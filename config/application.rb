@@ -30,6 +30,7 @@ module Classroom
     end
 
     # Precompile Fonts
-    config.assets.precompile += %w(*.svg *.eot *.woff *.ttf)
+    # Compile all font types except octicons-local
+    config.assets.precompile << %r(octicons/octicons/octicons+\.(?:svg|eot|woff|ttf)$)
   end
 end
