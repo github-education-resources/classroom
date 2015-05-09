@@ -79,6 +79,8 @@ GEM
     pg (0.18.1)
     puma (2.11.2)
       rack (>= 1.1, < 2.0)
+    quiet_assets (1.1.0)
+      railties (>= 3.1, < 5.0)
     rack (1.6.1)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -159,6 +161,7 @@ DEPENDENCIES
   minitest-reporters
   pg
   puma
+  quiet_assets
   rails (= 4.2.1)
   rails_12factor
   sass-rails (~> 5.0)
