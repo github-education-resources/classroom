@@ -1,0 +1,8 @@
+{
+  "name": "classroom",
+  "dependencies": {
+    "jquery":     "~1.11.2",
+    "jquery-ujs": " ~1.0.3",
+    "primer-css": " ~2.1.0"
+  }
+}
