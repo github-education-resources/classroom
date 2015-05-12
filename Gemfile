@@ -8,6 +8,9 @@ gem 'coffee-rails', '~> 4.1.0'
 gem 'jbuilder', '~> 2.0'
 gem 'jquery-rails'
 
+gem 'omniauth'
+gem 'omniauth-github'
+
 gem 'pg'
 gem 'puma'
 
@@ -17,12 +20,17 @@ gem 'turbolinks'
 
 gem 'uglifier', '>= 1.3.0'
 
+group :development do
+  gem 'awesome_print', require: 'ap'
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'dotenv-rails'
+  gem 'pry-rails'
+  gem 'pry-byebug'
+end
+
 group :development, :test do
-  gem 'byebug'
-
   gem 'spring'
-
-  gem 'web-console', '~> 2.0'
 end
 
 group :production do

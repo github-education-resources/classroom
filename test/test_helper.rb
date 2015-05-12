@@ -10,6 +10,8 @@ Minitest::Reporters.use!(
   ENV,
   Minitest.backtrace_filter)
 
+OmniAuth.config.test_mode = true
+
 class ActiveSupport::TestCase
   fixtures :all
 end
