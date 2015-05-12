@@ -10,9 +10,9 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
+ *= require octicons/octicons/sprockets-octicons
  *= require_self
  *= require_tree .
  */
 
-@import "octicons/octicons/sprockets-octicons";
 @import "primer-css/scss/primer";
