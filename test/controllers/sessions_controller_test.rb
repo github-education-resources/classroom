@@ -10,6 +10,26 @@ class SessionsControllerTest < ActionController::TestCase
     assert_redirected_to '/auth/github'
   end
 
+  test 'create adds a new user if they do not exist' do
+    assert_difference 'User.count' do
+      post :create, provider: 'github'
+    end
+  end
+
+  test 'create finds the user if they already exist' do
+    auth_hash = request.env['omniauth.auth']
+    User.create_from_auth_hash(auth_hash)
+
+    assert_no_difference 'User.count' do
+      post :create, provider: 'github'
+    end
+  end
+
+  test 'create redirects to the users show path' do
+    post :create, provider: 'github'
+    assert_redirected_to user_path(User.last)
+  end
+
   test 'destroy removes session[:user_id] AND redirects to the root_path' do
     session[:user_id] = 1
     get :destroy
