@@ -1,4 +1,7 @@
 class User < ActiveRecord::Base
+  validates_presence_of   :provider, :uid, :login, :email, :token
+  validates_uniqueness_of :uid, :login, :email, :token
+
   def self.create_from_auth_hash(hash)
     create!(AuthHash.new(hash).user_info)
   end
@@ -8,7 +11,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_auth_hash(hash)
-    conditions = AuthHash.new(hash).user_info.slice(:provider, :uid)
+    conditions = AuthHash.new(hash).user_info.slice(:uid)
     where(conditions).first
   end
 end
