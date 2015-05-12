@@ -7,7 +7,7 @@
 jim:
   provider: github
   uid:      12345
-  nickname: githubjim
+  login:    githubjim
   email:    jimlovesgithub@gmail.com
   name:     Jim
   token:    b70baeb9621b2cfe91dbee0d72e02be0516797ff
