@@ -9,12 +9,12 @@ class AuthHash
 
   def user_info
     {
-      provider:    provider,
-      uid:         uid,
-      nickname:    nickname,
-      email:       email,
-      name:        name,
-      token:       token
+      provider: provider,
+      uid:      uid,
+      login:    nickname,
+      email:    email,
+      name:     name,
+      token:    token
     }
   end
 
