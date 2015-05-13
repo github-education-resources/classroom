@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  resources :users, only: [:show]
-
   root to: 'pages#home'
 
   get '/login',  to: 'sessions#new',     as: 'login'
@@ -8,4 +6,8 @@ Rails.application.routes.draw do
 
   match '/auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
   post  '/auth/failure',            to: 'sessions#failure'
+
+  get 'dashboard', to: 'users#show'
+
+  resources :organizations, except: [:edit, :update], path: 'classroom'
 end

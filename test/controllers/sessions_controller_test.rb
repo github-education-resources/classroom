@@ -25,9 +25,9 @@ class SessionsControllerTest < ActionController::TestCase
     end
   end
 
-  test '#create redirects to the users show path' do
+  test '#create redirects to the users dashboard' do
     post :create, provider: 'github'
-    assert_redirected_to user_path(User.last)
+    assert_redirected_to dashboard_path
   end
 
   test '#destroy removes session[:user_id]' do

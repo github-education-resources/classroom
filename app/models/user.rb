@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  has_and_belongs_to_many :organizations
+
   validates_presence_of   :uid, :login, :email, :token
   validates_uniqueness_of :uid, :login, :email, :token
 

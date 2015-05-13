@@ -11,7 +11,13 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
   end
 
+  def ensure_logged_in
+    unless logged_in?
+      redirect_to root_path, notice: 'You must be logged in to view this content.'
+    end
+  end
+
   def logged_in?
-    !current_user
+    !!current_user
   end
 end
