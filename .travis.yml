@@ -12,7 +12,6 @@ before_script:
   - psql -c 'create database classroom_test;' -U postgres
 
 script:
-  - bundle exec scss-lint
   - RAILS_ENV=test bundle exec rake db:migrate --trace
   - bundle exec rake test
 
