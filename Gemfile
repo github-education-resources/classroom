@@ -41,5 +41,4 @@ end
 
 group :test do
   gem 'minitest-reporters'
-  gem 'shoulda', require: false
 end
