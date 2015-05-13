@@ -85,7 +85,7 @@ GEM
     mime-types (2.5)
     mini_portile (0.6.2)
     minitest (5.6.1)
-    minitest-reporters (1.0.14)
+    minitest-reporters (1.0.15)
       ansi
       builder
       minitest (>= 5.0)
