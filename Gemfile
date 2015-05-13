@@ -41,4 +41,5 @@ end
 
 group :test do
   gem 'minitest-reporters'
+  gem 'scss_lint'
 end

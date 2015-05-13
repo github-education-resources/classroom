@@ -1,0 +1,16 @@
+<header class="header">
+  <div class="container">
+    <%= link_to root_path, class: 'logo' do %>
+      <%= mega_octicon('mortar-board') %>
+      Classroom
+    <% end %>
+    <nav class="header-nav">
+      <% if logged_in? %>
+        <%= link_to 'Sign in', login_path %>
+      <% else %>
+        <%= link_to "Your profile", '#' %>
+        <%= link_to 'Sign out', logout_path %>
+      <% end %>
+    </nav>
+  </div>
+</header>

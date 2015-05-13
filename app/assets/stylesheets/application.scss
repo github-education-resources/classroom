@@ -10,9 +10,61 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require octicons/octicons/sprockets-octicons
- *= require_self
- *= require_tree .
  */
 
+@import "octicons/octicons/sprockets-octicons";
 @import "primer-css/scss/primer";
+
+.container {
+  width: auto;
+  max-width: 980px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.header {
+  color: #fff;
+  background-color: $brand-purple;
+  margin-bottom: 20px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  text-align: center;
+}
+
+.header-nav {
+  float: right;
+  margin-top: 0.5rem;
+
+  a {
+    transition: color 0.25s ease-in;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 16px;
+    margin-left: 10px;
+
+    &:hover {
+      color: #fff;
+      text-decoration: none;
+    }
+  }
+
+  @media (max-width: 34em) {
+    padding-top: 1rem;
+    border-top: 0.075rem solid rgba(255, 255, 255, 0.25);
+    text-align: center;
+    width: 100%;
+  }
+}
+
+.logo {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 200;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  @media (min-width: 34em) {
+    float: left;
+  }
+}
