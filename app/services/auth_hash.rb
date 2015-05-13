@@ -9,7 +9,6 @@ class AuthHash
 
   def user_info
     {
-      provider: provider,
       uid:      uid,
       login:    nickname,
       email:    email,
@@ -21,10 +20,6 @@ class AuthHash
   private
 
   attr_reader :user_hash
-
-  def provider
-    user_hash.fetch('provider')
-  end
 
   def uid
     user_hash.fetch('uid')

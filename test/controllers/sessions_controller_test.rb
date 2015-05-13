@@ -5,18 +5,18 @@ class SessionsControllerTest < ActionController::TestCase
     request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:github]
   end
 
-  test 'new should redirect to /auth/github' do
+  test '#new redirects to /auth/github' do
     get :new
     assert_redirected_to '/auth/github'
   end
 
-  test 'create adds a new user if they do not exist' do
-    assert_difference 'User.count' do
+  test '#create adds a new user if they do not exist' do
+    assert_difference 'User.count', 1 do
       post :create, provider: 'github'
     end
   end
 
-  test 'create finds the user if they already exist' do
+  test '#create finds the user if they already exist' do
     auth_hash = request.env['omniauth.auth']
     User.create_from_auth_hash(auth_hash)
 
@@ -25,23 +25,27 @@ class SessionsControllerTest < ActionController::TestCase
     end
   end
 
-  test 'create redirects to the users show path' do
+  test '#create redirects to the users show path' do
     post :create, provider: 'github'
     assert_redirected_to user_path(User.last)
   end
 
-  test 'destroy removes session[:user_id] AND redirects to the root_path' do
+  test '#destroy removes session[:user_id]' do
     session[:user_id] = 1
     get :destroy
 
     assert_equal nil, session[:user_id]
+  end
+
+  test '#destroy redirects to root_path' do
+    get :destroy
     assert_redirected_to root_path
   end
 
-  test 'failure redirects to root_path with flash message' do
-    get :failure, message: 'FAILURE!!!'
+  test '#failure redirects to root_path with a flash message' do
+    get :failure, message: 'Failure!'
 
     assert_redirected_to root_path
-    assert_equal 'FAILURE!!!', flash[:notice]
+    assert_equal 'Failure!', flash[:notice]
   end
 end

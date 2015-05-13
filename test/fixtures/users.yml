@@ -4,10 +4,9 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-jim:
-  provider: github
+tobias:
   uid:      12345
-  login:    githubjim
-  email:    jimlovesgithub@gmail.com
-  name:     Jim
+  login:    tobias
+  email:    tobiaslovesgithub@gmail.com
+  name:     Tobias
   token:    b70baeb9621b2cfe91dbee0d72e02be0516797ff

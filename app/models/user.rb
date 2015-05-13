@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  validates_presence_of   :provider, :uid, :login, :email, :token
+  validates_presence_of   :uid, :login, :email, :token
   validates_uniqueness_of :uid, :login, :email, :token
 
   def self.create_from_auth_hash(hash)
