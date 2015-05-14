@@ -4,28 +4,29 @@ class OrganizationsController < ApplicationController
   before_action :set_organization, except: [:new, :create]
 
   def new
-    @organization = Organization.new
-    @users_github_organizations = current_user.github_client
-      .users_organizations.collect { |org| [org.login, org.id] }
+    @organization               = Organization.new
+    @users_github_organizations = current_user.github_client.
+                                  users_organizations.map(&:login)
   end
 
   def create
-    github_organization_id = params[:org_id].to_i
-
-    if Organization.where(github_id: github_organization_id).present?
+    if Organization.where(login: params[:org]).present?
       redirect_to new_organization_path, alert: 'Classroom has already been added'
-    elsif !current_user.github_client.is_organization_owner?(github_organization_id)
-      redirect_to new_organization_path, alert: 'You are not an owner of this classroom'
     else
-      login = current_user.github_client.organization(github_organization_id).login
-
-      @organization = Organization.new(login: login, github_id: github_organization_id)
-      @organization.users << current_user
-
-      if @organization.save
-        redirect_to dashboard_path
+      unless current_user.github_client.is_organization_admin?(params[:org])
+        redirect_to new_organization_path, alert: 'You are not an administrator of this classroom'
       else
-        redirect_to new_organization_path, error: "Could not create classroom"
+        organization  = Organization.new(login:     params[:org],
+                                         github_id: current_user.github_client.
+                                                    organization(params[:org]).login)
+        organization.users << current_user
+
+        if organization.save
+          flash[:success] = "Classroom was successfully added"
+          redirect_to dashboard_path
+        else
+          redirect_to :back, error: "Could not create classroom"
+        end
       end
     end
   end
@@ -46,7 +47,8 @@ class OrganizationsController < ApplicationController
 
   def authorize_user!
     begin
-      has_user_id = Organization.find(params[:id]).user_ids.include?(current_user.id)
+      has_user_id = Organization.find(params[:id]).user_ids.
+                                 include?(current_user.id)
     rescue ActiveRecord::RecordNotFound
       has_user_id = false
     end

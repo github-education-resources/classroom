@@ -4,9 +4,8 @@ class GithubClient
     @token = token
   end
 
-  def is_organization_owner?(org_id)
-    owners_team_id = client.organization_teams(org_id).first.id
-    client.team_member?(owners_team_id, @login)
+  def is_organization_admin?(org)
+    client.organization_membership(org).role == "admin"
   end
 
   def organization(org, options = {})
@@ -14,7 +13,7 @@ class GithubClient
   end
 
   def users_organizations
-    client.organizations(@login)
+    client.list_organizations(@login)
   end
 
   private
