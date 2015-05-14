@@ -1,19 +1,9 @@
-/*
- *= require octicons/octicons/sprockets-octicons
- *= require primer-css/scss/primer
- *= require_self
- *= require_tree .
- */
+@import "octicons/octicons/sprockets-octicons";
+@import "primer-css/scss/primer";
 
-.container {
-  width: auto;
-  max-width: 980px;
-  padding-left: 20px;
-  padding-right: 20px;
-}
+@import "base";
+@import "layout";
 
-.page-header {
-  padding-bottom: 19px;
-  border-bottom: 1px solid #E5E5E5;
-  margin-bottom: 30px;
-}
+@import "header";
+
+@import "organizations";

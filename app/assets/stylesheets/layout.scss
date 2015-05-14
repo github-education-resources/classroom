@@ -1,0 +1,64 @@
+.container {
+  width: auto;
+  max-width: 980px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+// Column widths
+.one-third {
+  width: 33.333333%;
+
+  @media (max-width: 43em) {
+    width: 100%;
+  }
+}
+
+.two-thirds {
+  width: 66.666667%;
+
+  @media (max-width: 43em) {
+    width: 100%;
+  }
+}
+
+.one-fourth {
+  width: 25%;
+
+  @media (max-width: 43em) {
+    width: 100%;
+  }
+}
+
+.one-half {
+  width: 50%;
+
+  @media (max-width: 43em) {
+    width: 100%;
+  }
+}
+
+.three-fourths {
+  width: 75%;
+
+  @media (max-width: 43em) {
+    width: 100%;
+  }
+}
+
+.one-fifth {
+  width: 20%;
+
+  @media (max-width: 43em) {
+    width: 100%;
+  }
+}
+
+.four-fifths {
+  width: 80%;
+
+  @media (max-width: 43em) {
+    width: 100%;
+  }
+}
+

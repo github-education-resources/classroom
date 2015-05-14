@@ -1,1 +1,14 @@
 <h1 class="page-header">New Classroom</h1>
+<%= form_for @organization, url: { action: 'create' } do |f| %>
+  <dl class="form">
+    <dt><%= f.label :organization %></dt>
+
+    <dd class="select-organization">
+      <%= select_tag :org_id, options_for_select(@users_github_organizations) %>
+    </dd>
+
+    <div class="form-actions left">
+      <%= f.submit 'Add Organization', class: 'btn btn-primary' %>
+    </div>
+  </dl>
+<% end %>
