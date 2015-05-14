@@ -11,7 +11,8 @@
     <%= csrf_meta_tags %>
   </head>
   <body>
-    <%= render 'layouts/header' %>
+    <%= render 'shared/header' %>
+    <%= render 'shared/flash_messages' %>
 
     <div class="container">
       <%= yield %>

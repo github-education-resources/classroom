@@ -13,9 +13,9 @@ class OrganizationsController < ApplicationController
     github_organization_id = params[:org_id].to_i
 
     if Organization.where(github_id: github_organization_id).present?
-      redirect_to new_organization_path, notice: 'Classroom has already been added'
+      redirect_to new_organization_path, alert: 'Classroom has already been added'
     elsif !current_user.github_client.is_organization_owner?(github_organization_id)
-      redirect_to new_organization_path, notice: 'You are not an owner of this organization'
+      redirect_to new_organization_path, alert: 'You are not an owner of this classroom'
     else
       login = current_user.github_client.organization(github_organization_id).login
 
@@ -23,7 +23,7 @@ class OrganizationsController < ApplicationController
       @organization.users << current_user
 
       if @organization.save
-        redirect_to dashboard_path, notice: "#{login} was successfully added"
+        redirect_to dashboard_path
       else
         redirect_to new_organization_path, error: "Could not create classroom"
       end
