@@ -16,4 +16,8 @@ class User < ActiveRecord::Base
     conditions = AuthHash.new(hash).user_info.slice(:uid)
     where(conditions).first
   end
+
+  def github_client
+    @github_client ||= GithubClient.new(login, token)
+  end
 end

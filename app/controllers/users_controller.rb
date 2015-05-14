@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_action :ensure_logged_in, :set_user
 
   def show
-    @orgs = @user.organizations
+    @organizations = @user.organizations
   end
 
   private
