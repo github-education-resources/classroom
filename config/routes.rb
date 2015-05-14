@@ -9,5 +9,5 @@ Rails.application.routes.draw do
 
   get 'dashboard', to: 'users#show'
 
-  resources :organizations, except: [:edit, :update, :destroy], path: 'classroom'
+  resources :organizations, except: [:edit, :update], path: 'classroom'
 end

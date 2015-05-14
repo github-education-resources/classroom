@@ -1,7 +1,7 @@
 class OrganizationsController < ApplicationController
   before_action :ensure_logged_in
-  before_action :authorize_user!,  only: :show
-  before_action :set_organization, only: :show
+  before_action :authorize_user!,  except: [:new, :create]
+  before_action :set_organization, except: [:new, :create]
 
   def new
     @organization = Organization.new
@@ -31,6 +31,15 @@ class OrganizationsController < ApplicationController
   end
 
   def show
+  end
+
+  def destroy
+    if @organization.destroy
+      flash[:success] = 'Classroom was successfully deleted'
+      redirect_to dashboard_path
+    else
+      redirect_to back, error: 'Could not delete classroom'
+    end
   end
 
   private
