@@ -42,4 +42,6 @@ end
 
 group :test do
   gem 'minitest-reporters'
+  gem 'vcr'
+  gem 'webmock'
 end
