@@ -8,8 +8,8 @@ class GithubClient
     client.organization_membership(org).role == "admin"
   end
 
-  def organization(org, options = {})
-    client.organization(org, options)
+  def organization(org)
+    client.organization(org)
   end
 
   def users_organizations
