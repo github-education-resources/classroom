@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_action :ensure_logged_in, :set_user
+  before_action :redirect_to_root, unless: :logged_in?
+  before_action :set_user
 
   def show
     @organizations = @user.organizations

@@ -1,7 +1,8 @@
 class OrganizationsController < ApplicationController
-  before_action :ensure_logged_in
-  before_action :authorize_user!,  except: [:new, :create]
-  before_action :set_organization, except: [:new, :create]
+  before_action :redirect_to_root, unless: :logged_in?
+
+  before_action :verify_organization_ownership, except: [:new, :create]
+  before_action :set_organization,              except: [:new, :create]
 
   def new
     @organization               = Organization.new
@@ -46,15 +47,8 @@ class OrganizationsController < ApplicationController
 
   private
 
-  def authorize_user!
-    begin
-      has_user_id = Organization.find(params[:id]).user_ids.
-                                 include?(current_user.id)
-    rescue ActiveRecord::RecordNotFound
-      has_user_id = false
-    end
-
-    unless has_user_id
+  def verify_organization_ownership
+    unless current_user.organization_ids.include?(params[:id].to_i)
       redirect_to '/404.html'
     end
   end
