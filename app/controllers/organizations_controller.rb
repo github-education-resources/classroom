@@ -5,20 +5,19 @@ class OrganizationsController < ApplicationController
 
   def new
     @organization               = Organization.new
-    @users_github_organizations = current_user.github_client.
-                                  users_organizations.map(&:login)
+    @users_github_organizations = current_user.github_client.users_organizations.
+                                  collect { |org| [org.login, [org.login, org.id]] }
   end
 
   def create
-    if Organization.where(login: params[:org]).present?
+    org               = JSON.parse(params[:org])
+    login, github_id  = org.first, org.last
+
+    if Organization.where(github_id: github_id).present?
       redirect_to new_organization_path, alert: 'Classroom has already been added'
     else
-      unless current_user.github_client.is_organization_admin?(params[:org])
-        redirect_to new_organization_path, alert: 'You are not an administrator of this classroom'
-      else
-        organization  = Organization.new(login:     params[:org],
-                                         github_id: current_user.github_client.
-                                                    organization(params[:org]).login)
+      if current_user.github_client.is_organization_admin?(login)
+        organization  = Organization.new(login: login, github_id: github_id)
         organization.users << current_user
 
         if organization.save
@@ -27,6 +26,8 @@ class OrganizationsController < ApplicationController
         else
           redirect_to :back, error: "Could not create classroom"
         end
+      else
+        redirect_to new_organization_path, alert: 'You are not an administrator of this classroom'
       end
     end
   end
