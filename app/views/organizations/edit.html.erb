@@ -1,0 +1,24 @@
+<h1 class="page-header">Edit Organization</h1>
+<div class="columns">
+  <div class="one-half column centered">
+    <%= form_for @organization, url: { action: 'update' } do |f| %>
+      <dl class="form">
+        <dt><%= f.label :title, class: 'input-label' %></dt>
+        <dd><%= f.text_field :title, class: 'textfield' %></dd>
+      </dl>
+
+      <div class="form-actions left">
+        <%= link_to 'Cancel', @organization, class: 'btn', role: 'button' %>
+        <%= f.submit 'Update Organization', class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+
+    <!-- I promise I'll come and style this later -->
+    <br><br><br><br>
+    <!-- -->
+
+    <%= link_to 'Remove Organization', @organization, class: 'btn btn-danger', role: 'button',
+      method: :delete, data: { confirm: 'Are you sure you want to remove your classroom?' } %>
+  </div>
+</div>
+

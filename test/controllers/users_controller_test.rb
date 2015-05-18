@@ -1,14 +1,16 @@
 require 'test_helper'
 
 class UsersControllerTest < ActionController::TestCase
-  def setup
-    @user             = users(:tobias)
-    session[:user_id] = @user.id
+  before do
+    @controller       = UsersController.new
+    session[:user_id] = users(:tobias).id
   end
 
-  test '#show returns success and sets the user' do
-    get :show
-    assert_response :success
-    assert_not_nil assigns(:user)
+  describe '#show' do
+    it 'returns success and sets the user' do
+      get :show
+      assert_response :success
+      assert_not_nil assigns(:user)
+    end
   end
 end

@@ -1,26 +1,25 @@
 class GithubClient
-  def initialize(login, token)
-    @login = login
+  def initialize(token)
     @token = token
   end
 
-  def is_organization_admin?(org)
-    client.organization_membership(org).role == "admin"
+  def is_organization_admin?(github_id)
+    organization_login = client.organization(github_id).login
+    client.organization_membership(organization_login).role == "admin"
   end
 
-  def organization(org)
-    client.organization(org)
+  def organization(github_id)
+    client.organization(github_id)
   end
 
   def users_organizations
-    client.list_organizations(@login)
+    client.list_organizations
   end
 
   private
 
   def client
-    @client ||= Octokit::Client.new(login:         @login,
-                                    access_token:  @token,
-                                    auto_paginate: true)
+    @client ||= Octokit::Client.new(access_token: @token,
+                                    auto_paginate:  true)
   end
 end

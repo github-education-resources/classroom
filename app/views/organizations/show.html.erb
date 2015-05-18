@@ -1,6 +1,4 @@
 <h1 class="page-header">
-  <%= @organization.login %>
+  <%= @organization.title %>
+  <%= link_to 'Edit', edit_organization_path, class: 'lead' %>
 </h1>
-
-<%= link_to 'Remove Classroom', @organization, class: 'btn btn-sm btn-danger', role: 'button',
-  method: :delete, data: { confirm: 'Are you sure you want to remove your classroom?' } %>

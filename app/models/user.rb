@@ -18,6 +18,6 @@ class User < ActiveRecord::Base
   end
 
   def github_client
-    @github_client ||= GithubClient.new(login, token)
+    @github_client ||= GithubClient.new(token)
   end
 end

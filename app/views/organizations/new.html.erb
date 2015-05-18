@@ -1,14 +1,22 @@
-<h1 class="page-header">New Classroom</h1>
-<%= form_for @organization, url: { action: 'create' } do |f| %>
-  <dl class="form">
-    <dt><%= f.label :organization %></dt>
+<h1 class="page-header">Add Organization</h1>
 
-    <dd class="select-organization">
-      <%= select_tag :org, options_for_select(@users_github_organizations) %>
-    </dd>
+<div class="columns">
+  <div class="one-half column centered">
+    <%= form_for @organization, url: { action: 'create' } do |f| %>
+      <dl class="form">
+        <dt><%= f.label :title %></dt>
+        <dd><%= f.text_field :title, class: 'textfield' %></dd>
+      </dl>
 
-    <div class="form-actions left">
-      <%= f.submit 'Add Organization', class: 'btn btn-primary' %>
-    </div>
-  </dl>
-<% end %>
+      <dl class="form">
+        <dd class="select-organization">
+          <%= select :organization, :github_id, options_for_select(@users_github_organizations) %>
+        </dd>
+      </dl>
+
+      <div class="form-actions left">
+        <%= f.submit 'Add Organization', class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+  </div>
+</div>
