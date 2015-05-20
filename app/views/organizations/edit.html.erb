@@ -1,0 +1,26 @@
+<h1 class="page-header">Edit Organization</h1>
+<div class="columns">
+  <div class="one-half column centered">
+    <%= form_for @organization do |f| %>
+      <%= render 'shared/error_messages', object: f.object %>
+
+      <dl class="form">
+        <dt><%= f.label :title, class: 'input-label' %></dt>
+        <dd><%= f.text_field :title, class: 'textfield' %></dd>
+      </dl>
+
+      <div class="form-actions left">
+        <%= link_to 'Cancel', @organization, class: 'btn', role: 'button' %>
+        <%= f.submit 'Update Organization', class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+
+    <!-- I promise I'll come and style this later -->
+    <br><br><br><br>
+    <!-- -->
+
+    <%= link_to 'Remove Organization', '#delete-organization', class: 'btn btn-danger', role: 'button' %>
+  </div>
+</div>
+
+<%= render partial: 'remove_organization_modal', locals: { modal_id: 'delete-organization' } %>

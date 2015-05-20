@@ -1,28 +1,15 @@
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
+require 'minitest/spec'
 
-require 'minitest/reporters'
-Minitest::Reporters.use!(
-  Minitest::Reporters::ProgressReporter.new,
-  ENV,
-  Minitest.backtrace_filter)
-
-OmniAuth.config.test_mode = true
-OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new({
-  'provider'=> 'github',
-  'uid'=> '8675309',
-
-  'info'=>
-  {
-    'nickname' => 'testuser',
-    "email"    => 'testuser@gmail.com',
-    'name'     => 'Test User',
-  },
-
-  'credentials' => { 'token' => 'some-token' }
-})
+# Require all support files
+Dir["#{Rails.root}/test/support/**/*.rb"].each {|file| require file }
 
 class ActiveSupport::TestCase
   fixtures :all
+end
+
+class ActionController::TestCase
+  extend Minitest::Spec::DSL
 end

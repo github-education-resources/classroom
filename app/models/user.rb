@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  has_and_belongs_to_many :organizations
+
   validates_presence_of   :uid, :login, :email, :token
   validates_uniqueness_of :uid, :login, :email, :token
 
@@ -13,5 +15,9 @@ class User < ActiveRecord::Base
   def self.find_by_auth_hash(hash)
     conditions = AuthHash.new(hash).user_info.slice(:uid)
     where(conditions).first
+  end
+
+  def github_client
+    @github_client ||= GithubClient.new(token)
   end
 end

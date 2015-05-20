@@ -1,0 +1,11 @@
+org1:
+  title: org1
+  github_id: 10
+
+org2:
+  title: org2
+  github_id: 20
+
+org3:
+  title: org3
+  github_id: 30

@@ -1,1 +1,24 @@
-<h2>Hello <%= "#{@user.name}" %></h2>
+<h1 class="page-header">Dashboard</h1>
+<div class="columns">
+  <div class="one-fourth column">
+    <%= link_to new_organization_path, class: 'btn btn-primary organization-btn', role: 'button' do %>
+      <%= octicon('plus') %> Add Organization
+    <% end %>
+  </div>
+
+  <div class="three-fourths column">
+    <% if @organizations.present? %>
+      <% @organizations.each do |organization| %>
+        <%= link_to organization.title, organization_path(organization) %>
+      <% end %>
+    <% else %>
+      <div class="blankslate spacious">
+        <span class="mega-octicon octicon-git-commit"></span>
+        <span class="mega-octicon octicon-tag"></span>
+        <span class="mega-octicon octicon-git-branch"></span>
+        <h3>This is a blank slate</h3>
+        <p>Use it to provide information when no dynamic content exists.</p>
+      </div>
+    <% end %>
+  </div>
+</div>
