@@ -54,7 +54,7 @@ class SessionsControllerTest < ActionController::TestCase
       get :failure, message: 'Failure!'
 
       assert_redirected_to root_path
-      assert_equal 'Failure!', flash[:notice]
+      assert_equal 'Failure!', flash[:alert]
     end
   end
 end
