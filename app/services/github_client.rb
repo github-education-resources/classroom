@@ -3,8 +3,9 @@ class GithubClient
     @token = token
   end
 
-  def is_organization_admin?(github_id)
+  def organization_admin?(github_id)
     organization_login = client.organization(github_id.to_i).login
+
     begin
       client.organization_membership(organization_login).role == "admin"
     rescue Octokit::NotFound

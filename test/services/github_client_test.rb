@@ -9,14 +9,14 @@ class GithubClientTest < ActiveSupport::TestCase
     @github_client = GithubClient.new(token)
   end
 
-  test '#is_organization_admin?' do
+  test '#organization_admin?' do
     VCR.use_cassette('admin_organization_membership') do
-      assert @github_client.is_organization_admin?(@github_boxen_id)
+      assert @github_client.organization_admin?(@github_boxen_id)
       assert :get, github_url('user/memberships/orgs/boxen')
     end
 
     VCR.use_cassette('member_organization_membership') do
-      assert_not @github_client.is_organization_admin?(@github_education_id)
+      assert_not @github_client.organization_admin?(@github_education_id)
       assert :get, github_url('user/memberships/orgs/education')
     end
   end

@@ -1,6 +1,6 @@
 class OrganizationsController < ApplicationController
-  before_action :redirect_to_root,             unless: :logged_in?
-  before_action :verify_is_organization_admin, except: [:new, :create]
+  before_action :redirect_to_root,          unless: :logged_in?
+  before_action :ensure_organization_admin, except: [:new, :create]
 
   before_action :set_organization,                  except: [:new, :create]
   before_action :set_users_github_organizations,    only:   [:new, :create]
@@ -18,11 +18,11 @@ class OrganizationsController < ApplicationController
   def create
     @organization = Organization.new(new_organization_params)
 
-    if current_user.github_client.is_organization_admin?(new_organization_params["github_id"])
+    if current_user.github_client.organization_admin?(new_organization_params["github_id"])
       @organization.users << current_user
 
       if @organization.save
-        flash[:success] = 'Organization was successfully added'
+        flash[:success] = "Organization \"#{@organization.title}\" was successfully added"
         redirect_to dashboard_path
       else
         render :new
@@ -34,7 +34,7 @@ class OrganizationsController < ApplicationController
 
   def update
     if @organization.update_attributes(update_organization_params)
-      flash[:success] = 'Organization updated'
+      flash[:success] = "Organization \"#{@organization.title}\" updated"
       redirect_to @organization
     else
       render :edit
@@ -68,11 +68,11 @@ class OrganizationsController < ApplicationController
     params.require(:organization).permit(:title)
   end
 
-  def verify_is_organization_admin
+  def ensure_organization_admin
     github_id = Organization.find(params[:id]).github_id
 
-    unless current_user.github_client.is_organization_admin?(github_id)
-      render text: 'unauthorized', status: 401
+    unless current_user.github_client.organization_admin?(github_id)
+      render text: 'Unauthorized', status: 401
     end
   end
 end
