@@ -72,7 +72,7 @@ class OrganizationsController < ApplicationController
     github_id = Organization.find(params[:id]).github_id
 
     unless current_user.github_client.is_organization_admin?(github_id)
-      redirect_to :back, status: 401, error: 'Not authorized'
+      render text: 'unauthorized', status: 401
     end
   end
 end
