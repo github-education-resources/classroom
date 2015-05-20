@@ -1,7 +1,9 @@
 <h1 class="page-header">Edit Organization</h1>
 <div class="columns">
   <div class="one-half column centered">
-    <%= form_for @organization, url: { action: 'update' } do |f| %>
+    <%= form_for @organization do |f| %>
+      <%= render 'shared/error_messages', object: f.object %>
+
       <dl class="form">
         <dt><%= f.label :title, class: 'input-label' %></dt>
         <dd><%= f.text_field :title, class: 'textfield' %></dd>
@@ -17,8 +19,35 @@
     <br><br><br><br>
     <!-- -->
 
-    <%= link_to 'Remove Organization', @organization, class: 'btn btn-danger', role: 'button',
-      method: :delete, data: { confirm: 'Are you sure you want to remove your classroom? This will not affect your organization on github.com' } %>
+    <%= link_to 'Remove Organization', '#delete-organization', class: 'btn btn-danger', role: 'button' %>
   </div>
 </div>
 
+<div class="modal" id="delete-organization" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h3>
+        Are you ABSOLUTLEY SURE?
+        <%= link_to '', class: 'btn-close right', 'aria-hidden' => 'true' do %>
+          <%= octicon('x') %>
+        <% end %>
+      </h3>
+    </div>
+
+    <div class="modal-warning text-center">
+      <p>Please read this before continuing!</p>
+    </div>
+
+    <div class="modal-body">
+      <p>
+        This will not affect your organization on GitHub, however this will remove access for all other users using this org
+      </p>
+    </div>
+
+    <div class="modal-footer">
+      <%= form_for @organization, html: { method: :delete } do |f| %>
+        <%= f.submit 'I understand the consequences, remove the organization', class: 'btn btn-danger' %>
+      <% end %>
+    </div>
+  </div>
+</div>

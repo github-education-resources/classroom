@@ -1,8 +1,9 @@
 <h1 class="page-header">Add Organization</h1>
-
 <div class="columns">
   <div class="one-half column centered">
-    <%= form_for @organization, url: { action: 'create' } do |f| %>
+    <%= form_for @organization do |f| %>
+      <%= render 'shared/error_messages', object: f.object %>
+
       <dl class="form">
         <dt><%= f.label :title %></dt>
         <dd><%= f.text_field :title, class: 'textfield' %></dd>
