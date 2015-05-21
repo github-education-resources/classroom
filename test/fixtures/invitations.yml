@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: 'Students'
+  team_id: 1024
+  key: 12345
+
+two:
+  title: 'Students'
+  team_id: 2048
+  key: 123456

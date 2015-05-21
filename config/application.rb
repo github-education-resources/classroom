@@ -32,5 +32,9 @@ module Classroom
     # Precompile Fonts
     # Compile all font types except octicons-local
     config.assets.precompile << %r(octicons/octicons/octicons+\.(?:svg|eot|woff|ttf)$)
+
+    # Set ActiveJob adapter
+    # config.active_job.queue_adapter     = :sidekiq
+    # config.active_job.queue_name_prefix = Rails.env
   end
 end

@@ -1,0 +1,26 @@
+<h1 class="page-header">Organization Invitations</h1>
+<%= link_to new_organization_invitation_path, class: 'btn btn-primary', role: 'button' do %>
+  <%= octicon('plus') %>
+  New Invitation
+<% end %>
+
+<div class="columns">
+  <div class="one-half column centered">
+    <form>
+      <% @invitations.each do |invitation| %>
+        <dl class="form">
+          <dt><label><%= invitation.title %></label></dt>
+          <div class="input-group">
+            <%= content_tag :input, '', class: 'input-block', type: 'text', value: "#{request.base_url}#{invitation_path(invitation.key)}", readonly: 'readonly' %>
+            <span class="input-group-button">
+              <%= link_to [@organization, invitation], class: 'btn btn-danger', role: 'button',
+                method: :delete, data: { confirm: 'Are you sure you want to remove your classroom?' } do %>
+                <%= octicon('trashcan') %>
+              <% end %>
+            </span>
+          </div>
+        </dl>
+      <% end %>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<% invitations_url = @invitation.new_record? ? organization_invitations_path : organization_invitation_path %>
+<%= form_for @invitation, url: invitations_url do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+
+  <dl class="form">
+    <dt><%= f.label :title %></dt>
+    <dd><%= f.text_field :title, class: 'textfield' %></dd>
+  </dl>
+
+  <dl class="form">
+    <dd><label>Team</label></dd>
+    <dt><%= select :invitation, :team_id, options_for_select(@organizations_teams) %></dt>
+  </dl>
+
+  <div class="form-actions left">
+    <%= f.submit 'Create Invitation', class: 'btn btn-primary' %>
+  </div>
+<% end %>

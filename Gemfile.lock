@@ -71,13 +71,12 @@ GEM
     execjs (2.5.2)
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
+    friendly_id (5.1.0)
+      activerecord (>= 4.0.0)
     globalid (0.3.5)
       activesupport (>= 4.1.0)
     hashie (3.4.1)
     i18n (0.7.0)
-    jbuilder (2.2.16)
-      activesupport (>= 3.0.0, < 5)
-      multi_json (~> 1.2)
     json (1.8.2)
     jwt (1.5.0)
     loofah (2.0.2)
@@ -207,7 +206,7 @@ DEPENDENCIES
   binding_of_caller
   coffee-rails (~> 4.1.0)
   dotenv-rails
-  jbuilder (~> 2.0)
+  friendly_id
   minitest-reporters
   octokit
   omniauth
