@@ -32,7 +32,7 @@ class InvitationsController < ApplicationController
   end
 
   def index
-    @invitations = Invitation.where(organizations_id: @organization.id)
+    @invitations = Invitation.where(organization_id: @organization.id)
   end
 
   def new
@@ -41,7 +41,7 @@ class InvitationsController < ApplicationController
 
   def create
     @invitation = Invitation.new(invitation_params)
-    @invitation.organizations_id = @organization.id
+    @invitation.organization_id = @organization.id
 
     if @invitation.save
       flash[:success] = 'Invitation Created!'
@@ -81,7 +81,8 @@ class InvitationsController < ApplicationController
   end
 
   def set_organization_teams
-    @organizations_teams = current_user.github_client.organization_teams(@organization.github_id).
+    @organizations_teams = current_user.github_client.
+      organization_teams(@organization.github_id).
       collect { |team| [team.slug, team.id] }
   end
 end

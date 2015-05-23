@@ -17,16 +17,16 @@ ActiveRecord::Schema.define(version: 20150520225757) do
   enable_extension "plpgsql"
 
   create_table "invitations", force: :cascade do |t|
-    t.string   "title",            null: false
-    t.integer  "team_id",          null: false
-    t.string   "key",              null: false
-    t.integer  "organizations_id"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.string   "title",           null: false
+    t.integer  "team_id",         null: false
+    t.string   "key",             null: false
+    t.integer  "organization_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
   add_index "invitations", ["key"], name: "index_invitations_on_key", unique: true, using: :btree
-  add_index "invitations", ["organizations_id"], name: "index_invitations_on_organizations_id", using: :btree
+  add_index "invitations", ["organization_id"], name: "index_invitations_on_organization_id", using: :btree
   add_index "invitations", ["team_id"], name: "index_invitations_on_team_id", unique: true, using: :btree
 
   create_table "organizations", force: :cascade do |t|

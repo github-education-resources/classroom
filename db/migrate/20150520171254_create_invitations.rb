@@ -5,7 +5,7 @@ class CreateInvitations < ActiveRecord::Migration
       t.integer :team_id,    null: false
       t.string  :key,        null: false
 
-      t.belongs_to :organizations, index: true
+      t.belongs_to :organization, index: true
 
       t.timestamps null: false
     end
