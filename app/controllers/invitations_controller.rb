@@ -1,19 +1,33 @@
 class InvitationsController < ApplicationController
   before_action :authenticate_with_pre_login_destination, only: [:show]
 
-  before_action :set_invitation,         except: [:index, :new, :create]
-  before_action :set_organization,       only:   [:index, :new, :create]
-  before_action :set_organization_teams, only:   [:new, :create]
+  def create
+    @invitation   = Invitation.new(invitation_params)
+    @organization = Organization.find_by(id: params[:organization_id])
+
+    @invitation.organization = @organization
+
+    if @invitation.save
+      flash[:success] = 'Invitation Created!'
+      redirect_to organization_invitations_path(@organization)
+    else
+      render :new
+    end
+  end
 
   def show
+    begin
+      @invitation = Invitation.find_by_key!(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      render text: 'Invitation does not exist :-(', status: 503
+    end
+
     @organization = Organization.find(@invitation.organizations_id)
 
     if @organization.user_ids.include?(current_user.id)
       flash[:notice] = 'You are an admin of this organization'
       redirect_to organization_invitations_path(@organization)
     else
-      # TODO: should look into putting a background job in here
-      # to remove users that aren't admins anymore
       @organization_admin = @organization.users.to_a.keep_if do |user|
         user.github_client.organization_admin?(@organization.github_id)
       end.first
@@ -31,27 +45,9 @@ class InvitationsController < ApplicationController
     end
   end
 
-  def index
-    @invitations = Invitation.where(organization_id: @organization.id)
-  end
-
-  def new
-    @invitation = Invitation.new
-  end
-
-  def create
-    @invitation = Invitation.new(invitation_params)
-    @invitation.organization_id = @organization.id
-
-    if @invitation.save
-      flash[:success] = 'Invitation Created!'
-      redirect_to organization_invitations_path(@organization)
-    else
-      render :new
-    end
-  end
-
   def destroy
+    @invitation = Invitation.find_by_key(params[:id])
+
     organizations_id = @invitation.organizations_id
     @invitation.destroy
 
@@ -70,19 +66,5 @@ class InvitationsController < ApplicationController
 
   def invitation_params
     params.require(:invitation).permit(:title, :team_id)
-  end
-
-  def set_invitation
-    @invitation = Invitation.find_by_key!(params[:id])
-  end
-
-  def set_organization
-    @organization = Organization.find_by(id: params[:organization_id])
-  end
-
-  def set_organization_teams
-    @organizations_teams = current_user.github_client.
-      organization_teams(@organization.github_id).
-      collect { |team| [team.slug, team.id] }
   end
 end

@@ -5,14 +5,8 @@ class OrganizationsController < ApplicationController
   before_action :set_organization,               except: [:new, :create]
   before_action :set_users_github_organizations, only:   [:new, :create]
 
-  def show
-  end
-
   def new
     @organization = Organization.new
-  end
-
-  def edit
   end
 
   def create
@@ -23,13 +17,20 @@ class OrganizationsController < ApplicationController
 
       if @organization.save
         flash[:success] = "Organization \"#{@organization.title}\" was successfully added"
-        redirect_to dashboard_path
+        redirect_to @organization
       else
         render :new
       end
     else
       redirect_to new_organization_path, alert: 'You are not an administrator of this organization'
     end
+  end
+
+  def show
+    @invitation = @organization.invitation
+  end
+
+  def edit
   end
 
   def update

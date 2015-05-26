@@ -3,4 +3,6 @@
   <%= link_to 'Edit', edit_organization_path, class: 'lead' %>
 </h1>
 
-<%= link_to 'Team Invitations', organization_invitations_path(@organization) %>
+<% if @invitation.present? %>
+  <%= render partial: 'organizations_invitation' %>
+<% end %>

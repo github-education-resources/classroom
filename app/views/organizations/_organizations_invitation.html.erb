@@ -1,0 +1,10 @@
+<div class="columns">
+  <div class="one-half column centered">
+    <form>
+      <dl class="form">
+        <dt><label><%= @invitation.title %></label></dt>
+        <%= content_tag :input, '', class: 'input-block', type: 'text', value: "#{request.base_url}#{invitation_path(@invitation.key)}", readonly: 'readonly' %>
+      </dl>
+    </form>
+  </div>
+</div>
