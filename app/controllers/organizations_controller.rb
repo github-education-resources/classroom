@@ -3,6 +3,8 @@ class OrganizationsController < ApplicationController
   before_action :ensure_organization_admin, except: [:new, :create]
 
   before_action :set_organization,               except: [:new, :create]
+
+  before_action :ensure_new_organization,        only:   [:invite]
   before_action :set_users_github_organizations, only:   [:new, :create]
 
   def new
@@ -51,11 +53,6 @@ class OrganizationsController < ApplicationController
 
   def invite
     @invitation = Invitation.new
-
-    if @organization.students_team_id.present?
-      # do something
-    end
-
     @teams = current_user.github_client.organization_teams(@organization.github_id)
   end
 
@@ -65,6 +62,12 @@ class OrganizationsController < ApplicationController
     github_id = Organization.find(params[:id]).github_id
     unless current_user.github_client.organization_admin?(github_id)
       render text: 'Unauthorized', status: 401
+    end
+  end
+
+  def ensure_new_organization
+    if @organization.students_team_id.present?
+      redirect_to @organization, notice: 'Your invitation and team has already been setup'
     end
   end
 

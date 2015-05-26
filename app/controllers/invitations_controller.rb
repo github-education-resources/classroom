@@ -11,15 +11,15 @@ class InvitationsController < ApplicationController
 
     if @team.id.present?
       @invitation.team_id = @team.id
-
-      if @invitation.save
-        flash[:success] = 'Your team and invitation have been created'
+      if @invitation.save && @organization.update_attributes(students_team_id: @invitation.team_id)
+        flash[:success] = "Your team \"#{@team.name}\" and it's invitation have been created"
         redirect_to @organization
       else
         render 'organizations/invite'
       end
     else
-      redirect_to 'organizations/invite', error: 'Team failed to be created'
+      flash[:error] = 'Team failed to be created please try again'
+      redirect_to invite_organization_path(@organization)
     end
   end
 
