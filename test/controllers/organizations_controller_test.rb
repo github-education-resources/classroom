@@ -48,6 +48,8 @@ class OrganizationsControllerTest < ActionController::TestCase
       assert_difference 'Organization.count' do
         post :create, organization: { title: 'Test Org One', github_id: 1 }
       end
+
+      assert_redirected_to organization_path(Organization.last)
     end
 
     it 'will not add an organization that already exists' do
