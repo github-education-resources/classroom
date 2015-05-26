@@ -7,10 +7,6 @@ class GithubClient
     client.add_team_membership(team_id, login)
   end
 
-  def create_team(github_id, options = {})
-    client.create_team(github_id, options)
-  end
-
   def organization_admin?(github_id)
     organization_login = client.organization(github_id.to_i).login
     begin
