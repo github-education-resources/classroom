@@ -1,0 +1,14 @@
+<p>It appears that you have only one team, please create a new team for all of your students to join</p>
+
+<%= form_for @invitation, url: organization_invitations_path(@organization) do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+
+  <dl class="form">
+    <dt><label>Team Name</label></dt>
+    <dd><%= f.text_field :title, class: 'textfield', value: 'Students' %></dd>
+  </dl>
+
+  <div class="form-actions left">
+    <%= f.submit 'Create Team', class: 'btn btn-primary' %>
+  </div>
+<% end %>

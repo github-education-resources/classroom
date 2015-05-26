@@ -1,5 +1,27 @@
 class InvitationsController < ApplicationController
   before_action :authenticate_with_pre_login_destination, only: [:show]
+  before_action :set_organization, only: [:create]
+
+  def create
+    @invitation = Invitation.new(invitation_params)
+    @invitation.organization = @organization
+
+    options = { name: invitation_params[:title], permission: 'push' }
+    @team = current_user.github_client.create_team(@organization.github_id, options)
+
+    if @team.id.present?
+      @invitation.team_id = @team.id
+
+      if @invitation.save
+        flash[:success] = 'Your team and invitation have been created'
+        redirect_to @organization
+      else
+        render 'organizations/invite'
+      end
+    else
+      redirect_to 'organizations/invite', error: 'Team failed to be created'
+    end
+  end
 
   def show
     begin
@@ -38,5 +60,13 @@ class InvitationsController < ApplicationController
       session[:pre_login_destination] = "#{request.base_url}#{request.path}"
       redirect_to login_path
     end
+  end
+
+  def invitation_params
+    params.require(:invitation).permit(:title)
+  end
+
+  def set_organization
+    @organization = Organization.find(params[:organization_id])
   end
 end

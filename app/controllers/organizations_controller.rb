@@ -16,8 +16,7 @@ class OrganizationsController < ApplicationController
       @organization.users << current_user
 
       if @organization.save
-        flash[:success] = "Organization \"#{@organization.title}\" was successfully added"
-        redirect_to @organization
+        redirect_to invite_organization_path(@organization)
       else
         render :new
       end
@@ -48,6 +47,16 @@ class OrganizationsController < ApplicationController
 
     flash[:success] = "Organization \"#{title}\" was removed"
     redirect_to dashboard_path
+  end
+
+  def invite
+    @invitation = Invitation.new
+
+    if @organization.students_team_id.present?
+      # do something
+    end
+
+    @teams = current_user.github_client.organization_teams(@organization.github_id)
   end
 
   private

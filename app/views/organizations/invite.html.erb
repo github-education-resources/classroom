@@ -1,0 +1,10 @@
+<h1 class="page-header">Setup <span class="lead"><%= @organization.title %></span></h1>
+<div class="columns">
+  <div class="one-half column centered">
+    <% if @teams.length == 1 %>
+      <%= render partial: 'one_team_organization' %>
+    <% else %>
+      <%= render partial: 'multiple_team_organization' %>
+    <% end %>
+  </div>
+</div>

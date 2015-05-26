@@ -4,7 +4,7 @@ class Invitation < ActiveRecord::Base
 
   belongs_to :organization
 
-  validates_presence_of   :key, :team_id, :title
+  validates_presence_of   :key, :team_id, :title, :organization_id
   validates_uniqueness_of :key, :team_id
 
   after_initialize :assign_key
