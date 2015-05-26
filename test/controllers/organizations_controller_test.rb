@@ -8,9 +8,9 @@ class OrganizationsControllerTest < ActionController::TestCase
 
   describe '#new' do
     before do
-      stub_get_json(github_url('/user/orgs'),
-                    [{ login: 'testorg1', id: 1 },
-                     { login: 'testorg2', id: 2 }])
+      stub_json_request(:get, github_url('/user/orgs'),
+                        [{ login: 'testorg1', id: 1 },
+                         { login: 'testorg2', id: 2 }])
     end
 
     it 'returns success' do
@@ -31,19 +31,19 @@ class OrganizationsControllerTest < ActionController::TestCase
 
   describe '#create' do
     before do
-      stub_get_json(github_url('/user/orgs'),
-                    [{ login: 'testorg1', id: 1 },
-                     { login: 'testorg2', id: 2 }])
+      stub_json_request(:get, github_url('/user/orgs'),
+                        [{ login: 'testorg1', id: 1 },
+                         { login: 'testorg2', id: 2 }])
     end
 
     it 'will add an organization' do
-      stub_get_json(github_url('/organizations/1'),
-                    { login: 'testorg1',
-                      id: 1 })
+      stub_json_request(:get, github_url('/organizations/1'),
+                        { login: 'testorg1',
+                          id: 1 })
 
-      stub_get_json(github_url('/user/memberships/orgs/testorg1'),
-                    { state: 'active',
-                      role:  'admin' })
+      stub_json_request(:get, github_url('/user/memberships/orgs/testorg1'),
+                        { state: 'active',
+                          role:  'admin' })
 
       assert_difference 'Organization.count' do
         post :create, organization: { title: 'Test Org One', github_id: 1 }
@@ -55,13 +55,13 @@ class OrganizationsControllerTest < ActionController::TestCase
     it 'will not add an organization that already exists' do
       existing_organization = organizations(:org1)
 
-      stub_get_json(github_url("/organizations/#{existing_organization.github_id}"),
-                    { login: 'org1',
-                      id: existing_organization.github_id })
+      stub_json_request(:get, github_url("/organizations/#{existing_organization.github_id}"),
+                        { login: 'org1',
+                          id: existing_organization.github_id })
 
-      stub_get_json(github_url("user/memberships/orgs/#{existing_organization.title}"),
-                    { state: 'active',
-                      role:  'admin' })
+      stub_json_request(:get, github_url("user/memberships/orgs/#{existing_organization.title}"),
+                { state: 'active',
+                  role:  'admin' })
 
       assert_no_difference 'Organization.count' do
         post :create, organization: { title: "#{existing_organization.title}",
@@ -70,13 +70,13 @@ class OrganizationsControllerTest < ActionController::TestCase
     end
 
     it 'will only add the organization if the user is an administrator' do
-      stub_get_json(github_url('/organizations/1'),
-                    { login: 'testorg1',
-                      id: 1 })
+      stub_json_request(:get, github_url('/organizations/1'),
+                        { login: 'testorg1',
+                          id: 1 })
 
-      stub_get_json(github_url('/user/memberships/orgs/testorg1'),
-                    { state: 'active',
-                      role:  'member' })
+      stub_json_request(:get, github_url('/user/memberships/orgs/testorg1'),
+                        { state: 'active',
+                          role:  'member' })
 
       assert_no_difference 'Organization.count' do
         post :create, organization: { title: 'Test Org One', github_id: 1 }
@@ -88,13 +88,13 @@ class OrganizationsControllerTest < ActionController::TestCase
     before do
       @organization = organizations(:org1)
 
-      stub_get_json(github_url("/organizations/#{@organization.github_id}"),
-                    { login: 'org1',
-                      id: @organization.github_id })
+      stub_json_request(:get, github_url("/organizations/#{@organization.github_id}"),
+                        { login: 'org1',
+                          id: @organization.github_id })
 
-      stub_get_json(github_url('/user/memberships/orgs/org1'),
-                    { state: 'active',
-                      role:  'admin' })
+      stub_json_request(:get, github_url('/user/memberships/orgs/org1'),
+                        { state: 'active',
+                          role:  'admin' })
     end
 
     it 'returns success and sets the organization' do
@@ -109,13 +109,13 @@ class OrganizationsControllerTest < ActionController::TestCase
     before do
       @organization = organizations(:org1)
 
-      stub_get_json(github_url("/organizations/#{@organization.github_id}"),
-                    { login: 'org1',
-                      id: @organization.github_id })
+      stub_json_request(:get, github_url("/organizations/#{@organization.github_id}"),
+                        { login: 'org1',
+                          id: @organization.github_id })
 
-      stub_get_json(github_url('/user/memberships/orgs/org1'),
-                    { state: 'active',
-                      role:  'admin' })
+      stub_json_request(:get, github_url('/user/memberships/orgs/org1'),
+                        { state: 'active',
+                          role:  'admin' })
     end
 
     it 'returns success and sets the organization' do
@@ -131,13 +131,13 @@ class OrganizationsControllerTest < ActionController::TestCase
     before do
       @organization = organizations(:org1)
 
-      stub_get_json(github_url("/organizations/#{@organization.github_id}"),
-                    { login: 'org1',
-                      id: @organization.github_id })
+      stub_json_request(:get, github_url("/organizations/#{@organization.github_id}"),
+                        { login: 'org1',
+                          id: @organization.github_id })
 
-      stub_get_json(github_url('/user/memberships/orgs/org1'),
-                    { state: 'active',
-                      role:  'admin' })
+      stub_json_request(:get, github_url('/user/memberships/orgs/org1'),
+                        { state: 'active',
+                          role:  'admin' })
     end
 
     it 'deletes the organization' do
