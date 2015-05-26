@@ -6,27 +6,6 @@ class OrganizationsControllerTest < ActionController::TestCase
     session[:user_id] = users(:tobias).id
   end
 
-  describe '#show' do
-    before do
-      @organization = organizations(:org1)
-
-      stub_get_json(github_url("/organizations/#{@organization.github_id}"),
-                    { login: 'org1',
-                      id: @organization.github_id })
-
-      stub_get_json(github_url('/user/memberships/orgs/org1'),
-                    { state: 'active',
-                      role:  'admin' })
-    end
-
-    it 'returns success and sets the organization' do
-      get :show, id: @organization.id
-
-      assert_response :success
-      assert_not_nil assigns(:organization)
-    end
-  end
-
   describe '#new' do
     before do
       stub_get_json(github_url('/user/orgs'),
@@ -50,35 +29,8 @@ class OrganizationsControllerTest < ActionController::TestCase
     end
   end
 
-  describe '#edit' do
-    before do
-      @organization = organizations(:org1)
-
-      stub_get_json(github_url("/organizations/#{@organization.github_id}"),
-                    { login: 'org1',
-                      id: @organization.github_id })
-
-      stub_get_json(github_url('/user/memberships/orgs/org1'),
-                    { state: 'active',
-                      role:  'admin' })
-    end
-
-    it 'returns success and sets the organization' do
-      get :edit, id: organizations(:org1).id
-
-      assert_response :success
-      assert_not_nil assigns(:organization)
-    end
-  end
-
   describe '#create' do
     before do
-      @organization = organizations(:org1)
-
-      stub_get_json(github_url("/organizations/#{@organization.github_id}"),
-                    { login: 'org1',
-                      id: @organization.github_id })
-
       stub_get_json(github_url('/user/orgs'),
                     [{ login: 'testorg1', id: 1 },
                      { login: 'testorg2', id: 2 }])
@@ -93,13 +45,18 @@ class OrganizationsControllerTest < ActionController::TestCase
                     { state: 'active',
                       role:  'admin' })
 
-      assert_difference 'Organization.count', 1 do
+      assert_difference 'Organization.count' do
         post :create, organization: { title: 'Test Org One', github_id: 1 }
       end
     end
 
     it 'will not add an organization that already exists' do
       existing_organization = organizations(:org1)
+
+      stub_get_json(github_url("/organizations/#{existing_organization.github_id}"),
+                    { login: 'org1',
+                      id: existing_organization.github_id })
+
       stub_get_json(github_url("user/memberships/orgs/#{existing_organization.title}"),
                     { state: 'active',
                       role:  'admin' })
@@ -124,6 +81,49 @@ class OrganizationsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  describe '#show' do
+    before do
+      @organization = organizations(:org1)
+
+      stub_get_json(github_url("/organizations/#{@organization.github_id}"),
+                    { login: 'org1',
+                      id: @organization.github_id })
+
+      stub_get_json(github_url('/user/memberships/orgs/org1'),
+                    { state: 'active',
+                      role:  'admin' })
+    end
+
+    it 'returns success and sets the organization' do
+      get :show, id: @organization.id
+
+      assert_response :success
+      assert_not_nil assigns(:organization)
+    end
+  end
+
+  describe '#edit' do
+    before do
+      @organization = organizations(:org1)
+
+      stub_get_json(github_url("/organizations/#{@organization.github_id}"),
+                    { login: 'org1',
+                      id: @organization.github_id })
+
+      stub_get_json(github_url('/user/memberships/orgs/org1'),
+                    { state: 'active',
+                      role:  'admin' })
+    end
+
+    it 'returns success and sets the organization' do
+      get :edit, id: organizations(:org1).id
+
+      assert_response :success
+      assert_not_nil assigns(:organization)
+    end
+  end
+
 
   describe '#destroy' do
     before do
