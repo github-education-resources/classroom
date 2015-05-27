@@ -23,7 +23,6 @@ class GithubClientTest < ActiveSupport::TestCase
     VCR.use_cassette('create_team') do
       @team_name = "Test Team #{Time.now.to_i}"
       @team = @github_client.create_team(@admin_org[:id], {name: @team_name})
-      use_vcr_placeholder_for(@team.id, "<GITHUB_TEST_ORG_TEAM_ID>")
 
       assert_requested :post, github_url("/organizations/#{@admin_org[:id]}/teams")
     end
