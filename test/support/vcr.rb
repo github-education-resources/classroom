@@ -19,3 +19,11 @@ end
 def test_github_token
   Rails.application.secrets.classroom_test_github_token || 'x' * 40
 end
+
+def use_vcr_placeholder_for(text, replacement)
+  VCR.configure do |c|
+    c.define_cassette_placeholder(replacement) do
+      text
+    end
+  end
+end
