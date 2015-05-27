@@ -1,10 +1,8 @@
-<h1>Multiple Teams</h1>
-<h2>You can either...</h2>
-
-<h4>Make a new team</h4>
-<%= render partial: 'new_invitation_team_form' %>
-
-<!-- style this later :-( -->
-<br><br><br>
-<h4>Choose an existing team</h4>
-<%= render partial: 'new_invitation_with_existing_team_form' %>
+<div class="columns">
+  <div class="one-half column">
+    <%= render partial: 'new_invitation_with_existing_team_form' %>
+  </div>
+  <div class="one-half column">
+    <%= render partial: 'new_invitation_team_form' %>
+  </div>
+</div>

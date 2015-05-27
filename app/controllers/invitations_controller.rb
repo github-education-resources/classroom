@@ -10,7 +10,9 @@ class InvitationsController < ApplicationController
       @team = current_user.github_client.team(invitation_params[:team_id])
       @invitation.title = @team.name if @invitation.title.blank?
     else
-      options = { name: invitation_params[:title], permission: 'push' }
+      options = { name: (invitation_params[:title] || 'Students'),
+                  description: 'Team Managed by Classroom',
+                  permission: 'push' }
       @team = current_user.github_client.create_team(@organization.github_id, options)
     end
 

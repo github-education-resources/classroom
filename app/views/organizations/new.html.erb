@@ -1,4 +1,4 @@
-<h1 class="page-header">Add Organization</h1>
+<h1 class="page-header">New Organization</h1>
 <% if @users_github_organizations.empty? %>
   <div class="blankslate spacious">
     <span class="mega-octicon octicon-git-commit"></span>
@@ -11,25 +11,32 @@
 <% else %>
   <div class="columns">
     <div class="one-half column centered">
-      <%= form_for @organization do |f| %>
-        <%= render 'shared/error_messages', object: f.object %>
-
-        <dl class="form">
-          <dt><%= f.label :title %></dt>
-          <dd><%= f.text_field :title, class: 'textfield' %></dd>
-        </dl>
-
-        <dl class="form">
-          <dd class="select-organization">
-            <%= select :organization, :github_id, options_for_select(@users_github_organizations) %>
-          </dd>
-        </dl>
-
-        <div class="form-actions left">
-          <%= link_to 'Cancel', dashboard_path, class: 'btn', role: 'button' %>
-          <%= f.submit 'Add Organization', class: 'btn btn-primary' %>
+      <div class="panel">
+        <div class="panel-heading">
+          <h3 class="panel-title">Select Your Organization</h3>
         </div>
-      <% end %>
+        <div class="panel-body">
+          <%= form_for @organization do |f| %>
+            <%= render 'shared/error_messages', object: f.object %>
+
+            <dl class="form">
+              <dt><%= f.label :title %></dt>
+              <dd><%= f.text_field :title, class: 'textfield' %></dd>
+            </dl>
+
+            <dl class="form">
+              <dd class="select-organization">
+                <%= select :organization, :github_id, options_for_select(@users_github_organizations) %>
+              </dd>
+            </dl>
+
+            <div class="form-actions left">
+              <%= link_to 'Cancel', dashboard_path, class: 'btn', role: 'button' %>
+              <%= f.submit 'Add Organization', class: 'btn btn-primary' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
 <% end %>
