@@ -4,6 +4,7 @@ class GithubClientTest < ActiveSupport::TestCase
   def setup
     @admin_org  = {login: 'tarebytetestorg', id: 12439714, owners_team_id: 1501923}
     @member_org = {login: 'education',       id:  6667880}
+
     @user       = {login: 'tarebyte',        id:   564113}
     @test_user  = {login: 'tarebytetest',    id: 12435329}
 
@@ -57,12 +58,21 @@ class GithubClientTest < ActiveSupport::TestCase
     end
   end
 
-  test 'team' do
+  test '#team' do
     VCR.use_cassette('team') do
       team = @github_client.team(@admin_org[:owners_team_id])
 
       assert @admin_org[:owners_team_id], team.id
       assert_requested :get, github_url("/teams/#{@admin_org[:owners_team_id]}")
+    end
+  end
+
+  test '#update_team' do
+    VCR.use_cassette('update_team') do
+      team = @github_client.team(@admin_org[:owners_team_id])
+
+      @github_client.update_team(team.id, description: 'The Owners')
+      assert_requested :patch, github_url("/teams/#{team.id}")
     end
   end
 

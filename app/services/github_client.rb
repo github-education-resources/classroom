@@ -32,6 +32,10 @@ class GithubClient
     client.team(github_id)
   end
 
+  def update_team(team_id, options)
+    client.update_team(team_id, options)
+  end
+
   def user(github_id=nil)
     client.user(github_id)
   end

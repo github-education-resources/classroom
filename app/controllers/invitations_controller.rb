@@ -9,6 +9,9 @@ class InvitationsController < ApplicationController
     if invitation_params[:team_id].present?
       @team = current_user.github_client.team(invitation_params[:team_id])
       @invitation.title = @team.name if @invitation.title.blank?
+
+      UpdateGithubTeamJob.perform_later(current_user.id, @team.id,
+                                        { description: 'Team Managed By Classroom' })
     else
       options = { name: (invitation_params[:title] || 'Students'),
                   description: 'Team Managed by Classroom',
@@ -18,6 +21,7 @@ class InvitationsController < ApplicationController
 
     if @team.id.present?
       @invitation.team_id = @team.id
+
       if @invitation.save && @organization.update_attributes(students_team_id: @invitation.team_id)
         flash[:success] = "Your team \"#{@team.name}\" and it's invitation have been created"
         redirect_to @organization
