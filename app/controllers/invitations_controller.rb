@@ -6,8 +6,12 @@ class InvitationsController < ApplicationController
     @invitation = Invitation.new(invitation_params)
     @invitation.organization = @organization
 
-    options = { name: invitation_params[:title], permission: 'push' }
-    @team = current_user.github_client.create_team(@organization.github_id, options)
+    if invitation_params[:team_id].present?
+      @team = current_user.github_client.team(invitation_params[:team_id])
+    else
+      options = { name: invitation_params[:title], permission: 'push' }
+      @team = current_user.github_client.create_team(@organization.github_id, options)
+    end
 
     if @team.id.present?
       @invitation.team_id = @team.id
@@ -63,7 +67,7 @@ class InvitationsController < ApplicationController
   end
 
   def invitation_params
-    params.require(:invitation).permit(:title)
+    params.require(:invitation).permit(:title, :team_id)
   end
 
   def set_organization

@@ -1,0 +1,17 @@
+<%= form_for @invitation, url: organization_invitations_path(@organization) do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+
+  <dl class="form">
+    <dt><%= f.label :title %></dt>
+    <dd><%= f.text_field :title, class: 'textfield' %></dd>
+  </dl>
+
+  <dl class="form">
+    <dd><label>Team</label></dd>
+    <dt><%= select :invitation, :team_id, options_for_select(@teams) %></dt>
+  </dl>
+
+  <div class="form-actions left">
+    <%= f.submit 'Use Team', class: 'btn btn-primary' %>
+  </div>
+<% end %>

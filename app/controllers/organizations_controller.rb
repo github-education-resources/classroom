@@ -53,7 +53,8 @@ class OrganizationsController < ApplicationController
 
   def invite
     @invitation = Invitation.new
-    @teams = current_user.github_client.organization_teams(@organization.github_id)
+    @teams = current_user.github_client.organization_teams(@organization.github_id).
+      collect { |team| [team.name, team.id] }
   end
 
   private
