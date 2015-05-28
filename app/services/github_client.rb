@@ -7,8 +7,8 @@ class GithubClient
     client.add_team_membership(team_id, login)
   end
 
-  def create_team(github_id, options = {})
-    client.create_team(github_id, options)
+  def create_team(org_github_id, options = {})
+    client.create_team(org_github_id, options)
   end
 
   def organization_admin?(github_id)
@@ -28,8 +28,12 @@ class GithubClient
     client.organization_teams(github_id.to_i)
   end
 
-  def team(github_id)
-    client.team(github_id)
+  def team(github_team_id)
+    begin
+      client.team(github_team_id)
+    rescue Octokit::NotFound
+      nil
+    end
   end
 
   def update_team(team_id, options)

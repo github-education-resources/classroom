@@ -7,11 +7,6 @@
       <%= render 'shared/error_messages', object: f.object %>
 
       <dl class="form">
-        <dt><label>Team Name</label></dt>
-        <dd><%= f.text_field :title, class: 'textfield' %></dd>
-      </dl>
-
-      <dl class="form">
         <dd><label>Team</label></dd>
         <dt><%= select :invitation, :team_id, options_for_select(@teams) %></dt>
       </dl>

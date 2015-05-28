@@ -3,34 +3,22 @@ class InvitationsController < ApplicationController
   before_action :set_organization, only: [:create]
 
   def create
-    @invitation = Invitation.new(invitation_params)
-    @invitation.organization = @organization
+    @organization = Organization.find(params[:organization_id])
+    @team = current_user.github_client.team(invitation_params[:team_id]) ||
+      current_user.github_client.create_team(@organization.github_id,
+                                             {name: invitation_params[:title], permission: 'push'})
 
-    if invitation_params[:team_id].present?
-      @team = current_user.github_client.team(invitation_params[:team_id])
-      @invitation.title = @team.name if @invitation.title.blank?
+    @invitation = Invitation.new(title:           @team.name,
+                                 team_id:         @team.id,
+                                 organization_id: @organization.id)
 
-      UpdateGithubTeamJob.perform_later(current_user.id, @team.id,
-                                        { description: 'Team Managed By Classroom' })
+    if @invitation.save && @organization.update_attributes(students_team_id: @invitation.team_id)
+      UpdateGithubTeamJob.perform_later(current_user, @team.id, {description: 'Managed by Classroom'})
+
+      flash[:success] = "Your team \"#{@team.name}\" and its invitation are ready to go!"
+      redirect_to @organization
     else
-      options = { name: (invitation_params[:title] || 'Students'),
-                  description: 'Team Managed by Classroom',
-                  permission: 'push' }
-      @team = current_user.github_client.create_team(@organization.github_id, options)
-    end
-
-    if @team.id.present?
-      @invitation.team_id = @team.id
-
-      if @invitation.save && @organization.update_attributes(students_team_id: @invitation.team_id)
-        flash[:success] = "Your team \"#{@team.name}\" and it's invitation have been created"
-        redirect_to @organization
-      else
-        render 'organizations/invite'
-      end
-    else
-      flash[:error] = 'Team failed to be created please try again'
-      redirect_to invite_organization_path(@organization)
+      render 'organizations/invite'
     end
   end
 
