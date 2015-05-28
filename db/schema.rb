@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150520225757) do
+ActiveRecord::Schema.define(version: 20150520171254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 20150520225757) do
     t.integer  "team_id",         null: false
     t.string   "key",             null: false
     t.integer  "organization_id"
+    t.integer  "user_id"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
   end
@@ -28,16 +29,18 @@ ActiveRecord::Schema.define(version: 20150520225757) do
   add_index "invitations", ["key"], name: "index_invitations_on_key", unique: true, using: :btree
   add_index "invitations", ["organization_id"], name: "index_invitations_on_organization_id", using: :btree
   add_index "invitations", ["team_id"], name: "index_invitations_on_team_id", unique: true, using: :btree
+  add_index "invitations", ["user_id"], name: "index_invitations_on_user_id", using: :btree
 
   create_table "organizations", force: :cascade do |t|
     t.integer  "github_id",        null: false
     t.string   "title",            null: false
+    t.integer  "students_team_id"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
-    t.integer  "students_team_id"
   end
 
   add_index "organizations", ["github_id"], name: "index_organizations_on_github_id", unique: true, using: :btree
+  add_index "organizations", ["title"], name: "index_organizations_on_title", unique: true, using: :btree
 
   create_table "organizations_users", id: false, force: :cascade do |t|
     t.integer "user_id"
