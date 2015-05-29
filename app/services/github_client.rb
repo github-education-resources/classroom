@@ -8,14 +8,18 @@ class GithubClient
   end
 
   def create_team(org_github_id, options = {})
-    client.create_team(org_github_id, options)
+    begin
+      client.create_team(org_github_id, options)
+    rescue
+      nil
+    end
   end
 
   def organization_admin?(github_id)
     organization_login = client.organization(github_id.to_i).login
     begin
       client.organization_membership(organization_login).role == "admin"
-    rescue Octokit::NotFound
+    rescue
       false
     end
   end
@@ -31,7 +35,7 @@ class GithubClient
   def team(github_team_id)
     begin
       client.team(github_team_id)
-    rescue Octokit::NotFound
+    rescue
       nil
     end
   end

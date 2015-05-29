@@ -3,16 +3,4 @@ one:
   team_id: 1024
   key: <%= SecureRandom.hex(16) %>
   organization: org1
-
-two:
-  title: 'Students'
-  team_id: 2048
-  key: <%= SecureRandom.hex(16) %>
-  organization: org2
-
-
-two:
-  title: 'Students'
-  team_id: 3072
-  key: <%= SecureRandom.hex(16) %>
-  organization: org3
+  user: tobias

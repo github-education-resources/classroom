@@ -36,5 +36,8 @@ module Classroom
     # Set ActiveJob adapter
     # config.active_job.queue_adapter     = :sidekiq
     # config.active_job.queue_name_prefix = Rails.env
+
+    # Add other models to autoload path
+    config.autoload_paths += Dir[Rails.root.join('app', 'models', '**', '*.rb')]
   end
 end

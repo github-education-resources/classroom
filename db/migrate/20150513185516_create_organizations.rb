@@ -4,8 +4,6 @@ class CreateOrganizations < ActiveRecord::Migration
       t.integer :github_id,        null: false
       t.string  :title,            null: false
 
-      t.integer :students_team_id
-
       t.timestamps null: false
     end
 

@@ -32,11 +32,10 @@ ActiveRecord::Schema.define(version: 20150520171254) do
   add_index "invitations", ["user_id"], name: "index_invitations_on_user_id", using: :btree
 
   create_table "organizations", force: :cascade do |t|
-    t.integer  "github_id",        null: false
-    t.string   "title",            null: false
-    t.integer  "students_team_id"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.integer  "github_id",  null: false
+    t.string   "title",      null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_index "organizations", ["github_id"], name: "index_organizations_on_github_id", unique: true, using: :btree

@@ -1,33 +1,15 @@
 class Inviter
-  def initialize(user, organization, team_id, title)
-    @user = user
+  def initialize(creator, organization, team_id, team_title)
+    @creator      = creator
     @organization = organization
-    @team_id = team_id
-    @title = title
+    @team_id      = team_id
+    @team_title   = team_title
   end
 
   def create_invitation
-    team = find_or_create_github_team
-    invitation = @organization.build_invitation(title:   team.name,
-                                                team_id: team.id,
-                                                user_id: @user.id)
-  end
+    github_team = Github::Team.new(@creator.github_client, @organization.github_id)
+    team        = github_team.find_or_create_team(@team_id, @team_title)
 
-private
-
-  def find_or_create_github_team
-    if team = @user.github_client.team(@team_id)
-      team
-    else
-      begin
-        @user.github_client.create_team(@organization.github_id, {name: @title, permission: 'push'})
-      rescue
-        NullTeam.new
-      end
-    end
-  end
-
-  class NullTeam
-    attr_reader :name, :id
+    @organization.build_invitation(team_id: team.id, title: team.name, user_id: @creator.id)
   end
 end
