@@ -3,28 +3,20 @@ class InvitationsController < ApplicationController
   before_action :set_organization,                        only: [:create]
 
   def create
-    @team = current_user.github_client.team(invitation_params[:team_id]) ||
-      current_user.github_client.create_team(@organization.github_id,
-                                             {name: invitation_params[:title], permission: 'push'})
+    inviter = Inviter.new(current_user, @organization, invitation_params[:team_id], invitation_params[:title])
+    @invitation = inviter.create_invitation
 
-    @invitation = Invitation.new(title:           @team.name,
-                                 team_id:         @team.id,
-                                 organization_id: @organization.id,
-                                 user_id:         current_user.id)
-
-    if @invitation.save && @organization.update_attributes(students_team_id: @invitation.team_id)
-      UpdateGithubTeamJob.perform_later(current_user, @team.id, {description: 'Managed by Classroom'})
-
+    if @invitation.save
       flash[:success] = "Your team \"#{@team.name}\" and its invitation are ready to go!"
       redirect_to @organization
     else
-      render 'organizations/invite'
+      flash[:error] = "Invitation failed because team already exists"
+      redirect_to invite_organization_path(params[:organization_id])
     end
   end
 
   def show
-    @invitation   = Invitation.find_by_key!(params[:id])
-    @organization = Organization.find(@invitation.organization_id)
+    @invitation = Invitation.find_by_key!(params[:id])
 
     if @invitation.redeem(current_user.github_client.user)
       render text: 'Success!', status: 200
