@@ -1,5 +1,4 @@
 tobias:
-  id:            1
   uid:           10
   login:         tobias
   email:         tobiaslovesgithub@gmail.com
@@ -8,7 +7,6 @@ tobias:
   organizations: org1
 
 aaron:
-  id:            2
   uid:           20
   login:         aaron
   email:         aaronlovesgithub@gmail.com

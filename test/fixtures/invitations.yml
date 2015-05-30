@@ -1,6 +1,7 @@
 one:
+  id: 8675309
   title: 'Students'
   team_id: 1024
   key: <%= SecureRandom.hex(16) %>
-  organization: org1
-  user: tobias
+  organization: org2
+  user: aaron
