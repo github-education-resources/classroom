@@ -3,7 +3,17 @@ require 'test_helper'
 class InvitationsControllerTest < ActionController::TestCase
   before do
     @controller = InvitationsController.new
-    @invitation   = invitations(:one)
+    @invitation = invitations(:one)
+  end
+
+  describe '#create' do
+    it 'will redirect back to the organization page if there is an invitation' do
+
+    end
+
+    it 'will create the invitation if one does not exist' do
+
+    end
   end
 
   describe '#show' do
@@ -16,16 +26,16 @@ class InvitationsControllerTest < ActionController::TestCase
 
     describe 'authenticated request' do
       before do
-        @organization = @invitation.organization
-        @user = users(:tobias)
+        @organization     = @invitation.organization
+        @user             = @invitation.user
         session[:user_id] = @user.id
       end
 
       describe 'successful invitation' do
         it 'will invite the user to the organizations team' do
           stub_json_request(:get, github_url("/organizations/#{@organization.github_id}"),
-                        { login: @organization.title,
-                          id: @organization.github_id } )
+                            { login: @organization.title,
+                              id: @organization.github_id } )
 
           stub_json_request(:get, github_url("/user/memberships/orgs/#{@organization.title}"),
                             { state: 'active',
@@ -47,25 +57,11 @@ class InvitationsControllerTest < ActionController::TestCase
       end
 
       describe 'unsuccessful invitation' do
-        # it 'will fail if the invitation that does not exist' do
-        #   get :show, { id: 'foobar' }
-        #
-        #   assert 'Invitation does not exist :-(', @response.body
-        #   assert 503, @response.status
-        # end
-
-        # it 'will fail if classroom does not have a vaild admin' do
-        #   stub_json_request(:get, github_url("/organizations/#{@organization.github_id}"),
-        #                     { login: @organization.title,
-        #                       id: @organization.github_id } )
-        #
-        #   stub_json_request(:get, github_url("/user/memberships/orgs/#{@organization.title}"),
-        #                     { state: 'active',
-        #                       role:  'member' })
-        #
-        #   assert 'Failed :-(', @response.body
-        #   assert 503, @response.status
-        # end
+        it 'will raise ActiveRecord::RecordNotFound if the invitation does not exist' do
+          assert_raises(ActiveRecord::RecordNotFound) do
+            get :show, { id: 'foobar' }
+          end
+        end
       end
     end
   end

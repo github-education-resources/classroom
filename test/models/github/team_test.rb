@@ -3,8 +3,7 @@ require 'test_helper'
 class Github::TeamTest < ActiveSupport::TestCase
   def setup
     user         = users(:tobias)
-    organization = users.organizations.first
-
+    organization = user.organizations.first
     @github_team = Github::Team.new(user.github_client, organization.github_id)
   end
 
