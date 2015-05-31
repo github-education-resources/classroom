@@ -3,13 +3,15 @@ require 'test_helper'
 class OrganizationsControllerTest < ActionController::TestCase
   before do
     @controller = OrganizationsController.new
+
+    @user             = create(:user_with_organizations)
+    session[:user_id] = @user.id
+
     @org_login  = 'testorg'
   end
 
   describe '#new' do
     before do
-      session[:user_id] = create(:user).id
-
       @testorg1 = { login: 'testorg1', id: 1 }
       @testorg2 = { login: 'testorg2', id: 2 }
 
@@ -36,9 +38,6 @@ class OrganizationsControllerTest < ActionController::TestCase
 
   describe '#create' do
     before do
-      @user = create(:user_with_organizations)
-      session[:user_id] = create(:user).id
-
       @testorg1 = { login: 'testorg1', id: 1 }
       @testorg2 = { login: 'testorg2', id: 2 }
 
@@ -84,7 +83,6 @@ class OrganizationsControllerTest < ActionController::TestCase
 
     it 'will only add the organization if the user is an administrator' do
       github_id = 1
-      title     = 'Test Org'
 
       stub_json_request(:get,
                         github_url("/organizations/#{github_id}"),
@@ -95,17 +93,14 @@ class OrganizationsControllerTest < ActionController::TestCase
                         { state: 'active', role: 'member' })
 
       assert_no_difference 'Organization.count' do
-        post :create, organization: { title: title, github_id: github_id }
+        post :create, organization: { title: @org_login, github_id: github_id }
       end
     end
   end
 
   describe '#show' do
     before do
-      @user         = create(:user_with_organizations)
       @organization = @user.organizations.first
-
-      session[:user_id] = @user.id
 
       stub_json_request(:get,
                         github_url("/organizations/#{@organization.github_id}"),
@@ -116,31 +111,17 @@ class OrganizationsControllerTest < ActionController::TestCase
                         { state: 'active', role: 'admin' })
     end
 
-    it 'it redirects to the invite page if the invitation is not set' do
+    it 'returns success and sets the organization' do
       get :show, id: @organization.id
 
-      assert_redirected_to invite_organization_path(@organization)
+      assert_response :success
       assert_not_nil assigns(:organization)
-    end
-
-    it 'sets the invitation if present' do
-      invitation   = create(:invitation)
-      organization = invitation.organization
-
-      session[:user_id] = invitation.user.id
-
-      get :show, id: @organization.id
     end
   end
 
   describe '#edit' do
     before do
-      invitation    = create(:invitation)
-
-      @user         = invitation.user
-      @organization = invitation.organization
-
-      session[:user_id] = @user.id
+      @organization = @user.organizations.first
 
       stub_json_request(:get,
                         github_url("/organizations/#{@organization.github_id}"),
@@ -161,11 +142,7 @@ class OrganizationsControllerTest < ActionController::TestCase
 
   describe '#destroy' do
     before do
-      invitation    = create(:invitation)
-      @organization = invitation.organization
-      @user         = invitation.user
-
-      session[:user_id] = @user.id
+      @organization = @user.organizations.first
 
       stub_json_request(:get,
                         github_url("/organizations/#{@organization.github_id}"),
