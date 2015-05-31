@@ -1,3 +1,3 @@
-class Github::Null::Team
+class NullGitHubTeam
   attr_reader :id, :name
 end

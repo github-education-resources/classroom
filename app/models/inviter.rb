@@ -7,7 +7,7 @@ class Inviter
   end
 
   def create_invitation
-    github_team = Github::Team.new(@creator.github_client, @organization.github_id)
+    github_team = GitHubTeam.new(@creator.github_client, @organization.github_id)
     team        = github_team.find_or_create_team(@team_id, @team_title)
 
     @organization.build_invitation(team_id: team.id, title: team.name, user_id: @creator.id)
