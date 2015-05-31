@@ -1,7 +1,6 @@
 class InvitationsController < ApplicationController
   before_action :authenticate_with_pre_login_destination,    only: [:show]
-  before_action :set_organization,                           only: [:create]
-  before_action :ensure_organization_invitation_not_present, only: [:create]
+  before_action :set_organization,                           only: [:create, :destroy]
 
   def create
     inviter     = Inviter.new(current_user, @organization, invitation_params[:team_id], invitation_params[:title])
@@ -26,18 +25,22 @@ class InvitationsController < ApplicationController
     end
   end
 
+  def destroy
+    @invitation   = @organization.invitation
+    flash_message = "Invitation \"#{@Invitation.title}\" was destroyed"
+
+    @invitation.destroy
+
+    flash[:success] = flash_message
+    redirect_to organization_path(@organization)
+  end
+
   private
 
   def authenticate_with_pre_login_destination
     unless logged_in?
       session[:pre_login_destination] = "#{request.base_url}#{request.path}"
       redirect_to login_path
-    end
-  end
-
-  def ensure_organization_invitation_not_present
-    if @organization.invitation.present?
-      redirect_to @organization, notice: 'Your invitation has already been setup'
     end
   end
 

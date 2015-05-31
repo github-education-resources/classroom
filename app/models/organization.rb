@@ -6,4 +6,8 @@ class Organization < ActiveRecord::Base
   validates_uniqueness_of :github_id, message: 'organization is already in use'
 
   validates_presence_of   :title
+
+  def invitation
+    super || NullInvitation.new
+  end
 end

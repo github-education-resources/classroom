@@ -6,8 +6,6 @@ class OrganizationsController < ApplicationController
   before_action :set_organization,               except: [:new, :create]
   before_action :set_users_github_organizations, only:   [:new, :create]
 
-  before_action :ensure_invitation_set,          only:   [:show, :edit]
-
   def new
     @organization = Organization.new
   end
@@ -29,7 +27,6 @@ class OrganizationsController < ApplicationController
   end
 
   def show
-    @invitation = @organization.invitation
   end
 
   def edit
@@ -45,10 +42,10 @@ class OrganizationsController < ApplicationController
   end
 
   def destroy
-    title = @organization.title
+    flash_message = "Organization \"#{@organization.title}\" was removed"
     @organization.destroy
 
-    flash[:success] = "Organization \"#{title}\" was removed"
+    flash[:success] = flash_message
     redirect_to dashboard_path
   end
 
@@ -62,14 +59,9 @@ class OrganizationsController < ApplicationController
 
   def ensure_organization_admin
     github_id = Organization.find(params[:id]).github_id
+
     unless current_user.github_client.organization_admin?(github_id)
       render text: 'Unauthorized', status: 401
-    end
-  end
-
-  def ensure_invitation_set
-    unless @organization.invitation.present?
-      redirect_to invite_organization_path(@organization)
     end
   end
 
