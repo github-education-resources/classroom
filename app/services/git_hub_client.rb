@@ -1,4 +1,4 @@
-class GithubClient
+class GitHubClient
   def initialize(token)
     @token = token
   end

@@ -2,8 +2,8 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :organizations
   has_many :invitations, dependent: :destroy
 
-  validates_presence_of   :uid, :login, :email, :token
-  validates_uniqueness_of :uid, :login, :email, :token
+  validates_presence_of   :uid, :token
+  validates_uniqueness_of :uid, :token
 
   def self.create_from_auth_hash(hash)
     create!(AuthHash.new(hash).user_info)
@@ -19,6 +19,6 @@ class User < ActiveRecord::Base
   end
 
   def github_client
-    @github_client ||= GithubClient.new(token)
+    @github_client ||= GitHubClient.new(token)
   end
 end

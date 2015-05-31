@@ -2,7 +2,7 @@ require 'test_helper'
 
 class InvitationTest < ActiveSupport::TestCase
   def setup
-    @invitation = invitations(:one)
+    @invitation = create(:invitation)
   end
 
   test '#accept_invitation' do

@@ -2,7 +2,7 @@ require 'test_helper'
 
 class GitHubTeamTest < ActiveSupport::TestCase
   def setup
-    user         = users(:tobias)
+    user         = create(:user_with_organizations)
     organization = user.organizations.first
     @github_team = GitHubTeam.new(user.github_client, organization.github_id)
   end

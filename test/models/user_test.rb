@@ -3,7 +3,7 @@ require 'test_helper'
 class UserTest < ActiveSupport::TestCase
   def setup
     @github_omniauth_hash = OmniAuth.config.mock_auth[:github]
-    @user                 = users(:tobias)
+    @user                 = create(:user)
   end
 
   test '#create_from_auth_hash creates a valid user' do

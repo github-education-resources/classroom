@@ -10,9 +10,6 @@ class AuthHash
   def user_info
     {
       uid:      uid,
-      login:    nickname,
-      email:    email,
-      name:     name,
       token:    token
     }
   end
@@ -23,18 +20,6 @@ class AuthHash
 
   def uid
     user_hash.fetch('uid')
-  end
-
-  def nickname
-    info.fetch('nickname')
-  end
-
-  def email
-    info.fetch('email', nil)
-  end
-
-  def name
-    raw_info.fetch('name', nil)
   end
 
   def token

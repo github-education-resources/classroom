@@ -3,7 +3,7 @@ require 'test_helper'
 class UsersControllerTest < ActionController::TestCase
   before do
     @controller       = UsersController.new
-    session[:user_id] = users(:tobias).id
+    session[:user_id] = create(:user).id
   end
 
   describe '#show' do

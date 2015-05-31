@@ -3,7 +3,8 @@ require 'test_helper'
 class InvitationsControllerTest < ActionController::TestCase
   before do
     @controller = InvitationsController.new
-    @invitation = invitations(:one)
+    @invitation = create(:invitation)
+    @org_login      = 'testorg'
   end
 
   describe '#create' do
@@ -32,27 +33,31 @@ class InvitationsControllerTest < ActionController::TestCase
       end
 
       describe 'successful invitation' do
+
         it 'will invite the user to the organizations team' do
-          stub_json_request(:get, github_url("/organizations/#{@organization.github_id}"),
-                            { login: @organization.title,
-                              id: @organization.github_id } )
+          user_login = 'user'
 
-          stub_json_request(:get, github_url("/user/memberships/orgs/#{@organization.title}"),
-                            { state: 'active',
-                              role:  'admin' })
+          stub_json_request(:get,
+                            github_url("/organizations/#{@organization.github_id}"),
+                            { login: @organization.title, id: @organization.github_id } )
 
-          stub_json_request(:get, github_url('/user'),
-                            { login: @user.login })
+          stub_json_request(:get,
+                            github_url("/user/memberships/orgs/#{@org_login}"),
+                            { state: 'active', role: 'admin' })
 
-          memberships_url = github_url("/teams/#{@invitation.team_id}/memberships/#{@user.login}")
-          stub_json_request(:put, memberships_url,
-                            { url: memberships_url,
-                              state: 'pending' })
+          stub_json_request(:get,
+                            github_url('/user'),
+                            { login: user_login })
+
+          memberships_url = github_url("/teams/#{@invitation.team_id}/memberships/#{user_login}")
+          stub_json_request(:put,
+                            memberships_url,
+                            { url: memberships_url, state: 'pending' })
 
           get :show, { id: @invitation.key }
 
           assert 'Success!', @response.body
-          assert 200,       @response.status
+          assert 200,        @response.status
         end
       end
 

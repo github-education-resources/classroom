@@ -2,7 +2,7 @@ require 'test_helper'
 
 class InviterTest < ActiveSupport::TestCase
   def setup
-    @user         = users(:tobias)
+    @user         = create(:user_with_organizations)
     @organization = @user.organizations.first
   end
 
