@@ -27,7 +27,7 @@ class InvitationsController < ApplicationController
 
   def destroy
     @invitation   = @organization.invitation
-    flash_message = "Invitation \"#{@Invitation.title}\" was destroyed"
+    flash_message = "Invitation \"#{@invitation.title}\" was destroyed"
 
     @invitation.destroy
 
