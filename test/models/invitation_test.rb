@@ -6,7 +6,15 @@ class InvitationTest < ActiveSupport::TestCase
   end
 
   test '#accept_invitation' do
-    # Still Todo
+    team_id    = 43
+    other_user = { login: 'otheruser', id: 42 }
+
+    stub_github_user(other_user[:id], other_user)
+    stub_add_team_membership(@invitation.team_id, other_user[:login], { state: 'pending' })
+
+    @invitation.accept_invitation(other_user)
+
+    assert_requested :put, github_url("/teams/#{@invitation.team_id}/memberships/#{other_user[:login]}")
   end
 
   test '#to_param' do

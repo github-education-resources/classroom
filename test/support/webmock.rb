@@ -1,5 +1,17 @@
 require 'webmock/minitest'
 
+# From Octokit.rb
+# https://github.com/octokit/octokit.rb/blob/master/spec/helper.rb
+def github_url(url)
+  return url if url =~ /^http/
+
+  url = File.join(Octokit.api_endpoint, url)
+  uri = Addressable::URI.parse(url)
+  uri.path.gsub!("v3//", "v3/")
+
+  uri.to_s
+end
+
 def stub_add_team_membership(team_id, user_login, expected_resp)
   url = github_url("/teams/#{team_id}/memberships/#{user_login}")
   stub_put_json(url, expected_resp)
@@ -38,18 +50,6 @@ def stub_users_github_organization_membership(org_login, expected_resp)
 end
 
 private
-
-# From Octokit.rb
-# https://github.com/octokit/octokit.rb/blob/master/spec/helper.rb
-def github_url(url)
-  return url if url =~ /^http/
-
-  url = File.join(Octokit.api_endpoint, url)
-  uri = Addressable::URI.parse(url)
-  uri.path.gsub!("v3//", "v3/")
-
-  uri.to_s
-end
 
 def stub_get_json(url, expected_resp)
   stub_request(:get, url).

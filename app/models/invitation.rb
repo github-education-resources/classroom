@@ -8,7 +8,7 @@ class Invitation < ActiveRecord::Base
   after_initialize :assign_key
 
   def accept_invitation(other_user)
-    user.github_client.add_team_membership(team_id, other_user.login)
+    user.github_client.add_team_membership(team_id, other_user[:login])
   end
 
   def to_param
