@@ -3,6 +3,6 @@
   "dependencies": {
     "jquery":     "~1.11.2",
     "jquery-ujs": " ~1.0.3",
-    "primer-css": " ~2.2.0"
+    "primer-css": " ~2.2.1"
   }
 }
