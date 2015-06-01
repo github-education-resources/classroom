@@ -9,9 +9,7 @@ class InviterTest < ActiveSupport::TestCase
   end
 
   test '#create_invitation with an existing team returns a valid invitation' do
-    stub_json_request(:get,
-                      github_url("/teams/#{@team[:id]}"),
-                      @team)
+    stub_github_team(@team[:id], @team)
 
     inviter    = Inviter.new(@user, @organization, @team[:id], @team[:name])
     invitation = inviter.create_invitation
@@ -20,14 +18,9 @@ class InviterTest < ActiveSupport::TestCase
   end
 
   test '#create_invitation with new team parameters returns a valid invitation' do
-    stub_json_request(:get,
-                      github_url("/teams/"),
-                      nil)
+    stub_github_team(nil, nil)
 
-    stub_json_request(:post,
-                      github_url("/organizations/#{@organization.github_id}/teams"),
-                      { name: @team[:name], permission: 'push'}.to_json,
-                      @team)
+    stub_create_github_team(@organization.github_id, { name: @team[:name], permission: 'push' }, @team)
 
     inviter    = Inviter.new(@user, @organization, nil, @team[:name])
     invitation = inviter.create_invitation

@@ -14,12 +14,11 @@ class InvitationsControllerTest < ActionController::TestCase
       @organization        = @user.organizations.first
       new_invitation_attrs = attributes_for(:invitation)
 
-      stub_json_request(:get, github_url("/teams/#{new_invitation_attrs[:team_id]}"), nil)
-      stub_json_request(:post,
-                        github_url("/organizations/#{@organization.github_id}/teams"),
-                        { name: new_invitation_attrs[:title], permission: 'push'}.to_json,
-                        { id: new_invitation_attrs[:team_id], name: new_invitation_attrs[:title] })
+      stub_github_team(new_invitation_attrs[:team_id], nil)
 
+      stub_create_github_team(@organization.github_id,
+                              { name: new_invitation_attrs[:title], permission: 'push'},
+                              { id: new_invitation_attrs[:team_id], name: new_invitation_attrs[:title] })
 
       assert_difference 'Invitation.count' do
         post :create,
@@ -38,11 +37,11 @@ class InvitationsControllerTest < ActionController::TestCase
 
       new_invitation_attrs = attributes_for(:invitation)
 
-      stub_json_request(:get, github_url("/teams/#{new_invitation_attrs[:team_id]}"), nil)
-      stub_json_request(:post,
-                        github_url("/organizations/#{@organization.github_id}/teams"),
-                        { name: new_invitation_attrs[:title], permission: 'push'}.to_json,
-                        { id: new_invitation_attrs[:team_id], name: new_invitation_attrs[:title] })
+      stub_github_team(new_invitation_attrs[:team_id], nil)
+
+      stub_create_github_team(@organization.github_id,
+                              { name: new_invitation_attrs[:title], permission: 'push'},
+                              { id: new_invitation_attrs[:team_id], name: new_invitation_attrs[:title] })
 
       assert_no_difference 'Invitation.count' do
         post :create,
@@ -78,22 +77,13 @@ class InvitationsControllerTest < ActionController::TestCase
         it 'will invite the user to the organizations team' do
           user_login = 'user'
 
-          stub_json_request(:get,
-                            github_url("/organizations/#{@organization.github_id}"),
-                            { login: @organization.title, id: @organization.github_id } )
+          stub_github_organization(@organization.github_id, { login: @organization.title, id: @organization.github_id })
 
-          stub_json_request(:get,
-                            github_url("/user/memberships/orgs/#{@org_login}"),
-                            { state: 'active', role: 'admin' })
+          stub_users_github_organization_membership(user_login, { login: @organization.title, id: @organization.github_id })
 
-          stub_json_request(:get,
-                            github_url('/user'),
-                            { login: user_login })
+          stub_github_user(nil, { login: user_login })
 
-          memberships_url = github_url("/teams/#{@invitation.team_id}/memberships/#{user_login}")
-          stub_json_request(:put,
-                            memberships_url,
-                            { url: memberships_url, state: 'pending' })
+          stub_add_team_membership(@invitation.team_id, user_login, {  state: 'pending' })
 
           get :show, { id: @invitation.key }
 

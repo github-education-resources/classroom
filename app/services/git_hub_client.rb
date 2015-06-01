@@ -15,17 +15,21 @@ class GitHubClient
     end
   end
 
+  def organization(github_id)
+    client.organization(github_id)
+  end
+
   def organization_admin?(github_id)
     organization_login = client.organization(github_id.to_i).login
     begin
-      client.organization_membership(organization_login).role == "admin"
+      organization_membership(organization_login).role == "admin"
     rescue
       false
     end
   end
 
-  def organization(github_id)
-    client.organization(github_id)
+  def organization_membership(github_login)
+    client.organization_membership(github_login)
   end
 
   def organization_teams(github_id)

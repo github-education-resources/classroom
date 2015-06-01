@@ -29,6 +29,15 @@ class GitHubClientTest < ActiveSupport::TestCase
     end
   end
 
+  test '#organization' do
+    VCR.use_cassette('organization') do
+      organization = @github_client.organization(@member_org[:id])
+
+      assert @member_org[:login], organization.login
+      assert_requested :get, github_url("/organizations/#{@member_org[:id]}")
+    end
+  end
+
   test '#organization_admin?' do
     VCR.use_cassette('admin_organization_membership') do
       assert @github_client.organization_admin?(@admin_org[:id])
@@ -41,20 +50,18 @@ class GitHubClientTest < ActiveSupport::TestCase
     end
   end
 
-  test '#organization' do
-    VCR.use_cassette('organization') do
-      organization = @github_client.organization(@member_org[:id])
-
-      assert @member_org[:login], organization.login
-      assert_requested :get, github_url("/organizations/#{@member_org[:id]}")
-    end
-  end
-
   test '#organization_teams' do
     VCR.use_cassette('organization_teams') do
       teams = @github_client.organization_teams(@member_org[:id])
       assert Array, teams.class
       assert_requested :get, github_url("/organizations/#{@member_org[:id]}/teams?per_page=100")
+    end
+  end
+
+  test '#organization_membership' do
+    VCR.use_cassette('organization_membership') do
+      membership = @github_client.organization_membership(@member_org[:login])
+      assert_requested :get, github_url("/user/memberships/orgs/#{@member_org[:login]}")
     end
   end
 
