@@ -6,9 +6,15 @@ class PagesControllerTest < ActionController::TestCase
   end
 
   describe '#home' do
-    test 'returns success' do
+    it 'returns success' do
       get :home
       assert_response :success
+    end
+
+    it 'redirects to the dashboard_path if a user is logged in' do
+      session[:user_id] = users(:tobias).id
+      get :home
+      assert_redirected_to dashboard_path
     end
   end
 end
