@@ -12,7 +12,7 @@ class PagesControllerTest < ActionController::TestCase
     end
 
     it 'redirects to the dashboard_path if a user is logged in' do
-      session[:user_id] = users(:tobias).id
+      session[:user_id] = create(:user).id
       get :home
       assert_redirected_to dashboard_path
     end
