@@ -1,6 +1,5 @@
 {
   "name": "primer-css",
-  "version": "2.1.0",
   "ignore": [
     "docs/",
     ".gitignore",
@@ -19,13 +18,14 @@
     "primer-markdown": "https://github.com/primer/markdown.git#2.1.7"
   },
   "homepage": "https://github.com/primer/primer",
-  "_release": "2.1.0",
+  "version": "2.2.0",
+  "_release": "2.2.0",
   "_resolution": {
     "type": "version",
-    "tag": "v2.1.0",
-    "commit": "455797ccbedbec4a672bd9f290d568fdae036197"
+    "tag": "v2.2.0",
+    "commit": "11e61aec1274bc0db151a5d995a31022f1a4f166"
   },
   "_source": "git://github.com/primer/primer.git",
-  "_target": "~2.1.0",
+  "_target": "~2.2.0",
   "_originalSource": "primer-css"
 }

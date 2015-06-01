@@ -28,15 +28,8 @@ Download the [latest release](https://github.com/primer/primer/releases/latest) 
 
 ### Bower
 
-Install Primer with Bower by adding `primer-css` to your app's `bower.json` (in `github/github`, this is `vendor/assets/bower.json`). Replace `x.x.x` with the latest version number.
-
-``` json
-{
-  "name": "myapp",
-  "dependencies": {
-    "primer-css": "0.x.x"
-  }
-}
+```
+$ bower install primer-css --save
 ```
 
 ### Things to know
@@ -116,7 +109,7 @@ Within `bower.json`, update to a new release by changing the version number that
 {
   "name": "myapp",
   "dependencies": {
-    "primer-css": "0.x.x"
+    "primer-css": "x.x.x"
   }
 }
 ```
@@ -136,12 +129,12 @@ Development of Primer happens in our primary branch, `master`. For stable versio
 
 ## Contributing
 
-By contributing to Primer, you agree to the terms presented in our [CLA](CLA.md). *More information will be provided here soon.*
+By contributing to Primer, you agree to the terms presented in [this license agreement](https://cla.github.com/). *More information will be provided here soon.*
 
 When contributing changes to Primer, be sure to do the following steps when opening a pull request:
 
 1. Bump the version number in `bower.json` (it's purely placebo right now, but it's good habit) and `package.json`.
-2. Run `grunt css` and commit the changes. This compiles the SCSS to CSS so we can do basic analysis on the number of selectors, file size, etc.
+2. Run `grunt` and commit the changes. This compiles the SCSS to CSS so we can do basic analysis on the number of selectors, file size, etc.
 
 In addition, please read through our [contributing guidelines](https://github.com/primer/primer/blob/master/CONTRIBUTING.md). Included are directions for opening issues, coding standards, and notes on development.
 
