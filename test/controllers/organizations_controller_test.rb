@@ -72,7 +72,7 @@ class OrganizationsControllerTest < ActionController::TestCase
                         { id: existing_organization.github_id })
 
       stub_json_request(:get,
-                        github_url("/user/memberships/orgs/#{@org_login}"),
+                        github_url("/user/memberships/orgs/"),
                         { state: 'active', role: 'admin' })
 
       assert_no_difference 'Organization.count' do

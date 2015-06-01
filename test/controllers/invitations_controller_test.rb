@@ -3,21 +3,61 @@ require 'test_helper'
 class InvitationsControllerTest < ActionController::TestCase
   before do
     @controller = InvitationsController.new
-    @invitation = create(:invitation)
-    @org_login      = 'testorg'
+    @org_login  = 'testorg'
   end
 
   describe '#create' do
-    it 'will redirect back to the organization page if there is an invitation' do
+    it 'will create the invitation if one does not exist' do
+      @user             = create(:user_with_organizations)
+      session[:user_id] = @user.id
 
+      @organization        = @user.organizations.first
+      new_invitation_attrs = attributes_for(:invitation)
+
+      stub_json_request(:get, github_url("/teams/#{new_invitation_attrs[:team_id]}"), nil)
+      stub_json_request(:post,
+                        github_url("/organizations/#{@organization.github_id}/teams"),
+                        { name: new_invitation_attrs[:title], permission: 'push'}.to_json,
+                        { id: new_invitation_attrs[:team_id], name: new_invitation_attrs[:title] })
+
+
+      assert_difference 'Invitation.count' do
+        post :create,
+          organization_id: @organization.id,
+          invitation:  { title:   new_invitation_attrs[:title],
+                         team_id: new_invitation_attrs[:team_id] }
+      end
     end
 
-    it 'will create the invitation if one does not exist' do
+    it 'will override the organizations invitation if it already exists' do
+      @invitation   = create(:invitation)
+      @organization = @invitation.organization
 
+      @user             = @invitation.user
+      session[:user_id] = @user.id
+
+      new_invitation_attrs = attributes_for(:invitation)
+
+      stub_json_request(:get, github_url("/teams/#{new_invitation_attrs[:team_id]}"), nil)
+      stub_json_request(:post,
+                        github_url("/organizations/#{@organization.github_id}/teams"),
+                        { name: new_invitation_attrs[:title], permission: 'push'}.to_json,
+                        { id: new_invitation_attrs[:team_id], name: new_invitation_attrs[:title] })
+
+      assert_no_difference 'Invitation.count' do
+        post :create,
+          organization_id: @organization.id,
+          invitation:  { title:   new_invitation_attrs[:title],
+                         team_id: new_invitation_attrs[:team_id] }
+      end
     end
   end
 
   describe '#show' do
+    before do
+      @invitation = create(:invitation)
+    end
+
     describe 'unathenticated request' do
       it 'will redirect the new user to sign in with GitHub' do
         get :show, { id: @invitation.key }
@@ -27,13 +67,14 @@ class InvitationsControllerTest < ActionController::TestCase
 
     describe 'authenticated request' do
       before do
-        @organization     = @invitation.organization
-        @user             = @invitation.user
+        @user             = create(:user)
         session[:user_id] = @user.id
+
+        @invitation       = create(:invitation)
+        @organization     = @invitation.organization
       end
 
       describe 'successful invitation' do
-
         it 'will invite the user to the organizations team' do
           user_login = 'user'
 
@@ -67,6 +108,20 @@ class InvitationsControllerTest < ActionController::TestCase
             get :show, { id: 'foobar' }
           end
         end
+      end
+    end
+  end
+
+  describe '#destroy' do
+    before do
+      invitation        = create(:invitation)
+      session[:user_id] = invitation.user_id
+      @organization     = invitation.organization
+    end
+
+    it 'deletes the invitation' do
+      assert_difference 'Invitation.count', -1 do
+        delete :destroy, organization_id: @organization.id
       end
     end
   end
