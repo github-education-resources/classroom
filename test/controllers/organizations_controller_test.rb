@@ -87,7 +87,7 @@ class OrganizationsControllerTest < ActionController::TestCase
     end
 
     it 'returns success and sets the organization' do
-      stub :show, id: @organization.id
+      get :show, id: @organization.id
 
       assert_response :success
       assert_not_nil assigns(:organization)
@@ -103,7 +103,7 @@ class OrganizationsControllerTest < ActionController::TestCase
     end
 
     it 'returns success and sets the organization' do
-      stub :edit, id: @organization.id
+      get :edit, id: @organization.id
 
       assert_response :success
       assert_not_nil assigns(:organization)
