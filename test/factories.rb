@@ -37,4 +37,9 @@ FactoryGirl.define do
     organization { FactoryGirl.create(:organization_with_users) }
     user         { organization.users.first }
   end
+
+  factory :assignment do
+    title        { "#{Faker::Company.name} Assignment" }
+    organization { FactoryGirl.create(:organization_with_users) }
+  end
 end

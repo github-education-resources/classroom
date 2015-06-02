@@ -32,5 +32,10 @@ module Classroom
     # Precompile Fonts
     # Compile all font types except octicons-local
     config.assets.precompile << %r(octicons/octicons/octicons+\.(?:svg|eot|woff|ttf)$)
+
+    # Configure the generators
+    config.generators do |g|
+      g.test_framework :mini_test, fixture: false
+    end
   end
 end
