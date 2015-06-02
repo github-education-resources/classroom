@@ -1,0 +1,28 @@
+<%= content_tag :div, class: 'modal', id: modal_id, "aria-hidden" => "true" do %>
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h3>
+        Are you ABSOLUTLEY SURE?
+        <%= link_to '', class: 'btn-close right', 'aria-hidden' => 'true' do %>
+          <%= octicon('x') %>
+        <% end %>
+      </h3>
+    </div>
+
+    <div class="modal-warning text-center">
+      <p>Please read this before continuing!</p>
+    </div>
+
+    <div class="modal-body">
+      <p>
+        This will not effect your organization on GitHub, however this will do very very nasty things that I haven't quite figured out yet! So there!
+      </p>
+    </div>
+
+    <div class="modal-footer">
+      <%= form_for [@organization, @assignment], url: organization_assignment_path(@organization, @assignment), html: { method: :delete } do |f| %>
+        <%= f.submit 'I understand the consequences, remove the assignment', class: 'btn btn-danger' %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

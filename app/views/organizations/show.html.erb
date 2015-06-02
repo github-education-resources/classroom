@@ -3,4 +3,18 @@
   <%= link_to 'Edit', edit_organization_path, class: 'lead' %>
 </h1>
 
-<%= render @organization.invitation %>
+<div class="columns">
+  <div class="one-third column">
+    <%= link_to new_organization_assignment_path(@organization), class: 'btn btn-primary', role: 'button' do %>
+      <%= octicon('plus') %> Create Assignment
+    <% end %>
+
+    <% @organization.assignments.each do |assignment| %>
+      <h2><%= link_to assignment.title, organization_assignment_path(@organization, assignment) %></h2>
+    <% end %>
+  </div>
+
+  <div class="two-thirds column">
+    <%= render @organization.invitation %>
+  </div>
+</div>
