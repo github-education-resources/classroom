@@ -2,6 +2,7 @@ class CreateOrganizations < ActiveRecord::Migration
   def change
     create_table :organizations do |t|
       t.integer :github_id,        null: false
+      t.integer :students_team_id
       t.string  :title,            null: false
 
       t.timestamps null: false
