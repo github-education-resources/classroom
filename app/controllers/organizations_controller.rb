@@ -1,18 +1,13 @@
 class OrganizationsController < ApplicationController
-  before_action :redirect_to_root,          unless: :logged_in?
-  before_action :ensure_organization_admin, except: [:new, :create]
+  before_action :redirect_to_root,               unless: :logged_in?
 
-  before_action :set_organization,                  except: [:new, :create]
-  before_action :set_users_github_organizations,    only:   [:new, :create]
+  before_action :ensure_organization_admin,      except: [:new, :create]
 
-  def show
-  end
+  before_action :set_organization,               except: [:new, :create]
+  before_action :set_users_github_organizations, only:   [:new, :create]
 
   def new
     @organization = Organization.new
-  end
-
-  def edit
   end
 
   def create
@@ -22,14 +17,19 @@ class OrganizationsController < ApplicationController
       @organization.users << current_user
 
       if @organization.save
-        flash[:success] = "Organization \"#{@organization.title}\" was successfully added"
-        redirect_to dashboard_path
+        redirect_to invite_organization_path(@organization)
       else
         render :new
       end
     else
       redirect_to new_organization_path, alert: 'You are not an administrator of this organization'
     end
+  end
+
+  def show
+  end
+
+  def edit
   end
 
   def update
@@ -42,14 +42,28 @@ class OrganizationsController < ApplicationController
   end
 
   def destroy
-    title = @organization.title
+    flash_message = "Organization \"#{@organization.title}\" was removed"
     @organization.destroy
 
-    flash[:success] = "Organization \"#{title}\" was removed"
+    flash[:success] = flash_message
     redirect_to dashboard_path
   end
 
+  def invite
+    @invitation = Invitation.new
+    @teams = current_user.github_client.organization_teams(@organization.github_id).
+      collect { |team| [team.name, team.id] }
+  end
+
   private
+
+  def ensure_organization_admin
+    github_id = Organization.find(params[:id]).github_id
+
+    unless current_user.github_client.organization_admin?(github_id)
+      render text: 'Unauthorized', status: 401
+    end
+  end
 
   def new_organization_params
     params.require(:organization).permit(:title, :github_id)
@@ -66,13 +80,5 @@ class OrganizationsController < ApplicationController
 
   def update_organization_params
     params.require(:organization).permit(:title)
-  end
-
-  def ensure_organization_admin
-    github_id = Organization.find(params[:id]).github_id
-
-    unless current_user.github_client.organization_admin?(github_id)
-      render text: 'Unauthorized', status: 401
-    end
   end
 end

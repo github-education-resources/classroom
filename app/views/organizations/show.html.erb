@@ -2,3 +2,5 @@
   <%= @organization.title %>
   <%= link_to 'Edit', edit_organization_path, class: 'lead' %>
 </h1>
+
+<%= render @organization.invitation %>

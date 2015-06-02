@@ -1,0 +1,19 @@
+<div class="panel">
+  <div class="panel-heading">
+    <h3 class="panel-title">Create a new Team</h3>
+  </div>
+  <div class="panel-body">
+    <%= form_for @invitation, url: organization_invitations_path(@organization) do |f| %>
+      <%= render 'shared/error_messages', object: f.object %>
+
+      <dl class="form">
+        <dt><label>Team Name</label></dt>
+        <dd><%= f.text_field :title, class: 'textfield', value: 'Students' %></dd>
+      </dl>
+
+      <div class="form-actions left">
+        <%= f.submit 'Create Team', class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+  </div>
+</div>

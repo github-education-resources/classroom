@@ -2,36 +2,19 @@ require 'test_helper'
 
 class OrganizationsControllerTest < ActionController::TestCase
   before do
-    @controller       = OrganizationsController.new
-    session[:user_id] = users(:tobias).id
-  end
+    @controller = OrganizationsController.new
+    @org_login  = 'testorg'
 
-  describe '#show' do
-    before do
-      @organization = organizations(:org1)
-
-      stub_get_json(github_url("/organizations/#{@organization.github_id}"),
-                    { login: 'org1',
-                      id: @organization.github_id })
-
-      stub_get_json(github_url('/user/memberships/orgs/org1'),
-                    { state: 'active',
-                      role:  'admin' })
-    end
-
-    it 'returns success and sets the organization' do
-      get :show, id: @organization.id
-
-      assert_response :success
-      assert_not_nil assigns(:organization)
-    end
+    @user             = create(:user_with_organizations)
+    session[:user_id] = @user.id
   end
 
   describe '#new' do
     before do
-      stub_get_json(github_url('/user/orgs'),
-                    [{ login: 'testorg1', id: 1 },
-                     { login: 'testorg2', id: 2 }])
+      @testorg1 = { login: 'testorg1', id: 1 }
+      @testorg2 = { login: 'testorg2', id: 2 }
+
+      stub_users_github_organizations([@testorg1, @testorg2])
     end
 
     it 'returns success' do
@@ -46,96 +29,93 @@ class OrganizationsControllerTest < ActionController::TestCase
 
     it 'has an array of the users GitHub organizations' do
       get :new
-      assert_equal [['testorg1', 1], ['testorg2', 2]], assigns(:users_github_organizations)
+      assert_equal [[@testorg1[:login], @testorg1[:id]], [@testorg2[:login], @testorg2[:id]]], assigns(:users_github_organizations)
     end
   end
 
-  describe '#edit' do
+  describe '#create' do
     before do
-      @organization = organizations(:org1)
+      @testorg1 = { login: 'testorg1', id: 1 }
+      @testorg2 = { login: 'testorg2', id: 2 }
 
-      stub_get_json(github_url("/organizations/#{@organization.github_id}"),
-                    { login: 'org1',
-                      id: @organization.github_id })
+      stub_users_github_organizations([@testorg1, @testorg2])
+    end
 
-      stub_get_json(github_url('/user/memberships/orgs/org1'),
-                    { state: 'active',
-                      role:  'admin' })
+    it 'will add an organization' do
+      organization = build(:organization)
+
+      stub_github_organization(organization.github_id, { login: @org_login, id: organization.github_id })
+      stub_users_github_organization_membership(@org_login, { state: 'active', role: 'admin' })
+
+      assert_difference 'Organization.count' do
+        post :create, organization: { title: organization.title, github_id: organization.github_id }
+      end
+
+      assert_redirected_to invite_organization_path(Organization.last)
+    end
+
+    it 'will not add an organization that already exists' do
+      existing_organization = @user.organizations.first
+
+      stub_github_organization(existing_organization.github_id, { login: @org_login, id: existing_organization.github_id })
+      stub_users_github_organization_membership(@org_login, { state: 'active', role: 'admin' })
+
+      assert_no_difference 'Organization.count' do
+        post :create, organization: { title:     "#{existing_organization.title}",
+                                      github_id: "#{existing_organization.github_id}" }
+      end
+    end
+
+    it 'will only add the organization if the user is an administrator' do
+      github_id = 1
+
+      stub_github_organization(github_id, { login: @org_login, id: github_id })
+      stub_users_github_organization_membership(@org_login, { state: 'active', role: 'member' })
+
+      assert_no_difference 'Organization.count' do
+        post :create, organization: { title: @org_login, github_id: github_id }
+      end
+    end
+  end
+
+  describe '#show' do
+    before do
+      @organization = @user.organizations.first
+
+      stub_github_organization(@organization.github_id, { login: @org_login, id: @organization.github_id })
+      stub_users_github_organization_membership(@org_login, { state: 'active', role: 'admin' })
     end
 
     it 'returns success and sets the organization' do
-      get :edit, id: organizations(:org1).id
+      get :show, id: @organization.id
 
       assert_response :success
       assert_not_nil assigns(:organization)
     end
   end
 
-  describe '#create' do
+  describe '#edit' do
     before do
-      @organization = organizations(:org1)
+      @organization = @user.organizations.first
 
-      stub_get_json(github_url("/organizations/#{@organization.github_id}"),
-                    { login: 'org1',
-                      id: @organization.github_id })
-
-      stub_get_json(github_url('/user/orgs'),
-                    [{ login: 'testorg1', id: 1 },
-                     { login: 'testorg2', id: 2 }])
+      stub_github_organization(@organization.github_id, { login: @org_login, id: @organization.github_id })
+      stub_users_github_organization_membership(@org_login, { state: 'active', role: 'admin' })
     end
 
-    it 'will add an organization' do
-      stub_get_json(github_url('/organizations/1'),
-                    { login: 'testorg1',
-                      id: 1 })
+    it 'returns success and sets the organization' do
+      get :edit, id: @organization.id
 
-      stub_get_json(github_url('/user/memberships/orgs/testorg1'),
-                    { state: 'active',
-                      role:  'admin' })
-
-      assert_difference 'Organization.count', 1 do
-        post :create, organization: { title: 'Test Org One', github_id: 1 }
-      end
-    end
-
-    it 'will not add an organization that already exists' do
-      existing_organization = organizations(:org1)
-      stub_get_json(github_url("user/memberships/orgs/#{existing_organization.title}"),
-                    { state: 'active',
-                      role:  'admin' })
-
-      assert_no_difference 'Organization.count' do
-        post :create, organization: { title: "#{existing_organization.title}",
-                                      github_id: "#{existing_organization.github_id}" }
-      end
-    end
-
-    it 'will only add the organization if the user is an administrator' do
-      stub_get_json(github_url('/organizations/1'),
-                    { login: 'testorg1',
-                      id: 1 })
-
-      stub_get_json(github_url('/user/memberships/orgs/testorg1'),
-                    { state: 'active',
-                      role:  'member' })
-
-      assert_no_difference 'Organization.count' do
-        post :create, organization: { title: 'Test Org One', github_id: 1 }
-      end
+      assert_response :success
+      assert_not_nil assigns(:organization)
     end
   end
 
   describe '#destroy' do
     before do
-      @organization = organizations(:org1)
+      @organization = @user.organizations.first
 
-      stub_get_json(github_url("/organizations/#{@organization.github_id}"),
-                    { login: 'org1',
-                      id: @organization.github_id })
-
-      stub_get_json(github_url('/user/memberships/orgs/org1'),
-                    { state: 'active',
-                      role:  'admin' })
+      stub_github_organization(@organization.github_id, { login: @org_login, id: @organization.github_id })
+      stub_users_github_organization_membership(@org_login, { state: 'active', role: 'admin' })
     end
 
     it 'deletes the organization' do

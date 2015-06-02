@@ -11,10 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150513185516) do
+ActiveRecord::Schema.define(version: 20150520171254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "invitations", force: :cascade do |t|
+    t.string   "title",           null: false
+    t.integer  "team_id",         null: false
+    t.string   "key",             null: false
+    t.integer  "organization_id"
+    t.integer  "user_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "invitations", ["key"], name: "index_invitations_on_key", unique: true, using: :btree
+  add_index "invitations", ["organization_id"], name: "index_invitations_on_organization_id", using: :btree
+  add_index "invitations", ["team_id"], name: "index_invitations_on_team_id", unique: true, using: :btree
+  add_index "invitations", ["user_id"], name: "index_invitations_on_user_id", using: :btree
 
   create_table "organizations", force: :cascade do |t|
     t.integer  "github_id",  null: false
@@ -24,6 +39,7 @@ ActiveRecord::Schema.define(version: 20150513185516) do
   end
 
   add_index "organizations", ["github_id"], name: "index_organizations_on_github_id", unique: true, using: :btree
+  add_index "organizations", ["title"], name: "index_organizations_on_title", unique: true, using: :btree
 
   create_table "organizations_users", id: false, force: :cascade do |t|
     t.integer "user_id"
@@ -35,9 +51,6 @@ ActiveRecord::Schema.define(version: 20150513185516) do
 
   create_table "users", force: :cascade do |t|
     t.string   "uid",        null: false
-    t.string   "login",      null: false
-    t.string   "email",      null: false
-    t.string   "name"
     t.string   "token",      null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
