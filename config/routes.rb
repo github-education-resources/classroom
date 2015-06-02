@@ -13,7 +13,7 @@ Rails.application.routes.draw do
 
   resources :organizations do
     resources :assignments
-    resource :invitations, only: [:create, :destroy]
+    resources :invitations, only: [:create, :destroy]
     get 'invite', on: :member
   end
 end

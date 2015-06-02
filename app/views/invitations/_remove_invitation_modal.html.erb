@@ -20,7 +20,8 @@
     </div>
 
     <div class="modal-footer">
-      <%= form_for [@organization, @organization.invitation], url: organization_invitations_path(@organization), html: { method: :delete } do |f| %>
+      <% invitation = @organization.invitation %>
+      <%= form_for [@organization, invitation], url: organization_invitation_path(@organization, invitation), html: { method: :delete } do |f| %>
         <%= f.submit 'I understand the consequences, remove the invitation', class: 'btn btn-danger' %>
       <% end %>
     </div>
