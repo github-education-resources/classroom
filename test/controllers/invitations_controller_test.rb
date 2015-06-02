@@ -104,14 +104,14 @@ class InvitationsControllerTest < ActionController::TestCase
 
   describe '#destroy' do
     before do
-      invitation        = create(:invitation)
-      session[:user_id] = invitation.user_id
-      @organization     = invitation.organization
+      @invitation        = create(:invitation)
+      @organization     = @invitation.organization
+      session[:user_id] = @invitation.user_id
     end
 
     it 'deletes the invitation' do
       assert_difference 'Invitation.count', -1 do
-        delete :destroy, organization_id: @organization.id
+        delete :destroy, organization_id: @organization.id, id: @invitation.id
       end
     end
   end
