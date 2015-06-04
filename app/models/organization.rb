@@ -5,7 +5,9 @@ class Organization < ActiveRecord::Base
 
   validates_presence_of   :github_id, :title
   validates_uniqueness_of :github_id, message: 'organization is already in use'
-  validates_uniqueness_of :students_team_id
+
+  validates_presence_of   :students_team_id, unless: :new_record?
+  validates_uniqueness_of :students_team_id, unless: :new_record?
 
   def invitation
     super || NullInvitation.new

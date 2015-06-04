@@ -12,8 +12,11 @@ Rails.application.routes.draw do
   resources :invitations, only: [:show]
 
   resources :organizations do
+    member do
+      get 'setup'
+      patch 'add_students_team'
+    end
+
     resources :assignments
-    resources :invitations, only: [:create, :destroy]
-    get 'invite', on: :member
   end
 end

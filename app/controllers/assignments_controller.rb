@@ -11,6 +11,8 @@ class AssignmentsController < ApplicationController
     @assignment.organization = @organization
 
     if @assignment.save
+      CreateAssignmentInvitation.perform_later(@assignment, current_user, @organization)
+
       flash[:success] = "Your assignment \"#{@assignment.title}\" has been created!"
       redirect_to organization_assignment_path(@organization, @assignment)
     else

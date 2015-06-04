@@ -17,7 +17,7 @@ class OrganizationsController < ApplicationController
       @organization.users << current_user
 
       if @organization.save
-        redirect_to invite_organization_path(@organization)
+        redirect_to setup_organization_path(@organization)
       else
         render :new
       end
@@ -49,13 +49,31 @@ class OrganizationsController < ApplicationController
     redirect_to dashboard_path
   end
 
-  def invite
-    @invitation = Invitation.new
+  def setup
     @teams = current_user.github_client.organization_teams(@organization.github_id).
       collect { |team| [team.name, team.id] }
   end
 
+  def add_students_team
+    team = GitHubTeam.find_or_create_team(current_user.github_client,
+                                          @organization.github_id,
+                                          add_students_team_params[:students_team_id],
+                                          add_students_team_params[:title])
+
+    if @organization.update_attributes(students_team_id: team.id)
+      flash[:success] = 'Ready to go!'
+      redirect_to organization_path(@organization)
+    else
+      flash[:error] = 'This team has already been created'
+      redirect_to setup_organization_path(@organization)
+    end
+  end
+
   private
+
+  def add_students_team_params
+    params.require(:organization).permit(:title, :students_team_id)
+  end
 
   def ensure_organization_admin
     github_id = Organization.find(params[:id]).github_id

@@ -1,0 +1,15 @@
+<h1 class="page-header">Setup <span class="lead"><%= @organization.title %></span></h1>
+
+<div class="columns">
+  <% if @teams.length > 1 %>
+    <div class="one-half column">
+      <%= render partial: 'select_from_existing_github_team_form' %>
+    </div>
+    <div class="one-half column">
+    <% else %>
+      <div class="one-half column centered">
+      <% end %>
+      <%= render partial: 'create_new_github_team_form.html.erb' %>
+    </div>
+  </div>
+</div>

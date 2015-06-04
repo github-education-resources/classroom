@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20150602155858) do
     t.string   "title",           null: false
     t.integer  "team_id",         null: false
     t.string   "key",             null: false
+    t.integer  "assignment_id"
     t.integer  "organization_id"
     t.integer  "user_id"
     t.datetime "created_at",      null: false
@@ -66,6 +67,7 @@ ActiveRecord::Schema.define(version: 20150602155858) do
     t.datetime "updated_at", null: false
   end
 
+  add_index "users", ["token"], name: "index_users_on_token", unique: true, using: :btree
   add_index "users", ["uid"], name: "index_users_on_uid", unique: true, using: :btree
 
 end
