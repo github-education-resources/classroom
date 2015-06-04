@@ -3,12 +3,11 @@
     <h3 class="panel-title">Choose and Existing Team</h3>
   </div>
   <div class="panel-body">
-    <%= form_for @invitation, url: organization_invitations_path(@organization) do |f| %>
-      <%= render 'shared/error_messages', object: f.object %>
-
+    <% url = add_students_team_organization_path(@organization) %>
+    <%= form_for @organization, url: url do |f| %>
       <dl class="form">
         <dd><label>Team</label></dd>
-        <dt><%= select :invitation, :team_id, options_for_select(@teams) %></dt>
+        <dt><%= select :organization, :students_team_id, options_for_select(@teams) %></dt>
       </dl>
 
       <div class="form-actions left">

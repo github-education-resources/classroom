@@ -15,8 +15,9 @@ FactoryGirl.define do
   end
 
   factory :organization do
-    title      { "#{Faker::Company.name} Class" }
-    github_id  { rand(1..1_000_000) }
+    title             { "#{Faker::Company.name} Class" }
+    github_id         { rand(1..1_000_000) }
+    students_team_id  { rand(1..1_000_000) }
 
     factory :organization_with_users do
       transient do

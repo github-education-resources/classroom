@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20150602155858) do
     t.string   "title",           null: false
     t.integer  "team_id",         null: false
     t.string   "key",             null: false
+    t.integer  "assignment_id"
     t.integer  "organization_id"
     t.integer  "user_id"
     t.datetime "created_at",      null: false
@@ -41,10 +42,11 @@ ActiveRecord::Schema.define(version: 20150602155858) do
   add_index "invitations", ["user_id"], name: "index_invitations_on_user_id", using: :btree
 
   create_table "organizations", force: :cascade do |t|
-    t.integer  "github_id",  null: false
-    t.string   "title",      null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "github_id",        null: false
+    t.integer  "students_team_id"
+    t.string   "title",            null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
 
   add_index "organizations", ["github_id"], name: "index_organizations_on_github_id", unique: true, using: :btree
@@ -65,6 +67,7 @@ ActiveRecord::Schema.define(version: 20150602155858) do
     t.datetime "updated_at", null: false
   end
 
+  add_index "users", ["token"], name: "index_users_on_token", unique: true, using: :btree
   add_index "users", ["uid"], name: "index_users_on_uid", unique: true, using: :btree
 
 end

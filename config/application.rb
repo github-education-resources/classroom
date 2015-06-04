@@ -35,7 +35,7 @@ module Classroom
 
     # Configure the generators
     config.generators do |g|
-      g.test_framework :mini_test, fixture: false
+      g.test_framework :test_unit, fixture: false
     end
   end
 end

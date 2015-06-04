@@ -1,4 +1,5 @@
 class Invitation < ActiveRecord::Base
+  belongs_to :assignment
   belongs_to :organization
   belongs_to :user
 
@@ -7,8 +8,10 @@ class Invitation < ActiveRecord::Base
 
   after_initialize :assign_key
 
-  def accept_invitation(other_user)
+  def redeem_invitation(other_user)
     user.github_client.add_team_membership(team_id, other_user[:login])
+    # Create the users individual team
+    # Create the assignment repo
   end
 
   def to_param
