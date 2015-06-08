@@ -9,7 +9,5 @@ Rails.application.routes.draw do
 
   get 'dashboard', to: 'users#show'
 
-  resources :invitations, only: [:show]
-
   resources :organizations
 end
