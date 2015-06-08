@@ -17,7 +17,7 @@ class OrganizationsController < ApplicationController
       @organization.users << current_user
 
       if @organization.save
-        redirect_to invite_organization_path(@organization)
+        redirect_to @organization
       else
         render :new
       end
@@ -47,12 +47,6 @@ class OrganizationsController < ApplicationController
 
     flash[:success] = flash_message
     redirect_to dashboard_path
-  end
-
-  def invite
-    @invitation = Invitation.new
-    @teams = current_user.github_client.organization_teams(@organization.github_id).
-      collect { |team| [team.name, team.id] }
   end
 
   private
