@@ -1,6 +1,5 @@
 class IndividualAssignmentInvitation < ActiveRecord::Base
   belongs_to :individual_assignment
-  belongs_to :organization
 
   validates_presence_of   :key
   validates_uniqueness_of :key
