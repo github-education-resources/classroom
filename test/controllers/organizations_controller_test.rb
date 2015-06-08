@@ -51,7 +51,7 @@ class OrganizationsControllerTest < ActionController::TestCase
         post :create, organization: { title: organization.title, github_id: organization.github_id }
       end
 
-      assert_redirected_to invite_organization_path(Organization.last)
+      assert_redirected_to organization_path(Organization.last)
     end
 
     it 'will not add an organization that already exists' do
