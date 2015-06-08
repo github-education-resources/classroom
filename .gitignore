@@ -14,3 +14,6 @@
 
 # Ignore local environment variables
 .env
+
+# Rails ERD
+erd.pdf
