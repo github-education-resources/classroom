@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   has_and_belongs_to_many :organizations
-  has_many :repo_accesses
+
+  has_many :repo_accesses, dependent: :destroy
 
   validates_presence_of   :uid, :token
   validates_uniqueness_of :uid, :token
