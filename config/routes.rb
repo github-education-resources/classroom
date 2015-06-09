@@ -9,5 +9,13 @@ Rails.application.routes.draw do
 
   get 'dashboard', to: 'users#show'
 
-  resources :organizations
+  resources :assignment_invitations, only: [:show]
+
+  resources :organizations do
+    member do
+      get 'new_assignment'
+    end
+
+    resources :assignments, only: [:show, :new, :create]
+  end
 end

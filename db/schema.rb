@@ -16,6 +16,35 @@ ActiveRecord::Schema.define(version: 20150608135401) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "assignment_invitations", force: :cascade do |t|
+    t.string   "key",           null: false
+    t.integer  "assignment_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "assignment_invitations", ["assignment_id"], name: "index_assignment_invitations_on_assignment_id", using: :btree
+  add_index "assignment_invitations", ["key"], name: "index_assignment_invitations_on_key", unique: true, using: :btree
+
+  create_table "assignment_repos", force: :cascade do |t|
+    t.integer  "github_repo_id", null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.integer  "assignment_id"
+  end
+
+  add_index "assignment_repos", ["assignment_id"], name: "index_assignment_repos_on_assignment_id", using: :btree
+  add_index "assignment_repos", ["github_repo_id"], name: "index_assignment_repos_on_github_repo_id", unique: true, using: :btree
+
+  create_table "assignments", force: :cascade do |t|
+    t.string   "title",           null: false
+    t.integer  "organization_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "assignments", ["organization_id"], name: "index_assignments_on_organization_id", using: :btree
+
   create_table "group_assignment_invitations", force: :cascade do |t|
     t.string   "key",                 null: false
     t.integer  "group_assignment_id"
@@ -23,7 +52,8 @@ ActiveRecord::Schema.define(version: 20150608135401) do
     t.datetime "updated_at",          null: false
   end
 
-  add_index "group_assignment_invitations", ["key"], name: "group_assg_invitation_key", unique: true, using: :btree
+  add_index "group_assignment_invitations", ["group_assignment_id"], name: "index_group_assignment_invitations_on_group_assignment_id", using: :btree
+  add_index "group_assignment_invitations", ["key"], name: "index_group_assignment_invitations_on_key", unique: true, using: :btree
 
   create_table "group_assignment_repos", force: :cascade do |t|
     t.integer  "github_repo_id",      null: false
@@ -62,34 +92,6 @@ ActiveRecord::Schema.define(version: 20150608135401) do
 
   add_index "groups", ["github_team_id"], name: "index_groups_on_github_team_id", unique: true, using: :btree
   add_index "groups", ["grouping_id"], name: "index_groups_on_grouping_id", using: :btree
-
-  create_table "individual_assignment_invitations", force: :cascade do |t|
-    t.string   "key",                      null: false
-    t.integer  "individual_assignment_id"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
-  end
-
-  add_index "individual_assignment_invitations", ["key"], name: "indv_assg_invitation_key", unique: true, using: :btree
-
-  create_table "individual_assignment_repos", force: :cascade do |t|
-    t.integer  "github_repo_id",           null: false
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
-    t.integer  "individual_assignment_id"
-  end
-
-  add_index "individual_assignment_repos", ["github_repo_id"], name: "index_individual_assignment_repos_on_github_repo_id", unique: true, using: :btree
-  add_index "individual_assignment_repos", ["individual_assignment_id"], name: "index_individual_assignment_repos_on_individual_assignment_id", using: :btree
-
-  create_table "individual_assignments", force: :cascade do |t|
-    t.string   "title",           null: false
-    t.integer  "organization_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-  end
-
-  add_index "individual_assignments", ["organization_id"], name: "index_individual_assignments_on_organization_id", using: :btree
 
   create_table "organizations", force: :cascade do |t|
     t.integer  "github_id",  null: false
