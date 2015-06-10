@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 20150608135401) do
 
   create_table "assignment_repos", force: :cascade do |t|
     t.integer  "github_repo_id", null: false
+    t.integer  "repo_access_id"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.integer  "assignment_id"
@@ -35,6 +36,7 @@ ActiveRecord::Schema.define(version: 20150608135401) do
 
   add_index "assignment_repos", ["assignment_id"], name: "index_assignment_repos_on_assignment_id", using: :btree
   add_index "assignment_repos", ["github_repo_id"], name: "index_assignment_repos_on_github_repo_id", unique: true, using: :btree
+  add_index "assignment_repos", ["repo_access_id"], name: "index_assignment_repos_on_repo_access_id", using: :btree
 
   create_table "assignments", force: :cascade do |t|
     t.string   "title",           null: false
