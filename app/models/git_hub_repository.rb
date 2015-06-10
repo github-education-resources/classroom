@@ -8,7 +8,7 @@ class GitHubRepository
   end
 
   def self.create_repository_for_team(org_owner, organization, team_id, repo_name)
-    github_organization = org_owner.organization(organization.github_id)
+    github_organization = org_owner.github_client.organization(organization.github_id)
 
     options = {
       private:       true,
