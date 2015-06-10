@@ -52,6 +52,10 @@ class GitHubClient
     client.repository(github_id)
   end
 
+  def repository?(github_id)
+    client.repository?(github_id)
+  end
+
   def team(github_team_id)
     begin
       client.team(github_team_id)

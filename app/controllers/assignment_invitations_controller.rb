@@ -5,9 +5,9 @@ class AssignmentInvitationsController < ApplicationController
     @invitation = AssignmentInvitation.find_by_key!(params[:id])
 
     if @invitation.redeem(current_user)
-      render plain: "OK", status: 200
+      render :success, layout: false, status: 200
     else
-      render plain: "NOT OK", status: 503
+      render :failed,  layout: false, status: 503
     end
   end
 

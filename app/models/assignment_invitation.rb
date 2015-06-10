@@ -25,7 +25,7 @@ class AssignmentInvitation < ActiveRecord::Base
       assignment_repo.save!
     end
 
-    assignment_owner.github_client.repository(assignment_repo.github_repo_id)
+    assignment_owner.github_client.repository?(assignment_repo.github_repo_id)
   end
 
   def to_param
