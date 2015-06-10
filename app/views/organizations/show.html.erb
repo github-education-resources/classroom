@@ -2,3 +2,14 @@
   <%= @organization.title %>
   <%= link_to 'Edit', edit_organization_path, class: 'lead' %>
 </h1>
+
+<div class="columns">
+  <div class="one-fourth column">
+    <%= link_to new_assignment_organization_path(@organization), class: 'btn btn-primary', role: 'button' do %>
+      <%= octicon('plus') %> Assignment
+    <% end %>
+  </div>
+  <div class="three-fourths column">
+    <%= render @assignments %>
+  </div>
+</div>

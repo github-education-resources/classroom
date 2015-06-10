@@ -27,6 +27,7 @@ class OrganizationsController < ApplicationController
   end
 
   def show
+    @assignments = @organization.all_assignments.sort_by(&:created_at)
   end
 
   def edit
@@ -47,6 +48,10 @@ class OrganizationsController < ApplicationController
 
     flash[:success] = flash_message
     redirect_to dashboard_path
+  end
+
+  def new_assignment
+
   end
 
   private
