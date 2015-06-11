@@ -39,13 +39,13 @@ def stub_github_user(github_id = nil, expected_resp)
   stub_get_json(url, expected_resp)
 end
 
-def stub_users_github_organizations(expected_resp)
-  url = github_url('user/orgs')
+def stub_users_github_organization_membership(org_login, expected_resp)
+  url = github_url("user/memberships/orgs/#{org_login}")
   stub_get_json(url, expected_resp)
 end
 
-def stub_users_github_organization_membership(org_login, expected_resp)
-  url = github_url("user/memberships/orgs/#{org_login}")
+def stub_users_github_organization_memberships(expected_resp)
+  url = github_url('user/memberships/orgs?per_page=100')
   stub_get_json(url, expected_resp)
 end
 

@@ -65,6 +65,13 @@ class GitHubClientTest < ActiveSupport::TestCase
     end
   end
 
+  test '#organization_memberships' do
+    VCR.use_cassette('organization_memberships') do
+      @github_client.organization_memberships
+      assert_requested :get, github_url('/user/memberships/orgs?per_page=100')
+    end
+  end
+
   test '#team' do
     VCR.use_cassette('team') do
       team = @github_client.team(@admin_org[:owners_team_id])
@@ -95,15 +102,6 @@ class GitHubClientTest < ActiveSupport::TestCase
       user = @github_client.user
       assert @user[:login], user.login
       assert_requested :get, github_url('/user')
-    end
-  end
-
-  test '#list_organization' do
-    VCR.use_cassette('list_organizations') do
-      organizations = @github_client.list_organizations
-
-      assert Array, organizations.class
-      assert_requested :get, github_url('/user/orgs')
     end
   end
 end

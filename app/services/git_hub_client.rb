@@ -52,10 +52,6 @@ class GitHubClient
     client.user(github_id)
   end
 
-  def list_organizations
-    client.list_organizations
-  end
-
   private
 
   def client
