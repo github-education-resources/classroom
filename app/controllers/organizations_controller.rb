@@ -1,8 +1,6 @@
 class OrganizationsController < ApplicationController
   before_action :redirect_to_root,               unless: :logged_in?
-
   before_action :ensure_organization_admin,      except: [:new, :create]
-
   before_action :set_organization,               except: [:new, :create]
   before_action :set_users_github_organizations, only:   [:new, :create]
 
@@ -58,7 +56,9 @@ class OrganizationsController < ApplicationController
   end
 
   def new_organization_params
-    params.require(:organization).permit(:title, :github_id)
+    params
+      .require(:organization)
+      .permit(:title, :github_id)
   end
 
   def set_organization
@@ -72,6 +72,8 @@ class OrganizationsController < ApplicationController
   end
 
   def update_organization_params
-    params.require(:organization).permit(:title)
+    params
+      .require(:organization)
+      .permit(:title)
   end
 end
