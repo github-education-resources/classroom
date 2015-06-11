@@ -12,17 +12,12 @@ class OrganizationsController < ApplicationController
 
   def create
     @organization = Organization.new(new_organization_params)
+    @organization.users << current_user
 
-    if current_user.github_client.organization_admin?(new_organization_params["github_id"])
-      @organization.users << current_user
-
-      if @organization.save
-        redirect_to @organization
-      else
-        render :new
-      end
+    if @organization.save
+      redirect_to @organization
     else
-      redirect_to new_organization_path, alert: 'You are not an administrator of this organization'
+      render :new
     end
   end
 
@@ -54,9 +49,8 @@ class OrganizationsController < ApplicationController
   def ensure_organization_admin
     github_id = Organization.find(params[:id]).github_id
 
-    unless current_user.github_client.organization_admin?(github_id)
-      render text: 'Unauthorized', status: 401
-    end
+    return if current_user.github_client.organization_admin?(github_id)
+    render text: 'Unauthorized', status: 401
   end
 
   def new_organization_params
@@ -68,8 +62,9 @@ class OrganizationsController < ApplicationController
   end
 
   def set_users_github_organizations
-    @users_github_organizations = current_user.github_client.users_organizations.
-                                  collect { |org| [org.login, org.id] }
+    @users_github_organizations = current_user.github_client.organization_memberships.map do |org|
+      [org.organization.login, org.organization.id] if org.role == 'admin'
+    end.compact
   end
 
   def update_organization_params

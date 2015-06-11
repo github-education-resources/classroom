@@ -2,11 +2,11 @@ require 'test_helper'
 
 class GitHubClientTest < ActiveSupport::TestCase
   def setup
-    @admin_org  = { login: 'tarebytetestorg', id: 12439714, owners_team_id: 1501923 }
-    @member_org = { login: 'education',       id:  6667880                          }
+    @admin_org  = { login: 'tarebytetestorg', id: 12_439_714, owners_team_id: 1_501_923 }
+    @member_org = { login: 'education',       id:  6_667_880                            }
 
-    @user       = { login: 'tarebyte',        id:   564113 }
-    @test_user  = { login: 'tarebytetest',    id: 12435329 }
+    @user       = { login: 'tarebyte',        id:   564_113 }
+    @test_user  = { login: 'tarebytetest',    id: 12_435_329 }
 
     token          = Rails.application.secrets.classroom_test_github_token || 'some-token'
     @github_client = GitHubClient.new(token)
@@ -22,8 +22,8 @@ class GitHubClientTest < ActiveSupport::TestCase
 
   test '#create_team' do
     VCR.use_cassette('create_team') do
-      @team_name = "Test Team #{Time.now.to_i}"
-      @team = @github_client.create_team(@admin_org[:id], {name: @team_name})
+      @team_name = "Test Team #{Time.zone.now.to_i}"
+      @team = @github_client.create_team(@admin_org[:id], name: @team_name)
 
       assert_requested :post, github_url("/organizations/#{@admin_org[:id]}/teams")
     end
@@ -60,7 +60,7 @@ class GitHubClientTest < ActiveSupport::TestCase
 
   test '#organization_membership' do
     VCR.use_cassette('organization_membership') do
-      membership = @github_client.organization_membership(@member_org[:login])
+      @github_client.organization_membership(@member_org[:login])
       assert_requested :get, github_url("/user/memberships/orgs/#{@member_org[:login]}")
     end
   end
@@ -98,9 +98,9 @@ class GitHubClientTest < ActiveSupport::TestCase
     end
   end
 
-  test '#users_organizations' do
+  test '#list_organization' do
     VCR.use_cassette('list_organizations') do
-      organizations = @github_client.users_organizations
+      organizations = @github_client.list_organizations
 
       assert Array, organizations.class
       assert_requested :get, github_url('/user/orgs')

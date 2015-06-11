@@ -4,12 +4,16 @@ require 'rails/test_help'
 require 'minitest/spec'
 
 # Require all support files
-Dir["#{Rails.root}/test/support/**/*.rb"].each {|file| require file }
+Dir["#{Rails.root}/test/support/**/*.rb"].each { |file| require file }
 
-class ActiveSupport::TestCase
-  fixtures :all
+module ActiveSupport
+  class TestCase
+    fixtures :all
+  end
 end
 
-class ActionController::TestCase
-  extend Minitest::Spec::DSL
+module ActionController
+  class TestCase
+    extend Minitest::Spec::DSL
+  end
 end

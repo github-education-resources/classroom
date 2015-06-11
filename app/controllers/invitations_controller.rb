@@ -7,10 +7,10 @@ class InvitationsController < ApplicationController
     @invitation = inviter.create_invitation
 
     if @invitation.save
-      flash[:success] = "Your team and its invitation are ready to go!"
+      flash[:success] = 'Your team and its invitation are ready to go!'
       redirect_to @organization
     else
-      flash[:error] = "Invitation failed because team already exists"
+      flash[:error] = 'Invitation failed because team already exists'
       redirect_to invite_organization_path(params[:organization_id])
     end
   end
@@ -38,10 +38,9 @@ class InvitationsController < ApplicationController
   private
 
   def authenticate_with_pre_login_destination
-    unless logged_in?
-      session[:pre_login_destination] = "#{request.base_url}#{request.path}"
-      redirect_to login_path
-    end
+    return if logged_in?
+    session[:pre_login_destination] = "#{request.base_url}#{request.path}"
+    redirect_to login_path
   end
 
   def invitation_params
