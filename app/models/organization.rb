@@ -1,13 +1,13 @@
 class Organization < ActiveRecord::Base
-  has_and_belongs_to_many :users
-
   has_many :individual_assignments, dependent: :destroy
   has_many :group_assignments,      dependent: :destroy
   has_many :groupings,              dependent: :destroy
   has_many :repo_accesses,          dependent: :destroy
 
-  validates_presence_of   :github_id, :title
-  validates_uniqueness_of :github_id
+  has_and_belongs_to_many :users
+
+  validates :github_id, :title, presence:   true
+  validates :github_id,         uniqueness: true
 
   def invitation
     super || NullInvitation.new

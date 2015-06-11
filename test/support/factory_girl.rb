@@ -1,3 +1,5 @@
-class MiniTest::Test
-  include FactoryGirl::Syntax::Methods
+module MiniTest
+  class Test
+    include FactoryGirl::Syntax::Methods
+  end
 end

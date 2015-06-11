@@ -1,10 +1,10 @@
 class User < ActiveRecord::Base
-  has_and_belongs_to_many :organizations
-
   has_many :repo_accesses, dependent: :destroy
 
-  validates_presence_of   :uid, :token
-  validates_uniqueness_of :uid, :token
+  has_and_belongs_to_many :organizations
+
+  validates :uid, :token, presence: true
+  validates :uid, :token, uniqueness: true
 
   def self.create_from_auth_hash(hash)
     create!(AuthHash.new(hash).user_info)
@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
 
   def self.find_by_auth_hash(hash)
     conditions = AuthHash.new(hash).user_info.slice(:uid)
-    where(conditions).first
+    find_by(conditions)
   end
 
   def github_client
