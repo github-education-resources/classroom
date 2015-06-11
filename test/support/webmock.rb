@@ -27,6 +27,16 @@ def stub_github_organization(org_id, expected_resp)
   stub_get_json(url, expected_resp)
 end
 
+def stub_create_github_organization_repo(org, options = {}, expected_resp)
+  url = github_url("/orgs/#{org}/repos")
+  stub_post_json(url, options, expected_resp)
+end
+
+def stub_github_repo(repo_id, expected_resp)
+  url = github_url("/repositories/#{repo_id}")
+  stub_get_json(url, expected_resp)
+end
+
 def stub_github_team(team_id, expected_resp)
   url = github_url("/teams/#{team_id}")
   stub_get_json(url, expected_resp)

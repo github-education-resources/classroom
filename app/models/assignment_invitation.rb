@@ -35,7 +35,7 @@ class AssignmentInvitation < ActiveRecord::Base
     if assignment_repo.new_record?
       assignment_repo.repo_access = repo_access
 
-      new_repo_name = "#{assignment.title} #{Time.zone.now}"
+      new_repo_name = "#{assignment.title}: #{assignment.assignment_repos.count + 1}"
       assignment_repo.create_github_repo(assignment_owner, assignment.organization, new_repo_name)
 
       assignment_repo.save!
@@ -48,7 +48,7 @@ class AssignmentInvitation < ActiveRecord::Base
     repo_access = user.repo_accesses.find_or_create_by(organization: organization)
 
     if repo_access.new_record?
-      repo_access.create_github_team(assignment_owner, "Team: #{Time.zone.now}")
+      repo_access.create_github_team(assignment_owner, "Team: #{organization.repo_accesses.count + 1}")
       repo_access.save!
     end
 

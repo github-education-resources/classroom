@@ -1,10 +1,8 @@
 class GitHubRepository
-  attr_reader :id, :name
+  attr_reader :id
 
-  def initialize(id, name, url)
-    @id   = id
-    @name = name
-    @url  = url
+  def initialize(id)
+    @id = id
   end
 
   def self.create_repository_for_team(org_owner, organization, team_id, repo_name)
@@ -12,7 +10,7 @@ class GitHubRepository
     options             = github_repo_options(github_organization, team_id)
 
     if (repo = org_owner.github_client.create_repository(repo_name, options))
-      GitHubRepository.new(repo.id, repo.name, repo.html_url)
+      GitHubRepository.new(repo.id)
     else
       NullGitHubRepository.new
     end
