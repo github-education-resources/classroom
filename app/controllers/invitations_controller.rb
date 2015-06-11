@@ -2,6 +2,7 @@ class InvitationsController < ApplicationController
   before_action :authenticate_with_pre_login_destination,    only: [:show]
   before_action :set_organization,                           only: [:create, :destroy]
 
+  # rubocop:disable Metrics/AbcSize
   def create
     inviter     = Inviter.new(current_user, @organization, invitation_params[:team_id], invitation_params[:title])
     @invitation = inviter.create_invitation
@@ -14,6 +15,7 @@ class InvitationsController < ApplicationController
       redirect_to invite_organization_path(params[:organization_id])
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   def show
     @invitation = Invitation.find_by_key!(params[:id])
