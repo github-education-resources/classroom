@@ -1,9 +1,9 @@
 class AssignmentRepo < ActiveRecord::Base
-  belongs_to :repo_access
   belongs_to :assignment
+  belongs_to :repo_access
 
-  validates_presence_of   :github_repo_id
-  validates_uniqueness_of :github_repo_id
+  validates :github_repo_id, presence:   true
+  validates :github_repo_id, uniqueness: true
 
   def create_github_repo(org_owner, organization, repo_name)
     repo = GitHubRepository.create_repository_for_team(org_owner,

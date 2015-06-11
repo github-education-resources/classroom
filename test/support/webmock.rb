@@ -7,7 +7,7 @@ def github_url(url)
 
   url = File.join(Octokit.api_endpoint, url)
   uri = Addressable::URI.parse(url)
-  uri.path.gsub!("v3//", "v3/")
+  uri.path.gsub!('v3//', 'v3/')
 
   uri.to_s
 end
@@ -32,15 +32,10 @@ def stub_github_team(team_id, expected_resp)
   stub_get_json(url, expected_resp)
 end
 
-def stub_github_user(github_id=nil, expected_resp)
-  url = github_url("/user")
+def stub_github_user(github_id = nil, expected_resp)
+  url = github_url('/user')
   url += github_id.nil? ? '' : "/#{github_id}"
 
-  stub_get_json(url, expected_resp)
-end
-
-def stub_users_github_organizations(expected_resp)
-  url = github_url('user/orgs')
   stub_get_json(url, expected_resp)
 end
 
@@ -49,26 +44,31 @@ def stub_users_github_organization_membership(org_login, expected_resp)
   stub_get_json(url, expected_resp)
 end
 
+def stub_users_github_organization_memberships(expected_resp)
+  url = github_url('user/memberships/orgs?per_page=100')
+  stub_get_json(url, expected_resp)
+end
+
 private
 
 def stub_get_json(url, expected_resp)
-  stub_request(:get, url).
-    to_return(
+  stub_request(:get, url)
+    .to_return(
       body: expected_resp.to_json,
-      headers: {'Content-Type' => 'application/json'})
+      headers: { 'Content-Type' => 'application/json' })
 end
 
 def stub_post_json(url, body = {}, expected_resp)
-  stub_request(:post, url).
-    with(body: body.to_json).
-    to_return(
+  stub_request(:post, url)
+    .with(body: body.to_json)
+    .to_return(
       body: expected_resp.to_json,
-      headers: {'Content-Type' => 'application/json'})
+      headers: { 'Content-Type' => 'application/json' })
 end
 
 def stub_put_json(url, expected_resp)
-  stub_request(:put, url).
-    to_return(
+  stub_request(:put, url)
+    .to_return(
       body: expected_resp.to_json,
-      headers: {'Content-Type' => 'application/json'})
+      headers: { 'Content-Type' => 'application/json' })
 end

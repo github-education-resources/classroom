@@ -11,10 +11,11 @@ class OrganizationsControllerTest < ActionController::TestCase
 
   describe '#new' do
     before do
-      @testorg1 = { login: 'testorg1', id: 1 }
-      @testorg2 = { login: 'testorg2', id: 2 }
+      @admin_org1  = { role: 'admin',  organization: { login: 'admin_org1',  id: 1 } }
+      @admin_org2  = { role: 'admin',  organization: { login: 'admin_org2',  id: 2 } }
+      @member_org1 = { role: 'member', organization: { login: 'member_org1', id: 3 } }
 
-      stub_users_github_organizations([@testorg1, @testorg2])
+      stub_users_github_organization_memberships([@admin_org1, @admin_org2, @member_org1])
     end
 
     it 'returns success' do
@@ -27,25 +28,29 @@ class OrganizationsControllerTest < ActionController::TestCase
       assert_not_nil assigns(:organization)
     end
 
-    it 'has an array of the users GitHub organizations' do
+    it 'has an array of the users GitHub organizations that they are an admin of' do
       get :new
-      assert_equal [[@testorg1[:login], @testorg1[:id]], [@testorg2[:login], @testorg2[:id]]], assigns(:users_github_organizations)
+      assert_equal [
+        [@admin_org1[:organization][:login], @admin_org1[:organization][:id]],
+        [@admin_org2[:organization][:login], @admin_org2[:organization][:id]]
+      ], assigns(:users_github_organizations)
     end
   end
 
   describe '#create' do
     before do
-      @testorg1 = { login: 'testorg1', id: 1 }
-      @testorg2 = { login: 'testorg2', id: 2 }
+      @admin_org1  = { role: 'admin',  organization: { login: 'admin_org1',  id: 1 } }
+      @admin_org2  = { role: 'admin',  organization: { login: 'admin_org2',  id: 2 } }
+      @member_org1 = { role: 'member', organization: { login: 'member_org1', id: 3 } }
 
-      stub_users_github_organizations([@testorg1, @testorg2])
+      stub_users_github_organization_memberships([@admin_org1, @admin_org2, @member_org1])
     end
 
     it 'will add an organization' do
       organization = build(:organization)
 
-      stub_github_organization(organization.github_id, { login: @org_login, id: organization.github_id })
-      stub_users_github_organization_membership(@org_login, { state: 'active', role: 'admin' })
+      stub_github_organization(organization.github_id, login: @org_login, id: organization.github_id)
+      stub_users_github_organization_membership(@org_login, state: 'active', role: 'admin')
 
       assert_difference 'Organization.count' do
         post :create, organization: { title: organization.title, github_id: organization.github_id }
@@ -57,23 +62,12 @@ class OrganizationsControllerTest < ActionController::TestCase
     it 'will not add an organization that already exists' do
       existing_organization = @user.organizations.first
 
-      stub_github_organization(existing_organization.github_id, { login: @org_login, id: existing_organization.github_id })
-      stub_users_github_organization_membership(@org_login, { state: 'active', role: 'admin' })
+      stub_github_organization(existing_organization.github_id, login: @org_login, id: existing_organization.github_id)
+      stub_users_github_organization_membership(@org_login, state: 'active', role: 'admin')
 
       assert_no_difference 'Organization.count' do
         post :create, organization: { title:     "#{existing_organization.title}",
                                       github_id: "#{existing_organization.github_id}" }
-      end
-    end
-
-    it 'will only add the organization if the user is an administrator' do
-      github_id = 1
-
-      stub_github_organization(github_id, { login: @org_login, id: github_id })
-      stub_users_github_organization_membership(@org_login, { state: 'active', role: 'member' })
-
-      assert_no_difference 'Organization.count' do
-        post :create, organization: { title: @org_login, github_id: github_id }
       end
     end
   end
@@ -82,8 +76,8 @@ class OrganizationsControllerTest < ActionController::TestCase
     before do
       @organization = @user.organizations.first
 
-      stub_github_organization(@organization.github_id, { login: @org_login, id: @organization.github_id })
-      stub_users_github_organization_membership(@org_login, { state: 'active', role: 'admin' })
+      stub_github_organization(@organization.github_id, login: @org_login, id: @organization.github_id)
+      stub_users_github_organization_membership(@org_login, state: 'active', role: 'admin')
     end
 
     it 'returns success and sets the organization' do
@@ -98,8 +92,8 @@ class OrganizationsControllerTest < ActionController::TestCase
     before do
       @organization = @user.organizations.first
 
-      stub_github_organization(@organization.github_id, { login: @org_login, id: @organization.github_id })
-      stub_users_github_organization_membership(@org_login, { state: 'active', role: 'admin' })
+      stub_github_organization(@organization.github_id, login: @org_login, id: @organization.github_id)
+      stub_users_github_organization_membership(@org_login, state: 'active', role: 'admin')
     end
 
     it 'returns success and sets the organization' do
@@ -114,8 +108,8 @@ class OrganizationsControllerTest < ActionController::TestCase
     before do
       @organization = @user.organizations.first
 
-      stub_github_organization(@organization.github_id, { login: @org_login, id: @organization.github_id })
-      stub_users_github_organization_membership(@org_login, { state: 'active', role: 'admin' })
+      stub_github_organization(@organization.github_id, login: @org_login, id: @organization.github_id)
+      stub_users_github_organization_membership(@org_login, state: 'active', role: 'admin')
     end
 
     it 'deletes the organization' do

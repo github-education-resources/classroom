@@ -1,8 +1,8 @@
 class AssignmentInvitation < ActiveRecord::Base
   belongs_to :assignment
 
-  validates_presence_of   :key
-  validates_uniqueness_of :key
+  validates :key, presence:   true
+  validates :key, uniqueness: true
 
   after_initialize :assign_key
 

@@ -20,11 +20,9 @@ class GitHubClient
   end
 
   def create_team(org_github_id, options = {})
-    begin
-      client.create_team(org_github_id, options)
-    rescue
-      nil
-    end
+    client.create_team(org_github_id, options)
+  rescue
+    nil
   end
 
   def organization(github_id)
@@ -34,7 +32,7 @@ class GitHubClient
   def organization_admin?(github_id)
     organization_login = client.organization(github_id.to_i).login
     begin
-      organization_membership(organization_login).role == "admin"
+      organization_membership(organization_login).role == 'admin'
     rescue
       false
     end
@@ -42,6 +40,10 @@ class GitHubClient
 
   def organization_membership(github_login)
     client.organization_membership(github_login)
+  end
+
+  def organization_memberships
+    client.organization_memberships
   end
 
   def organization_teams(github_id)
@@ -57,23 +59,17 @@ class GitHubClient
   end
 
   def team(github_team_id)
-    begin
-      client.team(github_team_id)
-    rescue
-      nil
-    end
+    client.team(github_team_id)
+  rescue
+    nil
   end
 
   def update_team(team_id, options)
     client.update_team(team_id, options)
   end
 
-  def user(github_id=nil)
+  def user(github_id = nil)
     client.user(github_id)
-  end
-
-  def users_organizations
-    client.list_organizations
   end
 
   private
