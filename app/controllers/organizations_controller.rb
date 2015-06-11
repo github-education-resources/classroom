@@ -46,7 +46,6 @@ class OrganizationsController < ApplicationController
   end
 
   def new_assignment
-
   end
 
   private

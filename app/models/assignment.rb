@@ -1,7 +1,7 @@
 class Assignment < ActiveRecord::Base
-  has_one    :assignment_invitation, dependent: :destroy
+  has_one :assignment_invitation, dependent: :destroy
 
-  has_many   :assignment_repos
+  has_many :assignment_repos
 
   belongs_to :organization
 

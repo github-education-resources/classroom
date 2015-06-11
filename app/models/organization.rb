@@ -10,6 +10,6 @@ class Organization < ActiveRecord::Base
   validates :github_id,         uniqueness: true
 
   def all_assignments
-    (self.assignments + self.group_assignments) || NullAssignment.new
+    (assignments + group_assignments) || NullAssignment.new
   end
 end

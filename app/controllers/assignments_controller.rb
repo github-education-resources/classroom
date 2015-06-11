@@ -3,7 +3,6 @@ class AssignmentsController < ApplicationController
   before_action :set_organization, only:   [:new, :create]
 
   def show
-
   end
 
   def new

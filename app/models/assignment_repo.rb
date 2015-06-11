@@ -8,7 +8,7 @@ class AssignmentRepo < ActiveRecord::Base
   def create_github_repo(org_owner, organization, repo_name)
     repo = GitHubRepository.create_repository_for_team(org_owner,
                                                        organization,
-                                                       self.repo_access.github_team_id,
+                                                       repo_access.github_team_id,
                                                        repo_name)
 
     self.github_repo_id = repo.id

@@ -12,11 +12,9 @@ class GitHubClient
   end
 
   def create_repository(name, options = {})
-    begin
-      client.create_repository(name, options)
-    rescue
-      nil
-    end
+    client.create_repository(name, options)
+  rescue
+    nil
   end
 
   def create_team(org_github_id, options = {})
