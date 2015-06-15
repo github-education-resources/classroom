@@ -4,7 +4,7 @@ class AssignmentInvitationsController < ApplicationController
   def show
     @invitation = AssignmentInvitation.find_by_key!(params[:id])
 
-    if @invitation.redeem(current_user)
+    if @invitation.redeemed?(current_user)
       render :success, layout: false, status: 200
     else
       render :failed,  layout: false, status: 503
