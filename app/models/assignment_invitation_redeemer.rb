@@ -9,9 +9,17 @@ class AssignmentInvitationRedeemer
   def redeemed?
     repo_access     = find_or_create_repo_access
     assignment_repo = find_or_create_assignment_repo(repo_access)
-    full_repo_name  = @organization_owner.github_client.repository(assignment_repo.github_repo_id).full_name
 
+    full_repo_name  = @organization_owner.github_client.repository(assignment_repo.github_repo_id).full_name
     @organization_owner.github_client.team_repository?(repo_access.github_team_id, full_repo_name)
+  end
+
+  protected
+
+  def find_organization_owner
+    @organization.users.find do |user|
+      user.github_client.organization_admin?(@organization.github_id)
+    end
   end
 
   private
@@ -31,7 +39,7 @@ class AssignmentInvitationRedeemer
   end
 
   def create_repo_access
-    team_name   = "Team #{@organization.repo_accesses.count + 1}"
+    team_name   = "Team: #{@organization.repo_accesses.count + 1}"
     github_team = GitHubTeam.create_team(@organization_owner, @organization.github_id, team_name)
 
     github_team.add_user_to_team(@invitee)
@@ -40,12 +48,6 @@ class AssignmentInvitationRedeemer
 
     repo_access.save!
     repo_access
-  end
-
-  def find_organization_owner
-    @organization.users.find do |user|
-      user.github_client.organization_admin?(@organization.github_id)
-    end
   end
 
   def find_assignment_repo(repo_access)

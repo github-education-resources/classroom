@@ -54,12 +54,8 @@ class GitHubClient
     nil
   end
 
-  def team_repository?(team_id, repo_id)
-    client.team_repository?(team_id, repo_id)
-  end
-
-  def update_team(team_id, options)
-    client.update_team(team_id, options)
+  def team_repository?(team_id, full_repo_name)
+    client.team_repository?(team_id, full_repo_name)
   end
 
   def user(github_id = nil)

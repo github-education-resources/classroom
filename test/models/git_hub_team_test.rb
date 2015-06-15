@@ -16,7 +16,7 @@ class GitHubTeamTest < ActiveSupport::TestCase
 
     stub_create_github_team(@organization.github_id, { name: @team[:name], permission: 'push' }, @team)
 
-    github_team = GitHubTeam.find_or_create_team(@user.github_client, @organization.github_id, nil, @team[:name])
+    github_team = GitHubTeam.create_team(@user, @organization.github_id, @team[:name])
 
     assert @team[:id],   github_team.id
     assert @team[:name], github_team.name
@@ -27,7 +27,7 @@ class GitHubTeamTest < ActiveSupport::TestCase
 
     stub_create_github_team(@organization.github_id, { name: @team[:name], permission: 'push' }, nil)
 
-    github_team = GitHubTeam.find_or_create_team(@user.github_client, @organization.github_id, nil, @team[:name])
+    github_team = GitHubTeam.create_team(@user, @organization.github_id, @team[:name])
 
     assert NullGitHubTeam, github_team.class
   end

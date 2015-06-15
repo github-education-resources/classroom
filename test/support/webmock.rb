@@ -42,6 +42,11 @@ def stub_github_team(team_id, expected_resp)
   stub_get_json(url, expected_resp)
 end
 
+def stub_github_team_repository?(team_id, full_name, status, expected_resp)
+  url = github_url("teams/#{team_id}/repos/#{full_name}")
+  stub_get_json_with_status(url, status, expected_resp)
+end
+
 def stub_github_user(github_id = nil, expected_resp)
   url = github_url('/user')
   url += github_id.nil? ? '' : "/#{github_id}"
@@ -64,6 +69,14 @@ private
 def stub_get_json(url, expected_resp)
   stub_request(:get, url)
     .to_return(
+      body: expected_resp.to_json,
+      headers: { 'Content-Type' => 'application/json' })
+end
+
+def stub_get_json_with_status(url, status, expected_resp)
+  stub_request(:get, url)
+    .to_return(
+      status: status,
       body: expected_resp.to_json,
       headers: { 'Content-Type' => 'application/json' })
 end

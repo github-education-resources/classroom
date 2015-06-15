@@ -8,7 +8,7 @@ class AssignmentInvitation < ActiveRecord::Base
 
   def redeemed?(invitee)
     invitation_redeemer = AssignmentInvitationRedeemer.new(assignment, invitee)
-    invitation_redeemer.redeemed?
+    # invitation_redeemer.redeemed?
   end
 
   def to_param

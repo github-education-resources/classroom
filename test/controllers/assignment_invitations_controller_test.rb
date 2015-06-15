@@ -28,13 +28,14 @@ class AssignmentInvitationsControllerTest < ActionController::TestCase
 
       describe 'successful invitation' do
         it 'will redeem the users invitation and show them the success layout' do
-          repo_id    = 123
-          team_id    = 1
-          user_login = 'user_login'
+          full_repo_name = 'org/test_repo'
+          repo_id        = 123
+          team_id        = 1
+          user_login     = 'user_login'
 
-          #################
-          ## repo_access ##
-          #################
+          ###########
+          ## Setup ##
+          ###########
 
           # Get organization
           stub_github_organization(@organization.github_id, login: @organization.title, id: @organization.github_id)
@@ -42,14 +43,15 @@ class AssignmentInvitationsControllerTest < ActionController::TestCase
           # Get admin member of org
           stub_users_github_organization_membership(@organization.title, state: 'active', role: 'admin')
 
-          # No GitHub Team is present
-          stub_github_team(nil, nil)
-
           # Create GitHub Team
           team_number = @organization.repo_accesses.count + 1
           stub_create_github_team(@organization.github_id,
                                   { name: "Team: #{team_number}", permission: 'push' },
                                   id: team_id)
+
+          #################
+          ## repo_access ##
+          #################
 
           # Get GitHub User info
           stub_github_user(nil, login: user_login)
@@ -70,14 +72,13 @@ class AssignmentInvitationsControllerTest < ActionController::TestCase
             name:          "#{@invitation.assignment.title}: #{@invitation.assignment.assignment_repos.count + 1}"
           }
 
-          # Create GitHub Repo
           stub_create_github_organization_repo(@organization.title,
                                                options,
                                                id: repo_id,
                                                name: @invitation.assignment.title)
 
-          # Return that the repo exists
-          stub_github_repo(repo_id, true)
+          stub_github_repo(repo_id, { full_name: full_repo_name })
+          stub_github_team_repository?(team_id, full_repo_name, 204, nil)
 
           get :show, id: @invitation.key
 

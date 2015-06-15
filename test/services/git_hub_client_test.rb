@@ -20,6 +20,9 @@ class GitHubClientTest < ActiveSupport::TestCase
     end
   end
 
+  test '#create_repository' do
+  end
+
   test '#create_team' do
     VCR.use_cassette('create_team') do
       @team_name = "Test Team #{Time.zone.now.to_i}"
@@ -81,12 +84,12 @@ class GitHubClientTest < ActiveSupport::TestCase
     end
   end
 
-  test '#update_team' do
-    VCR.use_cassette('update_team') do
-      team = @github_client.team(@admin_org[:owners_team_id])
+  test '#team_repository?' do
+    VCR.use_cassette('team_repository?') do
+      is_team_repo = @github_client.team_repository?(@admin_org[:owners_team_id], "#{@admin_org[:login]}/notateamrepository")
 
-      @github_client.update_team(team.id, description: 'The Owners')
-      assert_requested :patch, github_url("/teams/#{team.id}")
+      assert_not is_team_repo
+      assert_requested :get, github_url("/teams/#{@admin_org[:owners_team_id]}/repos/#{@admin_org[:login]}/notateamrepository")
     end
   end
 
