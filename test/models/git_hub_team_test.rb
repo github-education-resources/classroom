@@ -9,7 +9,6 @@ class GitHubTeamTest < ActiveSupport::TestCase
   end
 
   test '#add_user_to_team' do
-
   end
 
   test '#create_team returns a new team' do
