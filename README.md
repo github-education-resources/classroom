@@ -1,3 +1,3 @@
 # Classroom
 
-Testing the CLA. Ignore Me. For real.
+Testing the CLA. You have been CLAd.
