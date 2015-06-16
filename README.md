@@ -1,2 +1,2 @@
 # Classroom
-:octocat:
+:octocat: :octocat:
