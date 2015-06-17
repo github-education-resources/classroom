@@ -1,0 +1,19 @@
+.loading {
+  &:after {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    content: " ";
+    background: #fff image-url("octocat-spinner-128.gif") no-repeat center center;
+    background-size: 64px;
+  }
+}
+
+.loader {
+  display: none;
+  height: 64px;
+  background: #fff url('../img/octocat-spinner-128.gif') no-repeat center center;
+  background-size: 32px;
+}

@@ -1,13 +1,18 @@
 class AssignmentInvitationsController < ApplicationController
   before_action :authenticate_with_pre_login_destination, only: [:show]
+  before_action :set_invitation
 
   def show
-    @invitation = AssignmentInvitation.find_by_key!(params[:id])
+  end
 
-    if @invitation.redeemed?(current_user)
-      render :success, layout: false, status: 200
-    else
-      render :failed,  layout: false, status: 503
+  def accept_invitation
+
+    respond_to do |format|
+      if @invitation.redeemed?(current_user)
+        format.json { render :success, status: :created }
+      else
+        format.json { render :failed, status: 503 }
+      end
     end
   end
 
@@ -17,5 +22,9 @@ class AssignmentInvitationsController < ApplicationController
     return if logged_in?
     session[:pre_login_destination] = "#{request.base_url}#{request.path}"
     redirect_to login_path
+  end
+
+  def set_invitation
+    @invitation = AssignmentInvitation.find_by_key!(params[:id])
   end
 end
