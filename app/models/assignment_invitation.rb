@@ -7,7 +7,7 @@ class AssignmentInvitation < ActiveRecord::Base
   after_initialize :assign_key
 
   def redeemed?(invitee)
-    invitation_redeemer = AssignmentInvitationRedeemer.new(invitee)
+    invitation_redeemer = AssignmentInvitationRedeemer.new(assignment, invitee)
     invitation_redeemer.redeemed?
   end
 
