@@ -39,10 +39,11 @@ ActiveRecord::Schema.define(version: 20150608135401) do
   add_index "assignment_repos", ["repo_access_id"], name: "index_assignment_repos_on_repo_access_id", using: :btree
 
   create_table "assignments", force: :cascade do |t|
-    t.string   "title",           null: false
+    t.boolean  "public_repo",     default: true
+    t.string   "title",                          null: false
     t.integer  "organization_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
   end
 
   add_index "assignments", ["organization_id"], name: "index_assignments_on_organization_id", using: :btree
@@ -68,10 +69,11 @@ ActiveRecord::Schema.define(version: 20150608135401) do
   add_index "group_assignment_repos", ["group_assignment_id"], name: "index_group_assignment_repos_on_group_assignment_id", using: :btree
 
   create_table "group_assignments", force: :cascade do |t|
-    t.string   "title",           null: false
+    t.boolean  "public_repo",     default: true
+    t.string   "title",                          null: false
     t.integer  "organization_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
   end
 
   add_index "group_assignments", ["organization_id"], name: "index_group_assignments_on_organization_id", using: :btree

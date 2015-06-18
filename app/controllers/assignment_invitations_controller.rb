@@ -6,7 +6,6 @@ class AssignmentInvitationsController < ApplicationController
   end
 
   def accept_invitation
-
     respond_to do |format|
       if @invitation.redeemed?(current_user)
         format.json { render :success, status: :created }

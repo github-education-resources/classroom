@@ -10,4 +10,12 @@ class Assignment < ActiveRecord::Base
   def assignment_invitation
     super || NullAssignmentInvitation.new
   end
+
+  def public?
+    public_repo
+  end
+
+  def private?
+    !public_repo
+  end
 end

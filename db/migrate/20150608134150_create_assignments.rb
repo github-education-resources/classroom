@@ -1,14 +1,18 @@
 class CreateAssignments < ActiveRecord::Migration
   def change
     create_table :assignments do |t|
+      t.boolean    :public_repo,  default: true
       t.string     :title,        null: false
+
       t.belongs_to :organization, index: true
 
       t.timestamps null: false
     end
 
     create_table :group_assignments do |t|
+      t.boolean    :public_repo,  default: true
       t.string     :title,        null: false
+
       t.belongs_to :organization, index: true
 
       t.timestamps null: false

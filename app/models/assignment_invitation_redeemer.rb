@@ -24,22 +24,22 @@ class AssignmentInvitationRedeemer
 
   private
 
-  def create_assignment_repo(repo_access)
-    assignment_name   = "#{@assignment.title}: #{@assignment.assignment_repos.count + 1}"
-    github_repository = GitHubRepository.create_repository_for_team(@organization_owner,
-                                                                    @organization,
-                                                                    repo_access.github_team_id,
-                                                                    assignment_name)
+  def create_assignment_repo(repo_access, assignment_name)
+    org_login = @organization_owner.github_client.organization(@organization.github_id).login
 
-    assignment_repo   = AssignmentRepo.new(assignment:     @assignment,
-                                           github_repo_id: github_repository.id,
-                                           repo_access:    repo_access)
+    repo = GitHubRepository.create_repository(@organization_owner,
+                                              assignment_name,
+                                              organization: org_login,
+                                              team_id:      repo_access.github_team_id,
+                                              private:      @assignment.private?)
+
+    assignment_repo = AssignmentRepo.new(assignment: @assignment, github_repo_id: repo.id, repo_access: repo_access)
+
     assignment_repo.save!
     assignment_repo
   end
 
-  def create_repo_access
-    team_name   = "Team: #{@organization.repo_accesses.count + 1}"
+  def create_repo_access(team_name)
     github_team = GitHubTeam.create_team(@organization_owner, @organization.github_id, team_name)
 
     github_team.add_user_to_team(@invitee)
@@ -55,11 +55,21 @@ class AssignmentInvitationRedeemer
   end
 
   def find_or_create_assignment_repo(repo_access)
-    find_assignment_repo(repo_access) || create_assignment_repo(repo_access)
+    if (assignment_repo = find_assignment_repo(repo_access))
+      assignment_repo
+    else
+      assignment_name = "#{@assignment.title}: #{@assignment.assignment_repos.count + 1}"
+      create_assignment_repo(repo_access, assignment_name)
+    end
   end
 
   def find_or_create_repo_access
-    find_repo_access || create_repo_access
+    if (repo_access = find_repo_access)
+      repo_access
+    else
+      team_name = "Team: #{@organization.repo_accesses.count + 1}"
+      create_repo_access(team_name)
+    end
   end
 
   def find_repo_access
