@@ -32,7 +32,9 @@ group :development, :test do
   gem 'dotenv-rails'
   gem 'pry-rails'
   gem 'pry-byebug'
-  gem 'rubocop', require: false
+  gem 'rspec-rails'
+  gem 'rubocop',   require: false
+  gem 'scss_lint', require: false
   gem 'spring'
 end
 

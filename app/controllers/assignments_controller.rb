@@ -5,9 +5,6 @@ class AssignmentsController < ApplicationController
   before_action :set_assignment,             except: [:new, :create]
   before_action :set_organization,           only: [:new, :create]
 
-  def show
-  end
-
   def new
     @assignment = Assignment.new
   end
@@ -23,6 +20,9 @@ class AssignmentsController < ApplicationController
     else
       render :new
     end
+  end
+
+  def show
   end
 
   private

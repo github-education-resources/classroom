@@ -5,7 +5,7 @@ class GitHubRepository
     @id = id
   end
 
-  def self.create_repository(org_owner, repo_name, user_repo_options)
+  def self.create_repository(org_owner, repo_name, user_repo_options = {})
     repo_options = github_repo_default_options.merge(user_repo_options)
 
     if (repo = org_owner.github_client.create_repository(repo_name, repo_options))
