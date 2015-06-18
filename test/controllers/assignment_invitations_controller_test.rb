@@ -42,7 +42,7 @@ class AssignmentInvitationsControllerTest < ActionController::TestCase
         team_id:        12,
         team_name:      'Team 1',
         user_login:     'user',
-        repo_id:        8675309,
+        repo_id:        8_675_309,
         repo_name:      "#{@invitation.assignment.title}: 1",
         full_repo_name: "user/#{@invitation.assignment.title.parameterize}-1"
       }
@@ -80,8 +80,7 @@ class AssignmentInvitationsControllerTest < ActionController::TestCase
                                              id: @stub_values[:repo_id],
                                              name: @stub_values[:repo_name])
 
-
-        stub_github_repo(@stub_values[:repo_id], { full_name: @stub_values[:full_repo_name] })
+        stub_github_repo(@stub_values[:repo_id], full_name: @stub_values[:full_repo_name])
         stub_github_team_repository?(@stub_values[:team_id], @stub_values[:full_repo_name], 204, nil)
 
         get :accept_invitation, format: :json, id: @invitation.key

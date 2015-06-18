@@ -86,10 +86,13 @@ class GitHubClientTest < ActiveSupport::TestCase
 
   test '#team_repository?' do
     VCR.use_cassette('team_repository?') do
-      is_team_repo = @github_client.team_repository?(@admin_org[:owners_team_id], "#{@admin_org[:login]}/notateamrepository")
+      team_repo = @github_client.team_repository?(@admin_org[:owners_team_id],
+                                                  "#{@admin_org[:login]}/notateamrepository")
 
-      assert_not is_team_repo
-      assert_requested :get, github_url("/teams/#{@admin_org[:owners_team_id]}/repos/#{@admin_org[:login]}/notateamrepository")
+      url = "/teams/#{@admin_org[:owners_team_id]}/repos/#{@admin_org[:login]}/notateamrepository"
+
+      assert_not team_repo
+      assert_requested :get, github_url(url)
     end
   end
 
