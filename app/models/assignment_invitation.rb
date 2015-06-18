@@ -8,7 +8,6 @@ class AssignmentInvitation < ActiveRecord::Base
 
   def redeemed?(invitee)
     invitation_redeemer = AssignmentInvitationRedeemer.new(invitee)
-    binding.pry
     invitation_redeemer.redeemed?
   end
 
