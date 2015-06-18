@@ -1,13 +1,18 @@
 class CreateAssignmentRepos < ActiveRecord::Migration
   def change
-    create_table :individual_assignment_repos do |t|
+    create_table :assignment_repos do |t|
       t.integer :github_repo_id, null: false
+      t.belongs_to :repo_access, index: true
+
+      t.timestamps null: false
     end
 
-    add_index :individual_assignment_repos, :github_repo_id, unique: true
+    add_index :assignment_repos, :github_repo_id, unique: true
 
     create_table :group_assignment_repos do |t|
       t.integer :github_repo_id, null: false
+
+      t.timestamps null: false
     end
 
     add_index :group_assignment_repos, :github_repo_id, unique: true

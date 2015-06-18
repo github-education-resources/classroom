@@ -27,9 +27,24 @@ def stub_github_organization(org_id, expected_resp)
   stub_get_json(url, expected_resp)
 end
 
+def stub_create_github_organization_repo(org, options = {}, expected_resp)
+  url = github_url("/orgs/#{org}/repos")
+  stub_post_json(url, options, expected_resp)
+end
+
+def stub_github_repo(repo_id, expected_resp)
+  url = github_url("/repositories/#{repo_id}")
+  stub_get_json(url, expected_resp)
+end
+
 def stub_github_team(team_id, expected_resp)
   url = github_url("/teams/#{team_id}")
   stub_get_json(url, expected_resp)
+end
+
+def stub_github_team_repository?(team_id, full_name, status, expected_resp)
+  url = github_url("teams/#{team_id}/repos/#{full_name}")
+  stub_get_json_with_status(url, status, expected_resp)
 end
 
 def stub_github_user(github_id = nil, expected_resp)
@@ -54,6 +69,14 @@ private
 def stub_get_json(url, expected_resp)
   stub_request(:get, url)
     .to_return(
+      body: expected_resp.to_json,
+      headers: { 'Content-Type' => 'application/json' })
+end
+
+def stub_get_json_with_status(url, status, expected_resp)
+  stub_request(:get, url)
+    .to_return(
+      status: status,
       body: expected_resp.to_json,
       headers: { 'Content-Type' => 'application/json' })
 end

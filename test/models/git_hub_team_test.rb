@@ -8,35 +8,26 @@ class GitHubTeamTest < ActiveSupport::TestCase
     @team = { id: 8_675_309, name: 'Students' }
   end
 
-  test '#find_or_create_team returns an existing team' do
-    stub_github_team(@team[:id], @team)
-
-    github_team = GitHubTeam.find_or_create_team(@user.github_client,
-                                                 @organization.github_id,
-                                                 @team[:id],
-                                                 @team[:name])
-
-    assert @team[:id],   github_team.id
-    assert @team[:name], github_team.name
+  test '#add_user_to_team' do
   end
 
-  test '#find_or_create_team returns a new team' do
+  test '#create_team returns a new team' do
     stub_github_team(nil, nil)
 
     stub_create_github_team(@organization.github_id, { name: @team[:name], permission: 'push' }, @team)
 
-    github_team = GitHubTeam.find_or_create_team(@user.github_client, @organization.github_id, nil, @team[:name])
+    github_team = GitHubTeam.create_team(@user, @organization.github_id, @team[:name])
 
     assert @team[:id],   github_team.id
     assert @team[:name], github_team.name
   end
 
-  test '#find_or_create_team returns NullGitHubTeam' do
+  test '#create_team returns NullGitHubTeam' do
     stub_github_team(nil, nil)
 
     stub_create_github_team(@organization.github_id, { name: @team[:name], permission: 'push' }, nil)
 
-    github_team = GitHubTeam.find_or_create_team(@user.github_client, @organization.github_id, nil, @team[:name])
+    github_team = GitHubTeam.create_team(@user, @organization.github_id, @team[:name])
 
     assert NullGitHubTeam, github_team.class
   end
