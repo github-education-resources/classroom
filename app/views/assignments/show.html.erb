@@ -1,4 +1,7 @@
-<h1 class="page-header"><%= @assignment.title %></h1>
+<h2 class="page-header">
+  <%= link_to @organization.title, @organization %> / <%= link_to @assignment.title, organization_assignment_path(@organization, @assignment) %>
+</h2>
+
 <div class="columns">
   <div class="one-half column centered">
     <%= render @assignment.assignment_invitation %>

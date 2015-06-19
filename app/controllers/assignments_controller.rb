@@ -3,7 +3,7 @@ class AssignmentsController < ApplicationController
   before_action :ensure_organization_admin
 
   before_action :set_assignment,             except: [:new, :create]
-  before_action :set_organization,           only: [:new, :create]
+  before_action :set_organization
 
   def new
     @assignment = Assignment.new
