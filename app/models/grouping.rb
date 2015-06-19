@@ -1,7 +1,7 @@
 class Grouping < ActiveRecord::Base
-  belongs_to :organization
-
   has_many :groups
+
+  belongs_to :organization
 
   validates :title, presence: true
 end

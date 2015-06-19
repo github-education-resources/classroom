@@ -7,6 +7,12 @@ class GitHubClient
     client.add_team_membership(team_id, login)
   end
 
+  def create_repository(name, options = {})
+    client.create_repository(name, options)
+  rescue
+    nil
+  end
+
   def create_team(org_github_id, options = {})
     client.create_team(org_github_id, options)
   rescue
@@ -38,14 +44,18 @@ class GitHubClient
     client.organization_teams(github_id.to_i)
   end
 
+  def repository(github_id)
+    client.repository(github_id)
+  end
+
   def team(github_team_id)
     client.team(github_team_id)
   rescue
     nil
   end
 
-  def update_team(team_id, options)
-    client.update_team(team_id, options)
+  def team_repository?(team_id, full_repo_name)
+    client.team_repository?(team_id, full_repo_name)
   end
 
   def user(github_id = nil)

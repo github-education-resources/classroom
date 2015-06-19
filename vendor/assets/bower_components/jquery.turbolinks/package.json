@@ -1,0 +1,29 @@
+{
+  "name": "jquery.turbolinks",
+  "version": "2.1.0",
+  "authors": [
+    "Sasha Koss <kossnocorp@gmail.com>",
+    "Rico Sta. Cruz <hi@ricostacruz.com>"
+  ],
+  "description": "jQuery plugin for drop-in fix binded events problem caused by Turbolinks",
+
+  "devDependencies": {
+    "coffee-script": "~1.7.1",
+    "mocha":         "~1.21.4",
+    "chai":          "~1.9.1",
+    "sinon":         "~1.10.3",
+    "sinon-chai":    "~2.5.0",
+    "jquery":        "~2.1.1",
+    "jsdom":         "~1.0.0-pre.4"
+  },
+
+  "license": "MIT",
+
+  "engine": {
+    "node": ">=0.4"
+  },
+
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha ./spec/*_spec.coffee --compilers coffee:coffee-script/register -R spec -c"
+  }
+}

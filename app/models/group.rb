@@ -1,5 +1,5 @@
 class Group < ActiveRecord::Base
-  belongs_to :grouping
-
   has_many :repo_access
+
+  belongs_to :grouping
 end
