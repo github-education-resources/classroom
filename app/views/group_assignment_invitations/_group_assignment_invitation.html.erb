@@ -1,0 +1,12 @@
+<form>
+  <dt><label>Give this to your students</label></dt>
+  <div class="input-group">
+    <% invitation_url = request.base_url + group_assignment_invitation_path(group_assignment_invitation.key) %>
+    <%= content_tag :input, '', type: 'text', value: "#{invitation_url}", readonly: 'readonly' %>
+    <span class="input-group-button">
+      <button class="btn">
+        <span class="octicon octicon-clippy"></span>
+      </button>
+    </span>
+  </div>
+</form>

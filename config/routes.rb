@@ -15,11 +15,18 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :group_assignment_invitations, only: [:show] do
+    member do
+      get 'accept_invitation'
+    end
+  end
+
   resources :organizations do
     member do
       get 'new_assignment'
     end
 
-    resources :assignments, only: [:show, :new, :create]
+    resources :assignments,       only: [:show, :new, :create]
+    resources :group_assignments, only: [:show, :new, :create]
   end
 end
