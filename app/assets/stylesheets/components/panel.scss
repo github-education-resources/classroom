@@ -1,20 +1,20 @@
 .panel {
   margin-bottom: 10px;
-  background-color: white;
+  background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 4px;
-  box-shadow: 0 1px 1px rgba(0,0,0,.05);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
 .panel-body {
-  padding: 25px;
   @include clearfix;
+  padding: 25px;
 }
 
 // Optional heading
 .panel-heading {
   padding: 10px;
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
   border-bottom: 1px solid #ddd;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;

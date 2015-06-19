@@ -1,9 +1,11 @@
 class AssignmentInvitationRedeemer
+  attr_reader :assignment, :invitee, :organization, :organization_owner
+
   def initialize(assignment, invitee)
     @assignment         = assignment
     @invitee            = invitee
     @organization       = assignment.organization
-    @organization_owner = find_organization_owner
+    @organization_owner = @organization.users.sample
   end
 
   def redeemed?
@@ -12,14 +14,6 @@ class AssignmentInvitationRedeemer
 
     full_repo_name  = @organization_owner.github_client.repository(assignment_repo.github_repo_id).full_name
     @organization_owner.github_client.team_repository?(repo_access.github_team_id, full_repo_name)
-  end
-
-  protected
-
-  def find_organization_owner
-    @organization.users.find do |user|
-      user.github_client.organization_admin?(@organization.github_id)
-    end
   end
 
   private

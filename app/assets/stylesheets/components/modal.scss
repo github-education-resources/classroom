@@ -5,8 +5,8 @@ $space: 40px;
 $blue: #428bca;
 $blue-dark: darken($blue, 5%);
 
-.modal{
-  &:before{
+.modal {
+  &:before {
     content: "";
     display: none;
     background: rgba(0, 0, 0, 0.5);
@@ -15,20 +15,19 @@ $blue-dark: darken($blue, 5%);
     z-index: 10;
   }
 
-  &:target{
-    &:before{
+  &:target {
+    &:before {
       display: block;
     }
-    .modal-dialog{
-      transform: translate(0,0);
+
+    .modal-dialog {
+      transform: translate(0, 0);
       top: 20%;
     }
-
   }
-
 }
 
-.modal-dialog{
+.modal-dialog {
   background: #fefefe;
   border: $gray solid 1px;
   border-radius: 5px;
@@ -43,25 +42,24 @@ $blue-dark: darken($blue, 5%);
   transition: 1s ease-out;
 }
 
-.modal-body{
+.modal-body {
   padding: $space/2;
 }
 
 .modal-header,
-.modal-footer{
+.modal-footer {
   padding: $space/4 $space/2;
 }
 
-.modal-header{
+.modal-header {
   border-bottom: $gray-lighter solid 1px;
 
-  h2{
+  h2 {
     font-size: 20px;
   }
-
 }
 
-.modal-footer{
+.modal-footer {
   border-top: $gray-lighter solid 1px;
   text-align: center;
 }
