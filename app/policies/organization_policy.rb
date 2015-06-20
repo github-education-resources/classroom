@@ -1,11 +1,6 @@
 class OrganizationPolicy < ApplicationPolicy
   attr_reader :user, :organization
 
-  def initialize(user, organization)
-    @user         = user
-    @organization = organization
-  end
-
   # Creation of objects that need an organization
   def create?
     github_organization_admin?(@user, @organization.github_id)
