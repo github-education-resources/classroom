@@ -12,6 +12,7 @@ gem 'omniauth'
 gem 'omniauth-github'
 
 gem 'pg'
+gem 'pundit'
 
 gem 'sass-rails', '~> 5.0'
 
@@ -45,7 +46,6 @@ end
 group :test do
   gem 'factory_girl_rails'
   gem 'faker'
-  gem 'minitest-reporters'
   gem 'vcr'
   gem 'webmock'
 end
