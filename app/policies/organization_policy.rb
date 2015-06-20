@@ -27,4 +27,10 @@ class OrganizationPolicy < ApplicationPolicy
   def destroy?
     github_organization_admin?(@user, @organization.github_id)
   end
+
+  private
+
+  def github_organization_admin?(user, organization_github_id)
+    user.github_client.organization_admin?(organization_github_id)
+  end
 end

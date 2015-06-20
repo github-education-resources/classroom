@@ -28,10 +28,4 @@ class ApplicationPolicy
   def destroy?
     false
   end
-
-  protected
-
-  def github_organization_admin?(user, organization_github_id)
-    user.github_client.organization_admin?(organization_github_id)
-  end
 end
