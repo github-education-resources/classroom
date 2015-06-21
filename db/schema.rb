@@ -71,6 +71,7 @@ ActiveRecord::Schema.define(version: 20150608135401) do
   create_table "group_assignments", force: :cascade do |t|
     t.boolean  "public_repo",     default: true
     t.string   "title",                          null: false
+    t.integer  "grouping_id"
     t.integer  "organization_id"
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false

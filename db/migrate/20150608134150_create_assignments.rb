@@ -13,6 +13,7 @@ class CreateAssignments < ActiveRecord::Migration
       t.boolean    :public_repo,  default: true
       t.string     :title,        null: false
 
+      t.belongs_to :grouping
       t.belongs_to :organization, index: true
 
       t.timestamps null: false

@@ -15,6 +15,7 @@ class GroupAssignmentsController < ApplicationController
     @group_assignment = GroupAssignment.new(new_group_assignment_params)
 
     if @group_assignment.save
+      CreateGroupingJob.perform_later(@group_assignment, new_grouping_params)
       CreateGroupAssignmentInvitationJob.perform_later(@group_assignment)
 
       flash[:success] = "\"#{@group_assignment.title}\" has been created!"
@@ -43,12 +44,19 @@ class GroupAssignmentsController < ApplicationController
       .merge(organization_id: params[:organization_id])
   end
 
-  def set_group_assignment
-    @group_assignment = GroupAssignment.find(params[:id])
+  def new_grouping_params
+    params
+      .require(:grouping)
+      .permit(:title)
+      .merge(organization_id: new_group_assignment_params[:organization_id])
   end
 
   def set_groupings
     @groupings = @organization.groupings.map { |group| [group.title, group.id] }
+  end
+
+  def set_group_assignment
+    @group_assignment = GroupAssignment.find(params[:id])
   end
 
   def set_organization
