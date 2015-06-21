@@ -57,7 +57,7 @@ Rails.application.configure do
   # Use a different cache store in production.
   config.cache_store = :mem_cache_store, ENV["MEMCACHEDCLOUD_SERVERS"].split(','), { username: ENV["MEMCACHEDCLOUD_USERNAME"],
                                                                                      password: ENV["MEMCACHEDCLOUD_PASSWORD"],
-                                                                                     namespace: CLASSROOM,
+                                                                                     namespace: 'classroom',
                                                                                      expires_in: 15.minutes,
                                                                                      compress: true,
                                                                                      pool_size: 5 }
