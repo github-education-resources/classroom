@@ -33,14 +33,14 @@
 
           <dl class="form">
             <dt><label>Create a new group of teams</label></dt>
-            <dd><input class="textfield" type="text" name="group_assignment[:grouping_title]" id="group_assignment_grouping_title">
+            <dd><input class="textfield" type="text" name="grouping[title]" id="grouping_title">
           </dl>
 
           <% if @organization.groupings.present? %>
             <dt><label>OR choose an existing group of teams</label></dt>
             <dl class="form">
               <dd>
-                <%= select :group_assignment, :grouping, options_for_select(@groupings), include: :blank %>
+                <%= select :group_assignment, :grouping_id, options_for_select(@groupings), include_blank: true %>
               </dd>
             </dl>
           <% end %>
@@ -49,11 +49,10 @@
 
           <div class="form-actions left">
             <%= link_to 'Cancel', organization_path(@organization), class: 'btn', role: 'button' %>
-            <%= f.submit 'Create Assignment', class: 'btn btn-primary' %>
+            <%= f.submit 'Create Assignment', class: 'btn btn-primary', id: 'group_assignment_submit', disabled: true %>
           </div>
         <% end %>
       </div>
     </div>
   </div>
 </div>
-
