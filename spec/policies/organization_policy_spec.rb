@@ -1,23 +1,47 @@
 require 'rails_helper'
 
 describe OrganizationPolicy do
-  let(:user) { User.new }
+  let(:user) { create(:user_with_organizations) }
 
   subject { described_class }
 
-  permissions :show? do
-    pending "add some examples to (or delete) #{__FILE__}"
+  permissions :index? do
+    it 'will never allow index' do
+    end
+  end
+
+  permissions :new? do
+    it 'will allow the creation of a new organization' do
+    end
   end
 
   permissions :create? do
-    pending "add some examples to (or delete) #{__FILE__}"
+    it '' do
+    end
+  end
+
+  permissions :show? do
+    it '' do
+    end
+  end
+
+  permissions :edit? do
+    it '' do
+    end
   end
 
   permissions :update? do
-    pending "add some examples to (or delete) #{__FILE__}"
+    it '' do
+    end
   end
 
   permissions :destroy? do
-    pending "add some examples to (or delete) #{__FILE__}"
+    it '' do
+    end
+  end
+
+  permissions :new_assignment? do
+    it '' do
+    end
   end
 end
