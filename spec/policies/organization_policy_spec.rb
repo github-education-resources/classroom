@@ -1,17 +1,15 @@
 require 'rails_helper'
 
 describe OrganizationPolicy do
-  let(:user) { create(:user_with_organizations) }
-
   subject { described_class }
 
   permissions :index? do
-    it 'will never allow index' do
+    it '' do
     end
   end
 
   permissions :new? do
-    it 'will allow the creation of a new organization' do
+    it '' do
     end
   end
 
