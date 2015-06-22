@@ -5,6 +5,8 @@ class GroupAssignmentInvitationsController < ApplicationController
   layout 'layouts/invitations'
 
   def show
+    @grouping = @invitation.group_assignment.grouping
+    @groups   = @grouping.groups
   end
 
   def accept_invitation

@@ -1,0 +1,32 @@
+<div class="columns">
+  <div class="two-thirds column centered">
+    <div class="panel">
+      <div class="panel-heading">
+        <h3 class="panel-title">Create your team or join a team</h3>
+      </div>
+      <div class="panel-body">
+        <%= form_tag({ controller: :groups, action: :create }, id: 'new_group_form', remote: true) do %>
+          <%= hidden_field_tag :key, @invitation.key %>
+          <div class="input-group">
+            <%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team' %>
+            <span class="input-group-button">
+              <button class="btn" id="add_new_group" disabled="true">
+                <span class="octicon octicon-plus"></span>
+              </button>
+            </span>
+          </div>
+        <% end %>
+
+        <!-- <hr> -->
+
+        <div id="groupings">
+
+        </div>
+
+        <%# <%= form_for @grouping do |f| %>
+        <%#
+        <%# <% end %>
+      </div>
+    </div>
+  </div>
+</div>

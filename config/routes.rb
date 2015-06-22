@@ -21,6 +21,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :groups, only: [:create]
+
   resources :organizations do
     member do
       get 'new_assignment'

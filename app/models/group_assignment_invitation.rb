@@ -1,4 +1,6 @@
 class GroupAssignmentInvitation < ActiveRecord::Base
+  has_one :grouping, through: :group_assignment
+
   belongs_to :group_assignment
 
   validates :key, presence:   true
