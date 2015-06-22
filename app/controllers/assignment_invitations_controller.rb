@@ -2,6 +2,8 @@ class AssignmentInvitationsController < ApplicationController
   before_action :authenticate_with_pre_login_destination, only: [:show]
   before_action :set_invitation
 
+  layout 'layouts/invitations'
+
   def show
   end
 
