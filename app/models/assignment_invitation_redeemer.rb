@@ -5,7 +5,7 @@ class AssignmentInvitationRedeemer
     @assignment         = assignment
     @invitee            = invitee
     @organization       = assignment.organization
-    @organization_owner = @organization.users.sample
+    @organization_owner = @organization.owner
   end
 
   def redeemed?
@@ -21,11 +21,9 @@ class AssignmentInvitationRedeemer
   private
 
   def create_assignment_repo(repo_access, assignment_name)
-    org_login = @organization_owner.github_client.organization(@organization.github_id).login
-
     repo = GitHubRepository.create_repository(@organization_owner,
                                               assignment_name,
-                                              organization: org_login,
+                                              organization: @organization.github_login,
                                               team_id:      repo_access.github_team_id,
                                               private:      @assignment.private?)
 

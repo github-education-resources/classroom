@@ -17,11 +17,9 @@ Rails.application.routes.draw do
 
   resources :group_assignment_invitations, only: [:show] do
     member do
-      get 'accept_invitation'
+      patch 'accept_invitation'
     end
   end
-
-  resources :groups, only: [:create]
 
   resources :organizations do
     member do

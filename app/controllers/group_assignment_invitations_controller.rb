@@ -5,17 +5,15 @@ class GroupAssignmentInvitationsController < ApplicationController
   layout 'layouts/invitations'
 
   def show
-    @grouping = @invitation.group_assignment.grouping
-    @groups   = @grouping.groups
+    @grouping = @invitation.grouping
+    @groups   = @grouping.groups.map { |group| [group.title, group.id] }
   end
 
   def accept_invitation
-    respond_to do |format|
-      if @invitation.redeemed?(current_user)
-        format.json { render :success, status: :created }
-      else
-        format.json { render :failed, status: 503 }
-      end
+    if @invitation.redeemed?(current_user, group_params)
+      render :success, status: 201
+    else
+      render :error, status: 503
     end
   end
 
@@ -25,6 +23,12 @@ class GroupAssignmentInvitationsController < ApplicationController
     return if logged_in?
     session[:pre_login_destination] = "#{request.base_url}#{request.path}"
     redirect_to login_path
+  end
+
+  def group_params
+    params
+      .require(:group)
+      .permit(:id, :title)
   end
 
   def set_invitation

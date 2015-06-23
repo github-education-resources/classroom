@@ -2,30 +2,26 @@
   <div class="two-thirds column centered">
     <div class="panel">
       <div class="panel-heading">
-        <h3 class="panel-title">Create your team or join a team</h3>
+        <h3 class="panel-title">Teams for "<%= @invitation.group_assignment.title %>"</h3>
       </div>
       <div class="panel-body">
-        <%= form_tag({ controller: :groups, action: :create }, id: 'new_group_form', remote: true) do %>
-          <%= hidden_field_tag :key, @invitation.key %>
-          <div class="input-group">
-            <%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team' %>
-            <span class="input-group-button">
-              <button class="btn" id="add_new_group" disabled="true">
-                <span class="octicon octicon-plus"></span>
-              </button>
-            </span>
-          </div>
+        <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, method: :patch) do %>
+          <dl class="form">
+            <dt><label>Create a new team</label></dt>
+            <dd><%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'textfield' %></dd>
+          </dl>
+
+          <% if @groups.present? %>
+            <dt><label>OR choose an existing group of teams</label></dt>
+            <dl class="form">
+              <dd>
+                <%= select :group, :id, options_for_select(@groups), include_blank: true %>
+              </dd>
+            </dl>
+          <% end %>
+
+          <%= submit_tag 'Join Team', class: 'btn btn-primary js-submit-button', disabled: true %>
         <% end %>
-
-        <!-- <hr> -->
-
-        <div id="groupings">
-
-        </div>
-
-        <%# <%= form_for @grouping do |f| %>
-        <%#
-        <%# <% end %>
       </div>
     </div>
   </div>

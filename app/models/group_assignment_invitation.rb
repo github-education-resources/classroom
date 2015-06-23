@@ -1,5 +1,8 @@
 class GroupAssignmentInvitation < ActiveRecord::Base
-  has_one :grouping, through: :group_assignment
+  has_one :grouping,     through: :group_assignment
+  has_one :organization, through: :group_assignment
+
+  has_many :groups, through: :grouping
 
   belongs_to :group_assignment
 
@@ -7,6 +10,11 @@ class GroupAssignmentInvitation < ActiveRecord::Base
   validates :key, uniqueness: true
 
   after_initialize :assign_key
+
+  def redeemed?(invitee, group_options)
+    invitation_redeemer = GroupAssignmentInvitationRedeemer.new(group_assignment, invitee, group_options)
+    invitation_redeemer.redeemed?
+  end
 
   def to_param
     key

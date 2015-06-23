@@ -1,14 +1,24 @@
 $('.group_assignment_invitations.show').ready ->
-  $add_button = $('#add_new_group')
-  $new_group_form = $('form#new_group_form')
+  $form = $('form')
 
-  $new_group_form.on('change keyup', ->
-    if $('#group_title').val().length != 0
-      $add_button.prop('disabled', false)
+  $form.on('change keyup', ->
+    $submitButton = $('.js-submit-button')
+
+    if $form_values_present()
+      $submitButton.prop('disabled', false)
     else
-      $add_button.prop('disabled', true)
+      $submitButton.prop('disabled', true)
   )
 
-  $new_group_form.on('submit', ->
-    $(this).addClass('loading')
-  )
+  $form.on('submit', -> $('body').addClass('loading'))
+
+$form_values_present = () ->
+  $present('group_title') || $present('group_id')
+
+$present = (id) ->
+  $el = $("##{id}")
+
+  if $el.length != 0
+    return $el.val().length != 0
+
+  false

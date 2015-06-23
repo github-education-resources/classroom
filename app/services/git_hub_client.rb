@@ -46,6 +46,8 @@ class GitHubClient
 
   def repository(github_id)
     client.repository(github_id)
+  rescue
+    nil
   end
 
   def team(github_team_id)
