@@ -9,13 +9,10 @@ class AssignmentInvitationRedeemer
   end
 
   def redeemed?
-    repo_access_creator = RepoAccessCreator.new(@invitee, @organization)
-    repo_access         = repo_access_creator.find_or_create_repo_access
-
+    repo_access     = find_or_create_repo_access
     assignment_repo = find_or_create_assignment_repo(repo_access)
 
-    full_repo_name  = @organization_owner.github_client.repository(assignment_repo.github_repo_id).full_name
-    @organization_owner.github_client.team_repository?(repo_access.github_team_id, full_repo_name)
+    validate_github_presence(assignment_repo, repo_access)
   end
 
   private
@@ -44,5 +41,15 @@ class AssignmentInvitationRedeemer
       assignment_name = "#{@assignment.title}: #{@assignment.assignment_repos.count + 1}"
       create_assignment_repo(repo_access, assignment_name)
     end
+  end
+
+  def find_or_create_repo_access
+    repo_access_creator = RepoAccessCreator.new(@invitee, @organization)
+    repo_access_creator.find_or_create_repo_access
+  end
+
+  def validate_github_presence(assignment_repo, repo_access)
+    full_repo_name  = @organization_owner.github_client.repository(assignment_repo.github_repo_id).full_name
+    @organization_owner.github_client.team_repository?(repo_access.github_team_id, full_repo_name)
   end
 end
