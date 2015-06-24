@@ -4,12 +4,22 @@
 </h1>
 
 <div class="columns">
-  <div class="one-fourth column">
-    <%= link_to new_assignment_organization_path(@organization), class: 'btn btn-primary', role: 'button' do %>
-      <%= octicon('plus') %> Assignment
-    <% end %>
-  </div>
-  <div class="three-fourths column">
-    <%= render @assignments %>
-  </div>
+  <% if @assignments.present? %>
+    <div class="one-fourth column">
+      <%= link_to new_assignment_organization_path(@organization), class: 'btn btn-primary', role: 'button' do %>
+        <%= octicon('plus') %> New assignment
+      <% end %>
+    </div>
+
+    <div class="three-fourths column">
+      <%= render @assignments %>
+    </div>
+  <% else %>
+    <div class="blankslate">
+      <h3>It appears that this organization doesn't have any assignments. Create one now to get started.</h3>
+      <%= link_to new_assignment_organization_path(@organization), class: 'btn btn-primary', role: 'button' do %>
+        <%= octicon('plus') %> New assignment
+      <% end %>
+    </div>
+  <% end %>
 </div>
