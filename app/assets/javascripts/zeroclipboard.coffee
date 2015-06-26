@@ -37,5 +37,5 @@ zeroClipboardClient.on('ready', ->
 
 zeroClipboardClient.on('error', ->
   zeroClipboardClient.destroy()
-  zeroClipboardClient.style.display = 'none'
+  $button.addClass('disabled')
 )
