@@ -7,11 +7,14 @@ gem 'autoprefixer-rails'
 
 gem 'coffee-rails', '~> 4.1.0'
 
+gem 'faraday-http-cache'
+
 gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'
 
 gem 'pg'
+gem 'pundit'
 
 gem 'sass-rails', '~> 5.0'
 
@@ -38,14 +41,14 @@ group :development, :test do
 end
 
 group :production do
-  gem 'rails_12factor'
+  gem 'dalli'
   gem 'puma'
+  gem 'rails_12factor'
 end
 
 group :test do
   gem 'factory_girl_rails'
   gem 'faker'
-  gem 'minitest-reporters'
   gem 'vcr'
   gem 'webmock'
 end

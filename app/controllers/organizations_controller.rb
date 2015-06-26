@@ -1,8 +1,10 @@
 class OrganizationsController < ApplicationController
-  before_action :redirect_to_root,               unless: :logged_in?
-  before_action :ensure_organization_admin,      except: [:new, :create]
-  before_action :set_organization,               except: [:new, :create]
-  before_action :set_users_github_organizations, only:   [:new, :create]
+  before_action :set_organization,  except: [:new, :create]
+  before_action :ensure_permission, except: [:new, :create]
+
+  before_action :set_users_github_organizations, only: [:new, :create]
+
+  after_action :verify_authorized, except: [:new, :create]
 
   def new
     @organization = Organization.new
@@ -48,11 +50,8 @@ class OrganizationsController < ApplicationController
 
   private
 
-  def ensure_organization_admin
-    github_id = Organization.find(params[:id]).github_id
-
-    return if current_user.github_client.organization_admin?(github_id)
-    render text: 'Unauthorized', status: 401
+  def ensure_permission
+    authorize @organization
   end
 
   def new_organization_params

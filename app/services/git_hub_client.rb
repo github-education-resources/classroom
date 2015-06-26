@@ -37,7 +37,7 @@ class GitHubClient
   end
 
   def organization_memberships
-    client.organization_memberships
+    client.organization_memberships(headers: { 'Cache-Control' => 'no-cache, no-store' })
   end
 
   def organization_teams(github_id)
