@@ -21,6 +21,9 @@ class AssignmentInvitation < ActiveRecord::Base
     assignment.title
   end
 
+  # Public: Override the
+  #
+  # Returns the key as a String
   def to_param
     key
   end

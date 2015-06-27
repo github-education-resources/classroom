@@ -1,18 +1,28 @@
 module OcticonHelper
-  # Public: Get a mega-oction
+  # Public: Mega Octicon View Helper
   #
-  # code - The String which contains the octicon type
+  # code - The String that sets the octicon
   #
-  # Returns a String which is a <span> and the octicon
+  # Examples
+  #
+  #  mega_octicon('mark-github')
+  #  # => "<span class=\"mega-octicon mega-octicon-mark-github\"></span>"
+  #
+  # Returns the <span> tag with the mega-octicon classes as a String
   def mega_octicon(code)
     content_tag :span, '', class: "mega-octicon octicon-#{code.to_s.dasherize}"
   end
 
-  # Public: Get a oction
+  # Public: Octicon View Helper
   #
-  # code - The String which contains the octicon type
+  # code - The String that sets the octicon
   #
-  # Returns a String which is a <span> and the octicon
+  # Examples
+  #
+  #  octicon('mark-github')
+  #  # => "<span class=\"octicon octicon-mark-github\"></span>"
+  #
+  # Returns the <span> tag with the octicon classes as a String
   def octicon(code)
     content_tag :span, '', class: "octicon octicon-#{code.to_s.dasherize}"
   end

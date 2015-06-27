@@ -26,10 +26,26 @@ class Assignment < ActiveRecord::Base
 
   alias_attribute :invitation, :assignment_invitation
 
+  # Public: Determine if the Assignment is private
+  #
+  # Example
+  #
+  #  assignment.private?
+  #  # => true
+  #
+  # Returns a boolean
   def private?
     !public_repo
   end
 
+  # Public: Determine if the Assignment is public
+  #
+  # Example
+  #
+  #  assignment.private?
+  #  # => true
+  #
+  # Returns a boolean
   def public?
     public_repo
   end
