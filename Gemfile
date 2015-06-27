@@ -45,7 +45,6 @@ end
 group :test do
   gem 'factory_girl_rails'
   gem 'faker'
-  gem 'minitest-reporters'
   gem 'vcr'
   gem 'webmock'
 end
