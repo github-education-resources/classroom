@@ -14,13 +14,17 @@ class Organization < ActiveRecord::Base
   validates :github_id, presence: true, uniqueness: true
   validates :title,     presence: true, uniqueness: { case_sensitive: false }
 
-  # Public
+  # Public: Retrieve both Assignments and Group Assignments
+  # for the organization.
   #
+  # Returns an array of assignments and group assignments
+  # if the organization doesn't have any yet
   def all_assignments
     assignments + group_assignments
   end
 
-  # Public
+  # Public: Retrieve a properly authenticated GitHubClient
+  # on for the organization
   #
   def github_client
     users.sample.github_client

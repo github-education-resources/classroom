@@ -21,7 +21,8 @@ class AssignmentInvitation < ActiveRecord::Base
     assignment.title
   end
 
-  # Public: Override the
+  # Public: Override the AssignmentInvitation path so that it uses the key
+  # instead of the id
   #
   # Returns the key as a String
   def to_param
@@ -30,6 +31,10 @@ class AssignmentInvitation < ActiveRecord::Base
 
   protected
 
+  # Internal: Assign a SecureRandom key to the AssignmentInvitation
+  # if it is not already set.
+  #
+  # Returns the key as a String
   def assign_key
     self.key ||= SecureRandom.hex(16)
   end

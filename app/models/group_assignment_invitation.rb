@@ -28,12 +28,20 @@ class GroupAssignmentInvitation < ActiveRecord::Base
     group_assignment.title
   end
 
+  # Public: Override the GroupAssignmentInvitation path
+  # so that it uses its key instead of the id
+  #
+  # Returns the key as a String
   def to_param
     key
   end
 
   protected
 
+  # Internal: Assign a SecureRandom hex 16 key to the
+  # GroupAssignmentInvitation if it is not already set.
+  #
+  # Returns the key as a String
   def assign_key
     self.key ||= SecureRandom.hex(16)
   end
