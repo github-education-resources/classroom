@@ -7,6 +7,8 @@ gem 'autoprefixer-rails'
 
 gem 'coffee-rails', '~> 4.1.0'
 
+gem 'jbuilder'
+
 gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'
@@ -43,6 +45,7 @@ group :production do
 end
 
 group :test do
+  gem 'database_cleaner'
   gem 'factory_girl_rails'
   gem 'faker'
   gem 'vcr'
