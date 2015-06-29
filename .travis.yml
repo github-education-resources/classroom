@@ -12,9 +12,7 @@ before_script:
   - psql -c 'create database classroom_test;' -U postgres
 
 script:
-  - bundle exec rubocop
-  - bundle exec scss-lint
   - RAILS_ENV=test bundle exec rake db:migrate --trace
-  - bundle exec rspec
+  - ./script/test
 
 bundler_args: --without development production --deployment --jobs=3 --retry=3
