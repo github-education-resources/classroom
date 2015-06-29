@@ -1,8 +1,10 @@
 class OrganizationsController < ApplicationController
   before_action :redirect_to_root,               unless: :logged_in?
-  before_action :ensure_organization_admin,      except: [:new, :create]
   before_action :set_organization,               except: [:new, :create]
+  before_action :ensure_organization_admin,      except: [:new, :create]
   before_action :set_users_github_organizations, only:   [:new, :create]
+
+  rescue_from GitHubOrganization::Forbidden, with: :deny_access
 
   def new
     @organization = Organization.new
@@ -48,11 +50,16 @@ class OrganizationsController < ApplicationController
 
   private
 
-  def ensure_organization_admin
-    github_id = Organization.find(params[:id]).github_id
+  def deny_access
+    flash[:error] = 'You are not authorized to perform this action'
+    redirect_to_root
+  end
 
-    return if current_user.github_client.organization_admin?(github_id)
-    render text: 'Unauthorized', status: 401
+  def ensure_organization_admin
+    github_organization = GitHubOrganization.new(current_user.github_client, @organization.github_id)
+
+    login = github_organization.info.login
+    github_organization.authorization_on_github_organization?(login)
   end
 
   def new_organization_params
