@@ -8,8 +8,7 @@ class GitHubTeam
   end
 
   def add_user_to_team(new_user)
-    login = new_user.github_client.user.login
-    @creator.github_client.add_team_membership(@id, login)
+    @creator.github_client.add_team_membership(@id, new_user.github_login)
   end
 
   def self.create_team(creator, org_id, team_name)

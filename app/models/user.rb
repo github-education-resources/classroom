@@ -6,12 +6,12 @@ class User < ActiveRecord::Base
   validates :uid, :token, presence: true
   validates :uid, :token, uniqueness: true
 
-  def self.create_from_auth_hash(hash)
-    create!(AuthHash.new(hash).user_info)
-  end
-
   def assign_from_auth_hash(hash)
     update_attributes(AuthHash.new(hash).user_info)
+  end
+
+  def self.create_from_auth_hash(hash)
+    create!(AuthHash.new(hash).user_info)
   end
 
   def self.find_by_auth_hash(hash)
@@ -21,5 +21,9 @@ class User < ActiveRecord::Base
 
   def github_client
     @github_client ||= GitHubClient.new(token)
+  end
+
+  def github_login
+    github_client.user.login
   end
 end
