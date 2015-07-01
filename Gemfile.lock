@@ -87,6 +87,9 @@ GEM
       activesupport (>= 4.1.0)
     hashie (3.4.2)
     i18n (0.7.0)
+    jbuilder (2.3.0)
+      activesupport (>= 3.0.0, < 5)
+      multi_json (~> 1.2)
     json (1.8.3)
     jwt (1.5.1)
     loofah (2.0.2)
@@ -249,6 +252,7 @@ DEPENDENCIES
   dotenv-rails
   factory_girl_rails
   faker
+  jbuilder
   octokit
   omniauth
   omniauth-github

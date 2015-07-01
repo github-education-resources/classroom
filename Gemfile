@@ -7,6 +7,8 @@ gem 'autoprefixer-rails'
 
 gem 'coffee-rails', '~> 4.1.0'
 
+gem 'jbuilder'
+
 gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'

@@ -4,7 +4,8 @@ class OrganizationsController < ApplicationController
   before_action :ensure_organization_admin,      except: [:new, :create]
   before_action :set_users_github_organizations, only:   [:new, :create]
 
-  rescue_from GitHubOrganization::Forbidden, with: :deny_access
+  rescue_from GitHub::Error,     with: :error
+  rescue_from GitHub::Forbidden, with: :deny_access
 
   def new
     @organization = Organization.new
@@ -55,10 +56,14 @@ class OrganizationsController < ApplicationController
     redirect_to_root
   end
 
+  def error(exception)
+    flash[:error] = exception.message
+  end
+
   def ensure_organization_admin
     github_organization = GitHubOrganization.new(current_user.github_client, @organization.github_id)
 
-    login = github_organization.info.login
+    login = github_organization.login
     github_organization.authorization_on_github_organization?(login)
   end
 

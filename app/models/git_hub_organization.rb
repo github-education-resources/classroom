@@ -15,7 +15,6 @@ class GitHubOrganization
       @client.create_team(@id, name: team_name, permission: 'push')
     end
 
-    binding.pry
     GitHubTeam.new(@client, github_team.id)
   end
 
