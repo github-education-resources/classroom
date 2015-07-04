@@ -28,7 +28,7 @@ def classroom_owner
 end
 
 def classroom_owner_id
-  (ENV.fetch 'CLASSROOM_OWNER_ID', 5_000_000_000).to_i
+  (ENV.fetch 'CLASSROOM_OWNER_ID', 5_000_000).to_i
 end
 
 def classroom_owner_github_token
@@ -40,7 +40,7 @@ def classroom_student
 end
 
 def classroom_student_id
-  (ENV.fetch 'CLASSROOM_STUDENT_ID', 5_000_000_001).to_i
+  (ENV.fetch 'CLASSROOM_STUDENT_ID', 5_000_001).to_i
 end
 
 def classroom_student_github_token
@@ -60,7 +60,7 @@ def classroom_owner_github_org
 end
 
 def classroom_owner_github_org_id
-  (ENV.fetch 'CLASSROOM_OWNER_ORGANIZATION_ID', 5_000_000_002).to_i
+  (ENV.fetch 'CLASSROOM_OWNER_ORGANIZATION_ID', 5_000_002).to_i
 end
 
 def use_vcr_placeholder_for(text, replacement)
