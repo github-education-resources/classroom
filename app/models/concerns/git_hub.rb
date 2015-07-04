@@ -22,18 +22,18 @@ module GitHub
 
   # Internal
   #
+  # rubocop:disable AbcSize
   def build_error_message(error)
+    return 'An error has occured' unless error.present?
+
     error_message = []
 
-    if error.present?
-      error_message << error[:resource]
-      error_message << error[:code].gsub('_', ' ') if error[:message].nil?
-      error_message << error[:field] if error[:message].nil?
-      error_message << error[:message] unless error[:message].nil?
-    else
-      error_message << 'An error has occurred'
-    end
+    error_message << error[:resource]
+    error_message << error[:code].gsub('_', ' ') if error[:message].nil?
+    error_message << error[:field] if error[:message].nil?
+    error_message << error[:message] unless error[:message].nil?
 
     error_message.map(&:to_s).join(' ')
   end
+  # rubocop:enable AbcSize
 end

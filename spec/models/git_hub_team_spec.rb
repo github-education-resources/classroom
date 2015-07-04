@@ -27,9 +27,10 @@ describe GitHubTeam do
   describe '#team_repository?', :vcr do
     it 'checks if a repo is managed by a specific team' do
       is_team_repo = @github_team.team_repository?("#{classroom_owner_github_org}/notateamrepository")
+      url = "/teams/#{@github_team.id}/repos/#{classroom_owner_github_org}/notateamrepository"
 
       expect(is_team_repo).to be false
-      assert_requested :get, github_url("/teams/#{@github_team.id}/repos/#{classroom_owner_github_org}/notateamrepository")
+      assert_requested :get, github_url(url)
     end
   end
 end

@@ -9,7 +9,7 @@ describe GitHubOrganization do
 
   describe '#create_repository', :vcr do
     before do
-      @repo_name = "classroom-test-repo"
+      @repo_name = 'classroom-test-repo'
     end
 
     after do
@@ -17,7 +17,7 @@ describe GitHubOrganization do
     end
 
     it 'successfully creates a GitHub Repository for the Organization' do
-      github_repository = @github_organization.create_repository(@repo_name, private: true)
+      @github_organization.create_repository(@repo_name, private: true)
       assert_requested :post, github_url("/organizations/#{classroom_owner_github_org_id}/repos")
     end
   end

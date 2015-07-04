@@ -9,8 +9,8 @@ class AssignmentInvitationsController < ApplicationController
   end
 
   def accept_invitation
-    if (repo_url = @invitation.redeem(current_user))
-      @repo_url = repo_url
+    if (full_repo_name = @invitation.redeem(current_user))
+      @repo_url = "https://github.com/#{full_repo_name}"
     else
       render json: { message: 'An error has occured, please refresh the page and try again.',
                      status: :internal_server_error }

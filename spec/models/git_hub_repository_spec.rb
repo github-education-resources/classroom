@@ -13,10 +13,7 @@ describe GitHubRepository do
   end
 
   after(:each) do
-    begin
-      @client.delete_repository(@full_name)
-    rescue Octokit::NotFound
-    end
+    @client.delete_repository(@full_name)
   end
 
   describe '#full_name', :vcr do

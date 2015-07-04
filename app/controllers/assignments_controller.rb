@@ -1,9 +1,7 @@
 class AssignmentsController < ApplicationController
   before_action :redirect_to_root,           unless: :logged_in?
-
   before_action :set_organization
   before_action :ensure_organization_admin
-
   before_action :set_assignment,             except: [:new, :create]
 
   rescue_from GitHub::Error,     with: :error
