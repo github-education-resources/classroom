@@ -9,7 +9,7 @@ describe GitHubOrganization do
 
   describe '#create_repository', :vcr do
     before do
-      @repo_name = 'classroom-test-repo'
+      @repo_name = 'test-repo'
     end
 
     after do

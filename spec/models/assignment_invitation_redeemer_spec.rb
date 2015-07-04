@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentInvitationRedeemer, type: :model do
-  let(:organization) { create(:owner_classroom_org) }
+  let(:organization) { GitHubFactory.create_owner_classroom_org }
 
-  let(:assignment) { Assignment.create(title: 'Assignment', organization: organization, public_repo: false) }
-  let(:invitee)    { create(:classroom_student) }
+  let(:assignment)   { Assignment.create(title: 'Ruby', organization: organization, public_repo: false) }
+  let(:invitee)      { GitHubFactory.create_classroom_student }
 
   before(:each) do
     @invitation_redeemer = AssignmentInvitationRedeemer.new(assignment, invitee)
@@ -24,7 +24,7 @@ RSpec.describe AssignmentInvitationRedeemer, type: :model do
 
       assert_requested :post, github_url("/organizations/#{organization.github_id}/teams")
       assert_requested :post, github_url("/organizations/#{organization.github_id}/repos")
-      expect(@full_repo_name).to include(organization.title)
+      expect(@full_repo_name).to eql("#{organization.title}/GHClassroom-Assignment-#{assignment.title}-1")
     end
   end
 end

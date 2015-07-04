@@ -1,12 +1,15 @@
 require 'rails_helper'
 
 describe AssignmentRepoManager, :vcr do
-  let(:organization)       { create(:owner_classroom_org) }
+  let(:organization)       { GitHubFactory.create_owner_classroom_org }
   let(:organization_owner) { organization.fetch_owner     }
-  let(:user)               { create(:classroom_student)   }
+  let(:user)               { GitHubFactory.create_classroom_student }
 
-  let(:assignment)   { Assignment.create(title: 'ruby-project', organization: organization, public_repo: false) }
-  let(:repo_access)  { RepoAccess.new(user: user, organization: organization)                              }
+  let(:assignment) do
+    Assignment.create(title: 'Ruby', organization: organization, public_repo: false)
+  end
+
+  let(:repo_access) { RepoAccess.new(user: user, organization: organization) }
 
   before(:each) do
     github_organization = GitHubOrganization.new(organization.fetch_owner.github_client, organization.github_id)

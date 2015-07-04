@@ -1,6 +1,6 @@
-sudo: false
-
 language: ruby
+
+sudo: false
 
 rvm:
   - 2.2.2
@@ -10,6 +10,21 @@ env:
 
 before_script:
   - psql -c 'create database classroom_test;' -U postgres
+
+env:
+  global:
+    - CLASSROOM_OWNER="owner"
+    - CLASSROOM_OWNER_ID=5000000000
+    - CLASSROOM_OWNER_GITHUB_TOKEN="6a21f190e3422bf89afa8b360d923b0c30e8fbfa"
+
+    - CLASSROOM_STUDENT="student"
+    - CLASSROOM_STUDENT_ID=5000000001
+    - CLASSROOM_STUDENT_GITHUB_TOKEN="6a21f190e3422bf89afa8b360d923b0c30e8fbfb"
+
+    - CLASSROOM_MEMBER_ORGANIZATION="member-organization"
+
+    - CLASSROOM_OWNER_ORGANIZATION="owner-organization"
+    - CLASSROOM_OWNER_ORGANIZATION_ID=5000000002
 
 script:
   - RAILS_ENV=test bundle exec rake db:migrate --trace

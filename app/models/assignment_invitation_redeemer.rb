@@ -21,7 +21,7 @@ class AssignmentInvitationRedeemer
   # Internal
   #
   def assignment_title
-    "GHClassrooom Assignment #{@assignment.title} #{@assignment.assignment_repos.count + 1}"
+    "GHClassroom Assignment #{@assignment.title} #{@assignment.assignment_repos.count + 1}"
   end
 
   # Internal

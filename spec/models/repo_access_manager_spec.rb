@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 describe RepoAccessManager, :vcr do
-  let(:organization) { create(:owner_classroom_org) }
-  let(:user)         { create(:classroom_student)   }
+  let(:organization)       { GitHubFactory.create_owner_classroom_org }
+  let(:user)               { GitHubFactory.create_classroom_student   }
 
   before(:each) do
-    @team_name           = 'Team'
+    @team_name           = "Team #{Time.zone.now.to_i}"
     @repo_access_manager = RepoAccessManager.new(user, organization)
   end
 

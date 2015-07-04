@@ -1,6 +1,3 @@
-require 'rspec/rails'
-require 'vcr'
-
 VCR.configure do |config|
   config.configure_rspec_metadata!
 
@@ -9,7 +6,8 @@ VCR.configure do |config|
   config.default_cassette_options = {
     serialize_with: :json,
     preserve_exact_body_bytes:  true,
-    decode_compressed_response: true
+    decode_compressed_response: true,
+    record: ENV['TRAVIS'] ? :none : :once
   }
 
   config.filter_sensitive_data('<<OWNER_ACCESS_TOKEN>>') do
@@ -28,7 +26,7 @@ def classroom_owner
 end
 
 def classroom_owner_id
-  (ENV.fetch 'CLASSROOM_OWNER_ID', 8_675_309).to_i
+  (ENV.fetch 'CLASSROOM_OWNER_ID', 5_000_000_000).to_i
 end
 
 def classroom_owner_github_token
@@ -40,7 +38,7 @@ def classroom_student
 end
 
 def classroom_student_id
-  (ENV.fetch 'CLASSROOM_STUDENT_ID', 8_675_301).to_i
+  (ENV.fetch 'CLASSROOM_STUDENT_ID', 5_000_000_001).to_i
 end
 
 def classroom_student_github_token
@@ -60,7 +58,7 @@ def classroom_owner_github_org
 end
 
 def classroom_owner_github_org_id
-  (ENV.fetch 'CLASSROOM_OWNER_ORGANIZATION_ID', 276_350_626).to_i
+  (ENV.fetch 'CLASSROOM_OWNER_ORGANIZATION_ID', 5_000_000_002).to_i
 end
 
 def use_vcr_placeholder_for(text, replacement)
