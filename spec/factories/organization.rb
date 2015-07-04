@@ -13,4 +13,11 @@ FactoryGirl.define do
       end
     end
   end
+
+  factory :owner_classroom_org, class: Organization do
+    github_id { classroom_owner_github_org_id }
+    title     { classroom_owner_github_org }
+
+    users { [ User.create(uid: classroom_owner_id, token: classroom_owner_github_token) ] }
+  end
 end

@@ -10,7 +10,7 @@ class GitHubOrganization
 
   # Public
   #
-  def create_repository(repo_name, options = {})
+  def create_repository(repo_name, users_repo_options = {})
     repo_options = github_repo_default_options.merge(users_repo_options)
 
     repo = with_error_handling do

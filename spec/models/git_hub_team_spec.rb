@@ -1,35 +1,35 @@
 require 'rails_helper'
 
 describe GitHubTeam do
-  let(:user)         { create(:user_with_organizations) }
-  let(:organization) { user.organizations.first }
-  let(:team)         { { id: 8_675_309, name: 'Students' } }
+  before do
+    Octokit.reset!
+    @client              = oauth_client
+    @github_organization = GitHubOrganization.new(@client, classroom_owner_github_org_id)
+  end
 
-  describe '#add_user_to_team' do
+  before(:each) do
+    team_name    = "Team Team #{Time.zone.now.to_i}"
+    team         = @github_organization.create_team(team_name)
+    @github_team = GitHubTeam.new(@client, team.id)
+  end
+
+  after(:each) do
+    @client.delete_team(@github_team.id)
+  end
+
+  describe '#add_to_team', :vcr do
     it 'adds a user to the given GitHubTeam' do
+      @github_team.add_to_team(classroom_student)
+      assert_requested :put, github_url("teams/#{@github_team.id}/memberships/#{classroom_student}")
     end
   end
 
-  describe '#create_team' do
-    before(:each) do
-      stub_github_team(nil, nil)
-    end
+  describe '#team_repository?', :vcr do
+    it 'checks if a repo is managed by a specific team' do
+      is_team_repo = @github_team.team_repository?("#{classroom_owner_github_org}/notateamrepository")
 
-    it 'returns a GitHubTeam' do
-      stub_create_github_team(organization.github_id, { name: team[:name], permission: 'push' }, team)
-
-      github_team = GitHubTeam.create_team(user, organization.github_id, team[:name])
-
-      expect(github_team.id).to eql(team[:id])
-      expect(github_team.name).to eql(team[:name])
-    end
-
-    it 'returns a NullGitHubTeam' do
-      stub_create_github_team(organization.github_id, { name: team[:name], permission: 'push' }, nil)
-
-      github_team = GitHubTeam.create_team(user, organization.github_id, team[:name])
-
-      expect(github_team.class).to eq(NullGitHubTeam)
+      expect(is_team_repo).to be false
+      assert_requested :get, github_url("/teams/#{@github_team.id}/repos/#{classroom_owner_github_org}/notateamrepository")
     end
   end
 end

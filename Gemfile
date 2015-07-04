@@ -31,6 +31,7 @@ end
 group :development, :test do
   gem 'awesome_print', require: 'ap'
   gem 'dotenv-rails'
+  gem 'factory_girl_rails'
   gem 'pry-rails'
   gem 'pry-byebug'
   gem 'rspec-rails'
@@ -45,7 +46,7 @@ group :production do
 end
 
 group :test do
-  gem 'factory_girl_rails'
+  gem 'database_cleaner'
   gem 'faker'
   gem 'vcr'
   gem 'webmock'

@@ -1,32 +1,30 @@
 require 'rails_helper'
 
 describe GitHubRepository do
-  let(:default_repo_options) { { has_issues: true, has_wiki: true, has_downloads: true } }
+  before do
+    Octokit.reset!
+    @client = oauth_client
+  end
 
-  describe '#create_repository' do
-    let(:user)      { create(:user) }
-    let(:repo_name) { 'Team 1' }
+  before(:each) do
+    @repo_name           = 'repo'
+    github_organization  = GitHubOrganization.new(@client, classroom_owner_github_org_id)
+    @github_repository   = github_organization.create_repository(@repo_name, private: true)
+  end
 
-    it 'successfully creates a new GitHub repository' do
-      options = default_repo_options.merge(name: repo_name)
-      stub_create_github_repository(options, id: 1)
-
-      repo = GitHubRepository.create_repository(user, repo_name)
-      expect(repo.id).to_not be_nil
-    end
-
-    it 'returns a NullGitHubRepository if there was an error' do
-      options = default_repo_options.merge(name: nil)
-      stub_create_github_repository(options, nil)
-
-      repo = GitHubRepository.create_repository(user, nil)
-      expect(repo.class).to be(NullGitHubRepository)
+  after(:each) do
+    begin
+      @client.delete_repository(@full_name)
+    rescue Octokit::NotFound
     end
   end
 
-  describe 'github_repo_default_options' do
-    it 'has the defaults for the repo' do
-      expect(GitHubRepository.github_repo_default_options).to eq(default_repo_options)
+  describe '#full_name', :vcr do
+    it 'gets the full_name (owner/repo_name) of the repository' do
+      @full_name = "#{classroom_owner_github_org}/#{@repo_name}"
+
+      expect(@github_repository.full_name).to eql(@full_name)
+      assert_requested :get, github_url("/repositories/#{@github_repository.id}")
     end
   end
 end

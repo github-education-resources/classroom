@@ -21,14 +21,15 @@ class AssignmentRepoManager
   # Internal
   #
   def create_assignment_repo(assignment_title)
-    github_organization = GitHubOrganization.new(@organization.github_client, @organization.github_id)
-    github_repositoriy  = github_organization.create_repository(assignment_title,
+    github_organization = GitHubOrganization.new(@organization_owner.github_client, @organization.github_id)
+    github_repository   = github_organization.create_repository(assignment_title,
                                                                 team_id: @repo_access.github_team_id,
                                                                 private: @assignment.private?)
 
-    assignment_repo = AssignmentRepo.new(assignment: @assignment, github_repo_id: repo.id, repo_access: @repo_access)
+    assignment_repo = AssignmentRepo.new(assignment:     @assignment,
+                                         github_repo_id: github_repository.id,
+                                         repo_access:    @repo_access)
     assignment_repo.save!
-
     assignment_repo
   end
 end

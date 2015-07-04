@@ -28,16 +28,16 @@ RSpec.describe User, type: :model do
 
   describe '#github_client' do
     it 'sets or creates a new GitHubClient with the users token' do
-      expect(user.github_client.class).to eql(GitHubClient)
+      expect(user.github_client.class).to eql(Octokit::Client)
     end
   end
 
-  describe '#github_login' do
+  describe '#github_login', :vcr do
     it 'gets the users GitHub login' do
-      VCR.use_cassette('User#github_login') do
-        expect(user.github_login).to eq('tarebyte')
-        assert_requested :get, github_url('/user')
-      end
+      user.token = classroom_owner_github_token
+
+      expect(user.github_login).to eq(classroom_owner)
+      assert_requested :get, github_url('/user')
     end
   end
 end
