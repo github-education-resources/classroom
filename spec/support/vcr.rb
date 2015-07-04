@@ -1,3 +1,5 @@
+require 'rspec/rails'
+
 VCR.configure do |config|
   config.configure_rspec_metadata!
 
