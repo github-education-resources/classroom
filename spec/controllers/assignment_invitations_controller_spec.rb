@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentInvitationsController, type: :controller do
-  let(:organization) { create(:owner_classroom_org) }
-  let(:user)         { create(:classroom_student)   }
+  let(:organization) { GitHubFactory.create_owner_classroom_org }
+  let(:user)         { GitHubFactory.create_classroom_student }
 
   let(:assignment) { Assignment.create(title: 'ruby-project', organization: organization, public_repo: false) }
   let(:invitation) { AssignmentInvitation.create(assignment: assignment) }
