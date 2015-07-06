@@ -13,11 +13,9 @@ class Organization < ActiveRecord::Base
     (assignments + group_assignments) || NullAssignment.new
   end
 
-  def github_login
-    owner.github_client.organization(github_id).login
-  end
-
-  def owner
+  # Public
+  #
+  def fetch_owner
     users.sample
   end
 end

@@ -12,7 +12,7 @@ $('.assignment_invitations.show').ready ->
     $assignmentInvitationStatus.html("<h1>#{response.message}</h1>")
 
   $invitation_request.fail (response) ->
-    $assignmentInvitationStatus.html("<h1>#{response.message}</h1>")
+    $assignmentInvitationStatus.html("<h1>An error has occured, please refresh the page and try again.</h1>")
 
   $invitation_request.always ->
     $('#assignment-invitation-status').removeClass('loading')

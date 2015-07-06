@@ -1,18 +1,19 @@
 source 'https://rubygems.org'
 
 ruby '2.2.2'
-gem 'rails', '4.2.2'
+gem 'rails', '4.2.3'
 
 gem 'autoprefixer-rails'
 
 gem 'coffee-rails', '~> 4.1.0'
+
+gem 'jbuilder'
 
 gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'
 
 gem 'pg'
-gem 'puma'
 
 gem 'sass-rails', '~> 5.0'
 
@@ -40,12 +41,13 @@ end
 
 group :production do
   gem 'rails_12factor'
+  gem 'puma'
 end
 
 group :test do
+  gem 'database_cleaner'
   gem 'factory_girl_rails'
   gem 'faker'
-  gem 'minitest-reporters'
   gem 'vcr'
   gem 'webmock'
 end

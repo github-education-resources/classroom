@@ -19,5 +19,9 @@
     </div>
 
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+
+    <script type="text/javascript">
+      ZeroClipboard.config( { swfPath: "<%= image_path 'ZeroClipboard.swf' %>", cacheBust: false  } );
+    </script>
   </body>
 </html>

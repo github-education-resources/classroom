@@ -1,35 +1,35 @@
 require 'rails_helper'
 
 describe GitHubTeam do
-  let(:user)         { create(:user_with_organizations) }
-  let(:organization) { user.organizations.first }
-  let(:team)         { { id: 8_675_309, name: 'Students' } }
+  before do
+    Octokit.reset!
+    @client              = oauth_client
+    @github_organization = GitHubOrganization.new(@client, 'cse3901-osu-2015su')
+  end
 
-  describe '#add_user_to_team' do
+  before(:each) do
+    team = @github_organization.create_team('Team')
+    @github_team = GitHubTeam.new(@client, team.id)
+  end
+
+  after(:each) do
+    @client.delete_team(@github_team.id)
+  end
+
+  describe '#add_to_team', :vcr do
     it 'adds a user to the given GitHubTeam' do
+      @github_team.add_to_team('tarebytetest')
+      assert_requested :put, github_url("teams/#{@github_team.id}/memberships/tarebytetest")
     end
   end
 
-  describe '#create_team' do
-    before(:each) do
-      stub_github_team(nil, nil)
-    end
+  describe '#team_repository?', :vcr do
+    it 'checks if a repo is managed by a specific team' do
+      is_team_repo = @github_team.team_repository?('cse3901-osu-2015su/notateamrepository')
+      url = "/teams/#{@github_team.id}/repos/cse3901-osu-2015su/notateamrepository"
 
-    it 'returns a GitHubTeam' do
-      stub_create_github_team(organization.github_id, { name: team[:name], permission: 'push' }, team)
-
-      github_team = GitHubTeam.create_team(user, organization.github_id, team[:name])
-
-      expect(github_team.id).to eql(team[:id])
-      expect(github_team.name).to eql(team[:name])
-    end
-
-    it 'returns a NullGitHubTeam' do
-      stub_create_github_team(organization.github_id, { name: team[:name], permission: 'push' }, nil)
-
-      github_team = GitHubTeam.create_team(user, organization.github_id, team[:name])
-
-      expect(github_team.class).to eq(NullGitHubTeam)
+      expect(is_team_repo).to be false
+      assert_requested :get, github_url(url)
     end
   end
 end

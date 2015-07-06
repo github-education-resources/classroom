@@ -14,6 +14,7 @@
 #= require jquery-ujs/src/rails
 #
 #= require jquery-readyselector/jquery.readyselector
+#= require zeroclipboard/dist/ZeroClipboard
 #
 #= require turbolinks
 #
