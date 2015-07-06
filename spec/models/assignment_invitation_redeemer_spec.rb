@@ -24,7 +24,8 @@ RSpec.describe AssignmentInvitationRedeemer, type: :model do
 
       assert_requested :post, github_url("/organizations/#{organization.github_id}/teams")
       assert_requested :post, github_url("/organizations/#{organization.github_id}/repos")
-      expect(@full_repo_name).to eql("#{organization.title}/GHClassroom-Assignment-#{assignment.title}-1")
+
+      expect(@full_repo_name).to eql("#{organization.title}/GHClassroom-#{assignment.title}-1")
     end
   end
 end

@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-describe AssignmentRepoManager, :vcr do
+describe AssignmentRepoManager do
   let(:organization)       { GitHubFactory.create_owner_classroom_org }
-  let(:organization_owner) { organization.fetch_owner     }
-  let(:user)               { GitHubFactory.create_classroom_student }
+  let(:organization_owner) { organization.fetch_owner                 }
+  let(:user)               { GitHubFactory.create_classroom_student   }
 
   let(:assignment) do
-    Assignment.create(title: 'Ruby', organization: organization, public_repo: false)
+    Assignment.create(title: 'Ruby-Project', organization: organization, public_repo: false)
   end
 
   let(:repo_access) { RepoAccess.new(user: user, organization: organization) }
@@ -23,10 +23,10 @@ describe AssignmentRepoManager, :vcr do
 
   after(:each) do
     organization_owner.github_client.delete_team(repo_access.github_team_id)
-    organization_owner.github_client.delete_repository("#{classroom_owner_github_org}/#{assignment.title}")
+    organization_owner.github_client.delete_repository("#{organization.title}/#{assignment.title}")
   end
 
-  describe '#find_or_create_assignment_repo' do
+  describe '#find_or_create_assignment_repo', :vcr do
     context 'user does not have an AssignmentRepo for the Assignment' do
       it 'creates a GitHub Repository and the AssignmentRepo' do
         @assignment_repo_manager.find_or_create_assignment_repo(assignment.title)

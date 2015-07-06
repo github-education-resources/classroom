@@ -34,10 +34,11 @@ RSpec.describe User, type: :model do
 
   describe '#github_login', :vcr do
     it 'gets the users GitHub login' do
-      user.token = classroom_owner_github_token
+      user.token   = classroom_owner_github_token
+      github_login = user.github_login
 
-      expect(user.github_login).to eq(classroom_owner)
       assert_requested :get, github_url('/user')
+      expect(github_login).to eq('tarebyte')
     end
   end
 end

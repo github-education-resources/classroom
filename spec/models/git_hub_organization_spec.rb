@@ -1,31 +1,29 @@
 require 'rails_helper'
 
 describe GitHubOrganization do
+  let(:organization) { GitHubFactory.create_owner_classroom_org }
+
   before do
     Octokit.reset!
     @client              = oauth_client
-    @github_organization = GitHubOrganization.new(@client, classroom_owner_github_org_id)
+    @repo_name           = 'test-github-repository'
+    @github_organization = GitHubOrganization.new(@client, organization.github_id)
   end
 
   describe '#create_repository', :vcr do
-    before do
-      @repo_name = 'test-repo'
-    end
-
     after do
-      @client.delete_repository("#{classroom_owner_github_org}/#{@repo_name}")
+      @client.delete_repository("#{organization.title}/#{@repo_name}")
     end
 
     it 'successfully creates a GitHub Repository for the Organization' do
       @github_organization.create_repository(@repo_name, private: true)
-      assert_requested :post, github_url("/organizations/#{classroom_owner_github_org_id}/repos")
+      assert_requested :post, github_url("/organizations/#{organization.github_id}/repos")
     end
   end
 
   describe '#create_team', :vcr do
     before do
-      team_name    = "Team Team #{Time.zone.now.to_i}"
-      @github_team = @github_organization.create_team(team_name)
+      @github_team = @github_organization.create_team('Team')
     end
 
     after do
@@ -33,20 +31,20 @@ describe GitHubOrganization do
     end
 
     it 'successfully creates a GitHub team' do
-      assert_requested :post, github_url("/organizations/#{classroom_owner_github_org_id}/teams")
+      assert_requested :post, github_url("/organizations/#{organization.github_id}/teams")
     end
   end
 
   describe '#login', :vcr do
     it 'gets the login for the GitHub Organization' do
-      expect(@github_organization.login).to eql(classroom_owner_github_org)
+      expect(@github_organization.login).to eql(organization.title)
     end
   end
 
   describe '#authorization_on_github_organization', :vcr do
     context 'when authorized' do
       it 'verifies that the user is an owner of the organization' do
-        verification_result = @github_organization.authorization_on_github_organization?(classroom_owner_github_org)
+        verification_result = @github_organization.authorization_on_github_organization?(organization.title)
         expect(verification_result).to be_nil
       end
     end
@@ -54,7 +52,7 @@ describe GitHubOrganization do
     context 'when not authorized' do
       it 'raises a GitHub::Forbidden' do
         begin
-          @github_organization.authorization_on_github_organization?(member_github_organization)
+          @github_organization.authorization_on_github_organization?('education')
         rescue => err
           expect(err.class).to eql(GitHub::Forbidden)
         end

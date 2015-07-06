@@ -21,13 +21,13 @@ class AssignmentInvitationRedeemer
   # Internal
   #
   def assignment_title
-    "GHClassroom Assignment #{@assignment.title} #{@assignment.assignment_repos.count + 1}"
+    "GHClassroom-#{@assignment.title}-#{@assignment.assignment_repos.count + 1}"
   end
 
   # Internal
   #
   def team_name
-    "GHClassroom Student Team #{@organization.repo_accesses.count + 1}"
+    "GHClassroom Team #{@organization.repo_accesses.count + 1}"
   end
 
   # Internal
