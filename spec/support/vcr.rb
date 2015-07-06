@@ -1,21 +1,44 @@
-require 'vcr'
+require 'rspec/rails'
 
-VCR.configure do |config|
-  config.cassette_library_dir = 'spec/support/cassettes'
+VCR.configure do |c|
+  c.configure_rspec_metadata!
 
-  config.default_cassette_options = {
+  c.cassette_library_dir = 'spec/support/cassettes'
+
+  c.default_cassette_options = {
     serialize_with: :json,
     preserve_exact_body_bytes:  true,
-    decode_compressed_response: true
+    decode_compressed_response: true,
+    record: ENV['TRAVIS'] ? :none : :once
   }
 
-  config.filter_sensitive_data('<<ACCESS_TOKEN>>') do
-    test_github_token
+  c.filter_sensitive_data('<CLASSROOM_OWNER_ACCESS_TOKEN>') do
+    classroom_owner_github_token
   end
 
-  config.hook_into :webmock
+  c.filter_sensitive_data('<CLASSROOM_STUDENT_GITHUB_TOKEN>') do
+    classroom_student_github_token
+  end
+
+  c.hook_into :webmock
 end
 
-def test_github_token
-  Rails.application.secrets.classroom_test_github_token || 'x' * 40
+def classroom_owner_github_token
+  ENV.fetch 'CLASSROOM_OWNER_GITHUB_TOKEN', 'x' * 40
+end
+
+def classroom_student_github_token
+  ENV.fetch 'CLASSROOM_STUDENT_GITHUB_TOKEN', 'q' * 40
+end
+
+def oauth_client
+  Octokit::Client.new(access_token: classroom_owner_github_token)
+end
+
+def use_vcr_placeholder_for(text, replacement)
+  VCR.configure do |c|
+    c.define_cassette_placeholder(replacement) do
+      text
+    end
+  end
 end

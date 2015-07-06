@@ -1,3 +1,5 @@
+require_relative '../support/vcr'
+
 FactoryGirl.define do
   factory :user do
     uid    { rand(1..1_000_000) }

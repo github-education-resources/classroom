@@ -12,4 +12,10 @@ class Organization < ActiveRecord::Base
   def all_assignments
     (assignments + group_assignments) || NullAssignment.new
   end
+
+  # Public
+  #
+  def fetch_owner
+    users.sample
+  end
 end
