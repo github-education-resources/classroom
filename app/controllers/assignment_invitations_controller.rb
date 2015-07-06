@@ -34,7 +34,7 @@ class AssignmentInvitationsController < ApplicationController
     default_message = 'Uh oh, an error has occured. Please refresh the page and try again'
     error_message   = exception.message.present? ? exception.message : default_message
 
-    render json: { message: error_message }
+    render json: { message: "#{error_message} please contact an administrator for further assistance" }
   end
 
   def set_invitation
