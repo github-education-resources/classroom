@@ -16,9 +16,9 @@ describe GitHubTeam do
     @client.delete_team(@github_team.id)
   end
 
-  describe '#add_to_team', :vcr do
+  describe '#add_team_membership', :vcr do
     it 'adds a user to the given GitHubTeam' do
-      @github_team.add_to_team('tarebytetest')
+      @github_team.add_team_membership('tarebytetest')
       assert_requested :put, github_url("teams/#{@github_team.id}/memberships/tarebytetest")
     end
   end

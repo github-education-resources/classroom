@@ -5,7 +5,6 @@ describe RepoAccessManager, :vcr do
   let(:user)               { GitHubFactory.create_classroom_student   }
 
   before(:each) do
-    @team_name           = "Team #{Time.zone.now.to_i}"
     @repo_access_manager = RepoAccessManager.new(user, organization)
   end
 
@@ -19,7 +18,7 @@ describe RepoAccessManager, :vcr do
   describe '#find_or_create_repo_access' do
     context 'user does not have a RepoAccess' do
       it 'creates a GitHub team and the RepoAccess' do
-        @repo_access_manager.find_or_create_repo_access(@team_name)
+        @repo_access_manager.find_or_create_repo_access
 
         assert_requested :post, github_url("/organizations/#{organization.github_id}/teams")
         expect(user.repo_accesses.count).to eql(1)
@@ -35,7 +34,7 @@ describe RepoAccessManager, :vcr do
       end
 
       it 'finds the RepoAccess' do
-        @repo_access_manager.find_or_create_repo_access(@team_name)
+        @repo_access_manager.find_or_create_repo_access
         expect(user.repo_accesses.count).to eql(1)
       end
     end

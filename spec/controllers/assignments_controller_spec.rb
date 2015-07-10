@@ -61,7 +61,7 @@ RSpec.describe AssignmentsController, type: :controller do
   end
 
   describe 'GET #show' do
-    let(:assignment) { create(:assignment_with_organization) }
+    let(:assignment) { create(:assignment) }
     let(:assignment_organization) { assignment.organization }
 
     before(:each) do

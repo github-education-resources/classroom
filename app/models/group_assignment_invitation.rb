@@ -6,6 +6,8 @@ class GroupAssignmentInvitation < ActiveRecord::Base
 
   belongs_to :group_assignment
 
+  validates :group_assignment, presence: true
+
   validates :key, presence:   true
   validates :key, uniqueness: true
 

@@ -4,6 +4,19 @@ RSpec.describe User, type: :model do
   let(:github_omniauth_hash) { OmniAuth.config.mock_auth[:github] }
   let(:user)                 { create(:user) }
 
+  it { should have_many(:repo_accesses).dependent(:destroy) }
+  it { should have_many(:groups).through(:repo_accesses)    }
+
+  it { should have_and_belong_to_many(:organizations) }
+
+  it { should validate_presence_of(:uid)   }
+  # https://github.com/thoughtbot/shoulda-matchers/issues/745
+  # it { should validate_uniqueness_of(:uid) }
+
+  it { should validate_presence_of(:token)   }
+  # https://github.com/thoughtbot/shoulda-matchers/issues/745
+  # it { should validate_uniqueness_of(:token) }
+
   describe '#assign_from_auth_hash' do
     it 'updates the users attributes' do
       user.assign_from_auth_hash(github_omniauth_hash)

@@ -4,5 +4,8 @@ class Grouping < ActiveRecord::Base
 
   belongs_to :organization
 
+  validates :organization, presence: true
+
   validates :title, presence: true
+  validates :title, uniqueness: { scope: :organization }
 end

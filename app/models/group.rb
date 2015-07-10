@@ -6,6 +6,7 @@ class Group < ActiveRecord::Base
   validates :github_team_id, presence: true
   validates :github_team_id, uniqueness: true
 
-  validates :grouping_id, presence: true
-  validates :grouping_id, uniqueness: true
+  validates :grouping, presence: true
+
+  validates :title, presence: true
 end
