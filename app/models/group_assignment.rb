@@ -7,6 +7,9 @@ class GroupAssignment < ActiveRecord::Base
   belongs_to :grouping
   belongs_to :organization
 
+  def group_assignment_invitation
+    super || NullGroupAssignmentInvitation.new
+  end
   def public?
     public_repo
   end
