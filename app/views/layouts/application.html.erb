@@ -12,7 +12,10 @@
   </head>
   <body class="<%= controller_name %> <%= action_name %>">
     <%= render 'shared/header' %>
-    <%= render 'shared/flash_messages' %>
+
+    <div class="container">
+      <%= render 'shared/flash_messages' %>
+    </div>
 
     <div class="container">
       <%= yield %>

@@ -4,6 +4,9 @@
       <div class="panel-heading">
         <h3 class="panel-title">Teams for "<%= @invitation.group_assignment.title %>"</h3>
       </div>
+
+      <%= render 'shared/flash_messages' %>
+
       <div class="panel-body">
         <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, method: :patch) do %>
           <dl class="form">
