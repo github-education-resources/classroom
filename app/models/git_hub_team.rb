@@ -10,7 +10,7 @@ class GitHubTeam
 
   # Public
   #
-  def add_to_team(new_user_github_login)
+  def add_team_membership(new_user_github_login)
     with_error_handling do
       @client.add_team_membership(@id, new_user_github_login)
     end
