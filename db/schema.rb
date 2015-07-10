@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150608135401) do
+ActiveRecord::Schema.define(version: 20150623190946) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(version: 20150608135401) do
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
     t.integer  "group_assignment_id"
+    t.integer  "group_id",            null: false
   end
 
   add_index "group_assignment_repos", ["github_repo_id"], name: "index_group_assignment_repos_on_github_repo_id", unique: true, using: :btree
@@ -71,6 +72,7 @@ ActiveRecord::Schema.define(version: 20150608135401) do
   create_table "group_assignments", force: :cascade do |t|
     t.boolean  "public_repo",     default: true
     t.string   "title",                          null: false
+    t.integer  "grouping_id"
     t.integer  "organization_id"
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
@@ -92,10 +94,19 @@ ActiveRecord::Schema.define(version: 20150608135401) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.integer  "grouping_id"
+    t.string   "title",          null: false
   end
 
   add_index "groups", ["github_team_id"], name: "index_groups_on_github_team_id", unique: true, using: :btree
   add_index "groups", ["grouping_id"], name: "index_groups_on_grouping_id", using: :btree
+
+  create_table "groups_repo_accesses", id: false, force: :cascade do |t|
+    t.integer "group_id"
+    t.integer "repo_access_id"
+  end
+
+  add_index "groups_repo_accesses", ["group_id"], name: "index_groups_repo_accesses_on_group_id", using: :btree
+  add_index "groups_repo_accesses", ["repo_access_id"], name: "index_groups_repo_accesses_on_repo_access_id", using: :btree
 
   create_table "organizations", force: :cascade do |t|
     t.integer  "github_id",  null: false

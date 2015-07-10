@@ -6,16 +6,28 @@ class Organization < ActiveRecord::Base
 
   has_and_belongs_to_many :users
 
-  validates :github_id, :title, presence:   true
-  validates :github_id,         uniqueness: true
+  validates :github_id, :title, presence: true, uniqueness: true
 
+  after_save :validate_minimum_number_of_users
+
+  # Public
+  #
   def all_assignments
-    (assignments + group_assignments) || NullAssignment.new
+    assignments + group_assignments
   end
 
   # Public
   #
   def fetch_owner
     users.sample
+  end
+
+  # Internal
+  #
+  def validate_minimum_number_of_users
+    return if users.count > 0
+    error_message = 'must have at least one user'
+    errors.add(:users, error_message)
+    fail ActiveRecord::RecordInvalid.new(self), error_message
   end
 end

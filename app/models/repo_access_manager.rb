@@ -7,8 +7,8 @@ class RepoAccessManager
 
   # Public
   #
-  def find_or_create_repo_access(team_name)
-    find_repo_access || create_repo_access(team_name)
+  def find_or_create_repo_access
+    find_repo_access || create_repo_access
   end
 
   # Internal
@@ -19,15 +19,18 @@ class RepoAccessManager
 
   # Internal
   #
-  def create_repo_access(team_name)
+  def create_repo_access
     github_organization = GitHubOrganization.new(@organization_owner.github_client, @organization.github_id)
     github_team         = github_organization.create_team(team_name)
 
-    github_team.add_to_team(@user.github_login)
+    github_team.add_team_membership(@user.github_login)
 
-    repo_access = RepoAccess.new(user: @user, organization: @organization, github_team_id: github_team.id)
-    repo_access.save!
+    RepoAccess.create!(user: @user, organization: @organization, github_team_id: github_team.id)
+  end
 
-    repo_access
+  # Internal
+  #
+  def team_name
+    "Team #{@organization.repo_accesses.count + 1}"
   end
 end

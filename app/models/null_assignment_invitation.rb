@@ -1,6 +1,6 @@
 class NullAssignmentInvitation < AssignmentInvitation
   def to_partial_path
-    'individual_assignment_invitations/null'
+    'assignment_invitations/null'
   end
 
   protected

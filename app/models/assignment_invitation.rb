@@ -1,14 +1,16 @@
 class AssignmentInvitation < ActiveRecord::Base
   belongs_to :assignment
 
+  validates :assignment, presence: true
+
   validates :key, presence:   true
   validates :key, uniqueness: true
 
   after_initialize :assign_key
 
-  def redeem(invitee)
-    invitation_redeemer = AssignmentInvitationRedeemer.new(assignment, invitee)
-    invitation_redeemer.redeem
+  def redeem_for(invitee)
+    invitation_redeemer = AssignmentInvitationRedeemer.new(assignment)
+    invitation_redeemer.redeem_for(invitee)
   end
 
   def to_param

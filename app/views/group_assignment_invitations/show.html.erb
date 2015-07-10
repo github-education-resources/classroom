@@ -1,0 +1,31 @@
+<div class="columns">
+  <div class="two-thirds column centered">
+    <div class="panel">
+      <div class="panel-heading">
+        <h3 class="panel-title">Teams for "<%= @invitation.group_assignment.title %>"</h3>
+      </div>
+
+      <%= render 'shared/flash_messages' %>
+
+      <div class="panel-body">
+        <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, method: :patch) do %>
+          <dl class="form">
+            <dt><label>Create a new team</label></dt>
+            <dd><%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'textfield' %></dd>
+          </dl>
+
+          <% if @groups.present? %>
+            <dt><label>OR choose an existing group of teams</label></dt>
+            <dl class="form">
+              <dd>
+                <%= select :group, :id, options_for_select(@groups), include_blank: true %>
+              </dd>
+            </dl>
+          <% end %>
+
+          <%= submit_tag 'Join Team', class: 'btn btn-primary js-submit-button', disabled: true %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

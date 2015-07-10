@@ -7,6 +7,8 @@ class AssignmentsController < ApplicationController
   rescue_from GitHub::Error,     with: :error
   rescue_from GitHub::Forbidden, with: :deny_access
 
+  before_action :set_assignment, except: [:new, :create]
+
   def new
     @assignment = Assignment.new
   end
@@ -29,13 +31,13 @@ class AssignmentsController < ApplicationController
 
   private
 
-  def error
-    flash[:error] = exception.message
-  end
-
   def deny_access
     flash[:error] = 'You are not authorized to perform this action'
     redirect_to_root
+  end
+
+  def error
+    flash[:error] = exception.message
   end
 
   def ensure_organization_admin

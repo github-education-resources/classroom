@@ -1,0 +1,5 @@
+$(<%= escape_javascript render(@group) %>).appendTo('#select_group')
+
+// Should be last
+$('hr, #select_group').removeClass('hidden');
+$('body').removeClass('loading');

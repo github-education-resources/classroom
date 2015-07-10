@@ -1,0 +1,58 @@
+<h1 class="page-header">New Group Assignment</h1>
+<div class="columns">
+  <div class="two-thirds column centered">
+    <div class="panel">
+      <div class="panel-heading">
+        <h3 class="panel-title">Create your assignment</h3>
+      </div>
+      <div class="panel-body">
+        <% url = organization_group_assignments_path(@organization) %>
+        <%= form_for @group_assignment, url: url do |f| %>
+          <%= render 'shared/error_messages', object: f.object %>
+
+          <dl class="form">
+            <dt><%= f.label :title %></dt>
+            <dd><%= f.text_field :title, class: 'textfield' %></dd>
+          </dl>
+
+          <hr>
+
+          <div class="form-checkbox">
+            <%= mega_octicon('repo') %>
+            <label><%= f.radio_button :public_repo, true %> Public</label>
+            <span class="note">Anyone can see this repository. You choose who can commit.</span>
+          </div>
+
+          <div class="form-checkbox">
+            <%= mega_octicon('lock') %>
+            <label><%= f.radio_button :public_repo, false %> Private</label>
+            <span class="note">You choose who can see and commit to this repository.</span>
+          </div>
+
+          <hr>
+
+          <dl class="form">
+            <dt><label>Create a new group of teams</label></dt>
+            <dd><input class="textfield" type="text" name="grouping[title]" id="grouping_title">
+          </dl>
+
+          <% if @organization.groupings.present? %>
+            <dt><label>OR choose an existing group of teams</label></dt>
+            <dl class="form">
+              <dd>
+                <%= select :group_assignment, :grouping_id, options_for_select(@groupings), include_blank: true %>
+              </dd>
+            </dl>
+          <% end %>
+
+          <hr>
+
+          <div class="form-actions left">
+            <%= link_to 'Cancel', organization_path(@organization), class: 'btn', role: 'button' %>
+            <%= f.submit 'Create Assignment', class: 'btn btn-primary', id: 'group_assignment_submit', disabled: true %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
