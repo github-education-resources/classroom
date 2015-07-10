@@ -1,4 +1,4 @@
-$('.group_assignments.new').ready ->
+$('.group_assignments').ready ->
   $('form').on('change keyup',  ->
     $submit_button = $('#group_assignment_submit')
 
