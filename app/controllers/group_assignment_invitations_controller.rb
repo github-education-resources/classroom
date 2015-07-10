@@ -1,19 +1,19 @@
-class GroupAssignmentInvitationsController < ApplicationController
-  before_action :authenticate_with_pre_login_destination, only: [:show]
-  before_action :set_invitation
-
-  layout 'layouts/invitations'
-
+class GroupAssignmentInvitationsController < InvitationsController
   def show
-    @grouping = @invitation.grouping
-    @groups   = @grouping.groups.map { |group| [group.title, group.id] }
+    @groups = @invitation.groups.map { |group| [group.title, group.id] }
   end
 
   def accept_invitation
-    if @invitation.redeemed?(current_user, group_params)
-      render :success, status: 201
+    group       = Group.find_by(id: group_params[:id])
+    group_title = group_params[:title]
+
+    if (full_repo_name = @invitation.redeem(current_user, group, group_title))
+      render partial: 'success',
+             locals: { repo_url: "https://github.com/#{full_repo_name}" },
+             layout: 'invitations'
     else
-      render :error, status: 503
+      flash[:error] = 'An error has occured, please refresh the page and try again.'
+      redirect_to :show
     end
   end
 
@@ -23,6 +23,11 @@ class GroupAssignmentInvitationsController < ApplicationController
     return if logged_in?
     session[:pre_login_destination] = "#{request.base_url}#{request.path}"
     redirect_to login_path
+  end
+
+  def error(exception)
+    flash[:error] = super
+    redirect_to group_assignment_invitation_path(@invitation)
   end
 
   def group_params

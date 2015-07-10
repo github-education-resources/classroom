@@ -31,13 +31,13 @@ class AssignmentsController < ApplicationController
 
   private
 
-  def error
-    flash[:error] = exception.message
-  end
-
   def deny_access
     flash[:error] = 'You are not authorized to perform this action'
     redirect_to_root
+  end
+
+  def error
+    flash[:error] = exception.message
   end
 
   def ensure_organization_admin
