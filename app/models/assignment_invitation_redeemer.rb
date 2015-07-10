@@ -1,42 +1,18 @@
-class AssignmentInvitationRedeemer
-  def initialize(assignment, invitee)
-    @assignment         = assignment
-    @invitee            = invitee
-    @organization       = assignment.organization
-    @organization_owner = @organization.fetch_owner
+class AssignmentInvitationRedeemer < InvitationRedeemer
+  def initialize(assignment)
+    @assignment   = assignment
+    @organization = assignment.organization
   end
 
   # Public
   #
-  def redeem
-    repo_access_manager = RepoAccessManager.new(@invitee, @organization)
-    repo_access         = repo_access_manager.find_or_create_repo_access(team_name)
+  def redeem_for(invitee)
+    repo_access_manager = RepoAccessManager.new(invitee, @organization)
+    repo_access         = repo_access_manager.find_or_create_repo_access
 
     assignment_repo_manager = AssignmentRepoManager.new(@assignment, repo_access)
-    assignment_repo         = assignment_repo_manager.find_or_create_assignment_repo(assignment_title)
+    assignment_repo         = assignment_repo_manager.find_or_create_assignment_repo
 
     verify_github_presence(repo_access, assignment_repo)
-  end
-
-  # Internal
-  #
-  def assignment_title
-    "GHClassroom-#{@assignment.title}-#{@assignment.assignment_repos.count + 1}"
-  end
-
-  # Internal
-  #
-  def team_name
-    "GHClassroom Team #{@organization.repo_accesses.count + 1}"
-  end
-
-  # Internal
-  #
-  def verify_github_presence(repo_access, assignment_repo)
-    github_repository = GitHubRepository.new(@organization_owner.github_client, assignment_repo.github_repo_id)
-    full_repo_name    = github_repository.full_name
-
-    github_team = GitHubTeam.new(@organization_owner.github_client, repo_access.github_team_id)
-    full_repo_name if github_team.team_repository?(full_repo_name)
   end
 end

@@ -1,77 +1,58 @@
-class GroupAssignmentInvitationRedeemer
-  def initialize(group_assignment, invitee, group = {})
+class GroupAssignmentInvitationRedeemer < InvitationRedeemer
+  def initialize(group_assignment, group, group_title)
+    @group              = group
     @group_assignment   = group_assignment
-    @group_id           = group[:id]
-    @group_title        = group[:title]
-    @invitee            = invitee
+    @group_title        = group_title
     @organization       = group_assignment.organization
-    @organization_owner = @organization.owner
   end
 
-  def redeemed?
-    repo_access = find_or_create_repo_access
-    group       = find_or_create_group
+  # Public
+  #
+  def redeem_for(invitee)
+    repo_access           = setup_repo_access(invitee)
+    group                 = setup_group(repo_access)
+    group_assignment_repo = setup_group_assignment_repo(repo_access, group)
 
-    add_repo_access_to_group(group, repo_access)
-
-    group_assignment_repo = find_or_create_group_assignment_repo(repo_access, group)
-
-    validate_github_presence(group_assignment_repo, repo_access)
+    verify_github_presence(repo_access, group_assignment_repo)
   end
 
-  private
+  # Internal
+  #
+  def find_group(repo_access)
+    @group_assignment.grouping.groups.each do |group|
+      return group if group.repo_accesses.find_by(id: repo_access.id)
+    end
 
-  def add_repo_access_to_group(group, repo_access)
-    group.repo_accesses << repo_access
-
-    github_team = GitHubTeam.new(@organization_owner, group.github_team_id, nil)
-    github_team.add_user_to_team(@invitee)
+    return @group unless @group.nil?
   end
 
-  def create_group_assignment_repo(repo_access, group, group_assignment_name)
-    repo = GitHubRepository.create_repository(@organization_owner,
-                                              group_assignment_name,
-                                              team_id:      repo_access.github_team_id,
-                                              private:      @group_assignment.private?,
-                                              organization: @organization.github_login)
+  # Internal
+  #
+  def setup_group(repo_access)
+    group_manager = GroupManager.new(@group_assignment, @group)
+    group         = find_group(repo_access) || group_manager.create_group(@group_title)
 
-    group_assignment_repo = GroupAssignmentRepo.new(github_repo_id:   repo.id,
-                                                    group_assignment: @group_assignment,
-                                                    group:            group)
+    group_manager.group = group
+    group_manager.add_repo_access_to_group(repo_access)
 
-    group_assignment_repo.save!
+    group
+  end
+
+  # Internal
+  #
+  def setup_group_assignment_repo(repo_access, group)
+    group_assignment_repo_manager = GroupAssignmentRepoManager.new(@group_assignment, group, repo_access)
+    group_assignment_repo         = group_assignment_repo_manager.find_or_create_group_assignment_repo
+
+    group_assignment_repo_manager.add_repo_access_to_assignment_repo
+
     group_assignment_repo
   end
 
-  def find_group_assignment_repo(group)
-    @group_assignment.group_assignment_repos.find_by(group: group)
-  end
-
-  def find_or_create_group_assignment_repo(repo_access, group)
-    if (group_assignment_repo = find_group_assignment_repo(group))
-      group_assignment_repo
-    else
-      group_assignment_name = "#{@group_assignment.title}: #{group.title}"
-      create_group_assignment_repo(repo_access, group, group_assignment_name)
-    end
-  end
-
-  def find_or_create_group
-    if (group = @group_assignment.groups.find_by(id: @group_id))
-      group
-    else
-      group_creator = GroupCreator.new(@organization)
-      group_creator.create_group(@group_title, @group_assignment.grouping)
-    end
-  end
-
-  def find_or_create_repo_access
-    repo_access_creator = RepoAccessCreator.new(@invitee, @organization)
-    repo_access_creator.find_or_create_repo_access
-  end
-
-  def validate_github_presence(group_assignment_repo, repo_access)
-    full_repo_name  = @organization_owner.github_client.repository(group_assignment_repo.github_repo_id).full_name
-    @organization_owner.github_client.team_repository?(repo_access.github_team_id, full_repo_name)
+  # Internal
+  #
+  def setup_repo_access(invitee)
+    repo_access_manager = RepoAccessManager.new(invitee, @organization)
+    repo_access_manager.find_or_create_repo_access
   end
 end

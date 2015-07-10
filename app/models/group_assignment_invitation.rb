@@ -11,9 +11,9 @@ class GroupAssignmentInvitation < ActiveRecord::Base
 
   after_initialize :assign_key
 
-  def redeemed?(invitee, group_options)
-    invitation_redeemer = GroupAssignmentInvitationRedeemer.new(group_assignment, invitee, group_options)
-    invitation_redeemer.redeemed?
+  def redeem(invitee, group = nil, group_title = nil)
+    invitation_redeemer = GroupAssignmentInvitationRedeemer.new(group_assignment, group, group_title)
+    invitation_redeemer.redeem_for(invitee)
   end
 
   def to_param
