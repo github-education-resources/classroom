@@ -15,6 +15,7 @@
 #
 #= require jquery-readyselector/jquery.readyselector
 #= require zeroclipboard/dist/ZeroClipboard
+#= require zeroclipboard-asset-path
 #
 #= require turbolinks
 #
