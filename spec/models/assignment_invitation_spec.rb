@@ -15,11 +15,16 @@ RSpec.describe AssignmentInvitation, type: :model do
   end
 
   describe '#redeem', :vcr do
+    let(:invitee)       { GitHubFactory.create_classroom_student }
     let(:organization)  { GitHubFactory.create_owner_classroom_org }
     let(:github_client) { organization.fetch_owner.github_client   }
 
-    let(:assignment) { Assignment.create(title: 'Ruby', organization: organization, public_repo: false) }
-    let(:invitee)    { GitHubFactory.create_classroom_student                                           }
+    let(:assignment) do
+      Assignment.create(creator: organization.fetch_owner,
+                        title: 'Ruby',
+                        organization: organization,
+                        public_repo: false)
+    end
 
     after(:each) do
       github_client.delete_team(RepoAccess.last.github_team_id)

@@ -6,7 +6,10 @@ describe AssignmentRepoManager do
   let(:user)          { GitHubFactory.create_classroom_student   }
 
   let(:assignment) do
-    Assignment.create(title: 'Ruby-Project', organization: organization, public_repo: false)
+    Assignment.create(creator: organization.fetch_owner,
+                      organization: organization,
+                      public_repo: false,
+                      title: 'Ruby-Project')
   end
 
   let(:repo_access) { RepoAccess.new(user: user, organization: organization) }

@@ -9,6 +9,7 @@ class GroupAssignmentsController < ApplicationController
 
   rescue_from GitHub::Error,     with: :error
   rescue_from GitHub::Forbidden, with: :deny_access
+  rescue_from GitHub::NotFound,  with: :not_found
 
   def new
     @group_assignment = GroupAssignment.new
@@ -40,6 +41,7 @@ class GroupAssignmentsController < ApplicationController
 
   def error
     flash[:error] = exception.message
+    redirect_to :back
   end
 
   def ensure_organization_admin
@@ -53,7 +55,9 @@ class GroupAssignmentsController < ApplicationController
     params
       .require(:group_assignment)
       .permit(:title, :public_repo, :grouping_id)
-      .merge(organization_id: params[:organization_id])
+      .merge(creator: current_user,
+             organization_id: params[:organization_id],
+             starter_code_repo_id: starter_code_repository_id(params[:repo_name]))
   end
 
   def new_grouping_params
@@ -61,6 +65,11 @@ class GroupAssignmentsController < ApplicationController
       .require(:grouping)
       .permit(:title)
       .merge(organization_id: new_group_assignment_params[:organization_id])
+  end
+
+  def not_found
+    flash[:error] = 'We could not find the repository'
+    redirect_to :back
   end
 
   def set_groupings
@@ -73,5 +82,12 @@ class GroupAssignmentsController < ApplicationController
 
   def set_organization
     @organization = Organization.find(params[:organization_id])
+  end
+
+  def starter_code_repository_id(repo_name)
+    return unless repo_name
+    sanitized_repo_name = repo_name.gsub(/\s+/, '')
+    github_repository   = GitHubRepository.new(current_user.github_client, nil)
+    github_repository.repository(sanitized_repo_name).id
   end
 end

@@ -7,7 +7,8 @@ describe GroupManager do
   let(:grouping)      { Grouping.create(title: 'Grouping', organization: organization) }
 
   let(:group_assignment) do
-    GroupAssignment.new(title: 'JavaScript-Project',
+    GroupAssignment.new(creator: organization.fetch_owner,
+                        title: 'JavaScript-Project',
                         grouping: grouping,
                         organization: organization,
                         public_repo: false)

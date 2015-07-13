@@ -5,8 +5,10 @@ RSpec.describe GroupAssignment, type: :model do
 
   it { should have_many(:group_assignment_repos) }
 
+  it { should belong_to(:creator) }
   it { should belong_to :organization }
 
+  it { should validate_presence_of(:creator) }
   it { should validate_presence_of(:organization) }
 
   it { should validate_presence_of(:title) }
@@ -15,14 +17,18 @@ RSpec.describe GroupAssignment, type: :model do
 
   it 'validates that an Assignment in the same organization does not have the same title' do
     organization     = create(:organization)
-    assignment       = Assignment.create(title: 'Ruby Project', organization: organization)
+    assignment       = Assignment.create(creator: organization.fetch_owner,
+                                         title: 'Ruby Project',
+                                         organization: organization)
+
     grouping         = Grouping.new(title: 'Grouping', organization: organization)
-    group_assignment = GroupAssignment.create(title: assignment.title, organization: organization, grouping: grouping)
+    group_assignment = GroupAssignment.create(creator: assignment.creator,
+                                              title: assignment.title,
+                                              organization: organization,
+                                              grouping: grouping)
 
-    group_assignment.save
-
-    expect(group_assignment.errors.count).to eql(1)
-    expect(group_assignment.errors.messages[:title].first).to eql('has already been taken')
+    expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid,
+                                                     'Validation failed: Title has already been taken')
   end
 
   describe '#group_assignment_invitation' do

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150623190946) do
+ActiveRecord::Schema.define(version: 20150710192319) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,11 +39,13 @@ ActiveRecord::Schema.define(version: 20150623190946) do
   add_index "assignment_repos", ["repo_access_id"], name: "index_assignment_repos_on_repo_access_id", using: :btree
 
   create_table "assignments", force: :cascade do |t|
-    t.boolean  "public_repo",     default: true
-    t.string   "title",                          null: false
+    t.boolean  "public_repo",          default: true
+    t.string   "title",                               null: false
     t.integer  "organization_id"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.integer  "starter_code_repo_id"
+    t.integer  "creator_id"
   end
 
   add_index "assignments", ["organization_id"], name: "index_assignments_on_organization_id", using: :btree
@@ -70,12 +72,14 @@ ActiveRecord::Schema.define(version: 20150623190946) do
   add_index "group_assignment_repos", ["group_assignment_id"], name: "index_group_assignment_repos_on_group_assignment_id", using: :btree
 
   create_table "group_assignments", force: :cascade do |t|
-    t.boolean  "public_repo",     default: true
-    t.string   "title",                          null: false
+    t.boolean  "public_repo",          default: true
+    t.string   "title",                               null: false
     t.integer  "grouping_id"
     t.integer  "organization_id"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.integer  "starter_code_repo_id"
+    t.integer  "creator_id"
   end
 
   add_index "group_assignments", ["organization_id"], name: "index_group_assignments_on_organization_id", using: :btree
