@@ -3,8 +3,11 @@ class GroupAssignment < ActiveRecord::Base
 
   has_many :group_assignment_repos, dependent: :destroy
 
+  belongs_to :creator, class_name: User
   belongs_to :grouping
   belongs_to :organization
+
+  validates :creator, presence: true
 
   validates :organization, presence: true
 
@@ -23,6 +26,10 @@ class GroupAssignment < ActiveRecord::Base
 
   def private?
     !public_repo
+  end
+
+  def starter_code?
+    starter_code_repo_id.present?
   end
 
   private

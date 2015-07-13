@@ -22,7 +22,11 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
     let(:github_client) { organization.fetch_owner.github_client   }
 
     let(:group_assignment)  do
-      GroupAssignment.create(title: 'JavaScript', organization: organization, public_repo: false, grouping: grouping)
+      GroupAssignment.create(creator: organization.fetch_owner,
+                             title: 'JavaScript',
+                             organization: organization,
+                             public_repo: false,
+                             grouping: grouping)
     end
 
     after do

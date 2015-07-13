@@ -38,9 +38,14 @@ RSpec.describe Organization, type: :model do
 
     context 'with Assignments and GroupAssignments' do
       before do
+        creator = organization.fetch_owner
         grouping = Grouping.new(title: 'Grouping', organization: organization)
-        Assignment.create(title: 'Assignment', organization: organization)
-        GroupAssignment.create(title: 'Group Assignment', grouping: grouping, organization: organization)
+
+        Assignment.create(creator: creator, title: 'Assignment', organization: organization)
+        GroupAssignment.create(creator: creator,
+                               grouping: grouping,
+                               organization: organization,
+                               title: 'Group Assignment')
       end
 
       it 'should return an array of Assignments and GroupAssignments' do

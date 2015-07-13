@@ -31,6 +31,14 @@
 
           <hr>
 
+          <dl class="form">
+            <dt><label>Add your starter code from GitHub <small>(Optional)</small> </label></dt>
+            <dd><input class="textfield" type="text" name="repo_name"></dd>
+            <span class="note">e.g. education/classroom</span>
+          </dl>
+
+          <hr>
+
           <div class="form-actions left">
             <%= link_to 'Cancel', organization_path(@organization), class: 'btn', role: 'button' %>
             <%= f.submit 'Create Assignment', class: 'btn btn-primary' %>

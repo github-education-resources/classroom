@@ -6,6 +6,7 @@ class AssignmentsController < ApplicationController
 
   rescue_from GitHub::Error,     with: :error
   rescue_from GitHub::Forbidden, with: :deny_access
+  rescue_from GitHub::NotFound,  with: :not_found
 
   before_action :set_assignment, except: [:new, :create]
 
@@ -38,6 +39,7 @@ class AssignmentsController < ApplicationController
 
   def error
     flash[:error] = exception.message
+    redirect_to :back
   end
 
   def ensure_organization_admin
@@ -51,7 +53,14 @@ class AssignmentsController < ApplicationController
     params
       .require(:assignment)
       .permit(:title, :public_repo)
-      .merge(organization_id: params[:organization_id])
+      .merge(creator: current_user,
+             organization_id: params[:organization_id],
+             starter_code_repo_id: starter_code_repository_id(params[:repo_name]))
+  end
+
+  def not_found
+    flash[:error] = 'We could not find the repository'
+    redirect_to :back
   end
 
   def set_assignment
@@ -60,5 +69,12 @@ class AssignmentsController < ApplicationController
 
   def set_organization
     @organization = Organization.find(params[:organization_id])
+  end
+
+  def starter_code_repository_id(repo_name)
+    return unless repo_name
+    sanitized_repo_name = repo_name.gsub(/\s+/, '')
+    github_repository   = GitHubRepository.new(current_user.github_client, nil)
+    github_repository.repository(sanitized_repo_name).id
   end
 end

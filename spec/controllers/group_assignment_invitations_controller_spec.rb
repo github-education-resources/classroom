@@ -37,7 +37,11 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     let(:grouping)      { Grouping.create(title: 'Grouping 1', organization: organization) }
 
     let(:group_assignment) do
-      GroupAssignment.create(title: 'HTML5', grouping: grouping, organization: organization, public_repo: false)
+      GroupAssignment.create(creator: organization.fetch_owner,
+                             title: 'HTML5',
+                             grouping: grouping,
+                             organization: organization,
+                             public_repo: false)
     end
 
     let(:invitation) { GroupAssignmentInvitation.create(group_assignment: group_assignment) }
