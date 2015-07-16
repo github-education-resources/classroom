@@ -41,6 +41,18 @@ class GitHubOrganization
 
   # Public
   #
+  def organization_members(options = {})
+    with_error_handling { @client.organization_members(@id, options) }
+  end
+
+  # Public
+  #
+  def organization_memberships(options = {})
+    with_error_handling { @client.organization_memberships(options) }
+  end
+
+  # Public
+  #
   def authorization_on_github_organization?(organization_login)
     with_error_handling do
       if @client.organization_membership(organization_login).role != 'admin'
