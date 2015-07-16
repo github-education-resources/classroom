@@ -37,5 +37,7 @@ module Classroom
     config.generators do |g|
       g.test_framework :rspec, fixture: false
     end
+
+    GC::Profiler.enable
   end
 end

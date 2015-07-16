@@ -14,7 +14,7 @@
 #= require jquery-ujs/src/rails
 #
 #= require peek
-#= require peek/views/faraday
+#= require peek/views/dalli
 #= require peek/views/performance_bar
 #
 #= require jquery-readyselector/jquery.readyselector
