@@ -5,7 +5,10 @@ RSpec.describe Assignment, type: :model do
 
   it { should have_many(:assignment_repos) }
 
-  it { should belong_to :organization }
+  it { should belong_to(:creator) }
+  it { should belong_to(:organization) }
+
+  it { should validate_presence_of(:creator) }
 
   it { should validate_presence_of(:organization) }
 
@@ -16,8 +19,15 @@ RSpec.describe Assignment, type: :model do
   it 'validates that a GroupAssignment in the same organization does not have the same title' do
     organization     = create(:organization)
     grouping         = Grouping.new(title: 'Grouping', organization: organization)
-    group_assignment = GroupAssignment.create(title: 'Ruby Project', organization: organization, grouping: grouping)
-    assignment       = Assignment.new(title: group_assignment.title, organization: organization)
+
+    group_assignment = GroupAssignment.create(creator: organization.fetch_owner,
+                                              title: 'Ruby Project',
+                                              organization: organization,
+                                              grouping: grouping)
+
+    assignment       = Assignment.new(creator: organization.fetch_owner,
+                                      title: group_assignment.title,
+                                      organization: organization)
 
     assignment.save
 

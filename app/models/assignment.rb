@@ -3,7 +3,10 @@ class Assignment < ActiveRecord::Base
 
   has_many :assignment_repos
 
+  belongs_to :creator, class_name: User
   belongs_to :organization
+
+  validates :creator, presence: true
 
   validates :organization, presence: true
 
@@ -22,6 +25,10 @@ class Assignment < ActiveRecord::Base
 
   def private?
     !public_repo
+  end
+
+  def starter_code?
+    starter_code_repo_id.present?
   end
 
   private

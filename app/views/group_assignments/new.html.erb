@@ -32,8 +32,16 @@
           <hr>
 
           <dl class="form">
+            <dt><label>Add your starter code from GitHub <small>(Optional)</small> </label></dt>
+            <dd><input class="textfield" type="text" name="repo_name"></dd>
+            <span class="note">e.g. education/classroom</span>
+          </dl>
+
+          <hr>
+
+          <dl class="form">
             <dt><label>Create a new group of teams</label></dt>
-            <dd><input class="textfield" type="text" name="grouping[title]" id="grouping_title">
+            <dd><input class="textfield" type="text" name="grouping[title]" id="grouping_title"></dd>
           </dl>
 
           <% if @organization.groupings.present? %>

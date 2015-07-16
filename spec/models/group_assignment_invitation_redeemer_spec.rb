@@ -7,7 +7,11 @@ describe GroupAssignmentInvitationRedeemer do
   let(:grouping)         { Grouping.create(title: 'Grouping', organization: organization) }
 
   let(:group_assignment)  do
-    GroupAssignment.create(title: 'JavaScript', organization: organization, public_repo: false, grouping: grouping)
+    GroupAssignment.create(creator: organization.fetch_owner,
+                           title: 'JavaScript',
+                           organization: organization,
+                           public_repo: false,
+                           grouping: grouping)
   end
 
   describe '#redeem_for', :vcr do

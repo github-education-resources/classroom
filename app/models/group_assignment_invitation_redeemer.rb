@@ -13,7 +13,12 @@ class GroupAssignmentInvitationRedeemer < InvitationRedeemer
     group                 = setup_group(repo_access)
     group_assignment_repo = setup_group_assignment_repo(repo_access, group)
 
-    verify_github_presence(repo_access, group_assignment_repo)
+    full_repo_name = verify_github_presence(repo_access, group_assignment_repo)
+    return full_repo_name unless @group_assignment.starter_code?
+
+    push_starter_code(@group_assignment, group_assignment_repo)
+
+    full_repo_name
   end
 
   # Internal

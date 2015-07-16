@@ -30,8 +30,12 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       @organization = GitHubFactory.create_owner_classroom_org
       @user         = GitHubFactory.create_classroom_student
 
-      @assignment  = Assignment.create(title: 'ruby-project', organization: @organization, public_repo: false)
-      @invitation  = AssignmentInvitation.create(assignment: @assignment)
+      @assignment = Assignment.create(creator: @organization.fetch_owner,
+                                      title: 'ruby-project',
+                                      organization: @organization,
+                                      public_repo: false)
+
+      @invitation = AssignmentInvitation.create(assignment: @assignment)
 
       session[:user_id] = @user.id
     end

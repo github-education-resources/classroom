@@ -18,9 +18,9 @@ class GitHubTeam
 
   # Publc
   #
-  def add_team_repository(full_repo_name)
+  def add_team_repository(full_name)
     with_error_handling do
-      unless @client.add_team_repository(@id, full_repo_name)
+      unless @client.add_team_repository(@id, full_name)
         fail GitHub::Error, 'Could not add team to the GitHub repository'
       end
     end
@@ -28,9 +28,9 @@ class GitHubTeam
 
   # Public
   #
-  def team_repository?(full_repo_name)
+  def team_repository?(full_name)
     with_error_handling do
-      @client.team_repository?(@id, full_repo_name)
+      @client.team_repository?(@id, full_name)
     end
   end
 end

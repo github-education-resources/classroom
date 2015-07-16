@@ -13,6 +13,11 @@ class AssignmentInvitationRedeemer < InvitationRedeemer
     assignment_repo_manager = AssignmentRepoManager.new(@assignment, repo_access)
     assignment_repo         = assignment_repo_manager.find_or_create_assignment_repo
 
-    verify_github_presence(repo_access, assignment_repo)
+    full_repo_name = verify_github_presence(repo_access, assignment_repo)
+    return full_repo_name unless @assignment.starter_code?
+
+    push_starter_code(@assignment, assignment_repo)
+
+    full_repo_name
   end
 end
