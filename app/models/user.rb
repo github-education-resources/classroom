@@ -27,4 +27,8 @@ class User < ActiveRecord::Base
   def github_login
     github_client.user.login
   end
+
+  def staff?
+    site_admin
+  end
 end
