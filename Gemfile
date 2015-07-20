@@ -7,11 +7,20 @@ gem 'autoprefixer-rails'
 
 gem 'coffee-rails', '~> 4.1.0'
 
+gem 'faraday-http-cache'
+
 gem 'jbuilder'
 
 gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'
+
+gem 'peek'
+gem 'peek-dalli'
+gem 'peek-gc'
+gem 'peek-git'
+gem 'peek-performance_bar'
+gem 'peek-pg'
 
 gem 'pg'
 
@@ -40,6 +49,7 @@ group :development, :test do
 end
 
 group :production do
+  gem 'dalli'
   gem 'rails_12factor'
   gem 'puma'
 end

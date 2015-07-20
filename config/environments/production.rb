@@ -55,7 +55,13 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
 
   # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  config.cache_store = :mem_cache_store, ENV["MEMCACHEDCLOUD_SERVERS"].split(','), { username: ENV["MEMCACHEDCLOUD_USERNAME"],
+                                                                                     password: ENV["MEMCACHEDCLOUD_PASSWORD"],
+                                                                                     namespace: 'CLASSROOM',
+                                                                                     expires_in: (ENV["REQUEST_CACHE_TIMEOUT"] || 30).to_i.minutes,
+                                                                                     compress: true,
+                                                                                     pool_size: 5 }
+
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = 'http://assets.example.com'
@@ -76,4 +82,11 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Dalli configuration for Peek
+  config.peek.adapter = :memcache, {
+    client: Dalli::Client.new(ENV['MEMCACHEDCLOUD_SERVERS'].split(','),
+                              { username: ENV['MEMCACHEDCLOUD_USERNAME'],
+                                password: ENV['MEMCACHEDCLOUD_PASSWORD'] }),
+  }
 end

@@ -5,6 +5,11 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user, :logged_in?
 
+  def peek_enabled?
+    return unless current_user
+    current_user.staff?
+  end
+
   private
 
   def current_user

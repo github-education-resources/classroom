@@ -1,6 +1,7 @@
 Dir[Rails.root.join('lib/constraints/**/*.rb')].each { |f| require f }
 
 Rails.application.routes.draw do
+  mount Peek::Railtie => '/peek'
   root to: 'pages#home'
 
   get '/login',  to: 'sessions#new',     as: 'login'
