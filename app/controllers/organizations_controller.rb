@@ -58,7 +58,9 @@ class OrganizationsController < ApplicationController
       InviteUserToClassroomJob.perform_later(id, login, email, current_user, @organization)
     end
 
-    redirect_to @organization
+    respond_to do |format|
+      format.html { redirect_to @organization }
+    end
   end
 
   private
