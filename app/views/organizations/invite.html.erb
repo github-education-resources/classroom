@@ -1,0 +1,12 @@
+<h1 class="page-header">Invite team members</h1>
+<% if @organization_owners.present? %>
+  <%= render partial: 'organization_owner_invitation_form' %>
+<% else %>
+  <div class="blankslate">
+    <h3>It appears that there aren't anyone to add to your Classroom.</h3>
+    <p>Please add members as admins to your GitHub Organization and then come back.</p>
+    <%= link_to @organization, class: 'btn btn-primary', role: 'button' do %>
+      Go to <%= @organization.title %> <%= octicon('arrow-right') %>
+    <% end %>
+  </div>
+<% end %>

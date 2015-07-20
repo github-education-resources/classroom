@@ -144,9 +144,10 @@ ActiveRecord::Schema.define(version: 20150720170719) do
 
   create_table "users", force: :cascade do |t|
     t.string   "uid",                        null: false
-    t.string   "token",                      null: false
+    t.string   "token"
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+    t.integer  "status",     default: 0
     t.boolean  "site_admin", default: false
   end
 

@@ -1,7 +1,6 @@
 class AssignmentsController < ApplicationController
   before_action :redirect_to_root,           unless: :logged_in?
   before_action :set_organization
-  before_action :ensure_organization_admin
   before_action :set_assignment,             except: [:new, :create]
 
   rescue_from GitHub::Error,     with: :error
@@ -42,13 +41,6 @@ class AssignmentsController < ApplicationController
     redirect_to :back
   end
 
-  def ensure_organization_admin
-    github_organization = GitHubOrganization.new(current_user.github_client, @organization.github_id)
-
-    login = github_organization.login
-    github_organization.authorization_on_github_organization?(login)
-  end
-
   def new_assignment_params
     params
       .require(:assignment)
@@ -72,7 +64,7 @@ class AssignmentsController < ApplicationController
   end
 
   def starter_code_repository_id(repo_name)
-    return unless repo_name
+    return unless repo_name.present?
     sanitized_repo_name = repo_name.gsub(/\s+/, '')
     github_repository   = GitHubRepository.new(current_user.github_client, nil)
     github_repository.repository(sanitized_repo_name).id

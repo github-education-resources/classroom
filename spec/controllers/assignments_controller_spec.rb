@@ -3,31 +3,14 @@ require 'rails_helper'
 RSpec.describe AssignmentsController, type: :controller do
   include ActiveJob::TestHelper
 
-  let(:user)         { create(:user_with_organizations) }
-  let(:organization) { user.organizations.first }
-
-  let(:org_login) { 'ord_login' }
+  let(:organization)  { GitHubFactory.create_owner_classroom_org }
+  let(:user)          { organization.users.first                 }
 
   before do
     session[:user_id] = user.id
   end
 
-  before(:each) do
-    @request_stubs = []
-  end
-
-  after(:each) do
-    @request_stubs.each do |request_stub|
-      expect(request_stub).to have_been_requested.once
-    end
-  end
-
-  describe 'GET #new' do
-    before(:each) do
-      @request_stubs << stub_github_organization(organization.github_id, login: org_login, id: organization.github_id)
-      @request_stubs << stub_users_github_organization_membership(org_login, state: 'active', role: 'admin')
-    end
-
+  describe 'GET #new', :vcr do
     it 'returns success status' do
       get :new, organization_id: organization.id
       expect(response).to have_http_status(:success)
@@ -39,12 +22,7 @@ RSpec.describe AssignmentsController, type: :controller do
     end
   end
 
-  describe 'POST #create' do
-    before(:each) do
-      @request_stubs << stub_github_organization(organization.github_id, login: org_login, id: organization.github_id)
-      @request_stubs << stub_users_github_organization_membership(org_login, state: 'active', role: 'admin')
-    end
-
+  describe 'POST #create', :vcr do
     it 'creates a new Assignment' do
       expect do
         post :create, organization_id: organization.id, assignment: attributes_for(:assignment)
@@ -60,20 +38,11 @@ RSpec.describe AssignmentsController, type: :controller do
     end
   end
 
-  describe 'GET #show' do
-    let(:assignment) { create(:assignment) }
-    let(:assignment_organization) { assignment.organization }
-
-    before(:each) do
-      @request_stubs << stub_github_organization(assignment_organization.github_id,
-                                                 login: org_login,
-                                                 id: assignment_organization.github_id)
-
-      @request_stubs << stub_users_github_organization_membership(org_login, state: 'active', role: 'admin')
-    end
+  describe 'GET #show', :vcr do
+    let(:assignment) { Assignment.create(title: 'Assignment', creator: user, organization: organization) }
 
     it 'returns success status' do
-      get :show, organization_id: assignment_organization.id, id: assignment.id
+      get :show, organization_id: assignment.organization.id, id: assignment.id
       expect(response).to have_http_status(:success)
     end
   end

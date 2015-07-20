@@ -1,3 +1,5 @@
+Dir[Rails.root.join('lib/constraints/**/*.rb')].each { |f| require f }
+
 Rails.application.routes.draw do
   mount Peek::Railtie => '/peek'
   root to: 'pages#home'
@@ -22,9 +24,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :organizations do
+  resources :organizations, constraints: Constraints::OrganizationAuthorized.new do
     member do
-      get 'new_assignment'
+      get   'invite'
+      get   'new_assignment'
+      patch 'invite_users'
     end
 
     resources :assignments,       only: [:show, :new, :create]
