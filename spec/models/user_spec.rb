@@ -54,4 +54,15 @@ RSpec.describe User, type: :model do
       expect(github_login).to eq('tarebyte')
     end
   end
+
+  describe '#staff?' do
+    it 'returns if the User is a site_admin' do
+      expect(user.staff?).to be(false)
+
+      user.site_admin = true
+      user.save!
+
+      expect(user.staff?).to be(true)
+    end
+  end
 end

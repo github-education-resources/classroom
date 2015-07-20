@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount Peek::Railtie => '/peek'
   root to: 'pages#home'
 
   get '/login',  to: 'sessions#new',     as: 'login'
