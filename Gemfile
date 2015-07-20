@@ -15,6 +15,13 @@ gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'
 
+gem 'peek'
+gem 'peek-dalli'
+gem 'peek-gc'
+gem 'peek-git'
+gem 'peek-performance_bar'
+gem 'peek-pg'
+
 gem 'pg'
 
 gem 'sass-rails', '~> 5.0'

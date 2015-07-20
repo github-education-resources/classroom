@@ -82,4 +82,11 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Dalli configuration for Peek
+  config.peek.adapter = :memcache, {
+    client: Dalli::Client.new(ENV['MEMCACHEDCLOUD_SERVERS'].split(','),
+                              { username: ENV['MEMCACHEDCLOUD_USERNAME'],
+                                password: ENV['MEMCACHEDCLOUD_PASSWORD'] }),
+  }
 end
