@@ -1,25 +1,65 @@
-<h1 class="page-header">
-  <%= @organization.title %>
-  <%= link_to 'Edit', edit_organization_path, class: 'lead' %>
-</h1>
+<header class="org-header">
+  <div class="container">
+    <div class="org-header-wrapper">
+      <%= image_tag @organization.avatar_url(200), class: 'avatar', width: 100 %>
+      <div class="org-header-info">
+        <h1 class="org-name">
+          <span>
+            <%= @organization.title %>
+          </span>
+          <%= link_to edit_organization_path, class: 'edit-org tooltipped tooltipped-e', 'aria-label' => 'Classroom Settings' do %>
+            <%= octicon('gear') %>
+          <% end %>
+        </h1>
+      </div>
+    </div>
+  </div>
+</header>
 
-<div class="columns">
-  <% if @assignments.present? %>
-    <div class="one-fourth column">
-      <%= link_to new_assignment_organization_path(@organization), class: 'btn btn-primary', role: 'button' do %>
-        <%= octicon('plus') %> New assignment
-      <% end %>
-    </div>
+<div class="container">
+  <div class="org-main">
+    <% if @assignments.present? %>
+      <div class="subnav subnav-bordered subnav-flush org-toolbar">
+        <%= link_to new_assignment_organization_path(@organization), class: 'btn btn-primary right' do %>
+          <%= octicon('plus') %>
+          New Assignment
+        <% end %>
+      </div>
 
-    <div class="three-fourths column">
-      <%= render @assignments %>
+      <div class="org-assignments assignment-list">
+        <%= render @assignments %>
+      </div>
+    <% else %>
+      <div class="blankslate">
+        <h3>This classroom doesn't have any assignments. Create one now.</h3>
+        <%= link_to new_assignment_organization_path(@organization), class: 'btn btn-primary', role: 'button' do %>
+          <%= octicon('plus') %> New assignment
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="org-sidebar">
+    <div class="org-module simple-box">
+      <h3 class="org-module-title org-owners-title">
+        <%= link_to '#', class: 'org-module-link' do %>
+          <span class="org-stats">
+            <%= @organization.active_users.count %>
+            <%= octicon('chevron-right') %>
+          </span>
+          People
+        <% end %>
+      </h3>
+
+      <div class="owner-avatar-group">
+        <% @organization.active_users.each do |user| %>
+          <%= image_tag user.avatar_url(120), class: 'avatar', width: 60 %>
+        <% end %>
+      </div>
+
+      <div class="simple-box-footer">
+        <%= link_to 'Invite Someone', '#', class: 'btn btn-sm' %>
+      </div>
     </div>
-  <% else %>
-    <div class="blankslate">
-      <h3>It appears that this organization doesn't have any assignments. Create one now to get started.</h3>
-      <%= link_to new_assignment_organization_path(@organization), class: 'btn btn-primary', role: 'button' do %>
-        <%= octicon('plus') %> New assignment
-      <% end %>
-    </div>
-  <% end %>
+  </div>
 </div>

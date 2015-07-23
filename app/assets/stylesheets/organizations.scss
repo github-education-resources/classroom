@@ -1,11 +1,174 @@
-// Place all the styles related to the organizations controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
-
-.classroom-btn {
-  margin-bottom: 20px;
+.owner-avatar {
+  float: left;
+  margin: 1px
 }
 
-.select-organization {
+.owner-avatar-group {
+  margin-bottom: -1px;
+  margin-top: -1px;
+  margin-right: -1px;
+  margin-left: -1px;
+}
+
+.owner-avatar-group:before {
+  display: table;
+  content: ""
+}
+
+.owner-avatar-group:after {
+  display: table;
+  clear: both;
+  content: ""
+}
+
+.org-header {
   margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  background-color: #fcfcfc;
+
+  .edit-org {
+    position: relative;
+    top: -6px;
+    display: inline-block;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 14px;
+    color: #aaa;
+    border: 1px solid #e5e5e5;
+    border-radius: 3px;
+
+    .octicon {
+      font-size: 14px;
+    }
+  }
+}
+
+.org-header-wrapper {
+  display: table;
+  max-width: 680px;
+  padding-bottom: 20px;
+
+  .avatar {
+    display: table-cell;
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+  }
+}
+
+.org-header-info {
+  display: table-cell;
+  vertical-align: middle;
+  max-width: 560px;
+}
+
+.org-name {
+  margin-top: 0;
+  font-size: 36px;
+  font-weight: normal;
+}
+
+.org-main {
+  float: left;
+  width: 680px;
+}
+
+.org-owners-title {
+  margin-bottom: 0;
+  border-bottom: 0
+}
+
+.org-module-title {
+  margin: -15px -15px 0;
+  margin-top: -15px;
+  margin-left: -15px;
+  margin-right: -15px;
+  margin-bottom: 0px;
+  font-size: 18px;
+}
+
+.org-module-link {
+  display: block;
+  padding: 15px;
+  color: #333
+}
+
+.org-stats {
+  margin-top: 3px;
+  float: right;
+  font-size: 14px;
+  color: #767676
+}
+
+.org-module-link:hover,
+.org-module-link:hover .org-stats {
+  text-decoration: none;
+  color: #4078c0
+}
+
+.org-sidebar {
+  position: relative;
+  z-index: 1;
+  float: right;
+  max-width: 280px;
+  margin-top: -112px;
+}
+
+.org-sidebar .owner-badge {
+  display: block;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-top: 0
+}
+
+.simple-box {
+  padding-bottom: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 15px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  border-radius: 3px
+}
+
+.simple-box-title {
+  margin: -15px -15px 0;
+  font-size: 18px;
+  padding: 15px;
+  border-bottom: 1px solid #eee
+}
+
+.simple-box-footer {
+  margin: 10px -15px -15px;
+  padding: 15px;
+  border-top: 1px solid #eee;
+  background-color: #fcfcfc;
+  border-radius: 0 0 3px 3px
+}
+
+.subnav {
+  margin-bottom: 20px
+}
+
+.subnav:before {
+  display: table;
+  content: ""
+}
+
+.subnav:after {
+  display: table;
+  clear: both;
+  content: ""
+}
+
+.subnav-bordered {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee
+}
+
+.subnav-flush {
+  margin-bottom: 0
 }

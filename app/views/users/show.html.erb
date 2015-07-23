@@ -1,21 +1,21 @@
 <h1 class="page-header">Dashboard</h1>
 <div class="columns">
   <% if @organizations.present? %>
-    <div class="one-fourth column">
+    <div class="four-fifths column">
+      <%= render @organizations %>
+    </div>
+
+    <div class="one-fifth column">
       <%= link_to new_organization_path, class: 'btn btn-primary', role: 'button' do %>
         <%= octicon('plus') %> Add organization
       <% end %>
     </div>
-
-    <div class="three-fourths column">
-      <%= render @organizations %>
-    <% else %>
-      <div class="blankslate">
-        <h3>You're not managing any GitHub organizations with Classroom. Add an organization to get started.</h3>
-        <%= link_to new_organization_path, class: 'btn btn-primary', role: 'button' do %>
-          <%= octicon('plus') %> Add organization
-        <% end %>
-      </div>
-    <% end %>
-  </div>
+  <% else %>
+    <div class="blankslate">
+      <h3>You're not managing any GitHub organizations with Classroom. Add an organization to get started.</h3>
+      <%= link_to new_organization_path, class: 'btn btn-primary', role: 'button' do %>
+        <%= octicon('plus') %> Add organization
+      <% end %>
+    </div>
+  <% end %>
 </div>

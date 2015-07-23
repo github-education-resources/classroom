@@ -1,0 +1,48 @@
+.assignment-list {
+  position: relative;
+}
+
+.assignment-list-item {
+  position: relative;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  list-style: none;
+  border-bottom: 1px solid #eee
+}
+
+.assignment-list-meta {
+  display: block;
+  margin-top: 8px;
+  margin-bottom: 0;
+  font-size: 13px;
+  color: #888
+}
+
+.assignment-list-name {
+  margin: 0 0 8px;
+  font-size: 20px;
+  line-height: 1.2
+}
+
+.assignment-list-stats {
+  margin-top: 6px;
+  float: right;
+  font-size: 12px;
+  font-weight: bold;
+  color: #888
+}
+
+.assignment-list-stats .assignment-list-stat-item {
+  margin-left: 8px;
+  display: inline-block;
+  color: #888;
+  text-decoration: none
+}
+
+.assignment-list-stats .assignment-list-stat-item:hover {
+  color: #4078c0
+}
+
+.assignment-list-stats .assignment-list-stat-item>.octicon {
+  font-size: 14px
+}
