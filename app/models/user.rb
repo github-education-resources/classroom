@@ -11,6 +11,10 @@ class User < ActiveRecord::Base
     update_attributes(AuthHash.new(hash).user_info)
   end
 
+  def avatar_url(size = 80)
+    "https://avatars.githubusercontent.com/u/#{uid}?size=#{size}"
+  end
+
   def self.create_from_auth_hash(hash)
     create!(AuthHash.new(hash).user_info)
   end

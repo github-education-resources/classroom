@@ -12,8 +12,20 @@ class Organization < ActiveRecord::Base
 
   # Public
   #
+  def active_users
+    users.where(status: 'active')
+  end
+
+  # Public
+  #
   def all_assignments
     assignments + group_assignments
+  end
+
+  # Public
+  #
+  def avatar_url(size = 80)
+    "https://avatars.githubusercontent.com/u/#{github_id}?size=#{size}"
   end
 
   # Public

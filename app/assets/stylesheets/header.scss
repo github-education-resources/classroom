@@ -25,24 +25,21 @@
     }
   }
 
-  @media (max-width: 34em) {
-    padding-top: 1rem;
-    border-top: 0.075rem solid rgba(255, 255, 255, 0.25);
-    text-align: center;
-    width: 100%;
-  }
+  // @media (max-width: 34em) {
+  //   padding-top: 1rem;
+  //   border-top: 0.075rem solid rgba(255, 255, 255, 0.25);
+  //   text-align: center;
+  //   width: 100%;
+  // }
 }
 
 .logo {
   color: #fff;
   font-size: 24px;
   font-weight: 200;
+  float: left;
 
   &:hover {
     text-decoration: none;
-  }
-
-  @media (min-width: 34em) {
-    float: left;
   }
 }

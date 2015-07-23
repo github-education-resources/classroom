@@ -1,1 +1,11 @@
-<h2><%= link_to assignment.title, organization_assignment_path(@organization, assignment) %></h2>
+<% is_private_class = assignment.private? ? 'private' : '' %>
+<div class="assignment-list-item <%= is_private_class %>">
+  <div class="assignment-list-stats">
+    <a href="#" class="assignment-list-stat-item tooltipped tooltipped-s" aria-label="Student Assignments">
+      <%= octicon('person') %>
+      <%= assignment.assignment_repos.count %>
+    </a>
+  </div>
+  <h3 class="assignment-list-name"><%= link_to assignment.title, organization_assignment_path(@organization, assignment) %></h3>
+  <p class="assignment-list-meta">Updated <time datetime="" is="relative-time" title=""><%= assignment.updated_at %></time></p>
+</div>
