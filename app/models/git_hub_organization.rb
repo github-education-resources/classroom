@@ -8,6 +8,12 @@ class GitHubOrganization
     @id        = id
   end
 
+  def accept_membership
+    with_error_handling do
+      @client.update_organization_membership(login, state: 'active')
+    end
+  end
+
   # Public
   #
   def create_repository(repo_name, users_repo_options = {})
@@ -22,6 +28,12 @@ class GitHubOrganization
 
   # Public
   #
+  def delete_repository(repo_id)
+    @client.delete_repository(repo_id)
+  end
+
+  # Public
+  #
   def create_team(team_name)
     github_team = with_error_handling do
       @client.create_team(@id,
@@ -31,6 +43,12 @@ class GitHubOrganization
     end
 
     GitHubTeam.new(@client, github_team.id)
+  end
+
+  # Public
+  #
+  def delete_team(team_id)
+    @client.delete_team(team_id)
   end
 
   # Public

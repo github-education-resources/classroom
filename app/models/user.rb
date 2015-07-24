@@ -1,5 +1,4 @@
 class User < ActiveRecord::Base
-  has_many :groups,        through:   :repo_accesses
   has_many :repo_accesses, dependent: :destroy
 
   has_and_belongs_to_many :organizations

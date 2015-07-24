@@ -17,12 +17,6 @@ describe GitHubRepository do
     @client.delete_repository(@github_repository.id)
   end
 
-  describe '#branches', :vcr do
-    it 'returns an array of branches' do
-      expect(@github_repository.branches).to eql([])
-    end
-  end
-
   describe '#full_name', :vcr do
     it 'gets the full_name (owner/repo_name) of the repository' do
       expect(@github_repository.full_name).to eql("#{organization.title}/test-repository")

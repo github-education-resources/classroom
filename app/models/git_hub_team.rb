@@ -16,6 +16,14 @@ class GitHubTeam
     end
   end
 
+  # Public
+  #
+  def remove_team_membership(user_github_login)
+    with_error_handling do
+      @client.remove_team_membership(@id, user_github_login)
+    end
+  end
+
   # Publc
   #
   def add_team_repository(full_name)
