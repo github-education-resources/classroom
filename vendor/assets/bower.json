@@ -3,7 +3,7 @@
   "dependencies": {
     "jquery": "~2.1.4",
     "jquery-ujs": " ~1.0.4",
-    "primer-css": " ~2.3.0",
+    "primer-css": " ~2.3.2",
     "jquery-readyselector": "Verba/jquery-readyselector",
     "jquery.turbolinks": "kossnocorp/jquery.turbolinks#~2.1.0",
     "zeroclipboard": "~2.2.0"

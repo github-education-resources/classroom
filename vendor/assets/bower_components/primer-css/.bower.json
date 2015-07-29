@@ -18,14 +18,14 @@
     "primer-markdown": "https://github.com/primer/markdown.git#2.1.7"
   },
   "homepage": "https://github.com/primer/primer",
-  "version": "2.3.0",
-  "_release": "2.3.0",
+  "version": "2.3.2",
+  "_release": "2.3.2",
   "_resolution": {
     "type": "version",
-    "tag": "v2.3.0",
-    "commit": "99a89715f1ce016ab957c9d8d10691366a2a8dce"
+    "tag": "v2.3.2",
+    "commit": "69fb3f3c84289cb533f495d3e999d1bbb1569938"
   },
   "_source": "git://github.com/primer/primer.git",
-  "_target": "~2.3.0",
+  "_target": "~2.3.2",
   "_originalSource": "primer-css"
 }
