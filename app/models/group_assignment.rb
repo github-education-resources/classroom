@@ -20,12 +20,12 @@ class GroupAssignment < ActiveRecord::Base
     super || NullGroupAssignmentInvitation.new
   end
 
-  def public?
-    public_repo
-  end
-
   def private?
     !public_repo
+  end
+
+  def public?
+    public_repo
   end
 
   def starter_code?

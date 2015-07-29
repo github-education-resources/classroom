@@ -33,11 +33,10 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
   describe 'GET #accept_invitation', :vcr do
     let(:organization)  { GitHubFactory.create_owner_classroom_org }
     let(:user)          { GitHubFactory.create_classroom_student   }
-    let(:github_client) { organization.fetch_owner.github_client   }
     let(:grouping)      { Grouping.create(title: 'Grouping 1', organization: organization) }
 
     let(:group_assignment) do
-      GroupAssignment.create(creator: organization.fetch_owner,
+      GroupAssignment.create(creator: organization.users.first,
                              title: 'HTML5',
                              grouping: grouping,
                              organization: organization,
@@ -52,9 +51,9 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       end
 
       after(:each) do
-        github_client.delete_team(RepoAccess.last.github_team_id)
-        github_client.delete_team(Group.last.github_team_id)
-        github_client.delete_repository(GroupAssignmentRepo.last.github_repo_id)
+        RepoAccess.destroy_all
+        Group.destroy_all
+        GroupAssignmentRepo.destroy_all
       end
 
       it 'redeems the users invitation' do

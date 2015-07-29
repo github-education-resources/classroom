@@ -18,9 +18,11 @@ class Organization < ActiveRecord::Base
 
   # Public
   #
-  def fetch_owner
-    users.sample
+  def github_client
+    users.sample.github_client
   end
+
+  private
 
   # Internal
   #

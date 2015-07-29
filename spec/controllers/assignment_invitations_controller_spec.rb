@@ -26,39 +26,35 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
   end
 
   describe 'GET #accept_invitation', :vcr do
+    let(:organization) { GitHubFactory.create_owner_classroom_org }
+    let(:user)         { GitHubFactory.create_classroom_student   }
+
+    let(:assignment) do
+      Assignment.create(creator: organization.users.first,
+                        title: 'ruby-project',
+                        organization: organization,
+                        public_repo: false)
+    end
+
+    let(:assignment_invitation) { AssignmentInvitation.create(assignment: assignment) }
+
     before(:each) do
-      @organization = GitHubFactory.create_owner_classroom_org
-      @user         = GitHubFactory.create_classroom_student
-
-      @assignment = Assignment.create(creator: @organization.fetch_owner,
-                                      title: 'ruby-project',
-                                      organization: @organization,
-                                      public_repo: false)
-
-      @invitation = AssignmentInvitation.create(assignment: @assignment)
-
-      session[:user_id] = @user.id
+      session[:user_id] = user.id
     end
 
     after(:each) do
-      assignment_repo = @assignment.assignment_repos.last
-      client          = @organization.fetch_owner.github_client
-
-      repo_id         = assignment_repo.github_repo_id
-      team_id         = assignment_repo.repo_access.github_team_id
-
-      client.delete_team(team_id)
-      client.delete_repository(repo_id)
+      AssignmentRepo.destroy_all
+      RepoAccess.destroy_all
     end
 
     it 'redeems the users invitation' do
-      get :accept_invitation, id: @invitation.key, format: :json
+      get :accept_invitation, id: assignment_invitation.key, format: :json
 
-      assert_requested :post, github_url("/organizations/#{@organization.github_id}/teams")
-      assert_requested :post, github_url("/organizations/#{@organization.github_id}/repos")
+      assert_requested :post, github_url("/organizations/#{organization.github_id}/teams")
+      assert_requested :post, github_url("/organizations/#{organization.github_id}/repos")
 
-      expect(@assignment.assignment_repos.count).to eql(1)
-      expect(@user.repo_accesses.count).to eql(1)
+      expect(assignment.assignment_repos.count).to eql(1)
+      expect(user.repo_accesses.count).to eql(1)
     end
   end
 end

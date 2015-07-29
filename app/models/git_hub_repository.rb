@@ -10,24 +10,18 @@ class GitHubRepository
 
   # Public
   #
-  def branches
-    with_error_handling { @client.branches(full_name) }
-  end
-
-  # Public
-  #
   def full_name
     @full_name ||= with_error_handling { @client.repository(@id).full_name }
   end
 
   # Public
   #
-  def push_to(destination)
+  def get_starter_code_from(source)
     Dir.mktmpdir do |dir|
       Dir.chdir(dir) do
-        system("git clone --bare https://#{@client.access_token}@github.com/#{full_name}.git")
-        Dir.chdir("#{full_name.split('/').last}.git") do
-          system("git push --mirror https://#{@client.access_token}@github.com/#{destination}.git")
+        system("git clone --bare https://#{@client.access_token}@github.com/#{source}.git")
+        Dir.chdir("#{source.split('/').last}.git") do
+          system("git push --mirror https://#{@client.access_token}@github.com/#{full_name}.git")
         end
       end
     end

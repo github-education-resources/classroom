@@ -7,7 +7,7 @@ class GroupAssignmentInvitationsController < InvitationsController
     group       = Group.find_by(id: group_params[:id])
     group_title = group_params[:title]
 
-    if (full_repo_name = @invitation.redeem(current_user, group, group_title))
+    if (full_repo_name = @invitation.redeem_for(current_user, group, group_title))
       render partial: 'success',
              locals: { repo_url: "https://github.com/#{full_repo_name}" },
              layout: 'invitations'

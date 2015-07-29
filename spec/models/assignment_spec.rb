@@ -1,38 +1,43 @@
 require 'rails_helper'
 
 RSpec.describe Assignment, type: :model do
-  it { should have_one(:assignment_invitation).dependent(:destroy) }
+  it { is_expected.to have_one(:assignment_invitation).dependent(:destroy) }
 
-  it { should have_many(:assignment_repos) }
+  it { is_expected.to have_many(:assignment_repos).dependent(:destroy) }
 
-  it { should belong_to(:creator) }
-  it { should belong_to(:organization) }
+  it { is_expected.to belong_to(:creator).class_name(User) }
+  it { is_expected.to belong_to(:organization) }
 
-  it { should validate_presence_of(:creator) }
+  describe 'validation and uniqueness' do
+    subject { Assignment.new }
 
-  it { should validate_presence_of(:organization) }
+    it { is_expected.to validate_presence_of(:creator) }
 
-  it { should validate_presence_of(:title) }
-  # https://github.com/thoughtbot/shoulda-matchers/issues/745
-  # it { should validate_uniqueness_of(:title).scoped_to(:organization) }
+    it { is_expected.to validate_presence_of(:organization) }
 
-  it 'validates that a GroupAssignment in the same organization does not have the same title' do
-    organization     = create(:organization)
-    grouping         = Grouping.new(title: 'Grouping', organization: organization)
+    it { is_expected.to validate_presence_of(:title) }
+    # it { is_expected.to validate_uniqueness_of(:title).scoped_to(:organization) }
+  end
 
-    group_assignment = GroupAssignment.create(creator: organization.fetch_owner,
-                                              title: 'Ruby Project',
-                                              organization: organization,
-                                              grouping: grouping)
+  describe 'uniqueness of title across organization' do
+    let(:organization) { create(:organization)    }
+    let(:creator)      { organization.users.first }
 
-    assignment       = Assignment.new(creator: organization.fetch_owner,
-                                      title: group_assignment.title,
-                                      organization: organization)
+    let(:grouping)     { Grouping.create(title: 'Grouping', organization: organization) }
 
-    assignment.save
+    let(:group_assignment) do
+      GroupAssignment.create(creator: creator,
+                             title: 'Ruby Project',
+                             organization: organization,
+                             grouping: grouping)
+    end
 
-    expect(assignment.errors.count).to eql(1)
-    expect(assignment.errors.messages[:title].first).to eql('has already been taken')
+    let(:assignment) { Assignment.new(creator: creator, title: group_assignment.title, organization: organization) }
+
+    it 'validates that a GroupAssignment in the same organization does not have the same title' do
+      expect { assignment.save! }.to raise_error(ActiveRecord::RecordInvalid,
+                                                 'Validation failed: Title has already been taken')
+    end
   end
 
   describe '#assignment_invitation' do

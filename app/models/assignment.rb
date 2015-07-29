@@ -1,7 +1,7 @@
 class Assignment < ActiveRecord::Base
   has_one :assignment_invitation, dependent: :destroy
 
-  has_many :assignment_repos
+  has_many :assignment_repos, dependent: :destroy
 
   belongs_to :creator, class_name: User
   belongs_to :organization
@@ -19,12 +19,12 @@ class Assignment < ActiveRecord::Base
     super || NullAssignmentInvitation.new
   end
 
-  def public?
-    public_repo
-  end
-
   def private?
     !public_repo
+  end
+
+  def public?
+    public_repo
   end
 
   def starter_code?
