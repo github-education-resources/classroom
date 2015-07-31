@@ -1,5 +1,5 @@
 class AssignmentsController < ApplicationController
-  before_action :redirect_to_root,           unless: :logged_in?
+  before_action :ensure_logged_in
   before_action :set_organization
   before_action :set_assignment,             except: [:new, :create]
 

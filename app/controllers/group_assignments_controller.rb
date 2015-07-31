@@ -1,6 +1,5 @@
 class GroupAssignmentsController < ApplicationController
-  before_action :redirect_to_root, unless: :logged_in?
-
+  before_action :ensure_logged_in
   before_action :set_organization
   before_action :set_group_assignment, except: [:new, :create]
   before_action :set_groupings,        except: [:show]

@@ -1,5 +1,5 @@
 class OrganizationsController < ApplicationController
-  before_action :redirect_to_root,               unless: :logged_in?
+  before_action :ensure_logged_in
   before_action :set_organization,               except: [:new, :create]
   before_action :set_users_github_organizations, only:   [:new, :create]
 
