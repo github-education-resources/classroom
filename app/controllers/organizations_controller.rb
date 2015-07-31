@@ -12,7 +12,6 @@ class OrganizationsController < ApplicationController
 
   def create
     @organization = Organization.new(new_organization_params)
-    @organization.users << current_user
 
     if @organization.save
       redirect_to invite_organization_path(@organization)
@@ -78,6 +77,7 @@ class OrganizationsController < ApplicationController
     params
       .require(:organization)
       .permit(:title, :github_id)
+      .merge(users: [current_user])
   end
 
   def set_organization
