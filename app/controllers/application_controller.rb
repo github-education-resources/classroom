@@ -6,8 +6,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_user, :logged_in?, :staff?
 
   def peek_enabled?
-    return unless current_user
-    current_user.staff?
+    staff?
   end
 
   private
@@ -28,5 +27,9 @@ class ApplicationController < ActionController::Base
 
   def redirect_to_root
     redirect_to root_path
+  end
+
+  def staff?
+    logged_in? && current_user.staff?
   end
 end

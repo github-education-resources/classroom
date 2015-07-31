@@ -6,7 +6,7 @@
     <% end %>
     <nav class="header-nav">
       <% if logged_in? %>
-        <%= link_to "Dashboard", dashboard_path %>
+        <%= render 'shared/staff_links' if staff? %>
         <%= link_to 'Sign out', logout_path %>
       <% else %>
         <%= link_to 'Sign in', login_path %>

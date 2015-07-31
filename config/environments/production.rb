@@ -89,4 +89,8 @@ Rails.application.configure do
                               { username: ENV['MEMCACHEDCLOUD_USERNAME'],
                                 password: ENV['MEMCACHEDCLOUD_PASSWORD'] }),
   }
+
+  config.peek.adapter = :sidekiq, {
+    client: Redis.new(url: ENV['REDIS_PROVIDER'])
+  }
 end

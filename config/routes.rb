@@ -1,6 +1,12 @@
 require 'organization_authorized_constraint'
+require 'staff_constraint'
+
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
-  mount Peek::Railtie => '/peek'
+  mount Peek::Railtie => '/peek',    constraints: StaffConstraint.new
+  mount Sidekiq::Web  => '/sidekiq', constraints: StaffConstraint.new
+
   root to: 'pages#home'
 
   get '/login',  to: 'sessions#new',     as: 'login'
