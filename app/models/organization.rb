@@ -19,7 +19,7 @@ class Organization < ActiveRecord::Base
   # Public
   #
   def github_client
-    users.sample.github_client
+    users.where(state: 'active').sample.github_client
   end
 
   private

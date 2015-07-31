@@ -1,7 +1,6 @@
 class AssignmentsController < ApplicationController
   before_action :redirect_to_root,           unless: :logged_in?
   before_action :set_organization
-  before_action :ensure_organization_admin
   before_action :set_assignment,             except: [:new, :create]
 
   rescue_from GitHub::Error,     with: :error
@@ -40,13 +39,6 @@ class AssignmentsController < ApplicationController
   def error
     flash[:error] = exception.message
     redirect_to :back
-  end
-
-  def ensure_organization_admin
-    github_organization = GitHubOrganization.new(current_user.github_client, @organization.github_id)
-
-    login = github_organization.login
-    github_organization.authorization_on_github_organization?(login)
   end
 
   def new_assignment_params

@@ -1,3 +1,4 @@
+require 'organization_authorized_constraint'
 Rails.application.routes.draw do
   mount Peek::Railtie => '/peek'
   root to: 'pages#home'
@@ -22,9 +23,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :organizations do
+  resources :organizations, constraints: OrganizationAuthorizedConstraint.new do
     member do
-      get 'new_assignment'
+      get   'invite'
+      get   'new_assignment'
+      patch 'invite_users'
     end
 
     resources :assignments,       only: [:show, :new, :create]

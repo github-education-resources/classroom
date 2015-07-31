@@ -59,12 +59,8 @@ class GitHubOrganization
 
   # Public
   #
-  def authorization_on_github_organization?(organization_login)
-    with_error_handling do
-      if @client.organization_membership(organization_login).role != 'admin'
-        fail GitHub::Forbidden
-      end
-    end
+  def organization_members(options = {})
+    with_error_handling { @client.organization_members(@id, options) }
   end
 
   # Internal
