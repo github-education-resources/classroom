@@ -1,7 +1,7 @@
 class GitHubRepository
   include GitHub
 
-  attr_reader :full_name, :id
+  attr_reader :id
 
   def initialize(client, id)
     @client = client
@@ -11,7 +11,7 @@ class GitHubRepository
   # Public
   #
   def full_name
-    @full_name ||= with_error_handling { @client.repository(@id).full_name }
+    with_error_handling { @client.repository(@id).full_name }
   end
 
   # Public

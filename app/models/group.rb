@@ -5,7 +5,7 @@ class Group < ActiveRecord::Base
 
   belongs_to :grouping
 
-  has_and_belongs_to_many :repo_accesses, before_add: :add_member_to_github_team, unless: :new_record?,
+  has_and_belongs_to_many :repo_accesses, before_add:    :add_member_to_github_team, unless: :new_record?,
                                           before_remove: :remove_from_github_team
 
   validates :github_team_id, presence: true
