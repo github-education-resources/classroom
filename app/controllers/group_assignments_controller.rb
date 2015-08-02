@@ -1,15 +1,10 @@
 class GroupAssignmentsController < ApplicationController
-  before_action :redirect_to_root, unless: :logged_in?
-
+  before_action :ensure_logged_in
   before_action :set_organization
-  before_action :ensure_organization_admin
-
   before_action :set_group_assignment, except: [:new, :create]
   before_action :set_groupings,        except: [:show]
 
-  rescue_from GitHub::Error,     with: :error
-  rescue_from GitHub::Forbidden, with: :deny_access
-  rescue_from GitHub::NotFound,  with: :not_found
+  rescue_from GitHub::Error, GitHub::Forbidden, GitHub::NotFound, with: :error
 
   def new
     @group_assignment = GroupAssignment.new
@@ -34,21 +29,9 @@ class GroupAssignmentsController < ApplicationController
 
   private
 
-  def deny_access
-    flash[:error] = 'You are not authorized to perform this action'
-    redirect_to_root
-  end
-
   def error
     flash[:error] = exception.message
     redirect_to :back
-  end
-
-  def ensure_organization_admin
-    github_organization = GitHubOrganization.new(current_user.github_client, @organization.github_id)
-
-    login = github_organization.login
-    github_organization.authorization_on_github_organization?(login)
   end
 
   def new_group_assignment_params
@@ -65,11 +48,6 @@ class GroupAssignmentsController < ApplicationController
       .require(:grouping)
       .permit(:title)
       .merge(organization_id: new_group_assignment_params[:organization_id])
-  end
-
-  def not_found
-    flash[:error] = 'We could not find the repository'
-    redirect_to :back
   end
 
   def set_groupings

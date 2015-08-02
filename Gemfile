@@ -25,6 +25,8 @@ gem 'peek-pg'
 gem 'pg'
 
 gem 'sass-rails', '~> 5.0'
+gem 'sidekiq'
+gem 'sinatra'
 
 gem 'turbolinks'
 
@@ -33,7 +35,6 @@ gem 'uglifier', '>= 1.3.0'
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'rails-erd', require: false
   gem 'quiet_assets'
 end
 

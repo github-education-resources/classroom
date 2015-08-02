@@ -1,13 +1,13 @@
 class GitHubOrganization
   include GitHub
 
-  attr_reader :login
-
   def initialize(client, id)
     @client    = client
     @id        = id
   end
 
+  # Public
+  #
   def accept_membership
     with_error_handling do
       @client.update_organization_membership(login, state: 'active')
@@ -54,18 +54,16 @@ class GitHubOrganization
   # Public
   #
   def login
-    @login ||= with_error_handling { @client.organization(@id).login }
+    with_error_handling { @client.organization(@id).login }
   end
 
   # Public
   #
-  def authorization_on_github_organization?(organization_login)
-    with_error_handling do
-      if @client.organization_membership(organization_login).role != 'admin'
-        fail GitHub::Forbidden
-      end
-    end
+  def organization_members(options = {})
+    with_error_handling { @client.organization_members(@id, options) }
   end
+
+  private
 
   # Internal
   #

@@ -1,14 +1,9 @@
 class AssignmentsController < ApplicationController
-  before_action :redirect_to_root,           unless: :logged_in?
+  before_action :ensure_logged_in
   before_action :set_organization
-  before_action :ensure_organization_admin
-  before_action :set_assignment,             except: [:new, :create]
-
-  rescue_from GitHub::Error,     with: :error
-  rescue_from GitHub::Forbidden, with: :deny_access
-  rescue_from GitHub::NotFound,  with: :not_found
-
   before_action :set_assignment, except: [:new, :create]
+
+  rescue_from GitHub::Error, GitHub::Forbidden, GitHub::NotFound, with: :error
 
   def new
     @assignment = Assignment.new
@@ -32,21 +27,9 @@ class AssignmentsController < ApplicationController
 
   private
 
-  def deny_access
-    flash[:error] = 'You are not authorized to perform this action'
-    redirect_to_root
-  end
-
   def error
     flash[:error] = exception.message
     redirect_to :back
-  end
-
-  def ensure_organization_admin
-    github_organization = GitHubOrganization.new(current_user.github_client, @organization.github_id)
-
-    login = github_organization.login
-    github_organization.authorization_on_github_organization?(login)
   end
 
   def new_assignment_params
@@ -56,11 +39,6 @@ class AssignmentsController < ApplicationController
       .merge(creator: current_user,
              organization_id: params[:organization_id],
              starter_code_repo_id: starter_code_repository_id(params[:repo_name]))
-  end
-
-  def not_found
-    flash[:error] = 'We could not find the repository'
-    redirect_to :back
   end
 
   def set_assignment

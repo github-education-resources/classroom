@@ -40,23 +40,4 @@ describe GitHubOrganization do
       expect(@github_organization.login).to eql(organization.title)
     end
   end
-
-  describe '#authorization_on_github_organization', :vcr do
-    context 'when authorized' do
-      it 'verifies that the user is an owner of the organization' do
-        verification_result = @github_organization.authorization_on_github_organization?(organization.title)
-        expect(verification_result).to be_nil
-      end
-    end
-
-    context 'when not authorized' do
-      it 'raises a GitHub::Forbidden' do
-        begin
-          @github_organization.authorization_on_github_organization?('education')
-        rescue => err
-          expect(err.class).to eql(GitHub::Forbidden)
-        end
-      end
-    end
-  end
 end

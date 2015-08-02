@@ -5,7 +5,7 @@ class Group < ActiveRecord::Base
 
   belongs_to :grouping
 
-  has_and_belongs_to_many :repo_accesses, before_add: :add_member_to_github_team, unless: :new_record?,
+  has_and_belongs_to_many :repo_accesses, before_add:    :add_member_to_github_team, unless: :new_record?,
                                           before_remove: :remove_from_github_team
 
   validates :github_team_id, presence: true
@@ -20,18 +20,18 @@ class Group < ActiveRecord::Base
   # Internal
   #
   def add_member_to_github_team(repo_access)
-    github_team.add_team_membership(repo_access.user.github_login)
+    github_team = GitHubTeam.new(organization.github_client, github_team_id)
+    github_user = GitHubUser.new(repo_access.user.github_client)
+
+    github_team.add_team_membership(github_user.login)
   end
 
   # Internal
   #
   def remove_from_github_team(repo_access)
-    github_team.remove_team_membership(repo_access.user.github_login)
-  end
+    github_team = GitHubTeam.new(organization.github_client, github_team_id)
+    github_user = GitHubUser.new(repo_access.user.github_client)
 
-  # Internal
-  #
-  def github_team
-    @github_team ||= GitHubTeam.new(organization.github_client, github_team_id)
+    github_team.remove_team_membership(github_user.login)
   end
 end

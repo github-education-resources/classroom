@@ -38,7 +38,7 @@ RSpec.describe Organization, type: :model do
 
     context 'new Organization' do
       it 'returns an empty array' do
-        expect(subject.all_assignments.class).to be(Array)
+        expect(subject.all_assignments).to be_kind_of(Array)
         expect(subject.all_assignments.count).to eql(0)
       end
     end
@@ -57,7 +57,7 @@ RSpec.describe Organization, type: :model do
       end
 
       it 'should return an array of Assignments and GroupAssignments' do
-        expect(subject.all_assignments.class).to be(Array)
+        expect(subject.all_assignments).to be_kind_of(Array)
         expect(subject.all_assignments.count).to eql(2)
       end
     end

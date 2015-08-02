@@ -40,5 +40,8 @@ module Classroom
 
     # GC Profiler for analytics
     GC::Profiler.enable
+
+    # Use SideKiq for background jobs
+    config.active_job.queue_adapter = :sidekiq
   end
 end

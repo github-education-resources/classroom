@@ -1,7 +1,6 @@
 class OrganizationsController < ApplicationController
-  before_action :redirect_to_root,               unless: :logged_in?
+  before_action :ensure_logged_in
   before_action :set_organization,               except: [:new, :create]
-  before_action :ensure_organization_admin,      except: [:new, :create]
   before_action :set_users_github_organizations, only:   [:new, :create]
 
   rescue_from GitHub::Error,     with: :error
@@ -13,10 +12,9 @@ class OrganizationsController < ApplicationController
 
   def create
     @organization = Organization.new(new_organization_params)
-    @organization.users << current_user
 
     if @organization.save
-      redirect_to @organization
+      redirect_to invite_organization_path(@organization)
     else
       render :new
     end
@@ -49,6 +47,21 @@ class OrganizationsController < ApplicationController
   def new_assignment
   end
 
+  def invite
+    @organization_owners = set_github_organization_owners
+  end
+
+  def invite_users
+    params[:github_owners].each do |login, id|
+      email = params[:github_owner_emails][login]
+      InviteUserToClassroomJob.perform_later(id, email, current_user, @organization)
+    end
+
+    respond_to do |format|
+      format.html { redirect_to @organization }
+    end
+  end
+
   private
 
   def deny_access
@@ -60,26 +73,33 @@ class OrganizationsController < ApplicationController
     flash[:error] = exception.message
   end
 
-  def ensure_organization_admin
-    github_organization = GitHubOrganization.new(current_user.github_client, @organization.github_id)
-
-    login = github_organization.login
-    github_organization.authorization_on_github_organization?(login)
-  end
-
   def new_organization_params
     params
       .require(:organization)
       .permit(:title, :github_id)
+      .merge(users: [current_user])
   end
 
   def set_organization
     @organization = Organization.find(params[:id])
   end
 
+  def set_github_organization_owners
+    organization_users_uids = @organization.users.pluck(:uid)
+    github_organization     = GitHubOrganization.new(current_user.github_client, @organization.github_id)
+
+    github_organization.organization_members(role: 'admin').delete_if do |member|
+      organization_users_uids.include?(member.id)
+    end
+  end
+
   def set_users_github_organizations
-    @users_github_organizations = current_user.github_client.organization_memberships.map do |org|
-      [org.organization.login, org.organization.id] if org.role == 'admin'
+    github_user = GitHubUser.new(current_user.github_client)
+
+    @users_github_organizations = github_user.admin_organization_memberships.map do |membership|
+      unless Organization.find_by(github_id: membership.organization.id)
+        [membership.organization.login, membership.organization.id]
+      end
     end.compact
   end
 

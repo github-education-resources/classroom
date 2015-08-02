@@ -9,16 +9,32 @@ module GitHub
     yield
   rescue Octokit::Error => err
     case err
-    when Octokit::Forbidden then raise GitHub::Forbidden
-    when Octokit::NotFound  then raise GitHub::NotFound
-
-    when Octokit::ServerError
-      raise GitHub::Error, 'There seems to be a problem on GitHub.com, please try again.'
-
-    when Octokit::UnprocessableEntity
-      raise GitHub::Error, build_error_message(err.errors.first)
+    when Octokit::Forbidden           then raise_github_forbidden_error
+    when Octokit::NotFound            then raise_github_not_found_error
+    when Octokit::ServerError         then raise_github_server_error
+    when Octokit::UnprocessableEntity then raise_github_error(err)
     end
   end
+
+  protected
+
+  def raise_github_forbidden_error
+    fail GitHub::Forbidden, 'You are forbidden from performing this action on github.com'
+  end
+
+  def raise_github_server_error
+    fail GitHub::Error, 'There seems to be a problem on github.com, please try again.'
+  end
+
+  def raise_github_error(err)
+    fail GitHub::Error, build_error_message(err.errors.first)
+  end
+
+  def raise_github_not_found_error
+    fail GitHub::NotFound, 'Resource could not be found on github.com'
+  end
+
+  private
 
   # Internal
   #

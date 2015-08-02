@@ -25,7 +25,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
       it 'will have an array of groups' do
         get :show, id: invitation.key
-        expect(assigns(:groups).class).to be(Array)
+        expect(assigns(:groups)).to be_kind_of(Array)
       end
     end
   end

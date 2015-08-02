@@ -11,17 +11,32 @@ RSpec.describe User, type: :model do
   describe 'validation and uniqueness' do
     subject { build(:user) }
 
-    it { is_expected.to validate_presence_of(:uid)   }
-    it { is_expected.to validate_presence_of(:token) }
-
+    it { is_expected.to validate_presence_of(:uid)     }
     it { is_expected.to validate_uniqueness_of(:uid)   }
-    it { is_expected.to validate_uniqueness_of(:token) }
+
+    context 'active' do
+      it { is_expected.to validate_presence_of(:token) }
+    end
+
+    context 'pending' do
+      subject { build(:user, state: 'pending') }
+
+      it { is_expected.not_to validate_uniqueness_of(:token) }
+      it { is_expected.to allow_value('').for(:token)        }
+    end
   end
 
   describe '#assign_from_auth_hash' do
     it 'updates the users attributes' do
       user.assign_from_auth_hash(github_omniauth_hash)
       expect(github_omniauth_hash.credentials.token).to eq(user.token)
+    end
+
+    it 'updates the users status from pending to active' do
+      pending_user = create(:user, state: 'pending', token: nil)
+
+      pending_user.assign_from_auth_hash(github_omniauth_hash)
+      expect(pending_user.state).to eql('active')
     end
   end
 
@@ -43,16 +58,6 @@ RSpec.describe User, type: :model do
   describe '#github_client' do
     it 'sets or creates a new GitHubClient with the users token' do
       expect(user.github_client.class).to eql(Octokit::Client)
-    end
-  end
-
-  describe '#github_login', :vcr do
-    it 'gets the users GitHub login' do
-      user.token   = classroom_owner_github_token
-      github_login = user.github_login
-
-      assert_requested :get, github_url('/user')
-      expect(github_login).to eq('tarebyte')
     end
   end
 

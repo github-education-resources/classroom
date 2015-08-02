@@ -55,7 +55,8 @@ RSpec.describe Group, type: :model do
       describe 'before_add' do
         describe '#add_member_to_github_team' do
           it 'adds the user to the GitHub team' do
-            memberships_url = "teams/#{@group.github_team_id}/memberships/#{@repo_access.user.github_login}"
+            github_user     = GitHubUser.new(@repo_access.user.github_client)
+            memberships_url = "teams/#{@group.github_team_id}/memberships/#{github_user.login}"
 
             assert_requested :put, github_url(memberships_url)
             assert_requested :patch, github_url("/user/memberships/orgs/#{organization.title}")
@@ -66,10 +67,10 @@ RSpec.describe Group, type: :model do
       describe 'before_destroy' do
         describe '#remove_from_github_team' do
           it 'removes the user from the GitHub team'do
-            user_login = @repo_access.user.github_login
+            github_user = GitHubUser.new(@repo_access.user.github_client)
 
             @group.repo_accesses.delete(@repo_access)
-            assert_requested :delete, github_url("/teams/#{@group.github_team_id}/memberships/#{user_login}")
+            assert_requested :delete, github_url("/teams/#{@group.github_team_id}/memberships/#{github_user.login}")
           end
         end
       end
