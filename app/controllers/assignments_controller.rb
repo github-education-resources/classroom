@@ -37,8 +37,8 @@ class AssignmentsController < ApplicationController
       .require(:assignment)
       .permit(:title, :public_repo)
       .merge(creator: current_user,
-    organization_id: params[:organization_id],
-    starter_code_repo_id: starter_code_repository_id(params[:repo_name]))
+             organization_id: params[:organization_id],
+             starter_code_repo_id: starter_code_repository_id(params[:repo_name]))
   end
 
   def set_assignment
