@@ -31,7 +31,7 @@ module GitHub
   end
 
   def raise_github_not_found_error
-    fail GitHub::NotFound
+    fail GitHub::NotFound, 'Resource could not be found on github.com'
   end
 
   private
