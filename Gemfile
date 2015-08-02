@@ -21,7 +21,6 @@ gem 'peek-gc'
 gem 'peek-git'
 gem 'peek-performance_bar'
 gem 'peek-pg'
-gem 'peek-sidekiq'
 
 gem 'pg'
 

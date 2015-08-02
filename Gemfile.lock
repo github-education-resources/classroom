@@ -149,10 +149,6 @@ GEM
       atomic (>= 1.0.0)
       peek
       pg
-    peek-sidekiq (1.0.3)
-      atomic (>= 1.0.0)
-      peek
-      sidekiq
     pg (0.18.2)
     powerpack (0.1.1)
     pry (0.10.1)
@@ -306,7 +302,6 @@ DEPENDENCIES
   peek-git
   peek-performance_bar
   peek-pg
-  peek-sidekiq
   pg
   pry-byebug
   pry-rails
