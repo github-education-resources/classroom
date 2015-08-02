@@ -38,7 +38,8 @@ RSpec.describe RepoAccess, type: :model do
 
       describe '#add_member_to_github_team' do
         it 'adds the user to the GitHub team' do
-          assert_requested :put, github_url("teams/#{@repo_access.github_team_id}/memberships/#{user.github_login}")
+          github_user = GitHubUser.new(user.github_client)
+          assert_requested :put, github_url("teams/#{@repo_access.github_team_id}/memberships/#{github_user.login}")
         end
 
         it 'accepts the users membership to the Organization' do

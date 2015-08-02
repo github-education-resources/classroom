@@ -29,10 +29,6 @@ class User < ActiveRecord::Base
     @github_client ||= Octokit::Client.new(access_token: token, auto_paginate: true)
   end
 
-  def github_login
-    github_client.user.login
-  end
-
   def staff?
     site_admin
   end
