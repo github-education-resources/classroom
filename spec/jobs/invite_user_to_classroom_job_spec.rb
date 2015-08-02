@@ -6,9 +6,13 @@ RSpec.describe InviteUserToClassroomJob, type: :job do
   let(:invitee)      { GitHubFactory.create_classroom_student   }
 
   it 'creates sends an Invitation email', :vcr do
-    expect do
-      InviteUserToClassroomJob.perform_now(invitee.uid, 'test-email@gmail.com', invitor, organization)
-    end.to change { ActionMailer::Base.deliveries.size }.by(1)
+    assert_performed_with(job: InviteUserToClassroomJob,
+                          args: [invitee.uid, 'test-email@gmail.com', invitor, organization], queue: 'default'
+                         ) do
+                           expect do
+                             InviteUserToClassroomJob.perform_later(invitee.uid, 'test-email@gmail.com', invitor, organization)
+                           end.to change { ActionMailer::Base.deliveries.size }.by(1)
+                         end
   end
 
   it 'creates a new pending user if the user does not exist', :vcr do
