@@ -16,7 +16,10 @@ class RepoAccess < ActiveRecord::Base
   validates :user, uniqueness: { scope: :organization }
 
   before_validation(on: :create) do
-    add_member_to_github_team if organization
+    if organization
+      add_member_to_github_team
+      accept_membership_to_organization
+    end
   end
 
   private
@@ -25,8 +28,14 @@ class RepoAccess < ActiveRecord::Base
   #
   def add_member_to_github_team
     github_team = GitHubTeam.new(organization.github_client, github_team_id)
-    github_team.add_team_membership(user.github_login)
+    github_user = GitHubUser.new(user.github_client)
 
+    github_team.add_team_membership(github_user.login)
+  end
+
+  # Interal
+  #
+  def accept_membership_to_organization
     users_github_organization = GitHubOrganization.new(user.github_client, organization.github_id)
     users_github_organization.accept_membership
   end
