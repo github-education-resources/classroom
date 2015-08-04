@@ -18,6 +18,12 @@ class GroupAssignmentRepo < ActiveRecord::Base
 
   # Public
   #
+  def creator
+    group_assignment.creator
+  end
+
+  # Public
+  #
   def private?
     !group_assignment.public_repo?
   end

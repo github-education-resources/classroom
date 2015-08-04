@@ -16,6 +16,12 @@ class AssignmentRepo < ActiveRecord::Base
 
   # Public
   #
+  def creator
+    assignment.creator
+  end
+
+  # Public
+  #
   def private?
     !assignment.public_repo?
   end
