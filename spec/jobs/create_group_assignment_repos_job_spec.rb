@@ -8,7 +8,7 @@ RSpec.describe CreateGroupAssignmentReposJob, type: :job do
     RepoAccess.create(user: student, organization: organization)
   end
 
-  let(:group_assignment) { create(:group_assignment, organization: organization, starter_code_repo_id: 40140589) }
+  let(:group_assignment) { create(:group_assignment, organization: organization, starter_code_repo_id: 40_140_589) }
 
   after(:each) do
     RepoAccess.destroy_all
