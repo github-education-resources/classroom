@@ -51,6 +51,7 @@ end
 
 group :production do
   gem 'dalli'
+  gem 'rack-tracker'
   gem 'rails_12factor'
   gem 'puma'
 end
