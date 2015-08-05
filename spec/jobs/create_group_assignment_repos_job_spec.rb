@@ -25,17 +25,4 @@ RSpec.describe CreateGroupAssignmentReposJob, type: :job do
       expect(GroupAssignmentRepo.all.count).to eql(0)
     end
   end
-
-  context 'a GroupAssignment with an existing Grouping with Groups', :vcr do
-    it 'creates a GroupAssignmentRepo for each group' do
-      group = Group.create(grouping: group_assignment.grouping, title: 'Group 1')
-      group.repo_accesses << repo_access
-
-      assert_performed_with(job: CreateGroupAssignmentReposJob, args: [group_assignment.id]) do
-        CreateGroupAssignmentReposJob.perform_later(group_assignment.id)
-      end
-
-      expect(GroupAssignmentRepo.all.count).to eql(1)
-    end
-  end
 end
