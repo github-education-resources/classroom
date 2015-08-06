@@ -1,4 +1,6 @@
 class Assignment < ActiveRecord::Base
+  default_scope { where(deleted_at: nil) }
+
   has_one :assignment_invitation, dependent: :destroy
 
   has_many :assignment_repos, dependent: :destroy

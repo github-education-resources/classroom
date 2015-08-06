@@ -1,4 +1,6 @@
 class AssignmentInvitation < ActiveRecord::Base
+  default_scope { where(deleted_at: nil) }
+
   has_one :organization, through: :assignment
 
   belongs_to :assignment

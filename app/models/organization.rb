@@ -1,4 +1,6 @@
 class Organization < ActiveRecord::Base
+  default_scope { where(deleted_at: nil) }
+
   has_many :assignments,       dependent: :destroy
   has_many :groupings,         dependent: :destroy
   has_many :group_assignments, dependent: :destroy

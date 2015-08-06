@@ -8,6 +8,8 @@ RSpec.describe Organization, type: :model do
 
   it { is_expected.to have_and_belong_to_many(:users) }
 
+  it_behaves_like 'a default scope where deleted_at is not present'
+
   describe 'validation and uniqueness' do
     subject { build(:organization) }
 
