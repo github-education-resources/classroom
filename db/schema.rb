@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150729210740) do
+ActiveRecord::Schema.define(version: 20150806032053) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,9 +21,11 @@ ActiveRecord::Schema.define(version: 20150729210740) do
     t.integer  "assignment_id"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.datetime "deleted_at"
   end
 
   add_index "assignment_invitations", ["assignment_id"], name: "index_assignment_invitations_on_assignment_id", using: :btree
+  add_index "assignment_invitations", ["deleted_at"], name: "index_assignment_invitations_on_deleted_at", using: :btree
   add_index "assignment_invitations", ["key"], name: "index_assignment_invitations_on_key", unique: true, using: :btree
 
   create_table "assignment_repos", force: :cascade do |t|
@@ -46,8 +48,10 @@ ActiveRecord::Schema.define(version: 20150729210740) do
     t.datetime "updated_at",                          null: false
     t.integer  "starter_code_repo_id"
     t.integer  "creator_id"
+    t.datetime "deleted_at"
   end
 
+  add_index "assignments", ["deleted_at"], name: "index_assignments_on_deleted_at", using: :btree
   add_index "assignments", ["organization_id"], name: "index_assignments_on_organization_id", using: :btree
 
   create_table "group_assignment_invitations", force: :cascade do |t|
@@ -55,8 +59,10 @@ ActiveRecord::Schema.define(version: 20150729210740) do
     t.integer  "group_assignment_id"
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
+    t.datetime "deleted_at"
   end
 
+  add_index "group_assignment_invitations", ["deleted_at"], name: "index_group_assignment_invitations_on_deleted_at", using: :btree
   add_index "group_assignment_invitations", ["group_assignment_id"], name: "index_group_assignment_invitations_on_group_assignment_id", using: :btree
   add_index "group_assignment_invitations", ["key"], name: "index_group_assignment_invitations_on_key", unique: true, using: :btree
 
@@ -80,8 +86,10 @@ ActiveRecord::Schema.define(version: 20150729210740) do
     t.datetime "updated_at",                          null: false
     t.integer  "starter_code_repo_id"
     t.integer  "creator_id"
+    t.datetime "deleted_at"
   end
 
+  add_index "group_assignments", ["deleted_at"], name: "index_group_assignments_on_deleted_at", using: :btree
   add_index "group_assignments", ["organization_id"], name: "index_group_assignments_on_organization_id", using: :btree
 
   create_table "groupings", force: :cascade do |t|
@@ -117,8 +125,10 @@ ActiveRecord::Schema.define(version: 20150729210740) do
     t.string   "title",      null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
   end
 
+  add_index "organizations", ["deleted_at"], name: "index_organizations_on_deleted_at", using: :btree
   add_index "organizations", ["github_id"], name: "index_organizations_on_github_id", unique: true, using: :btree
   add_index "organizations", ["title"], name: "index_organizations_on_title", unique: true, using: :btree
 

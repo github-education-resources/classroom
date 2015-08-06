@@ -5,6 +5,8 @@ RSpec.describe AssignmentInvitation, type: :model do
 
   it { is_expected.to belong_to(:assignment) }
 
+  it_behaves_like 'a default scope where deleted_at is not present'
+
   describe 'validations and uniqueness' do
     subject { AssignmentInvitation.new }
 

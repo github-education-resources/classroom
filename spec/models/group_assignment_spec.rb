@@ -8,6 +8,8 @@ RSpec.describe GroupAssignment, type: :model do
   it { is_expected.to belong_to(:creator) }
   it { is_expected.to belong_to :organization }
 
+  it_behaves_like 'a default scope where deleted_at is not present'
+
   describe 'validation and uniqueness' do
     subject { GroupAssignment.new }
 

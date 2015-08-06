@@ -1,4 +1,6 @@
 class GroupAssignment < ActiveRecord::Base
+  default_scope { where(deleted_at: nil) }
+
   has_one :group_assignment_invitation, dependent: :destroy
 
   has_many :group_assignment_repos, dependent: :destroy

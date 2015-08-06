@@ -8,6 +8,8 @@ RSpec.describe Assignment, type: :model do
   it { is_expected.to belong_to(:creator).class_name(User) }
   it { is_expected.to belong_to(:organization) }
 
+  it_behaves_like 'a default scope where deleted_at is not present'
+
   describe 'validation and uniqueness' do
     subject { Assignment.new }
 
