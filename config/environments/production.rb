@@ -102,4 +102,8 @@ Rails.application.configure do
   }
 
   ActionMailer::Base.delivery_method = :smtp
+
+  config.middleware.use(Rack::Tracker) do
+    handler :google_analytics, { tracker: ENV['GOOGLE_ANALYTICS_TRACKING_ID'] }
+  end
 end
