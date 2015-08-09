@@ -29,7 +29,7 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
     let(:organization)  { GitHubFactory.create_owner_classroom_org }
     let(:grouping)      { Grouping.create(title: 'Grouping', organization: organization) }
 
-    let(:group_assignment)  do
+    let(:group_assignment) do
       GroupAssignment.create(creator: organization.users.first,
                              title: 'JavaScript',
                              organization: organization,

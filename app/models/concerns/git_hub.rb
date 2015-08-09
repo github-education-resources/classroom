@@ -45,7 +45,7 @@ module GitHub
     error_message = []
 
     error_message << error[:resource]
-    error_message << error[:code].gsub('_', ' ') if error[:message].nil?
+    error_message << error[:code].tr('_', ' ') if error[:message].nil?
     error_message << error[:field] if error[:message].nil?
     error_message << error[:message] unless error[:message].nil?
 

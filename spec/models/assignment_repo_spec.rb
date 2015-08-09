@@ -8,7 +8,7 @@ RSpec.describe AssignmentRepo, type: :model do
     subject { AssignmentRepo.new }
     it { is_expected.to validate_presence_of(:assignment) }
 
-    it { is_expected.to validate_presence_of(:github_repo_id)     }
+    it { is_expected.to validate_presence_of(:github_repo_id) }
     # it { is_expected.to validate_uniqueness_of(:github_repo_id) }
 
     it { is_expected.to validate_presence_of(:repo_access) }
