@@ -11,13 +11,13 @@ RSpec.describe Organization, type: :model do
   it_behaves_like 'a default scope where deleted_at is not present'
 
   describe 'validation and uniqueness' do
-    subject { build(:organization) }
+    subject { create(:organization) }
 
-    it { is_expected.to validate_presence_of(:github_id) }
-    it { is_expected.to validate_presence_of(:title)     }
-
+    it { is_expected.to validate_presence_of(:github_id)   }
     it { is_expected.to validate_uniqueness_of(:github_id) }
-    it { is_expected.to validate_uniqueness_of(:title)     }
+
+    it { is_expected.to validate_presence_of(:title)   }
+    it { is_expected.to validate_uniqueness_of(:title) }
   end
 
   describe 'callbacks' do

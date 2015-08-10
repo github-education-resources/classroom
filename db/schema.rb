@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150806032053) do
+ActiveRecord::Schema.define(version: 20150809162441) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,10 +49,12 @@ ActiveRecord::Schema.define(version: 20150806032053) do
     t.integer  "starter_code_repo_id"
     t.integer  "creator_id"
     t.datetime "deleted_at"
+    t.string   "slug",                                null: false
   end
 
   add_index "assignments", ["deleted_at"], name: "index_assignments_on_deleted_at", using: :btree
   add_index "assignments", ["organization_id"], name: "index_assignments_on_organization_id", using: :btree
+  add_index "assignments", ["slug"], name: "index_assignments_on_slug", using: :btree
 
   create_table "group_assignment_invitations", force: :cascade do |t|
     t.string   "key",                 null: false
@@ -87,10 +89,12 @@ ActiveRecord::Schema.define(version: 20150806032053) do
     t.integer  "starter_code_repo_id"
     t.integer  "creator_id"
     t.datetime "deleted_at"
+    t.string   "slug",                                null: false
   end
 
   add_index "group_assignments", ["deleted_at"], name: "index_group_assignments_on_deleted_at", using: :btree
   add_index "group_assignments", ["organization_id"], name: "index_group_assignments_on_organization_id", using: :btree
+  add_index "group_assignments", ["slug"], name: "index_group_assignments_on_slug", using: :btree
 
   create_table "groupings", force: :cascade do |t|
     t.string   "title",           null: false
@@ -126,10 +130,12 @@ ActiveRecord::Schema.define(version: 20150806032053) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
+    t.string   "slug",       null: false
   end
 
   add_index "organizations", ["deleted_at"], name: "index_organizations_on_deleted_at", using: :btree
   add_index "organizations", ["github_id"], name: "index_organizations_on_github_id", unique: true, using: :btree
+  add_index "organizations", ["slug"], name: "index_organizations_on_slug", using: :btree
   add_index "organizations", ["title"], name: "index_organizations_on_title", unique: true, using: :btree
 
   create_table "organizations_users", id: false, force: :cascade do |t|

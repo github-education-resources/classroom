@@ -10,6 +10,7 @@ gem 'bitly'
 gem 'coffee-rails', '~> 4.1.0'
 
 gem 'faraday-http-cache'
+gem 'friendly_id'
 
 gem 'jbuilder'
 

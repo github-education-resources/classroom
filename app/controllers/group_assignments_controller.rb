@@ -39,7 +39,7 @@ class GroupAssignmentsController < ApplicationController
       .require(:group_assignment)
       .permit(:title, :public_repo, :grouping_id)
       .merge(creator: current_user,
-             organization_id: params[:organization_id],
+             organization: @organization,
              starter_code_repo_id: starter_code_repository_id(params[:repo_name]))
   end
 
@@ -47,7 +47,7 @@ class GroupAssignmentsController < ApplicationController
     params
       .require(:grouping)
       .permit(:title)
-      .merge(organization_id: new_group_assignment_params[:organization_id])
+      .merge(organization: @organization)
   end
 
   def set_groupings

@@ -1,4 +1,7 @@
 class GroupAssignment < ActiveRecord::Base
+  extend FriendlyId
+  friendly_id :title, use: [:slugged, :finders]
+
   default_scope { where(deleted_at: nil) }
 
   has_one :group_assignment_invitation, dependent: :destroy
