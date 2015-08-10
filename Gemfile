@@ -5,6 +5,8 @@ gem 'rails', '4.2.3'
 
 gem 'autoprefixer-rails'
 
+gem 'bitly'
+
 gem 'coffee-rails', '~> 4.1.0'
 
 gem 'faraday-http-cache'
