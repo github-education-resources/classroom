@@ -12,7 +12,7 @@ class Organization < ActiveRecord::Base
   has_and_belongs_to_many :users
 
   validates :github_id, presence: true, uniqueness: true
-  validates :title,     presence: true, uniqueness: true
+  validates :title,     presence: true, uniqueness: { case_sensitive: false }
 
   after_save :validate_minimum_number_of_users
 
