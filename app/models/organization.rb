@@ -1,4 +1,7 @@
 class Organization < ActiveRecord::Base
+  extend FriendlyId
+  friendly_id :title, use: [:slugged, :finders]
+
   default_scope { where(deleted_at: nil) }
 
   has_many :assignments,       dependent: :destroy
@@ -8,7 +11,8 @@ class Organization < ActiveRecord::Base
 
   has_and_belongs_to_many :users
 
-  validates :github_id, :title, presence: true, uniqueness: true
+  validates :github_id, presence: true, uniqueness: true
+  validates :title,     presence: true, uniqueness: true
 
   after_save :validate_minimum_number_of_users
 

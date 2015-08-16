@@ -25,18 +25,20 @@ Rails.application.routes.draw do
 
   resources :group_assignment_invitations, only: [:show] do
     member do
-      patch 'accept_invitation'
+      patch 'accept_invitation', path: 'accept'
     end
   end
 
-  resources :organizations, constraints: OrganizationAuthorizedConstraint.new do
-    member do
-      get   'invite'
-      get   'new_assignment'
-      patch 'invite_users'
-    end
+  scope path_names: { edit: 'settings' } do
+    resources :organizations, path: 'orgs', constraints: OrganizationAuthorizedConstraint.new do
+      member do
+        get   'invite'
+        get   'new_assignment', path: 'new-assignment'
+        patch 'invite_users', path: 'invite-users'
+      end
 
-    resources :assignments,       only: [:show, :new, :create]
-    resources :group_assignments, only: [:show, :new, :create]
+      resources :assignments, only: [:show, :new, :create]
+      resources 'group_assignments', path: 'group-assignments', only: [:show, :new, :create]
+    end
   end
 end
