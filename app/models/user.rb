@@ -6,6 +6,9 @@ class User < ActiveRecord::Base
 
   validates :token, presence: true, uniqueness: true
 
+  validates :uid, presence: true
+  validates :uid, uniqueness: true
+
   # Public: Create a new User from an OAuth hash
   #
   # hash - The Omniauth OAuth hash to create the User from
