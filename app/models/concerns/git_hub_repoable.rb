@@ -12,8 +12,7 @@ module GitHubRepoable
     before_destroy :destroy_github_repository
   end
 
-  # Public
-  #
+  # Public: Add GitHub team as a collaborator to the new repository
   def add_team_to_github_repository
     github_repository = GitHubRepository.new(organization.github_client, github_repo_id)
     github_team       = GitHubTeam.new(organization.github_client, github_team_id)
@@ -21,8 +20,8 @@ module GitHubRepoable
     github_team.add_team_repository(github_repository.full_name)
   end
 
-  # Public
-  #
+  # Public: Create a GitHub Repository
+  # Returns the GitHub repository id
   def create_github_repository
     repo_description = "#{repo_name} created by Classroom for GitHub"
     github_repository = github_organization.create_repository(repo_name,
@@ -32,21 +31,20 @@ module GitHubRepoable
     self.github_repo_id = github_repository.id
   end
 
-  # Public
-  #
+  # Public: Delete a GitHub Repository
   def destroy_github_repository
     github_organization.delete_repository(github_repo_id)
   end
 
-  # Public
-  #
+  # Public: Push the Assignment or GroupAssignment Starter Code to the new
+  # GitHub repository
   def push_starter_code
     return true unless starter_code_repo_id
     PushStarterCodeJob.perform_later(creator, github_repo_id, starter_code_repo_id)
   end
 
-  # Internal
-  #
+  # Internal: Find or create the GitHub Organization
+  # Returns the GitHubOrganization
   def github_organization
     @github_organization ||= GitHubOrganization.new(organization.github_client, organization.github_id)
   end

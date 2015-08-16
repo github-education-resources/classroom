@@ -25,10 +25,6 @@ class User < ActiveRecord::Base
     update_attributes(user_attributes)
   end
 
-  def self.create_from_auth_hash(hash)
-    create!(AuthHash.new(hash).user_info)
-  end
-
   # Public: Find the User from the given OAuth hash
   #
   # hash - The Omniauth OAuth hash to find the User
