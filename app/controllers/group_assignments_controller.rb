@@ -31,6 +31,12 @@ class GroupAssignmentsController < ApplicationController
     @group_assignment_repos = @group_assignment.group_assignment_repos.page(params[:page])
   end
 
+  def edit
+  end
+
+  def destroy
+  end
+
   private
 
   def error

@@ -28,6 +28,12 @@ class AssignmentsController < ApplicationController
     @assignment_repos = @assignment.assignment_repos.page(params[:page])
   end
 
+  def edit
+  end
+
+  def destroy
+  end
+
   private
 
   def error
