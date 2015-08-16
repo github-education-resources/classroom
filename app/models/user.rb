@@ -46,7 +46,7 @@ class User < ActiveRecord::Base
     @github_client ||= Octokit::Client.new(access_token: token, auto_paginate: true)
   end
 
-  # Public: Determin if the User is a site_admin
+  # Public: Determine if the User is a site_admin
   # Returns site_admin
   def staff?
     site_admin

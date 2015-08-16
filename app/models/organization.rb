@@ -26,6 +26,12 @@ class Organization < ActiveRecord::Base
   # Public: Retrieve a properly authenticated GitHubClient
   # on for the organization
   #
+  # Example
+  #
+  #   organization.github_client
+  #   # => #<Octokit::Client:0x3fe32a050c4c>
+  #
+  # Returns an authenticated Octokit::Client
   def github_client
     users.sample.github_client
   end

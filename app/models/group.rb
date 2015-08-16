@@ -17,8 +17,11 @@ class Group < ActiveRecord::Base
 
   private
 
-  # Internal
+  # Internal: Add the RepoAccess User to the Groups GitHub team
   #
+  # repo_access - The RepoAccess that will be added to the group
+  #
+  # Returns if it was successful
   def add_member_to_github_team(repo_access)
     github_team = GitHubTeam.new(organization.github_client, github_team_id)
     github_user = GitHubUser.new(repo_access.user.github_client)
@@ -26,8 +29,11 @@ class Group < ActiveRecord::Base
     github_team.add_team_membership(github_user.login)
   end
 
-  # Internal
+  # Internal: Remove the RepoAccess's User from the Groups GitHub team
   #
+  # repo_access - The RepoAccess that will be removed to the group
+  #
+  # Returns if it was successful
   def remove_from_github_team(repo_access)
     github_team = GitHubTeam.new(organization.github_client, github_team_id)
     github_user = GitHubUser.new(repo_access.user.github_client)

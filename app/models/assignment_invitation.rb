@@ -12,6 +12,11 @@ class AssignmentInvitation < ActiveRecord::Base
 
   after_initialize :assign_key
 
+  # Public: Redeem invitation for a given User
+  #
+  # invitee - The User that is invited
+  #
+  # Returns the full name of the newly created GitHub repository
   def redeem_for(invitee)
     repo_access = RepoAccess.find_or_create_by!(user: invitee, organization: organization)
     AssignmentRepo.find_or_create_by!(assignment: assignment, repo_access: repo_access)

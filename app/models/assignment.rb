@@ -50,12 +50,24 @@ class Assignment < ActiveRecord::Base
     public_repo
   end
 
+  # Public: Determine if the Assignment has starter code
+  #
+  # Example
+  #
+  #  assignment.starter_code?
+  #  # => true
+  #
+  # Returns if the starter_code_repo_id column is not NULL
   def starter_code?
     starter_code_repo_id.present?
   end
 
   private
 
+  # Internal: Verify that there aren't any GroupAssignments in the
+  # Assignments Organization that have the same title.
+  #
+  # This will add an error to the title column if there is a match
   def uniqueness_of_title_across_organization
     return unless GroupAssignment.where(title: title, organization: organization).present?
     errors.add(:title, 'title is already in use for your organization')

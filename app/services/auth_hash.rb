@@ -1,10 +1,10 @@
 class AuthHash
-  def self.extract_user_info(hash)
-    AuthHash.new(hash).user_info
-  end
-
   def initialize(user_hash)
     @user_hash = user_hash
+  end
+
+  def self.extract_user_info(hash)
+    AuthHash.new(hash).user_info
   end
 
   def user_info
