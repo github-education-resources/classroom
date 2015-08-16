@@ -1,8 +1,13 @@
 #!/bin/sh
 
+# script/linter: Run the linters for the project.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
 echo "==> Running rubocop..."
 bundle exec rubocop
 
 echo "==> Running scss-lint..."
 bundle exec scss-lint
-

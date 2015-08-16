@@ -7,19 +7,12 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-echo "Tests started at..."
-date "+%H:%M:%S"
-
-# setup environment
-export RAILS_ROOT=$(cd "$(dirname $0)"/.. && pwd)
-export RAILS_ENV="test"
-export RACK_ROOT="$RAILS_ROOT"
-export RACK_ENV="$RAILS_ENV"
-
 # run tests
 echo "Running tests ..."
 date "+%H:%M:%S"
 
 # run tests.
-script/linters
 script/test
+
+# run linters
+script/linter
