@@ -1,8 +1,53 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font: 13px/1.4 Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+a {
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.site-header {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  color: #ccc;
+  background-color: #2f3232;
+}
+
+.site-logo {
+  width: 251px;
+  height: 21px;
+}
+
+.site-nav {
+  float: right;
+  margin-top: 0.1rem;
+  font-size: 1rem;
+
+  a {
+    margin-left: 2rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  a:hover {
+    color: rgba(255, 255, 255, 1);
+  }
+}
+
+/***************************************************/
+/***************************************************/
+/***************************************************/
+
 .container {
   width: auto;
   max-width: 980px;
-  padding-left: 20px;
   padding-right: 20px;
+  padding-left: 20px;
 }
 
 // Column widths
