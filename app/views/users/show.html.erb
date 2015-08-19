@@ -2,8 +2,8 @@
 <div class="columns">
   <% if @organizations.present? %>
     <div class="one-fourth column">
-      <%= link_to new_organization_path, class: 'btn btn-primary', role: 'button' do %>
-        <%= octicon('plus') %> Add organization
+      <%= link_to new_organization_path, class: 'btn btn-green', role: 'button' do %>
+        Add organization
       <% end %>
     </div>
 
@@ -13,8 +13,8 @@
     <% else %>
       <div class="blankslate">
         <h3>You're not managing any GitHub organizations with Classroom. Add an organization to get started.</h3>
-        <%= link_to new_organization_path, class: 'btn btn-primary', role: 'button' do %>
-          <%= octicon('plus') %> Add organization
+        <%= link_to new_organization_path, class: 'btn btn-green btn-big', role: 'button' do %>
+          Add your first organization
         <% end %>
       </div>
     <% end %>
