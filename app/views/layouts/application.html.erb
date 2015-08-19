@@ -18,8 +18,10 @@
       <%= render 'shared/flash_messages' %>
     </div>
 
-    <div class="container">
-      <%= yield %>
+    <div class="site-content">
+      <div class="container">
+        <%= yield %>
+      </div>
     </div>
 
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>

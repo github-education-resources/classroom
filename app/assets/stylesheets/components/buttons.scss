@@ -1,6 +1,7 @@
 // Custom button with Classroom green
 .btn-green {
   color: #fff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   background-color: #5fb27b;
   background-image: linear-gradient(#69c387, #519568);
   border-color: #55926a;
@@ -13,6 +14,6 @@
 }
 
 .btn-big {
-  padding: 1.2rem 2rem;
-  font-size: 1.1rem;
+  padding: 1rem 2rem;
+  font-size: 1rem;
 }

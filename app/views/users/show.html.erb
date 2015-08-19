@@ -1,4 +1,3 @@
-<h1 class="page-header">Dashboard</h1>
 <div class="columns">
   <% if @organizations.present? %>
     <div class="one-fourth column">
@@ -11,8 +10,10 @@
       <%= render @organizations %>
       <%= paginate @organizations %>
     <% else %>
-      <div class="blankslate">
-        <h3>You're not managing any GitHub organizations with Classroom. Add an organization to get started.</h3>
+      <div class="blankslate large-format spacious">
+        <h3>You're not managing any organizations with GitHub for Classrooms.</h3>
+        <p>You can begin creating assignments once you have at least one organization.</p>
+
         <%= link_to new_organization_path, class: 'btn btn-green btn-big', role: 'button' do %>
           Add your first organization
         <% end %>
