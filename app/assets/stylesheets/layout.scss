@@ -40,6 +40,23 @@ a {
   }
 }
 
+.organization-banner {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  color: #fff;
+  background-color: #5fb27b;
+
+  .btn {
+    float: right;
+    margin-top: 1rem;
+  }
+}
+
+.organization-name {
+  font-size: 36px;
+  font-weight: normal;
+}
+
 .site-content {
   margin-top: 1rem;
 }
