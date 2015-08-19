@@ -9,6 +9,11 @@
 
 <div class="site-content">
   <div class="site-content-cap">
+    <% if @assignments.present? %>
+      <%= link_to new_assignment_organization_path(@organization), class: 'btn btn-green right', role: 'button' do %>
+        Add assignment
+      <% end %>
+    <% end %>
     <h2 class="site-content-heading">Assignments</h2>
   </div>
 

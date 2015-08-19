@@ -13,16 +13,15 @@
       <%= render @organizations %>
       <%= paginate @organizations %>
 
-      <% else %>
-        <div class="blankslate large-format spacious clean-background">
-          <h3>You’re not managing any organizations yet.</h3>
-          <p>You can begin creating assignments once you have at least one organization.</p>
+    <% else %>
+      <div class="blankslate large-format spacious clean-background">
+        <h3>You’re not managing any organizations yet.</h3>
+        <p>You can begin creating assignments once you have at least one organization.</p>
 
-          <%= link_to new_organization_path, class: 'btn btn-green btn-big', role: 'button' do %>
-            Add your first organization
-          <% end %>
-        </div>
-      <% end %>
-    </div>
+        <%= link_to new_organization_path, class: 'btn btn-green btn-big', role: 'button' do %>
+          Add your first organization
+        <% end %>
+      </div>
+    <% end %>
   </div>
 </div>

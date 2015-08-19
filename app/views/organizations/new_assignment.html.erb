@@ -1,9 +1,41 @@
-<h1 class="page-header">New Assignment</h1>
-
-<%= link_to new_organization_assignment_path(@organization), class: 'btn btn-primary organization-btn', role: 'button' do %>
-  <%= octicon('plus') %> Individual Assignment
+<% content_for :organization_banner do %>
+  <div class="organization-banner">
+    <div class="container">
+      <%= link_to 'Edit', edit_organization_path, class: 'btn btn-green' %>
+      <h1 class="organization-name"><%= @organization.title %></h1>
+    </div>
+  </div>
 <% end %>
 
-<%= link_to new_organization_group_assignment_path(@organization), class: 'btn btn-primary organization-btn', role: 'button' do %>
-  <%= octicon('plus') %> Group Assignment
-<% end %>
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">New Assignment</h2>
+  </div>
+
+  <div class="site-content-body">
+    <div class="columns">
+      <div class="one-half column text-center">
+        <span class="assignment-icon assignment-icon-individual">
+          <%= octicon('person') %>
+        </span>
+        <h3 class="assignment-option-name">Individual assignment</h3>
+        <p class="assignment-option-description">A sentence describing what an individual assignment is.</p>
+
+        <%= link_to new_organization_assignment_path(@organization), class: 'btn btn-green', role: 'button' do %>
+          Create an individual assignment
+        <% end %>
+      </div>
+      <div class="one-half column text-center">
+        <span class="assignment-icon assignment-icon-group">
+          <%= octicon('organization') %>
+        </span>
+        <h3 class="assignment-option-name">Group assignment</h3>
+        <p class="assignment-option-description">A sentence describing what a group assignment is.</p>
+
+        <%= link_to new_organization_group_assignment_path(@organization), class: 'btn btn-green', role: 'button' do %>
+          Create a group assignment
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

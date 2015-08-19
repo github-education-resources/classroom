@@ -13,6 +13,14 @@ a {
   }
 }
 
+.container {
+  width: auto;
+  max-width: 980px;
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+
 .site-header {
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -21,8 +29,8 @@ a {
 }
 
 .site-logo {
-  width: 251px;
-  height: 21px;
+  width: 242px;
+  height: 20px;
 }
 
 .site-nav {
@@ -86,6 +94,40 @@ a {
   color: #5d666f;
 }
 
+.assignment-option-name {
+  margin-bottom: 0;
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.assignment-option-description {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  color: #777;
+}
+
+.assignment-icon {
+  display: inline-block;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+
+  .octicon {
+    font-size: 22px;
+    line-height: 45px;
+  }
+}
+
+.assignment-icon-individual {
+  color: #555;
+  background-color: rgba(216, 216, 216, 0.3);
+}
+
+.assignment-icon-group {
+  background-color: #555;
+  color: #f3f3f3;
+}
+
 .table-minimal {
   td {
     padding-right: 1rem;
@@ -95,17 +137,6 @@ a {
   td:first-child {
     padding-left: 0;
   }
-}
-
-/***************************************************/
-/***************************************************/
-/***************************************************/
-
-.container {
-  width: auto;
-  max-width: 980px;
-  padding-right: 20px;
-  padding-left: 20px;
 }
 
 // Column widths
