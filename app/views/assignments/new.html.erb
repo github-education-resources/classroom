@@ -1,50 +1,52 @@
-<h1 class="page-header">New Individual Assignment</h1>
-<div class="columns">
-  <div class="two-thirds column centered">
-    <div class="panel">
-      <div class="panel-heading">
-        <h3 class="panel-title">Create your assignment</h3>
-      </div>
-      <div class="panel-body">
-        <% url = organization_assignments_path(@organization) %>
-        <%= form_for @assignment, url: url do |f| %>
-          <%= render 'shared/error_messages', object: f.object %>
-
-          <dl class="form">
-            <dt><%= f.label :title %></dt>
-            <dd><%= f.text_field :title, class: 'textfield' %></dd>
-          </dl>
-
-          <hr>
-
-          <div class="form-checkbox">
-            <%= mega_octicon('repo') %>
-            <label><%= f.radio_button :public_repo, true %> Public</label>
-            <span class="note">Anyone can see this repository. You choose who can commit.</span>
-          </div>
-
-          <div class="form-checkbox">
-            <%= mega_octicon('lock') %>
-            <label><%= f.radio_button :public_repo, false %> Private</label>
-            <span class="note">You choose who can see and commit to this repository.</span>
-          </div>
-
-          <hr>
-
-          <dl class="form">
-            <dt><label>Add your starter code from GitHub <small>(Optional)</small> </label></dt>
-            <dd><input class="textfield" type="text" name="repo_name"></dd>
-            <span class="note">e.g. education/classroom</span>
-          </dl>
-
-          <hr>
-
-          <div class="form-actions left">
-            <%= link_to 'Cancel', organization_path(@organization), class: 'btn', role: 'button' %>
-            <%= f.submit 'Create Assignment', class: 'btn btn-primary' %>
-          </div>
-        <% end %>
-      </div>
+<% content_for :organization_banner do %>
+  <div class="organization-banner">
+    <div class="container">
+      <%= link_to 'Edit', edit_organization_path(@organization), class: 'btn btn-green' %>
+      <h1 class="organization-name"><%= @organization.title %></h1>
     </div>
   </div>
+<% end %>
+
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">New individual assignment</h2>
+  </div>
+</div>
+
+<div class="site-content-body">
+  <% url = organization_assignments_path(@organization) %>
+  <%= form_for @assignment, url: url do |f| %>
+    <%= render 'shared/error_messages', object: f.object %>
+
+    <dl class="form">
+      <dt><%= f.label :title %></dt>
+      <dd><%= f.text_field :title, class: 'textfield' %></dd>
+    </dl>
+
+    <hr>
+
+    <div class="form-checkbox">
+      <label><%= f.radio_button :public_repo, true %> Public</label>
+      <%= mega_octicon('repo') %>
+      <span class="note">Anyone can see this repository. You choose who can commit.</span>
+    </div>
+
+    <div class="form-checkbox">
+      <label><%= f.radio_button :public_repo, false %> Private</label>
+      <%= mega_octicon('lock') %>
+      <span class="note">You choose who can see and commit to this repository.</span>
+    </div>
+
+    <hr>
+
+    <dl class="form">
+      <dt><label>Add your starter code from GitHub <small>(optional)</small> </label></dt>
+      <dd><input class="textfield" type="text" name="repo_name" placeholder="e.g. education/classroom"></dd>
+    </dl>
+
+    <div class="form-actions">
+      <%= f.submit 'Create Assignment', class: 'btn btn-green' %>
+      <%= link_to 'Cancel', organization_path(@organization), class: 'btn', role: 'button' %>
+    </div>
+  <% end %>
 </div>
