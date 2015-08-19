@@ -1,7 +1,7 @@
 <header class="site-header">
   <div class="container">
     <nav class="site-nav">
-      <%= link_to "GitHub Education", 'http://education.github.com' %>
+      <%= link_to "GitHub Education", 'https://education.github.com' %>
       <% if logged_in? %>
         <%= render 'shared/staff_links' if staff? %>
         <%= link_to 'Sign out', logout_path, method: :post %>

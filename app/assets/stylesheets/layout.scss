@@ -4,6 +4,7 @@
 
 body {
   font: 13px/1.4 Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  background-color: #f3f4f6;
 }
 
 a {
@@ -40,7 +41,32 @@ a {
 }
 
 .site-content {
-  margin-top: 3rem;
+  margin-top: 1rem;
+}
+
+.site-content-cap {
+  padding: 1.5rem 2rem;
+  background-color: #fbfbfb;
+  border: solid 1px #e3e3e3;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+.site-content-body {
+  padding: 2rem;
+  background-color: #fff;
+  border: solid 1px #e3e3e3;
+  border-top: 0;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.site-content-heading {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 20px;
+  font-weight: normal;
+  color: #5d666f;
 }
 
 /***************************************************/
