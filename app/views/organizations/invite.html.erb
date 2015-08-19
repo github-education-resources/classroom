@@ -1,25 +1,33 @@
-<div class="columns">
-  <div class="two-thirds column centered">
-    <%= form_tag invite_users_organization_path(@organization), method: :patch do %>
-      <form>
-        <% @organization_owners.each do |owner| %>
-          <dl class="form js-user-invitation-form">
-            <label>
-              <%= check_box_tag "github_owners[#{owner.login}]", owner.id %>
-              <%= owner.login %> <%= "(#{owner.name})" if owner.name %>
-            </label>
-            <% disabled    = owner.email.present? %>
-            <% input_class = disabled ? 'input-contrast input-mini' : 'input-mini' %>
-            <%= email_field_tag "github_owner_emails[#{owner.login}]", owner.email, class: input_class, placeholder: 'Email Address', disabled: disabled %>
-          </dl>
+<div class="site-content">
+  <div class="site-content-cap">
+    <h1 class="site-content-heading">Invite users</h1>
+  </div>
 
-          <br>
+  <div class="site-content-body">
+    <%= form_tag invite_users_organization_path(@organization), method: :patch do %>
+      <table class="table-minimal">
+        <% @organization_owners.each do |owner| %>
+          <tr>
+            <td class="js-user-invitation-form">
+              <label>
+                <%= check_box_tag "github_owners[#{owner.login}]", owner.id %>
+                <%= owner.login %> <%= "(#{owner.name})" if owner.name %>
+              </label>
+            </td>
+            <td>
+              <% disabled    = owner.email.present? %>
+              <% input_class = disabled ? 'input-contrast input-mini' : 'input-mini' %>
+              <%= email_field_tag "github_owner_emails[#{owner.login}]", owner.email, class: input_class, placeholder: 'Email Address', disabled: disabled %>
+            </td>
+          </tr>
         <% end %>
-        <div class="form-actions left">
-          <%= link_to 'Continue', organization_path(@organization), class: 'btn', role: 'button' %>
-          <%= submit_tag 'Invite', class: 'btn btn-primary', disabled: true %>
-        </div>
-      </form>
+      </table>
+
+      <div class="form-actions">
+        <%= submit_tag 'Invite', class: 'btn btn-green', disabled: true %>
+        or
+        <%= link_to 'skip for now', organization_path(@organization) %>
+      </div>
     <% end %>
   </div>
 </div>

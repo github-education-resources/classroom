@@ -11,6 +11,14 @@
     background-image: linear-gradient(#5da976, #468059);
     border-color: #477958;
   }
+
+  &:disabled {
+    color: #fff;
+    background-color: #64b680;
+    background-image: none;
+    border-color: #55926a;
+    opacity: 0.5;
+  }
 }
 
 .btn-big {
