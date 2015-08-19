@@ -1,9 +1,23 @@
-<h2 class="page-header">
-  <%= link_to @organization.title, @organization %> / <%= link_to @assignment.title, organization_assignment_path(@organization, @assignment) %>
-</h2>
+<% content_for :organization_banner do %>
+  <div class="organization-banner">
+    <div class="container">
+      <%= link_to 'Edit', edit_organization_path(@organization), class: 'btn btn-green' %>
+      <h1 class="organization-name"><%= @organization.title %></h1>
+    </div>
+  </div>
+<% end %>
 
-<div class="columns">
-  <div class="one-half column centered">
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">
+      <span class="assignment-icon assignment-icon-individual">
+        <%= octicon('person') %>
+      </span>
+      <%= @assignment.title %>
+    </h2>
+  </div>
+
+  <div class="site-content-body">
     <%= render @assignment.assignment_invitation %>
   </div>
 </div>
