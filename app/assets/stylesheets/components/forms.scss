@@ -1,0 +1,15 @@
+dl.form {
+  margin-top: 0;
+}
+
+// Override right-floated buttons
+.form-actions {
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+  border-top: solid 1px #e3e3e3;
+
+  .btn {
+    float: none;
+  }
+}
+

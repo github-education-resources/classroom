@@ -1,42 +1,36 @@
-<h1 class="page-header">New Organization</h1>
-<% if @users_github_organizations.empty? %>
-  <div class="blankslate spacious">
-    <span class="mega-octicon octicon-git-commit"></span>
-    <span class="mega-octicon octicon-tag"></span>
-    <span class="mega-octicon octicon-git-branch"></span>
-    <h1>Uh Oh!</h1>
-    <p>It appears that you do not have any organizations on your GitHub account.</p>
-    <p>Please <a href="https://github.com/organizations/new">click here</a> to sign up for a new organization and then come back!</p>
+<div class="site-content">
+  <div class="site-content-cap">
+    <h1 class="site-content-heading">New Organization</h1>
   </div>
-<% else %>
-  <div class="columns">
-    <div class="one-half column centered">
-      <div class="panel">
-        <div class="panel-heading">
-          <h3 class="panel-title">Select Your Organization</h3>
-        </div>
-        <div class="panel-body">
-          <%= form_for @organization do |f| %>
-            <%= render 'shared/error_messages', object: f.object %>
 
-            <dl class="form">
-              <dt><%= f.label :title %></dt>
-              <dd><%= f.text_field :title, class: 'textfield' %></dd>
-            </dl>
+  <div class="site-content-body">
+    <% if @users_github_organizations.empty? %>
+      <div class="blankslate large-format spacious clean-background">
+        <h3>Oh, you don’t have any organizations on your GitHub account.</h3>
 
-            <dl class="form">
-              <dd class="select-organization">
-                <%= select :organization, :github_id, options_for_select(@users_github_organizations) %>
-              </dd>
-            </dl>
-
-            <div class="form-actions left">
-              <%= link_to 'Cancel', dashboard_path, class: 'btn', role: 'button' %>
-              <%= f.submit 'Add Organization', class: 'btn btn-primary' %>
-            </div>
-          <% end %>
-        </div>
+        <p>Please <a href="https://github.com/organizations/new">create an organization on GitHub.com</a> and then come back.</p>
       </div>
-    </div>
+    <% else %>
+      <%= form_for @organization do |f| %>
+        <%= render 'shared/error_messages', object: f.object %>
+
+        <dl class="form">
+          <dt><%= f.label :title %></dt>
+          <dd><%= f.text_field :title, class: 'textfield' %></dd>
+        </dl>
+
+        <dl class="form">
+          <dt><%= f.label :organization %></dt>
+          <dd>
+            <%= select :organization, :github_id, options_for_select(@users_github_organizations), {}, {:class => 'select'} %>
+          </dd>
+        </dl>
+
+        <div class="form-actions">
+          <%= f.submit 'Add Organization', class: 'btn btn-green' %>
+          <%= link_to 'Cancel', dashboard_path, class: 'btn', role: 'button' %>
+        </div>
+      <% end %>
+    <% end %>
   </div>
-<% end %>
+</div>
