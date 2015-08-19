@@ -75,6 +75,10 @@ a {
   border: solid 1px #e3e3e3;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
+
+  .btn {
+    margin-top: -5px;
+  }
 }
 
 .site-content-body {
@@ -110,6 +114,7 @@ a {
   display: inline-block;
   width: 45px;
   height: 45px;
+  text-align: center;
   border-radius: 50%;
 
   .octicon {
@@ -124,8 +129,30 @@ a {
 }
 
 .assignment-icon-group {
-  background-color: #555;
   color: #f3f3f3;
+  background-color: #555;
+}
+
+.assignment-listing {
+  margin-bottom: 2rem;
+
+  .assignment-icon {
+    margin-right: 0.7rem;
+  }
+}
+
+.assignment-name-link {
+  padding-top: 0.4rem;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.assignment-type {
+  margin-top: 0;
+}
+
+.assignment-invite-link {
+  float: right;
 }
 
 .table-minimal {

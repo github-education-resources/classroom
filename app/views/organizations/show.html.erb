@@ -11,7 +11,7 @@
   <div class="site-content-cap">
     <% if @assignments.present? %>
       <%= link_to new_assignment_organization_path(@organization), class: 'btn btn-green right', role: 'button' do %>
-        Add assignment
+        New assignment
       <% end %>
     <% end %>
     <h2 class="site-content-heading">Assignments</h2>
@@ -19,10 +19,6 @@
 
   <div class="site-content-body">
     <% if @assignments.present? %>
-      <%= link_to new_assignment_organization_path(@organization), class: 'btn btn-primary', role: 'button' do %>
-        New assignment
-      <% end %>
-
       <%= render @assignments %>
       <%= paginate @assignments %>
 
