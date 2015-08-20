@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  skip_before_action :ensure_logged_in
+
   def new
     redirect_to '/auth/github'
   end

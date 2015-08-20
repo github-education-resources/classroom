@@ -1,5 +1,4 @@
 class InvitationsController < ApplicationController
-  before_action :ensure_logged_in, only: [:show]
   before_action :set_invitation
 
   layout 'layouts/invitations'
