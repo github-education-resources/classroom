@@ -7,7 +7,7 @@
     <nav class="header-nav">
       <% if logged_in? %>
         <%= render 'shared/staff_links' if staff? %>
-        <%= link_to 'Sign out', logout_path %>
+        <%= link_to 'Sign out', logout_path, method: :post %>
       <% else %>
         <%= link_to 'Sign in', login_path %>
       <% end %>
