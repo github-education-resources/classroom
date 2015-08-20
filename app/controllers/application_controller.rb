@@ -5,6 +5,8 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user, :logged_in?, :staff?
 
+  before_action :ensure_logged_in
+
   def peek_enabled?
     staff?
   end
