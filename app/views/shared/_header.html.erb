@@ -2,11 +2,13 @@
   <div class="container">
     <nav class="site-nav">
       <%= link_to "GitHub Education", 'https://education.github.com' %>
-      <%= link_to 'http://github.com/jasonlong' do %>
-        <img alt="@jasonlong" class="avatar" height="20" src="https://avatars3.githubusercontent.com/u/6104?v=3&amp;s=40" width="20">
-      <% end %>
       <% if logged_in? %>
         <%= render 'shared/staff_links' if staff? %>
+
+        <%= link_to current_user.github_url do %>
+          <%= image_tag current_user.avatar_url(40), class: 'avatar', alt: "@#{current_user.github_login}", height: 20, width: 20 %>
+        <% end %>
+
         <%= link_to logout_path, method: :post do %>
           <%= octicon('sign-out') %>
         <% end %>
