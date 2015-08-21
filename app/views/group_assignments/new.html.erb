@@ -3,6 +3,7 @@
     <div class="container">
       <%= link_to 'Edit', edit_organization_path(@organization), class: 'btn btn-green' %>
       <h1 class="organization-name"><%= @organization.title %></h1>
+      <p class="organization-login">@organization_login_name</p>
     </div>
   </div>
 <% end %>

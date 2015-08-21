@@ -49,20 +49,27 @@ a {
 }
 
 .organization-banner {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   color: #fff;
   background-color: #5fb27b;
 
   .btn {
     float: right;
-    margin-top: 1rem;
+    margin-top: 1.7rem;
   }
 }
 
 .organization-name {
-  font-size: 36px;
+  margin-bottom: 0;
+  font-size: 2.2rem;
   font-weight: normal;
+}
+
+.organization-login {
+  margin-top: 0.2rem;
+  font-size: 1rem;
+  opacity: 0.8;
 }
 
 .site-content {
