@@ -11,10 +11,7 @@
 
   <div class="flex-table-item">
     <div class="input-group assignment-invite-link">
-      <%# TODO: get this wired up
-      <%# <% invitation_url = invitation_url(request.base_url, assignment_invitation) %>
-      <%# <%= content_tag :input, '', type: 'text', class: 'js-url-field', value: invitation_url, readonly: 'readonly' %>
-      <%= content_tag :input, '', type: 'text', class: 'js-url-field', value: 'http://bit.ly/123456', readonly: 'readonly' %>
+      <%= content_tag :input, '', type: 'text', class: 'js-url-field', value: assignment_invitation_url(assignment.invitation), readonly: 'readonly' %>
       <span class="input-group-button">
         <button aria-label="Copy to clipboard" class="js-zeroclipboard btn tooltipped tooltipped-s" data-copied-hint="Copied!" type="button">
           <%= octicon('clippy') %>
