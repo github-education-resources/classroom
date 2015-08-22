@@ -27,7 +27,7 @@ module GitHubRepoable
     github_repository = github_organization.create_repository(repo_name,
                                                               team_id: github_team_id,
                                                               private: self.private?,
-                                                              description: "#{repo_name} created by GitHub Classroom")
+                                                              description: "#{repo_name} created by Classroom for GitHub")
     self.github_repo_id = github_repository.id
   end
 
