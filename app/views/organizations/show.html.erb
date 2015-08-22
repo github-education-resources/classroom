@@ -2,8 +2,8 @@
   <div class="organization-banner">
     <div class="container">
       <%= link_to 'Edit', edit_organization_path, class: 'btn btn-green' %>
-      <h1 class="organization-name"><%= @organization.title %></h1>
-      <p class="organization-login">@organization_login_name</p>
+      <h1 class="organization-name"><%= link_to @organization.title, @organization %></h1>
+      <p class="organization-login"><%= link_to "@#{@organization.github_login}", @organization.github_url %></p>
     </div>
   </div>
 <% end %>

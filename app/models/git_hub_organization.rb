@@ -68,6 +68,12 @@ class GitHubOrganization
 
   # Public
   #
+  def organization
+    with_error_handling { @client.organization(@id) }
+  end
+
+  # Public
+  #
   def organization_members(options = {})
     with_error_handling { @client.organization_members(@id, options) }
   end

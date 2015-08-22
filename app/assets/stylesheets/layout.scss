@@ -64,12 +64,20 @@ a {
   margin-bottom: 0;
   font-size: 2.2rem;
   font-weight: normal;
+
+  a {
+    color: inherit;
+  }
 }
 
 .organization-login {
   margin-top: 0.2rem;
   font-size: 1rem;
   opacity: 0.8;
+
+  a {
+    color: inherit;
+  }
 }
 
 .site-content {
