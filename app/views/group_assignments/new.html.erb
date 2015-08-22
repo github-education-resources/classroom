@@ -1,12 +1,4 @@
-<% content_for :organization_banner do %>
-  <div class="organization-banner">
-    <div class="container">
-      <%= link_to 'Edit', edit_organization_path(@organization), class: 'btn btn-green' %>
-      <h1 class="organization-name"><%= @organization.title %></h1>
-      <p class="organization-login">@organization_login_name</p>
-    </div>
-  </div>
-<% end %>
+<%= render 'organizations/organization_banner' %>
 
 <div class="site-content">
   <div class="site-content-cap">
@@ -56,7 +48,7 @@
 
     <% if @organization.groupings.present? %>
       <dt><label>OR choose an existing group of teams</label></dt>
-      <dl class="form">G
+      <dl class="form">
         <dd>
           <%= select :group_assignment, :grouping_id, options_for_select(@groupings), include_blank: true %>
         </dd>

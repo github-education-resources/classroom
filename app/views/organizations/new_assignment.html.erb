@@ -1,12 +1,4 @@
-<% content_for :organization_banner do %>
-  <div class="organization-banner">
-    <div class="container">
-      <%= link_to 'Edit', edit_organization_path, class: 'btn btn-green' %>
-      <h1 class="organization-name"><%= @organization.title %></h1>
-      <p class="organization-login">@organization_login_name</p>
-    </div>
-  </div>
-<% end %>
+<%= render 'organizations/organization_banner' %>
 
 <div class="site-content">
   <div class="site-content-cap">
