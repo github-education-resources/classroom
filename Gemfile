@@ -12,6 +12,8 @@ gem 'friendly_id'
 
 gem 'jbuilder'
 
+gem 'kaminari'
+
 gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'

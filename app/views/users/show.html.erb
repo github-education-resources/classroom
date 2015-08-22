@@ -9,6 +9,7 @@
 
     <div class="three-fourths column">
       <%= render @organizations %>
+      <%= paginate @organizations %>
     <% else %>
       <div class="blankslate">
         <h3>You're not managing any GitHub organizations with Classroom. Add an organization to get started.</h3>

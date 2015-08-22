@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_action :set_user
 
   def show
-    @organizations = @user.organizations
+    @organizations = @user.organizations.page(params[:page])
   end
 
   private
