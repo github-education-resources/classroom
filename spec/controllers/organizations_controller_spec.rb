@@ -33,17 +33,27 @@ RSpec.describe OrganizationsController, type: :controller do
   end
 
   describe 'POST #create', :vcr do
-    it 'will add an organization' do
-      new_organization = build(:organization)
+    before do
+      request.env['HTTP_REFERER'] = 'http://classroomtest.com/orgs/new'
+    end
+
+    it 'will fail to add an organization the user is not an admin of' do
+      new_organization = build(:organization, github_id: 90)
       new_organization_options = { title: new_organization.title, github_id: new_organization.github_id }
 
-      expect { post :create, organization: new_organization_options }.to change { Organization.count }
-      expect(response).to redirect_to(invite_organization_path(Organization.last))
+      expect { post :create, organization: new_organization_options }.not_to change { Organization.count }
     end
 
     it 'will not add an organization that already exists' do
       existing_organization_options = { title: organization.title, github_id: organization.github_id }
       expect { post :create, organization: existing_organization_options }.to_not change { Organization.count }
+    end
+
+    it 'will add an organization that the user is admin of on GitHub' do
+      organization_params = { title: organization.title, github_id: organization.github_id, users: organization.users }
+      organization.destroy!
+
+      expect { post :create, organization: organization_params }.to change { Organization.count }
     end
   end
 

@@ -1,9 +1,11 @@
 class OrganizationsController < ApplicationController
-  before_action :set_organization,               except: [:new, :create]
-  before_action :set_users_github_organizations, only:   [:new, :create]
+  before_action :authorize_organization_addition, only:   [:create]
+  before_action :set_organization,                except: [:new, :create]
+  before_action :set_users_github_organizations,  only:   [:new, :create]
 
   rescue_from GitHub::Error,     with: :error
   rescue_from GitHub::Forbidden, with: :deny_access
+  rescue_from GitHub::NotFound,  with: :deny_access
 
   def new
     @organization = Organization.new
@@ -63,9 +65,16 @@ class OrganizationsController < ApplicationController
 
   private
 
+  def authorize_organization_addition
+    github_organization = GitHubOrganization.new(current_user.github_client, new_organization_params[:github_id].to_i)
+    github_user         = GitHubUser.new(current_user.github_client)
+
+    deny_access unless github_organization.admin?(github_user.login)
+  end
+
   def deny_access
     flash[:error] = 'You are not authorized to perform this action'
-    redirect_to_root
+    redirect_to :back
   end
 
   def error(exception)

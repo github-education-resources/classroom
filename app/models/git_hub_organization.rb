@@ -16,6 +16,15 @@ class GitHubOrganization
 
   # Public
   #
+  def admin?(user_github_login)
+    with_error_handling do
+      membership = @client.organization_membership(login, user: user_github_login)
+      membership.role == 'admin' && membership.state == 'active'
+    end
+  end
+
+  # Public
+  #
   def create_repository(repo_name, users_repo_options = {})
     repo_options = github_repo_default_options.merge(users_repo_options)
 
