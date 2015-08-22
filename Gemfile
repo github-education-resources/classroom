@@ -5,8 +5,6 @@ gem 'rails', '4.2.3'
 
 gem 'autoprefixer-rails'
 
-gem 'bitly'
-
 gem 'coffee-rails', '~> 4.1.0'
 
 gem 'faraday-http-cache'
@@ -26,6 +24,8 @@ gem 'peek-performance_bar'
 gem 'peek-pg'
 
 gem 'pg'
+
+gem 'rack-canonical-host'
 
 gem 'sass-rails', '~> 5.0'
 gem 'sidekiq'
