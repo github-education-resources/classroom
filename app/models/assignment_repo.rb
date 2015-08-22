@@ -37,7 +37,8 @@ class AssignmentRepo < ActiveRecord::Base
   # Internal
   #
   def repo_name
-    "#{assignment.title}-#{assignment.assignment_repos.count + 1}"
+    github_user = GitHubUser.new(repo_access.user.github_client)
+    "#{assignment.title}-#{github_user.login}"
   end
 
   # Internal

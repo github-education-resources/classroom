@@ -30,7 +30,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     end
   end
 
-  describe 'GET #accept_invitation', :vcr do
+  describe 'PATCH #accept_invitation', :vcr do
     let(:organization)  { GitHubFactory.create_owner_classroom_org }
     let(:user)          { GitHubFactory.create_classroom_student   }
     let(:grouping)      { Grouping.create(title: 'Grouping 1', organization: organization) }

@@ -28,6 +28,10 @@ class GroupAssignmentInvitation < ActiveRecord::Base
     group_assignment_github_repository.full_name
   end
 
+  def title
+    group_assignment.title
+  end
+
   def to_param
     key
   end

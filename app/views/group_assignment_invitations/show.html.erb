@@ -2,7 +2,7 @@
   <div class="two-thirds column centered">
     <div class="panel">
       <div class="panel-heading">
-        <h3 class="panel-title">Teams for "<%= @invitation.group_assignment.title %>"</h3>
+        <h3 class="panel-title">Teams for "<%= @invitation.title %>"</h3>
       </div>
 
       <%= render 'shared/flash_messages' %>
@@ -23,7 +23,7 @@
             </dl>
           <% end %>
 
-          <%= submit_tag 'Join Team', class: 'btn btn-primary js-submit-button', disabled: true %>
+          <%= submit_tag 'Join Team', class: 'btn btn-primary js-button js-form-submit', disabled: true %>
         <% end %>
       </div>
     </div>

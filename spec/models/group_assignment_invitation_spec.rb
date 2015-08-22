@@ -51,6 +51,15 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
     end
   end
 
+  describe '#title' do
+    let(:group_assignment_invitation) { create(:group_assignment_invitation) }
+
+    it 'returns the group assignments title' do
+      group_assignment_title = group_assignment_invitation.group_assignment.title
+      expect(group_assignment_invitation.title).to eql(group_assignment_title)
+    end
+  end
+
   describe '#to_param' do
     let(:group_assignment_invitation) { create(:group_assignment_invitation) }
 

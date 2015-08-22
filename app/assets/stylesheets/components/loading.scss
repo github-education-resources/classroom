@@ -6,14 +6,7 @@
     top: 0;
     bottom: 0;
     content: " ";
-    background: #fff image-url("octocat-spinner-128.gif") no-repeat center center;
+    background: rgba(255, 255, 255, 0.7) image-url("octocat-spinner-128.gif") no-repeat center center;
     background-size: 64px;
   }
-}
-
-.loader {
-  display: none;
-  height: 64px;
-  background: #fff image-url("octocat-spinner-128.gif") no-repeat center center;
-  background-size: 32px;
 }
