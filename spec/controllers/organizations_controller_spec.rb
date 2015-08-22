@@ -34,7 +34,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
   describe 'POST #create', :vcr do
     before do
-      request.env["HTTP_REFERER"] = 'http://classroomtest.com/orgs/new'
+      request.env['HTTP_REFERER'] = 'http://classroomtest.com/orgs/new'
     end
 
     it 'will fail to add an organization the user is not an admin of' do
