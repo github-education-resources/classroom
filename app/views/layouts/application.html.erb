@@ -14,11 +14,9 @@
     <%= render 'peek/bar' %>
     <%= render 'shared/header' %>
 
-    <div class="container">
-      <%= render 'shared/flash_messages' %>
-    </div>
-
     <%= yield :organization_banner %>
+
+    <%= render 'shared/flash_messages' %>
 
     <div class="site-content">
       <div class="container">
