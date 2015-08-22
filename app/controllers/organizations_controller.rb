@@ -22,7 +22,7 @@ class OrganizationsController < ApplicationController
   end
 
   def show
-    @assignments = @organization.all_assignments.sort_by(&:created_at)
+    @assignments = Kaminari.paginate_array(@organization.all_assignments.sort_by(&:updated_at)).page(params[:page])
   end
 
   def edit
