@@ -19,17 +19,6 @@ class GroupAssignmentInvitationsController < InvitationsController
 
   private
 
-  def authenticate_with_pre_login_destination
-    return if logged_in?
-    session[:pre_login_destination] = "#{request.base_url}#{request.path}"
-    redirect_to login_path
-  end
-
-  def error(exception)
-    flash[:error] = super
-    redirect_to group_assignment_invitation_path(@invitation)
-  end
-
   def group_params
     params
       .require(:group)

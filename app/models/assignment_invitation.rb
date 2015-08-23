@@ -20,6 +20,10 @@ class AssignmentInvitation < ActiveRecord::Base
     assignment_github_repository.full_name
   end
 
+  def title
+    assignment.title
+  end
+
   def to_param
     key
   end

@@ -10,7 +10,15 @@ class InvitationsController < ApplicationController
   private
 
   def error(exception)
-    exception.message.present? ? exception.message : 'Uh oh, an error has occured.'
+    flash[:error] = exception.message.present? ? exception.message : 'Uh oh, an error has occured.'
+    redirect_path = case @invitation
+                    when AssignmentInvitation
+                      assignment_invitation_url(@invitation)
+                    when GroupAssignmentInvitation
+                      group_assignment_invitation_url(@invitation)
+                    end
+
+    redirect_to redirect_path
   end
 
   def ensure_logged_in

@@ -1,5 +1,18 @@
 <div class="columns">
-  <div class="one-half column centered">
-    <div class="loading" id="assignment-invitation-status" data-invitation-key="<%= @invitation.key %>"></div>
+  <div class="two-thirds column centered">
+    <div class="panel">
+      <div class="panel-heading">
+        <h3 class="panel-title">Join "<%= @invitation.title %>"</h3>
+      </div>
+
+      <%= render 'shared/flash_messages' %>
+
+      <div class="panel-body">
+        <%= form_tag({ controller: :assignment_invitations, action: :accept_invitation}, method: :patch) do %>
+          <p>Accept this assignment</p>
+          <%= submit_tag 'Accept', class: 'btn btn-primary js-button' %>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>

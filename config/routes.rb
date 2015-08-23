@@ -17,13 +17,13 @@ Rails.application.routes.draw do
 
   get 'dashboard', to: 'users#show'
 
-  resources :assignment_invitations, only: [:show] do
+  resources :assignment_invitations, path: 'assignment-invitations', only: [:show] do
     member do
-      get 'accept_invitation'
+      patch 'accept_invitation', path: 'accept'
     end
   end
 
-  resources :group_assignment_invitations, only: [:show] do
+  resources :group_assignment_invitations, path: 'group-assignment-invitations', only: [:show] do
     member do
       patch 'accept_invitation', path: 'accept'
     end

@@ -40,8 +40,18 @@ RSpec.describe AssignmentInvitation, type: :model do
     end
 
     it 'returns the full repo name of the users GitHub repository' do
+      github_login   = GitHubUser.new(invitee.github_client).login
       full_repo_name = assignment_invitation.redeem_for(invitee)
-      expect(full_repo_name).to eql("#{organization.title}/#{assignment.title}-1")
+      expect(full_repo_name).to eql("#{organization.title}/#{assignment.title}-#{github_login}")
+    end
+  end
+
+  describe '#title' do
+    let(:assignment_invitation) { create(:assignment_invitation) }
+
+    it 'returns the assignments title' do
+      assignment_title = assignment_invitation.assignment.title
+      expect(assignment_invitation.title).to eql(assignment_title)
     end
   end
 

@@ -25,7 +25,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
   end
 
-  describe 'GET #accept_invitation', :vcr do
+  describe 'PATCH #accept_invitation', :vcr do
     let(:organization) { GitHubFactory.create_owner_classroom_org }
     let(:user)         { GitHubFactory.create_classroom_student   }
 
@@ -36,7 +36,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
                         public_repo: false)
     end
 
-    let(:assignment_invitation) { AssignmentInvitation.create(assignment: assignment) }
+    let(:invitation) { AssignmentInvitation.create(assignment: assignment) }
 
     before(:each) do
       session[:user_id] = user.id
@@ -48,7 +48,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
 
     it 'redeems the users invitation' do
-      get :accept_invitation, id: assignment_invitation.key, format: :json
+      patch :accept_invitation, id: invitation.key
 
       assert_requested :post, github_url("/organizations/#{organization.github_id}/teams")
       assert_requested :post, github_url("/organizations/#{organization.github_id}/repos")

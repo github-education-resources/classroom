@@ -43,6 +43,6 @@ class RepoAccess < ActiveRecord::Base
   # Internal
   #
   def title
-    "Team #{organization.repo_accesses.count + 1}"
+    GitHubUser.new(user.github_client).login
   end
 end
