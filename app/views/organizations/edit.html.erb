@@ -1,26 +1,37 @@
-<h1 class="page-header">Edit Organization</h1>
-<div class="columns">
-  <div class="one-half column centered">
-    <%= form_for @organization do |f| %>
-      <%= render 'shared/error_messages', object: f.object %>
+<%= render 'organizations/organization_banner' %>
 
-      <dl class="form">
-        <dt><%= f.label :title, class: 'input-label' %></dt>
-        <dd><%= f.text_field :title, class: 'textfield' %></dd>
-      </dl>
-
-      <div class="form-actions left">
-        <%= link_to 'Cancel', @organization, class: 'btn', role: 'button' %>
-        <%= f.submit 'Update Organization', class: 'btn btn-primary' %>
-      </div>
-    <% end %>
-
-    <!-- I promise I'll come and style this later -->
-    <br><br><br><br>
-    <!-- -->
-
-    <%= link_to 'Remove Organization', '#delete-organization', class: 'btn btn-danger', role: 'button' %>
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading"><%= @organization.title %> settings</h2>
   </div>
 </div>
 
-<%= render partial: 'remove_organization_modal', locals: { modal_id: 'delete-organization' } %>
+<div class="site-content-body">
+  <%= form_for @organization do |f| %>
+    <%= render 'shared/error_messages', object: f.object %>
+
+    <div class="columns">
+      <div class="two-thirds column">
+        <dl class="form">
+          <dt><%= f.label :title %></dt>
+          <dd><%= f.text_field :title, class: 'textfield' %></dd>
+        </dl>
+      </div>
+
+      <div class="one-third column dangerzone-container">
+        <p class="text-emphasized">Remove this organization</p>
+        <p class="text-muted">Once you remove this organization, there is not going back. Please be certain.</p>
+        <p class="text-muted">Everything you have created, and every student that you have invited will also be removed from your organization on github.com</p>
+
+        <%= form_for @organization, html: { method: :delete } do |f| %>
+          <%= f.submit 'Remove this organization', class: 'btn btn-block btn-danger' %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= f.submit 'Save changes', class: 'btn btn-green' %>
+      <%= link_to 'Cancel', @organization, class: 'btn', role: 'button' %>
+    </div>
+  <% end %>
+</div>
