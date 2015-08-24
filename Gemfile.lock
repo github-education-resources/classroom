@@ -1,3 +1,12 @@
+GIT
+  remote: git://github.com/tarebyte/peek-sidekiq.git
+  revision: 01aacb215354ab3fb668c264e7f4f93589fd57ba
+  branch: sidekiq-webpath-link
+  specs:
+    peek-sidekiq (1.0.0)
+      peek
+      sidekiq
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -323,6 +332,7 @@ DEPENDENCIES
   peek-git
   peek-performance_bar
   peek-pg
+  peek-sidekiq!
   pg
   pry-byebug
   pry-rails

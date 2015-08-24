@@ -3,3 +3,4 @@ Peek.into Peek::Views::PerformanceBar
 Peek.into Peek::Views::GC
 Peek.into Peek::Views::Dalli
 Peek.into Peek::Views::PG
+Peek.into Peek::Views::Sidekiq, sidekiq_web_path: "#{ENV['HOST_URL']}/sidekiq"
