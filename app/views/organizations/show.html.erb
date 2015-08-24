@@ -1,26 +1,27 @@
-<h1 class="page-header">
-  <%= @organization.title %>
-  <%= link_to 'Edit', edit_organization_path, class: 'lead' %>
-</h1>
+<%= render 'organizations/organization_banner' %>
 
-<div class="columns">
-  <% if @assignments.present? %>
-    <div class="one-fourth column">
-      <%= link_to new_assignment_organization_path(@organization), class: 'btn btn-primary', role: 'button' do %>
-        <%= octicon('plus') %> New assignment
+<div class="site-content">
+  <div class="site-content-cap">
+    <% if @assignments.present? %>
+      <%= link_to new_assignment_organization_path(@organization), class: 'btn btn-green right', role: 'button' do %>
+        New assignment
       <% end %>
-    </div>
+    <% end %>
+    <h2 class="site-content-heading">Assignments</h2>
+  </div>
 
-    <div class="three-fourths column">
+  <div class="site-content-body">
+    <% if @assignments.present? %>
       <%= render @assignments %>
       <%= paginate @assignments %>
-    </div>
-  <% else %>
-    <div class="blankslate">
-      <h3>It appears that this organization doesn't have any assignments. Create one now to get started.</h3>
-      <%= link_to new_assignment_organization_path(@organization), class: 'btn btn-primary', role: 'button' do %>
-        <%= octicon('plus') %> New assignment
-      <% end %>
-    </div>
-  <% end %>
+
+    <% else %>
+      <div class="blankslate large-format spacious clean-background">
+        <h3>This organization doesn’t have any assignments yet.</h3>
+        <%= link_to new_assignment_organization_path(@organization), class: 'btn btn-green btn-big', role: 'button' do %>
+          Create your first assignment
+        <% end %>
+      </div>
+    <% end %>
+  </div>
 </div>

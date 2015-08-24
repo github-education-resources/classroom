@@ -24,6 +24,8 @@ class Assignment < ActiveRecord::Base
     super || NullAssignmentInvitation.new
   end
 
+  alias_method :invitation, :assignment_invitation
+
   def private?
     !public_repo
   end

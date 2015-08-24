@@ -1,20 +1,25 @@
-<h1 class="page-header">Dashboard</h1>
-<div class="columns">
-  <% if @organizations.present? %>
-    <div class="one-fourth column">
-      <%= link_to new_organization_path, class: 'btn btn-primary', role: 'button' do %>
-        <%= octicon('plus') %> Add organization
+<div class="site-content">
+  <div class="site-content-cap">
+    <% if @organizations.present? %>
+      <%= link_to new_organization_path, class: 'btn btn-green right', role: 'button' do %>
+        Add organization
       <% end %>
-    </div>
+    <% end %>
+    <h2 class="site-content-heading">Organizations</h2>
+  </div>
 
-    <div class="three-fourths column">
+  <div class="site-content-body">
+    <% if @organizations.present? %>
       <%= render @organizations %>
       <%= paginate @organizations %>
+
     <% else %>
-      <div class="blankslate">
-        <h3>You're not managing any GitHub organizations with Classroom. Add an organization to get started.</h3>
-        <%= link_to new_organization_path, class: 'btn btn-primary', role: 'button' do %>
-          <%= octicon('plus') %> Add organization
+      <div class="blankslate large-format spacious clean-background">
+        <h3>You’re not managing any organizations yet.</h3>
+        <p>You can begin creating assignments once you have at least one organization.</p>
+
+        <%= link_to new_organization_path, class: 'btn btn-green btn-big', role: 'button' do %>
+          Add your first organization
         <% end %>
       </div>
     <% end %>

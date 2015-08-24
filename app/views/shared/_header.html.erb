@@ -1,16 +1,21 @@
-<header class="header">
+<header class="site-header">
   <div class="container">
-    <%= link_to (logged_in? ? dashboard_path : root_path), class: 'logo' do %>
-      <%= mega_octicon('mortar-board') %>
-      Classroom
-    <% end %>
-    <nav class="header-nav">
+    <nav class="site-nav">
+      <%= link_to "GitHub Education", 'https://education.github.com' %>
       <% if logged_in? %>
         <%= render 'shared/staff_links' if staff? %>
-        <%= link_to 'Sign out', logout_path, method: :post %>
+
+        <%= link_to decorated_current_user.github_url do %>
+          <%= image_tag decorated_current_user.avatar_url(40), class: 'avatar', alt: "@#{decorated_current_user.login}", height: 20, width: 20 %>
+        <% end %>
+
+        <%= link_to logout_path, method: :post do %>
+          <%= octicon('sign-out') %>
+        <% end %>
       <% else %>
         <%= link_to 'Sign in', login_path %>
       <% end %>
     </nav>
+    <%= link_to(image_tag('logo@2x.png', :class => 'site-logo', :alt => 'GitHub for Classrooms'), (logged_in? ? dashboard_path : root_path)) %>
   </div>
 </header>

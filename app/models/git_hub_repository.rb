@@ -31,8 +31,7 @@ class GitHubRepository
   #
   def repository(full_repo_name = nil)
     with_error_handling do
-      repo = @client.repository(full_repo_name)
-      GitHubRepository.new(@client, repo.id)
+      @client.repository(full_repo_name || @id)
     end
   end
 end

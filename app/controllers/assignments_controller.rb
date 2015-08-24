@@ -2,6 +2,8 @@ class AssignmentsController < ApplicationController
   before_action :set_organization
   before_action :set_assignment, except: [:new, :create]
 
+  decorates_assigned :organization
+
   rescue_from GitHub::Error, GitHub::Forbidden, GitHub::NotFound, with: :error
 
   def new
@@ -22,6 +24,7 @@ class AssignmentsController < ApplicationController
   end
 
   def show
+    @assignment_repos = @assignment.assignment_repos.page(params[:page])
   end
 
   private

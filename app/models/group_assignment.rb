@@ -25,6 +25,8 @@ class GroupAssignment < ActiveRecord::Base
     super || NullGroupAssignmentInvitation.new
   end
 
+  alias_method :invitation, :group_assignment_invitation
+
   def private?
     !public_repo
   end
