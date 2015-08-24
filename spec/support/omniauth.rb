@@ -11,5 +11,7 @@ OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
     'name'     => 'Test User'
   },
 
+  'extra' => { 'raw_info' => { 'site_admin' => false } },
+
   'credentials' => { 'token' => 'some-token' }
 )

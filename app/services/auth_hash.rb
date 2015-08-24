@@ -9,8 +9,9 @@ class AuthHash
 
   def user_info
     {
-      uid:      uid,
-      token:    token
+      uid:        uid,
+      token:      token,
+      site_admin: site_admin
     }
   end
 
@@ -26,10 +27,16 @@ class AuthHash
     user_hash.fetch('credentials', {}).fetch('token')
   end
 
+  def site_admin
+    return true if non_staff_github_admins_ids.include?(uid)
+    raw_info[:site_admin]
+  end
+
   private
 
-  def info
-    user_hash.fetch('info', {})
+  def non_staff_github_admins_ids
+    return [] unless ENV['NON_STAFF_GITHUB_ADMIN_IDS'].present?
+    ENV['NON_STAFF_GITHUB_ADMINS_IDS'].split(',')
   end
 
   def raw_info
