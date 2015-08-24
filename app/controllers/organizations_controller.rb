@@ -3,6 +3,8 @@ class OrganizationsController < ApplicationController
   before_action :set_organization,                except: [:new, :create]
   before_action :set_users_github_organizations,  only:   [:new, :create]
 
+  decorates_assigned :organization
+
   rescue_from GitHub::Error,     with: :error
   rescue_from GitHub::Forbidden, with: :deny_access
   rescue_from GitHub::NotFound,  with: :deny_access

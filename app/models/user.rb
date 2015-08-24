@@ -16,10 +16,6 @@ class User < ActiveRecord::Base
     update_attributes(user_attributes)
   end
 
-  def avatar_url(size = 80)
-    "https://avatars.githubusercontent.com/u/#{uid}?v=3&size=#{size}"
-  end
-
   def self.create_from_auth_hash(hash)
     create!(AuthHash.new(hash).user_info)
   end
@@ -33,21 +29,7 @@ class User < ActiveRecord::Base
     @github_client ||= Octokit::Client.new(access_token: token, auto_paginate: true)
   end
 
-  def github_login
-    github_user.login
-  end
-
-  def github_url
-    github_user.user.html_url
-  end
-
   def staff?
     site_admin
-  end
-
-  private
-
-  def github_user
-    @github_user ||= GitHubUser.new(github_client)
   end
 end

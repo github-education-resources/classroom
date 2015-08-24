@@ -28,25 +28,7 @@ class Organization < ActiveRecord::Base
     users.where(state: 'active').sample.github_client
   end
 
-  # Public
-  #
-  def github_login
-    github_organization.login
-  end
-
-  # Public
-  #
-  def github_url
-    github_organization.organization.html_url
-  end
-
   private
-
-  # Internal
-  #
-  def github_organization
-    @github_organization ||= GitHubOrganization.new(github_client, github_id)
-  end
 
   # Internal
   #

@@ -28,13 +28,13 @@ class GroupAssignmentRepo < ActiveRecord::Base
     !group_assignment.public_repo?
   end
 
-  private
-
-  # Internal
+  # Public
   #
   def github_team_id
     group.github_team_id
   end
+
+  private
 
   # Internal
   #
