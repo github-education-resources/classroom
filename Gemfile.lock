@@ -1,7 +1,6 @@
 GIT
-  remote: git://github.com/tarebyte/peek-sidekiq.git
-  revision: 01aacb215354ab3fb668c264e7f4f93589fd57ba
-  branch: sidekiq-webpath-link
+  remote: git://github.com/Soliah/peek-sidekiq.git
+  revision: f191c4c10e12e1f133276ef4e454ab9d173a2b41
   specs:
     peek-sidekiq (1.0.0)
       peek

@@ -26,7 +26,7 @@ gem 'peek-gc'
 gem 'peek-git'
 gem 'peek-performance_bar'
 gem 'peek-pg'
-gem 'peek-sidekiq', github: 'tarebyte/peek-sidekiq', branch: 'sidekiq-webpath-link'
+gem 'peek-sidekiq', github: 'Soliah/peek-sidekiq'
 
 gem 'pg'
 
