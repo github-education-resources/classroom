@@ -30,7 +30,7 @@ Rails.application.routes.draw do
   end
 
   scope path_names: { edit: 'settings' } do
-    resources :organizations, path: 'orgs', constraints: OrganizationAuthorizedConstraint.new do
+    resources :organizations, constraints: OrganizationAuthorizedConstraint.new do
       member do
         get   'invite'
         get   'new_assignment', path: 'new-assignment'
