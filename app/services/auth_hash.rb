@@ -36,7 +36,7 @@ class AuthHash
 
   def non_staff_github_admins_ids
     return [] unless ENV['NON_STAFF_GITHUB_ADMIN_IDS'].present?
-    ENV['NON_STAFF_GITHUB_ADMINS_IDS'].split(',')
+    ENV['NON_STAFF_GITHUB_ADMIN_IDS'].split(',')
   end
 
   def raw_info
