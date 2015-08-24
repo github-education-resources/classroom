@@ -11,6 +11,18 @@
   </div>
 
   <div class="site-content-body">
-    <%= render @assignment.assignment_invitation %>
+    <div class="invitation-content">
+      <%= render @assignment.assignment_invitation %>
+    </div>
+
+    <% if @assignment_repos.present? %>
+      <%= render   @assignment_repos %>
+      <%= paginate @assignment_repos %>
+    <% else %>
+      <div class="blankslate">
+        <h3>"<%= @assignment.title %>" does not have any repositories.</h3>
+        <p>Share the invitation link with your students to get started.</p>
+      </div>
+    <% end %>
   </div>
 </div>

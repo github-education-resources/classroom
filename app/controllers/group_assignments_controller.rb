@@ -27,6 +27,7 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def show
+    @group_assignment_repos = @group_assignment.group_assignment_repos.page(params[:page])
   end
 
   private

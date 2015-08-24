@@ -24,6 +24,7 @@ class AssignmentsController < ApplicationController
   end
 
   def show
+    @assignment_repos = @assignment.assignment_repos.page(params[:page])
   end
 
   private

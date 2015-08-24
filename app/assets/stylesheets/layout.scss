@@ -182,3 +182,56 @@ hr {
   border-radius: 3px;
   padding-bottom: 13px;
 }
+
+.invitation-content {
+  border-bottom: 1px solid #e3e3e3;
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+}
+
+.assignment-repo-list-item {
+  margin-bottom: 1rem;
+  font-size: 14px;
+
+  .avatar {
+    margin-right: 10px;
+  }
+
+  .student-login {
+    color: $brand-gray-dark;
+    display: block;
+    padding-top: 4px;
+
+    &:hover {
+      color: $brand-blue;
+    }
+  }
+}
+
+.group-assignment-repo-list-item {
+  margin-bottom: 1rem;
+  font-size: 14px;
+
+  .student-ellipse {
+    font-size: 13px;
+    display: inline-block;
+    text-align: center;
+    width: 30px;
+    height: 30px;
+    line-height: 24px;
+    color: $brand-gray;
+    border-radius: 3px;
+    font-weight: bold;
+    background-color: #ddd;
+    vertical-align: top;
+  }
+
+  .team-name {
+    color: $brand-gray-dark;
+    display: block;
+
+    &:hover {
+      color: $brand-blue;
+    }
+  }
+}
