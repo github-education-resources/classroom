@@ -1,9 +1,6 @@
-class GroupAssignmentsController < ApplicationController
-  before_action :set_organization
+class GroupAssignmentsController < OrganizationAuthorizedController
   before_action :set_group_assignment, except: [:new, :create]
   before_action :set_groupings,        except: [:show]
-
-  decorates_assigned :organization
 
   rescue_from GitHub::Error, GitHub::Forbidden, GitHub::NotFound, with: :error
 
@@ -58,11 +55,7 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def set_group_assignment
-    @group_assignment = GroupAssignment.find(params[:id])
-  end
-
-  def set_organization
-    @organization = Organization.find(params[:organization_id])
+    @group_assignment = GroupAssignment.friendly.find(params[:id])
   end
 
   def starter_code_repository_id(repo_name)
