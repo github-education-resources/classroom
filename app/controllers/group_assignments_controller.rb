@@ -1,6 +1,10 @@
-class GroupAssignmentsController < OrganizationAuthorizedController
+class GroupAssignmentsController < ApplicationController
+  include OrganizationAuthorization
+
   before_action :set_group_assignment, except: [:new, :create]
   before_action :set_groupings,        except: [:show]
+
+  decorates_assigned :organization
 
   rescue_from GitHub::Error, GitHub::Forbidden, GitHub::NotFound, with: :error
 

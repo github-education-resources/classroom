@@ -31,6 +31,10 @@ class ApplicationController < ActionController::Base
     !current_user.nil?
   end
 
+  def not_found
+    fail ActionController::RoutingError, 'Not Found'
+  end
+
   def redirect_to_root
     redirect_to root_path
   end

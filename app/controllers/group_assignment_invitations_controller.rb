@@ -1,4 +1,6 @@
 class GroupAssignmentInvitationsController < InvitationsController
+  skip_before_action :set_organization, :authorize_organization_access
+
   def show
     @groups = @invitation.groups.map { |group| [group.title, group.id] }
   end

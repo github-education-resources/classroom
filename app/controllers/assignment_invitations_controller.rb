@@ -1,4 +1,6 @@
 class AssignmentInvitationsController < InvitationsController
+  skip_before_action :set_organization, :authorize_organization_access
+
   def accept_invitation
     if (full_repo_name = @invitation.redeem_for(current_user))
       render partial: 'invitations/success',

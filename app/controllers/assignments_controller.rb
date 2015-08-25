@@ -1,5 +1,9 @@
-class AssignmentsController < OrganizationAuthorizedController
+class AssignmentsController < ApplicationController
+  include OrganizationAuthorization
+
   before_action :set_assignment, except: [:new, :create]
+
+  decorates_assigned :organization
 
   rescue_from GitHub::Error, GitHub::Forbidden, GitHub::NotFound, with: :error
 
