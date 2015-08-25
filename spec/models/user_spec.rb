@@ -14,16 +14,8 @@ RSpec.describe User, type: :model do
     it { is_expected.to validate_presence_of(:uid)     }
     it { is_expected.to validate_uniqueness_of(:uid)   }
 
-    context 'active' do
-      it { is_expected.to validate_presence_of(:token) }
-    end
-
-    context 'pending' do
-      subject { build(:user, state: 'pending') }
-
-      it { is_expected.not_to validate_uniqueness_of(:token) }
-      it { is_expected.to allow_value('').for(:token)        }
-    end
+    it { is_expected.to validate_presence_of(:token)   }
+    it { is_expected.to validate_uniqueness_of(:token) }
   end
 
   describe '#assign_from_auth_hash' do

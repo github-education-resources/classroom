@@ -1,18 +1,15 @@
 class User < ActiveRecord::Base
-  enum state: [:active, :pending]
-
   has_many :repo_accesses, dependent: :destroy
 
   has_and_belongs_to_many :organizations
 
-  validates :token, presence: true, if: :active?
-  validates :token, uniqueness: true, allow_blank: true, if: :pending?
+  validates :token, presence: true, uniqueness: true
 
   validates :uid, presence: true
   validates :uid, uniqueness: true
 
   def assign_from_auth_hash(hash)
-    user_attributes = AuthHash.new(hash).user_info.merge(state: 'active')
+    user_attributes = AuthHash.new(hash).user_info
     update_attributes(user_attributes)
   end
 
