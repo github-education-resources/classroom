@@ -1,3 +1,12 @@
+GIT
+  remote: git://github.com/Soliah/peek-sidekiq.git
+  revision: 261c857578ae6dc189506a35194785a4db51e54c
+  ref: 261c857578ae6dc189506a35194785a4db51e54c
+  specs:
+    peek-sidekiq (1.0.0)
+      peek
+      sidekiq
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -327,6 +336,7 @@ DEPENDENCIES
   peek-git
   peek-performance_bar
   peek-pg
+  peek-sidekiq!
   pg
   pry-byebug
   pry-rails

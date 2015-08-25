@@ -22,13 +22,6 @@ gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'
 
-gem 'peek'
-gem 'peek-dalli'
-gem 'peek-gc'
-gem 'peek-git'
-gem 'peek-performance_bar'
-gem 'peek-pg'
-
 gem 'pg'
 
 gem 'rack-canonical-host'
@@ -45,6 +38,16 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'quiet_assets'
+end
+
+group :development, :production do
+  gem 'peek'
+  gem 'peek-dalli'
+  gem 'peek-gc'
+  gem 'peek-git'
+  gem 'peek-performance_bar'
+  gem 'peek-pg'
+  gem 'peek-sidekiq', github: 'Soliah/peek-sidekiq', ref: '261c857578ae6dc189506a35194785a4db51e54c'
 end
 
 group :development, :test do
