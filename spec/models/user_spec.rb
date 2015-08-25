@@ -23,13 +23,6 @@ RSpec.describe User, type: :model do
       user.assign_from_auth_hash(github_omniauth_hash)
       expect(github_omniauth_hash.credentials.token).to eq(user.token)
     end
-
-    it 'updates the users status from pending to active' do
-      pending_user = create(:user, state: 'pending', token: nil)
-
-      pending_user.assign_from_auth_hash(github_omniauth_hash)
-      expect(pending_user.state).to eql('active')
-    end
   end
 
   describe '#create_from_auth_hash' do
