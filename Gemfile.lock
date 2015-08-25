@@ -1,6 +1,7 @@
 GIT
   remote: git://github.com/Soliah/peek-sidekiq.git
-  revision: f191c4c10e12e1f133276ef4e454ab9d173a2b41
+  revision: 261c857578ae6dc189506a35194785a4db51e54c
+  ref: 261c857578ae6dc189506a35194785a4db51e54c
   specs:
     peek-sidekiq (1.0.0)
       peek
