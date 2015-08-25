@@ -23,9 +23,7 @@
         <p class="text-muted">Once you remove this organization, there is no going back. Please be certain.</p>
         <p class="text-muted">Everything you have created, and every student that you have invited will also be removed from your organization on github.com</p>
 
-        <%= form_for @organization, html: { method: :delete } do |f| %>
-          <%= f.submit 'Remove this organization', class: 'btn btn-block btn-danger' %>
-        <% end %>
+        <%= link_to 'Remove organization', @organization, class: 'btn btn-danger btn-block', method: :delete, data: { confirm: 'Are you positive that you want to delete your organization?' } %>
       </div>
     </div>
 
