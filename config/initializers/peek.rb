@@ -1,4 +1,4 @@
-unless Rails.env.testing?
+unless Rails.env.test?
   Peek.into Peek::Views::Git, :nwo => 'education/classroom'
   Peek.into Peek::Views::PerformanceBar
   Peek.into Peek::Views::GC
