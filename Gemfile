@@ -12,6 +12,8 @@ gem 'draper'
 gem 'faraday-http-cache'
 gem 'friendly_id'
 
+gem 'geo_pattern'
+
 gem 'jbuilder'
 
 gem 'kaminari'

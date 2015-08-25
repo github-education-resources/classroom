@@ -65,6 +65,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.9.1.1)
+    color (1.7.1)
     columnize (0.9.0)
     connection_pool (2.2.0)
     crack (0.4.2)
@@ -97,6 +98,8 @@ GEM
       faraday (~> 0.8)
     friendly_id (5.1.0)
       activerecord (>= 4.0.0)
+    geo_pattern (1.4.0)
+      color (~> 1.5)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     hashie (3.4.2)
@@ -312,6 +315,7 @@ DEPENDENCIES
   faker
   faraday-http-cache
   friendly_id
+  geo_pattern
   jbuilder
   kaminari
   octokit
