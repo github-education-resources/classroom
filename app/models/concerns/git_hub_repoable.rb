@@ -42,7 +42,11 @@ module GitHubRepoable
   #
   def push_starter_code
     return true unless starter_code_repo_id
-    PushStarterCodeJob.perform_later(creator, github_repo_id, starter_code_repo_id)
+
+    assignment_repository   = GitHubRepository.new(creator.github_client, github_repo_id)
+    starter_code_repository = GitHubRepository.new(creator.github_client, starter_code_repo_id)
+
+    PushStarterCodeJob.perform_later(assignment_repository, starter_code_repository)
   end
 
   private
