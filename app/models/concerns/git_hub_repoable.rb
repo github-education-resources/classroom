@@ -42,7 +42,7 @@ module GitHubRepoable
   #
   def push_starter_code
     return true unless starter_code_repo_id
-    PushStarterCodeJob.perform_later(github_repo_id, starter_code_repo_id)
+    PushStarterCodeJob.perform_later(creator, github_repo_id, starter_code_repo_id)
   end
 
   private
