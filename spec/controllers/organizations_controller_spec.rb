@@ -96,5 +96,11 @@ RSpec.describe OrganizationsController, type: :controller do
   end
 
   describe 'GET #invite' do
+    it 'returns success and sets the organization' do
+      get :invite, id: organization.id
+
+      expect(response.status).to eq(200)
+      expect(assigns(:organization)).to_not be_nil
+    end
   end
 end
