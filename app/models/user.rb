@@ -1,5 +1,8 @@
 class User < ActiveRecord::Base
-  has_many :repo_accesses, dependent: :destroy
+  enum state: [:active, :pending]
+
+  has_many :repo_accesses,    dependent: :destroy
+  has_many :assignment_repos, through: :repo_accesses
 
   has_and_belongs_to_many :organizations
 

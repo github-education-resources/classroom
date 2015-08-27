@@ -1,4 +1,4 @@
 <h1>You are Ready to Go!</h1>
 <p>
-  The assignment is located at: <%= link_to repo_url, repo_url %> <%= ', and your starter code will be available shortly.' if has_starter_code %>
+  The assignment is located at: <%= link_to github_repo_url, github_repo_url %> <%= ', and your starter code will be available shortly.' if assignment.starter_code? %>
 </p>
