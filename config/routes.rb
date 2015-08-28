@@ -18,13 +18,15 @@ Rails.application.routes.draw do
 
   resources :assignment_invitations, path: 'assignment-invitations', only: [:show] do
     member do
-      patch :accept_invitation, path: :accept
+      patch :accept_invitation,     path: :accept
+      get   :successful_invitation, path: :success
     end
   end
 
   resources :group_assignment_invitations, path: 'group-assignment-invitations', only: [:show] do
     member do
-      patch :accept_invitation, path: :accept
+      patch :accept_invitation,     path: :accept
+      get   :successful_invitation, path: :success
     end
   end
 

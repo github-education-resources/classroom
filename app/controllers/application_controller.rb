@@ -27,6 +27,10 @@ class ApplicationController < ActionController::Base
     redirect_to login_path
   end
 
+  def not_found
+    fail ActionController::RoutingError, 'Not Found'
+  end
+
   def logged_in?
     !current_user.nil?
   end
