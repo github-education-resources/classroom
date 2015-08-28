@@ -1,2 +1,2 @@
 $('.js-flash-close').on 'click', ->
-  $(this).parent().fadeOut('slow')
+  $(this).parents().eq(1).fadeOut('slow')
