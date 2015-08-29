@@ -28,6 +28,14 @@ a {
 .site-logo {
   width: 230px;
   height: 20px;
+
+  @media (max-width: 34em) {
+    margin-bottom: 1rem;
+    display: block;
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .site-nav {
@@ -46,10 +54,22 @@ a {
 
   a {
     color: rgba(255, 255, 255, 0.5);
+
+    @media (max-width: 34em) {
+      margin-left: 1rem;
+      margin-right: 1rem;
+    }
   }
 
   a:hover {
     color: rgba(255, 255, 255, 1);
+  }
+
+  @media (max-width: 34em) {
+    padding-top: 1rem;
+    border-top: 0.075rem solid rgba(255, 255, 255, 0.25);
+    text-align: center;
+    width: 100%;
   }
 }
 
