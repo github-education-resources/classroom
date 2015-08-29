@@ -1,9 +1,9 @@
 .container {
+  @include clearfix;
   width: auto;
   max-width: $container-width;
   margin-right: auto;
   margin-left: auto;
-  @include clearfix;
 }
 
 // Column widths
