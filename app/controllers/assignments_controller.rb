@@ -1,5 +1,6 @@
 class AssignmentsController < ApplicationController
-  before_action :set_organization
+  include OrganizationAuthorization
+
   before_action :set_assignment, except: [:new, :create]
 
   decorates_assigned :organization
@@ -44,11 +45,7 @@ class AssignmentsController < ApplicationController
   end
 
   def set_assignment
-    @assignment = Assignment.find(params[:id])
-  end
-
-  def set_organization
-    @organization = Organization.find(params[:organization_id])
+    @assignment = Assignment.friendly.find(params[:id])
   end
 
   def starter_code_repository_id(repo_name)

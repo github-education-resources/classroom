@@ -9,6 +9,10 @@ class OrganizationDecorator < Draper::Decorator
     github_organization.html_url
   end
 
+  def github_team_invitations_url
+    "https://github.com/orgs/#{github_organization.login}/invitations/new"
+  end
+
   def login
     github_organization.login
   end

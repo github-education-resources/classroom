@@ -95,30 +95,12 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
-  describe 'GET #invite', :vcr do
-    it 'returns an array of organization admins that have not been added yet' do
+  describe 'GET #invite' do
+    it 'returns success and sets the organization' do
       get :invite, id: organization.id
 
-      expect(assigns(:organization_owners)).to be_kind_of(Array)
-      expect(assigns(:organization_owners)).to_not include(user.uid)
-    end
-  end
-
-  describe 'PATCH #invite_users', :vcr do
-    it 'kicks off a InviteUserToClassroomJob for each invited user with an email address' do
-      github_owner_emails_params  = { 'not_invited_owner' => '', 'invited_owner' => 'invited_owner.8675309@osu.edu' }
-      github_owners_params        = { 'invited_owner' => '8439338' }
-
-      patch :invite_users, id:                  organization.id,
-                           github_owners:       github_owners_params,
-                           github_owner_emails: github_owner_emails_params
-
-      id    = github_owners_params['invited_owner']
-      email = github_owner_emails_params['invited_owner']
-
-      assert_enqueued_jobs 1 do
-        InviteUserToClassroomJob.perform_later(id, email, user, organization)
-      end
+      expect(response.status).to eq(200)
+      expect(assigns(:organization)).to_not be_nil
     end
   end
 end

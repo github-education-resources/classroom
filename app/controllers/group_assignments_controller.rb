@@ -1,5 +1,6 @@
 class GroupAssignmentsController < ApplicationController
-  before_action :set_organization
+  include OrganizationAuthorization
+
   before_action :set_group_assignment, except: [:new, :create]
   before_action :set_groupings,        except: [:show]
 
@@ -58,11 +59,7 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def set_group_assignment
-    @group_assignment = GroupAssignment.find(params[:id])
-  end
-
-  def set_organization
-    @organization = Organization.find(params[:organization_id])
+    @group_assignment = GroupAssignment.friendly.find(params[:id])
   end
 
   def starter_code_repository_id(repo_name)

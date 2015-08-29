@@ -20,10 +20,4 @@ class InvitationsController < ApplicationController
 
     redirect_to redirect_path
   end
-
-  def ensure_logged_in
-    return if logged_in?
-    session[:pre_login_destination] = "#{request.base_url}#{request.path}"
-    redirect_to login_path
-  end
 end

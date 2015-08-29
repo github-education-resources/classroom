@@ -1,4 +1,3 @@
-require 'organization_authorized_constraint'
 require 'staff_constraint'
 
 require 'sidekiq/web'
@@ -30,11 +29,10 @@ Rails.application.routes.draw do
   end
 
   scope path_names: { edit: 'settings' } do
-    resources :organizations, constraints: OrganizationAuthorizedConstraint.new do
+    resources :organizations do
       member do
         get   'invite'
         get   'new_assignment', path: 'new-assignment'
-        patch 'invite_users', path: 'invite-users'
       end
 
       resources :assignments, only: [:show, :new, :create]

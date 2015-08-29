@@ -24,11 +24,15 @@ class ApplicationController < ActionController::Base
   def ensure_logged_in
     return if logged_in?
     session[:pre_login_destination] = "#{request.base_url}#{request.path}"
-    redirect_to login_path, notice: 'You must be logged in to view this content.'
+    redirect_to login_path
   end
 
   def logged_in?
     !current_user.nil?
+  end
+
+  def not_found
+    fail ActionController::RoutingError, 'Not Found'
   end
 
   def redirect_to_root

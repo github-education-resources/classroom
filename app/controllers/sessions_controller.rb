@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
   skip_before_action :ensure_logged_in
+  skip_before_action :set_organization, :authorize_organization_access
 
   def new
     redirect_to '/auth/github'

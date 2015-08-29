@@ -1,43 +1,30 @@
-<% content_for :organization_banner do %>
-  <div class="organization-banner">
-    <div class="container">
-      <%= link_to 'Edit', edit_organization_path(@organization), class: 'btn btn-green' %>
-      <h1 class="organization-name"><%= @organization.title %></h1>
-      <p class="organization-login">@organization_login_name</p>
-    </div>
-  </div>
-<% end %>
+<%= render 'organizations/organization_banner' %>
 
 <div class="site-content">
   <div class="site-content-cap">
-    <h2 class="site-content-heading">Invite users</h2>
+    <%= link_to 'Skip for now', organization_path(@organization), class: 'btn btn-green right' %>
+    <h2 class="site-content-heading">Invite other administrators</h2>
   </div>
 
-  <div class="site-content-body">
-    <%= form_tag invite_users_organization_path(@organization), method: :patch do %>
-      <table class="table-minimal">
-        <% @organization_owners.each do |owner| %>
-          <tr>
-            <td class="js-user-invitation-form">
-              <label>
-                <%= check_box_tag "github_owners[#{owner.login}]", owner.id %>
-                <%= owner.login %> <%= "(#{owner.name})" if owner.name %>
-              </label>
-            </td>
-            <td>
-              <% disabled    = owner.email.present? %>
-              <% input_class = disabled ? 'input-contrast input-mini' : 'input-mini' %>
-              <%= email_field_tag "github_owner_emails[#{owner.login}]", owner.email, class: input_class, placeholder: 'Email Address', disabled: disabled %>
-            </td>
-          </tr>
-        <% end %>
-      </table>
+  <div class="site-content-body markdown-body">
+    <h3>1. Add them to your GitHub Organization</h3>
+    <p><strong>You must add them to the Owners team in order for them to have access.</strong></p>
+    <p>You can do so at <%= link_to organization.github_team_invitations_url, organization.github_team_invitations_url %></p>
 
-      <div class="form-actions">
-        <%= submit_tag 'Invite', class: 'btn btn-green', disabled: true %>
-        or
-        <%= link_to 'skip for now', organization_path(@organization) %>
+    <h3>2. Give them this URL</h3>
+    <p>After signing in, they will automatically be added to this classroom.</p>
+    <div class="columns">
+      <div class="two-thirds column">
+        <div class="input-group">
+          <%= content_tag :input, '', type: 'text', class: 'js-url-field', value: organization_url(@organization), readonly: 'readonly' %>
+          <span class="input-group-button">
+            <button aria-label="Copy to clipboard" class="js-zeroclipboard btn tooltipped tooltipped-s" data-copied-hint="Copied!" type="button">
+              <%= octicon('clippy') %>
+              Copy organization link
+            </button>
+          </span>
+        </div>
       </div>
-    <% end %>
+    </div>
   </div>
 </div>
