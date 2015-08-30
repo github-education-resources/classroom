@@ -2,7 +2,7 @@ class RepoAccess < ActiveRecord::Base
   include GitHubTeamable
 
   belongs_to :user
-  belongs_to :organization
+  belongs_to :organization, -> { unscope(where: :deleted_at) }
 
   has_and_belongs_to_many :groups
 

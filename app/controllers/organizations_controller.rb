@@ -43,11 +43,15 @@ class OrganizationsController < ApplicationController
   end
 
   def destroy
-    flash_message = "Organization \"#{@organization.title}\" was removed"
-    @organization.destroy
+    if @organization.update_attributes(deleted_at: Time.zone.now)
+      DestroyResourceJob.perform_later(@organization)
+      flash_message = "Organization \"#{@organization.title}\" was removed"
 
-    flash[:success] = flash_message
-    redirect_to dashboard_path
+      flash[:success] = flash_message
+      redirect_to dashboard_path
+    else
+      render :edit
+    end
   end
 
   def new_assignment

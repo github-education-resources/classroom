@@ -1,9 +1,11 @@
 class AssignmentsController < ApplicationController
   include OrganizationAuthorization
+  include StarterCode
 
   before_action :set_assignment, except: [:new, :create]
 
   decorates_assigned :organization
+  decorates_assigned :assignment
 
   rescue_from GitHub::Error, GitHub::Forbidden, GitHub::NotFound, with: :error
 
@@ -28,9 +30,31 @@ class AssignmentsController < ApplicationController
     @assignment_repos = @assignment.assignment_repos.page(params[:page])
   end
 
+  def edit
+  end
+
+  def update
+    if @assignment.update_attributes(update_assignment_params)
+      flash[:success] = "Assignment \"#{@assignment.title}\" updated"
+      redirect_to organization_assignment_path(@organization, @assignment)
+    else
+      render :edit
+    end
+  end
+
+  def destroy
+    if @assignment.update_attributes(deleted_at: Time.zone.now)
+      DestroyResourceJob.perform_later(@assignment)
+      flash[:success] = "A job has been queued to delete your individual assignment \"#{@assignment.title}\""
+      redirect_to @organization
+    else
+      render :edit
+    end
+  end
+
   private
 
-  def error
+  def error(exception)
     flash[:error] = exception.message
     redirect_to :back
   end
@@ -48,10 +72,10 @@ class AssignmentsController < ApplicationController
     @assignment = Assignment.friendly.find(params[:id])
   end
 
-  def starter_code_repository_id(repo_name)
-    return unless repo_name.present?
-    sanitized_repo_name = repo_name.gsub(/\s+/, '')
-    github_repository   = GitHubRepository.new(current_user.github_client, nil)
-    github_repository.repository(sanitized_repo_name).id
+  def update_assignment_params
+    params
+      .require(:assignment)
+      .permit(:title, :public_repo)
+      .merge(starter_code_repo_id: starter_code_repository_id(params[:repo_name]))
   end
 end

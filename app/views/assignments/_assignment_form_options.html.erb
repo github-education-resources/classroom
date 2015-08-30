@@ -1,0 +1,23 @@
+<dl class="form">
+  <dt><%= f.label :title %></dt>
+  <dd><%= f.text_field :title, class: 'textfield' %></dd>
+</dl>
+
+<dl class="form">
+  <div class="form-checkbox">
+    <label><%= f.radio_button :public_repo, true %> Public</label>
+    <%= mega_octicon('repo') %>
+    <span class="note">Anyone can see this repository. You choose who can commit.</span>
+  </div>
+
+  <div class="form-checkbox">
+    <label><%= f.radio_button :public_repo, false %> Private</label>
+    <%= mega_octicon('lock') %>
+    <span class="note">You choose who can see and commit to this repository.</span>
+  </div>
+</dl>
+
+<dl class="form">
+  <dt><label>Add your starter code from GitHub <small>(optional)</small> </label></dt>
+  <dd><input class="textfield" type="text" name="repo_name" value="<%= assignment.full_name %>" placeholder="<%= assignment.full_name || 'e.g. education/classroom'%>"</dd>
+</dl>

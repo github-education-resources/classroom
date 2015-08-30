@@ -1,7 +1,7 @@
 class Group < ActiveRecord::Base
   include GitHubTeamable
 
-  has_one :organization, through: :grouping
+  has_one :organization, -> { unscope(where: :deleted_at) }, through: :grouping
 
   belongs_to :grouping
 

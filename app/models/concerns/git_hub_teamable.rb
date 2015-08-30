@@ -23,8 +23,6 @@ module GitHubTeamable
     true
   end
 
-  private
-
   # Internal
   #
   def github_organization
