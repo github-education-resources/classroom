@@ -85,8 +85,17 @@ RSpec.describe OrganizationsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    it 'deletes the organization' do
-      expect { delete :destroy, id: organization.id }.to change { Organization.count }
+    it 'sets the `deleted_at` column for the organization' do
+      expect { delete :destroy, id: organization.id }.to change { Organization.all.count }
+      expect(Organization.unscoped.find(organization.id).deleted_at).not_to be_nil
+    end
+
+    it 'calls the DestroyResource background job' do
+      delete :destroy, id: organization.id
+
+      assert_enqueued_jobs 1 do
+        DestroyResourceJob.perform_later(organization)
+      end
     end
 
     it 'redirects back to the dashboard' do
