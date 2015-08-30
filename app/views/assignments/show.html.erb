@@ -2,6 +2,8 @@
 
 <div class="site-content">
   <div class="site-content-cap">
+    <%= link_to 'Settings', edit_organization_assignment_path(@organization, @assignment), class: 'btn btn-green assignment-settings' %>
+
     <h2 class="site-content-heading">
       <span class="assignment-icon assignment-icon-individual">
         <%= octicon('person') %>

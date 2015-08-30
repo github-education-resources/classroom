@@ -5,6 +5,7 @@ class AssignmentsController < ApplicationController
   before_action :set_assignment, except: [:new, :create]
 
   decorates_assigned :organization
+  decorates_assigned :assignment
 
   rescue_from GitHub::Error, GitHub::Forbidden, GitHub::NotFound, with: :error
 
@@ -32,7 +33,23 @@ class AssignmentsController < ApplicationController
   def edit
   end
 
+  def update
+    if @assignment.update_attributes(update_assignment_params)
+      flash[:success] = "Assignment \"#{@assignment.title}\" updated"
+      redirect_to organization_assignment_path(@organization, @assignment)
+    else
+      render :edit
+    end
+  end
+
   def destroy
+    if @assignment.update_attributes(deleted_at: Time.zone.now)
+      DestroyResourceJob.perform_later(@assignment)
+      flash[:success] = "A job has been queued to delete your individual assignment \"#{@assignment.title}\""
+      redirect_to @organization
+    else
+      render :edit
+    end
   end
 
   private
@@ -55,5 +72,10 @@ class AssignmentsController < ApplicationController
     @assignment = Assignment.friendly.find(params[:id])
   end
 
+  def update_assignment_params
+    params
+      .require(:assignment)
+      .permit(:title, :public_repo)
+      .merge(starter_code_repo_id: starter_code_repository_id(params[:repo_name]))
   end
 end
