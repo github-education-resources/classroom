@@ -6,6 +6,7 @@ class GroupAssignmentsController < ApplicationController
   before_action :set_groupings,        except: [:show]
 
   decorates_assigned :organization
+  decorates_assigned :group_assignment
 
   rescue_from GitHub::Error, GitHub::Forbidden, GitHub::NotFound, with: :error
 
@@ -35,7 +36,23 @@ class GroupAssignmentsController < ApplicationController
   def edit
   end
 
+  def update
+    if @group_assignment.update_attributes(update_group_assignment_params)
+      flash[:success] = "Assignment \"#{@group_assignment.title}\" updated"
+      redirect_to organization_group_assignment_path(@organization, @group_assignment)
+    else
+      render :edit
+    end
+  end
+
   def destroy
+    if @group_assignment.update_attributes(deleted_at: Time.zone.now)
+      DestroyResourceJob.perform_later(@group_assignment)
+      flash[:success] = "A job has been queued to delete your group assignment \"#{@group_assignment.title}\""
+      redirect_to @organization
+    else
+      render :edit
+    end
   end
 
   private
@@ -69,5 +86,10 @@ class GroupAssignmentsController < ApplicationController
     @group_assignment = GroupAssignment.friendly.find(params[:id])
   end
 
+  def update_group_assignment_params
+    params
+      .require(:group_assignment)
+      .permit(:title, :public_repo)
+      .merge(starter_code_repo_id: starter_code_repository_id(params[:repo_name]))
   end
 end
