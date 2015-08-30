@@ -45,8 +45,6 @@ module GitHubRepoable
     PushStarterCodeJob.perform_later(creator, github_repo_id, starter_code_repo_id)
   end
 
-  private
-
   # Internal
   #
   def github_organization
