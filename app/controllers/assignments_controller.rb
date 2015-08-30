@@ -36,7 +36,7 @@ class AssignmentsController < ApplicationController
 
   private
 
-  def error
+  def error(exception)
     flash[:error] = exception.message
     redirect_to :back
   end
