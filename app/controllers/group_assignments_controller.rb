@@ -1,5 +1,6 @@
 class GroupAssignmentsController < ApplicationController
   include OrganizationAuthorization
+  include StarterCode
 
   before_action :set_group_assignment, except: [:new, :create]
   before_action :set_groupings,        except: [:show]
@@ -68,10 +69,5 @@ class GroupAssignmentsController < ApplicationController
     @group_assignment = GroupAssignment.friendly.find(params[:id])
   end
 
-  def starter_code_repository_id(repo_name)
-    return unless repo_name.present?
-    sanitized_repo_name = repo_name.gsub(/\s+/, '')
-    github_repository   = GitHubRepository.new(current_user.github_client, nil)
-    github_repository.repository(sanitized_repo_name).id
   end
 end

@@ -1,5 +1,6 @@
 class AssignmentsController < ApplicationController
   include OrganizationAuthorization
+  include StarterCode
 
   before_action :set_assignment, except: [:new, :create]
 
@@ -54,10 +55,5 @@ class AssignmentsController < ApplicationController
     @assignment = Assignment.friendly.find(params[:id])
   end
 
-  def starter_code_repository_id(repo_name)
-    return unless repo_name.present?
-    sanitized_repo_name = repo_name.gsub(/\s+/, '')
-    github_repository   = GitHubRepository.new(current_user.github_client, nil)
-    github_repository.repository(sanitized_repo_name).id
   end
 end
