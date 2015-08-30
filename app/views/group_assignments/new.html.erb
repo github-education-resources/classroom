@@ -1,0 +1,25 @@
+<%= render 'organizations/organization_banner' %>
+
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">
+      <span class="assignment-icon assignment-icon-group">
+        <%= octicon('organization') %>
+      </span>
+      New group assignment
+    </h2>
+
+  </div>
+</div>
+
+<div class="site-content-body">
+  <%= form_for [@organization, @group_assignment] do |f| %>
+    <%= render 'shared/error_messages', object: f.object %>
+    <%= render partial: 'group_assignments/group_assignment_form_options', locals: { f: f } %>
+
+    <div class="form-actions">
+      <%= f.submit 'Create Assignment', class: 'btn btn-green', id: 'group_assignment_submit', disabled: true %>
+      <%= link_to 'Cancel', organization_path(@organization), class: 'btn', role: 'button' %>
+    </div>
+  <% end %>
+</div>

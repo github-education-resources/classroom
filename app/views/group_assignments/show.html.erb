@@ -2,12 +2,20 @@
 
 <div class="site-content">
   <div class="site-content-cap">
-    <h2 class="site-content-heading">
-      <span class="assignment-icon assignment-icon-group">
-        <%= octicon('organization') %>
-      </span>
-      <%= @group_assignment.title %>
-    </h2>
+    <div class="flex-table">
+      <div class="flex-table-item">
+        <h2 class="site-content-heading">
+          <span class="assignment-icon assignment-icon-group">
+            <%= octicon('organization') %>
+          </span>
+          <%= @group_assignment.title %>
+        </h2>
+      </div>
+
+      <div class="flex-table-item">
+        <%= link_to 'Settings', edit_organization_group_assignment_path(@organization, @group_assignment), class: 'btn btn-green right' %>
+      </div>
+    </div>
   </div>
 
   <div class="site-content-body">
