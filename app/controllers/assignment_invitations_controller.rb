@@ -1,7 +1,9 @@
 class AssignmentInvitationsController < InvitationsController
-  before_action :set_assignment
+  before_action :set_assignment, :set_organization
   before_action :verify_not_already_accepted_invitation, only: [:show]
   before_action :set_assignment_repo, only: [:successful_invitation]
+
+  decorates_assigned :organization
 
   def accept_invitation
     if (assignment_repo = @invitation.redeem_for(current_user))
@@ -30,6 +32,10 @@ class AssignmentInvitationsController < InvitationsController
 
   def set_invitation
     @invitation = AssignmentInvitation.find_by_key!(params[:id])
+  end
+
+  def set_organization
+    @organization = @assignment.organization
   end
 
   def verify_not_already_accepted_invitation
