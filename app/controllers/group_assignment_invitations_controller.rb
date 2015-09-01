@@ -57,6 +57,8 @@ class GroupAssignmentInvitationsController < InvitationsController
 
   def group
     repo_access = current_user.repo_accesses.find_by(organization: organization)
+    return unless repo_access.present? && repo_access.groups.present?
+
     @group ||= repo_access.groups.find_by(grouping: group_assignment.grouping)
   end
 
