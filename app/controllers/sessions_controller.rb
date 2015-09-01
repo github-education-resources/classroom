@@ -1,6 +1,5 @@
 class SessionsController < ApplicationController
-  skip_before_action :ensure_logged_in
-  skip_before_action :set_organization, :authorize_organization_access
+  skip_before_action :ensure_logged_in, :set_organization, :authorize_organization_access
 
   def new
     redirect_to '/auth/github'
@@ -14,7 +13,7 @@ class SessionsController < ApplicationController
 
     session[:user_id] = user.id
 
-    url = session[:pre_login_destination] || dashboard_path
+    url = session[:pre_login_destination] || organizations_path
     redirect_to url
   end
 

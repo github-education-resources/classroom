@@ -14,6 +14,6 @@
         <%= link_to 'Sign in', login_path %>
       <% end %>
     </nav>
-    <%= link_to(image_tag('logo@2x.png', :class => 'site-logo', :alt => 'GitHub for Classrooms'), (logged_in? ? dashboard_path : root_path)) %>
+    <%= link_to(image_tag('logo@2x.png', :class => 'site-logo', :alt => 'GitHub for Classrooms'), (logged_in? ? organizations_path : root_path)) %>
   </div>
 </header>

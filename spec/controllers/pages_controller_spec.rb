@@ -11,7 +11,7 @@ RSpec.describe PagesController, type: :controller do
       session[:user_id] = create(:user).id
 
       get :home
-      expect(response).to redirect_to(dashboard_path)
+      expect(response).to redirect_to(organizations_path)
     end
   end
 end
