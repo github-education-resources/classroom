@@ -4,6 +4,8 @@ class RepoAccess < ActiveRecord::Base
   belongs_to :user
   belongs_to :organization, -> { unscope(where: :deleted_at) }
 
+  has_many :assignment_repos
+
   has_and_belongs_to_many :groups
 
   validates :github_team_id, presence:   true

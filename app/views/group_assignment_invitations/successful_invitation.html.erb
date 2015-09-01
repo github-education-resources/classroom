@@ -1,0 +1,23 @@
+<%= render 'organizations/organization_invitation_banner' %>
+
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">
+      <span class="assignment-icon assignment-icon-group">
+        <%= octicon('organization') %>
+      </span>
+      Accepted the <strong><%= group_assignment.title %></strong> assignment
+    </h2>
+  </div>
+</div>
+
+<div class="site-content-body">
+  <div class="markdown-body">
+    <h2>You are ready to go!</h2>
+    <p>Your assignment has been created here: <%= link_to decorated_group_assignment_repo.github_repo_url, decorated_group_assignment_repo.github_repo_url %></p>
+
+    <% if group_assignment.starter_code? %>
+      <p>This assignment also has starter code, which will be pushed up to your repository soon.</p>
+    <% end %>
+  </div>
+</div>

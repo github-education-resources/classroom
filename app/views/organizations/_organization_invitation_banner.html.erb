@@ -1,0 +1,8 @@
+<% content_for :organization_invitation_banner do %>
+  <div class="organization-banner" style="background-image: <%= decorated_organization.geo_pattern_data_uri %>">
+    <div class="container">
+      <h1 class="organization-name"><%= organization.title %></h1>
+      <p class="organization-login"><%= link_to "@#{decorated_organization.login}", decorated_organization.github_url %></p>
+    </div>
+  </div>
+<% end %>

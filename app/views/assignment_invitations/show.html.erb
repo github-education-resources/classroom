@@ -1,18 +1,29 @@
-<div class="columns">
-  <div class="two-thirds column centered">
-    <div class="panel">
-      <div class="panel-heading">
-        <h3 class="panel-title">Join "<%= @invitation.title %>"</h3>
-      </div>
+<%= render 'organizations/organization_invitation_banner' %>
 
-      <%= render 'shared/flash_messages' %>
-
-      <div class="panel-body">
-        <%= form_tag({ controller: :assignment_invitations, action: :accept_invitation}, method: :patch) do %>
-          <p>Accept this assignment</p>
-          <%= submit_tag 'Accept', class: 'btn btn-primary js-button' %>
-        <% end %>
-      </div>
-    </div>
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">
+      <span class="assignment-icon assignment-icon-individual">
+        <%= octicon('person') %>
+      </span>
+      Accept the <strong><%= assignment.title %></strong> assignment
+    </h2>
   </div>
+</div>
+
+<div class="site-content-body">
+  <%= render 'shared/flash_messages' %>
+
+  <%= form_tag({ controller: :assignment_invitations, action: :accept_invitation}, method: :patch) do %>
+    <div class="markdown-body">
+      <p>
+        Accepting this assignment will give you access to the <strong><%= assignment.title %></strong>
+        repository in the <%= link_to "@#{decorated_organization.login}", decorated_organization.github_url %> organization on GitHub.
+      </p>
+    </div>
+
+    <div class="form-actions">
+      <%= submit_tag 'Accept this assignment', class: 'btn btn-green js-button' %>
+    </div>
+  <% end %>
 </div>

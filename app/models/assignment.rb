@@ -7,6 +7,8 @@ class Assignment < ActiveRecord::Base
   has_one :assignment_invitation, dependent: :destroy
 
   has_many :assignment_repos, dependent: :destroy
+  has_many :repo_accesses,    through:   :assignment_repos
+  has_many :users,            through:   :repo_accesses
 
   belongs_to :creator, class_name: User
   belongs_to :organization

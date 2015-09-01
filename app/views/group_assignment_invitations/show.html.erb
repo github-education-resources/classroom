@@ -1,31 +1,41 @@
-<div class="columns">
-  <div class="two-thirds column centered">
-    <div class="panel">
-      <div class="panel-heading">
-        <h3 class="panel-title">Teams for "<%= @invitation.title %>"</h3>
-      </div>
+<%= render 'organizations/organization_invitation_banner' %>
 
-      <%= render 'shared/flash_messages' %>
-
-      <div class="panel-body">
-        <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, method: :patch) do %>
-          <dl class="form">
-            <dt><label>Create a new team</label></dt>
-            <dd><%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'textfield' %></dd>
-          </dl>
-
-          <% if @groups.present? %>
-            <dt><label>OR choose an existing group of teams</label></dt>
-            <dl class="form">
-              <dd>
-                <%= select :group, :id, options_for_select(@groups), include_blank: true %>
-              </dd>
-            </dl>
-          <% end %>
-
-          <%= submit_tag 'Join Team', class: 'btn btn-primary js-button js-form-submit', disabled: true %>
-        <% end %>
-      </div>
-    </div>
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">
+      <span class="assignment-icon assignment-icon-group">
+        <%= octicon('organization') %>
+      </span>
+      Accept the <strong><%= group_assignment.title %></strong> assignment
+    </h2>
   </div>
+</div>
+
+<div class="site-content-body">
+  <%= render 'shared/flash_messages' %>
+
+  <div class="markdown-body">
+    <p>Accepting this assignment will give you access to the <strong><%= group_assignment.title %></strong> repository in the <%= link_to "@#{decorated_organization.login}", decorated_organization.github_url %> organization on GitHub.</p>
+    <h3>Please create or join a team</h3>
+  </div>
+
+  <hr>
+
+  <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, method: :patch) do %>
+    <dl class="form">
+      <dt><label>Create a new team</label></dt>
+      <dd><%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'textfield' %></dd>
+    </dl>
+
+    <% if @groups.present? %>
+      <dt><label>OR choose an existing group of teams</label></dt>
+      <dl class="form">
+        <dd><%= select :group, :id, options_for_select(@groups), include_blank: true %></dd>
+      </dl>
+    <% end %>
+
+    <div class="form-actions">
+      <%= submit_tag 'Join team', class: 'btn btn-green js-button js-form-submit', disabled: true %>
+    </div>
+  <% end %>
 </div>
