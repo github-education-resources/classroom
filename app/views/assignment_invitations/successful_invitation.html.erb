@@ -1,20 +1,22 @@
+<%= render 'organizations/organization_invitation_banner' %>
+
 <div class="site-content">
   <div class="site-content-cap">
     <h2 class="site-content-heading">
       <span class="assignment-icon assignment-icon-individual">
         <%= octicon('person') %>
       </span>
-      Accepted the "<%= @assignment.title %>" assignment
+      Accepted the <strong><%= assignment.title %></strong> assignment
     </h2>
   </div>
 </div>
 
 <div class="site-content-body">
-  <div class="mardown-body">
+  <div class="markdown-body">
     <h2>You are ready to go!</h2>
-    <p>Your assignment has been created here: <%= link_to @decorated_assignment_repo.github_url, @decorated_assignment_repo.github_url %></p>
+    <p>Your assignment has been created here: <%= link_to decorated_assignment_repo.github_url, decorated_assignment_repo.github_url %></p>
 
-    <% if @assignment.starter_code? %>
+    <% if assignment.starter_code? %>
       <p>This assignment also has starter code, which will be pushed up to your repository soon.</p>
     <% end %>
   </div>

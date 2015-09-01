@@ -1,10 +1,12 @@
+<%= render 'organizations/organization_invitation_banner' %>
+
 <div class="site-content">
   <div class="site-content-cap">
     <h2 class="site-content-heading">
       <span class="assignment-icon assignment-icon-individual">
         <%= octicon('person') %>
       </span>
-      Accept the "<%= @assignment.title %>" assignment
+      Accept the <strong><%= assignment.title %></strong> assignment
     </h2>
   </div>
 </div>
@@ -13,14 +15,15 @@
   <%= render 'shared/flash_messages' %>
 
   <%= form_tag({ controller: :assignment_invitations, action: :accept_invitation}, method: :patch) do %>
-
     <div class="markdown-body">
-      <p>If this is your first assignment, this will add you to the <%= link_to organization.login, organization.github_url %> organization on <%= link_to 'github.com', 'https://github.com' %>.</p>
-      <p>This will also create a <%= link_to 'GitHub repository', 'https://help.github.com/articles/github-glossary/#repository' %> that you will have access to while you work on your assignment.</p>
+      <p>
+        Accepting this assignment will give you access to the <strong><%= assignment.title %></strong>
+        repository in the <%= link_to "@#{decorated_organization.login}", decorated_organization.github_url %> organization on GitHub.
+      </p>
     </div>
 
     <div class="form-actions">
-      <%= submit_tag 'Accept assignment', class: 'btn btn-green js-button' %>
+      <%= submit_tag 'Accept this assignment', class: 'btn btn-green js-button' %>
     </div>
   <% end %>
 </div>
