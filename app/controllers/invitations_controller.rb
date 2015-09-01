@@ -1,6 +1,4 @@
 class InvitationsController < ApplicationController
-  before_action :set_invitation
-
   layout 'layouts/invitations'
 
   rescue_from GitHub::Forbidden, GitHub::Error, GitHub::NotFound, with: :error

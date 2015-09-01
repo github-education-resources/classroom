@@ -21,11 +21,7 @@ class GroupAssignmentInvitation < ActiveRecord::Base
 
     invitees_group.repo_accesses << repo_access unless invitees_group.repo_accesses.include?(repo_access)
 
-    invitees_group_assignment_repo     = group_assignment_repo(invitees_group)
-    group_assignment_github_repository = GitHubRepository.new(organization.github_client,
-                                                              invitees_group_assignment_repo.github_repo_id)
-
-    group_assignment_github_repository.full_name
+    group_assignment_repo(invitees_group)
   end
 
   def title
@@ -46,13 +42,13 @@ class GroupAssignmentInvitation < ActiveRecord::Base
 
   # Internal
   #
-  def group(repo_access, selected_group, new_group_title)
+  def group(repo_access, selected_group, selected_group_title)
     group = Group.joins(:repo_accesses).find_by(grouping: grouping, repo_accesses: { id: repo_access.id })
 
     return group if group.present?
     return selected_group if selected_group
 
-    Group.create(title: new_group_title, grouping: grouping)
+    Group.create(title: selected_group_title, grouping: grouping)
   end
 
   # Internal
