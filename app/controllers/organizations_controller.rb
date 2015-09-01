@@ -4,13 +4,17 @@ class OrganizationsController < ApplicationController
   before_action :authorize_organization_addition, only: [:create]
   before_action :set_users_github_organizations,  only: [:new, :create]
 
-  skip_before_action :set_organization, :authorize_organization_access, only: [:new, :create]
+  skip_before_action :set_organization, :authorize_organization_access, only: [:index, :new, :create]
 
   decorates_assigned :organization
 
   rescue_from GitHub::Error,     with: :error
   rescue_from GitHub::Forbidden, with: :deny_access
   rescue_from GitHub::NotFound,  with: :deny_access
+
+  def index
+    @organizations = current_user.organizations.page(params[:page])
+  end
 
   def new
     @organization = Organization.new
@@ -48,7 +52,7 @@ class OrganizationsController < ApplicationController
       flash_message = "Organization \"#{@organization.title}\" was removed"
 
       flash[:success] = flash_message
-      redirect_to dashboard_path
+      redirect_to organizations_path
     else
       render :edit
     end

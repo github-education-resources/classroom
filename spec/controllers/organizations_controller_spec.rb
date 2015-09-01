@@ -10,6 +10,18 @@ RSpec.describe OrganizationsController, type: :controller do
     session[:user_id] = user.id
   end
 
+  describe 'GET #index' do
+    it 'returns success status' do
+      get :index
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'sets the users organization' do
+      get :index
+      expect(assigns(:organizations)).not_to be_nil
+    end
+  end
+
   describe 'GET #new', :vcr do
     it 'returns success status' do
       get :new
@@ -98,9 +110,9 @@ RSpec.describe OrganizationsController, type: :controller do
       end
     end
 
-    it 'redirects back to the dashboard' do
+    it 'redirects back to the index page' do
       delete :destroy, id: organization.id
-      expect(response).to redirect_to(dashboard_path)
+      expect(response).to redirect_to(organizations_path)
     end
   end
 
