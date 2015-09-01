@@ -10,24 +10,6 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         expect(response).to redirect_to(login_path)
       end
     end
-
-    context 'authenticated request' do
-      let(:user) { create(:user) }
-
-      before(:each) do
-        session[:user_id] = user.id
-      end
-
-      it 'will set the correct invitation' do
-        get :show, id: invitation.key
-        expect(assigns(:invitation)).to_not be_nil
-      end
-
-      it 'will have an array of groups' do
-        get :show, id: invitation.key
-        expect(assigns(:groups)).to be_kind_of(Array)
-      end
-    end
   end
 
   describe 'PATCH #accept_invitation', :vcr do

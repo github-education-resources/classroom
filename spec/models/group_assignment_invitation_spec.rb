@@ -45,9 +45,9 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
       GroupAssignmentRepo.destroy_all
     end
 
-    it 'returns the full repo name of the users GitHub repository' do
-      full_repo_name = group_assignment_invitation.redeem_for(invitee, nil, 'Code Squad')
-      expect(full_repo_name).to eql("#{organization.title}/#{group_assignment.title}-Code-Squad")
+    it 'returns the GroupAssignmentRepo' do
+      group_assignment_repo = group_assignment_invitation.redeem_for(invitee, nil, 'Code Squad')
+      expect(group_assignment_repo).to eql(GroupAssignmentRepo.last)
     end
   end
 
