@@ -35,15 +35,14 @@ class GroupAssignmentRepo < ActiveRecord::Base
     group.github_team_id
   end
 
-  private
-
-  # Internal
+  # Public
   #
   def repo_name
-    "#{group_assignment.title}-#{group.title}"
+    github_team = GitHubUser.new(creator.github_client, github_team_id).team
+    "#{group_assignment.slug}-#{github_team.name}"
   end
 
-  # Internal
+  # Public
   #
   def starter_code_repo_id
     group_assignment.starter_code_repo_id

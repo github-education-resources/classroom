@@ -15,7 +15,7 @@
   <%= form_tag({ controller: :assignment_invitations, action: :accept_invitation}, method: :patch) do %>
     <div class="markdown-body">
       <p>
-        Accepting this assignment will give you access to the <strong><%= assignment.title %></strong>
+        Accepting this assignment will give you access to the <strong><%= "#{assignment.slug}-#{decorated_current_user.login}" %></strong>
         repository in the <%= link_to "@#{decorated_organization.login}", decorated_organization.github_url %> organization on GitHub.
       </p>
     </div>
