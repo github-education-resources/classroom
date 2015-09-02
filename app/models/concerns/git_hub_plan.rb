@@ -15,7 +15,8 @@ module GitHubPlan
 
     error_message = <<-ERROR
     Cannot make this private assignment, your limit of #{allowed_private_repos}
-    #{'repository'.pluralize(allowed_private_repos)} has been reached
+    #{'repository'.pluralize(allowed_private_repos)} has been reached. You can request
+    a larger plan for free at https://education.github.com/discount
     ERROR
 
     fail ActiveRecord::RecordInvalid.new(self), error_message
