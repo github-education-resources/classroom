@@ -14,7 +14,7 @@
 <div class="site-content-body">
   <div class="markdown-body">
     <h2>You are ready to go!</h2>
-    <p>If this is your first assignment, you will recieve an email to join the <%= link_to "@#{decorated_organization.login}", decorated_organization.github_url %>. You can ignore that.</p>
+    <p>You may receive an invitation to join <%= link_to "@#{decorated_organization.login}", decorated_organization.github_url %> via email invitation on your behalf. No further action is necessary.</p>
     <p>Your assignment has been created here: <%= link_to decorated_assignment_repo.github_url, decorated_assignment_repo.github_url %></p>
 
     <% if assignment.starter_code? %>

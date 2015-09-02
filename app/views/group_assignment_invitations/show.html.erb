@@ -27,7 +27,7 @@
     <% end %>
 
     <dl class="form">
-      <dt><label>Create a new team</label></dt>
+      <dt><label><%= 'OR' if @groups.present? %> Create a new team</label></dt>
       <dd><%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'textfield' %></dd>
     </dl>
 
