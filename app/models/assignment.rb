@@ -1,4 +1,6 @@
 class Assignment < ActiveRecord::Base
+  include GitHubPlan
+
   extend FriendlyId
   friendly_id :title, use: [:slugged, :finders]
 

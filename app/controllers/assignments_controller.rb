@@ -7,7 +7,10 @@ class AssignmentsController < ApplicationController
   decorates_assigned :organization
   decorates_assigned :assignment
 
-  rescue_from GitHub::Error, GitHub::Forbidden, GitHub::NotFound, with: :error
+  rescue_from ActiveRecord::RecordInvalid, with: :error
+  rescue_from GitHub::Error,               with: :error
+  rescue_from GitHub::Forbidden,           with: :error
+  rescue_from GitHub::NotFound,            with: :error
 
   def new
     @assignment = Assignment.new
