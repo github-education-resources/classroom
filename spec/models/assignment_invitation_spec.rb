@@ -1,20 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentInvitation, type: :model do
-  it { is_expected.to have_one(:organization).through(:assignment) }
-
-  it { is_expected.to belong_to(:assignment) }
-
   it_behaves_like 'a default scope where deleted_at is not present'
-
-  describe 'validations and uniqueness' do
-    subject { AssignmentInvitation.new }
-
-    it { is_expected.to validate_presence_of(:assignment) }
-
-    it { is_expected.to validate_presence_of(:key)   }
-    it { is_expected.to validate_uniqueness_of(:key) }
-  end
 
   it 'should have a key after initialization' do
     assignment_invitation = AssignmentInvitation.new

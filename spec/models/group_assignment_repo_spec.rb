@@ -1,25 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe GroupAssignmentRepo, type: :model do
-  it { is_expected.to have_one(:organization).through(:group_assignment) }
-
-  it { is_expected.to have_many(:repo_accesses).through(:group) }
-
-  it { is_expected.to belong_to(:group)            }
-  it { is_expected.to belong_to(:group_assignment) }
-
-  describe 'validation and uniqueness' do
-    subject { GroupAssignmentRepo.new }
-
-    it { is_expected.to validate_presence_of(:github_repo_id) }
-    # it { is_expected.to validate_uniqueness_of(:github_repo_id) }
-    #
-    it { is_expected.to validate_presence_of(:group_assignment) }
-
-    it { is_expected.to validate_presence_of(:group) }
-    # it { is_expected.to validate_uniqueness_of(:group).scoped_to(:group_assignment) }
-  end
-
   context 'with created objects', :vcr do
     let(:organization) { GitHubFactory.create_owner_classroom_org                                      }
     let(:repo_access)  { RepoAccess.create(user: organization.users.first, organization: organization) }

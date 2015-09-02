@@ -1,25 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Assignment, type: :model do
-  it { is_expected.to have_one(:assignment_invitation).dependent(:destroy) }
-
-  it { is_expected.to have_many(:assignment_repos).dependent(:destroy) }
-
-  it { is_expected.to belong_to(:creator).class_name(User) }
-  it { is_expected.to belong_to(:organization) }
-
   it_behaves_like 'a default scope where deleted_at is not present'
-
-  describe 'validation and uniqueness' do
-    subject { Assignment.new }
-
-    it { is_expected.to validate_presence_of(:creator) }
-
-    it { is_expected.to validate_presence_of(:organization) }
-
-    it { is_expected.to validate_presence_of(:title) }
-    # it { is_expected.to validate_uniqueness_of(:title).scoped_to(:organization) }
-  end
 
   describe 'uniqueness of title across organization' do
     let(:organization) { create(:organization)    }

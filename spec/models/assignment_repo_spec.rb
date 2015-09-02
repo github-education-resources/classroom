@@ -1,19 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentRepo, type: :model do
-  it { is_expected.to belong_to(:assignment)  }
-  it { is_expected.to belong_to(:repo_access) }
-
-  describe 'validation and uniqueness' do
-    subject { AssignmentRepo.new }
-    it { is_expected.to validate_presence_of(:assignment) }
-
-    it { is_expected.to validate_presence_of(:github_repo_id) }
-    # it { is_expected.to validate_uniqueness_of(:github_repo_id) }
-
-    it { is_expected.to validate_presence_of(:repo_access) }
-  end
-
   context 'with created objects', :vcr do
     let(:organization) { GitHubFactory.create_owner_classroom_org                                      }
     let(:repo_access)  { RepoAccess.create(user: organization.users.first, organization: organization) }

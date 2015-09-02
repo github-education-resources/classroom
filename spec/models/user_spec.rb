@@ -4,20 +4,6 @@ RSpec.describe User, type: :model do
   let(:github_omniauth_hash) { OmniAuth.config.mock_auth[:github] }
   let(:user)                 { create(:user) }
 
-  it { is_expected.to have_many(:repo_accesses).dependent(:destroy) }
-
-  it { is_expected.to have_and_belong_to_many(:organizations) }
-
-  describe 'validation and uniqueness' do
-    subject { build(:user) }
-
-    it { is_expected.to validate_presence_of(:uid)     }
-    it { is_expected.to validate_uniqueness_of(:uid)   }
-
-    it { is_expected.to validate_presence_of(:token)   }
-    it { is_expected.to validate_uniqueness_of(:token) }
-  end
-
   describe '#assign_from_auth_hash' do
     it 'updates the users attributes' do
       user.assign_from_auth_hash(github_omniauth_hash)

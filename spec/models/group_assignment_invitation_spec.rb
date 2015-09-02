@@ -1,24 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe GroupAssignmentInvitation, type: :model do
-  it { is_expected.to have_one(:grouping).through(:group_assignment)     }
-  it { is_expected.to have_one(:organization).through(:group_assignment) }
-
-  it { is_expected.to have_many(:groups).through(:grouping) }
-
-  it { is_expected.to belong_to(:group_assignment) }
-
-  it_behaves_like 'a default scope where deleted_at is not present'
-
-  describe 'validations and uniqueness' do
-    subject { GroupAssignmentInvitation.new }
-
-    it { is_expected.to validate_presence_of(:group_assignment) }
-
-    it { is_expected.to validate_presence_of(:key)   }
-    it { is_expected.to validate_uniqueness_of(:key) }
-  end
-
   it 'should have a key after initialization' do
     group_assignment_invitation = GroupAssignmentInvitation.new
     expect(group_assignment_invitation.key).to_not be_nil

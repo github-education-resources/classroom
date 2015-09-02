@@ -7,6 +7,6 @@ module GitHubFactory
 
   def self.create_owner_classroom_org
     owner = User.create(uid: 564_113, token: classroom_owner_github_token)
-    Organization.create(title: 'cse3901-osu-2015su', github_id: 8_795_167, users: [owner])
+    Organization.create(title: 'cse-classes-org', github_id: 12_402_279, users: [owner])
   end
 end

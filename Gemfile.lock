@@ -311,8 +311,6 @@ GEM
     scss_lint (0.41.0)
       rainbow (~> 2.0)
       sass (~> 3.4.15)
-    shoulda-matchers (3.0.0.rc1)
-      activesupport (>= 4.0.0)
     sidekiq (3.5.0)
       celluloid (~> 0.17.0)
       connection_pool (~> 2.2, >= 2.2.0)
@@ -391,7 +389,6 @@ DEPENDENCIES
   rubocop
   sass-rails (~> 5.0)
   scss_lint
-  shoulda-matchers (= 3.0.0.rc1)
   sidekiq
   sinatra
   spring
