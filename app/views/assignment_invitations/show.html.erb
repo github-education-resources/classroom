@@ -12,8 +12,6 @@
 </div>
 
 <div class="site-content-body">
-  <%= render 'shared/flash_messages' %>
-
   <%= form_tag({ controller: :assignment_invitations, action: :accept_invitation}, method: :patch) do %>
     <div class="markdown-body">
       <p>

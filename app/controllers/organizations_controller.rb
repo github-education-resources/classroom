@@ -8,9 +8,10 @@ class OrganizationsController < ApplicationController
 
   decorates_assigned :organization
 
-  rescue_from GitHub::Error,     with: :error
-  rescue_from GitHub::Forbidden, with: :deny_access
-  rescue_from GitHub::NotFound,  with: :deny_access
+  rescue_from ActiveRecord::RecordInvalid, with: :error
+  rescue_from GitHub::Error,               with: :error
+  rescue_from GitHub::Forbidden,           with: :deny_access
+  rescue_from GitHub::NotFound,            with: :deny_access
 
   def index
     @organizations = current_user.organizations.page(params[:page])

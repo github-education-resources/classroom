@@ -1,22 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe RepoAccess, type: :model do
-  it { is_expected.to belong_to(:user)         }
-  it { is_expected.to belong_to(:organization) }
-
-  it { is_expected.to have_and_belong_to_many(:groups) }
-
-  describe 'validation and uniqueness' do
-    subject { RepoAccess.new }
-
-    it { is_expected.to validate_presence_of(:github_team_id)   }
-    it { is_expected.to validate_uniqueness_of(:github_team_id) }
-
-    it { is_expected.to validate_presence_of(:organization) }
-
-    it { is_expected.to validate_presence_of(:user) }
-  end
-
   describe 'callbacks', :vcr do
     let(:organization) { GitHubFactory.create_owner_classroom_org }
     let(:user)         { organization.users.first                 }

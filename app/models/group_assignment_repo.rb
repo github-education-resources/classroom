@@ -1,4 +1,5 @@
 class GroupAssignmentRepo < ActiveRecord::Base
+  include GitHubPlan
   include GitHubRepoable
 
   has_one :organization, -> { unscope(where: :deleted_at) }, through: :group_assignment
