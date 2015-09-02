@@ -96,7 +96,7 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
-  describe 'DELETE #destroy' do
+  describe 'DELETE #destroy', :vcr do
     it 'sets the `deleted_at` column for the organization' do
       expect { delete :destroy, id: organization.id }.to change { Organization.all.count }
       expect(Organization.unscoped.find(organization.id).deleted_at).not_to be_nil
