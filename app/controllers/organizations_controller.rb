@@ -50,7 +50,7 @@ class OrganizationsController < ApplicationController
   def destroy
     if @organization.update_attributes(deleted_at: Time.zone.now)
       DestroyResourceJob.perform_later(@organization)
-      flash_message = "Organization \"#{@organization.title}\" was removed"
+      flash_message = "A job has been queued to remove your organization \"#{@organization.title}\""
 
       flash[:success] = flash_message
       redirect_to organizations_path

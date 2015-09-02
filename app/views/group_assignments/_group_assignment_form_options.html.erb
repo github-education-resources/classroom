@@ -7,13 +7,13 @@
   <div class="form-checkbox">
     <label><%= f.radio_button :public_repo, true %> Public</label>
     <%= mega_octicon('repo') %>
-    <span class="note">Anyone can see this repository. You choose who can commit.</span>
+    <span class="note">Anyone can see this repository and it's contents.</span>
   </div>
 
   <div class="form-checkbox">
     <label><%= f.radio_button :public_repo, false %> Private</label>
     <%= mega_octicon('lock') %>
-    <span class="note">You choose who can see and commit to this repository.</span>
+    <span class="note">This is can only be seen by the team, and the Owners of the organization.</span>
   </div>
 </dl>
 
@@ -24,7 +24,7 @@
 
 <% if @group_assignment.new_record? %>
   <dl class="form">
-    <dt><label>Create a new group of teams</label></dt>
+    <dt><label>Create a reusable set of teams</label></dt>
     <dd><input class="textfield" type="text" name="grouping[title]" id="grouping_title"></dd>
   </dl>
 
