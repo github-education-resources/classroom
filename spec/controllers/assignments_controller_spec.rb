@@ -30,14 +30,6 @@ RSpec.describe AssignmentsController, type: :controller do
         post :create, organization_id: organization.id, assignment: attributes_for(:assignment)
       end.to change { Assignment.count }
     end
-
-    it 'kicks of a background job to create a new AssignmentInvitation' do
-      post :create, organization_id: organization.id, assignment: attributes_for(:assignment)
-
-      assert_enqueued_jobs 1 do
-        CreateAssignmentInvitationJob.perform_later(organization, assigns(:assignment))
-      end
-    end
   end
 
   describe 'GET #show', :vcr do

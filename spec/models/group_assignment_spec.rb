@@ -1,6 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe GroupAssignment, type: :model do
+  describe 'callbacks' do
+    describe 'after_create' do
+      describe '#create_group_assignment_invitation' do
+        let(:group_assignment) { create(:assignment) }
+
+        it 'creates the invitation for the assignment' do
+          expect(assignment.invitation).not_to be_nil
+          expect(AssignmentInvitation.all.count).to eql(1)
+        end
+      end
+    end
+  end
+
   describe 'uniqueness of title across organization' do
     let(:organization) { create(:organization)    }
     let(:creator)      { organization.users.first }
@@ -19,22 +32,6 @@ RSpec.describe GroupAssignment, type: :model do
     it 'validates that an Assignment in the same organization does not have the same title' do
       expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid,
                                                        'Validation failed: Title has already been taken')
-    end
-  end
-
-  describe '#group_assignment_invitation' do
-    let(:group_assignment_invitation) { create(:group_assignment_invitation)         }
-    let(:group_assignment)            { group_assignment_invitation.group_assignment }
-
-    it 'returns a NullGroupAssignmentInvitation if the GroupAssignmentInvitation doe not exist' do
-      group_assignment.group_assignment_invitation = nil
-      group_assignment.save
-
-      expect(group_assignment.group_assignment_invitation.class).to eql(NullGroupAssignmentInvitation)
-    end
-
-    it 'returns the GroupAssignmentInvitation' do
-      expect(group_assignment.group_assignment_invitation.class).to eql(GroupAssignmentInvitation)
     end
   end
 

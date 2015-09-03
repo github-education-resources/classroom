@@ -91,6 +91,7 @@ class OrganizationsController < ApplicationController
 
   def error(exception)
     flash[:error] = exception.message
+    redirect_to :back
   end
 
   def new_organization_params

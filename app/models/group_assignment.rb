@@ -6,7 +6,7 @@ class GroupAssignment < ActiveRecord::Base
 
   default_scope { where(deleted_at: nil) }
 
-  has_one :group_assignment_invitation, dependent: :destroy
+  has_one :group_assignment_invitation, dependent: :destroy, autosave: true
 
   has_many :group_assignment_repos, dependent: :destroy
 
@@ -23,11 +23,9 @@ class GroupAssignment < ActiveRecord::Base
 
   validate :uniqueness_of_title_across_organization
 
-  def group_assignment_invitation
-    super || NullGroupAssignmentInvitation.new
-  end
+  after_create :create_group_assignment_invitation
 
-  alias_method :invitation, :group_assignment_invitation
+  alias_attribute :invitation, :group_assignment_invitation
 
   def private?
     !public_repo
@@ -42,6 +40,10 @@ class GroupAssignment < ActiveRecord::Base
   end
 
   private
+
+  def create_group_assignment_invitation
+    GroupAssignmentInvitation.create(group_assignment_id: id)
+  end
 
   def uniqueness_of_title_across_organization
     return unless Assignment.where(title: title, organization: organization).present?

@@ -18,12 +18,7 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def create
-    @group_assignment = GroupAssignment.new(new_group_assignment_params)
-
-    if @group_assignment.save
-      CreateGroupingJob.perform_later(@group_assignment, new_grouping_params)
-      CreateGroupAssignmentInvitationJob.perform_later(@group_assignment)
-
+    if (@group_assignment = create_group_assignment)
       flash[:success] = "\"#{@group_assignment.title}\" has been created!"
       redirect_to organization_group_assignment_path(@organization, @group_assignment)
     else
@@ -50,6 +45,7 @@ class GroupAssignmentsController < ApplicationController
   def destroy
     if @group_assignment.update_attributes(deleted_at: Time.zone.now)
       DestroyResourceJob.perform_later(@group_assignment)
+
       flash[:success] = "A job has been queued to delete your group assignment \"#{@group_assignment.title}\""
       redirect_to @organization
     else
@@ -58,6 +54,10 @@ class GroupAssignmentsController < ApplicationController
   end
 
   private
+
+  def create_group_assignment
+    GroupAssignmentService.new(new_group_assignment_params, new_grouping_params).create_group_assignment
+  end
 
   def error(exception)
     flash[:error] = exception.message

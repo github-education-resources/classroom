@@ -20,8 +20,6 @@ class AssignmentsController < ApplicationController
     @assignment = Assignment.new(new_assignment_params)
 
     if @assignment.save
-      CreateAssignmentInvitationJob.perform_later(@assignment)
-
       flash[:success] = "\"#{@assignment.title}\" has been created!"
       redirect_to organization_assignment_path(@organization, @assignment)
     else
