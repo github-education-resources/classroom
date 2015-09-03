@@ -4,6 +4,7 @@ class GroupAssignmentService
     @new_grouping_params         = new_grouping_params
   end
 
+  # rubocop:disable MethodLength
   def create_group_assignment
     grouping = Grouping.find_by(id: @new_group_assignment_params[:grouping_id])
     grouping = Grouping.new(@new_grouping_params) unless grouping.present?
@@ -21,4 +22,5 @@ class GroupAssignmentService
 
     group_assignment
   end
+  # rubocop:enable MethodLength
 end
