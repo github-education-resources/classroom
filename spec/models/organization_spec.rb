@@ -2,15 +2,39 @@ require 'rails_helper'
 
 RSpec.describe Organization, type: :model do
   describe 'callbacks' do
-    describe 'after_save' do
-      describe '#validate_minimum_number_of_users' do
-        subject { create(:organization) }
+    describe 'assocation callbacks' do
+      describe 'before_remove' do
+        describe '#verify_not_last_user' do
+          subject { create(:organization) }
 
-        it 'validates that there is at least one user' do
-          subject.users.destroy_all
-          subject.save
+          it 'verifies that the last users is not being removed' do
+            begin
+              subject.users.destroy_all
+            rescue => e
+              expect(e.message).to eql('unable to remove user')
+              expect(subject.errors.count).to eql(1)
+              expect(subject.users.count).to eql(1)
+              expect(subject.errors.full_messages.first).to eql('This organization must have at least one active user')
+            end
+          end
+        end
 
-          expect(subject.errors.count).to be(1)
+        describe '#verify_not_assignment_creator' do
+          subject          { create(:organization)                                                                }
+          let(:assignment) { Assignment.create(title: 'Ruby', creator: subject.users.last, organization: subject) }
+
+          it 'verifies that the user being removed is not the creator of an assignment' do
+            begin
+              assignment # For some reason the object isn't actually created until called
+              error_message = 'User is the creator of one or more assignments, and cannot be removed at this time'
+              subject.users.destroy_all
+            rescue => e
+              expect(e.message).to eql('unable to remove user')
+              expect(subject.errors.count).to eql(1)
+              expect(subject.users.count).to eql(1)
+              expect(subject.errors.full_messages.first).to eql(error_message)
+            end
+          end
         end
       end
     end
