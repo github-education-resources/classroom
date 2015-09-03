@@ -16,6 +16,8 @@ class GroupAssignment < ActiveRecord::Base
 
   validates :creator, presence: true
 
+  validates :grouping, presence: true
+
   validates :organization, presence: true
 
   validates :title, presence: true
