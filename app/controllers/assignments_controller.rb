@@ -18,6 +18,7 @@ class AssignmentsController < ApplicationController
 
   def create
     @assignment = Assignment.new(new_assignment_params)
+    @assignment.build_assignment_invitation
 
     if @assignment.save
       flash[:success] = "\"#{@assignment.title}\" has been created!"

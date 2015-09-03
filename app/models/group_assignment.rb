@@ -23,8 +23,6 @@ class GroupAssignment < ActiveRecord::Base
 
   validate :uniqueness_of_title_across_organization
 
-  after_create :create_group_assignment_invitation
-
   alias_attribute :invitation, :group_assignment_invitation
 
   def private?
@@ -40,10 +38,6 @@ class GroupAssignment < ActiveRecord::Base
   end
 
   private
-
-  def create_group_assignment_invitation
-    GroupAssignmentInvitation.create(group_assignment_id: id)
-  end
 
   def uniqueness_of_title_across_organization
     return unless Assignment.where(title: title, organization: organization).present?

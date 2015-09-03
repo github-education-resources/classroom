@@ -1,19 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe GroupAssignment, type: :model do
-  describe 'callbacks' do
-    describe 'after_create' do
-      describe '#create_group_assignment_invitation' do
-        let(:group_assignment) { create(:assignment) }
-
-        it 'creates the invitation for the assignment' do
-          expect(assignment.invitation).not_to be_nil
-          expect(AssignmentInvitation.all.count).to eql(1)
-        end
-      end
-    end
-  end
-
   describe 'uniqueness of title across organization' do
     let(:organization) { create(:organization)    }
     let(:creator)      { organization.users.first }
