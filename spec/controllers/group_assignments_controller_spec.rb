@@ -39,11 +39,6 @@ RSpec.describe GroupAssignmentsController, type: :controller do
       post :create, organization_id: organization.id,
                     group_assignment: { title: 'Learn JavaScript' },
                     grouping: { title: 'Grouping 1' }
-
-      assert_enqueued_jobs 2 do
-        CreateGroupingJob.perform_later(GroupAssignment.last, title: 'Learn JavaScript')
-        CreateGroupAssignmentInvitationJob.perform_later(organization, assigns(:group_assignment))
-      end
     end
   end
 
