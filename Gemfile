@@ -15,6 +15,7 @@ gem 'friendly_id'
 gem 'geo_pattern'
 
 gem 'jbuilder'
+gem 'jquery-turbolinks'
 
 gem 'kaminari'
 
