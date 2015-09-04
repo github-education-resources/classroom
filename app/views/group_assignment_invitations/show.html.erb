@@ -13,24 +13,23 @@
 
 <div class="site-content-body">
   <div class="markdown-body">
-    <p>Accepting this assignment will give you access to the <strong><%= group_assignment.title %></strong> repository in the <%= link_to "@#{decorated_organization.login}", decorated_organization.github_url %> organization on GitHub.</p>
-    <h3>Please create or join a team</h3>
+    <p>Accepting this assignment will give you access to the <strong><%= "#{group_assignment.slug}-#{decorated_group.name}" %></strong> repository in the <%= link_to "@#{decorated_organization.login}", decorated_organization.github_url %> organization on GitHub.</p>
   </div>
 
   <hr>
 
   <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, method: :patch) do %>
-    <dl class="form">
-      <dt><label>Create a new team</label></dt>
-      <dd><%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'textfield' %></dd>
-    </dl>
-
     <% if @groups.present? %>
-      <dt><label>OR choose an existing group of teams</label></dt>
+      <dt><label>Join an existing team</label></dt>
       <dl class="form">
         <dd><%= select :group, :id, options_for_select(@groups), include_blank: true %></dd>
       </dl>
     <% end %>
+
+    <dl class="form">
+      <dt><label><%= 'OR' if @groups.present? %> Create a new team</label></dt>
+      <dd><%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'textfield' %></dd>
+    </dl>
 
     <div class="form-actions">
       <%= submit_tag 'Join team', class: 'btn btn-green js-navigation js-form-submit', disabled: true %>

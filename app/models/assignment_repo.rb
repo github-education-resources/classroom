@@ -27,22 +27,20 @@ class AssignmentRepo < ActiveRecord::Base
     !assignment.public_repo?
   end
 
-  private
-
-  # Internal
+  # Public
   #
   def github_team_id
     repo_access.github_team_id
   end
 
-  # Internal
+  # Public
   #
   def repo_name
     github_user = GitHubUser.new(repo_access.user.github_client)
-    "#{assignment.title}-#{github_user.login}"
+    "#{assignment.slug}-#{github_user.login}"
   end
 
-  # Internal
+  # Public
   #
   def starter_code_repo_id
     assignment.starter_code_repo_id
