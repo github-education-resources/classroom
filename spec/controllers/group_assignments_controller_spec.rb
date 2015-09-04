@@ -34,12 +34,6 @@ RSpec.describe GroupAssignmentsController, type: :controller do
                       grouping:         { title: 'Grouping 1'       }
       end.to change { GroupAssignment.count }
     end
-
-    it 'kicks of a background job to create a new GroupAssignmentInvitation' do
-      post :create, organization_id: organization.id,
-                    group_assignment: { title: 'Learn JavaScript' },
-                    grouping: { title: 'Grouping 1' }
-    end
   end
 
   describe 'GET #show', :vcr do

@@ -5,7 +5,7 @@ class GroupAssignmentService
     @new_grouping_params         = new_grouping_params
   end
 
-  def create_group_assignment
+  def build_group_assignment
     group_assignment          = GroupAssignment.new(@new_group_assignment_params)
     group_assignment.grouping = Grouping.where(id: @grouping_id).first_or_create!(@new_grouping_params)
 

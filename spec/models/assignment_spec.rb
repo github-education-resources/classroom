@@ -19,8 +19,8 @@ RSpec.describe Assignment, type: :model do
     let(:assignment) { Assignment.new(creator: creator, title: group_assignment.title, organization: organization) }
 
     it 'validates that a GroupAssignment in the same organization does not have the same title' do
-      expect { assignment.save! }.to raise_error(ActiveRecord::RecordInvalid,
-                                                 'Validation failed: Title has already been taken')
+      validation_message = 'Validation failed: Your assignment title is already in use for your organization'
+      expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, validation_message)
     end
   end
 
