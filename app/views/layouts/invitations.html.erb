@@ -11,6 +11,8 @@
     <%= csrf_meta_tags %>
   </head>
   <body class="<%= controller_name %> <%= action_name %>">
+    <div class="loading-indicator" style="display: none;"></div>
+
     <%= render 'shared/invitation_header' %>
 
     <%= yield :organization_invitation_banner %>
@@ -23,6 +25,6 @@
       </div>
     </div>
 
-    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-eval' => false %>
   </body>
 </html>

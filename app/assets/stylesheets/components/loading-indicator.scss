@@ -1,4 +1,4 @@
-.loading {
+.loading-indicator {
   &:after {
     position: absolute;
     left: 0;
@@ -8,5 +8,6 @@
     content: " ";
     background: rgba(255, 255, 255, 0.7) image-url("octocat-spinner-128.gif") no-repeat center center;
     background-size: 64px;
+    z-index: 999999;
   }
 }
