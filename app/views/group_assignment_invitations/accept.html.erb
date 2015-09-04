@@ -16,7 +16,7 @@
 
   <%= form_tag({ controller: :group_assignment_invitations, action: :accept_assignment}, method: :patch) do %>
     <div class="markdown-body">
-      <p>Accepting this assignment will give your team (<%= decorated_group.name %>) access to the <strong><%= group_assignment.title %></strong> repository in the <%= link_to "@#{decorated_organization.login}", decorated_organization.github_url %> organization on GitHub.</p>
+      <p>Accepting this assignment will give your team (<%= decorated_group.name %>) access to the <strong><%= "#{group_assignment.slug}-#{decorated_group.slug}" %></strong> repository in the <%= link_to "@#{decorated_organization.login}", decorated_organization.github_url %> organization on GitHub.</p>
     </div>
 
     <div class="form-actions">

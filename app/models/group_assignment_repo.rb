@@ -39,7 +39,7 @@ class GroupAssignmentRepo < ActiveRecord::Base
   #
   def repo_name
     github_team = GitHubTeam.new(creator.github_client, github_team_id).team
-    "#{group_assignment.slug}-#{github_team.name}"
+    "#{group_assignment.slug}-#{github_team.slug}"
   end
 
   # Public

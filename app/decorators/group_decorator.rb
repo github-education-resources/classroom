@@ -5,6 +5,10 @@ class GroupDecorator < Draper::Decorator
     github_team.name
   end
 
+  def slug
+    github_team.slug
+  end
+
   private
 
   def github_team
