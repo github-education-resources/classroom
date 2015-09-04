@@ -17,7 +17,9 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def create
-    if (@group_assignment = create_group_assignment)
+    @group_assignment = build_group_assignment
+
+    if @group_assignment.save
       flash[:success] = "\"#{@group_assignment.title}\" has been created!"
       redirect_to organization_group_assignment_path(@organization, @group_assignment)
     else
@@ -54,8 +56,8 @@ class GroupAssignmentsController < ApplicationController
 
   private
 
-  def create_group_assignment
-    GroupAssignmentService.new(new_group_assignment_params, new_grouping_params).create_group_assignment
+  def build_group_assignment
+    GroupAssignmentService.new(new_group_assignment_params, new_grouping_params).build_group_assignment
   end
 
   def error(exception)
