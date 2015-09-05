@@ -65,9 +65,10 @@ end
 
 group :production do
   gem 'dalli'
+  gem 'newrelic_rpm'
+  gem 'puma'
   gem 'rack-tracker'
   gem 'rails_12factor'
-  gem 'puma'
 end
 
 group :test do
