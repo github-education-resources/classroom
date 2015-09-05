@@ -1,6 +1,10 @@
 class OrganizationDecorator < Draper::Decorator
   delegate_all
 
+  def avatar_url(size)
+    "https://avatars.githubusercontent.com/u/#{github_id}?v=3&size=#{size}"
+  end
+
   def geo_pattern_data_uri
     @geo_pattern_data_uri ||= GeoPattern.generate(github_id, color: '#5fb27b').to_data_uri
   end

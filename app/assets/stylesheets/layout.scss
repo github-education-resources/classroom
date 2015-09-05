@@ -235,3 +235,39 @@ hr {
     }
   }
 }
+
+.organization-list-item {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  font-size: 16px;
+  border-bottom: 1px solid #e3e3e3;
+
+  .avatar {
+    margin-right: 10px;
+  }
+
+  .organization-title {
+    display: block;
+    padding-top: 0.4em;
+
+    &:hover {
+      color: $brand-blue;
+    }
+  }
+
+  .organization-stats {
+    vertical-align: inherit;
+    font-size: 14px;
+    font-weight: bold;
+    padding-top: 0.5em;
+
+    .organization-stat-item {
+      margin-right: 0.6em;
+
+      .octicon {
+        font-size: 16px;
+        margin-right: 4px;
+      }
+    }
+  }
+}
