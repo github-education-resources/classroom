@@ -1,21 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Organization, type: :model do
-  describe 'callbacks' do
-    describe 'after_save' do
-      describe '#validate_minimum_number_of_users' do
-        subject { create(:organization) }
-
-        it 'validates that there is at least one user' do
-          subject.users.destroy_all
-          subject.save
-
-          expect(subject.errors.count).to be(1)
-        end
-      end
-    end
-  end
-
   describe '#all_assignments' do
     subject { create(:organization) }
 

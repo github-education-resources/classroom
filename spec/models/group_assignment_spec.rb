@@ -17,24 +17,8 @@ RSpec.describe GroupAssignment, type: :model do
     end
 
     it 'validates that an Assignment in the same organization does not have the same title' do
-      expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid,
-                                                       'Validation failed: Title has already been taken')
-    end
-  end
-
-  describe '#group_assignment_invitation' do
-    let(:group_assignment_invitation) { create(:group_assignment_invitation)         }
-    let(:group_assignment)            { group_assignment_invitation.group_assignment }
-
-    it 'returns a NullGroupAssignmentInvitation if the GroupAssignmentInvitation doe not exist' do
-      group_assignment.group_assignment_invitation = nil
-      group_assignment.save
-
-      expect(group_assignment.group_assignment_invitation.class).to eql(NullGroupAssignmentInvitation)
-    end
-
-    it 'returns the GroupAssignmentInvitation' do
-      expect(group_assignment.group_assignment_invitation.class).to eql(GroupAssignmentInvitation)
+      validation_message = 'Validation failed: Your assignment title is already in use for your organization'
+      expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, validation_message)
     end
   end
 

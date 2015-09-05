@@ -14,8 +14,6 @@ class Organization < ActiveRecord::Base
   validates :github_id, presence: true, uniqueness: true
   validates :title,     presence: true, uniqueness: { case_sensitive: false }
 
-  after_save :validate_minimum_number_of_users
-
   # Public
   #
   def all_assignments
@@ -26,16 +24,5 @@ class Organization < ActiveRecord::Base
   #
   def github_client
     users.sample.github_client
-  end
-
-  private
-
-  # Internal
-  #
-  def validate_minimum_number_of_users
-    return if users.count > 0
-    error_message = 'must have at least one user'
-    errors.add(:users, error_message)
-    fail ActiveRecord::RecordInvalid.new(self), error_message
   end
 end

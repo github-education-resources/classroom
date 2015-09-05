@@ -8,7 +8,6 @@ class GroupAssignmentsController < ApplicationController
   decorates_assigned :organization
   decorates_assigned :group_assignment
 
-  rescue_from ActiveRecord::RecordInvalid, with: :error
   rescue_from GitHub::Error,               with: :error
   rescue_from GitHub::Forbidden,           with: :error
   rescue_from GitHub::NotFound,            with: :error
@@ -18,12 +17,9 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def create
-    @group_assignment = GroupAssignment.new(new_group_assignment_params)
+    @group_assignment = build_group_assignment
 
     if @group_assignment.save
-      CreateGroupingJob.perform_later(@group_assignment, new_grouping_params)
-      CreateGroupAssignmentInvitationJob.perform_later(@group_assignment)
-
       flash[:success] = "\"#{@group_assignment.title}\" has been created!"
       redirect_to organization_group_assignment_path(@organization, @group_assignment)
     else
@@ -50,6 +46,7 @@ class GroupAssignmentsController < ApplicationController
   def destroy
     if @group_assignment.update_attributes(deleted_at: Time.zone.now)
       DestroyResourceJob.perform_later(@group_assignment)
+
       flash[:success] = "A job has been queued to delete your group assignment \"#{@group_assignment.title}\""
       redirect_to @organization
     else
@@ -58,6 +55,10 @@ class GroupAssignmentsController < ApplicationController
   end
 
   private
+
+  def build_group_assignment
+    GroupAssignmentService.new(new_group_assignment_params, new_grouping_params).build_group_assignment
+  end
 
   def error(exception)
     flash[:error] = exception.message

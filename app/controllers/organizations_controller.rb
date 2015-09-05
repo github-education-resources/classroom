@@ -8,7 +8,6 @@ class OrganizationsController < ApplicationController
 
   decorates_assigned :organization
 
-  rescue_from ActiveRecord::RecordInvalid, with: :error
   rescue_from GitHub::Error,               with: :error
   rescue_from GitHub::Forbidden,           with: :deny_access
   rescue_from GitHub::NotFound,            with: :deny_access
@@ -90,6 +89,7 @@ class OrganizationsController < ApplicationController
 
   def error(exception)
     flash[:error] = exception.message
+    redirect_to :back
   end
 
   def new_organization_params

@@ -7,7 +7,6 @@ class AssignmentsController < ApplicationController
   decorates_assigned :organization
   decorates_assigned :assignment
 
-  rescue_from ActiveRecord::RecordInvalid, with: :error
   rescue_from GitHub::Error,               with: :error
   rescue_from GitHub::Forbidden,           with: :error
   rescue_from GitHub::NotFound,            with: :error
@@ -18,10 +17,9 @@ class AssignmentsController < ApplicationController
 
   def create
     @assignment = Assignment.new(new_assignment_params)
+    @assignment.build_assignment_invitation
 
     if @assignment.save
-      CreateAssignmentInvitationJob.perform_later(@assignment)
-
       flash[:success] = "\"#{@assignment.title}\" has been created!"
       redirect_to organization_assignment_path(@organization, @assignment)
     else
