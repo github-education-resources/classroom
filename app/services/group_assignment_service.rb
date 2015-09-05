@@ -10,6 +10,6 @@ class GroupAssignmentService
     group_assignment.grouping = Grouping.where(id: @grouping_id).first_or_create!(@new_grouping_params)
 
     group_assignment.build_group_assignment_invitation
-    group_assignment.save!
+    group_assignment
   end
 end
