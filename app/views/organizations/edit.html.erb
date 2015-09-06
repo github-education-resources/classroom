@@ -23,7 +23,7 @@
         <p class="text-muted">Once you remove this organization, there is no going back. Please be certain.</p>
         <p class="text-muted">Everything you have created, and every student that you have invited will also be removed from your organization on github.com</p>
 
-        <%= link_to 'Remove this organization', @organization, class: 'btn btn-danger btn-block', method: :delete, data: { confirm: 'Are you positive that you want to delete your organization?' } %>
+        <a href="#openResetOrganizationModal" class="btn btn-danger btn-block">Reset this organization</a>
       </div>
     </div>
 
@@ -35,3 +35,4 @@
 </div>
 
 <%= render partial: 'organizations/invite_users' %>
+<%= render partial: 'organizations/reset_organization_modal' %>
