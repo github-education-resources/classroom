@@ -424,3 +424,25 @@ hr {
     padding: 1rem 0;
   }
 }
+
+.signin-section {
+  background-color: #5fb27b;
+  padding-top: 6.154em;
+  padding-bottom: 6.154em;
+  color: white;
+  margin-bottom: 6.154em;
+
+  .heading {
+    font-size: 52px;
+    font-weight: normal;
+  }
+
+  .subheading {
+    font-size: 21px;
+  }
+}
+
+.feature-heading {
+  font-size: 32px;
+  font-weight: normal;
+}
