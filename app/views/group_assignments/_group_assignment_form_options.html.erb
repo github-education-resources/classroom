@@ -18,8 +18,8 @@
 </dl>
 
 <dl class="form">
-  <dt><label>Add your starter code from GitHub <small>(Optional)</small> </label></dt>
-  <dd><input class="textfield" type="text" name="repo_name" placeholder="e.g. education/classroom"></dd>
+  <dt><label>Add your starter code from GitHub <small>(optional)</small> </label></dt>
+  <dd><input class="textfield" type="text" name="repo_name" value="<%= group_assignment.full_name %>" placeholder="<%= group_assignment.full_name || 'e.g. education/classroom'%>"</dd>
 </dl>
 
 <% if @group_assignment.new_record? %>
