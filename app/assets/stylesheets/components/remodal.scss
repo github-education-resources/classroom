@@ -37,10 +37,6 @@
     margin-bottom: 0.8rem;
   }
 
-  hr {
-    margin: 15px -15px;
-  }
-
   &.remodal-is-opening,
   &.remodal-is-closing {
     animation-fill-mode: forwards;
@@ -89,8 +85,17 @@
 }
 
 .remodal-description {
-  height: 8rem;
-  max-height: 5.5rem;
+  height: 5rem;
+}
+
+.remodal-warning {
+  color: #796620;
+  background-color: #f8eec7;
+  border-color: #f2e09a;
+  margin: -16px -15px 15px;
+  padding: 10px 15px;
+  border-style: solid;
+  border-width: 1px 0;
 }
 
 .remodal-close:hover,

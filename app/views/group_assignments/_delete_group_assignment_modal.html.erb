@@ -6,8 +6,6 @@
     <p>
       This action <strong>CANNOT</strong> be undone.
       This will permanently delete the <strong><%= @group_assignment.title %></strong> group assignment from Classroom for GitHub.
-    </p>
-    <p>
       In addition this will also delete <strong><%= pluralize(@group_assignment.group_assignment_repos.count, 'participant repository') %></strong>
       under the <strong><%= organization.login %></strong> organization.
     </p>
@@ -17,7 +15,7 @@
 
   <%= form_for [@organization, @group_assignment], html: { "data-name" => @group_assignment.title, method: 'delete' } do |f| %>
     <dl class="form js-normalize-submit">
-      <dt><label>Enter this group assignment’s name to confirm</label></dt>
+      <dt>Please type the name of the group assignment to confirm</dt>
       <dd><input type="text" class="js-input-block"></dd>
     </dl>
 
