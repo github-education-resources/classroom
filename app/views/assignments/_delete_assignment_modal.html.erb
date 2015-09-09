@@ -1,0 +1,26 @@
+<div class="remodal text-left" data-remodal-id="delete-assignment">
+  <button data-remodal-action="close" class="remodal-close"><%= octicon('x') %></button>
+  <h2 class="remodal-header text-left">Are you sure you want to delete this?</h2>
+
+  <div class="remodal-description">
+    <p>
+      This action <strong>CANNOT</strong> be undone.
+      This will permanently delete the <strong><%= @assignment.title %></strong> assignment from Classroom for GitHub.
+    </p>
+    <p>
+      In addition this will also delete <strong><%= pluralize(@assignment.assignment_repos.count, 'participant repository') %></strong>
+      under the <strong><%= organization.login %></strong> organization.
+    </p>
+  </div>
+
+  <hr>
+
+  <%= form_for [@organization, @assignment], html: { "data-name" => @assignment.title, method: 'delete' } do |f| %>
+    <dl class="form js-normalize-submit">
+      <dt><label>Enter this assignment’s name to confirm</label></dt>
+      <dd><input type="text" class="js-input-block"></dd>
+    </dl>
+
+    <%= f.submit 'Delete this assignment', class: 'btn btn-danger btn-block js-navigation', disabled: true %>
+  <% end %>
+</div>

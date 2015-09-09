@@ -1,7 +1,7 @@
 $('.js-normalize-submit').on 'change keyup', ->
-  organizationTitle = $(this).closest('form').attr('data-organization-name')
+  resourceName = $(this).closest('form').attr('data-name')
 
-  if $('.js-input-block').val() == organizationTitle
+  if $('.js-input-block').val() == resourceName
     $('.js-btn-close').prop('disabled', false)
   else
     $('.js-btn-close').prop('disabled', true)

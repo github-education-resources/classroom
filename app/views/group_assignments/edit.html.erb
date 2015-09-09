@@ -23,9 +23,8 @@
       <div class="one-third column dangerzone-container">
         <p class="text-emphasized">Delete this group assignment</p>
         <p class="text-muted">Once you delete this group assignment, there is no going back. Please be certain.</p>
-        <p class="text-muted"><strong><%= pluralize(@group_assignment.group_assignment_repos.count, 'team assignment') %></strong> will be delete from github.com.</p>
 
-        <%= link_to 'Delete this assignment', [@organization, @group_assignment], class: 'btn btn-danger btn-block', method: :delete, data: { confirm: 'Are you positive that you want to delete your assignment?' } %>
+        <a data-remodal-target="delete-group-assignment" class="btn btn-danger btn-block">Delete this group assignment</a>
       </div>
     </div>
 
@@ -35,3 +34,5 @@
     </div>
   <% end %>
 </div>
+
+<%= render partial: 'group_assignments/delete_group_assignment_modal' %>
