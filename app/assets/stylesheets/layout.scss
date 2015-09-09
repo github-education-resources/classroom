@@ -35,8 +35,16 @@ a {
   margin-top: 0.1rem;
   font-size: 0.9rem;
 
+  ul {
+    list-style-type: none;
+
+    li {
+      display: inline-block;
+      margin-left: 2rem;
+    }
+  }
+
   a {
-    margin-left: 2rem;
     color: rgba(255, 255, 255, 0.5);
   }
 
