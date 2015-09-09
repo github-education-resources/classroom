@@ -83,6 +83,15 @@ a {
     float: right;
     margin-top: 1.7rem;
   }
+
+  @media (max-width: 34em) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    .btn {
+      display: none;
+    }
+  }
 }
 
 .organization-name {
@@ -92,6 +101,10 @@ a {
 
   a {
     color: inherit;
+  }
+
+  @media (max-width: 34em) {
+    font-size: 1.5rem;
   }
 }
 
@@ -119,6 +132,10 @@ a {
   .btn {
     margin-top: -5px;
   }
+
+  @media (max-width: 34em) {
+    padding: 1.5rem 1rem;
+  }
 }
 
 .site-content-body {
@@ -128,6 +145,10 @@ a {
   border-top: 0;
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
+
+  @media (max-width: 43em) {
+    padding: 1rem;
+  }
 }
 
 .site-content-heading {
@@ -173,9 +194,20 @@ a {
   background-color: #555;
 }
 
-.assignment-listing {
-  margin-bottom: 2rem;
+.assignment-list-items {
+  .assignment-list-item:not(:first-child) {
+    border-top: 1px solid #e3e3e3;
+    margin-top: 1rem;
+    padding-top: 1rem;
 
+    @media (max-width: 34em) {
+      margin-top: 0.5rem;
+      padding-top: 1rem;
+    }
+  }
+}
+
+.assignment-list-item {
   .assignment-icon {
     margin-right: 0.7rem;
   }
@@ -269,11 +301,21 @@ hr {
   }
 }
 
+.organization-list-items {
+  .organization-list-item:not(:first-child) {
+    border-top: 1px solid #e3e3e3;
+    margin-top: 2rem;
+    padding-top: 2rem;
+
+    @media (max-width: 34em) {
+      margin-top: 1rem;
+      padding-top: 1rem;
+    }
+  }
+}
+
 .organization-list-item {
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
   font-size: 16px;
-  border-bottom: 1px solid #e3e3e3;
 
   .avatar {
     margin-right: 10px;
@@ -302,6 +344,10 @@ hr {
         margin-right: 4px;
       }
     }
+
+    @media (max-width: 34em) {
+      display: none;
+    }
   }
 }
 
@@ -318,4 +364,12 @@ hr {
 
 .made-by-logo {
   height: 26px;
+}
+
+.invitation-content,
+.settings,
+.zeroclipboard-form {
+  @media (max-width: 34em) {
+    display: none;
+  }
 }
