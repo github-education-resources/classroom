@@ -1,37 +1,39 @@
-<%= render 'organizations/organization_banner' %>
+<div class="remodal-bg">
+  <%= render 'organizations/organization_banner' %>
 
-<div class="site-content">
-  <div class="site-content-cap">
-    <h2 class="site-content-heading">Organization settings</h2>
+  <div class="site-content">
+    <div class="site-content-cap">
+      <h2 class="site-content-heading">Organization settings</h2>
+    </div>
   </div>
-</div>
 
-<div class="site-content-body">
-  <%= form_for @organization do |f| %>
-    <%= render 'shared/error_messages', object: f.object %>
+  <div class="site-content-body">
+    <%= form_for @organization do |f| %>
+      <%= render 'shared/error_messages', object: f.object %>
 
-    <div class="columns">
-      <div class="two-thirds column">
-        <dl class="form">
-          <dt><%= f.label :title %></dt>
-          <dd><%= f.text_field :title, class: 'textfield' %></dd>
-        </dl>
+      <div class="columns">
+        <div class="two-thirds column">
+          <dl class="form">
+            <dt><%= f.label :title %></dt>
+            <dd><%= f.text_field :title, class: 'textfield' %></dd>
+          </dl>
+        </div>
+
+        <div class="one-third column dangerzone-container">
+          <p class="text-emphasized">Reset and remove this organization</p>
+          <p class="text-muted">Once you reset this organization, there is no going back. Please be certain.</p>
+
+          <a data-remodal-target="reset-and-remove-organization" class="btn btn-danger btn-block">Reset and remove this organization</a>
+        </div>
       </div>
 
-      <div class="one-third column dangerzone-container">
-        <p class="text-emphasized">Remove this organization</p>
-        <p class="text-muted">Once you remove this organization, there is no going back. Please be certain.</p>
-        <p class="text-muted">Everything you have created, and every student that you have invited will also be removed from your organization on github.com</p>
-
-        <%= link_to 'Remove this organization', @organization, class: 'btn btn-danger btn-block', method: :delete, data: { confirm: 'Are you positive that you want to delete your organization?' } %>
+      <div class="form-actions">
+        <%= f.submit 'Save changes', class: 'btn btn-green' %>
+        <%= link_to 'Cancel', @organization, class: 'btn', role: 'button' %>
       </div>
-    </div>
+    <% end %>
+  </div>
 
-    <div class="form-actions">
-      <%= f.submit 'Save changes', class: 'btn btn-green' %>
-      <%= link_to 'Cancel', @organization, class: 'btn', role: 'button' %>
-    </div>
-  <% end %>
+  <%= render partial: 'organizations/invite_users' %>
+  <%= render partial: 'organizations/reset_and_remove_organization_modal' %>
 </div>
-
-<%= render partial: 'organizations/invite_users' %>

@@ -50,7 +50,7 @@ class OrganizationsController < ApplicationController
     if @organization.update_attributes(deleted_at: Time.zone.now)
       DestroyResourceJob.perform_later(@organization)
 
-      flash[:success] = "Your organization, @#{organization.login} is being removed"
+      flash[:success] = "Your organization, @#{organization.login} is being reset"
       redirect_to organizations_path
     else
       render :edit

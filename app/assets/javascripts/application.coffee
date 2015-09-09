@@ -18,6 +18,8 @@
 #
 #= require jquery-readyselector/jquery.readyselector
 #
+#= require remodal/dist/remodal
+#
 #= require peek
 #= require peek/views/dalli
 #= require peek/views/performance_bar

@@ -22,9 +22,7 @@
       <div class="one-third column dangerzone-container">
         <p class="text-emphasized">Delete this assignment</p>
         <p class="text-muted">Once you delete this assignment, there is no going back. Please be certain.</p>
-        <p class="text-muted"><strong><%= pluralize(@assignment.assignment_repos.count, 'student assignment') %></strong> will be delete from github.com.</p>
-
-        <%= link_to 'Delete this assignment', [@organization, @assignment], class: 'btn btn-danger btn-block', method: :delete, data: { confirm: 'Are you positive that you want to delete your assignment?' } %>
+        <a data-remodal-target="delete-assignment" class="btn btn-danger btn-block">Delete this assignment</a>
       </div>
     </div>
 
@@ -34,3 +32,5 @@
     </div>
   <% end %>
 </div>
+
+<%= render partial: 'assignments/delete_assignment_modal' %>
