@@ -46,7 +46,7 @@ class AssignmentsController < ApplicationController
   def destroy
     if @assignment.update_attributes(deleted_at: Time.zone.now)
       DestroyResourceJob.perform_later(@assignment)
-      flash[:success] = "A job has been queued to delete your individual assignment \"#{@assignment.title}\""
+      flash[:success] = "\"#{@assignment.title}\" is being deleted"
       redirect_to @organization
     else
       render :edit

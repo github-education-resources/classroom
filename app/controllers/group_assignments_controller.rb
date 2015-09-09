@@ -47,7 +47,7 @@ class GroupAssignmentsController < ApplicationController
     if @group_assignment.update_attributes(deleted_at: Time.zone.now)
       DestroyResourceJob.perform_later(@group_assignment)
 
-      flash[:success] = "A job has been queued to delete your group assignment \"#{@group_assignment.title}\""
+      flash[:success] = "\"#{@group_assignment.title}\" is being deleted"
       redirect_to @organization
     else
       render :edit
