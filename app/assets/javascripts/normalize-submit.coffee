@@ -1,10 +1,11 @@
 $('.js-normalize-submit').on 'change keyup', ->
   resourceName = $(this).closest('form').attr('data-name')
+  console.log $('.js-input-block').val()
 
   if $('.js-input-block').val() == resourceName
-    $('.js-btn-close').prop('disabled', false)
+    $('.js-submit').prop('disabled', false)
   else
-    $('.js-btn-close').prop('disabled', true)
+    $('.js-submit').prop('disabled', true)
 
-$('.js-close').on 'click', ->
+$('.remodal-close').on 'click', ->
   $('.js-input-block').val('')

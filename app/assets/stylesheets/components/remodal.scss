@@ -1,18 +1,18 @@
 .remodal-overlay {
   background: rgba(0, 0, 0, 0.4);
-}
 
-.remodal-overlay.remodal-is-opening,
-.remodal-overlay.remodal-is-closing {
-  animation-fill-mode: forwards;
-}
+  &.remodal-is-opening,
+  &.remodal-is-closing {
+    animation-fill-mode: forwards;
+  }
 
-.remodal-overlay.remodal-is-opening {
-  animation: remodal-overlay-opening-keyframes 0.3s;
-}
+  &.remodal-is-opening {
+    animation: remodal-overlay-opening-keyframes 0.3s;
+  }
 
-.remodal-overlay.remodal-is-closing {
-  animation: remodal-overlay-closing-keyframes 0.3s;
+  &.remodal-is-closing {
+    animation: remodal-overlay-closing-keyframes 0.3s;
+  }
 }
 
 .remodal-wrapper {
@@ -40,19 +40,19 @@
   hr {
     margin: 15px -15px;
   }
-}
 
-.remodal.remodal-is-opening,
-.remodal.remodal-is-closing {
-  animation-fill-mode: forwards;
-}
+  &.remodal-is-opening,
+  &.remodal-is-closing {
+    animation-fill-mode: forwards;
+  }
 
-.remodal.remodal-is-opening {
-  animation: remodal-opening-keyframes 0.3s;
-}
+  &.remodal-is-opening {
+    animation: remodal-opening-keyframes 0.3s;
+  }
 
-.remodal.remodal-is-closing {
-  animation: remodal-closing-keyframes 0.3s;
+  &.remodal-is-closing {
+    animation: remodal-closing-keyframes 0.3s;
+  }
 }
 
 .remodal,
@@ -119,7 +119,6 @@
 .remodal-cancel::-moz-focus-inner,
 .remodal-close::-moz-focus-inner {
   padding: 0;
-
   border: 0;
 }
 
@@ -129,6 +128,7 @@
 
     opacity: 0;
   }
+
   to {
     transform: none;
 
@@ -142,6 +142,7 @@
 
     opacity: 1;
   }
+
   to {
     transform: scale(0.95);
 
@@ -153,6 +154,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -162,13 +164,14 @@
   from {
     opacity: 1;
   }
+
   to {
     opacity: 0;
   }
 }
 
 .lt-ie9 .remodal-overlay {
-  background: #999999;
+  background: #999;
 }
 
 .lt-ie9 .remodal {
