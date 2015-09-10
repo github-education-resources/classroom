@@ -2,20 +2,25 @@
   box-sizing: border-box;
 }
 
-html,
-body {
-  height: 100%;
-}
-
 body {
   font: 13px/1.4 Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
   background-color: #f3f4f6;
+
+  &.site {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
 }
 
 a {
   &:hover {
     text-decoration: none;
   }
+}
+
+main {
+  flex: 1;
 }
 
 .site-header {
@@ -351,19 +356,12 @@ hr {
   }
 }
 
-.site-wrapper {
-  min-height: 100%;
-  height: auto;
-  margin: 0 auto -6em;
-}
-
 .site-footer {
-  margin-top: 1em;
-  height: 6em;
-}
+  margin-bottom: 1em;
 
-.made-by-logo {
-  height: 26px;
+  @media (max-width: 34em) {
+    margin-top: 1em;
+  }
 }
 
 .invitation-content,
