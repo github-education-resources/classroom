@@ -393,11 +393,8 @@ hr {
 }
 
 .site-footer {
+  margin-top: 1em;
   margin-bottom: 1em;
-
-  @media (max-width: 34em) {
-    margin-top: 1em;
-  }
 }
 
 .invitation-content,
