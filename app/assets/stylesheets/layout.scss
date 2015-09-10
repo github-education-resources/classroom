@@ -405,3 +405,9 @@ hr {
     display: none;
   }
 }
+
+.blankslate.spacious {
+  @media (max-width: 34em) {
+    padding: 1rem 0;
+  }
+}
