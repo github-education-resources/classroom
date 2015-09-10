@@ -1,6 +1,10 @@
 class GroupAssignmentRepoDecorator < Draper::Decorator
   delegate_all
 
+  def full_name
+    github_repository.full_name
+  end
+
   def github_team_url
     "https://github.com/orgs/#{github_team.organization.login}/teams/#{github_team.slug}"
   end

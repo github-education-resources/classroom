@@ -2,16 +2,20 @@
 
 <div class="flex-table assignment-repo-list-item">
   <div class="flex-table-item">
-    <%= image_tag assignment_repo.avatar_url(96), class: 'avatar left', height: 48, width: 48, alt: "@#{assignment_repo.student_login}" %>
+    <%= image_tag assignment_repo.avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{assignment_repo.student_login}" %>
 
-    <%= link_to "https://github.com/#{assignment_repo.student_login}", class: 'student-login' do %>
-      <strong class="css-truncate-target"><%= assignment_repo.student_login %></strong>
-    <% end %>
+    <div class="student-information">
+      <%= link_to "https://github.com/#{assignment_repo.student_login}", class: 'css-truncate css-truncate-target student-login' do %>
+        <strong class="css-truncate-target"><%= assignment_repo.student_login %></strong>
+      <% end %>
 
-    <span class="text-muted css-truncate-target"><%= assignment_repo.student_name %></span>
+      <span class="text-muted css-truncate css-truncate-target"><%= assignment_repo.student_name %></span>
+    </div>
   </div>
 
   <div class="flex-table-item text-right">
-    <strong><%= link_to assignment_repo.github_url, assignment_repo.github_url %></strong>
+    <strong class="css-truncate expandable">
+      <span class="css-truncate-target"><%= link_to assignment_repo.full_name, assignment_repo.github_url %></span>
+    </strong>
   </div>
 </div>

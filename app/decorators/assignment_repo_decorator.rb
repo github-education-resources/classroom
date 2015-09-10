@@ -5,6 +5,10 @@ class AssignmentRepoDecorator < Draper::Decorator
     "https://avatars.githubusercontent.com/u/#{user.uid}?v=3&size=#{size}"
   end
 
+  def full_name
+    github_repository.full_name
+  end
+
   def github_url
     github_repository.html_url
   end

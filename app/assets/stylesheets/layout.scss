@@ -54,6 +54,10 @@ main {
     li {
       display: inline-block;
       margin-left: 2rem;
+
+      @media (max-width: 34em) {
+        margin-left: 0;
+      }
     }
   }
 
@@ -259,12 +263,31 @@ hr {
   margin-bottom: 2rem;
 }
 
+.assignment-repo-list {
+  .assignment-repo-list-item:not(:first-child) {
+    border-top: 1px solid #e3e3e3;
+    margin-top: 1rem;
+    padding-top: 1rem;
+
+    @media (max-width: 34em) {
+      margin-bottom: 0;
+    }
+  }
+}
+
 .assignment-repo-list-item {
-  margin-bottom: 1rem;
   font-size: 14px;
 
   .avatar {
     margin-right: 10px;
+
+    @media (max-width: 34em) {
+      margin-right: 0;
+    }
+  }
+
+  .css-truncate-target {
+    max-width: 20rem;
   }
 
   .student-login {
@@ -278,22 +301,23 @@ hr {
   }
 }
 
+.group-assignment-repo-list {
+  .group-assignment-repo-list-item:not(:first-child) {
+    border-top: 1px solid #e3e3e3;
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+}
+
 .group-assignment-repo-list-item {
-  margin-bottom: 1rem;
   font-size: 14px;
 
-  .student-ellipse {
-    font-size: 13px;
-    display: inline-block;
-    text-align: center;
-    width: 30px;
-    height: 30px;
-    line-height: 24px;
-    color: $brand-gray;
-    border-radius: 3px;
-    font-weight: bold;
-    background-color: #ddd;
-    vertical-align: top;
+  .css-truncate-target {
+    max-width: 20rem;
+
+    @media (max-width: 34em) {
+      max-width: 10rem;
+    }
   }
 
   .team-name {
@@ -302,6 +326,18 @@ hr {
 
     &:hover {
       color: $brand-blue;
+    }
+  }
+
+  ul {
+    list-style-type: none;
+
+    li {
+      display: inline-block;
+
+      @media (max-width: 34em) {
+        margin-left: 0;
+      }
     }
   }
 }
@@ -366,6 +402,7 @@ hr {
 
 .invitation-content,
 .settings,
+.student-information,
 .zeroclipboard-form {
   @media (max-width: 34em) {
     display: none;

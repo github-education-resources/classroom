@@ -24,7 +24,10 @@
     </div>
 
     <% if @assignment_repos.present? %>
-      <%= render   @assignment_repos %>
+      <div class="assignment-repo-list">
+        <%= render @assignment_repos %>
+      </div>
+
       <%= paginate @assignment_repos %>
     <% else %>
       <div class="blankslate">
