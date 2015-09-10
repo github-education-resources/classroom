@@ -1,25 +1,2 @@
-<div class="columns">
-  <div class="two-thirds column centered">
-    <%= form_tag invite_users_organization_path(@organization), method: :patch do %>
-      <form>
-        <% @organization_owners.each do |owner| %>
-          <dl class="form js-user-invitation-form">
-            <label>
-              <%= check_box_tag "github_owners[#{owner.login}]", owner.id %>
-              <%= owner.login %> <%= "(#{owner.name})" if owner.name %>
-            </label>
-            <% disabled    = owner.email.present? %>
-            <% input_class = disabled ? 'input-contrast input-mini' : 'input-mini' %>
-            <%= email_field_tag "github_owner_emails[#{owner.login}]", owner.email, class: input_class, placeholder: 'Email Address', disabled: disabled %>
-          </dl>
-
-          <br>
-        <% end %>
-        <div class="form-actions left">
-          <%= link_to 'Continue', organization_path(@organization), class: 'btn', role: 'button' %>
-          <%= submit_tag 'Invite', class: 'btn btn-primary', disabled: true %>
-        </div>
-      </form>
-    <% end %>
-  </div>
-</div>
+<%= render 'organizations/organization_banner' %>
+<%= render 'organizations/invite_users' %>

@@ -11,16 +11,19 @@
 # about supported directives.
 #
 #= require jquery/dist/jquery
+#= require jquery.turbolinks
 #= require jquery-ujs/src/rails
+#
+#= require turbolinks
+#
+#= require jquery-readyselector/jquery.readyselector
+#
+#= require remodal/dist/remodal
 #
 #= require peek
 #= require peek/views/dalli
 #= require peek/views/performance_bar
 #
-#= require jquery-readyselector/jquery.readyselector
 #= require zeroclipboard/dist/ZeroClipboard
-#= require zeroclipboard-asset-path
-#
-#= require turbolinks
 #
 #= require_tree .

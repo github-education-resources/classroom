@@ -1,40 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Organization, type: :model do
-  it { is_expected.to have_many(:assignments).dependent(:destroy)       }
-  it { is_expected.to have_many(:groupings).dependent(:destroy)         }
-  it { is_expected.to have_many(:group_assignments).dependent(:destroy) }
-  it { is_expected.to have_many(:repo_accesses).dependent(:destroy)     }
-
-  it { is_expected.to have_and_belong_to_many(:users) }
-
-  it_behaves_like 'a default scope where deleted_at is not present'
-
-  describe 'validation and uniqueness' do
-    subject { build(:organization) }
-
-    it { is_expected.to validate_presence_of(:github_id) }
-    it { is_expected.to validate_presence_of(:title)     }
-
-    it { is_expected.to validate_uniqueness_of(:github_id) }
-    it { is_expected.to validate_uniqueness_of(:title)     }
-  end
-
-  describe 'callbacks' do
-    describe 'after_save' do
-      describe '#validate_minimum_number_of_users' do
-        subject { create(:organization) }
-
-        it 'validates that there is at least one user' do
-          subject.users.destroy_all
-          subject.save
-
-          expect(subject.errors.count).to be(1)
-        end
-      end
-    end
-  end
-
   describe '#all_assignments' do
     subject { create(:organization) }
 

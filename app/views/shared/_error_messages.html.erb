@@ -1,14 +1,16 @@
 <% if object.errors.any? %>
-  <div class="flash flash-error">
-    <span class="octicon octicon-x flash-close js-flash-close"></span>
-    <% if object.errors.count > 1 %>
-      <% object.errors.full_messages.each do |msg| %>
-        <p><%= msg %></p>
+  <div class="flash-form">
+    <div class="flash flash-error">
+      <span class="octicon octicon-x flash-close js-flash-close"></span>
+      <% if object.errors.count > 1 %>
+        <% object.errors.full_messages.each do |msg| %>
+          <p><%= msg %></p>
+        <% end %>
+      <% else %>
+        <% object.errors.full_messages.each do |msg| %>
+          <%= msg %>
+        <% end %>
       <% end %>
-    <% else %>
-      <% object.errors.full_messages.each do |msg| %>
-        <%= msg %>
-      <% end %>
-    <% end %>
+    </div>
   </div>
 <% end %>

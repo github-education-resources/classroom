@@ -10,6 +10,13 @@ describe GitHubOrganization do
     @github_organization = GitHubOrganization.new(@client, organization.github_id)
   end
 
+  describe '#admin?', :vcr do
+    it 'verifies if the user is an admin of the organization' do
+      github_admin = GitHubUser.new(organization.users.first.github_client)
+      expect(@github_organization.admin?(github_admin.login)).to eql(true)
+    end
+  end
+
   describe '#create_repository', :vcr do
     after do
       @client.delete_repository("#{organization.title}/#{@repo_name}")

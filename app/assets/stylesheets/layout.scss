@@ -1,64 +1,301 @@
-.container {
-  width: auto;
-  max-width: 980px;
-  padding-left: 20px;
-  padding-right: 20px;
+* {
+  box-sizing: border-box;
 }
 
-// Column widths
-.one-third {
-  width: 33.333333%;
+html,
+body {
+  height: 100%;
+}
 
-  @media (max-width: 43em) {
-    width: 100%;
+body {
+  font: 13px/1.4 Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  background-color: #f3f4f6;
+}
+
+a {
+  &:hover {
+    text-decoration: none;
   }
 }
 
-.two-thirds {
-  width: 66.666667%;
+.site-header {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  color: #ccc;
+  background-color: #2f3232;
+}
 
-  @media (max-width: 43em) {
-    width: 100%;
+.site-logo {
+  width: 230px;
+  height: 20px;
+}
+
+.site-nav {
+  float: right;
+  margin-top: 0.1rem;
+  font-size: 0.9rem;
+
+  ul {
+    list-style-type: none;
+
+    li {
+      display: inline-block;
+      margin-left: 2rem;
+    }
+  }
+
+  a {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  a:hover {
+    color: rgba(255, 255, 255, 1);
   }
 }
 
-.one-fourth {
-  width: 25%;
+.organization-banner {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  color: #fff;
+  background-color: #5fb27b;
 
-  @media (max-width: 43em) {
-    width: 100%;
+  .btn {
+    float: right;
+    margin-top: 1.7rem;
   }
 }
 
-.one-half {
-  width: 50%;
+.organization-name {
+  margin-bottom: 0;
+  font-size: 2.2rem;
+  font-weight: normal;
 
-  @media (max-width: 43em) {
-    width: 100%;
+  a {
+    color: inherit;
   }
 }
 
-.three-fourths {
-  width: 75%;
+.organization-login {
+  margin-top: 0.2rem;
+  font-size: 1rem;
+  opacity: 0.8;
 
-  @media (max-width: 43em) {
-    width: 100%;
+  a {
+    color: inherit;
   }
 }
 
-.one-fifth {
-  width: 20%;
+.site-content {
+  margin-top: 1rem;
+}
 
-  @media (max-width: 43em) {
-    width: 100%;
+.site-content-cap {
+  padding: 1.5rem 2rem;
+  background-color: #fbfbfb;
+  border: solid 1px #e3e3e3;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+
+  .btn {
+    margin-top: -5px;
   }
 }
 
-.four-fifths {
-  width: 80%;
+.site-content-body {
+  padding: 2rem;
+  background-color: #fff;
+  border: solid 1px #e3e3e3;
+  border-top: 0;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
 
-  @media (max-width: 43em) {
-    width: 100%;
+.site-content-heading {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 20px;
+  font-weight: normal;
+  color: #5d666f;
+}
+
+.assignment-option-name {
+  margin-bottom: 0;
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.assignment-option-description {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  color: #777;
+}
+
+.assignment-icon {
+  display: inline-block;
+  width: 45px;
+  height: 45px;
+  text-align: center;
+  border-radius: 50%;
+
+  .octicon {
+    font-size: 22px;
+    line-height: 45px;
   }
 }
 
+.assignment-icon-individual {
+  color: #555;
+  background-color: rgba(216, 216, 216, 0.3);
+}
+
+.assignment-icon-group {
+  color: #f3f3f3;
+  background-color: #555;
+}
+
+.assignment-listing {
+  margin-bottom: 2rem;
+
+  .assignment-icon {
+    margin-right: 0.7rem;
+  }
+}
+
+.assignment-name-link {
+  padding-top: 0.4rem;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.assignment-type {
+  margin-top: 0;
+}
+
+.assignment-invite-link {
+  float: right;
+}
+
+.table-minimal {
+  td {
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+
+  td:first-child {
+    padding-left: 0;
+  }
+}
+
+hr {
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.dangerzone-container {
+  border: 1px solid #e3e3e3;
+  border-radius: 3px;
+  padding-bottom: 13px;
+}
+
+.invitation-content {
+  border-bottom: 1px solid #e3e3e3;
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+}
+
+.assignment-repo-list-item {
+  margin-bottom: 1rem;
+  font-size: 14px;
+
+  .avatar {
+    margin-right: 10px;
+  }
+
+  .student-login {
+    color: $brand-gray-dark;
+    display: block;
+    padding-top: 4px;
+
+    &:hover {
+      color: $brand-blue;
+    }
+  }
+}
+
+.group-assignment-repo-list-item {
+  margin-bottom: 1rem;
+  font-size: 14px;
+
+  .student-ellipse {
+    font-size: 13px;
+    display: inline-block;
+    text-align: center;
+    width: 30px;
+    height: 30px;
+    line-height: 24px;
+    color: $brand-gray;
+    border-radius: 3px;
+    font-weight: bold;
+    background-color: #ddd;
+    vertical-align: top;
+  }
+
+  .team-name {
+    color: $brand-gray-dark;
+    display: block;
+
+    &:hover {
+      color: $brand-blue;
+    }
+  }
+}
+
+.organization-list-item {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  font-size: 16px;
+  border-bottom: 1px solid #e3e3e3;
+
+  .avatar {
+    margin-right: 10px;
+  }
+
+  .organization-title {
+    display: block;
+    padding-top: 0.4em;
+
+    &:hover {
+      color: $brand-blue;
+    }
+  }
+
+  .organization-stats {
+    vertical-align: inherit;
+    font-size: 14px;
+    font-weight: bold;
+    padding-top: 0.5em;
+
+    .organization-stat-item {
+      margin-right: 0.6em;
+
+      .octicon {
+        font-size: 16px;
+        margin-right: 4px;
+      }
+    }
+  }
+}
+
+.site-wrapper {
+  min-height: 100%;
+  height: auto;
+  margin: 0 auto -6em;
+}
+
+.site-footer {
+  margin-top: 1em;
+  height: 6em;
+}
+
+.made-by-logo {
+  height: 26px;
+}

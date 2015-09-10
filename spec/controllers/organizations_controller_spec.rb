@@ -10,6 +10,18 @@ RSpec.describe OrganizationsController, type: :controller do
     session[:user_id] = user.id
   end
 
+  describe 'GET #index' do
+    it 'returns success status' do
+      get :index
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'sets the users organization' do
+      get :index
+      expect(assigns(:organizations)).not_to be_nil
+    end
+  end
+
   describe 'GET #new', :vcr do
     it 'returns success status' do
       get :new
@@ -33,17 +45,27 @@ RSpec.describe OrganizationsController, type: :controller do
   end
 
   describe 'POST #create', :vcr do
-    it 'will add an organization' do
-      new_organization = build(:organization)
+    before do
+      request.env['HTTP_REFERER'] = 'http://classroomtest.com/orgs/new'
+    end
+
+    it 'will fail to add an organization the user is not an admin of' do
+      new_organization = build(:organization, github_id: 90)
       new_organization_options = { title: new_organization.title, github_id: new_organization.github_id }
 
-      expect { post :create, organization: new_organization_options }.to change { Organization.count }
-      expect(response).to redirect_to(invite_organization_path(Organization.last))
+      expect { post :create, organization: new_organization_options }.not_to change { Organization.count }
     end
 
     it 'will not add an organization that already exists' do
       existing_organization_options = { title: organization.title, github_id: organization.github_id }
       expect { post :create, organization: existing_organization_options }.to_not change { Organization.count }
+    end
+
+    it 'will add an organization that the user is admin of on GitHub' do
+      organization_params = { title: organization.title, github_id: organization.github_id, users: organization.users }
+      organization.destroy!
+
+      expect { post :create, organization: organization_params }.to change { Organization.count }
     end
   end
 
@@ -74,41 +96,32 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
-  describe 'DELETE #destroy' do
-    it 'deletes the organization' do
-      expect { delete :destroy, id: organization.id }.to change { Organization.count }
+  describe 'DELETE #destroy', :vcr do
+    it 'sets the `deleted_at` column for the organization' do
+      expect { delete :destroy, id: organization.id }.to change { Organization.all.count }
+      expect(Organization.unscoped.find(organization.id).deleted_at).not_to be_nil
     end
 
-    it 'redirects back to the dashboard' do
+    it 'calls the DestroyResource background job' do
       delete :destroy, id: organization.id
-      expect(response).to redirect_to(dashboard_path)
-    end
-  end
-
-  describe 'GET #invite', :vcr do
-    it 'returns an array of organization admins that have not been added yet' do
-      get :invite, id: organization.id
-
-      expect(assigns(:organization_owners)).to be_kind_of(Array)
-      expect(assigns(:organization_owners)).to_not include(user.uid)
-    end
-  end
-
-  describe 'PATCH #invite_users', :vcr do
-    it 'kicks off a InviteUserToClassroomJob for each invited user with an email address' do
-      github_owner_emails_params  = { 'not_invited_owner' => '', 'invited_owner' => 'invited_owner.8675309@osu.edu' }
-      github_owners_params        = { 'invited_owner' => '8439338' }
-
-      patch :invite_users, id:                  organization.id,
-                           github_owners:       github_owners_params,
-                           github_owner_emails: github_owner_emails_params
-
-      id    = github_owners_params['invited_owner']
-      email = github_owner_emails_params['invited_owner']
 
       assert_enqueued_jobs 1 do
-        InviteUserToClassroomJob.perform_later(id, email, user, organization)
+        DestroyResourceJob.perform_later(organization)
       end
+    end
+
+    it 'redirects back to the index page' do
+      delete :destroy, id: organization.id
+      expect(response).to redirect_to(organizations_path)
+    end
+  end
+
+  describe 'GET #invite' do
+    it 'returns success and sets the organization' do
+      get :invite, id: organization.id
+
+      expect(response.status).to eq(200)
+      expect(assigns(:organization)).to_not be_nil
     end
   end
 end

@@ -1,5 +1,27 @@
-<div class="columns">
-  <div class="one-half column centered">
-    <div class="loading" id="assignment-invitation-status" data-invitation-key="<%= @invitation.key %>"></div>
+<%= render 'organizations/organization_invitation_banner' %>
+
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">
+      <span class="assignment-icon assignment-icon-individual">
+        <%= octicon('person') %>
+      </span>
+      Accept the <strong><%= assignment.title %></strong> assignment
+    </h2>
   </div>
+</div>
+
+<div class="site-content-body">
+  <%= form_tag({ controller: :assignment_invitations, action: :accept_invitation}, method: :patch) do %>
+    <div class="markdown-body">
+      <p>
+        Accepting this assignment will give you access to the <strong><%= "#{assignment.slug}-#{decorated_current_user.login}" %></strong>
+        repository in the <%= link_to "@#{decorated_organization.login}", decorated_organization.github_url %> organization on GitHub.
+      </p>
+    </div>
+
+    <div class="form-actions">
+      <%= submit_tag 'Accept this assignment', class: 'btn btn-green js-navigation' %>
+    </div>
+  <% end %>
 </div>

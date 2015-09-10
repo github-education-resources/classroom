@@ -1,10 +1,20 @@
 class OrganizationsController < ApplicationController
-  before_action :ensure_logged_in
-  before_action :set_organization,               except: [:new, :create]
-  before_action :set_users_github_organizations, only:   [:new, :create]
+  include OrganizationAuthorization
 
-  rescue_from GitHub::Error,     with: :error
-  rescue_from GitHub::Forbidden, with: :deny_access
+  before_action :authorize_organization_addition, only: [:create]
+  before_action :set_users_github_organizations,  only: [:new, :create]
+
+  skip_before_action :set_organization, :authorize_organization_access, only: [:index, :new, :create]
+
+  decorates_assigned :organization
+
+  rescue_from GitHub::Error,               with: :error
+  rescue_from GitHub::Forbidden,           with: :deny_access
+  rescue_from GitHub::NotFound,            with: :deny_access
+
+  def index
+    @organizations = current_user.organizations.page(params[:page])
+  end
 
   def new
     @organization = Organization.new
@@ -21,7 +31,7 @@ class OrganizationsController < ApplicationController
   end
 
   def show
-    @assignments = @organization.all_assignments.sort_by(&:created_at)
+    @assignments = Kaminari.paginate_array(@organization.all_assignments.sort_by(&:updated_at)).page(params[:page])
   end
 
   def edit
@@ -37,40 +47,49 @@ class OrganizationsController < ApplicationController
   end
 
   def destroy
-    flash_message = "Organization \"#{@organization.title}\" was removed"
-    @organization.destroy
+    if @organization.update_attributes(deleted_at: Time.zone.now)
+      DestroyResourceJob.perform_later(@organization)
 
-    flash[:success] = flash_message
-    redirect_to dashboard_path
+      flash[:success] = "Your organization, @#{organization.login} is being reset"
+      redirect_to organizations_path
+    else
+      render :edit
+    end
   end
 
   def new_assignment
   end
 
   def invite
-    @organization_owners = set_github_organization_owners
-  end
-
-  def invite_users
-    params[:github_owners].each do |login, id|
-      email = params[:github_owner_emails][login]
-      InviteUserToClassroomJob.perform_later(id, email, current_user, @organization)
-    end
-
-    respond_to do |format|
-      format.html { redirect_to @organization }
-    end
   end
 
   private
 
+  def authorize_organization_access
+    return if @organization.users.include?(current_user) || current_user.staff?
+
+    begin
+      github_organization.admin?(decorated_current_user.login) ? @organization.users << current_user : not_found
+    rescue
+      not_found
+    end
+  end
+
+  def authorize_organization_addition
+    new_github_organization = GitHubOrganization.new(current_user.github_client,
+                                                     new_organization_params[:github_id].to_i)
+
+    deny_access unless new_github_organization.admin?(decorated_current_user.login)
+  end
+
   def deny_access
     flash[:error] = 'You are not authorized to perform this action'
-    redirect_to_root
+    redirect_to :back
   end
 
   def error(exception)
     flash[:error] = exception.message
+    redirect_to :back
   end
 
   def new_organization_params
@@ -81,16 +100,7 @@ class OrganizationsController < ApplicationController
   end
 
   def set_organization
-    @organization = Organization.find(params[:id])
-  end
-
-  def set_github_organization_owners
-    organization_users_uids = @organization.users.pluck(:uid)
-    github_organization     = GitHubOrganization.new(current_user.github_client, @organization.github_id)
-
-    github_organization.organization_members(role: 'admin').delete_if do |member|
-      organization_users_uids.include?(member.id)
-    end
+    @organization = Organization.friendly.find(params[:id])
   end
 
   def set_users_github_organizations

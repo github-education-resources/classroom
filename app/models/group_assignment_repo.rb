@@ -1,7 +1,8 @@
 class GroupAssignmentRepo < ActiveRecord::Base
+  include GitHubPlan
   include GitHubRepoable
 
-  has_one :organization, through: :group_assignment
+  has_one :organization, -> { unscope(where: :deleted_at) }, through: :group_assignment
 
   has_many :repo_accesses, through: :group
 
@@ -18,25 +19,30 @@ class GroupAssignmentRepo < ActiveRecord::Base
 
   # Public
   #
+  def creator
+    group_assignment.creator
+  end
+
+  # Public
+  #
   def private?
     !group_assignment.public_repo?
   end
 
-  private
-
-  # Internal
+  # Public
   #
   def github_team_id
     group.github_team_id
   end
 
-  # Internal
+  # Public
   #
   def repo_name
-    "#{group_assignment.title}-#{group.title}"
+    github_team = GitHubTeam.new(creator.github_client, github_team_id).team
+    "#{group_assignment.slug}-#{github_team.slug}"
   end
 
-  # Internal
+  # Public
   #
   def starter_code_repo_id
     group_assignment.starter_code_repo_id

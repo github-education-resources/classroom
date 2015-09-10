@@ -1,7 +1,8 @@
 class AssignmentRepo < ActiveRecord::Base
+  include GitHubPlan
   include GitHubRepoable
 
-  has_one :organization, through: :assignment
+  has_one :organization, -> { unscope(where: :deleted_at) }, through: :assignment
 
   belongs_to :assignment
   belongs_to :repo_access
@@ -16,25 +17,30 @@ class AssignmentRepo < ActiveRecord::Base
 
   # Public
   #
+  def creator
+    assignment.creator
+  end
+
+  # Public
+  #
   def private?
     !assignment.public_repo?
   end
 
-  private
-
-  # Internal
+  # Public
   #
   def github_team_id
     repo_access.github_team_id
   end
 
-  # Internal
+  # Public
   #
   def repo_name
-    "#{assignment.title}-#{assignment.assignment_repos.count + 1}"
+    github_user = GitHubUser.new(repo_access.user.github_client)
+    "#{assignment.slug}-#{github_user.login}"
   end
 
-  # Internal
+  # Public
   #
   def starter_code_repo_id
     assignment.starter_code_repo_id

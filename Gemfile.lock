@@ -1,36 +1,45 @@
+GIT
+  remote: git://github.com/Soliah/peek-sidekiq.git
+  revision: 261c857578ae6dc189506a35194785a4db51e54c
+  ref: 261c857578ae6dc189506a35194785a4db51e54c
+  specs:
+    peek-sidekiq (1.0.0)
+      peek
+      sidekiq
+
 GEM
   remote: https://rubygems.org/
   specs:
-    actionmailer (4.2.3)
-      actionpack (= 4.2.3)
-      actionview (= 4.2.3)
-      activejob (= 4.2.3)
+    actionmailer (4.2.4)
+      actionpack (= 4.2.4)
+      actionview (= 4.2.4)
+      activejob (= 4.2.4)
       mail (~> 2.5, >= 2.5.4)
       rails-dom-testing (~> 1.0, >= 1.0.5)
-    actionpack (4.2.3)
-      actionview (= 4.2.3)
-      activesupport (= 4.2.3)
+    actionpack (4.2.4)
+      actionview (= 4.2.4)
+      activesupport (= 4.2.4)
       rack (~> 1.6)
       rack-test (~> 0.6.2)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
-    actionview (4.2.3)
-      activesupport (= 4.2.3)
+    actionview (4.2.4)
+      activesupport (= 4.2.4)
       builder (~> 3.1)
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
-    activejob (4.2.3)
-      activesupport (= 4.2.3)
+    activejob (4.2.4)
+      activesupport (= 4.2.4)
       globalid (>= 0.3.0)
-    activemodel (4.2.3)
-      activesupport (= 4.2.3)
+    activemodel (4.2.4)
+      activesupport (= 4.2.4)
       builder (~> 3.1)
-    activerecord (4.2.3)
-      activemodel (= 4.2.3)
-      activesupport (= 4.2.3)
+    activerecord (4.2.4)
+      activemodel (= 4.2.4)
+      activesupport (= 4.2.4)
       arel (~> 6.0)
-    activesupport (4.2.3)
+    activesupport (4.2.4)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
@@ -42,7 +51,7 @@ GEM
     astrolabe (1.3.1)
       parser (~> 2.2)
     atomic (1.1.99)
-    autoprefixer-rails (5.2.1.2)
+    autoprefixer-rails (5.2.1.3)
       execjs
       json
     awesome_print (1.6.1)
@@ -55,8 +64,47 @@ GEM
     builder (3.2.2)
     byebug (5.0.0)
       columnize (= 0.9.0)
-    celluloid (0.16.1)
-      timers (~> 4.0.0)
+    celluloid (0.17.1.2)
+      bundler
+      celluloid-essentials
+      celluloid-extras
+      celluloid-fsm
+      celluloid-pool
+      celluloid-supervision
+      dotenv
+      nenv
+      rspec-logsplit (>= 0.1.2)
+      timers (>= 4.1.1)
+    celluloid-essentials (0.20.2.1)
+      bundler
+      dotenv
+      nenv
+      rspec-logsplit (>= 0.1.2)
+      timers (>= 4.1.1)
+    celluloid-extras (0.20.1)
+      bundler
+      dotenv
+      nenv
+      rspec-logsplit (>= 0.1.2)
+      timers (>= 4.1.1)
+    celluloid-fsm (0.20.1)
+      bundler
+      dotenv
+      nenv
+      rspec-logsplit (>= 0.1.2)
+      timers (>= 4.1.1)
+    celluloid-pool (0.20.1)
+      bundler
+      dotenv
+      nenv
+      rspec-logsplit (>= 0.1.2)
+      timers (>= 4.1.1)
+    celluloid-supervision (0.20.1.1)
+      bundler
+      dotenv
+      nenv
+      rspec-logsplit (>= 0.1.2)
+      timers (>= 4.1.1)
     coderay (1.1.0)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
@@ -65,6 +113,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.9.1.1)
+    color (1.7.1)
     columnize (0.9.0)
     connection_pool (2.2.0)
     crack (0.4.2)
@@ -77,19 +126,28 @@ GEM
     dotenv-rails (2.0.2)
       dotenv (= 2.0.2)
       railties (~> 4.0)
+    draper (2.1.0)
+      actionpack (>= 3.0)
+      activemodel (>= 3.0)
+      activesupport (>= 3.0)
+      request_store (~> 1.0)
     erubis (2.7.0)
-    execjs (2.5.2)
+    execjs (2.6.0)
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.5.0)
       factory_girl (~> 4.5.0)
       railties (>= 3.0.0)
-    faker (1.4.3)
+    faker (1.5.0)
       i18n (~> 0.5)
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
-    faraday-http-cache (1.1.1)
+    faraday-http-cache (1.2.2)
       faraday (~> 0.8)
+    friendly_id (5.1.0)
+      activerecord (>= 4.0.0)
+    geo_pattern (1.4.0)
+      color (~> 1.5)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     hashie (3.4.2)
@@ -98,9 +156,15 @@ GEM
     jbuilder (2.3.1)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
+    jquery-turbolinks (2.1.0)
+      railties (>= 3.1.0)
+      turbolinks
     json (1.8.3)
     jwt (1.5.1)
-    loofah (2.0.2)
+    kaminari (0.16.3)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
+    loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
@@ -111,6 +175,8 @@ GEM
     multi_json (1.11.2)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
+    nenv (0.2.0)
+    newrelic_rpm (3.13.0.299)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
     oauth2 (1.0.0)
@@ -119,7 +185,7 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (~> 1.2)
-    octokit (4.0.1)
+    octokit (4.1.0)
       sawyer (~> 0.6.0, >= 0.5.3)
     omniauth (1.2.2)
       hashie (>= 1.2, < 4)
@@ -160,10 +226,13 @@ GEM
       pry (~> 0.10)
     pry-rails (0.3.4)
       pry (>= 0.9.10)
-    puma (2.12.3)
+    puma (2.13.4)
     quiet_assets (1.1.0)
       railties (>= 3.1, < 5.0)
     rack (1.6.4)
+    rack-canonical-host (0.1.0)
+      addressable
+      rack (~> 1.0)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.3)
@@ -172,16 +241,16 @@ GEM
       activesupport (>= 3.0)
       rack (>= 1.4)
       tilt (>= 1.4)
-    rails (4.2.3)
-      actionmailer (= 4.2.3)
-      actionpack (= 4.2.3)
-      actionview (= 4.2.3)
-      activejob (= 4.2.3)
-      activemodel (= 4.2.3)
-      activerecord (= 4.2.3)
-      activesupport (= 4.2.3)
+    rails (4.2.4)
+      actionmailer (= 4.2.4)
+      actionpack (= 4.2.4)
+      actionview (= 4.2.4)
+      activejob (= 4.2.4)
+      activemodel (= 4.2.4)
+      activerecord (= 4.2.4)
+      activesupport (= 4.2.4)
       bundler (>= 1.3.0, < 2.0)
-      railties (= 4.2.3)
+      railties (= 4.2.4)
       sprockets-rails
     rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
@@ -195,10 +264,10 @@ GEM
       rails_serve_static_assets
       rails_stdout_logging
     rails_serve_static_assets (0.0.4)
-    rails_stdout_logging (0.0.3)
-    railties (4.2.3)
-      actionpack (= 4.2.3)
-      activesupport (= 4.2.3)
+    rails_stdout_logging (0.0.4)
+    railties (4.2.4)
+      actionpack (= 4.2.4)
+      activesupport (= 4.2.4)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rainbow (2.0.0)
@@ -206,11 +275,13 @@ GEM
     redis (3.2.1)
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
+    request_store (1.2.0)
     rspec-core (3.3.2)
       rspec-support (~> 3.3.0)
     rspec-expectations (3.3.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.3.0)
+    rspec-logsplit (0.1.3)
     rspec-mocks (3.3.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.3.0)
@@ -231,7 +302,7 @@ GEM
       ruby-progressbar (~> 1.4)
     ruby-progressbar (1.7.5)
     safe_yaml (1.0.4)
-    sass (3.4.16)
+    sass (3.4.18)
     sass-rails (5.0.3)
       railties (>= 4.0.0, < 5.0)
       sass (~> 3.1)
@@ -241,13 +312,11 @@ GEM
     sawyer (0.6.0)
       addressable (~> 2.3.5)
       faraday (~> 0.8, < 0.10)
-    scss_lint (0.40.1)
+    scss_lint (0.41.0)
       rainbow (~> 2.0)
-      sass (~> 3.4.1)
-    shoulda-matchers (3.0.0.rc1)
-      activesupport (>= 4.0.0)
-    sidekiq (3.4.2)
-      celluloid (~> 0.16.0)
+      sass (~> 3.4.15)
+    sidekiq (3.5.0)
+      celluloid (~> 0.17.0)
       connection_pool (~> 2.2, >= 2.2.0)
       json (~> 1.0)
       redis (~> 3.2, >= 3.2.1)
@@ -258,7 +327,7 @@ GEM
       tilt (>= 1.3, < 3)
     slop (3.6.0)
     spring (1.3.6)
-    sprockets (3.3.0)
+    sprockets (3.3.1)
       rack (~> 1.0)
     sprockets-rails (2.3.2)
       actionpack (>= 3.0)
@@ -267,13 +336,13 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (1.4.1)
-    timers (4.0.1)
+    timers (4.1.1)
       hitimes
     turbolinks (2.5.3)
       coffee-rails
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uglifier (2.7.1)
+    uglifier (2.7.2)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
     vcr (2.9.3)
@@ -293,10 +362,16 @@ DEPENDENCIES
   dalli
   database_cleaner
   dotenv-rails
+  draper
   factory_girl_rails
   faker
   faraday-http-cache
+  friendly_id
+  geo_pattern
   jbuilder
+  jquery-turbolinks
+  kaminari
+  newrelic_rpm
   octokit
   omniauth
   omniauth-github
@@ -306,22 +381,24 @@ DEPENDENCIES
   peek-git
   peek-performance_bar
   peek-pg
+  peek-sidekiq!
   pg
   pry-byebug
   pry-rails
   puma
   quiet_assets
+  rack-canonical-host
   rack-tracker
-  rails (= 4.2.3)
+  rails (= 4.2.4)
   rails_12factor
   rspec-rails
   rubocop
   sass-rails (~> 5.0)
   scss_lint
-  shoulda-matchers (= 3.0.0.rc1)
   sidekiq
   sinatra
   spring
+  sprockets (= 3.3.1)
   turbolinks
   uglifier (>= 1.3.0)
   vcr

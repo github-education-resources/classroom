@@ -4,22 +4,6 @@ RSpec.describe Group, type: :model do
   let(:organization) { GitHubFactory.create_owner_classroom_org }
   let(:grouping)     { Grouping.create(title: 'Grouping 1', organization: organization) }
 
-  it { is_expected.to have_one(:organization).through(:grouping) }
-
-  it { is_expected.to belong_to(:grouping) }
-
-  it { is_expected.to have_and_belong_to_many(:repo_accesses) }
-
-  describe 'validation and uniqueness', :vcr do
-    subject { Group.new(title: 'Group 1', grouping: grouping) }
-
-    # it { is_expected.to validate_presence_of(:github_team_id) }
-    it { is_expected.to validate_presence_of(:grouping)       }
-    # it { is_expected.to validate_presence_of(:title)          }
-    #
-    it { is_expected.to validate_uniqueness_of(:github_team_id) }
-  end
-
   describe 'callbacks', :vcr do
     let(:organization) { GitHubFactory.create_owner_classroom_org }
     let(:grouping)     { Grouping.create(title: 'Grouping 1', organization: organization) }

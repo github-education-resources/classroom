@@ -1,0 +1,36 @@
+<%= render 'organizations/organization_banner' %>
+
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">
+      <span class="assignment-icon assignment-icon-individual">
+        <%= octicon('person') %>
+      </span>
+      Assignment settings
+    </h2>
+  </div>
+</div>
+
+<div class="site-content-body">
+  <%= form_for [@organization, @assignment] do |f| %>
+    <div class="columns">
+      <div class="two-thirds column">
+        <%= render 'shared/error_messages', object: f.object %>
+        <%= render partial: 'assignments/assignment_form_options', locals: { f: f } %>
+      </div>
+
+      <div class="one-third column dangerzone-container">
+        <p class="text-emphasized">Delete this assignment</p>
+        <p class="text-muted">Once you delete this assignment, there is no going back. Please be certain.</p>
+        <a data-remodal-target="delete-assignment" class="btn btn-danger btn-block">Delete this assignment</a>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= f.submit 'Save changes', class: 'btn btn-green js-navigation' %>
+      <%= link_to 'Cancel', [@organization, @assignment], class: 'btn', role: 'button' %>
+    </div>
+  <% end %>
+</div>
+
+<%= render partial: 'assignments/delete_assignment_modal' %>

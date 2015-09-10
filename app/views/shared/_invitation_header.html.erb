@@ -1,0 +1,35 @@
+<header class="site-header">
+  <div class="container">
+    <nav class="site-nav">
+      <ul>
+        <%= link_to "GitHub Education", 'https://education.github.com', target: '_blank' %>
+
+        <li>
+          <%= link_to 'https://github.com/education/classroom/issues/new', class: 'tooltipped tooltipped-s', 'aria-label' => 'Report an issue' do %>
+            <%= octicon('bug') %>
+          <% end %>
+        </li>
+
+        <li>
+          <%= link_to 'https://github.com/education/classroom/issues/new' do %>
+            <%= octicon('bug') %>
+          <% end %>
+        </li>
+
+        <li>
+          <%= link_to decorated_current_user.github_url, class: 'tooltipped tooltipped-s', 'aria-label' => 'View GitHub profile' do %>
+            <%= image_tag decorated_current_user.avatar_url(40), class: 'avatar', alt: "@#{decorated_current_user.login}", height: 20, width: 20 %>
+          <% end %>
+        </li>
+
+        <li>
+          <%= link_to logout_path, method: :post, class: 'tooltipped tooltipped-s', 'aria-label' => 'Sign out' do %>
+            <%= octicon('sign-out') %>
+          <% end %>
+        </li>
+      </ul>
+    </nav>
+
+    <%= image_tag('logo@2x.png', :class => 'site-logo', :alt => 'GitHub for Classrooms') %>
+  </div>
+</header>

@@ -1,7 +1,12 @@
 class GroupAssignment < ActiveRecord::Base
+  include GitHubPlan
+
+  extend FriendlyId
+  friendly_id :title, use: [:slugged, :finders]
+
   default_scope { where(deleted_at: nil) }
 
-  has_one :group_assignment_invitation, dependent: :destroy
+  has_one :group_assignment_invitation, dependent: :destroy, autosave: true
 
   has_many :group_assignment_repos, dependent: :destroy
 
@@ -11,6 +16,8 @@ class GroupAssignment < ActiveRecord::Base
 
   validates :creator, presence: true
 
+  validates :grouping, presence: true
+
   validates :organization, presence: true
 
   validates :title, presence: true
@@ -18,9 +25,7 @@ class GroupAssignment < ActiveRecord::Base
 
   validate :uniqueness_of_title_across_organization
 
-  def group_assignment_invitation
-    super || NullGroupAssignmentInvitation.new
-  end
+  alias_attribute :invitation, :group_assignment_invitation
 
   def private?
     !public_repo
@@ -38,6 +43,6 @@ class GroupAssignment < ActiveRecord::Base
 
   def uniqueness_of_title_across_organization
     return unless Assignment.where(title: title, organization: organization).present?
-    errors.add(:title, 'has already been taken')
+    errors.add(:title, 'title is already in use for your organization')
   end
 end

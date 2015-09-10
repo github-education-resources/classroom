@@ -1,20 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentInvitation, type: :model do
-  it { is_expected.to have_one(:organization).through(:assignment) }
-
-  it { is_expected.to belong_to(:assignment) }
-
   it_behaves_like 'a default scope where deleted_at is not present'
-
-  describe 'validations and uniqueness' do
-    subject { AssignmentInvitation.new }
-
-    it { is_expected.to validate_presence_of(:assignment) }
-
-    it { is_expected.to validate_presence_of(:key)   }
-    it { is_expected.to validate_uniqueness_of(:key) }
-  end
 
   it 'should have a key after initialization' do
     assignment_invitation = AssignmentInvitation.new
@@ -40,8 +27,17 @@ RSpec.describe AssignmentInvitation, type: :model do
     end
 
     it 'returns the full repo name of the users GitHub repository' do
-      full_repo_name = assignment_invitation.redeem_for(invitee)
-      expect(full_repo_name).to eql("#{organization.title}/#{assignment.title}-1")
+      assignment_repo = assignment_invitation.redeem_for(invitee)
+      expect(assignment_repo).to eql(AssignmentRepo.last)
+    end
+  end
+
+  describe '#title' do
+    let(:assignment_invitation) { create(:assignment_invitation) }
+
+    it 'returns the assignments title' do
+      assignment_title = assignment_invitation.assignment.title
+      expect(assignment_invitation.title).to eql(assignment_title)
     end
   end
 

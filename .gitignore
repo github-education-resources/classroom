@@ -17,3 +17,6 @@
 
 # Rails ERD
 erd.pdf
+
+# Sketch
+*.sketch

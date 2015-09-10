@@ -2,7 +2,9 @@ class RepoAccess < ActiveRecord::Base
   include GitHubTeamable
 
   belongs_to :user
-  belongs_to :organization
+  belongs_to :organization, -> { unscope(where: :deleted_at) }
+
+  has_many :assignment_repos
 
   has_and_belongs_to_many :groups
 
@@ -43,6 +45,6 @@ class RepoAccess < ActiveRecord::Base
   # Internal
   #
   def title
-    "Team #{organization.repo_accesses.count + 1}"
+    GitHubUser.new(user.github_client).login
   end
 end

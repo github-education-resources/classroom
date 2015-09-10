@@ -34,6 +34,10 @@ class GitHubTeam
     end
   end
 
+  def team
+    with_error_handling { @client.team(@id) }
+  end
+
   # Public
   #
   def team_repository?(full_name)

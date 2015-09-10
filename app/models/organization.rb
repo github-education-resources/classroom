@@ -1,4 +1,7 @@
 class Organization < ActiveRecord::Base
+  extend FriendlyId
+  friendly_id :title, use: [:slugged, :finders]
+
   default_scope { where(deleted_at: nil) }
 
   has_many :assignments,       dependent: :destroy
@@ -8,9 +11,8 @@ class Organization < ActiveRecord::Base
 
   has_and_belongs_to_many :users
 
-  validates :github_id, :title, presence: true, uniqueness: true
-
-  after_save :validate_minimum_number_of_users
+  validates :github_id, presence: true, uniqueness: true
+  validates :title,     presence: true, uniqueness: { case_sensitive: false }
 
   # Public
   #
@@ -21,17 +23,6 @@ class Organization < ActiveRecord::Base
   # Public
   #
   def github_client
-    users.where(state: 'active').sample.github_client
-  end
-
-  private
-
-  # Internal
-  #
-  def validate_minimum_number_of_users
-    return if users.count > 0
-    error_message = 'must have at least one user'
-    errors.add(:users, error_message)
-    fail ActiveRecord::RecordInvalid.new(self), error_message
+    users.sample.github_client
   end
 end

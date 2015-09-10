@@ -1,22 +1,25 @@
 class GroupAssignmentsController < ApplicationController
-  before_action :ensure_logged_in
-  before_action :set_organization
+  include OrganizationAuthorization
+  include StarterCode
+
   before_action :set_group_assignment, except: [:new, :create]
   before_action :set_groupings,        except: [:show]
 
-  rescue_from GitHub::Error, GitHub::Forbidden, GitHub::NotFound, with: :error
+  decorates_assigned :organization
+  decorates_assigned :group_assignment
+
+  rescue_from GitHub::Error,               with: :error
+  rescue_from GitHub::Forbidden,           with: :error
+  rescue_from GitHub::NotFound,            with: :error
 
   def new
     @group_assignment = GroupAssignment.new
   end
 
   def create
-    @group_assignment = GroupAssignment.new(new_group_assignment_params)
+    @group_assignment = build_group_assignment
 
     if @group_assignment.save
-      CreateGroupingJob.perform_later(@group_assignment, new_grouping_params)
-      CreateGroupAssignmentInvitationJob.perform_later(@group_assignment)
-
       flash[:success] = "\"#{@group_assignment.title}\" has been created!"
       redirect_to organization_group_assignment_path(@organization, @group_assignment)
     else
@@ -25,11 +28,39 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def show
+    @group_assignment_repos = @group_assignment.group_assignment_repos.page(params[:page])
+  end
+
+  def edit
+  end
+
+  def update
+    if @group_assignment.update_attributes(update_group_assignment_params)
+      flash[:success] = "Assignment \"#{@group_assignment.title}\" updated"
+      redirect_to organization_group_assignment_path(@organization, @group_assignment)
+    else
+      render :edit
+    end
+  end
+
+  def destroy
+    if @group_assignment.update_attributes(deleted_at: Time.zone.now)
+      DestroyResourceJob.perform_later(@group_assignment)
+
+      flash[:success] = "\"#{@group_assignment.title}\" is being deleted"
+      redirect_to @organization
+    else
+      render :edit
+    end
   end
 
   private
 
-  def error
+  def build_group_assignment
+    GroupAssignmentService.new(new_group_assignment_params, new_grouping_params).build_group_assignment
+  end
+
+  def error(exception)
     flash[:error] = exception.message
     redirect_to :back
   end
@@ -39,7 +70,7 @@ class GroupAssignmentsController < ApplicationController
       .require(:group_assignment)
       .permit(:title, :public_repo, :grouping_id)
       .merge(creator: current_user,
-             organization_id: params[:organization_id],
+             organization: @organization,
              starter_code_repo_id: starter_code_repository_id(params[:repo_name]))
   end
 
@@ -47,7 +78,7 @@ class GroupAssignmentsController < ApplicationController
     params
       .require(:grouping)
       .permit(:title)
-      .merge(organization_id: new_group_assignment_params[:organization_id])
+      .merge(organization: @organization)
   end
 
   def set_groupings
@@ -55,17 +86,13 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def set_group_assignment
-    @group_assignment = GroupAssignment.find(params[:id])
+    @group_assignment = GroupAssignment.friendly.find(params[:id])
   end
 
-  def set_organization
-    @organization = Organization.find(params[:organization_id])
-  end
-
-  def starter_code_repository_id(repo_name)
-    return unless repo_name.present?
-    sanitized_repo_name = repo_name.gsub(/\s+/, '')
-    github_repository   = GitHubRepository.new(current_user.github_client, nil)
-    github_repository.repository(sanitized_repo_name).id
+  def update_group_assignment_params
+    params
+      .require(:group_assignment)
+      .permit(:title, :public_repo)
+      .merge(starter_code_repo_id: starter_code_repository_id(params[:repo_name]))
   end
 end

@@ -1,24 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe GroupAssignmentInvitation, type: :model do
-  it { is_expected.to have_one(:grouping).through(:group_assignment)     }
-  it { is_expected.to have_one(:organization).through(:group_assignment) }
-
-  it { is_expected.to have_many(:groups).through(:grouping) }
-
-  it { is_expected.to belong_to(:group_assignment) }
-
-  it_behaves_like 'a default scope where deleted_at is not present'
-
-  describe 'validations and uniqueness' do
-    subject { GroupAssignmentInvitation.new }
-
-    it { is_expected.to validate_presence_of(:group_assignment) }
-
-    it { is_expected.to validate_presence_of(:key)   }
-    it { is_expected.to validate_uniqueness_of(:key) }
-  end
-
   it 'should have a key after initialization' do
     group_assignment_invitation = GroupAssignmentInvitation.new
     expect(group_assignment_invitation.key).to_not be_nil
@@ -45,9 +27,18 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
       GroupAssignmentRepo.destroy_all
     end
 
-    it 'returns the full repo name of the users GitHub repository' do
-      full_repo_name = group_assignment_invitation.redeem_for(invitee, nil, 'Code Squad')
-      expect(full_repo_name).to eql("#{organization.title}/#{group_assignment.title}-Code-Squad")
+    it 'returns the GroupAssignmentRepo' do
+      group_assignment_repo = group_assignment_invitation.redeem_for(invitee, nil, 'Code Squad')
+      expect(group_assignment_repo).to eql(GroupAssignmentRepo.last)
+    end
+  end
+
+  describe '#title' do
+    let(:group_assignment_invitation) { create(:group_assignment_invitation) }
+
+    it 'returns the group assignments title' do
+      group_assignment_title = group_assignment_invitation.group_assignment.title
+      expect(group_assignment_invitation.title).to eql(group_assignment_title)
     end
   end
 

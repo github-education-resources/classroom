@@ -4,10 +4,10 @@
 @import "octicons/octicons/sprockets-octicons";
 @import "primer-css/scss/primer";
 
+@import "primer-markdown/components/markdown";
+
 @import "components/*";
 
 @import "layout";
 
-@import "header";
-
-@import "organizations";
+@import "remodal/dist/remodal";

@@ -20,4 +20,29 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  activerecord:
+    attributes:
+      grouping:
+        title: 'Your set of teams'
+      group_assignment:
+        title: 'Your assignment'
+      assignment:
+        title: 'Your assignment'
+    errors:
+      models:
+        grouping:
+          attributes:
+            title:
+              blank: 'must have a name'
+        group_assignment:
+          attributes:
+            title:
+              blank: 'must have a title'
+        assignment:
+          attributes:
+            title:
+              blank: 'must have a title'
+  views:
+    pagination:
+      previous: 'Previous'
+      next: 'Next'

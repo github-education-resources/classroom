@@ -5,22 +5,30 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Classroom</title>
+    <title>Classroom for GitHub</title>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
     <%= csrf_meta_tags %>
   </head>
   <body class="<%= controller_name %> <%= action_name %>">
-    <%= render 'peek/bar' %>
-    <%= render 'shared/header' %>
+    <div class="site-wrapper">
+      <div class="loading-indicator" style="display: none;"></div>
 
-    <div class="container">
+      <%= render 'peek/bar' %>
+      <%= render 'shared/header' %>
+
+      <%= yield :organization_banner %>
+
       <%= render 'shared/flash_messages' %>
+
+      <div class="site-content">
+        <div class="container">
+          <%= yield %>
+        </div>
+      </div>
     </div>
 
-    <div class="container">
-      <%= yield %>
-    </div>
+    <%= render 'shared/footer' %>
 
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   </body>
