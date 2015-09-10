@@ -2,20 +2,25 @@
   box-sizing: border-box;
 }
 
-html,
-body {
-  height: 100%;
-}
-
 body {
   font: 13px/1.4 Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
   background-color: #f3f4f6;
+
+  &.site {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
 }
 
 a {
   &:hover {
     text-decoration: none;
   }
+}
+
+main {
+  flex: 1;
 }
 
 .site-header {
@@ -28,6 +33,14 @@ a {
 .site-logo {
   width: 230px;
   height: 20px;
+
+  @media (max-width: 34em) {
+    margin-bottom: 1rem;
+    display: block;
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 .site-nav {
@@ -41,15 +54,31 @@ a {
     li {
       display: inline-block;
       margin-left: 2rem;
+
+      @media (max-width: 34em) {
+        margin-left: 0;
+      }
     }
   }
 
   a {
     color: rgba(255, 255, 255, 0.5);
+
+    @media (max-width: 34em) {
+      margin-left: 1rem;
+      margin-right: 1rem;
+    }
   }
 
   a:hover {
     color: rgba(255, 255, 255, 1);
+  }
+
+  @media (max-width: 34em) {
+    padding-top: 1rem;
+    border-top: 0.075rem solid rgba(255, 255, 255, 0.25);
+    text-align: center;
+    width: 100%;
   }
 }
 
@@ -63,6 +92,15 @@ a {
     float: right;
     margin-top: 1.7rem;
   }
+
+  @media (max-width: 34em) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    .btn {
+      display: none;
+    }
+  }
 }
 
 .organization-name {
@@ -72,6 +110,10 @@ a {
 
   a {
     color: inherit;
+  }
+
+  @media (max-width: 34em) {
+    font-size: 1.5rem;
   }
 }
 
@@ -99,6 +141,10 @@ a {
   .btn {
     margin-top: -5px;
   }
+
+  @media (max-width: 34em) {
+    padding: 1.5rem 1rem;
+  }
 }
 
 .site-content-body {
@@ -108,6 +154,10 @@ a {
   border-top: 0;
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
+
+  @media (max-width: 43em) {
+    padding: 1rem;
+  }
 }
 
 .site-content-heading {
@@ -153,9 +203,20 @@ a {
   background-color: #555;
 }
 
-.assignment-listing {
-  margin-bottom: 2rem;
+.assignment-list-items {
+  .assignment-list-item:not(:first-child) {
+    border-top: 1px solid #e3e3e3;
+    margin-top: 1rem;
+    padding-top: 1rem;
 
+    @media (max-width: 34em) {
+      margin-top: 0.5rem;
+      padding-top: 1rem;
+    }
+  }
+}
+
+.assignment-list-item {
   .assignment-icon {
     margin-right: 0.7rem;
   }
@@ -202,12 +263,31 @@ hr {
   margin-bottom: 2rem;
 }
 
+.assignment-repo-list {
+  .assignment-repo-list-item:not(:first-child) {
+    border-top: 1px solid #e3e3e3;
+    margin-top: 1rem;
+    padding-top: 1rem;
+
+    @media (max-width: 34em) {
+      margin-bottom: 0;
+    }
+  }
+}
+
 .assignment-repo-list-item {
-  margin-bottom: 1rem;
   font-size: 14px;
 
   .avatar {
     margin-right: 10px;
+
+    @media (max-width: 34em) {
+      margin-right: 0;
+    }
+  }
+
+  .css-truncate-target {
+    max-width: 20rem;
   }
 
   .student-login {
@@ -221,22 +301,23 @@ hr {
   }
 }
 
+.group-assignment-repo-list {
+  .group-assignment-repo-list-item:not(:first-child) {
+    border-top: 1px solid #e3e3e3;
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+}
+
 .group-assignment-repo-list-item {
-  margin-bottom: 1rem;
   font-size: 14px;
 
-  .student-ellipse {
-    font-size: 13px;
-    display: inline-block;
-    text-align: center;
-    width: 30px;
-    height: 30px;
-    line-height: 24px;
-    color: $brand-gray;
-    border-radius: 3px;
-    font-weight: bold;
-    background-color: #ddd;
-    vertical-align: top;
+  .css-truncate-target {
+    max-width: 20rem;
+
+    @media (max-width: 34em) {
+      max-width: 10rem;
+    }
   }
 
   .team-name {
@@ -247,13 +328,35 @@ hr {
       color: $brand-blue;
     }
   }
+
+  ul {
+    list-style-type: none;
+
+    li {
+      display: inline-block;
+
+      @media (max-width: 34em) {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+.organization-list-items {
+  .organization-list-item:not(:first-child) {
+    border-top: 1px solid #e3e3e3;
+    margin-top: 2rem;
+    padding-top: 2rem;
+
+    @media (max-width: 34em) {
+      margin-top: 1rem;
+      padding-top: 1rem;
+    }
+  }
 }
 
 .organization-list-item {
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
   font-size: 16px;
-  border-bottom: 1px solid #e3e3e3;
 
   .avatar {
     margin-right: 10px;
@@ -282,20 +385,29 @@ hr {
         margin-right: 4px;
       }
     }
-  }
-}
 
-.site-wrapper {
-  min-height: 100%;
-  height: auto;
-  margin: 0 auto -6em;
+    @media (max-width: 34em) {
+      display: none;
+    }
+  }
 }
 
 .site-footer {
   margin-top: 1em;
-  height: 6em;
+  margin-bottom: 1em;
 }
 
-.made-by-logo {
-  height: 26px;
+.invitation-content,
+.settings,
+.student-information,
+.zeroclipboard-form {
+  @media (max-width: 34em) {
+    display: none;
+  }
+}
+
+.blankslate.spacious {
+  @media (max-width: 34em) {
+    padding: 1rem 0;
+  }
 }

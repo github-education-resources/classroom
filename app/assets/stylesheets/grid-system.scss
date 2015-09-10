@@ -1,0 +1,88 @@
+.container {
+  @include clearfix;
+  width: auto;
+  max-width: $container-width;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.columns {
+  @media (max-width: 43em) {
+    .one-half:not(:last-child) {
+      margin-bottom: $grid-gutter;
+      padding-bottom: $grid-gutter;
+    }
+  }
+}
+
+// Column widths
+.one-third {
+  width: 33.333333%;
+
+  @media (max-width: 43em) {
+    width: 100%;
+  }
+}
+
+.two-thirds {
+  width: 66.666667%;
+
+  @media (max-width: 43em) {
+    width: 100%;
+  }
+}
+
+.one-fourth {
+  width: 25%;
+
+  @media (max-width: 43em) {
+    width: 100%;
+  }
+}
+
+.one-half {
+  width: 50%;
+
+  @media (max-width: 43em) {
+    width: 100%;
+  }
+}
+
+.three-fourths {
+  width: 75%;
+
+  @media (max-width: 43em) {
+    width: 100%;
+  }
+}
+
+.one-fifth {
+  width: 20%;
+
+  @media (max-width: 43em) {
+    width: 100%;
+  }
+}
+
+.four-fifths {
+  width: 80%;
+
+  @media (max-width: 43em) {
+    width: 100%;
+  }
+}
+
+// Single column hack
+.single-column {
+  padding-right: $grid-gutter;
+  padding-left: $grid-gutter;
+}
+
+// Equal width columns via table sorcery.
+.table-column {
+  display: table-cell;
+  width: 1%;
+  padding-right: $grid-gutter;
+  padding-left: $grid-gutter;
+  vertical-align: top;
+}
