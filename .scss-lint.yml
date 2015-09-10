@@ -6,7 +6,7 @@
 # https://github.com/causes/scss-lint/blob/master/config/default.yml
 # below is our settings.
 
-scss_files: 'app/assets/stylesheets/**/*.scss'
+scss_files: './app/assets/stylesheets'
 
 linters:
   BangFormat:

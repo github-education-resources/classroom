@@ -10,13 +10,13 @@
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
     <%= csrf_meta_tags %>
   </head>
-  <body class="<%= controller_name %> <%= action_name %>">
-    <div class="site-wrapper">
-      <div class="loading-indicator" style="display: none;"></div>
+  <body class="site <%= controller_name %> <%= action_name %>">
+    <div class="loading-indicator" style="display: none;"></div>
 
-      <%= render 'peek/bar' %>
-      <%= render 'shared/header' %>
+    <%= render 'peek/bar' %>
+    <%= render 'shared/header' %>
 
+    <main>
       <%= yield :organization_banner %>
 
       <%= render 'shared/flash_messages' %>
@@ -26,7 +26,7 @@
           <%= yield %>
         </div>
       </div>
-    </div>
+    </main>
 
     <%= render 'shared/footer' %>
 
