@@ -6,6 +6,15 @@
   margin-left: auto;
 }
 
+.columns {
+  @media (max-width: 43em) {
+    .one-half:not(:last-child) {
+      margin-bottom: $grid-gutter;
+      padding-bottom: $grid-gutter;
+    }
+  }
+}
+
 // Column widths
 .one-third {
   width: 33.333333%;
