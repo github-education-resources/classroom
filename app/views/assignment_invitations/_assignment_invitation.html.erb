@@ -1,5 +1,7 @@
 <form>
   <dt><label>Give this to your students</label></dt>
+  <%= content_tag :input, '', type: 'text', class: 'input-block js-url-field', value: assignment_invitation_url(assignment_invitation), readonly: 'readonly' %>
+
   <div class="input-group input-block">
     <%= content_tag :input, '', type: 'text', class: 'js-url-field', value: assignment_invitation_url(assignment_invitation), readonly: 'readonly' %>
     <span class="input-group-button">

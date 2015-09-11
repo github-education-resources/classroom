@@ -19,9 +19,7 @@
   </div>
 
   <div class="site-content-body">
-    <div class="invitation-content">
-      <%= render @assignment.assignment_invitation %>
-    </div>
+    <%= render @assignment.assignment_invitation %>
 
     <% if @assignment_repos.present? %>
       <div class="assignment-repo-list">
