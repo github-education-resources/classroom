@@ -15,8 +15,12 @@ class GitHubUser
   # Public
   #
   def admin_organization_memberships
+    no_cache_headers = { 'Cache-Control' => 'no-cache, no-store' }
+
     with_error_handling do
-      @client.organization_memberships(state: 'active').keep_if { |membership| membership.role == 'admin' }
+      @client.organization_memberships(state: 'active', headers: no_cache_headers).keep_if do |membership|
+        membership.role == 'admin'
+      end
     end
   end
 
