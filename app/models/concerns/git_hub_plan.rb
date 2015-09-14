@@ -9,22 +9,19 @@ module GitHubPlan
   end
 
   def verify_organization_has_private_repos_available
-    created_private_repos = github_assignment_organization.owned_private_repos
-    allowed_private_repos = github_assignment_organization.plan.private_repos
+    github_organization_plan = GitHubOrganization.new(organization.github_client, organization.github_id).plan
 
-    return if created_private_repos < allowed_private_repos
+    owned_private_repos = github_organization_plan[:owned_private_repos]
+    private_repos       = github_organization_plan[:private_repos]
+
+    return if owned_private_repos < private_repos
 
     error_message = <<-ERROR
-    Cannot make this private assignment, your limit of #{allowed_private_repos}
-    #{'repository'.pluralize(allowed_private_repos)} has been reached. You can request
+    Cannot make this private assignment, your limit of #{private_repos}
+    #{'repository'.pluralize(private_repos)} has been reached. You can request
     a larger plan for free at https://education.github.com/discount
     ERROR
 
     fail GitHub::Error, error_message
-  end
-
-  def github_assignment_organization
-    @github_assignment_organization = GitHubOrganization.new(organization.github_client,
-                                                             organization.github_id).organization
   end
 end
