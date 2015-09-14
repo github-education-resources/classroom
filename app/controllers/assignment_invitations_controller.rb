@@ -1,4 +1,6 @@
-class AssignmentInvitationsController < InvitationsController
+class AssignmentInvitationsController < ApplicationController
+  layout 'layouts/invitations'
+
   before_action :check_user_not_previous_acceptee, only: [:show]
 
   def accept_invitation
@@ -10,6 +12,9 @@ class AssignmentInvitationsController < InvitationsController
       flash[:error] = 'An error has occured, please refresh the page and try again.'
       redirect_to :show
     end
+  end
+
+  def show
   end
 
   def successful_invitation
