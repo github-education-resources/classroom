@@ -55,7 +55,6 @@ class GroupAssignmentsController < ApplicationController
   private
 
   def authorize_grouping_access
-    binding.pry
     grouping_id = new_group_assignment_params[:grouping_id]
 
     if grouping_id.present?
