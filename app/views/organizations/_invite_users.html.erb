@@ -10,7 +10,9 @@
 
     <h3>2. Give them this URL</h3>
     <p>After signing in, they will automatically be added to this classroom.</p>
-    <div class="columns">
+    <%= link_to organization_url(@organization), organization_url(@organization), class: 'mobile-invitation-content' %>
+
+    <div class="columns desktop-invitation-content">
       <div class="two-thirds column">
         <div class="input-group">
           <%= content_tag :input, '', type: 'text', class: 'js-url-field', value: organization_url(@organization), readonly: 'readonly' %>

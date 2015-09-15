@@ -1,5 +1,5 @@
 <% flash.each do |type, message| %>
-  <div class="flash-application">
+  <div class="flash-application container">
     <%= content_tag :div, class: "flash #{primer_class_for(type)}" do %>
       <span class="octicon octicon-x flash-close js-flash-close"></span>
       <%= message %>
