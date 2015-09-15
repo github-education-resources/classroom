@@ -10,8 +10,13 @@
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
     <%= csrf_meta_tags %>
   </head>
-  <body class="<%= controller_name %> <%= action_name %>">
-    <%= render 'shared/header' %>
-    <%= yield %>
+  <body class="site <%= controller_name %> <%= action_name %>">
+
+    <main>
+      <%= render 'shared/header' %>
+      <%= yield %>
+    </main>
+
+    <%= render 'shared/footer' %>
   </body>
 </html>
