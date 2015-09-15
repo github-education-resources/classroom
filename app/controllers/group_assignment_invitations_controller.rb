@@ -1,6 +1,10 @@
-class GroupAssignmentInvitationsController < InvitationsController
+class GroupAssignmentInvitationsController < ApplicationController
+  layout 'layouts/invitations'
+
   before_action :check_group_not_previous_acceptee, only: [:show]
   before_action :check_user_not_group_member,       only: [:show]
+
+  before_action :authorize_group_access, only: [:accept_invitation]
 
   def show
     @groups = invitation.groups.map { |group| [group.title, group.id] }
@@ -39,6 +43,15 @@ class GroupAssignmentInvitationsController < InvitationsController
   end
 
   private
+
+  def authorize_group_access
+    group_id = group_params[:id]
+
+    return unless group_id.present?
+    return if group_assignment.grouping.groups.find_by(id: group_id)
+
+    fail NotAuthorized, 'You are not permitted to select this team'
+  end
 
   def decorated_group_assignment_repo
     @decorated_group_assignment_repo ||= group_assignment_repo.decorate

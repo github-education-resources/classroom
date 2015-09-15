@@ -29,7 +29,8 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
     context 'authenticated request' do
       before(:each) do
-        session[:user_id] = user.id
+        session[:user_id]           = user.id
+        request.env['HTTP_REFERER'] = "http://classroomtest.com/group-assignment-invitations/#{invitation.key}"
       end
 
       after(:each) do
@@ -46,6 +47,16 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
         expect(group_assignment.group_assignment_repos.count).to eql(1)
         expect(user.repo_accesses.count).to eql(1)
+      end
+
+      it 'does not allow users to join a group that is not apart of the grouping' do
+        other_grouping = Grouping.create(title: 'Other Grouping', organization: organization)
+        other_group    = Group.create(title: 'The Group', grouping: other_grouping)
+
+        patch :accept_invitation, id: invitation.key, group: { id: other_group.id }
+
+        expect(group_assignment.group_assignment_repos.count).to eql(0)
+        expect(user.repo_accesses.count).to eql(0)
       end
     end
   end

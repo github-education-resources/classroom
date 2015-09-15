@@ -8,10 +8,6 @@ class OrganizationsController < ApplicationController
 
   decorates_assigned :organization
 
-  rescue_from GitHub::Error,               with: :error
-  rescue_from GitHub::Forbidden,           with: :deny_access
-  rescue_from GitHub::NotFound,            with: :deny_access
-
   def index
     @organizations = current_user.organizations.page(params[:page])
   end
@@ -79,17 +75,8 @@ class OrganizationsController < ApplicationController
     new_github_organization = GitHubOrganization.new(current_user.github_client,
                                                      new_organization_params[:github_id].to_i)
 
-    deny_access unless new_github_organization.admin?(decorated_current_user.login)
-  end
-
-  def deny_access
-    flash[:error] = 'You are not authorized to perform this action'
-    redirect_to :back
-  end
-
-  def error(exception)
-    flash[:error] = exception.message
-    redirect_to :back
+    return if new_github_organization.admin?(decorated_current_user.login)
+    fail NotAuthorized, 'You are not permitted to add this organization as a classroom'
   end
 
   def new_organization_params
