@@ -5,12 +5,10 @@ class GroupAssignmentsController < ApplicationController
   before_action :set_group_assignment, except: [:new, :create]
   before_action :set_groupings,        except: [:show]
 
+  before_action :authorize_grouping_access, only: [:create, :update]
+
   decorates_assigned :organization
   decorates_assigned :group_assignment
-
-  rescue_from GitHub::Error,               with: :error
-  rescue_from GitHub::Forbidden,           with: :error
-  rescue_from GitHub::NotFound,            with: :error
 
   def new
     @group_assignment = GroupAssignment.new
@@ -56,13 +54,17 @@ class GroupAssignmentsController < ApplicationController
 
   private
 
-  def build_group_assignment
-    GroupAssignmentService.new(new_group_assignment_params, new_grouping_params).build_group_assignment
+  def authorize_grouping_access
+    grouping_id = new_group_assignment_params[:grouping_id]
+
+    return unless grouping_id.present?
+    return if @organization.groupings.find_by(id: grouping_id)
+
+    fail NotAuthorized, 'You are not permitted to select this group of teams'
   end
 
-  def error(exception)
-    flash[:error] = exception.message
-    redirect_to :back
+  def build_group_assignment
+    GroupAssignmentService.new(new_group_assignment_params, new_grouping_params).build_group_assignment
   end
 
   def new_group_assignment_params
