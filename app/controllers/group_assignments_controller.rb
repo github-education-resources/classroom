@@ -57,11 +57,10 @@ class GroupAssignmentsController < ApplicationController
   def authorize_grouping_access
     grouping_id = new_group_assignment_params[:grouping_id]
 
-    if grouping_id.present?
-      return if @organization.groupings.find_by(id: grouping_id)
-    else
-      fail NotAuthorized, 'You are not permitted to select this group of teams'
-    end
+    return unless grouping_id.present?
+    return if @organization.groupings.find_by(id: grouping_id)
+
+    fail NotAuthorized, 'You are not permitted to select this group of teams'
   end
 
   def build_group_assignment

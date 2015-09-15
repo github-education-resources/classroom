@@ -47,8 +47,10 @@ class GroupAssignmentInvitationsController < ApplicationController
   def authorize_group_access
     group_id = group_params[:id]
 
-    return unless group_id.present? && group_assignment.grouping.groups.find_by(id: group_id)
-    fail NotAuthorized, 'You are not permitted to select this group of teams'
+    return unless group_id.present?
+    return if group_assignment.grouping.groups.find_by(id: group_id)
+
+    fail NotAuthorized, 'You are not permitted to select this team'
   end
 
   def decorated_group_assignment_repo
