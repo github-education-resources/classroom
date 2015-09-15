@@ -21,21 +21,30 @@
   }
 }
 
-.btn-outline-inverse {
+.btn-blue {
   color: #fff;
-  background-color: $brand-blue; // Reset default gradient backgrounds and colors
-  background-image: none;
-  border: 1px solid $brand-blue;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15);
+  background-color: #3072b3;
+  background-image: linear-gradient(#599bcd, #3072b3);
+  border-color: #2a65a0;
 
-  &:hover,
-  &:active,
-  &.selected,
-  &.zeroclipboard-is-hover,
-  &.zeroclipboard-is-active {
+  &:hover {
     color: #fff;
-    background-color: lighten($brand-blue, 5);
+    background-color: darken(#3072b3, 5%);
+    background-image: linear-gradient(darken(#599bcd, 5%), darken(#3072b3, 5%));
+    border-color: #2a65a0;
+  }
+
+  &:active,
+  &.selected {
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
+    background-color: darken(#3072b3, 5%);
     background-image: none;
-    border-color: lighten($brand-blue, 5);
+    border-color: darken(#2a65a0, 5%);
+  }
+
+  &.selected:hover {
+    background-color: darken(#3072b3, 10%);
   }
 }
 
