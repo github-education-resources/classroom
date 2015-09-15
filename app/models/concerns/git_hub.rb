@@ -18,6 +18,10 @@ module GitHub
 
   protected
 
+  def no_cache_headers
+    { 'Cache-Control' => 'no-cache, no-store' }
+  end
+
   def raise_github_forbidden_error
     fail GitHub::Forbidden, 'You are forbidden from performing this action on github.com'
   end

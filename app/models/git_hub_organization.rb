@@ -78,6 +78,13 @@ class GitHubOrganization
     with_error_handling { @client.organization_members(@id, options) }
   end
 
+  def plan
+    with_error_handling do
+      organization = @client.organization(@id, headers: no_cache_headers)
+      { owned_private_repos: organization.owned_private_repos, private_repos: organization.plan.private_repos }
+    end
+  end
+
   private
 
   # Internal

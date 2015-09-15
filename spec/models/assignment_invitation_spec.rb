@@ -26,7 +26,7 @@ RSpec.describe AssignmentInvitation, type: :model do
       AssignmentRepo.destroy_all
     end
 
-    it 'returns the full repo name of the users GitHub repository' do
+    it 'returns the AssignmentRepo' do
       assignment_repo = assignment_invitation.redeem_for(invitee)
       expect(assignment_repo).to eql(AssignmentRepo.last)
     end
