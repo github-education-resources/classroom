@@ -94,7 +94,7 @@ class OrganizationsController < ApplicationController
     github_user = GitHubUser.new(current_user.github_client)
 
     @users_github_organizations = github_user.admin_organization_memberships.map do |membership|
-      unless Organization.find_by(github_id: membership.organization.id)
+      unless Organization.unscoped.find_by(github_id: membership.organization.id)
         [membership.organization.login, membership.organization.id]
       end
     end.compact
