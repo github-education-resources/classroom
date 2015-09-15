@@ -261,6 +261,11 @@ hr {
   border-bottom: 1px solid #e3e3e3;
   padding-bottom: 2rem;
   margin-bottom: 2rem;
+
+  @media (max-width: 34em) {
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
 }
 
 .assignment-repo-list {
@@ -397,12 +402,20 @@ hr {
   margin-bottom: 1em;
 }
 
-.invitation-content,
+.desktop-invitation-content,
 .settings,
 .student-information,
 .zeroclipboard-form {
   @media (max-width: 34em) {
     display: none;
+  }
+}
+
+.mobile-invitation-content {
+  display: none;
+
+  @media (max-width: 34em) {
+    display: block;
   }
 }
 

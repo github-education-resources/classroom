@@ -1,8 +1,14 @@
 <form>
-  <dt><label>Give this to your students</label></dt>
-  <%= content_tag :input, '', type: 'text', class: 'input-block js-url-field', value: assignment_invitation_url(assignment_invitation), readonly: 'readonly' %>
+  <dt class="mobile-invitation-content">
+    <label>Give this to your students:
+      <span class="css-truncate css-truncate-target">
+        <%= link_to assignment_invitation_url(assignment_invitation), assignment_invitation_url(assignment_invitation) %>
+      </span>
+    </label>
+  </dt>
 
-  <div class="input-group input-block">
+  <dt class="desktop-invitation-content"><label>Give this to your students</label></dt>
+  <div class="desktop-invitation-content input-group input-block">
     <%= content_tag :input, '', type: 'text', class: 'js-url-field', value: assignment_invitation_url(assignment_invitation), readonly: 'readonly' %>
     <span class="input-group-button">
       <button aria-label="Copy to clipboard" class="js-zeroclipboard btn tooltipped tooltipped-s" data-copied-hint="Copied!" type="button">
