@@ -25,7 +25,8 @@
 <% if @group_assignment.new_record? %>
   <dl class="form">
     <dt><label>Create a reusable set of teams</label></dt>
-    <dd><input class="textfield" type="text" name="grouping[title]" id="grouping_title"></dd>
+    <% time = Time.zone.now %>
+    <dd><input class="textfield" type="text" value="<%= time.strftime("Teams formed on %B #{time.day.ordinalize}, %Y") unless @organization.groupings.present? %>" name="grouping[title]" id="grouping_title"></dd>
   </dl>
 
   <% if @organization.groupings.present? %>
