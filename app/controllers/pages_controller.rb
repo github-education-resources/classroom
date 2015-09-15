@@ -1,4 +1,6 @@
 class PagesController < ApplicationController
+  layout 'layouts/pages'
+
   skip_before_action :ensure_logged_in, :set_organization, :authorize_organization_access
 
   def home

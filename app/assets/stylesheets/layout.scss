@@ -424,3 +424,63 @@ hr {
     padding: 1rem 0;
   }
 }
+
+.signin-section {
+  background-color: #5fb27b;
+  padding-top: 6.154em;
+  padding-bottom: 6.154em;
+  color: #fff;
+  margin-bottom: 3em;
+
+  .heading {
+    font-size: 48px;
+    font-weight: normal;
+
+    @media (max-width: 34em) {
+      font-size: 38px;
+    }
+  }
+
+  .subheading {
+    font-size: 21px;
+    margin-bottom: 2rem;
+
+    @media (max-width: 34em) {
+      font-size: 18px;
+    }
+  }
+
+  a {
+    font-weight: normal;
+  }
+
+  .mega-octicon {
+    font-size: 38px;
+  }
+
+  ul {
+    list-style-type: none;
+
+    li {
+      display: inline-block;
+      margin-left: 2rem;
+      opacity: 0.4;
+
+      @media (max-width: 34em) {
+        display: none;
+      }
+    }
+  }
+}
+
+.information-section {
+  h2 {
+    font-size: 21px;
+    font-weight: normal;
+  }
+
+  p {
+    padding-right: 0.5rem;
+    font-size: 16px;
+  }
+}
