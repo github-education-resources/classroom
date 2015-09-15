@@ -21,6 +21,24 @@
   }
 }
 
+.btn-outline-inverse {
+  color: #fff;
+  background-color: $brand-blue; // Reset default gradient backgrounds and colors
+  background-image: none;
+  border: 1px solid $brand-blue;
+
+  &:hover,
+  &:active,
+  &.selected,
+  &.zeroclipboard-is-hover,
+  &.zeroclipboard-is-active {
+    color: #fff;
+    background-color: lighten($brand-blue, 5);
+    background-image: none;
+    border-color: lighten($brand-blue, 5);
+  }
+}
+
 .btn-big {
   padding: 1rem 2rem;
   font-size: 1rem;
