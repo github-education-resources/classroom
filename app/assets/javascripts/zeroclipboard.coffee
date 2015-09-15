@@ -18,9 +18,8 @@ $button.hover(buttonOver, buttonOut)
 zeroClipboardClient = new ZeroClipboard($button)
 
 zeroClipboardClient.on('ready', ->
-
   zeroClipboardClient.on('copy', (event) ->
-    url = $('.js-url-field').val().toString()
+    url = $(".js-url-field##{event.target.id}").val().toString()
     event.clipboardData.setData('text/plain', url)
   )
 
