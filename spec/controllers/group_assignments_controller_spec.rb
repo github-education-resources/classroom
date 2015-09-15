@@ -27,12 +27,25 @@ RSpec.describe GroupAssignmentsController, type: :controller do
   end
 
   describe 'POST #create', :vcr do
+    before do
+      request.env['HTTP_REFERER'] = "http://classroomtest.com/organizations/#{organization.slug}/group-assignments/new"
+    end
+
     it 'creates a new GroupAssignment' do
       expect do
         post :create, organization_id: organization.id,
                       group_assignment: { title: 'Learn JavaScript' },
                       grouping:         { title: 'Grouping 1'       }
       end.to change { GroupAssignment.count }
+    end
+
+    it 'does not allow groupings to be added that do not belong to the organization' do
+      other_group_assignment = create(:group_assignment)
+
+      expect do
+        post :create, organization_id: organization.id,
+                      group_assignment: { title: 'Learn Ruby', grouping_id: other_group_assignment.grouping_id }
+      end.not_to change { GroupAssignment.count }
     end
   end
 
