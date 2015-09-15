@@ -430,19 +430,62 @@ hr {
   padding-top: 6.154em;
   padding-bottom: 6.154em;
   color: white;
-  margin-bottom: 6.154em;
+  margin-bottom: 3em;
 
   .heading {
-    font-size: 52px;
+    font-size: 48px;
     font-weight: normal;
+
+    @media (max-width: 34em) {
+      font-size: 38px;
+    }
   }
 
   .subheading {
     font-size: 21px;
+    margin-bottom: 2rem;
+
+    @media (max-width: 34em) {
+      font-size: 18px;
+    }
+  }
+
+  h2 {
+    text-decoration: underline;
+    font-weight: normal;
+
+    a {
+      color: inherit;
+    }
+  }
+
+  .mega-octicon {
+    font-size: 38px;
+  }
+
+  ul {
+    list-style-type: none;
+
+    li {
+      display: inline-block;
+      margin-left: 2rem;
+      opacity: 0.4;
+
+      @media (max-width: 34em) {
+        display: none;
+      }
+    }
   }
 }
 
-.feature-heading {
-  font-size: 32px;
-  font-weight: normal;
+.information-section {
+  h2 {
+    font-size: 21px;
+    font-weight: normal;
+  }
+
+  p {
+    padding-right: .5rem;
+    font-size: 16px;
+  }
 }
