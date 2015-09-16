@@ -11,10 +11,14 @@
   margin-left: 0;
 
   @media (max-width: 43em) {
-    .one-half:not(:last-child),
-    .one-third:not(:last-child) {
+    .one-half:not(:last-child) {
       margin-bottom: $grid-gutter * 2;
       padding-bottom: $grid-gutter * 2;
+    }
+
+    .one-third:not(:last-child) {
+      margin-bottom: $grid-gutter;
+      padding-bottom: $grid-gutter;
     }
   }
 }
