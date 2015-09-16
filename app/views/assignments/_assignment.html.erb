@@ -3,9 +3,11 @@
     <span class="assignment-icon assignment-icon-individual left">
       <%= octicon('person') %>
     </span>
+
     <h3 class="assignment-name-link">
       <%= link_to assignment.title, organization_assignment_path(@organization, assignment), class: 'js-navigation' %>
     </h3>
+
     <p class="assignment-type text-muted">Individual assigment</p>
   </div>
 

@@ -4,12 +4,13 @@
   <div class="site-content-cap">
     <div class="flex-table">
       <div class="flex-table-item">
-        <h2 class="site-content-heading">
-          <span class="assignment-icon assignment-icon-group">
-            <%= octicon('organization') %>
-          </span>
+        <span class="group-assignment-icon assignment-icon-group left">
+          <%= octicon('organization') %>
+        </span>
+        <h2 class="site-content-heading group-assignment-title">
           <%= @group_assignment.title %>
         </h2>
+        <p class="assignment-type text-muted"><%= @group_assignment.grouping.title %></p>
       </div>
 
       <div class="flex-table-item settings">

@@ -166,6 +166,7 @@ main {
   font-size: 20px;
   font-weight: normal;
   color: #5d666f;
+  padding-top: 0.3rem;
 }
 
 .assignment-option-name {
@@ -180,12 +181,14 @@ main {
   color: #777;
 }
 
-.assignment-icon {
+.assignment-icon,
+.group-assignment-icon {
   display: inline-block;
   width: 45px;
   height: 45px;
   text-align: center;
   border-radius: 50%;
+  margin-right: 0.7rem;
 
   .octicon {
     font-size: 22px;
@@ -214,11 +217,9 @@ main {
       padding-top: 1rem;
     }
   }
-}
 
-.assignment-list-item {
-  .assignment-icon {
-    margin-right: 0.7rem;
+  .assignment-list-item:not(:last-child) {
+    margin-bottom: 1rem;
   }
 }
 
@@ -230,6 +231,7 @@ main {
 
 .assignment-type {
   margin-top: 0;
+  margin-bottom: 0;
 }
 
 .assignment-invite-link {
