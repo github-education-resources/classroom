@@ -11,12 +11,12 @@
 
   "env": {
     "GITHUB_CLIENT_ID": {
-      "description": "The GitHub.com Application Client ID."
+      "description": "The GitHub Application Client ID."
       "required": true
     },
 
     "GITHUB_CLIENT_SECRET": {
-      "description": "The GitHub.com Application Client Secret."
+      "description": "The GitHub Application Client Secret."
       "required": true
     },
 
