@@ -15,3 +15,6 @@ script:
   - ./script/cibuild
 
 bundler_args: --without development production --deployment --jobs=3 --retry=3
+
+notifications:
+  email: false
