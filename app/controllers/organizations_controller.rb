@@ -87,7 +87,7 @@ class OrganizationsController < ApplicationController
   end
 
   def set_organization
-    @organization = Organization.friendly.find(params[:id])
+    @organization = Organization.find(params[:id])
   end
 
   def set_users_github_organizations
