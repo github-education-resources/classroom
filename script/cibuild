@@ -38,4 +38,4 @@ date "+%H:%M:%S"
 script/test
 
 # run linters
-script/linters
+script/linter
