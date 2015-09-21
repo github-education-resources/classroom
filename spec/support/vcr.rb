@@ -11,8 +11,27 @@ VCR.configure do |c|
     record: ENV['TRAVIS'] ? :none : :once
   }
 
-  c.filter_sensitive_data('<CLASSROOM_OWNER_ACCESS_TOKEN>') do
+  # Owner
+  c.filter_sensitive_data('<CLASSROOM_OWNER_GITHUB_ID>') do
+    classroom_owner_github_id
+  end
+
+  c.filter_sensitive_data('<CLASSROOM_OWNER_GITHUB_TOKEN>') do
     classroom_owner_github_token
+  end
+
+  # Owners Org
+  c.filter_sensitive_data('<CLASSROOM_OWNER_ORGANIZATION_GITHUB_ID>') do
+    classroom_owner_organization_github_id
+  end
+
+  c.filter_sensitive_data('<CLASSROOM_OWNER_ORGANIZATION_GITHUB_LOGIN>') do
+    classroom_owner_organization_github_login
+  end
+
+  # Student
+  c.filter_sensitive_data('<CLASSROOM_STUDENT_GITHUB_ID>') do
+    classroom_student_github_id
   end
 
   c.filter_sensitive_data('<CLASSROOM_STUDENT_GITHUB_TOKEN>') do
@@ -22,8 +41,24 @@ VCR.configure do |c|
   c.hook_into :webmock
 end
 
+def classroom_owner_github_id
+  ENV.fetch 'CLASSROOM_OWNER_GITHUB_ID', 8675309
+end
+
 def classroom_owner_github_token
   ENV.fetch 'CLASSROOM_OWNER_GITHUB_TOKEN', 'x' * 40
+end
+
+def classroom_owner_organization_github_id
+  ENV.fetch 'CLASSROOM_OWNER_ORGANIZATION_GITHUB_ID', 1
+end
+
+def classroom_owner_organization_github_login
+  ENV.fetch 'CLASSROOM_OWNER_ORGANIZATION_GITHUB_LOGIN', 'classroom-testing-org'
+end
+
+def classroom_student_github_id
+  ENV.fetch 'CLASSROOM_STUDENT_GITHUB_ID', 42
 end
 
 def classroom_student_github_token
