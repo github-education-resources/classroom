@@ -42,7 +42,7 @@ VCR.configure do |c|
 end
 
 def classroom_owner_github_id
-  ENV.fetch 'CLASSROOM_OWNER_GITHUB_ID', 8675309
+  ENV.fetch 'CLASSROOM_OWNER_GITHUB_ID', 8_675_309
 end
 
 def classroom_owner_github_token
