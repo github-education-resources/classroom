@@ -1,15 +1,12 @@
 # Classroom for GitHub
+## Your course assignments on GitHub
 [![Build Status](https://travis-ci.org/education/classroom.svg?branch=master)](https://travis-ci.org/education/classroom)
-
-> Your course assignments on GitHub
 
 Classroom for GitHub is a [Ruby on Rails](http://rubyonrails.org/) application designed to automate repository creation and access control, making it easy to distribute starter code and collect assignments on GitHub
 
 ![Classroom for GitHub screenshot](https://cloud.githubusercontent.com/assets/123345/9819714/95b26b9c-58a7-11e5-99e9-d65996d53687.png)
 
 ## How it works
-
-Classroom for Github automates repository creation and access control, making it easy to distribute starter code and collect assignments from students.
 
 Assignments are the core of Classroom for GitHub. Teachers can easily create an assignment and distribute it to students using a private invitation URL. Optional starter code can be provided for individual or group work. It's even possible to delegate assignment creation and management to co-teachers and teaching assistants by adding them as organization administrators.
 deploy
@@ -21,7 +18,7 @@ New to Ruby? No worries! You can follow these instructions to install a local se
 
 #### Installing a Local Server
 
-First things first, you'll need to install Ruby 2.2.3. I recommend using the excellent [rbenv](https://github.com/sstephenson/rbenv),
+First things first, you'll need to install Ruby 2.2.3. We recommend using the excellent [rbenv](https://github.com/sstephenson/rbenv),
 and [ruby-build](https://github.com/sstephenson/ruby-build)
 
 ```bash
@@ -43,14 +40,14 @@ languages).
 gem install bundler && rbenv rehash
 ```
 
-### Setup the Classroom for GitHub
-Once bundler is installed go ahead and run the setup script
+### Setup Classroom for GitHub
+Once bundler is installed go ahead and run the `setup` script
 ```
 script/setup
 ```
 
 ### Development environment variables
-We use [dotenv](https://github.com/bkeepers/dotenv) for setting our environment variables. These values need to filled in in you `.env` file (which was created by the `setup` script.
+These values must be present in your `.env` file (created by `script/setup`).
 
 ENV Variable | Description |
 :-------------------|:-----------------|
@@ -86,6 +83,10 @@ We strongly encourage you to use [https://classroom.github.com](https://classroo
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 ## Contributing
-We'd love to have you participate. Please check out [contributing guidelines](CONTRIBUTING.md)
+We'd love to have you participate. Please check out [contributing guidelines](CONTRIBUTING.md).
+
+
+## Contributors
+Classroom is developed by these [contributors](https://github.com/education/classroom/graphs/contributors).
 
 Shout out to [GitHub Summer of Code](https://github.com/blog/1970-students-work-on-open-source-with-github-this-summer) student, [Mark Tareshawty](http://marktareshawty.com), from [The Ohio State University](https://www.osu.edu/) for his work on Classroom for GitHub.
