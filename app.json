@@ -42,6 +42,11 @@
 
     "SECRET_KEY_BASE": {
       "required": true
+    },
+
+    "NON_STAFF_GITHUB_ADMIN_IDS": {
+      "description": "GitHub IDs of non GitHub staff members that have staff access.",
+      "required": true
     }
   },
 
