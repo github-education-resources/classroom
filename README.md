@@ -62,12 +62,12 @@ ENV Variable | Description |
 
 ENV Variable | Description |
 :-------------------|:-----------------|
-`CLASSROOM_OWNER_ID` | The GitHub user ID of an organization admin.
-`CLASSROOM_OWNER_GITHUB_TOKEN` | The [Personal Access Token](https://github.com/blog/1509-personal-api-tokens) for the owner ID
-`CLASSROOM_STUDENT_ID` | Test OAuth application client ID.
-`CLASSROOM_STUDENT_GITHUB_TOKEN` | The [Personal Access Token](https://github.com/blog/1509-personal-api-tokens) for the student ID
-`CLASSROOM_OWNER_ORGANIZATION_ID` | GitHub ID (preferably one created specifically for testing against).
-`CLASSROOM_OWNER_ORGANIZATION_LOGIN` | GitHub login (preferably one created specifically for testing against).
+`TEST_CLASSROOM_OWNER_ID` | The GitHub `user_id` of an organization admin.
+`TEST_CLASSROOM_OWNER_GITHUB_TOKEN` | The [Personal Access Token](https://github.com/blog/1509-personal-api-tokens) for the owner ID
+`TEST_CLASSROOM_STUDENT_ID` | Test OAuth application client ID.
+`TEST_CLASSROOM_STUDENT_GITHUB_TOKEN` | The [Personal Access Token](https://github.com/blog/1509-personal-api-tokens) for the student ID
+`TEST_CLASSROOM_OWNER_ORGANIZATION_ID` | GitHub ID (preferably one created specifically for testing against).
+`TEST_CLASSROOM_OWNER_ORGANIZATION_LOGIN` | GitHub login (preferably one created specifically for testing against).
 
 ### Run the server
 
