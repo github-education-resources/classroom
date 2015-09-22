@@ -23,18 +23,21 @@
 </dl>
 
 <% if @group_assignment.new_record? %>
-  <dl class="form">
-    <dt><label>Create a reusable set of teams</label></dt>
-    <% time = Time.zone.now %>
-    <dd><input class="textfield" type="text" value="<%= time.strftime("Teams formed on %B #{time.day.ordinalize}, %Y") unless @organization.groupings.present? %>" name="grouping[title]" id="grouping_title"></dd>
-  </dl>
+  <% groupings_present = @organization.groupings.present? %>
 
-  <% if @organization.groupings.present? %>
-    <dt><label>OR choose an existing group of teams</label></dt>
+  <% if groupings_present %>
+    <dt><label>Choose an existing group of teams</label></dt>
     <dl class="form">
       <dd>
         <%= select :group_assignment, :grouping_id, options_for_select(@groupings), include_blank: true %>
       </dd>
     </dl>
   <% end %>
+
+  <dl class="form">
+    <dt><label><%= 'OR' if groupings_present %> Create a reusable set of teams</label></dt>
+    <% time           = Time.zone.now %>
+    <% suggested_name = Time.zone.now.strftime("Teams formed on %B #{time.day.ordinalize}, %Y") %>
+    <dd><input class="textfield" type="text" value="<%= suggested_name unless groupings_present %>" placeholder="<%= suggested_name if groupings_present %>" name="grouping[title]" id="grouping_title"></dd>
+  </dl>
 <% end %>
