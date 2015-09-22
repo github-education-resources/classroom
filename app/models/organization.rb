@@ -1,6 +1,6 @@
 class Organization < ActiveRecord::Base
   extend FriendlyId
-  friendly_id :slug_candidates, use: [:slugged, :finders]
+  friendly_id :slug_candidate, use: [:slugged, :finders]
 
   default_scope { where(deleted_at: nil) }
 
@@ -28,7 +28,7 @@ class Organization < ActiveRecord::Base
 
   private
 
-  def slug_candidates
+  def slug_candidate
     "#{github_id}-#{title}"
   end
 end
