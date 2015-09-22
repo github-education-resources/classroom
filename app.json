@@ -1,6 +1,6 @@
 {
   "name": "Classroom for GitHub",
-  "description": "Classroom for GitHub automates repository creation and access control, making it easy to distribute starter code and collect assignments on GitHub.",
+  "description": "Automates repository creation and access control, making it easy to distribute starter code and collect assignments on GitHub.",
   "website": "https://classroom.github.com",
   "repository": "https://classroom.github.com",
   "logo": "https://octodex.github.com/images/Professortocat_v2.png",
