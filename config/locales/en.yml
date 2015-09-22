@@ -46,3 +46,4 @@ en:
     pagination:
       previous: 'Previous'
       next: 'Next'
+      truncate: '...'

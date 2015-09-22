@@ -1,32 +1,54 @@
 {
-  "name": "classroom",
+  "name": "Classroom for GitHub",
+  "description": "Classroom for GitHub automates repository creation and access control, making it easy to distribute starter code and collect assignments on GitHub.",
+  "website": "https://classroom.github.com",
+  "repository": "https://classroom.github.com",
+  "logo": "https://octodex.github.com/images/Professortocat_v2.png",
+
   "scripts": {
     "postdeploy": "bundle exec rake db:migrate"
   },
+
   "env": {
     "GITHUB_CLIENT_ID": {
+      "description": "The GitHub.com Application Client ID."
       "required": true
     },
+
     "GITHUB_CLIENT_SECRET": {
+      "description": "The GitHub.com Application Client Secret."
       "required": true
     },
+
     "LANG": {
       "required": true
     },
+
     "RACK_ENV": {
       "required": true
     },
+
     "RAILS_ENV": {
       "required": true
     },
+
     "RAILS_SERVE_STATIC_FILES": {
       "required": true
     },
+
+    "REDIS_PROVIDER": {
+      "value": "REDISTOGO_URL"
+    },
+
     "SECRET_KEY_BASE": {
       "required": true
     }
   },
+
   "addons": [
-    "heroku-postgresql"
+    "heroku-postgresql",
+    "memcachedcloud",
+    "newrelic",
+    "redistogo"
   ]
 }

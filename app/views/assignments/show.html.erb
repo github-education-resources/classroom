@@ -4,12 +4,15 @@
   <div class="site-content-cap">
     <div class="flex-table">
       <div class="flex-table-item">
+        <span class="assignment-icon assignment-icon-individual left">
+          <%= octicon('person') %>
+        </span>
+
         <h2 class="site-content-heading">
-          <span class="assignment-icon assignment-icon-individual">
-            <%= octicon('person') %>
-          </span>
           <%= @assignment.title %>
         </h2>
+
+        <p class="assignment-type text-muted">Individual assigment</p>
       </div>
 
       <div class="flex-table-item settings">
@@ -28,7 +31,9 @@
         <%= render @assignment_repos %>
       </div>
 
-      <%= paginate @assignment_repos %>
+      <div class="paginate-container container">
+        <%= paginate @assignment_repos %>
+      </div>
     <% else %>
       <div class="blankslate">
         <h3>"<%= @assignment.title %>" does not have any repositories.</h3>
