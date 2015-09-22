@@ -6,6 +6,18 @@
 
 Hi there! We're thrilled that you'd like to contribute to this project. Your help is essential for keeping it great.
 
+## Opening an issue
+
+Thank you for taking the time to open an issue, your feedback helps make Classroom for GitHub better.
+Before opening an issue, please be sure that your issue hasn't already been asked by using [GitHub search](https://help.github.com/articles/searching-issues/)
+
+Here are a few things, that will help us help you when opening an issue.
+
+- A descriptive title that gives an idea of what your issue refers to
+- A thorough description of the issue, (one word descriptions are very hard to understand)
+- Screenshots (if appropriate)
+- Links (if appropriate)
+
 ## Submitting a pull request
 
 0. [Fork][fork] and clone the repository
