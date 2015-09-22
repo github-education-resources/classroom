@@ -8,7 +8,6 @@ Classroom for GitHub is a [Ruby on Rails](http://rubyonrails.org/) application d
 ## How it works
 
 Assignments are the core of Classroom for GitHub. Teachers can easily create an assignment and distribute it to students using a private invitation URL. Optional starter code can be provided for individual or group work. It's even possible to delegate assignment creation and management to co-teachers and teaching assistants by adding them as organization administrators.
-deploy
 
 ## Hacking on Classroom for GitHub
 
