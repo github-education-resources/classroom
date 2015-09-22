@@ -68,9 +68,9 @@ If you are recording new cassettes, you need to make sure all of these values ar
 ENV Variable | Description |
 :-------------------|:-----------------|
 `TEST_CLASSROOM_OWNER_ID` | The GitHub `user_id` of an organization admin.
-`TEST_CLASSROOM_OWNER_GITHUB_TOKEN` | The [Personal Access Token](https://github.com/blog/1509-personal-api-tokens) for the owner ID
+`TEST_CLASSROOM_OWNER_GITHUB_TOKEN` | The [Personal Access Token](https://github.com/blog/1509-personal-api-tokens) for the classroom owner
 `TEST_CLASSROOM_STUDENT_ID` | Test OAuth application client ID.
-`TEST_CLASSROOM_STUDENT_GITHUB_TOKEN` | The [Personal Access Token](https://github.com/blog/1509-personal-api-tokens) for the student ID
+`TEST_CLASSROOM_STUDENT_GITHUB_TOKEN` | The [Personal Access Token](https://github.com/blog/1509-personal-api-tokens) for the student
 `TEST_CLASSROOM_OWNER_ORGANIZATION_ID` | GitHub ID (preferably one created specifically for testing against).
 `TEST_CLASSROOM_OWNER_ORGANIZATION_LOGIN` | GitHub login (preferably one created specifically for testing against).
 
