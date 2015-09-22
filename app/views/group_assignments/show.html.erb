@@ -4,12 +4,13 @@
   <div class="site-content-cap">
     <div class="flex-table">
       <div class="flex-table-item">
-        <h2 class="site-content-heading">
-          <span class="assignment-icon assignment-icon-group">
-            <%= octicon('organization') %>
-          </span>
+        <span class="group-assignment-icon assignment-icon-group left">
+          <%= octicon('organization') %>
+        </span>
+        <h2 class="site-content-heading group-assignment-title">
           <%= @group_assignment.title %>
         </h2>
+        <p class="assignment-type text-muted">Group assignment for <strong><%= @group_assignment.grouping.title %></strong></p>
       </div>
 
       <div class="flex-table-item settings">
@@ -27,7 +28,10 @@
       <div class="group-assignment-repo-list">
         <%= render @group_assignment_repos %>
       </div>
-      <%= paginate @group_assignment_repos %>
+
+      <div class="paginate-container container">
+        <%= paginate @group_assignment_repos %>
+      </div>
     <% else %>
       <div class="blankslate">
         <h3>"<%= @group_assignment.title %>" does not have any repositories.</h3>
