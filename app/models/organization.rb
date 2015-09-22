@@ -1,6 +1,6 @@
 class Organization < ActiveRecord::Base
   extend FriendlyId
-  friendly_id :title, use: [:slugged, :finders]
+  friendly_id :slug_candidate, use: [:slugged, :finders]
 
   default_scope { where(deleted_at: nil) }
 
@@ -12,7 +12,7 @@ class Organization < ActiveRecord::Base
   has_and_belongs_to_many :users
 
   validates :github_id, presence: true, uniqueness: true
-  validates :title,     presence: true, uniqueness: { case_sensitive: false }
+  validates :title,     presence: true
 
   # Public
   #
@@ -24,5 +24,11 @@ class Organization < ActiveRecord::Base
   #
   def github_client
     users.sample.github_client
+  end
+
+  private
+
+  def slug_candidate
+    "#{github_id}-#{title}"
   end
 end
