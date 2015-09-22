@@ -232,6 +232,15 @@ main {
 .assignment-type {
   margin-top: 0;
   margin-bottom: 0;
+
+  @media (max-width: 34em) {
+    display: inline-block;
+    max-width: 125px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: top;
+  }
 }
 
 .assignment-invite-link {
