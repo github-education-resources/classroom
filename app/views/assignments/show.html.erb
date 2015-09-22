@@ -31,7 +31,9 @@
         <%= render @assignment_repos %>
       </div>
 
-      <%= paginate @assignment_repos %>
+      <div class="paginate-container container">
+        <%= paginate @assignment_repos %>
+      </div>
     <% else %>
       <div class="blankslate">
         <h3>"<%= @assignment.title %>" does not have any repositories.</h3>
