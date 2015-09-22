@@ -17,7 +17,9 @@
     }
   }
 
-  a, em, span {
+  a,
+  em,
+  span {
     font-size: 13px;
     font-weight: bold;
     font-style: normal;
@@ -34,7 +36,7 @@
 
     &.current {
       background-color: $brand-blue;
-      color: white;
+      color: #fff;
       border-color: $brand-blue;
       z-index: 3;
     }
