@@ -22,4 +22,4 @@ if [ -z "$RAILS_ENV" ] && [ -z "$RACK_ENV" ]; then
   cp --no-clobber .env-example .env
 fi
 
-echo "==> App is now ready to go!"
+echo "==> Your app is almost ready! Please make sure you fill out your .env file."
