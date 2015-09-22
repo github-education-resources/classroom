@@ -61,12 +61,6 @@ Classroom for GitHub uses [VCR](https://github.com/vcr/vcr) for recording and pl
 script/test
 ```
 
-In another terminal window you also need [sidekiq](https://github.com/mperham/sidekiq) running. This is used to run the background jobs such as pushing starter code.
-
-```bash
-script/sidekiq
-```
-
 Classroom for GitHub uses environmental variables for storing credentials used in testing, these values are located in your `.env` file (created by `script/setup`).
 If you are recording new cassettes, you need to make sure all of these values are present.
 
@@ -85,6 +79,12 @@ After you have everything configured all you need to do is run
 
 ```bash
 script/server
+```
+
+In another terminal window you also need [sidekiq](https://github.com/mperham/sidekiq) running. This is used to run the background jobs such as pushing starter code.
+
+```bash
+script/sidekiq
 ```
 
 And that's it! You should have a working instance of Classroom for GitHub located [here](http://localhost:3000)
