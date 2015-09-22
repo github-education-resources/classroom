@@ -6,7 +6,7 @@
     <h3 class="assignment-name-link">
       <%= link_to group_assignment.title, organization_group_assignment_path(@organization, group_assignment), class: 'js-navigation' %>
     </h3>
-    <p class="assignment-type text-muted">Group assigment</p>
+    <p class="assignment-type text-muted">Group assignment for <strong><%= group_assignment.grouping.title %></strong></p>
   </div>
 
   <div class="flex-table-item zeroclipboard-form">
