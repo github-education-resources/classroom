@@ -11,10 +11,7 @@
   <div class="site-content-body assignment-list-items">
     <% if @assignments.present? %>
       <%= render @assignments %>
-
-      <div class="paginate-container container">
-        <%= paginate @assignments %>
-      </div>
+      <%= render partial: 'shared/pagination', locals: { collection: @assignments } %>
     <% else %>
       <div class="blankslate large-format spacious clean-background">
         <h3>This organization doesn’t have any assignments yet.</h3>

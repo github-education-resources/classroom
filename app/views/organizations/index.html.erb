@@ -11,8 +11,7 @@
   <div class="site-content-body organization-list-items">
     <% if @organizations.present? %>
       <%= render @organizations %>
-      <%= paginate @organizations %>
-
+      <%= render partial: 'shared/pagination', locals: { collection: @organizations } %>
     <% else %>
       <div class="blankslate large-format spacious clean-background">
         <h3>You’re not managing any organizations yet.</h3>
