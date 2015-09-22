@@ -42,7 +42,7 @@ class GroupAssignment < ActiveRecord::Base
   private
 
   def uniqueness_of_title_across_organization
-    return unless Assignment.where(title: title, organization: organization).present?
+    return unless Assignment.where(slug: normalize_friendly_id(title), organization: organization).present?
     errors.add(:title, 'title is already in use for your organization')
   end
 end
