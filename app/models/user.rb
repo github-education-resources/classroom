@@ -34,15 +34,12 @@ class User < ActiveRecord::Base
   end
 
   def valid_auth_token?
-    application_client = Octokit::Client.new(client_id: Rails.application.secrets.github_client_id,
-                                             client_secret: Rails.application.secrets.github_client_secret)
-
-    begin
-      application_client.check_application_authorization(token, headers: no_cache_headers)
-    rescue Octokit::NotFound => err
-      return false
+    if (github_client.scopes & ['admin:org', 'delete_repo', 'repo', 'user:email']).present?
+      true
+    else
+      false
     end
-
-    true
+  rescue
+    false
   end
 end

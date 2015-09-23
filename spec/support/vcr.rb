@@ -13,11 +13,7 @@ VCR.configure do |c|
 
   # Application id and secret
   c.filter_sensitive_data('<TEST_APPLICATION_GITHUB_CLIENT_ID>') do
-    Rails.application.secrets.github_client_id
-  end
-
-  c.filter_sensitive_data('<TEST_APPLICATION_GITHUB_CLIENT_SECRET>') do
-    Rails.application.secrets.github_client_secret
+    application_github_client_id
   end
 
   # Owner
@@ -48,6 +44,10 @@ VCR.configure do |c|
   end
 
   c.hook_into :webmock
+end
+
+def application_github_client_id
+  ENV.fetch 'GITHUB_CLIENT_ID', 'i' * 20
 end
 
 def classroom_owner_github_id

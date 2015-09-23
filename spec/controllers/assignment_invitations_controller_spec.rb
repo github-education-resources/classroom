@@ -12,7 +12,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
 
     describe 'authenticated request' do
-      let(:user) { create(:user) }
+      let(:user) { GitHubFactory.create_classroom_student }
 
       before(:each) do
         session[:user_id] = user.id
@@ -20,7 +20,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
       it 'will bring you to the page' do
         get :show, id: invitation.key
-        expect(response).to have_http_status(:found)
+        expect(response).to have_http_status(:success)
       end
     end
   end

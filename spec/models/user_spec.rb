@@ -42,4 +42,15 @@ RSpec.describe User, type: :model do
       expect(user.staff?).to be(true)
     end
   end
+
+  describe '#valid_auth_token?', :vcr do
+    it 'returns false if the token is not good' do
+      expect(user.valid_auth_token?).to be(false)
+    end
+
+    it 'returns true is the token is good' do
+      user = GitHubFactory.create_owner_classroom_org.users.first
+      expect(user.valid_auth_token?).to be(true)
+    end
+  end
 end
