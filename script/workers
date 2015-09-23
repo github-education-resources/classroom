@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# script/workers: Run required executables and sidekiq using foreman
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+foreman start -f Procfile.dev
