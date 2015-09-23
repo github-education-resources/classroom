@@ -36,7 +36,7 @@ class User < ActiveRecord::Base
   def valid_auth_token?
     required_scopes = %w(admin:org delete_repo repo user:email)
     (required_scopes - github_client.scopes).empty? ? true : false
-  rescue Octokit::NotFound, Octokit::Unauthorized => err
+  rescue Octokit::NotFound, Octokit::Unauthorized
     false
   end
 end
