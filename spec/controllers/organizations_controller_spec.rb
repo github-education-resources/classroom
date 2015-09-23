@@ -10,7 +10,7 @@ RSpec.describe OrganizationsController, type: :controller do
     session[:user_id] = user.id
   end
 
-  describe 'GET #index' do
+  describe 'GET #index', :vcr do
     it 'returns success status' do
       get :index
       expect(response).to have_http_status(:success)
@@ -69,7 +69,7 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
-  describe 'GET #show' do
+  describe 'GET #show', :vcr do
     it 'returns success and sets the organization' do
       get :show, id: organization.id
 
@@ -78,7 +78,7 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
-  describe 'GET #edit' do
+  describe 'GET #edit', :vcr do
     it 'returns success and sets the organization' do
       get :edit, id: organization.id
 
@@ -87,7 +87,7 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
-  describe 'PATCH #update' do
+  describe 'PATCH #update', :vcr do
     it 'correctly updates the organization' do
       options = { title: 'New Title' }
       patch :update, id: organization.id, organization: options
@@ -116,7 +116,7 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
-  describe 'GET #invite' do
+  describe 'GET #invite', :vcr do
     it 'returns success and sets the organization' do
       get :invite, id: organization.id
 

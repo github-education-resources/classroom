@@ -11,6 +11,15 @@ VCR.configure do |c|
     record: ENV['TRAVIS'] ? :none : :once
   }
 
+  # Application id and secret
+  c.filter_sensitive_data('<TEST_APPLICATION_GITHUB_CLIENT_ID>') do
+    application_github_client
+  end
+
+  c.filter_sensitive_data('<TEST_APPLICATION_GITHUB_CLIENT_SECRET>') do
+    application_github_secret
+  end
+
   # Owner
   c.filter_sensitive_data('<TEST_CLASSROOM_OWNER_GITHUB_ID>') do
     classroom_owner_github_id
@@ -39,6 +48,14 @@ VCR.configure do |c|
   end
 
   c.hook_into :webmock
+end
+
+def application_github_client
+  ENV.fetch 'GITHUB_CLIENT_ID', 'i' * 20
+end
+
+def application_github_secret
+  ENV.fetch 'GITHUB_CLIENT_SECRET', 's' * 20
 end
 
 def classroom_owner_github_id
