@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user, :decorated_current_user, :logged_in?, :staff?
 
-  before_action :ensure_logged_in
+  before_action :authenticate_user!
 
   rescue_from GitHub::Error,     with: :flash_and_redirect_back_with_message
   rescue_from GitHub::Forbidden, with: :flash_and_redirect_back_with_message
@@ -20,6 +20,15 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def authenticate_user!
+    auth_redirect unless logged_in? && current_user.valid_auth_token?
+  end
+
+  def auth_redirect
+    session[:pre_login_destination] = "#{request.base_url}#{request.path}"
+    redirect_to login_path
+  end
 
   def decorated_current_user
     @decorated_current_user ||= current_user.decorate
@@ -42,12 +51,6 @@ class ApplicationController < ActionController::Base
     end
 
     redirect_to :back
-  end
-
-  def ensure_logged_in
-    return if logged_in?
-    session[:pre_login_destination] = "#{request.base_url}#{request.path}"
-    redirect_to login_path
   end
 
   def logged_in?
