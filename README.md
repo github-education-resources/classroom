@@ -28,7 +28,7 @@ Next, you'll need to make sure that you have PostgreSQL, Redis, and Memcached in
 done easily on OSX using [Homebrew](http://brew.sh)
 
 ```bash
-brew install postgres redis memcached
+brew install postgresql redis memcached
 ```
 
 > You will want to set postgresql to autostart at login via launchctl, if not already. See
