@@ -31,8 +31,7 @@ done easily on OSX using [Homebrew](http://brew.sh)
 brew install postgresql redis memcached
 ```
 
-> You will want to set postgresql to autostart at login via launchctl, if not already. See
-`brew info postgresql`. Redis and memcached may be setup similarly via launchctl or setup project wide by using foreman, described below.
+You will want to set postgresql to autostart at login via launchctl, if not already. See `brew info postgresql`. Redis and memcached may be setup similarly via launchctl or setup project wide by using foreman, described below.
 
 Now, let's install the gems from the `Gemfile` ("Gems" are synonymous with libraries in other
 languages).
@@ -77,9 +76,7 @@ ENV Variable | Description |
 
 ### Using foreman
 
-Foreman is setup to manage redis, memcached, and sidekiq in development mode. Postgresql must
-be running prior executing foreman. It assumes that redis and memcached are not already running on
-the system, where the commands may be commented out in `Procfile.dev`, if they are.
+Foreman is setup to manage redis, memcached, and sidekiq in development mode. Postgresql must be running prior executing foreman. It assumes that redis and memcached are not already running on the system, where the commands may be commented out in `Procfile.dev`, if they are. To use foreman, simply run:
 
 ```bash
 foreman start -f Procfile.dev
@@ -87,7 +84,7 @@ foreman start -f Procfile.dev
 
 ### Run the server
 
-After you have everything configured all you need to do is run
+After you have everything configured all you need to do is run:
 
 ```bash
 script/server
