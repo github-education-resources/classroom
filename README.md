@@ -31,6 +31,9 @@ done easily on OSX using [Homebrew](http://brew.sh)
 brew install postgres redis memcached
 ```
 
+> You will want to set postgresql to autostart at login via launchctl, if not already. See
+`brew info postgresql`. Redis and memcached may be setup similarly via launchctl or setup project wide by using foreman, described below.
+
 Now, let's install the gems from the `Gemfile` ("Gems" are synonymous with libraries in other
 languages).
 
@@ -71,6 +74,16 @@ ENV Variable | Description |
 `TEST_CLASSROOM_STUDENT_GITHUB_TOKEN` | The [Personal Access Token](https://github.com/blog/1509-personal-api-tokens) for the student
 `TEST_CLASSROOM_OWNER_ORGANIZATION_ID` | GitHub ID (preferably one created specifically for testing against).
 `TEST_CLASSROOM_OWNER_ORGANIZATION_LOGIN` | GitHub login (preferably one created specifically for testing against).
+
+### Using foreman
+
+Foreman is setup to manage redis, memcached, and sidekiq in development mode. Postgresql must
+be running prior executing foreman. It assumes that redis and memcached are not already running on
+the system, where the commands may be commented out in `Procfile.dev`, if they are.
+
+```bash
+foreman start -f Procfile.dev
+```
 
 ### Run the server
 
