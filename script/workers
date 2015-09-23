@@ -6,4 +6,4 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-foreman start -f Procfile.dev
+bundle exec foreman start -f Procfile.dev
