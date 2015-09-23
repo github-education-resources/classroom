@@ -1,8 +1,7 @@
 # Start development mode executables. Assumes that postgresql is already
 # running. 'script/server' should be run in a separate terminal.
 #
-#   foreman start -f Procfile.dev
-#   script/server  
+#   Run this file by executing: 'script/workers'
 
 redis: redis-server
 memcached: memcached
