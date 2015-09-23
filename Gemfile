@@ -26,6 +26,7 @@ gem 'omniauth-github'
 gem 'pg'
 
 gem 'rack-canonical-host'
+gem 'rails_admin'
 
 gem 'sprockets',  '3.3.1'
 gem 'sass-rails', '~> 5.0'

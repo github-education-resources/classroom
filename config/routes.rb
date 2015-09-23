@@ -3,8 +3,9 @@ require 'staff_constraint'
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  mount Peek::Railtie => '/peek',    constraints: StaffConstraint.new unless Rails.env.test?
-  mount Sidekiq::Web  => '/sidekiq', constraints: StaffConstraint.new
+  mount RailsAdmin::Engine => '/admin', as: 'rails_admin', constraints: StaffConstraint.new
+  mount Peek::Railtie      => '/peek',                     constraints: StaffConstraint.new unless Rails.env.test?
+  mount Sidekiq::Web       => '/sidekiq',                  constraints: StaffConstraint.new
 
   root to: 'pages#home'
 
