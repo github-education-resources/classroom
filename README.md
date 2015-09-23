@@ -76,7 +76,7 @@ ENV Variable | Description |
 
 ### Running the application
 
-Foreman is setup to manage redis, memcached, and sidekiq in development mode. Postgresql must be running prior executing foreman. It assumes that redis and memcached are not already running on the system, where the commands may be commented out in `Procfile.dev`, if they are. To execute foreman, and this application's dependencies, run:
+Foreman is setup to manage redis, memcached, and sidekiq in development mode. Postgresql must be running prior executing foreman. It assumes that redis and memcached are not already running on the system. Alternatively, you may run `script/sidekiq`, if you you to have redis and memcached always running system wide. To execute foreman, and this application's dependencies, run:
 
 ```bash
 script/workers
