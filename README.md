@@ -74,17 +74,15 @@ ENV Variable | Description |
 `TEST_CLASSROOM_OWNER_ORGANIZATION_ID` | GitHub ID (preferably one created specifically for testing against).
 `TEST_CLASSROOM_OWNER_ORGANIZATION_LOGIN` | GitHub login (preferably one created specifically for testing against).
 
-### Using foreman
+### Running the application
 
-Foreman is setup to manage redis, memcached, and sidekiq in development mode. Postgresql must be running prior executing foreman. It assumes that redis and memcached are not already running on the system, where the commands may be commented out in `Procfile.dev`, if they are. To use foreman, simply run:
+Foreman is setup to manage redis, memcached, and sidekiq in development mode. Postgresql must be running prior executing foreman. It assumes that redis and memcached are not already running on the system, where the commands may be commented out in `Procfile.dev`, if they are. To execute foreman, and this application's dependencies, run:
 
 ```bash
-foreman start -f Procfile.dev
+script/workers
 ```
 
-### Run the server
-
-After you have everything configured all you need to do is run:
+After that, you may start the rails server in a seperate terminal with:
 
 ```bash
 script/server
