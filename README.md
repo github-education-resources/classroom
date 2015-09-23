@@ -90,12 +90,6 @@ After you have everything configured all you need to do is run:
 script/server
 ```
 
-In another terminal window you also need [sidekiq](https://github.com/mperham/sidekiq) running. This is used to run the background jobs such as pushing starter code.
-
-```bash
-script/sidekiq
-```
-
 And that's it! You should have a working instance of Classroom for GitHub located [here](http://localhost:3000)
 
 ## Deployment
