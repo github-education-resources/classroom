@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  include GitHub
+
   has_many :repo_accesses,    dependent: :destroy
   has_many :assignment_repos, through: :repo_accesses
 
@@ -29,5 +31,18 @@ class User < ActiveRecord::Base
 
   def staff?
     site_admin
+  end
+
+  def valid_auth_token?
+    application_client = Octokit::Client.new(client_id: Rails.application.secrets.github_client_id,
+                                             client_secret: Rails.application.secrets.github_client_secret)
+
+    begin
+      application_client.check_application_authorization(token, headers: no_cache_headers)
+    rescue Octokit::NotFound => err
+      return false
+    end
+
+    true
   end
 end
