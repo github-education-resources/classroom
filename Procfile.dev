@@ -1,0 +1,8 @@
+# Start development mode executables. Assumes that postgresql is already
+# running. 'script/server' should be run in a separate terminal.
+#
+#   Run this file by executing: 'script/workers'
+
+redis: redis-server
+memcached: memcached
+worker: bundle exec sidekiq -q starter_code,2 -q trash_can

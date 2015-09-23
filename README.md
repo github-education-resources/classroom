@@ -28,8 +28,10 @@ Next, you'll need to make sure that you have PostgreSQL, Redis, and Memcached in
 done easily on OSX using [Homebrew](http://brew.sh)
 
 ```bash
-brew install postgres redis memcached
+brew install postgresql redis memcached
 ```
+
+You will want to set postgresql to autostart at login via launchctl, if not already. See `brew info postgresql`. Redis and memcached may be setup similarly via launchctl or setup project wide by using foreman, described below.
 
 Now, let's install the gems from the `Gemfile` ("Gems" are synonymous with libraries in other
 languages).
@@ -72,18 +74,18 @@ ENV Variable | Description |
 `TEST_CLASSROOM_OWNER_ORGANIZATION_ID` | GitHub ID (preferably one created specifically for testing against).
 `TEST_CLASSROOM_OWNER_ORGANIZATION_LOGIN` | GitHub login (preferably one created specifically for testing against).
 
-### Run the server
+### Running the application
 
-After you have everything configured all you need to do is run
+Foreman is setup to manage redis, memcached, and sidekiq in development mode. Postgresql must be running prior executing foreman. It assumes that redis and memcached are not already running on the system. Alternatively, you may run `script/sidekiq`, if you you to have redis and memcached always running system wide. To execute foreman, and this application's dependencies, run:
+
+```bash
+script/workers
+```
+
+After that, you may start the rails server in a seperate terminal with:
 
 ```bash
 script/server
-```
-
-In another terminal window you also need [sidekiq](https://github.com/mperham/sidekiq) running. This is used to run the background jobs such as pushing starter code.
-
-```bash
-script/sidekiq
 ```
 
 And that's it! You should have a working instance of Classroom for GitHub located [here](http://localhost:3000)
