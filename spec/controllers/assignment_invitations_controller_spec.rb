@@ -4,14 +4,14 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
   describe 'GET #show', :vcr do
     let(:invitation) { create(:assignment_invitation) }
 
-    describe 'unauthenticated request' do
+    context 'unauthenticated request' do
       it 'redirects the new user to sign in with GitHub' do
         get :show, id: invitation.key
         expect(response).to redirect_to(login_path)
       end
     end
 
-    describe 'authenticated request' do
+    context 'authenticated request' do
       let(:user) { GitHubFactory.create_classroom_student }
 
       before(:each) do
