@@ -35,10 +35,12 @@ RSpec.describe OrganizationsController, type: :controller do
     end
 
     context 'authenticated user with an invalid token' do
-      it 'redirects to login_path' do
+      before do
         user.token = '12345'
         user.save!
+      end
 
+      it 'redirects to login_path' do
         get :index
         expect(response).to redirect_to(login_path)
       end
