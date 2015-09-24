@@ -25,19 +25,19 @@ class AssignmentRepoDecorator < Draper::Decorator
 
   def github_repository
     @github_repository ||= GitHubRepository.new(creator.github_client, github_repo_id).repository
-  rescue
+  rescue GitHub::NotFound
     NullGitHubRepository.new
   end
 
   def student
     @student ||= GitHubUser.new(creator.github_client, user.uid).user
-  rescue
+  rescue GitHub::NotFound
     NullGitHubUser.new
   end
 
   def user
     @user ||= repo_access.user
-  rescue
+  rescue GitHub::NotFound
     NullGitHubUser.new
   end
 end

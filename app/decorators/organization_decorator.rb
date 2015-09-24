@@ -25,7 +25,7 @@ class OrganizationDecorator < Draper::Decorator
 
   def github_organization
     @github_organization ||= GitHubOrganization.new(github_client, github_id).organization
-  rescue
+  rescue GitHub::NotFound
     NullGitHubOrganization.new
   end
 end

@@ -13,7 +13,7 @@ class GroupDecorator < Draper::Decorator
 
   def github_team
     @github_team ||= GitHubTeam.new(organization.github_client, github_team_id).team
-  rescue
+  rescue GitHub::NotFound
     NullGitHubTeam.new
   end
 end
