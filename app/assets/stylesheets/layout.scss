@@ -17,6 +17,11 @@ a {
   &:hover {
     text-decoration: none;
   }
+
+  &.disabled {
+    pointer-events: none;
+    cursor: default;
+  }
 }
 
 main {
@@ -294,6 +299,16 @@ hr {
 .assignment-repo-list-item {
   font-size: 14px;
 
+  &.disabled {
+    a {
+      color: $brand-gray;
+    }
+
+    .avatar {
+      filter: grayscale(1);
+    }
+  }
+
   .avatar {
     margin-right: 10px;
 
@@ -327,6 +342,16 @@ hr {
 
 .group-assignment-repo-list-item {
   font-size: 14px;
+
+  &.disabled {
+    a {
+      color: $brand-gray;
+    }
+
+    .avatar {
+      filter: grayscale(1);
+    }
+  }
 
   .css-truncate-target {
     max-width: 20rem;
