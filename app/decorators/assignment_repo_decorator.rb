@@ -7,18 +7,26 @@ class AssignmentRepoDecorator < Draper::Decorator
 
   def full_name
     github_repository.full_name
+  rescue GitHub::NotFound
+    "Deleted repository"
   end
 
   def github_url
     github_repository.html_url
+  rescue GitHub::NotFound
+    "#"
   end
 
   def student_login
     student.login
+  rescue GitHub::NotFound
+    "ghost"
   end
 
   def student_name
     student.name
+  rescue GitHub::NotFound
+    "Deleted user"
   end
 
   private

@@ -7,10 +7,14 @@ class UserDecorator < Draper::Decorator
 
   def github_url
     github_user.html_url
+  rescue GitHub::NotFound
+    "#"
   end
 
   def login
     github_user.login
+  rescue GitHub::NotFound
+    "ghost"
   end
 
   private
