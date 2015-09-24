@@ -19,7 +19,7 @@ if [ -z "$RAILS_ENV" ] && [ -z "$RACK_ENV" ]; then
   # time. Or things needed to be run to to reset the application back to first
   # use experience. These things are scoped to the application's domain.
 
-  cp --no-clobber .env-example .env
+  cp -n .env-example .env
 fi
 
 echo "==> Your app is almost ready! Please make sure you fill out your .env file."
