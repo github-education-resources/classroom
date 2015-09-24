@@ -36,6 +36,7 @@ module GitHubRepoable
   #
   def destroy_github_repository
     github_organization.delete_repository(github_repo_id)
+    true # Destroy ActiveRecord object even if we fail to delete the repository
   end
 
   # Public
