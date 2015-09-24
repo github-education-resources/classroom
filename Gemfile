@@ -19,7 +19,7 @@ gem 'jquery-turbolinks'
 
 gem 'kaminari'
 
-gem 'octokit', git: 'https://github.com/octokit/octokit.rb', ref: 'a8e73a710476e34c549497673c4424466875a658'
+gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'
 
