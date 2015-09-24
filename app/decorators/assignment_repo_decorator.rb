@@ -37,7 +37,5 @@ class AssignmentRepoDecorator < Draper::Decorator
 
   def user
     @user ||= repo_access.user
-  rescue GitHub::NotFound
-    NullGitHubUser.new
   end
 end
