@@ -20,7 +20,7 @@ module GitHubTeamable
   #
   def destroy_github_team
     github_organization.delete_team(github_team_id)
-    true
+    true # Destroy ActiveRecord object even if we fail to delete the team
   end
 
   # Internal
