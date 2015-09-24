@@ -4,13 +4,13 @@ class AssignmentDecorator < Draper::Decorator
   def full_name
     return unless starter_code?
     github_repository.full_name
-  rescue GitHub::NotFound
-    NullGitHubRepository.full_name
   end
 
   private
 
   def github_repository
     @github_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id).repository
+  rescue
+    NullGitHubRepository.new
   end
 end
