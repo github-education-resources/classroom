@@ -12,19 +12,17 @@ class OrganizationDecorator < Draper::Decorator
   def github_url
     github_organization.html_url
   rescue GitHub::NotFound
-    "#"
+    NullGitHubOrganization.html_url
   end
 
   def github_team_invitations_url
-    "https://github.com/orgs/#{github_organization.login}/invitations/new"
-  rescue GitHub::NotFound
-    "#"
+    "https://github.com/orgs/#{login}/invitations/new"
   end
 
   def login
     github_organization.login
   rescue GitHub::NotFound
-    "ghost"
+    NullGitHubOrganization.login
   end
 
   private

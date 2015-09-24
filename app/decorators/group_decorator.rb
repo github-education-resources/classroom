@@ -4,13 +4,13 @@ class GroupDecorator < Draper::Decorator
   def name
     github_team.name
   rescue GitHub::NotFound
-    "Deleted team"
+    NullGitHubTeam.name
   end
 
   def slug
     github_team.slug
   rescue GitHub::NotFound
-    'ghost'
+    NullGitHubTeam.slug
   end
 
   private

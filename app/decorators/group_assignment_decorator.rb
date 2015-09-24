@@ -5,7 +5,7 @@ class GroupAssignmentDecorator < Draper::Decorator
     return unless starter_code?
     github_repository.full_name
   rescue GitHub::NotFound
-    "Deleted repository"
+    NullGitHubRepository.full_name
   end
 
   private

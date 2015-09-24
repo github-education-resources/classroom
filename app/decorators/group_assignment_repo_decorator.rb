@@ -4,7 +4,7 @@ class GroupAssignmentRepoDecorator < Draper::Decorator
   def full_name
     github_repository.full_name
   rescue GitHub::NotFound
-    "Deleted repository"
+    NullGitHubRepository.full_name
   end
 
   def github_team_url
@@ -16,7 +16,7 @@ class GroupAssignmentRepoDecorator < Draper::Decorator
   def github_repo_url
     github_repository.html_url
   rescue GitHub::NotFound
-    "#"
+    NullGitHubRepository.html_url
   end
 
   def team_name
