@@ -17,5 +17,7 @@ class UserDecorator < Draper::Decorator
 
   def github_user
     @github_user ||= GitHubUser.new(github_client, uid).user
+  rescue GitHub::NotFound
+    NullGitHubUser
   end
 end
