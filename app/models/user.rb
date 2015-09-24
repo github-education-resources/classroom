@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  include GitHub
+
   has_many :repo_accesses,    dependent: :destroy
   has_many :assignment_repos, through: :repo_accesses
 
@@ -29,5 +31,12 @@ class User < ActiveRecord::Base
 
   def staff?
     site_admin
+  end
+
+  def valid_auth_token?
+    required_scopes = %w(admin:org delete_repo repo user:email)
+    (required_scopes - github_client.scopes(token, headers: no_cache_headers)).empty? ? true : false
+  rescue Octokit::NotFound, Octokit::Unauthorized
+    false
   end
 end

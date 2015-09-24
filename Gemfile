@@ -19,7 +19,7 @@ gem 'jquery-turbolinks'
 
 gem 'kaminari'
 
-gem 'octokit'
+gem 'octokit', git: 'https://github.com/octokit/octokit.rb', ref: 'a8e73a710476e34c549497673c4424466875a658'
 gem 'omniauth'
 gem 'omniauth-github'
 
@@ -39,6 +39,7 @@ gem 'uglifier', '>= 1.3.0'
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'foreman'
   gem 'quiet_assets'
 end
 

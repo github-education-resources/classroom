@@ -1,26 +1,26 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentInvitationsController, type: :controller do
-  describe 'GET #show' do
+  describe 'GET #show', :vcr do
     let(:invitation) { create(:assignment_invitation) }
 
-    describe 'unauthenticated request' do
+    context 'unauthenticated request' do
       it 'redirects the new user to sign in with GitHub' do
         get :show, id: invitation.key
         expect(response).to redirect_to(login_path)
       end
     end
 
-    describe 'authenticated request' do
-      let(:user) { create(:user) }
+    context 'authenticated request' do
+      let(:user) { GitHubFactory.create_classroom_student }
 
       before(:each) do
         session[:user_id] = user.id
       end
 
-      it 'will set the correct invitation' do
+      it 'will bring you to the page' do
         get :show, id: invitation.key
-        expect(assigns(:invitation)).to_not be_nil
+        expect(response).to have_http_status(:success)
       end
     end
   end
