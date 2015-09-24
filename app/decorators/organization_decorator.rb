@@ -14,7 +14,7 @@ class OrganizationDecorator < Draper::Decorator
   end
 
   def github_team_invitations_url
-    "https://github.com/orgs/#{github_organization.login}/invitations/new"
+    "https://github.com/orgs/#{login}/invitations/new"
   end
 
   def login
@@ -25,5 +25,7 @@ class OrganizationDecorator < Draper::Decorator
 
   def github_organization
     @github_organization ||= GitHubOrganization.new(github_client, github_id).organization
+  rescue GitHub::NotFound
+    NullGitHubOrganization.new
   end
 end
