@@ -11,7 +11,7 @@ VCR.configure do |c|
     record: ENV['TRAVIS'] ? :none : :once
   }
 
-  # Application id and secret
+  # Application id
   c.filter_sensitive_data('<TEST_APPLICATION_GITHUB_CLIENT_ID>') do
     application_github_client_id
   end
