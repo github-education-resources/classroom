@@ -10,15 +10,40 @@ RSpec.describe OrganizationsController, type: :controller do
     session[:user_id] = user.id
   end
 
-  describe 'GET #index' do
-    it 'returns success status' do
-      get :index
-      expect(response).to have_http_status(:success)
+  describe 'GET #index', :vcr do
+    context 'unauthenticated user' do
+      before do
+        session[:user_id] = nil
+      end
+
+      it 'redirects to login_path' do
+        get :index
+        expect(response).to redirect_to(login_path)
+      end
     end
 
-    it 'sets the users organization' do
-      get :index
-      expect(assigns(:organizations)).not_to be_nil
+    context 'authenticated user with a valid token' do
+      it 'succeeds' do
+        get :index
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'sets the users organization' do
+        get :index
+        expect(assigns(:organizations).first.id).to eq(organization.id)
+      end
+    end
+
+    context 'authenticated user with an invalid token' do
+      before do
+        user.token = '12345'
+        user.save!
+      end
+
+      it 'redirects to login_path' do
+        get :index
+        expect(response).to redirect_to(login_path)
+      end
     end
   end
 
@@ -69,7 +94,7 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
-  describe 'GET #show' do
+  describe 'GET #show', :vcr do
     it 'returns success and sets the organization' do
       get :show, id: organization.id
 
@@ -78,7 +103,7 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
-  describe 'GET #edit' do
+  describe 'GET #edit', :vcr do
     it 'returns success and sets the organization' do
       get :edit, id: organization.id
 
@@ -87,7 +112,7 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
-  describe 'PATCH #update' do
+  describe 'PATCH #update', :vcr do
     it 'correctly updates the organization' do
       options = { title: 'New Title' }
       patch :update, id: organization.id, organization: options
@@ -116,7 +141,7 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
-  describe 'GET #invite' do
+  describe 'GET #invite', :vcr do
     it 'returns success and sets the organization' do
       get :invite, id: organization.id
 
