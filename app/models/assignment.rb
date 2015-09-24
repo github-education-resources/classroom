@@ -21,7 +21,7 @@ class Assignment < ActiveRecord::Base
 
   validates :title, presence: true
   validates :title, uniqueness: { scope: :organization }
-  validates :title, length: { maximum: 100 }
+  validates :title, length: { maximum: 60 }
 
   validate :uniqueness_of_title_across_organization
 
