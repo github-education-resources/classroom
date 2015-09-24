@@ -20,3 +20,6 @@ erd.pdf
 
 # Sketch
 *.sketch
+
+# Redis dump
+dump.rdb
