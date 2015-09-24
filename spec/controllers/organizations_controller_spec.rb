@@ -11,14 +11,37 @@ RSpec.describe OrganizationsController, type: :controller do
   end
 
   describe 'GET #index', :vcr do
-    it 'returns success status' do
-      get :index
-      expect(response).to have_http_status(:success)
+    context 'unauthenticated user' do
+      before do
+        session[:user_id] = nil
+      end
+
+      it 'will redirect you to the login_path' do
+        get :index
+        expect(response).to redirect_to(login_path)
+      end
     end
 
-    it 'sets the users organization' do
-      get :index
-      expect(assigns(:organizations)).not_to be_nil
+    context 'authenticated user with a valid token' do
+      it 'will take you to the index page' do
+        get :index
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'sets the users organization' do
+        get :index
+        expect(assigns(:organizations)).not_to be_nil
+      end
+    end
+
+    context 'authenticated user with an invalid token' do
+      it 'will take you to the login_path' do
+        user.token = '12345'
+        user.save!
+
+        get :index
+        expect(response).to redirect_to(login_path)
+      end
     end
   end
 
