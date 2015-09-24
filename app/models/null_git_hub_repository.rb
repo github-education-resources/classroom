@@ -1,4 +1,4 @@
-class NullGitHubRepository
+class NullGitHubRepository < NullGitHubResource
   def full_name
     'Deleted repository'
   end

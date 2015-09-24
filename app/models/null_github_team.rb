@@ -1,4 +1,4 @@
-class NullGitHubTeam
+class NullGitHubTeam < NullGitHubResource
   def name
     'Deleted team'
   end

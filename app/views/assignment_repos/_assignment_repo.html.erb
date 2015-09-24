@@ -1,6 +1,6 @@
 <% assignment_repo = assignment_repo.decorate %>
 
-<div class="flex-table assignment-repo-list-item">
+<div class="flex-table assignment-repo-list-item<%= ' disabled' if assignment_repo.disabled? %>">
   <div class="flex-table-item">
     <%= image_tag assignment_repo.avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{assignment_repo.student_login}" %>
 

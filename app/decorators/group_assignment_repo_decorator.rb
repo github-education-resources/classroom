@@ -1,6 +1,10 @@
 class GroupAssignmentRepoDecorator < Draper::Decorator
   delegate_all
 
+  def disabled?
+    github_repository.null? || github_team.null?
+  end
+
   def full_name
     github_repository.full_name
   end

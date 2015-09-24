@@ -1,4 +1,4 @@
-class NullGitHubOrganization
+class NullGitHubOrganization < NullGitHubResource
   def html_url
     '#'
   end

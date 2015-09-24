@@ -1,6 +1,6 @@
 <% group_assignment_repo = group_assignment_repo.decorate %>
 
-<div class="flex-table group-assignment-repo-list-item">
+<div class="flex-table group-assignment-repo-list-item<%= ' disabled' if group_assignment_repo.disabled? %>">
   <div class="flex-table-item">
     <%= link_to group_assignment_repo.github_team_url, class: 'team-name' do %>
       <strong class="css-truncate css-truncate-target"><%= group_assignment_repo.team_name %></strong>
