@@ -14,6 +14,7 @@ class Group < ActiveRecord::Base
   validates :grouping, presence: true
 
   validates :title, presence: true
+  validates :title, length: { maximum: 39 }
 
   private
 
