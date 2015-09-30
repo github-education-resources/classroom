@@ -6,6 +6,7 @@ gem 'rails', '4.2.4'
 gem 'airbrake'
 gem 'autoprefixer-rails'
 
+gem 'chewy'
 gem 'coffee-rails', '~> 4.1.0'
 
 gem 'draper'
@@ -24,7 +25,16 @@ gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'
 
+gem 'peek'
+gem 'peek-dalli'
+gem 'peek-gc'
+gem 'peek-git'
+gem 'peek-performance_bar'
+gem 'peek-pg'
+gem 'peek-sidekiq', github: 'Soliah/peek-sidekiq', ref: '261c857578ae6dc189506a35194785a4db51e54c'
+
 gem 'pg'
+gem 'puma'
 
 gem 'rack-canonical-host'
 
@@ -36,14 +46,6 @@ gem 'sinatra'
 gem 'turbolinks'
 
 gem 'uglifier', '>= 1.3.0'
-
-gem 'peek'
-gem 'peek-dalli'
-gem 'peek-gc'
-gem 'peek-git'
-gem 'peek-performance_bar'
-gem 'peek-pg'
-gem 'peek-sidekiq', github: 'Soliah/peek-sidekiq', ref: '261c857578ae6dc189506a35194785a4db51e54c'
 
 group :development do
   gem 'better_errors'
@@ -67,7 +69,6 @@ group :production do
   gem 'dalli'
   gem 'newrelic_rpm'
   gem 'pinglish'
-  gem 'puma'
   gem 'rack-tracker'
   gem 'rails_12factor'
 end

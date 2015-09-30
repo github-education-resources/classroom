@@ -2,6 +2,8 @@ class Organization < ActiveRecord::Base
   extend FriendlyId
   friendly_id :slug_candidate, use: [:slugged, :finders]
 
+  update_index('users') { users }
+
   default_scope { where(deleted_at: nil) }
 
   has_many :assignments,       dependent: :destroy

@@ -1,6 +1,8 @@
 class RepoAccess < ActiveRecord::Base
   include GitHubTeamable
 
+  update_index('users#user') { user }
+
   belongs_to :user
   belongs_to :organization, -> { unscope(where: :deleted_at) }
 

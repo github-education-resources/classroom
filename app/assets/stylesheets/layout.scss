@@ -145,7 +145,8 @@ main {
   }
 }
 
-.site-content {
+.site-content,
+.menu {
   margin-top: 1rem;
 }
 
@@ -454,7 +455,8 @@ hr {
 .desktop-invitation-content,
 .settings,
 .student-information,
-.clipboard-form {
+.clipboard-form,
+.classroom-user-name {
   @media (max-width: 34em) {
     display: none;
   }
@@ -581,5 +583,66 @@ hr {
   margin-bottom: 9px;
 }
 
-.organization {
+.user-results {
+  margin-top: 2em;
+}
+
+.classroom-users {
+  .assignment-repo-list-item:not(:first-child) {
+
+    @media (max-width: 34em) {
+      margin-bottom: 0;
+    }
+  }
+
+  .blankslate {
+    margin-top: 2em;
+  }
+}
+
+.classroom-user {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  font-size: 14px;
+  border-top: 1px solid #e3e3e3;
+
+  &.disabled {
+    a {
+      color: $brand-gray;
+    }
+
+    .avatar {
+      filter: grayscale(1);
+    }
+  }
+
+  .avatar {
+    margin-right: 10px;
+
+    @media (max-width: 34em) {
+      margin-right: 0;
+    }
+  }
+
+  .mega-octicon-search {
+    opacity: 0.3;
+  }
+
+  .css-truncate-target {
+    max-width: 20rem;
+
+    @media (max-width: 34em) {
+      display: none;
+    }
+  }
+
+  .login {
+    color: $brand-gray-dark;
+    display: block;
+    padding-top: 4px;
+
+    &:hover {
+      color: $brand-blue;
+    }
+  }
 }

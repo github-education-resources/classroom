@@ -1,6 +1,8 @@
 class User < ActiveRecord::Base
   include GitHub
 
+  update_index('users#user') { self }
+
   has_many :repo_accesses, dependent: :destroy
   has_many :assignment_repos
 

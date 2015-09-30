@@ -16,8 +16,17 @@
           </li>
 
           <li>
-            <%= link_to decorated_current_user.github_url, class: 'tooltipped tooltipped-s', 'aria-label' => 'View GitHub profile' do %>
-              <%= image_tag decorated_current_user.avatar_url(40), class: 'avatar', alt: "@#{decorated_current_user.login}", height: 20, width: 20 %>
+            <% if current_user != true_user %>
+              <%= link_to stop_impersonating_users_path, class: 'tooltipped tooltipped-s', method: :post, 'aria-label' => "@#{decorated_true_user.login} impersonating @#{decorated_current_user.login}" do %>
+                <div class="avatar-parent-child left">
+                  <%= image_tag decorated_current_user.avatar_url(40), class: 'avatar', alt: "@#{decorated_current_user.login}", height: 20, width: 20 %>
+                  <%= image_tag decorated_true_user.avatar_url(20), class: 'avatar avatar-child', alt: "@#{decorated_true_user.login}", height: 10, width: 10 %>
+                </div>
+              <% end %>
+            <% else %>
+              <%= link_to decorated_current_user.github_url, class: 'tooltipped tooltipped-s', 'aria-label' => 'View GitHub profile' do %>
+                <%= image_tag decorated_current_user.avatar_url(40), class: 'avatar', alt: "@#{decorated_current_user.login}", height: 20, width: 20 %>
+              <% end %>
             <% end %>
           </li>
 

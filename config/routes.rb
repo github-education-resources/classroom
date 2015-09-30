@@ -1,10 +1,7 @@
-require 'staff_constraint'
-
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  mount Peek::Railtie => '/peek',    constraints: StaffConstraint.new unless Rails.env.test?
-  mount Sidekiq::Web  => '/sidekiq', constraints: StaffConstraint.new
+  mount Peek::Railtie => '/peek'
 
   root to: 'pages#home'
 
@@ -41,6 +38,22 @@ Rails.application.routes.draw do
 
       resources :assignments
       resources :group_assignments, path: 'group-assignments'
+    end
+  end
+
+  namespace :stafftools do
+    mount Sidekiq::Web  => '/sidekiq'
+
+    root action: :impersonate
+    get :users
+  end
+
+  scope module: 'stafftools' do
+    resource :users, only: [] do
+      member do
+        post :impersonate
+        post :stop_impersonating
+      end
     end
   end
 end

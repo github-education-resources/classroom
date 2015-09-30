@@ -1,0 +1,17 @@
+<% if peek_enabled? %>
+  <div id="peek" class="<%= Peek.env %><%= ' disabled' if cookies[:peek] == 'false' %>" data-request-id="<%= Peek.request_id %>">
+    <div class="wrapper">
+      <% Peek.views.each do |view| %>
+        <div id="<%= view.dom_id %>" class="view">
+          <%= render view.partial_path, :view => view %>
+        </div>
+      <% end %>
+
+      <div id="peek-view-staff-tools" class="view">
+        <%= link_to stafftools_root_path, class: 'staff-tools-link tooltipped tooltipped-s', "aria-label" => 'Staff tools' do %>
+          <%= octicon('rocket') %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

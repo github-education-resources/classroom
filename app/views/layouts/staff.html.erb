@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Classroom for GitHub</title>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= csrf_meta_tags %>
+
+    <%= render 'shared/open_graph' %>
+  </head>
+  <body class="site <%= controller_name %> <%= action_name %>">
+    <div class="loading-indicator" style="display: none;"></div>
+
+    <%= render 'peek/bar' %>
+    <%= render 'shared/header' %>
+
+    <main>
+      <%= render 'shared/flash_messages' %>
+
+      <div class="site-content">
+        <div class="container">
+          <div class="one-fourth column">
+            <%= render 'stafftools/navigation' %>
+          </div>
+          <div class="three-fourths column">
+            <%= yield %>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  </body>
+</html>

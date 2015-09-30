@@ -9,7 +9,7 @@ RSpec.describe AssignmentsController, type: :controller do
   let(:assignment) { Assignment.create(title: 'Assignment', creator: user, organization: organization) }
 
   before do
-    session[:user_id] = user.id
+    sign_in(user)
   end
 
   describe 'GET #new', :vcr do

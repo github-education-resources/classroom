@@ -91,4 +91,12 @@ RSpec.configure do |config|
   config.profile_examples = 10
 =end
   # rubocop:enable Style/BlockComments
+
+  def sign_in(user)
+    session[:user_id] = user.try(:id)
+  end
+
+  def sign_out
+    session.delete(:user_id)
+  end
 end
