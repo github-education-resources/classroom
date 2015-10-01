@@ -32,6 +32,6 @@ class GroupAssignmentRepoDecorator < Draper::Decorator
   def github_team
     @github_team ||= GitHubTeam.new(creator.github_client, github_team_id).team
   rescue GitHub::NotFound
-    NullGitHubTeamTeam.new
+    NullGitHubTeam.new
   end
 end
