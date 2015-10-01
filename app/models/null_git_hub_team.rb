@@ -3,6 +3,10 @@ class NullGitHubTeam < NullGitHubResource
     'ghost'
   end
 
+  def organization
+    NullGitHubOrganization.new
+  end
+
   def slug
     'ghost'
   end
