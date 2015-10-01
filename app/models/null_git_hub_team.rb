@@ -1,6 +1,6 @@
 class NullGitHubTeam < NullGitHubResource
   def name
-    'ghost'
+    'Deleted team'
   end
 
   def organization
