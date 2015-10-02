@@ -13,7 +13,7 @@ class Organization < ActiveRecord::Base
 
   validates :github_id, presence: true, uniqueness: true
   validates :title,     presence: true
-  validates :title,     length: { maximum: 39 }
+  validates :title,     length: { maximum: 60 }
 
   # Public
   #
