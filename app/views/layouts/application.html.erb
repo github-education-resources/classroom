@@ -9,6 +9,8 @@
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
     <%= csrf_meta_tags %>
+
+    <%= render 'shared/open_graph' %>
   </head>
   <body class="site <%= controller_name %> <%= action_name %>">
     <div class="loading-indicator" style="display: none;"></div>
