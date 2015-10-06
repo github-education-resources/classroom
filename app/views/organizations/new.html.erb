@@ -1,6 +1,6 @@
 <div class="site-content">
   <div class="site-content-cap">
-    <h2 class="site-content-heading">New Organization</h2>
+    <h2 class="site-content-heading">New classroom</h2>
   </div>
 
   <div class="site-content-body">
@@ -20,14 +20,14 @@
         </dl>
 
         <dl class="form">
-          <dt><%= f.label :organization %></dt>
+          <dt><label>Select your GitHub organization to use for this classroom</label></dt>
           <dd>
             <%= select :organization, :github_id, options_for_select(@users_github_organizations), {}, {:class => 'select'} %>
           </dd>
         </dl>
 
         <div class="form-actions">
-          <%= f.submit 'Add Organization', class: 'btn btn-green' %>
+          <%= f.submit 'Create classroom', class: 'btn btn-green' %>
           <%= link_to 'Cancel', organizations_path, class: 'btn', role: 'button' %>
         </div>
       <% end %>

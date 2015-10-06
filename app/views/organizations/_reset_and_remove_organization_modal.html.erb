@@ -9,7 +9,7 @@
   <div class="remodal-description">
     <p>
       This action <strong>CANNOT</strong> be undone.
-      Please note that reseting and removing this organization will delete all repositories and teams under the <strong><%= organization.login %></strong> account that were created by Classroom for GitHub.
+      Please note that reseting and removing this classroom will delete all repositories and teams under the <strong><%= organization.login %></strong> account that were created by Classroom for GitHub.
     </p>
   </div>
 
@@ -19,6 +19,6 @@
       <dd><input type="text" class="js-input-block"></dd>
     </dl>
 
-    <%= f.submit 'Reset and remove this organization', class: 'btn btn-danger btn-block js-navigation js-submit', disabled: true %>
+    <%= f.submit 'Reset and remove this classroom', class: 'btn btn-danger btn-block js-navigation js-submit', disabled: true %>
   <% end %>
 </div>
