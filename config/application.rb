@@ -58,7 +58,7 @@ module Classroom
         end
 
         ping.check :redis do
-          Redis.new(url: ENV['REDIS_URL']).ping
+          Sidekiq.redis { |redis| redis.ping }
           'ok'
         end
       end
