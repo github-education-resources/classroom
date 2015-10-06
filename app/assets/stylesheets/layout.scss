@@ -38,6 +38,7 @@ main {
 .site-logo {
   width: 230px;
   height: 20px;
+  margin-top: 0.3rem;
 
   @media (max-width: 34em) {
     margin-bottom: 1rem;
@@ -50,18 +51,25 @@ main {
 
 .site-nav {
   float: right;
+  height: 28px;
   margin-top: 0.1rem;
   font-size: 0.9rem;
 
   ul {
     list-style-type: none;
+    display: inline-block;
 
     li {
-      display: inline-block;
+      float: left;
+      display: block;
       margin-left: 2rem;
 
       @media (max-width: 34em) {
         margin-left: 0;
+      }
+
+      .octicon {
+        font-size: 18px;
       }
     }
   }
@@ -85,6 +93,7 @@ main {
 
   @media (max-width: 34em) {
     padding-top: 1rem;
+    margin-bottom: 0.8rem;
     border-top: 0.075rem solid rgba(255, 255, 255, 0.25);
     text-align: center;
     width: 100%;
