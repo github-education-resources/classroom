@@ -218,6 +218,8 @@ GEM
       peek
       pg
     pg (0.18.3)
+    pinglish (0.2.1)
+      rack
     powerpack (0.1.1)
     pry (0.10.1)
       coderay (~> 1.1.0)
@@ -386,6 +388,7 @@ DEPENDENCIES
   peek-pg
   peek-sidekiq!
   pg
+  pinglish
   pry-byebug
   pry-rails
   puma

@@ -23,6 +23,7 @@ gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'
 
+gem 'pinglish'
 gem 'pg'
 
 gem 'rack-canonical-host'
