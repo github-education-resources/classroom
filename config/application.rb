@@ -43,5 +43,23 @@ module Classroom
 
     # Use SideKiq for background jobs
     config.active_job.queue_adapter = :sidekiq
+
+    # Health checks endpoint for monitoring
+    config.middleware.use Pinglish do |ping|
+      ping.check :db do
+        ActiveRecord::Base.connection.tables.size
+        'ok'
+      end
+
+      ping.check :memcached do
+        ActiveSupport::Cache.lookup_store(:mem_cache_store).stats.values.include? nil
+        'ok'
+      end
+
+      ping.check :redis do
+        Redis.new(url: ENV['REDIS_URL']).ping
+        'ok'
+      end
+    end
   end
 end
