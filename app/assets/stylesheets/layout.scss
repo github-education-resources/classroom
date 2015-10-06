@@ -51,18 +51,24 @@ main {
 
 .site-nav {
   float: right;
+  height: 28px;
   margin-top: 0.1rem;
   font-size: 0.9rem;
 
   ul {
     list-style-type: none;
+    display: inline-block;
 
     li {
-      display: inline-block;
+      float: left;
+      display: block;
       margin-left: 2rem;
 
       @media (max-width: 34em) {
         margin-left: 0;
+      }
+      .octicon {
+        font: normal normal normal 18px/1 octicons;
       }
     }
   }
