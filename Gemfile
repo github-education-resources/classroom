@@ -23,7 +23,6 @@ gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'
 
-gem 'pinglish'
 gem 'pg'
 
 gem 'rack-canonical-host'
@@ -68,6 +67,7 @@ end
 group :production do
   gem 'dalli'
   gem 'newrelic_rpm'
+  gem 'pinglish'
   gem 'puma'
   gem 'rack-tracker'
   gem 'rails_12factor'
