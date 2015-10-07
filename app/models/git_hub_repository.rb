@@ -17,14 +17,12 @@ class GitHubRepository
   # Public
   #
   def get_starter_code_from(source)
-    Dir.mktmpdir do |dir|
-      Dir.chdir(dir) do
-        system("git clone --bare https://#{@client.access_token}@github.com/#{source}.git")
-        Dir.chdir("#{source.split('/').last}.git") do
-          system("git push --mirror https://#{@client.access_token}@github.com/#{full_name}.git")
-        end
-      end
-    end
+    @client.put(
+      "/repositories/#{@id}/import",
+      headers: {accept: 'application/vnd.github.barred-rock-preview'},
+      "vcs": "git",
+      "vcs_url": "https://github.com/#{source.full_name}"
+    )
   end
 
   # Public
