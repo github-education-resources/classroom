@@ -17,33 +17,41 @@ class GroupAssignmentRepo < ActiveRecord::Base
   validates :group, presence: true
   validates :group, uniqueness: { scope: :group_assignment }
 
-  # Public
-  #
+  # Public: Get the parent group assignments creator
+  # Returns the User that created the GroupAssignment
   def creator
     group_assignment.creator
   end
 
-  # Public
+  # Public: Determine if the GroupAssignmentRepo's GroupAssignment is private
   #
+  # Example
+  #
+  #  group_assignment_repo.private?
+  #  # => true
+  #
+  # Returns a boolean
   def private?
     !group_assignment.public_repo?
   end
 
-  # Public
-  #
+  # Public: Return the GitHub team id from GroupAssignmentRepos Group
+  # Returns the GitHub Team id as an Integer
   def github_team_id
     group.github_team_id
   end
 
-  # Public
-  #
+  # Public: Build the title for the GroupAssignmentRepo
+  # Returns the title as a String
   def repo_name
     github_team = GitHubTeam.new(creator.github_client, github_team_id).team
     "#{group_assignment.slug}-#{github_team.slug}"
   end
 
-  # Public
+  # Public: Return the starter_code_repo_id from GroupAssignmentRepos
+  # GroupAssignment
   #
+  # Returns the starter_code_repo_id as an Integer
   def starter_code_repo_id
     group_assignment.starter_code_repo_id
   end

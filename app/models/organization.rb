@@ -15,14 +15,24 @@ class Organization < ActiveRecord::Base
   validates :title,     presence: true
   validates :title,     length: { maximum: 60 }
 
-  # Public
+  # Public: Retrieve both Assignments and Group Assignments
+  # for the organization.
   #
+  # Returns an array of assignments and group assignments
+  # if the organization doesn't have any yet
   def all_assignments
     assignments + group_assignments
   end
 
-  # Public
+  # Public: Retrieve a properly authenticated GitHubClient
+  # on for the organization
   #
+  # Example
+  #
+  #   organization.github_client
+  #   # => #<Octokit::Client:0x3fe32a050c4c>
+  #
+  # Returns an authenticated Octokit::Client
   def github_client
     users.sample.github_client
   end
