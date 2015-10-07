@@ -30,6 +30,42 @@ RSpec.describe AssignmentsController, type: :controller do
         post :create, organization_id: organization.id, assignment: attributes_for(:assignment)
       end.to change { Assignment.count }
     end
+
+    context 'valid starter_code input' do
+      before do
+        post :create,
+             organization_id: organization.id,
+             assignment:      attributes_for(:assignment),
+             repo_name:       'rails/rails'
+      end
+
+      it 'creates a new Assignment' do
+        expect(Assignment.count).to eql(1)
+      end
+    end
+
+    context 'invalid starter_code input' do
+      before do
+        request.env['HTTP_REFERER'] = 'http://test.host/classrooms/new'
+
+        post :create,
+             organization_id: organization.id,
+             assignment:      attributes_for(:assignment),
+             repo_name:       'https://github.com/rails/rails'
+      end
+
+      it 'fails to create a new Assignment' do
+        expect(Assignment.count).to eql(0)
+      end
+
+      it 'does not return an internal server error' do
+        expect(response).not_to have_http_status(:internal_server_error)
+      end
+
+      it 'provides a friendly error message' do
+        expect(flash[:error]).to eql('Invalid repository name, use the format owner/name')
+      end
+    end
   end
 
   describe 'GET #show', :vcr do
