@@ -17,12 +17,14 @@ class GitHubRepository
   # Public
   #
   def get_starter_code_from(source)
-    @client.put(
-      "/repositories/#{@id}/import",
-      headers: { accept: 'application/vnd.github.barred-rock-preview' },
-      'vcs': 'git',
-      'vcs_url': "https://github.com/#{source.full_name}"
-    )
+    with_error_handling do
+      @client.put(
+        "/repositories/#{@id}/import",
+        headers: { accept: 'application/vnd.github.barred-rock-preview' },
+        'vcs': 'git',
+        'vcs_url': "https://github.com/#{source.full_name}"
+      )
+    end
   end
 
   # Public
