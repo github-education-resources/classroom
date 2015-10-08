@@ -49,7 +49,12 @@ module GitHubRepoable
     assignment_repository   = GitHubRepository.new(client, github_repo_id)
     starter_code_repository = GitHubRepository.new(client, starter_code_repo_id)
 
-    assignment_repository.get_starter_code_from(starter_code_repository)
+    begin
+      assignment_repository.get_starter_code_from(starter_code_repository)
+    rescue
+      destroy_github_repository
+      raise GitHub::Error, 'Failed to create repository on GitHub, please try again'
+    end
   end
 
   # Internal
