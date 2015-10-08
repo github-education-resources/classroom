@@ -3,11 +3,13 @@ module GitHubRepoable
 
   included do
     before_validation(on: :create) do
-      create_github_repository if organization
+      if organization
+        create_github_repository
+        push_starter_code
+      end
     end
 
     before_create :add_team_to_github_repository
-    before_create :push_starter_code
 
     before_destroy :silently_destroy_github_repository
   end
@@ -49,7 +51,18 @@ module GitHubRepoable
   #
   def push_starter_code
     return true unless starter_code_repo_id
-    PushStarterCodeJob.perform_later(creator, github_repo_id, starter_code_repo_id)
+
+    client = creator.github_client
+
+    assignment_repository   = GitHubRepository.new(client, github_repo_id)
+    starter_code_repository = GitHubRepository.new(client, starter_code_repo_id)
+
+    begin
+      assignment_repository.get_starter_code_from(starter_code_repository)
+    rescue GitHub::Error
+      destroy_github_repository
+      raise GitHub::Error, 'Failed to create repository on GitHub, please try again'
+    end
   end
 
   # Internal

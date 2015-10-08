@@ -16,9 +16,5 @@
     <h2>You are ready to go!</h2>
     <p>You may receive an invitation to join <%= link_to "@#{decorated_organization.login}", decorated_organization.github_url %> via email invitation on your behalf. No further action is necessary.</p>
     <p>Your assignment has been created here: <%= link_to decorated_group_assignment_repo.github_repo_url, decorated_group_assignment_repo.github_repo_url %></p>
-
-    <% if group_assignment.starter_code? %>
-      <p>This assignment also has starter code, which will be pushed up to your repository soon.</p>
-    <% end %>
   </div>
 </div>
