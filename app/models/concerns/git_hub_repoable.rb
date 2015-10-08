@@ -3,11 +3,13 @@ module GitHubRepoable
 
   included do
     before_validation(on: :create) do
-      create_github_repository if organization
+      if organization
+        create_github_repository
+        push_starter_code
+      end
     end
 
     before_create :add_team_to_github_repository
-    before_create :push_starter_code
 
     before_destroy :destroy_github_repository
   end
