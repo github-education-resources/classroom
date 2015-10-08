@@ -9,7 +9,7 @@ module GitHubRepoable
     before_create :add_team_to_github_repository
     before_create :push_starter_code
 
-    before_destroy :destroy_github_repository
+    before_destroy :silently_destroy_github_repository
   end
 
   # Public
@@ -36,6 +36,12 @@ module GitHubRepoable
   #
   def destroy_github_repository
     github_organization.delete_repository(github_repo_id)
+  end
+
+  # Public
+  #
+  def silently_destroy_github_repository
+    destroy_github_repository
     true # Destroy ActiveRecord object even if we fail to delete the repository
   end
 
