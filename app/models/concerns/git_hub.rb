@@ -1,7 +1,7 @@
 module GitHub
   class Error < StandardError; end
-  class Forbidden < StandardError; end
-  class NotFound < StandardError; end
+  class Forbidden < Error; end
+  class NotFound < Error; end
 
   # Public
   #

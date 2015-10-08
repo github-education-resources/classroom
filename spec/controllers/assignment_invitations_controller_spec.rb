@@ -32,6 +32,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     let(:assignment) do
       Assignment.create(creator: organization.users.first,
                         title: 'ruby-project',
+                        starter_code_repo_id: '1062897',
                         organization: organization,
                         public_repo: false)
     end
@@ -39,6 +40,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     let(:invitation) { AssignmentInvitation.create(assignment: assignment) }
 
     before(:each) do
+      request.env['HTTP_REFERER'] = "http://classroomtest.com/group-assignment-invitations/#{invitation.key}"
       session[:user_id] = user.id
     end
 
@@ -55,6 +57,34 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
       expect(assignment.assignment_repos.count).to eql(1)
       expect(user.repo_accesses.count).to eql(1)
+    end
+
+    context 'github repository creation fails' do
+      before do
+        allow_any_instance_of(AssignmentRepo)
+          .to receive(:create_github_repository)
+          .and_raise(GitHub::Error)
+      end
+
+      it 'does not create a an assignment repo record' do
+        patch :accept_invitation, id: invitation.key
+
+        expect(assignment.assignment_repos.count).to eq(0)
+      end
+    end
+
+    context 'github import fails' do
+      before do
+        allow_any_instance_of(GitHubRepository)
+          .to receive(:get_starter_code_from)
+          .and_raise(GitHub::Error)
+      end
+
+      it 'removes the repository on GitHub' do
+        patch :accept_invitation, id: invitation.key
+
+        assert_requested :delete, github_url('/repositories/43894381')
+      end
     end
   end
 end
