@@ -53,7 +53,7 @@ module GitHubRepoable
 
     begin
       assignment_repository.get_starter_code_from(starter_code_repository)
-    rescue
+    rescue GitHub::Error
       destroy_github_repository
       raise GitHub::Error, 'Failed to create repository on GitHub, please try again'
     end
