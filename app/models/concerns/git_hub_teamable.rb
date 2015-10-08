@@ -6,7 +6,7 @@ module GitHubTeamable
       create_github_team if organization
     end
 
-    before_destroy :destroy_github_team
+    before_destroy :silently_destroy_github_team
   end
 
   # Public
@@ -20,6 +20,12 @@ module GitHubTeamable
   #
   def destroy_github_team
     github_organization.delete_team(github_team_id)
+  end
+
+  # Public
+  #
+  def silently_destroy_github_team
+    destroy_github_team
     true # Destroy ActiveRecord object even if we fail to delete the team
   end
 
