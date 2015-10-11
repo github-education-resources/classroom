@@ -20,7 +20,7 @@ describe GitHubRepository do
   describe '#full_name', :vcr do
     it 'gets the full_name (owner/repo_name) of the repository' do
       expect(@github_repository.full_name).to eql("#{organization.title}/test-repository")
-      assert_requested :get, github_url("/repositories/#{@github_repository.id}")
+      expect(WebMock).to have_requested(:get, github_url("/repositories/#{@github_repository.id}"))
     end
   end
 

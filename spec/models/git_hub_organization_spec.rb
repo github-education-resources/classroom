@@ -24,7 +24,7 @@ describe GitHubOrganization do
 
     it 'successfully creates a GitHub Repository for the Organization' do
       @github_organization.create_repository(@repo_name, private: true)
-      assert_requested :post, github_url("/organizations/#{organization.github_id}/repos")
+      expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
     end
   end
 
@@ -38,7 +38,7 @@ describe GitHubOrganization do
     end
 
     it 'successfully creates a GitHub team' do
-      assert_requested :post, github_url("/organizations/#{organization.github_id}/teams")
+      expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/teams"))
     end
   end
 

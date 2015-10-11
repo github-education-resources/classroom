@@ -42,8 +42,8 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       it 'redeems the users invitation' do
         patch :accept_invitation, id: invitation.key, group: { title: 'Code Squad' }
 
-        assert_requested :post, github_url("/organizations/#{organization.github_id}/teams"), times: 2
-        assert_requested :post, github_url("/organizations/#{organization.github_id}/repos")
+        expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/teams"))
+        expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
 
         expect(group_assignment.group_assignment_repos.count).to eql(1)
         expect(user.repo_accesses.count).to eql(1)

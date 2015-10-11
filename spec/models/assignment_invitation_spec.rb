@@ -22,7 +22,6 @@ RSpec.describe AssignmentInvitation, type: :model do
     let(:assignment_invitation) { AssignmentInvitation.create(assignment: assignment) }
 
     after(:each) do
-      RepoAccess.destroy_all
       AssignmentRepo.destroy_all
     end
 

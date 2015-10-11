@@ -1,14 +1,6 @@
 module GitHubTeamable
   extend ActiveSupport::Concern
 
-  included do
-    before_validation(on: :create) do
-      create_github_team if organization
-    end
-
-    before_destroy :silently_destroy_github_team
-  end
-
   # Public
   #
   def create_github_team
@@ -19,6 +11,7 @@ module GitHubTeamable
   # Public
   #
   def destroy_github_team
+    return true unless github_team_id.present?
     github_organization.delete_team(github_team_id)
   end
 
