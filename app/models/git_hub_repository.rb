@@ -22,7 +22,9 @@ class GitHubRepository
         "/repositories/#{@id}/import",
         headers: { accept: 'application/vnd.github.barred-rock-preview' },
         'vcs': 'git',
-        'vcs_url': "https://github.com/#{source.full_name}"
+        'vcs_url': "https://github.com/#{source.full_name}",
+        'vcs_username': @client.login,
+        'vcs_password': @client.access_token
       )
     end
   end
