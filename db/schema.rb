@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150922104925) do
+ActiveRecord::Schema.define(version: 20151015113741) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,11 +34,13 @@ ActiveRecord::Schema.define(version: 20150922104925) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.integer  "assignment_id"
+    t.integer  "user_id"
   end
 
   add_index "assignment_repos", ["assignment_id"], name: "index_assignment_repos_on_assignment_id", using: :btree
   add_index "assignment_repos", ["github_repo_id"], name: "index_assignment_repos_on_github_repo_id", unique: true, using: :btree
   add_index "assignment_repos", ["repo_access_id"], name: "index_assignment_repos_on_repo_access_id", using: :btree
+  add_index "assignment_repos", ["user_id"], name: "index_assignment_repos_on_user_id", using: :btree
 
   create_table "assignments", force: :cascade do |t|
     t.boolean  "public_repo",          default: true
@@ -146,7 +148,7 @@ ActiveRecord::Schema.define(version: 20150922104925) do
   add_index "organizations_users", ["user_id"], name: "index_organizations_users_on_user_id", using: :btree
 
   create_table "repo_accesses", force: :cascade do |t|
-    t.integer  "github_team_id",  null: false
+    t.integer  "github_team_id"
     t.integer  "organization_id"
     t.integer  "user_id"
     t.datetime "created_at",      null: false
