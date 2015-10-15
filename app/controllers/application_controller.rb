@@ -21,12 +21,17 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def required_scopes
+    %w(user:email repo delete_repo admin:org)
+  end
+
   def authenticate_user!
     auth_redirect unless logged_in? && current_user.valid_auth_token?
   end
 
   def auth_redirect
     session[:pre_login_destination] = "#{request.base_url}#{request.path}"
+    session[:scope]= required_scopes.join(",")
     redirect_to login_path
   end
 

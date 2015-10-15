@@ -23,6 +23,10 @@ class AssignmentInvitationsController < ApplicationController
 
   private
 
+  def required_scopes
+    %w()
+  end
+
   def assignment
     @assignment ||= invitation.assignment
   end
