@@ -46,6 +46,11 @@ Once bundler is installed go ahead and run the `setup` script
 script/setup
 ```
 
+### Production environment variables
+ENV Variable | Description |
+:-------------------|:-----------------|
+`AIRBRAKE_API_KEY` | the API key for airbrake.io, if set Airbrake will be enabled
+
 ### Development environment variables
 These values must be present in your `.env` file (created by `script/setup`).
 
