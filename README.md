@@ -50,6 +50,9 @@ script/setup
 ENV Variable | Description |
 :-------------------|:-----------------|
 `AIRBRAKE_API_KEY` | the API key for airbrake.io, if set Airbrake will be enabled
+`CANONICAL_HOST` | the preferred hostname for the applicaition, if set requests served on other hostnames will be redirected
+`GOOGLE_ANALYTICS_TRACKING_ID` | identifier for Google Analytics in the format `UA-.*`
+`PINGLISH_ENABLED` | Enable the `/_ping` endpoint with relevant health checks
 
 ### Development environment variables
 These values must be present in your `.env` file (created by `script/setup`).
@@ -59,7 +62,6 @@ ENV Variable | Description |
 `GITHUB_CLIENT_ID`| the GitHub Application Client ID.
 `GITHUB_CLIENT_SECRET`| the GitHub Application Client Secret.
 `NON_STAFF_GITHUB_ADMIN_IDS` | GitHub `user_ids` of users to be granted staff level access.
-`PINGLISH_ENABLED` | Enable the `/_ping` endpoint with relevant health checks
 
 ### Testing environment variables
 Classroom for GitHub uses [VCR](https://github.com/vcr/vcr) for recording and playing back API fixtures during test runs. These cassettes (fixtures) are part of the Git project in the `spec/support/cassettes` folder. If you're not recording new cassettes you can run the specs with existing cassettes with:
