@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
 
   def auth_redirect
     session[:pre_login_destination] = "#{request.base_url}#{request.path}"
-    session[:scope]= required_scopes.join(",")
+    session[:scope] = required_scopes.join(',')
     redirect_to login_path
   end
 
