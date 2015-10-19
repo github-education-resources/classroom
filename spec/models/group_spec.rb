@@ -19,7 +19,7 @@ RSpec.describe Group, type: :model do
     describe 'before_validation' do
       describe '#create_github_team' do
         it 'creates the team on GitHub' do
-          assert_requested :post, github_url("/organizations/#{organization.github_id}/teams")
+          expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/teams"))
         end
       end
     end
@@ -42,8 +42,8 @@ RSpec.describe Group, type: :model do
             github_user     = GitHubUser.new(@repo_access.user.github_client)
             memberships_url = "teams/#{@group.github_team_id}/memberships/#{github_user.login}"
 
-            assert_requested :put, github_url(memberships_url)
-            assert_requested :patch, github_url("/user/memberships/orgs/#{organization.title}")
+            expect(WebMock).to have_requested(:put, github_url(memberships_url))
+            expect(WebMock).to have_requested(:patch, github_url("/user/memberships/orgs/#{organization.title}"))
           end
         end
       end
@@ -54,7 +54,8 @@ RSpec.describe Group, type: :model do
             github_user = GitHubUser.new(@repo_access.user.github_client)
 
             @group.repo_accesses.delete(@repo_access)
-            assert_requested :delete, github_url("/teams/#{@group.github_team_id}/memberships/#{github_user.login}")
+            rmv_from_team_github_url = github_url("/teams/#{@group.github_team_id}/memberships/#{github_user.login}")
+            expect(WebMock).to have_requested(:delete, rmv_from_team_github_url)
           end
         end
       end

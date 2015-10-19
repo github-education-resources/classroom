@@ -8,9 +8,6 @@ class RepoAccess < ActiveRecord::Base
 
   has_and_belongs_to_many :groups
 
-  validates :github_team_id, presence:   true
-  validates :github_team_id, uniqueness: true
-
   validates :organization, presence: true
   validates :organization, uniqueness: { scope: :user }
 
@@ -19,27 +16,41 @@ class RepoAccess < ActiveRecord::Base
 
   before_validation(on: :create) do
     if organization
-      add_member_to_github_team
-      accept_membership_to_organization
+      add_membership_to_github_organization
+      accept_membership_to_github_organization
     end
   end
 
+  before_destroy :silently_destroy_github_team
+  before_destroy :silently_remove_organization_member
+
   private
 
-  # Internal
-  #
-  def add_member_to_github_team
-    github_team = GitHubTeam.new(organization.github_client, github_team_id)
-    github_user = GitHubUser.new(user.github_client)
+  def add_membership_to_github_organization
+    github_organization = GitHubOrganization.new(organization.github_client, organization.github_id)
+    github_user         = GitHubUser.new(user.github_client)
 
-    github_team.add_team_membership(github_user.login)
+    github_organization.add_membership(github_user.login)
   end
 
   # Interal
   #
-  def accept_membership_to_organization
+  def accept_membership_to_github_organization
     users_github_organization = GitHubOrganization.new(user.github_client, organization.github_id)
     users_github_organization.accept_membership
+  rescue GitHub::Error
+    silently_remove_organization_member
+    raise GitHub::Error, 'Failed to add user to the Classroom, please try again'
+  end
+
+  def remove_organization_member
+    github_organization = GitHubOrganization.new(organization.github_client, organization.github_id)
+    github_organization.remove_organization_member(user.uid)
+  end
+
+  def silently_remove_organization_member
+    remove_organization_member
+    true # Destroy ActiveRecord object even if we fail to delete the repository
   end
 
   # Internal

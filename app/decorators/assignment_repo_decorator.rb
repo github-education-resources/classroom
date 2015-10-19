@@ -2,7 +2,7 @@ class AssignmentRepoDecorator < Draper::Decorator
   delegate_all
 
   def avatar_url(size)
-    "https://avatars.githubusercontent.com/u/#{user.uid}?v=3&size=#{size}"
+    "https://avatars.githubusercontent.com/u/#{assignment_repo_user.uid}?v=3&size=#{size}"
   end
 
   def full_name
@@ -34,12 +34,16 @@ class AssignmentRepoDecorator < Draper::Decorator
   end
 
   def student
-    @student ||= GitHubUser.new(creator.github_client, user.uid).user
+    @student ||= GitHubUser.new(creator.github_client, assignment_repo_user.uid).user
   rescue GitHub::NotFound
     NullGitHubUser.new
   end
 
-  def user
-    @user ||= repo_access.user
+  def assignment_repo_user
+    if repo_access
+      @assignment_repo_user = repo_access.user
+    else
+      @assignment_repo_user = user
+    end
   end
 end

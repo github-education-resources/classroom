@@ -1,19 +1,6 @@
 module GitHubRepoable
   extend ActiveSupport::Concern
 
-  included do
-    before_validation(on: :create) do
-      if organization
-        create_github_repository
-        push_starter_code
-      end
-    end
-
-    before_create :add_team_to_github_repository
-
-    before_destroy :silently_destroy_github_repository
-  end
-
   # Public
   #
   def add_team_to_github_repository
@@ -23,12 +10,18 @@ module GitHubRepoable
     github_team.add_team_repository(github_repository.full_name)
   end
 
+  def add_user_as_collaborator
+    github_user = GitHubUser.new(user.github_client, user.uid)
+    repository  = GitHubRepository.new(organization.github_client, github_repo_id)
+
+    delete_github_repository_on_failure { repository.add_collaborator(github_user.login) }
+  end
+
   # Public
   #
   def create_github_repository
     repo_description = "#{repo_name} created by Classroom for GitHub"
     github_repository = github_organization.create_repository(repo_name,
-                                                              team_id: github_team_id,
                                                               private: self.private?,
                                                               description: repo_description)
     self.github_repo_id = github_repository.id
@@ -38,6 +31,15 @@ module GitHubRepoable
   #
   def destroy_github_repository
     github_organization.delete_repository(github_repo_id)
+  end
+
+  # Public
+  #
+  def delete_github_repository_on_failure
+    yield
+  rescue GitHub::Error
+    silently_destroy_github_repository
+    raise GitHub::Error, 'Assignment failed to be created'
   end
 
   # Public
@@ -57,11 +59,8 @@ module GitHubRepoable
     assignment_repository   = GitHubRepository.new(client, github_repo_id)
     starter_code_repository = GitHubRepository.new(client, starter_code_repo_id)
 
-    begin
+    delete_github_repository_on_failure do
       assignment_repository.get_starter_code_from(starter_code_repository)
-    rescue GitHub::Error
-      destroy_github_repository
-      raise GitHub::Error, 'Failed to create repository on GitHub, please try again'
     end
   end
 

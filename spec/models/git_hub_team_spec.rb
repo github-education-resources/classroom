@@ -21,7 +21,7 @@ describe GitHubTeam do
   describe '#add_team_membership', :vcr do
     it 'adds a user to the given GitHubTeam' do
       @github_team.add_team_membership('tarebytetest')
-      assert_requested :put, github_url("teams/#{@github_team.id}/memberships/tarebytetest")
+      expect(WebMock).to have_requested(:put, github_url("teams/#{@github_team.id}/memberships/tarebytetest"))
     end
   end
 
@@ -31,7 +31,7 @@ describe GitHubTeam do
       url = "/teams/#{@github_team.id}/repos/#{@github_organization_login}/notateamrepository"
 
       expect(is_team_repo).to be false
-      assert_requested :get, github_url(url)
+      expect(WebMock).to have_requested(:get, github_url(url))
     end
   end
 end

@@ -24,7 +24,7 @@ describe GitHubUser do
     it 'returns an array of organizations that the user belongs to' do
       admin_organization_memberships = github_user.admin_organization_memberships
 
-      assert_requested :get, github_url('/user/memberships/orgs?state=active')
+      expect(WebMock).to have_requested(:get, github_url('/user/memberships/orgs?state=active'))
       expect(admin_organization_memberships).to be_kind_of(Array)
     end
   end

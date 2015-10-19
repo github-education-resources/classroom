@@ -14,6 +14,12 @@ class GitHubOrganization
     end
   end
 
+  def add_membership(user_github_login)
+    with_error_handling do
+      @client.update_organization_membership(login, user: user_github_login)
+    end
+  end
+
   # Public
   #
   def admin?(user_github_login)
@@ -82,6 +88,14 @@ class GitHubOrganization
     with_error_handling do
       organization = @client.organization(@id, headers: no_cache_headers)
       { owned_private_repos: organization.owned_private_repos, private_repos: organization.plan.private_repos }
+    end
+  end
+
+  def remove_organization_member(github_user_id)
+    github_user_login = GitHubUser.new(@client, github_user_id).login
+
+    with_error_handling do
+      @client.remove_organization_member(@id, github_user_login, headers: new_org_permissions_header)
     end
   end
 

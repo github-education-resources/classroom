@@ -13,8 +13,12 @@ class AssignmentInvitation < ActiveRecord::Base
   after_initialize :assign_key
 
   def redeem_for(invitee)
-    repo_access = RepoAccess.find_or_create_by!(user: invitee, organization: organization)
-    AssignmentRepo.find_or_create_by!(assignment: assignment, repo_access: repo_access)
+    if (repo_access = RepoAccess.find_by(user: invitee, organization: organization))
+      assignment_repo = AssignmentRepo.find_by(assignment: assignment, repo_access: repo_access)
+      return assignment_repo if assignment_repo.present?
+    end
+
+    AssignmentRepo.find_or_create_by!(assignment: assignment, user: invitee)
   end
 
   def title

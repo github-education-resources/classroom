@@ -2,8 +2,9 @@ require 'rails_helper'
 
 RSpec.describe GroupAssignmentRepo, type: :model do
   context 'with created objects', :vcr do
-    let(:organization) { GitHubFactory.create_owner_classroom_org                                      }
-    let(:repo_access)  { RepoAccess.create(user: organization.users.first, organization: organization) }
+    let(:organization) { GitHubFactory.create_owner_classroom_org }
+    let(:student)      { GitHubFactory.create_classroom_student   }
+    let(:repo_access)  { RepoAccess.create(user: student, organization: organization) }
 
     let(:grouping)     { Grouping.create(organization: organization, title: 'Grouping 1') }
     let(:group)        { Group.create(title: 'Group 1', grouping: grouping) }
@@ -13,7 +14,8 @@ RSpec.describe GroupAssignmentRepo, type: :model do
                              grouping: grouping,
                              title: 'Learn JavaScript',
                              organization: organization,
-                             public_repo: false)
+                             public_repo: false,
+                             starter_code_repo_id: 1_062_897)
     end
 
     before(:each) do
@@ -31,16 +33,22 @@ RSpec.describe GroupAssignmentRepo, type: :model do
       describe 'before_validation' do
         describe '#create_github_repository' do
           it 'creates the repository on GitHub' do
-            assert_requested :post, github_url("/organizations/#{organization.github_id}/repos")
+            expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
           end
         end
-      end
 
-      describe 'before_create' do
+        describe '#push_starter_code' do
+          it 'pushes the starter code to the GitHub repository' do
+            import_github_repo_url = github_url("/repositories/#{@group_assignment_repo.github_repo_id}/import")
+            expect(WebMock).to have_requested(:put, import_github_repo_url)
+          end
+        end
+
         describe '#add_team_to_github_repository' do
           it 'adds the team to the repository' do
             github_repo = GitHubRepository.new(organization.github_client, @group_assignment_repo.github_repo_id)
-            assert_requested :put, github_url("/teams/#{group.github_team_id}/repos/#{github_repo.full_name}")
+            add_github_team_url = github_url("/teams/#{group.github_team_id}/repos/#{github_repo.full_name}")
+            expect(WebMock).to have_requested(:put, add_github_team_url)
           end
         end
       end
@@ -51,7 +59,7 @@ RSpec.describe GroupAssignmentRepo, type: :model do
             repo_id = @group_assignment_repo.github_repo_id
             @group_assignment_repo.destroy
 
-            assert_requested :delete, github_url("/repositories/#{repo_id}")
+            expect(WebMock).to have_requested(:delete, github_url("/repositories/#{repo_id}"))
           end
         end
       end

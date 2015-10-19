@@ -10,6 +10,14 @@ class GitHubRepository
 
   # Public
   #
+  def add_collaborator(collaborator)
+    with_error_handling do
+      @client.add_collaborator(@id, collaborator, headers: new_org_permissions_header)
+    end
+  end
+
+  # Public
+  #
   def full_name
     with_error_handling { @client.repository(@id).full_name }
   end
@@ -20,7 +28,7 @@ class GitHubRepository
     with_error_handling do
       @client.put(
         "/repositories/#{@id}/import",
-        headers: { accept: 'application/vnd.github.barred-rock-preview' },
+        headers: import_preview_header,
         'vcs': 'git',
         'vcs_url': "https://github.com/#{source.full_name}",
         'vcs_username': @client.login,
