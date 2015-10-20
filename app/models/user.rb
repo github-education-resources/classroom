@@ -30,7 +30,7 @@ class User < ActiveRecord::Base
   end
 
   def github_client_scopes
-    github_client.scopes(headers: no_cache_headers)
+    github_client.scopes(token, headers: no_cache_headers)
   end
 
   def staff?
