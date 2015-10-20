@@ -7,21 +7,22 @@ class CollabMigration
 
   def migrate
     # For each assignment_repo add the user as a collaborator
-    @repo_access.assignment_repos.each do |assignment_repo|
-      repository = GitHubRepository.new(organization.github_client, assignment_repo.github_repo_id)
-      repository.add_collaborator(github_user.login)
-    end
+    @repo_access.assignment_repos.each { |assignment_repo| add_user_as_collaborator(assignment_repo) }
 
-    # delete the github team if present
-    if @repo_access.github_team_id.present?
-      github_organization.delete_team(@repo_access.github_team_id)
+    return true unless @repo_access.github_team_id.present?
 
-      @repo_access.github_team_id = nil
-      @repo_access.save
-    end
+    github_organization.delete_team(@repo_access.github_team_id)
+
+    @repo_access.github_team_id = nil
+    @repo_access.save
   end
 
   protected
+
+  def add_user_as_collaborator(assignment_repo)
+    repository = GitHubRepository.new(organization.github_client, assignment_repo.github_repo_id)
+    repository.add_collaborator(github_user.login)
+  end
 
   def github_organization
     @github_organization ||= GitHubOrganization.new(organization.github_client, organization.github_id)
