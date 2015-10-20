@@ -21,17 +21,28 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def current_scopes
+    return [] unless logged_in?
+    session[:current_scopes] ||= current_user.github_client.scopes
+  end
+
   def required_scopes
     %w(user:email repo delete_repo admin:org)
   end
 
+  def adequate_scopes?
+    required_scopes.all? { |scope| current_scopes.include?(scope) }
+  end
+
   def authenticate_user!
-    auth_redirect unless logged_in? && current_user.valid_auth_token?
+    unless logged_in? && current_user.valid_auth_token? && adequate_scopes?
+      auth_redirect
+    end
   end
 
   def auth_redirect
     session[:pre_login_destination] = "#{request.base_url}#{request.path}"
-    session[:scope] = required_scopes.join(',')
+    session[:required_scopes] = required_scopes.join(',')
     redirect_to login_path
   end
 
