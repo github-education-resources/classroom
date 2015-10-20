@@ -45,7 +45,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   private
 
   def required_scopes
-    %w()
+    %w(admin:org)
   end
 
   def authorize_group_access
