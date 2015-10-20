@@ -6,6 +6,7 @@ class SessionsController < ApplicationController
     redirect_to "/auth/github?#{scope_param}"
   end
 
+  # rubocop:disable AbcSize
   def create
     auth_hash = request.env['omniauth.auth']
     user      = User.find_by_auth_hash(auth_hash) || User.new
