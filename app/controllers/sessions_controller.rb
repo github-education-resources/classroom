@@ -16,7 +16,7 @@ class SessionsController < ApplicationController
 
     url = session[:pre_login_destination] || organizations_path
 
-    session[:current_scopes] = user.github_client.scopes
+    session[:current_scopes] = user.github_client_scopes
 
     redirect_to url
   end
