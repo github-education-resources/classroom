@@ -2,7 +2,8 @@ class SessionsController < ApplicationController
   skip_before_action :authenticate_user!, :set_organization, :authorize_organization_access
 
   def new
-    scope_param = { scope: session[:required_scopes] }.to_param
+    scopes = session[:required_scopes] || "user:email,repo,delete_repo,admin:org"
+    scope_param = { scope: scopes }.to_param
     redirect_to "/auth/github?#{scope_param}"
   end
 

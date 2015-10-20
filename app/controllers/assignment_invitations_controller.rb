@@ -24,7 +24,7 @@ class AssignmentInvitationsController < ApplicationController
   private
 
   def required_scopes
-    %w()
+    %w(user:email)
   end
 
   def assignment
