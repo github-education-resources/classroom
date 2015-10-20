@@ -42,4 +42,10 @@ RSpec.describe User, type: :model do
       expect(user.staff?).to be(true)
     end
   end
+
+  describe '#github_client_scopes', :vcr do
+    it 'returns an Array of scopes' do
+      expect(user.github_client_scopes).to eq(%w(admin:org delete_repo gist repo user))
+    end
+  end
 end
