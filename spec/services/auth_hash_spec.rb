@@ -5,7 +5,7 @@ describe AuthHash do
 
   describe '#extract_user_info' do
     it 'extracts the users information' do
-      expect(auth_hash.user_info[:token]).to eq('some-token')
+      expect(auth_hash.user_info[:token]).to eq(OmniAuth.config.mock_auth[:github]["credentials"]["token"])
     end
   end
 
