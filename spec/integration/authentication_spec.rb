@@ -51,7 +51,7 @@ RSpec.describe 'OAuth scope requirements', type: :request do
     it 'renders organization#show' do
       get response.redirect_url
       expect(response.status).to eq(200)
-      expect(response).to render_template("organizations/show")
+      expect(response).to render_template('organizations/show')
     end
   end
 end
