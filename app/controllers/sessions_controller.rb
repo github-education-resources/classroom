@@ -2,7 +2,7 @@ class SessionsController < ApplicationController
   skip_before_action :authenticate_user!, :set_organization, :authorize_organization_access
 
   def new
-    scope_param = session.slice(:scope).to_params
+    scope_param = {:scope => session.slice(:required_scopes)}.to_params
     redirect_to "/auth/github?#{scope_param}"
   end
 
@@ -15,6 +15,9 @@ class SessionsController < ApplicationController
     session[:user_id] = user.id
 
     url = session[:pre_login_destination] || organizations_path
+
+    session[:current_scopes] = user.github_client.scopes
+
     redirect_to url
   end
 
