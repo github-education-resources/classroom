@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
 
   def current_scopes
     return [] unless logged_in?
-    session[:current_scopes] ||= current_user.github_client.scopes
+    session[:current_scopes] ||= current_user.github_client_scopes
   end
 
   def required_scopes
@@ -32,12 +32,12 @@ class ApplicationController < ActionController::Base
 
   def adequate_scopes?
     required_scopes.all? { |scope| current_scopes.include?(scope) }
+  rescue Octokit::NotFound, Octokit::Unauthorized
+    false
   end
 
   def authenticate_user!
-    unless logged_in? && current_user.valid_auth_token? && adequate_scopes?
-      auth_redirect
-    end
+    auth_redirect unless logged_in? && adequate_scopes?
   end
 
   def auth_redirect

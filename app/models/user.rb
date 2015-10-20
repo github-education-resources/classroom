@@ -29,14 +29,11 @@ class User < ActiveRecord::Base
     @github_client ||= Octokit::Client.new(access_token: token, auto_paginate: true)
   end
 
-  def staff?
-    site_admin
+  def github_client_scopes
+    github_client.scopes(headers: no_cache_headers)
   end
 
-  def valid_auth_token?
-    required_scopes = %w(admin:org delete_repo repo user:email)
-    (required_scopes - github_client.scopes(token, headers: no_cache_headers)).empty? ? true : false
-  rescue Octokit::NotFound, Octokit::Unauthorized
-    false
+  def staff?
+    site_admin
   end
 end
