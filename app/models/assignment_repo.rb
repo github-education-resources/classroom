@@ -6,14 +6,22 @@ class AssignmentRepo < ActiveRecord::Base
 
   belongs_to :assignment
   belongs_to :repo_access
+  belongs_to :user
 
   validates :assignment, presence: true
 
   validates :github_repo_id, presence:   true
   validates :github_repo_id, uniqueness: true
 
-  validates :repo_access, presence:   true
-  validates :repo_access, uniqueness: { scope: :assignment }
+  before_validation(on: :create) do
+    if organization
+      create_github_repository
+      push_starter_code
+      add_user_as_collaborator
+    end
+  end
+
+  before_destroy :silently_destroy_github_repository
 
   # Public
   #
@@ -30,13 +38,13 @@ class AssignmentRepo < ActiveRecord::Base
   # Public
   #
   def github_team_id
-    repo_access.github_team_id
+    repo_access.present? ? repo_access.github_team_id : nil
   end
 
   # Public
   #
   def repo_name
-    github_user = GitHubUser.new(repo_access.user.github_client)
+    github_user = GitHubUser.new(user.github_client)
     "#{assignment.slug}-#{github_user.login}"
   end
 

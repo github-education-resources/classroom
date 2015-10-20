@@ -6,4 +6,8 @@ class NullGitHubUser < NullGitHubResource
   def login
     'ghost'
   end
+
+  def name
+    'Deleted user'
+  end
 end
