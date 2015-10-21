@@ -11,10 +11,14 @@ class CollabMigration
 
     return true unless @repo_access.github_team_id.present?
 
-    github_organization.delete_team(@repo_access.github_team_id)
+    begin
+      github_organization.delete_team(@repo_access.github_team_id)
 
-    @repo_access.github_team_id = nil
-    @repo_access.save
+      @repo_access.github_team_id = nil
+      @repo_access.save
+    rescue Octokit::Unauthorized => e
+      puts e
+    end
   end
 
   protected
