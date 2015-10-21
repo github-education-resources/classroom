@@ -6,7 +6,6 @@ class CollabMigration
   end
 
   def migrate
-    # For each assignment_repo add the user as a collaborator
     @repo_access.assignment_repos.each { |assignment_repo| add_user_as_collaborator(assignment_repo) }
 
     return true unless @repo_access.github_team_id.present?
