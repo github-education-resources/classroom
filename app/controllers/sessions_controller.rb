@@ -22,6 +22,7 @@ class SessionsController < ApplicationController
 
     redirect_to url
   end
+  # rubocop:enable AbcSize
 
   def destroy
     reset_session
