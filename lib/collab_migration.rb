@@ -16,7 +16,7 @@ class CollabMigration
       @repo_access.github_team_id = nil
       @repo_access.save
     rescue Octokit::Unauthorized => e
-      puts e
+      Rails.logger.info e
     end
   end
 
