@@ -8,7 +8,5 @@ task collab_migration: :environment do
         collab_migrator.migrate
       end
     end
-
-    sleep(60)
   end
 end

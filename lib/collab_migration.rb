@@ -8,7 +8,7 @@ class CollabMigration
   def migrate
     @repo_access.assignment_repos.each { |assignment_repo| add_user_as_collaborator(assignment_repo) }
 
-    return true unless @repo_access.github_team_id.present?
+    return unless @repo_access.github_team_id.present?
 
     begin
       github_organization.delete_team(@repo_access.github_team_id)
