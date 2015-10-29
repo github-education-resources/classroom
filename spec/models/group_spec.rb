@@ -43,7 +43,6 @@ RSpec.describe Group, type: :model do
             memberships_url = "teams/#{@group.github_team_id}/memberships/#{github_user.login}"
 
             expect(WebMock).to have_requested(:put, github_url(memberships_url))
-            expect(WebMock).to have_requested(:patch, github_url("/user/memberships/orgs/#{organization.title}"))
           end
         end
       end

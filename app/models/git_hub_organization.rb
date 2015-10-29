@@ -8,13 +8,17 @@ class GitHubOrganization
 
   # Public
   #
-  def accept_membership
+  def accept_membership(user_github_login)
+    return if organization_member?(user_github_login)
+
     with_error_handling do
       @client.update_organization_membership(login, state: 'active')
     end
   end
 
   def add_membership(user_github_login)
+    return if organization_member?(user_github_login)
+
     with_error_handling do
       @client.update_organization_membership(login, user: user_github_login)
     end
@@ -84,6 +88,10 @@ class GitHubOrganization
     with_error_handling { @client.organization_members(@id, options) }
   end
 
+  def organization_member?(user_github_login)
+    with_error_handling { @client.organization_member?(@id, user_github_login) }
+  end
+
   def plan
     with_error_handling do
       organization = @client.organization(@id, headers: no_cache_headers)
@@ -93,6 +101,12 @@ class GitHubOrganization
 
   def remove_organization_member(github_user_id)
     github_user_login = GitHubUser.new(@client, github_user_id).login
+
+    begin
+      return if admin?(github_user_login)
+    rescue GitHub::NotFound
+      return
+    end
 
     with_error_handling do
       @client.remove_organization_member(@id, github_user_login, headers: new_org_permissions_header)

@@ -32,11 +32,25 @@ RSpec.describe RepoAccess, type: :model do
 
     describe 'before_destroy' do
       describe '#silently_remove_organization_member' do
-        it 'removes the user from the organization' do
-          @repo_access.destroy
-          student_github_login = GitHubUser.new(student.github_client, student.uid).login
-          delete_request_url   = "/organizations/#{organization.github_id}/members/#{student_github_login}"
-          expect(WebMock).to have_requested(:delete, github_url(delete_request_url))
+        context 'user is a member of the organization' do
+          it 'removes the user' do
+            @repo_access.destroy
+
+            student_github_login = GitHubUser.new(student.github_client, student.uid).login
+            delete_request_url   = "/organizations/#{organization.github_id}/members/#{student_github_login}"
+            expect(WebMock).to have_requested(:delete, github_url(delete_request_url))
+          end
+        end
+
+        context 'user is an owner of the organization' do
+          it 'does not remove the user' do
+            owner_repo_access = RepoAccess.create(user: organization.users.first, organization: organization)
+            owner_repo_access.destroy
+
+            student_github_login = GitHubUser.new(student.github_client, student.uid).login
+            delete_request_url   = "/organizations/#{organization.github_id}/members/#{student_github_login}"
+            expect(WebMock).to_not have_requested(:delete, github_url(delete_request_url))
+          end
         end
       end
     end

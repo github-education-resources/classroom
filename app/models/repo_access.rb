@@ -36,8 +36,10 @@ class RepoAccess < ActiveRecord::Base
   # Interal
   #
   def accept_membership_to_github_organization
-    users_github_organization = GitHubOrganization.new(user.github_client, organization.github_id)
-    users_github_organization.accept_membership
+    github_organization = GitHubOrganization.new(user.github_client, organization.github_id)
+    github_user         = GitHubUser.new(user.github_client)
+
+    github_organization.accept_membership(github_user.login)
   rescue GitHub::Error
     silently_remove_organization_member
     raise GitHub::Error, 'Failed to add user to the Classroom, please try again'
