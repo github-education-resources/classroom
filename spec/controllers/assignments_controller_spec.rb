@@ -89,7 +89,7 @@ RSpec.describe AssignmentsController, type: :controller do
       options = { title: 'Ruby on Rails' }
       patch :update, id: assignment.id, organization_id: organization.id, assignment: options
 
-      expect(response).to redirect_to(organization_assignment_path(organization, assignment))
+      expect(response).to redirect_to(organization_assignment_path(organization, Assignment.find(assignment.id)))
     end
   end
 

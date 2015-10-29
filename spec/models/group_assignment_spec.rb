@@ -1,6 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe GroupAssignment, type: :model do
+  describe 'when the title is updated' do
+    subject { create(:group_assignment) }
+
+    it 'updates the slug' do
+      subject.update_attributes(title: 'New Title')
+      expect(subject.slug).to eql('new-title')
+    end
+  end
+
   describe 'uniqueness of title across organization' do
     let(:organization) { create(:organization)    }
     let(:creator)      { organization.users.first }

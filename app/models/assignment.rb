@@ -41,6 +41,10 @@ class Assignment < ActiveRecord::Base
 
   private
 
+  def should_generate_new_friendly_id?
+    title_changed?
+  end
+
   def uniqueness_of_title_across_organization
     return unless GroupAssignment.where(slug: normalize_friendly_id(title), organization: organization).present?
     errors.add(:title, 'title is already in use for your organization')

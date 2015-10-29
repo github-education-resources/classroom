@@ -1,6 +1,6 @@
 <div class="site-content">
   <div class="site-content-cap">
-    <h2 class="site-content-heading">New classroom</h2>
+    <h2 class="site-content-heading">Select an organization for your new classroom</h2>
   </div>
 
   <div class="site-content-body">
@@ -14,24 +14,19 @@
       <%= form_for @organization do |f| %>
         <%= render 'shared/error_messages', object: f.object %>
 
-        <dl class="form">
-          <dt><%= f.label :title %></dt>
-          <dd><%= f.text_field :title, class: 'textfield' %></dd>
-        </dl>
-
-        <dl class="form">
-          <dt><label>Select your GitHub organization to use for this classroom</label></dt>
-          <dd>
-            <%= select :organization, :github_id, options_for_select(@users_github_organizations), {}, {:class => 'select'} %>
-          </dd>
-        </dl>
-
-        <div class="form-actions">
-          <%= f.submit 'Create classroom', class: 'btn btn-green' %>
-          <%= link_to 'Cancel', organizations_path, class: 'btn', role: 'button' %>
+        <div class="org-select-grid">
+          <% @users_github_organizations.each do |org| %>
+            <% if org[:role] == 'admin' && !org[:classroom].present? %>
+              <%= render partial: 'organization_select', locals: { org: org } %>
+            <% else %>
+              <%= render partial: 'disabled_organization_select', locals: { org: org } %>
+            <% end %>
+          <% end %>
         </div>
       <% end %>
     <% end %>
+
+    <%= render partial: 'shared/pagination', locals: { collection: @users_github_organizations } %>
   </div>
 </div>
 
