@@ -9,11 +9,11 @@
     <p class="assignment-type text-muted">Group assignment for <strong><%= group_assignment.grouping.title %></strong></p>
   </div>
 
-  <div class="flex-table-item zeroclipboard-form">
+  <div class="flex-table-item clipboard-form">
     <div class="input-group assignment-invite-link">
-      <%= content_tag :input, '', type: 'text', id: group_assignment.invitation.key, class: 'js-url-field', value: group_assignment_invitation_url(group_assignment.invitation), readonly: 'readonly' %>
+      <%= content_tag :input, '', type: 'text', id: "group-assignment-#{group_assignment.invitation.key}", value: group_assignment_invitation_url(group_assignment.invitation), readonly: 'readonly' %>
       <span class="input-group-button">
-        <button aria-label="Copy to clipboard" id=<%= group_assignment.invitation.key %> class="js-zeroclipboard btn tooltipped tooltipped-s" data-copied-hint="Copied!" type="button">
+        <button aria-label="Copy to clipboard" data-clipboard-target=<%= "#group-assignment-#{group_assignment.invitation.key}" %> class="js-clipboard btn tooltipped tooltipped-s" type="button">
           <%= octicon('clippy') %>
           Copy invitation link
         </button>

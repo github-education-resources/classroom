@@ -15,9 +15,9 @@
     <div class="columns desktop-invitation-content">
       <div class="two-thirds column">
         <div class="input-group">
-          <%= content_tag :input, '', type: 'text', id: @organization.slug, class: 'js-url-field', value: organization_url(@organization), readonly: 'readonly' %>
+          <%= content_tag :input, '', type: 'text', id: @organization.slug, value: organization_url(@organization), readonly: 'readonly' %>
           <span class="input-group-button">
-            <button aria-label="Copy to clipboard" id=<%= @organization.slug %> class="js-zeroclipboard btn tooltipped tooltipped-s" data-copied-hint="Copied!" type="button">
+            <button data-clipboard-target=<%= "##{@organization.slug}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="Copied!" type="button">
               <%= octicon('clippy') %>
               Copy classroom link
             </button>

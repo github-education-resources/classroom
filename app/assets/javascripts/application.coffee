@@ -24,6 +24,6 @@
 #= require peek/views/dalli
 #= require peek/views/performance_bar
 #
-#= require zeroclipboard/dist/ZeroClipboard
+#= require clipboard/dist/clipboard
 #
 #= require_tree .

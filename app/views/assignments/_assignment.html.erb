@@ -11,11 +11,11 @@
     <p class="assignment-type text-muted">Individual assigment</p>
   </div>
 
-  <div class="flex-table-item zeroclipboard-form">
+  <div class="flex-table-item clipboard-form">
     <div class="input-group assignment-invite-link">
-      <%= content_tag :input, '', type: 'text', id: assignment.invitation.key, class: 'js-url-field', value: assignment_invitation_url(assignment.invitation), readonly: 'readonly' %>
+      <%= content_tag :input, '', type: 'text', id: "assignment-#{assignment.invitation.key}", value: assignment_invitation_url(assignment.invitation), readonly: 'readonly' %>
       <span class="input-group-button">
-        <button aria-label="Copy to clipboard" id=<%= assignment.invitation.key %> class="js-zeroclipboard btn tooltipped tooltipped-s" data-copied-hint="Copied!" type="button">
+        <button aria-label="Copy to clipboard" data-clipboard-target=<%= "#assignment-#{assignment.invitation.key}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="Copied!" type="button">
           <%= octicon('clippy') %>
           Copy invitation link
         </button>
