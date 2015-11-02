@@ -58,9 +58,9 @@ RSpec.describe OrganizationsController, type: :controller do
       expect(assigns(:organization)).to_not be_nil
     end
 
-    it 'has an array of the users GitHub organizations that they are an admin of' do
+    it 'has an Kaminari::PaginatableArray of the users GitHub organizations that they are an admin of' do
       get :new
-      expect(assigns(:users_github_organizations)).to be_kind_of(Array)
+      expect(assigns(:users_github_organizations)).to be_kind_of(Kaminari::PaginatableArray)
     end
 
     it 'will not include any organizations that are already apart of classroom' do
@@ -92,6 +92,15 @@ RSpec.describe OrganizationsController, type: :controller do
 
       expect { post :create, organization: organization_params }.to change { Organization.count }
     end
+
+    it 'will redirect the user to the setup page' do
+      organization_params = { title: organization.title, github_id: organization.github_id, users: organization.users }
+      organization.destroy!
+
+      post :create, organization: organization_params
+
+      expect(response).to redirect_to(setup_organization_path(Organization.last))
+    end
   end
 
   describe 'GET #show', :vcr do
@@ -117,7 +126,7 @@ RSpec.describe OrganizationsController, type: :controller do
       options = { title: 'New Title' }
       patch :update, id: organization.id, organization: options
 
-      expect(response).to redirect_to(organization_path(organization))
+      expect(response).to redirect_to(organization_path(Organization.find(organization.id)))
     end
   end
 
@@ -147,6 +156,30 @@ RSpec.describe OrganizationsController, type: :controller do
 
       expect(response.status).to eq(200)
       expect(assigns(:organization)).to_not be_nil
+    end
+  end
+
+  describe 'GET #setup', :vcr do
+    it 'returns success and sets the organization' do
+      get :setup, id: organization.id
+
+      expect(response.status).to eq(200)
+      expect(assigns(:organization)).to_not be_nil
+    end
+  end
+
+  describe 'PATCH #setup_organization', :vcr do
+    before(:each) do
+      options = { title: 'New Title' }
+      patch :update, id: organization.id, organization: options
+    end
+
+    it 'correctly updates the organization' do
+      expect(Organization.find(organization.id).title).to eql('New Title')
+    end
+
+    it 'redirects to the invite page on success' do
+      expect(response).to redirect_to(organization_path(Organization.find(organization.id)))
     end
   end
 end

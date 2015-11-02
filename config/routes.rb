@@ -35,6 +35,8 @@ Rails.application.routes.draw do
       member do
         get   :invite
         get   :new_assignment, path: 'new-assignment'
+        get   :setup
+        patch :setup_organization
       end
 
       resources :assignments

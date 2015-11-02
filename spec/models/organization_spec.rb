@@ -1,6 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe Organization, type: :model do
+  describe 'when title is changed' do
+    subject { create(:organization) }
+
+    it 'updates the slug' do
+      subject.update_attributes(title: 'New Title')
+      expect(subject.slug).to eql("#{subject.github_id}-new-title")
+    end
+  end
+
   describe '#all_assignments' do
     subject { create(:organization) }
 

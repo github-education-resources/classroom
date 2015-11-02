@@ -537,3 +537,49 @@ hr {
     font-size: 21px;
   }
 }
+
+.org-select-grid {
+  overflow: auto;
+}
+
+.organization-select-target {
+  padding: 10px;
+  margin: 0 10px 20px;
+  text-align: center;
+  border: 0;
+  border-radius: 3px;
+  font-weight: bold;
+  background-image: none;
+  background-color: #f2f2f2;
+  float: left;
+
+  &:hover,
+  &:active,
+  &.selected {
+    color: #fff;
+    background-color: $brand-blue;
+    background-image: none;
+    border-color: $brand-blue;
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    color: #999;
+
+    .organization-select-avatar {
+      opacity: 0.3;
+    }
+  }
+
+  .css-truncate-target {
+    max-width: 90px;
+  }
+}
+
+.organization-select-avatar {
+  display: block;
+  margin-bottom: 9px;
+}
+
+.organization {
+}

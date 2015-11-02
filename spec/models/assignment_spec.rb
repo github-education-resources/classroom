@@ -3,6 +3,15 @@ require 'rails_helper'
 RSpec.describe Assignment, type: :model do
   it_behaves_like 'a default scope where deleted_at is not present'
 
+  describe 'when the title is updated' do
+    subject { create(:assignment) }
+
+    it 'updates the slug' do
+      subject.update_attributes(title: 'New Title')
+      expect(subject.slug).to eql('new-title')
+    end
+  end
+
   describe 'uniqueness of title across organization' do
     let(:organization) { create(:organization)    }
     let(:creator)      { organization.users.first }

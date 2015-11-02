@@ -1,8 +1,9 @@
 class OrganizationsController < ApplicationController
   include OrganizationAuthorization
 
-  before_action :authorize_organization_addition, only: [:create]
-  before_action :set_users_github_organizations,  only: [:new, :create]
+  before_action :authorize_organization_addition,     only: [:create]
+  before_action :set_users_github_organizations,      only: [:new, :create]
+  before_action :paginate_users_github_organizations, only: [:new, :create]
 
   skip_before_action :set_organization, :authorize_organization_access, only: [:index, :new, :create]
 
@@ -20,7 +21,7 @@ class OrganizationsController < ApplicationController
     @organization = Organization.new(new_organization_params)
 
     if @organization.save
-      redirect_to invite_organization_path(@organization)
+      redirect_to setup_organization_path(@organization)
     else
       render :new
     end
@@ -59,6 +60,17 @@ class OrganizationsController < ApplicationController
   def invite
   end
 
+  def setup
+  end
+
+  def setup_organization
+    if @organization.update_attributes(update_organization_params)
+      redirect_to invite_organization_path(@organization)
+    else
+      render :setup
+    end
+  end
+
   private
 
   def authorize_organization_access
@@ -72,18 +84,25 @@ class OrganizationsController < ApplicationController
   end
 
   def authorize_organization_addition
-    new_github_organization = GitHubOrganization.new(current_user.github_client,
-                                                     new_organization_params[:github_id].to_i)
+    new_github_organization = github_organization_from_params
 
     return if new_github_organization.admin?(decorated_current_user.login)
     fail NotAuthorized, 'You are not permitted to add this organization as a classroom'
   end
 
+  def github_organization_from_params
+    @github_organization_from_params ||= GitHubOrganization.new(current_user.github_client,
+                                                                params[:organization][:github_id].to_i)
+  end
+
   def new_organization_params
+    github_org = github_organization_from_params.organization
+
     params
       .require(:organization)
-      .permit(:title, :github_id)
+      .permit(:github_id)
       .merge(users: [current_user])
+      .merge(title: github_org.name || github_org.login)
   end
 
   def set_organization
@@ -93,11 +112,18 @@ class OrganizationsController < ApplicationController
   def set_users_github_organizations
     github_user = GitHubUser.new(current_user.github_client)
 
-    @users_github_organizations = github_user.admin_organization_memberships.map do |membership|
-      unless Organization.unscoped.find_by(github_id: membership.organization.id)
-        [membership.organization.login, membership.organization.id]
-      end
-    end.compact
+    @users_github_organizations = github_user.organization_memberships.map do |membership|
+      {
+        classroom: Organization.unscoped.find_by(github_id: membership.organization.id),
+        github_id: membership.organization.id,
+        login:     membership.organization.login,
+        role:      membership.role
+      }
+    end
+  end
+
+  def paginate_users_github_organizations
+    @users_github_organizations = Kaminari.paginate_array(@users_github_organizations).page(params[:page]).per(24)
   end
 
   def update_organization_params

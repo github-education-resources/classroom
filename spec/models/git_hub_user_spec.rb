@@ -20,12 +20,12 @@ describe GitHubUser do
     end
   end
 
-  describe '#admin_organization_memberships', :vcr do
+  describe '#organization_memberships', :vcr do
     it 'returns an array of organizations that the user belongs to' do
-      admin_organization_memberships = github_user.admin_organization_memberships
+      organization_memberships = github_user.organization_memberships
 
       expect(WebMock).to have_requested(:get, github_url('/user/memberships/orgs?state=active'))
-      expect(admin_organization_memberships).to be_kind_of(Array)
+      expect(organization_memberships).to be_kind_of(Array)
     end
   end
 

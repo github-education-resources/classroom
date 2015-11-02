@@ -70,7 +70,8 @@ RSpec.describe GroupAssignmentsController, type: :controller do
       options = { title: 'JavaScript Calculator' }
       patch :update, id: group_assignment.id, organization_id: organization.id, group_assignment: options
 
-      expect(response).to redirect_to(organization_group_assignment_path(organization, group_assignment))
+      expect(response).to redirect_to(organization_group_assignment_path(organization,
+                                                                         GroupAssignment.find(group_assignment.id)))
     end
   end
 

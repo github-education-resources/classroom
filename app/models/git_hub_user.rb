@@ -14,11 +14,9 @@ class GitHubUser
 
   # Public
   #
-  def admin_organization_memberships
+  def organization_memberships
     with_error_handling do
-      @client.organization_memberships(state: 'active', headers: no_cache_headers).keep_if do |membership|
-        membership.role == 'admin'
-      end
+      @client.organization_memberships(state: 'active', headers: no_cache_headers)
     end
   end
 
