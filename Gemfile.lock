@@ -214,7 +214,7 @@ GEM
       peek
     peek-git (1.0.2)
       peek
-    peek-performance_bar (1.1.6)
+    peek-performance_bar (1.2.0)
       peek (>= 0.1.0)
     peek-pg (1.1.0)
       atomic (>= 1.0.0)
@@ -413,6 +413,3 @@ DEPENDENCIES
   uglifier (>= 1.3.0)
   vcr
   webmock
-
-BUNDLED WITH
-   1.10.6
