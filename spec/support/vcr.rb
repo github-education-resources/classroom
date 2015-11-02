@@ -8,7 +8,7 @@ VCR.configure do |c|
     serialize_with: :json,
     preserve_exact_body_bytes:  true,
     decode_compressed_response: true,
-    record: ENV['TRAVIS'] ? :none : :new_episodes
+    record: ENV['TRAVIS'] ? :none : :once
   }
 
   # Application id
