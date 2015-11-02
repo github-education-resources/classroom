@@ -26,4 +26,6 @@
 #
 #= require clipboard/dist/clipboard
 #
+#= require js-cookie/src/js.cookie
+#
 #= require_tree .
