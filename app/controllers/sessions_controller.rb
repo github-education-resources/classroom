@@ -2,9 +2,13 @@ class SessionsController < ApplicationController
   skip_before_action :authenticate_user!, :set_organization, :authorize_organization_access
 
   def new
-    scopes = session[:required_scopes] || 'user:email,repo,delete_repo,admin:org'
+    scopes = session[:required_scopes] || default_required_scopes
     scope_param = { scope: scopes }.to_param
     redirect_to "/auth/github?#{scope_param}"
+  end
+
+  def default_required_scopes
+    'user:email,repo,delete_repo,admin:org'
   end
 
   # rubocop:disable AbcSize
