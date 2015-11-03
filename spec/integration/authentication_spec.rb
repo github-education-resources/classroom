@@ -4,7 +4,7 @@ RSpec.describe 'OAuth scope requirements', type: :request do
   let(:organization) { GitHubFactory.create_owner_classroom_org }
   let(:user)         { organization.users.first                 }
 
-  describe 'organizations#show' do
+  describe 'organizations#show', :vcr do
     context 'unauthenticated request' do
       it 'redirects to sessions#new' do
         get url_for(organization)
