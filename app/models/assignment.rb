@@ -2,7 +2,7 @@ class Assignment < ActiveRecord::Base
   include GitHubPlan
 
   extend FriendlyId
-  friendly_id :title, use: [:slugged, :finders]
+  friendly_id :slug_candidates, use: [:slugged, :finders]
 
   default_scope { where(deleted_at: nil) }
 
@@ -41,8 +41,19 @@ class Assignment < ActiveRecord::Base
 
   private
 
+  def organization_slug
+    organization.slug
+  end
+
   def should_generate_new_friendly_id?
     title_changed?
+  end
+
+  def slug_candidates
+    [
+      [:title],
+      [:title, :organization_slug]
+    ]
   end
 
   def uniqueness_of_title_across_organization
