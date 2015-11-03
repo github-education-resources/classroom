@@ -43,14 +43,9 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#valid_auth_token?', :vcr do
-    it 'returns false if the token is not good' do
-      expect(user.valid_auth_token?).to be(false)
-    end
-
-    it 'returns true is the token is good' do
-      user = GitHubFactory.create_owner_classroom_org.users.first
-      expect(user.valid_auth_token?).to be(true)
+  describe '#github_client_scopes', :vcr do
+    it 'returns an Array of scopes' do
+      expect(user.github_client_scopes).to eq(%w(admin:org delete_repo gist repo user))
     end
   end
 end

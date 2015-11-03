@@ -1,17 +1,22 @@
 OmniAuth.config.test_mode = true
 
-OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
-  'provider' => 'github',
-  'uid'      => '8675309',
+VCR.use_cassette 'auth_user' do
+  token = ENV['TEST_CLASSROOM_OWNER_GITHUB_TOKEN'] ||= 'some-token'
+  user = Octokit::Client.new(access_token: token).user
 
-  'info' =>
-  {
-    'nickname' => 'testuser',
-    'email'    => 'testuser@gmail.com',
-    'name'     => 'Test User'
-  },
+  OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
+    'provider' => 'github',
+    'uid'      => user.id.to_s,
 
-  'extra' => { 'raw_info' => { 'site_admin' => false } },
+    'info' =>
+    {
+      'nickname' => user.login,
+      'email'    => user.email,
+      'name'     => user.name
+    },
 
-  'credentials' => { 'token' => 'some-token' }
-)
+    'extra' => { 'raw_info' => { 'site_admin' => false } },
+
+    'credentials' => { 'token' => token }
+  )
+end

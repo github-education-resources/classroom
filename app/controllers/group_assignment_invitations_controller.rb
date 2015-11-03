@@ -44,6 +44,10 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   private
 
+  def required_scopes
+    %w(admin:org user:email)
+  end
+
   def authorize_group_access
     group_id = group_params[:id]
 
