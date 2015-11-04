@@ -5,6 +5,7 @@ module GitHub
 
   # Public
   #
+  # rubocop:disable Metrics/CyclomaticComplexity
   def with_error_handling
     yield
   rescue Octokit::Error => err
@@ -12,9 +13,11 @@ module GitHub
     when Octokit::Forbidden           then raise_github_forbidden_error
     when Octokit::NotFound            then raise_github_not_found_error
     when Octokit::ServerError         then raise_github_server_error
+    when Octokit::Unauthorized        then raise_github_forbidden_error
     when Octokit::UnprocessableEntity then raise_github_error(err)
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   protected
 
