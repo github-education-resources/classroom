@@ -12,7 +12,7 @@
   </div>
 
   <div class="flex-table-item text-right">
-    <%= form_tag impersonate_users_path do %>
+    <%= form_tag impersonate_stafftools_user_path(user.id) do %>
       <%= hidden_field_tag :id, user.id %>
       <%= submit_tag "Impersonate @#{user.login}", class: 'btn btn-sm btn-danger', data: { confirm: "Are you positive you want to impersonate @#{user.login}?" } %>
     <% end %>

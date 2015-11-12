@@ -1,13 +1,12 @@
-$('.stafftools.impersonate').ready ->
-  $('#js-search-form').on('change keyup', ->
-    $this = $(this)
+$('#js-search-form').on('change keyup', ->
+  $this = $(this)
 
-    formData = $(this).serialize()
-    history.replaceState(null, '', "?#{formData}")
+  formData = $(this).serialize()
+  history.replaceState(null, '', "?#{formData}")
 
-    $this.submit()
+  $this.submit()
 
-    $this.on('ajax:success', (e, data, status, xhr) ->
-      $('#js-search-results').html(xhr.responseText)
-    )
+  $this.on('ajax:success', (e, data, status, xhr) ->
+    $('#js-search-results').html(xhr.responseText)
   )
+)

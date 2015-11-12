@@ -1,5 +1,13 @@
 Chewy.logger = Rails.logger
 
+# Use ActiveJob config for async index updates.
+Chewy.strategy(:active_job)
+
+# Chewy wraps controller actions in the atomic strategy by default.
+# We change this to use ActiveJob here. Makes index updates async, outside
+# of the request.
+Chewy.request_strategy = :active_job
+
 ActiveSupport::Notifications.subscribe('import_objects.chewy') do |name, start, finish, id, payload|
   metric_name = "Database/ElasticSearch/import"
   duration = (finish - start).to_f

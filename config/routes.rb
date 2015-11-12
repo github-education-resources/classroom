@@ -1,4 +1,5 @@
 require 'sidekiq/web'
+require 'staff_constraint'
 
 Rails.application.routes.draw do
   mount Peek::Railtie => '/peek'
@@ -42,14 +43,13 @@ Rails.application.routes.draw do
   end
 
   namespace :stafftools do
-    mount Sidekiq::Web  => '/sidekiq'
+    mount Sidekiq::Web  => '/sidekiq', constraints: StaffConstraint.new
 
-    root action: :impersonate
-    get :users
-  end
+    root to: 'users#index'
 
-  scope module: 'stafftools' do
-    resource :users, only: [] do
+    resources :users, only: [:index] do
+      get :search, on: :collection
+
       member do
         post :impersonate
         post :stop_impersonating

@@ -1,16 +1,22 @@
 module Stafftools
   class UsersController < StafftoolsController
-    before_action :set_user, only: [:impersonate]
     skip_before_action :authorize_access, only: [:stop_impersonating]
 
-    def impersonate
-      if @user
-        session[:impersonated_user_id] = @user.id
-        redirect_to root_path
-      else
-        flash[:error] = 'This user does not exist on Classroom for GitHub'
-        redirect_to :back
+    before_action :set_user,  only: [:impersonate]
+    before_action :set_users, only: [:index, :search]
+
+    def index
+    end
+
+    def search
+      respond_to do |format|
+        format.html { render partial: 'stafftools/users/users', locals: { users: @users } }
       end
+    end
+
+    def impersonate
+      session[:impersonated_user_id] = @user.id
+      redirect_to root_path
     end
 
     def stop_impersonating
@@ -24,6 +30,14 @@ module Stafftools
 
     def set_user
       @user = User.find_by(id: params[:id])
+    end
+
+    def set_users
+      match_phrase_prefix = { match_phrase_prefix: { login: params[:query] } }
+      wildcard            = { wildcard:            { login: '*' }            }
+
+      user_query = params[:query].present? ? match_phrase_prefix : wildcard
+      @users = UsersIndex::User.query(user_query).page(params[:page]).per(20)
     end
   end
 end

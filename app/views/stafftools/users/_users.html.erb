@@ -1,0 +1,12 @@
+<% if @users.total_count > 0 %>
+  <% @users.each do |user| %>
+    <%= render partial: 'stafftools/users/user', locals: { user: user } %>
+  <% end %>
+
+  <%= render partial: 'shared/pagination', locals: { collection: @users } %>
+<% else %>
+  <div class="blankslate">
+    <%= mega_octicon('search') %>
+    <h3>We couldn't find any matching users</h3>
+  </div>
+<% end %>

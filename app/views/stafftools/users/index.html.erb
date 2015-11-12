@@ -3,22 +3,23 @@
     <div class="flex-table">
       <div class="flex-table-item">
         <span class="assignment-icon assignment-icon-individual left">
-          <%= octicon('gist-secret') %>
+          <%= octicon('person') %>
         </span>
 
-        <h2 class="site-content-heading">Impersonate a user</h2>
-        <p class="assignment-type text-muted">Excercise good judgement</p>
+        <h2 class="site-content-heading">Users</h2>
+        <!-- <p class="assignment&#45;type text&#45;muted">Excercise good judgement</p> -->
       </div>
     </div>
   </div>
 
   <div class="site-content-body">
-    <%= form_tag stafftools_users_path, id: 'js-search-form', method: :get, remote: true do %>
+    <%= form_tag search_stafftools_users_path, id: 'js-search-form', method: :get, remote: true do %>
       <%= text_field_tag :query, params[:query], class: 'input-block', placeholder: 'Find a user...' %>
     <% end %>
 
     <div class="classroom-users" id="js-search-results">
-      <%= render partial: 'stafftools/impersonate/user_results', locals: { users: @users } %>
+      <%= render partial: 'stafftools/users/users', locals: { users: @users } %>
     </div>
   </div>
 </div>
+
