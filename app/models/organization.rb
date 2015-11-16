@@ -2,7 +2,7 @@ class Organization < ActiveRecord::Base
   extend FriendlyId
   friendly_id :slug_candidate, use: [:slugged, :finders]
 
-  update_index('users') { users }
+  update_index('stafftools#organization') { self }
 
   default_scope { where(deleted_at: nil) }
 

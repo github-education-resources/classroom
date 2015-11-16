@@ -1,0 +1,15 @@
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">Resources</h2>
+  </div>
+
+  <div class="site-content-body">
+    <%= form_tag stafftools_search_path, id: 'js-search-form', method: :get, remote: true do %>
+      <%= text_field_tag :query, params[:query], class: 'input-block', placeholder: 'Search Classroom...' %>
+    <% end %>
+
+    <div class="search-results" id="js-search-results">
+      <%= render partial: 'stafftools/search_results', locals: { resources: @resources } %>
+    </div>
+  </div>
+</div>

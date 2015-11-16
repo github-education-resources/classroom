@@ -8,10 +8,43 @@ RSpec.describe Stafftools::UsersController, type: :controller do
     sign_in(user)
   end
 
+  describe 'GET #index', :vcr do
+    context 'as an unauthorized user' do
+      it 'returns a 404' do
+        expect { get :index }.to raise_error(ActionController::RoutingError)
+      end
+    end
+
+    context 'as an authorized user' do
+      before do
+        user.update_attributes(site_admin: true)
+      end
+
+      before(:each) do
+        get :index
+      end
+
+      it 'returns a success status' do
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'as an array of users' do
+        expect(assigns(:users)).to_not be_nil
+
+        expect(assigns(:users)).to respond_to(:total_count)
+        expect(assigns(:users)).to be_kind_of(UsersIndex::User::Query)
+      end
+
+      it 'renders the user_results partial' do
+        expect(response).to render_template(partial: 'stafftools/users/_users')
+      end
+    end
+  end
+
   describe 'POST #impersonate_user', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { post :impersonate, impersonated_user_id: student.id }.to raise_error(ActionController::RoutingError)
+        expect { post :impersonate, id: student.id }.to raise_error(ActionController::RoutingError)
       end
     end
 
@@ -37,7 +70,7 @@ RSpec.describe Stafftools::UsersController, type: :controller do
   describe 'POST #stop_impersonating', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { post :impersonate, id: student.id }.to raise_error(ActionController::RoutingError)
+        expect { post :stop_impersonating, id: student.id }.to raise_error(ActionController::RoutingError)
       end
     end
 

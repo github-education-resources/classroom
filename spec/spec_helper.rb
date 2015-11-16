@@ -93,7 +93,7 @@ RSpec.configure do |config|
   # rubocop:enable Style/BlockComments
 
   def sign_in(user)
-    session[:user_id] = user.try(:id)
+    session[:user_id] = user.id
   end
 
   def sign_out

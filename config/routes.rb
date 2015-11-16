@@ -45,11 +45,10 @@ Rails.application.routes.draw do
   namespace :stafftools do
     mount Sidekiq::Web  => '/sidekiq', constraints: StaffConstraint.new
 
-    root to: 'users#index'
+    root action: :resources
+    get :search
 
-    resources :users, only: [:index] do
-      get :search, on: :collection
-
+    resources :users, only: [:show] do
       member do
         post :impersonate
         post :stop_impersonating

@@ -2,16 +2,9 @@ module Stafftools
   class UsersController < StafftoolsController
     skip_before_action :authorize_access, only: [:stop_impersonating]
 
-    before_action :set_user,  only: [:impersonate]
-    before_action :set_users, only: [:index, :search]
+    before_action :set_user, except: [:stop_impersonating]
 
-    def index
-    end
-
-    def search
-      respond_to do |format|
-        format.html { render partial: 'stafftools/users/users', locals: { users: @users } }
-      end
+    def show
     end
 
     def impersonate
@@ -30,14 +23,6 @@ module Stafftools
 
     def set_user
       @user = User.find_by(id: params[:id])
-    end
-
-    def set_users
-      match_phrase_prefix = { match_phrase_prefix: { login: params[:query] } }
-      wildcard            = { wildcard:            { login: '*' }            }
-
-      user_query = params[:query].present? ? match_phrase_prefix : wildcard
-      @users = UsersIndex::User.query(user_query).page(params[:page]).per(20)
     end
   end
 end
