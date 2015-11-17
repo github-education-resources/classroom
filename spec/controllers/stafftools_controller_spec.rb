@@ -8,10 +8,10 @@ RSpec.describe StafftoolsController, type: :controller do
     sign_in(user)
   end
 
-  describe 'GET #impersonate', :vcr do
+  describe 'GET #resources', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { get :impersonate }.to raise_error(ActionController::RoutingError)
+        expect { get :search }.to raise_error(ActionController::RoutingError)
       end
     end
 
@@ -20,18 +20,44 @@ RSpec.describe StafftoolsController, type: :controller do
         user.update_attributes(site_admin: true)
       end
 
+      before(:each) do
+        get :resources
+      end
+
       it 'returns a success status' do
-        get :impersonate
         expect(response).to have_http_status(:success)
       end
 
-      it 'as an array of user search results' do
-        get :impersonate
+      it 'has a StafftoolsIndex::User::Query of resources' do
+        expect(assigns(:resources)).to_not be_nil
+        expect(assigns(:resources)).to be_kind_of(StafftoolsIndex::User::Query)
+      end
+    end
+  end
 
-        expect(assigns(:users)).to_not be_nil
+  describe 'GET #search', :vcr do
+    context 'as an unauthorized user' do
+      it 'returns a 404' do
+        expect { get :search }.to raise_error(ActionController::RoutingError)
+      end
+    end
 
-        expect(assigns(:users)).to respond_to(:total_count)
-        expect(assigns(:users)).to be_kind_of(UsersIndex::User::Query)
+    context 'as an authorized user' do
+      before do
+        user.update_attributes(site_admin: true)
+      end
+
+      before(:each) do
+        get :search
+      end
+
+      it 'returns a succcess status' do
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'has a StafftoolsIndex::User::Query of resources' do
+        expect(assigns(:resources)).to_not be_nil
+        expect(assigns(:resources)).to be_kind_of(StafftoolsIndex::User::Query)
       end
     end
   end
