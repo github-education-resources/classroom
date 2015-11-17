@@ -1,0 +1,24 @@
+<div class="site-content">
+  <div class="site-content-cap">
+    <div class="flex-table">
+      <div class="flex-table-item">
+        <span class="assignment-icon assignment-icon-individual left">
+          <%= octicon('person') %>
+        </span>
+
+        <h2 class="site-content-heading">
+          <%= @user.login %>
+        </h2>
+
+        <p class="assignment-type text-muted"><%= @user.name %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="site-content-body">
+    <a data-remodal-target="impersonate-user" class="btn btn-danger btn-block">Impersonate <%= "@#{@user.login}" %></a>
+  </div>
+
+
+  <%= render partial: 'stafftools/users/impersonate_user_modal' %>
+</div>

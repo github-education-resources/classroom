@@ -50,8 +50,8 @@ Rails.application.routes.draw do
 
     resources :users, only: [:show] do
       member do
-        post :impersonate
-        post :stop_impersonating
+        patch :impersonate
+        delete :stop_impersonating
       end
     end
   end

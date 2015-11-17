@@ -13,6 +13,10 @@ class UserDecorator < Draper::Decorator
     github_user.login
   end
 
+  def name
+    github_user.name
+  end
+
   private
 
   def github_user

@@ -21,7 +21,7 @@ class StafftoolsController < ApplicationController
 
   def set_resources
     resource_query = params[:query].present? ? match_phrase_prefix(params[:query]) : {}
-    @resources     = StafftoolsIndex.query(resource_query).order(updated_at: :desc).page(params[:page]).per(20)
+    @resources     = StafftoolsIndex::User.query(resource_query).page(params[:page]).per(20)
   end
 
   def match_phrase_prefix(query)

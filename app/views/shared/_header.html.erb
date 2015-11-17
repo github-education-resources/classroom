@@ -17,7 +17,7 @@
 
           <li>
             <% if impersonating?(current_user, true_user) %>
-              <%= link_to stop_impersonating_stafftools_user_path(current_user), class: 'tooltipped tooltipped-s', method: :post, 'aria-label' => "@#{decorated_true_user.login} impersonating @#{decorated_current_user.login}" do %>
+              <%= link_to stop_impersonating_stafftools_user_path(current_user), class: 'tooltipped tooltipped-s', method: :delete, 'aria-label' => "@#{decorated_true_user.login} impersonating @#{decorated_current_user.login}" do %>
                 <div class="avatar-parent-child left">
                   <%= image_tag decorated_current_user.avatar_url(40), class: 'avatar', alt: "@#{decorated_current_user.login}", height: 20, width: 20 %>
                   <%= image_tag decorated_true_user.avatar_url(20), class: 'avatar avatar-child', alt: "@#{decorated_true_user.login}", height: 10, width: 10 %>
