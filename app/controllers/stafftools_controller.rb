@@ -25,6 +25,6 @@ class StafftoolsController < ApplicationController
   end
 
   def match_phrase_prefix(query)
-    { bool: { should: %w(id uid name login).map { |field| { "match_phrase_prefix" => { field => query } } } } }
+    { bool: { should: %w(id uid name login).map { |field| { 'match_phrase_prefix' => { field => query } } } } }
   end
 end
