@@ -48,9 +48,9 @@ Rails.application.routes.draw do
     root action: :resources
     get :search
 
-    resources :users, only: [:show] do
+    resources :users, only: [] do
       member do
-        patch :impersonate
+        post :impersonate
         delete :stop_impersonating
       end
     end
