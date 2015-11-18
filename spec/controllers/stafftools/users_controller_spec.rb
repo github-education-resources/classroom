@@ -47,6 +47,7 @@ RSpec.describe Stafftools::UsersController, type: :controller do
       end
 
       before(:each) do
+        post :impersonate, id: student.id
         delete :stop_impersonating, id: student.id
       end
 

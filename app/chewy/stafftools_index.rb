@@ -1,3 +1,4 @@
+# rubocop:disable Metric/ClassLength
 class StafftoolsIndex < Chewy::Index
   define_type Assignment do
     field :id
@@ -140,3 +141,4 @@ class StafftoolsIndex < Chewy::Index
     end)
   end
 end
+# rubocop:enable Metric/ClassLength

@@ -45,8 +45,8 @@ Rails.application.routes.draw do
   namespace :stafftools do
     mount Sidekiq::Web  => '/sidekiq', constraints: StaffConstraint.new
 
-    root action: :resources
-    get :search
+    root to: 'resources#index'
+    get '/resource_search', to: 'resources#search'
 
     resources :users, only: [] do
       member do

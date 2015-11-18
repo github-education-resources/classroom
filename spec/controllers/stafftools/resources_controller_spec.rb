@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe StafftoolsController, type: :controller do
+RSpec.describe Stafftools::ResourcesController, type: :controller do
   let(:organization) { GitHubFactory.create_owner_classroom_org }
   let(:user)         { organization.users.first                 }
 
@@ -8,10 +8,10 @@ RSpec.describe StafftoolsController, type: :controller do
     sign_in(user)
   end
 
-  describe 'GET #resources', :vcr do
+  describe 'GET #index', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { get :search }.to raise_error(ActionController::RoutingError)
+        expect { get :index }.to raise_error(ActionController::RoutingError)
       end
     end
 
@@ -21,16 +21,16 @@ RSpec.describe StafftoolsController, type: :controller do
       end
 
       before(:each) do
-        get :resources
+        get :index
       end
 
       it 'returns a success status' do
         expect(response).to have_http_status(:success)
       end
 
-      it 'has a StafftoolsIndex::User::Query of resources' do
+      it 'has a StafftoolsIndex::Query of resources' do
         expect(assigns(:resources)).to_not be_nil
-        expect(assigns(:resources)).to be_kind_of(StafftoolsIndex::User::Query)
+        expect(assigns(:resources)).to be_kind_of(StafftoolsIndex::Query)
       end
     end
   end
@@ -57,7 +57,7 @@ RSpec.describe StafftoolsController, type: :controller do
 
       it 'has a StafftoolsIndex::User::Query of resources' do
         expect(assigns(:resources)).to_not be_nil
-        expect(assigns(:resources)).to be_kind_of(StafftoolsIndex::User::Query)
+        expect(assigns(:resources)).to be_kind_of(StafftoolsIndex::Query)
       end
     end
   end

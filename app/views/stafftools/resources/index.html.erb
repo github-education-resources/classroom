@@ -4,12 +4,12 @@
   </div>
 
   <div class="site-content-body">
-    <%= form_tag stafftools_search_path, id: 'js-search-form', method: :get, remote: true do %>
+    <%= form_tag stafftools_resource_search_path, id: 'js-search-form', method: :get, remote: true do %>
       <%= text_field_tag :query, params[:query], class: 'input-block', placeholder: 'Search Classroom...' %>
     <% end %>
 
     <div class="search-results" id="js-search-results">
-      <%= render partial: 'stafftools/search_results', locals: { resources: @resources } %>
+      <%= render partial: 'stafftools/resources/search_results', locals: { resources: @resources } %>
     </div>
   </div>
 </div>
