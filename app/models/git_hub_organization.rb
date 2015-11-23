@@ -95,7 +95,12 @@ class GitHubOrganization
   def plan
     with_error_handling do
       organization = @client.organization(@id, headers: no_cache_headers)
-      { owned_private_repos: organization.owned_private_repos, private_repos: organization.plan.private_repos }
+
+      if organization.owned_private_repos.present? && organization.plan.present?
+        { owned_private_repos: organization.owned_private_repos, private_repos: organization.plan.private_repos }
+      else
+        fail GitHub::Error, 'Cannot retrieve this organizations repo plan, please reauthenticate your token.'
+      end
     end
   end
 
