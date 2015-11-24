@@ -5,17 +5,20 @@ delay = do ->
     timer = setTimeout(callback, ms)
     return
 
-$('#js-search-form').on('change keyup', ->
-  $this = $(this)
+ready = ->
+  $('#js-search-form').on('change keyup', ->
+    $this = $(this)
 
-  formData = $(this).serialize()
-  history.replaceState(null, '', "?#{formData}")
+    formData = $(this).serialize()
+    history.replaceState(null, '', "?#{formData}")
 
-  delay (->
-    $this.submit()
+    delay (->
+      $this.submit()
 
-    $this.on('ajax:success', (e, data, status, xhr) ->
-      $('#js-search-results').html(xhr.responseText)
-    )
-  ), 200
-)
+      $this.on('ajax:success', (e, data, status, xhr) ->
+        $('#js-search-results').html(xhr.responseText)
+      )
+    ), 200
+  )
+
+$(document).ready(ready)
