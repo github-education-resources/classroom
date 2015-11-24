@@ -47,4 +47,16 @@ describe GitHubOrganization do
       expect(@github_organization.login).to eql(organization.title)
     end
   end
+
+  describe '#plan', :vcr do
+    it 'gets the plan for an organization' do
+      expect(@github_organization.plan[:owned_private_repos]).not_to be_nil
+      expect(@github_organization.plan[:private_repos]).not_to be_nil
+    end
+
+    it 'fails for an org that the token is not authenticated for' do
+      unauthorized_github_organization = GitHubOrganization.new(@client, 9919)
+      expect { unauthorized_github_organization.plan }.to raise_error(GitHub::Error)
+    end
+  end
 end
