@@ -24,11 +24,11 @@ rbenv install 2.2.3
 rbenv global 2.2.3
 ```
 
-Next, you'll need to make sure that you have PostgreSQL, Redis, and Memcached installed. This can be
+Next, you'll need to make sure that you have PostgreSQL, Redis, Memcached, and Elasticsearch installed. This can be
 done easily on OSX using [Homebrew](http://brew.sh)
 
 ```bash
-brew install postgresql redis memcached
+brew install postgresql redis memcached elasticsearch
 ```
 
 You will want to set postgresql to autostart at login via launchctl, if not already. See `brew info postgresql`. Redis and memcached may be setup similarly via launchctl or setup project wide by using foreman, described below.
@@ -84,7 +84,7 @@ ENV Variable | Description |
 
 ### Running the application
 
-Foreman is setup to manage redis, memcached, and sidekiq in development mode. Postgresql must be running prior executing foreman. It assumes that redis and memcached are not already running on the system. Alternatively, you may run `script/sidekiq`, if you you to have redis and memcached always running system wide. To execute foreman, and this application's dependencies, run:
+Foreman is setup to manage redis, memcached, sidekiq, and elasticsearch in development mode. Postgresql must be running prior executing foreman. It assumes that redis, memcached, and elasticsearch are not already running on the system. Alternatively, you may run `script/sidekiq`, if you have to have redis, memcached, and elasticsearch always running system wide. To execute foreman, and this application's dependencies, run:
 
 ```bash
 script/workers
