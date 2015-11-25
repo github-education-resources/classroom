@@ -1,0 +1,15 @@
+<%= octicon('git-branch') %>
+<div class="bucket">
+  <span class="current-branch css-truncate expandable">
+    <span class="current-branch-name css-truncate-target">
+      <%= view.branch_name %>
+    </span>
+    <span class="hidden">
+      <% if view.nwo? %>
+        <a href="<%= view.compare_url %>" target="_blank"><%= view.short_sha %></a>
+      <% else %>
+        <%= view.short_sha %>
+      <% end %>
+    </span>
+  </span>
+</div>

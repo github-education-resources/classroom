@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   class NotAuthorized < StandardError
   end
 
-  helper_method :current_user, :decorated_current_user, :logged_in?, :staff?
+  helper_method :current_user, :decorated_current_user, :decorated_true_user, :logged_in?, :staff?, :true_user
 
   before_action :authenticate_user!
 
@@ -50,8 +50,18 @@ class ApplicationController < ActionController::Base
     @decorated_current_user ||= current_user.decorate
   end
 
+  def decorated_true_user
+    @decorated_true_user ||= true_user.decorate
+  end
+
   def current_user
-    @current_user ||= User.find(session[:user_id]) if session[:user_id]
+    return @current_user if defined?(@current_user)
+
+    @current_user = if true_user.try(:staff?) && session[:impersonated_user_id]
+                      User.find session[:impersonated_user_id]
+                    else
+                      true_user
+                    end
   end
 
   def flash_and_redirect_back_with_message(exception)
@@ -83,5 +93,9 @@ class ApplicationController < ActionController::Base
 
   def staff?
     logged_in? && current_user.staff?
+  end
+
+  def true_user
+    @true_user ||= User.find(session[:user_id]) if session[:user_id]
   end
 end

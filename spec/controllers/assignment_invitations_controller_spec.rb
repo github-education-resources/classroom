@@ -15,7 +15,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       let(:user) { GitHubFactory.create_classroom_student }
 
       before(:each) do
-        session[:user_id] = user.id
+        sign_in(user)
       end
 
       it 'will bring you to the page' do
@@ -41,7 +41,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
     before(:each) do
       request.env['HTTP_REFERER'] = "http://classroomtest.com/group-assignment-invitations/#{invitation.key}"
-      session[:user_id] = user.id
+      sign_in(user)
     end
 
     after(:each) do

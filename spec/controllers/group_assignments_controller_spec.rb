@@ -11,7 +11,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
   end
 
   before do
-    session[:user_id] = user.id
+    sign_in(user)
   end
 
   describe 'GET #new', :vcr do

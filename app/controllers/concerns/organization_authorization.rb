@@ -6,7 +6,7 @@ module OrganizationAuthorization
   end
 
   def authorize_organization_access
-    return if @organization.users.include?(current_user) || current_user.staff?
+    return if @organization.users.include?(current_user)
 
     begin
       github_organization.admin?(decorated_current_user.login) ? @organization.users << current_user : not_found

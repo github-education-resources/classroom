@@ -108,6 +108,9 @@ GEM
       nenv
       rspec-logsplit (>= 0.1.2)
       timers (>= 4.1.1)
+    chewy (0.8.2)
+      activesupport (>= 3.2)
+      elasticsearch (>= 1.0.0)
     coderay (1.1.0)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
@@ -134,6 +137,14 @@ GEM
       activemodel (>= 3.0)
       activesupport (>= 3.0)
       request_store (~> 1.0)
+    elasticsearch (1.0.14)
+      elasticsearch-api (= 1.0.14)
+      elasticsearch-transport (= 1.0.14)
+    elasticsearch-api (1.0.14)
+      multi_json
+    elasticsearch-transport (1.0.14)
+      faraday
+      multi_json
     erubis (2.7.0)
     execjs (2.6.0)
     factory_girl (4.5.0)
@@ -366,6 +377,7 @@ DEPENDENCIES
   awesome_print
   better_errors
   binding_of_caller
+  chewy
   coffee-rails (~> 4.1.0)
   dalli
   database_cleaner

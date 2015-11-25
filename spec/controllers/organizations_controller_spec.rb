@@ -7,13 +7,13 @@ RSpec.describe OrganizationsController, type: :controller do
   let(:user)          { organization.users.first                 }
 
   before do
-    session[:user_id] = user.id
+    sign_in(user)
   end
 
   describe 'GET #index', :vcr do
     context 'unauthenticated user' do
       before do
-        session[:user_id] = nil
+        sign_out
       end
 
       it 'redirects to login_path' do
