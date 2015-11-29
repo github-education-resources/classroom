@@ -4,7 +4,7 @@ module Sidekiq
       @strategy = strategy
     end
 
-    def call(worker, msg, queue)
+    def call(_, _, _)
       Chewy.strategy(@strategy) do
         yield
       end
