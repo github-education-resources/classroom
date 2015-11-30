@@ -17,7 +17,7 @@ module Stafftools
     private
 
     def set_organization
-      @organization = Organizations.find_by(id: params[:id])
+      @organization = Organization.find_by(id: params[:id])
     end
   end
 end
