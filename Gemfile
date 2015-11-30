@@ -56,6 +56,7 @@ end
 
 group :development, :test do
   gem 'awesome_print', require: 'ap'
+  gem 'bullet'
   gem 'dotenv-rails'
   gem 'pry-rails'
   gem 'pry-byebug'
