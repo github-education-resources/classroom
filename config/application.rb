@@ -29,6 +29,9 @@ module Classroom
       config.assets.paths << bower_path
     end
 
+    # Append directories to autoload paths
+    config.autoload_paths += Dir["#{Rails.root}/lib"]
+
     # Precompile Fonts
     # Compile all font types except octicons-local
     config.assets.precompile << %r(octicons/octicons/octicons+\.(?:svg|eot|woff|ttf)$)

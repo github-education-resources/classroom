@@ -29,7 +29,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
     context 'authenticated request' do
       before(:each) do
-        session[:user_id]           = user.id
+        sign_in(user)
         request.env['HTTP_REFERER'] = "http://classroomtest.com/group-assignment-invitations/#{invitation.key}"
       end
 

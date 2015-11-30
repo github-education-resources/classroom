@@ -97,12 +97,13 @@ class OrganizationsController < ApplicationController
 
   def new_organization_params
     github_org = github_organization_from_params.organization
+    title      = github_org.name.present? ? github_org.name : github_org.login
 
     params
       .require(:organization)
       .permit(:github_id)
       .merge(users: [current_user])
-      .merge(title: github_org.name || github_org.login)
+      .merge(title: title)
   end
 
   def set_organization

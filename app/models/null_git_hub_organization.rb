@@ -6,4 +6,8 @@ class NullGitHubOrganization < NullGitHubResource
   def login
     'ghost'
   end
+
+  def name
+    'Deleted organization'
+  end
 end
