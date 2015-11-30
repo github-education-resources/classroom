@@ -601,20 +601,8 @@ hr {
   margin-top: 2em;
 }
 
-.classroom-users {
-  .assignment-repo-list-item:not(:first-child) {
-
-    @media (max-width: 34em) {
-      margin-bottom: 0;
-    }
-  }
-
-  .blankslate {
-    margin-top: 2em;
-  }
-}
-
-.classroom-user {
+.classroom-resource {
+  margin-top: 1rem;
   padding-top: 1rem;
   margin-top: 1rem;
   font-size: 14px;

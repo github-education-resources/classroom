@@ -1,0 +1,15 @@
+<div class="flex-table classroom-resource">
+  <div class="flex-table-item">
+    <span class="group-assignment-icon assignment-icon-group left">
+      <%= octicon('link') %>
+    </span>
+
+    <div class="student-information">
+      <%= link_to stafftools_group_assignment_invitation_path(group_assignment_invitation.id) do %>
+        <strong class="css-truncate-target login"><%= group_assignment_invitation.key %></strong>
+      <% end %>
+    </div>
+
+    <span class="text-muted css-truncate css-truncate-target">Created <%= local_time_ago(group_assignment_invitation.created_at) %></span>
+  </div>
+</div>

@@ -20,6 +20,8 @@ gem 'jquery-turbolinks'
 
 gem 'kaminari'
 
+gem 'local_time'
+
 gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'

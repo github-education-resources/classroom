@@ -15,11 +15,12 @@ module Stafftools
 
     def set_resources
       resource_query = params[:query].present? ? match_phrase_prefix(params[:query]) : {}
-      @resources     = StafftoolsIndex::User.query(resource_query).order(updated_at: :desc).page(params[:page]).per(20)
+      @resources     = StafftoolsIndex.query(resource_query).order(updated_at: :desc).page(params[:page]).per(20)
     end
 
     def match_phrase_prefix(query)
-      { bool: { should: %w(id uid name login).map { |field| { 'match_phrase_prefix' => { field => query } } } } }
+      searchable_fields = %w(github_id github_repo_id github_team_id id key login name slug title uid)
+      { bool: { should: searchable_fields.map { |field| { 'match_phrase_prefix' => { field => query } } } } }
     end
   end
 end

@@ -48,11 +48,26 @@ Rails.application.routes.draw do
     root to: 'resources#index'
     get '/resource_search', to: 'resources#search'
 
-    resources :users, only: [] do
+    resources :users, except: [:index, :new, :create] do
       member do
         post :impersonate
         delete :stop_impersonating
       end
     end
+
+    resources :organizations, except: [:index, :new, :create]
+
+    resources :repo_accesses, except: [:index, :new, :create]
+
+    resources :assignment_invitations, except: [:index, :new, :create]
+    resources :assignment_repos,       except: [:index, :new, :create]
+    resources :assignments,            except: [:index, :new, :create]
+
+    resources :group_assignment_invitations, path: 'group-assignment-invitations', except: [:index, :new, :create]
+    resources :group_assignment_repos,       path: 'group-assignment-repos',       except: [:index, :new, :create]
+    resources :group_assignments,            path: 'group-assignments',            except: [:index, :new, :create]
+
+    resources :groupings, except: [:index, :new, :create]
+    resources :groups,    except: [:index, :new, :create]
   end
 end

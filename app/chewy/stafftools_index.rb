@@ -32,6 +32,7 @@ class StafftoolsIndex < Chewy::Index
 
   define_type GroupAssignment do
     field :id
+    field :slug
     field :title
     field :created_at
     field :updated_at
@@ -65,6 +66,7 @@ class StafftoolsIndex < Chewy::Index
 
   define_type Organization do
     field :id
+    field :slug
     field :github_id
     field :created_at
     field :updated_at
