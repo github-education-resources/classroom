@@ -1,9 +1,9 @@
-<div class="flex-table classroom-user">
+<div class="flex-table classroom-resource">
   <div class="flex-table-item">
     <%= image_tag "#{user.avatar_url}&size=96", height: 48, width: 48, class: 'avatar left', alt: "@#{user.login}" %>
 
     <div class="student-information">
-      <%= link_to user.html_url do %>
+      <%= link_to stafftools_user_path(user.id) do %>
         <strong class="css-truncate-target login"><%= user.login %></strong>
       <% end %>
     </div>
