@@ -1,5 +1,7 @@
 module Stafftools
   class GroupingsController < StafftoolsController
+    before_action :set_grouping
+
     def show
     end
 
@@ -10,6 +12,12 @@ module Stafftools
     end
 
     def destroy
+    end
+
+    private
+
+    def set_grouping
+      @grouping = Grouping.find_by(id: params[:id])
     end
   end
 end

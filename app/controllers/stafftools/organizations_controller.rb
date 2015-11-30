@@ -1,5 +1,7 @@
 module Stafftools
   class OrganizationsController < StafftoolsController
+    before_action :set_organization
+
     def show
     end
 
