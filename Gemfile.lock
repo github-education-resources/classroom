@@ -83,7 +83,7 @@ GEM
     color (1.8)
     concurrent-ruby (1.0.0)
     connection_pool (2.2.0)
-    crack (0.4.2)
+    crack (0.4.3)
       safe_yaml (~> 1.0.0)
     dalli (2.7.4)
     database_cleaner (1.5.1)
