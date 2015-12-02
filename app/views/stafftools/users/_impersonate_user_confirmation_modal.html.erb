@@ -1,0 +1,24 @@
+<div class="remodal text-left" data-remodal-id="impersonate-user">
+  <button data-remodal-action="close" class="remodal-close"><%= octicon('x') %></button>
+  <h2 class="remodal-header">Are you ABSOLUTELY sure?</h2>
+
+  <div class="remodal-warning">
+    Please make sure you really want to do this.
+  </div>
+
+  <div class="remodal-description">
+    <p>
+      All actions that you perform on behalf of the user will affect their experience.
+      <strong>Please use caution when impersonating another user.</strong>
+    </p>
+  </div>
+
+  <%= form_tag impersonate_stafftools_user_path(user.id), 'data-name' => user.login do %>
+    <dl class="form js-normalize-submit">
+      <dt>Please type the users GitHub login to confirm</dt>
+      <dd><input type="text" class="js-input-block"></dd>
+    </dl>
+
+    <%= submit_tag "Impersonate @#{user.login}", class: 'btn btn-block btn-danger js-navigation js-submit', disabled: true %>
+  <% end %>
+</div>

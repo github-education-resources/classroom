@@ -10,10 +10,4 @@
 
     <span class="text-muted css-truncate css-truncate-target"><%= user.name %></span>
   </div>
-
-  <div class="flex-table-item text-right">
-    <%= form_tag impersonate_stafftools_user_path(user.id) do %>
-      <%= submit_tag "Impersonate @#{user.login}", class: 'btn btn-sm btn-danger', data: { confirm: "Are you positive you want to impersonate @#{user.login}?" } %>
-    <% end %>
-  </div>
 </div>

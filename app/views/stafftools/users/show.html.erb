@@ -1,0 +1,32 @@
+<div class="site-content">
+  <div class="site-content-cap">
+    <div class="flex-table">
+      <div class="flex-table-item">
+        <span class="assignment-icon assignment-icon-individual left">
+          <%= image_tag user.avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{user.login}" %>
+        </span>
+
+        <h2 class="site-content-heading">
+          <%= user.login %>
+        </h2>
+
+        <p class="assignment-type text-muted">User</p>
+      </div>
+    </div>
+  </div>
+  <div class="site-content-body">
+    <% if user.id != current_user.id %>
+      <div class="boxed-group dangerzone">
+        <h3>Dangerzone</h3>
+
+        <div class="boxed-group-inner">
+          <h4>Impersonate <%= "@#{user.login}" %></h4>
+          <a data-remodal-target="impersonate-user" class="btn btn-danger boxed-action">Impersonate <%= "@#{user.login}" %></a>
+          <p>This will send you to <strong><%= user.login %></strong>'s Classroom dashboard as <strong><%= user.login %></strong>.</p>
+
+          <%= render partial: 'stafftools/users/impersonate_user_confirmation_modal', locals: { user: user } %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
