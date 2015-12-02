@@ -48,26 +48,26 @@ Rails.application.routes.draw do
     root to: 'resources#index'
     get '/resource_search', to: 'resources#search'
 
-    resources :users, except: [:index, :new, :create] do
+    resources :users, only: [:show] do
       member do
         post :impersonate
         delete :stop_impersonating
       end
     end
 
-    resources :organizations, except: [:index, :new, :create]
+    resources :organizations, only: [:show]
 
-    resources :repo_accesses, except: [:index, :new, :create]
+    resources :repo_accesses, only: [:show]
 
-    resources :assignment_invitations, except: [:index, :new, :create]
-    resources :assignment_repos,       except: [:index, :new, :create]
-    resources :assignments,            except: [:index, :new, :create]
+    resources :assignment_invitations, only: [:show]
+    resources :assignment_repos,       only: [:show]
+    resources :assignments,            only: [:show]
 
-    resources :group_assignment_invitations, path: 'group-assignment-invitations', except: [:index, :new, :create]
-    resources :group_assignment_repos,       path: 'group-assignment-repos',       except: [:index, :new, :create]
-    resources :group_assignments,            path: 'group-assignments',            except: [:index, :new, :create]
+    resources :group_assignment_invitations, path: 'group-assignment-invitations', only: [:show]
+    resources :group_assignment_repos,       path: 'group-assignment-repos',       only: [:show]
+    resources :group_assignments,            path: 'group-assignments',            only: [:show]
 
-    resources :groupings, except: [:index, :new, :create]
-    resources :groups,    except: [:index, :new, :create]
+    resources :groupings, only: [:show]
+    resources :groups,    only: [:show]
   end
 end
