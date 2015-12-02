@@ -16,25 +16,4 @@ RSpec.describe Stafftools::GroupAssignmentInvitationsController, type: :controll
     context 'as an authorized user' do
     end
   end
-
-  describe 'GET #edit', :vcr do
-    context 'as an unauthorized user' do
-      it 'returns a 404' do
-      end
-    end
-  end
-
-  describe 'PATCH #update', :vcr do
-    context 'as an unauthorized user' do
-      it 'returns a 404' do
-      end
-    end
-  end
-
-  describe 'DELETE #destroy', :vcr do
-    context 'as an unauthorized user' do
-      it 'returns a 404' do
-      end
-    end
-  end
 end

@@ -31,45 +31,6 @@ RSpec.describe Stafftools::UsersController, type: :controller do
     end
   end
 
-  describe 'GET #edit', :vcr do
-    context 'as an unauthorized user' do
-      it 'returns a 404' do
-      end
-    end
-
-    context 'as an authorized user' do
-      before do
-        user.update_attributes(site_admin: true)
-      end
-    end
-  end
-
-  describe 'PATCH #update', :vcr do
-    context 'as an unauthorized user' do
-      it 'returns a 404' do
-      end
-    end
-
-    context 'as an authorized user' do
-      before do
-        user.update_attributes(site_admin: true)
-      end
-    end
-  end
-
-  describe 'DELETE #destroy', :vcr do
-    context 'as an unauthorized user' do
-      it 'returns a 404' do
-      end
-    end
-
-    context 'as an authorized user' do
-      before do
-        user.update_attributes(site_admin: true)
-      end
-    end
-  end
-
   describe 'POST #impersonate', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
