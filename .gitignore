@@ -11,6 +11,7 @@
 /log/*
 !/log/.keep
 /tmp
+/coverage
 
 # Ignore local environment variables
 .env
