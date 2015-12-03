@@ -14,7 +14,32 @@
       </div>
     </div>
   </div>
+
   <div class="site-content-body">
+    <div class="boxed-group">
+      <h3>Info</h3>
+
+      <div class="boxed-group-inner">
+        <p>
+          <h4>GitHub: <%= link_to user.github_url %></h4>
+          <h4>Joined on: <span class="lead"><%= local_time(user.created_at) %></span></h4>
+          <h4>Access token: <span class='lead'><%= user.token %></span></h4>
+        </p>
+      </div>
+    </div>
+
+    <% if user.organizations.present? %>
+      <div class="boxed-group">
+        <h3>Classrooms</h3>
+
+        <div class="boxed-group-inner">
+          <ul class="boxed-group-list standalone">
+            <%= render partial: 'stafftools/users/organization', collection: user.organizations.decorate %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
+
     <% if user.id != current_user.id %>
       <div class="boxed-group dangerzone">
         <h3>Dangerzone</h3>

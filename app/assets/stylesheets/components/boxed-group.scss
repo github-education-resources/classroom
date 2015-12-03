@@ -2,6 +2,10 @@
   position: relative;
   border-radius: 3px;
 
+  &:not(:last-child) {
+    margin-bottom: 30px;
+  }
+
   h3 {
     background-color: #f5f5f5;
     margin: 0;
@@ -41,10 +45,55 @@
     margin: 15px 0 -5px;
     font-size: 14px;
     color: #000;
+
+    .lead {
+      font-size: inherit;
+    }
   }
 }
 
 .boxed-action {
   float: right;
   margin-left: 10px;
+}
+
+.boxed-group-list {
+  list-style: none;
+  margin: 0;
+
+  &.standalone {
+    margin-top: -1px;
+
+    > li:first-child {
+      border-top: 0
+    }
+  }
+
+  &:first-child > li:first-child {
+    border-top: 0;
+  }
+
+  > li {
+    display: block;
+    margin-left: -10px;
+    margin-right: -10px;
+    padding: 5px 10px;
+    line-height: 23px;
+    border-bottom: 1px solid #e5e5e5;
+
+    &:first-child {
+      border-top: 1px solid #ddd;
+    }
+
+    &:last-of-type {
+      border-bottom: 0;
+    }
+
+    img {
+      margin-top: -2px;
+      margin-right: 4px;
+      vertical-align: middle;
+      border-radius: 3px;
+    }
+  }
 }
