@@ -2,6 +2,8 @@ class GroupAssignment < ActiveRecord::Base
   include GitHubPlan
   include Sluggable
 
+  update_index('stafftools#group_assignment') { self }
+
   default_scope { where(deleted_at: nil) }
 
   has_one :group_assignment_invitation, dependent: :destroy, autosave: true

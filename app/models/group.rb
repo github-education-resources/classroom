@@ -1,6 +1,8 @@
 class Group < ActiveRecord::Base
   include GitHubTeamable
 
+  update_index('stafftools#group') { self }
+
   has_one :organization, -> { unscope(where: :deleted_at) }, through: :grouping
 
   belongs_to :grouping

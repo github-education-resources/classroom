@@ -1,4 +1,7 @@
 class Grouping < ActiveRecord::Base
+
+  update_index('stafftools#grouping') { self }
+
   has_many :groups, dependent: :destroy
   has_many :users, through: :groups, source: :repo_accesses
 
