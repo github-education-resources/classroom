@@ -55,7 +55,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :organizations, only: [:show]
+    resources :organizations, path: 'classrooms', only: [:show]
 
     resources :repo_accesses, only: [:show]
 
