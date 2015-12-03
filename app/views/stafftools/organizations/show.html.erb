@@ -38,17 +38,19 @@
       </div>
     </div>
 
-    <div class="boxed-group">
-      <h3>Assignments</h3>
+    <% if organization.all_assignments.present? %>
+      <div class="boxed-group">
+        <h3>Assignments</h3>
 
-      <div class="boxed-group-inner">
-        <ul class="boxed-group-list standalone">
-          <% organization.all_assignments.each do |assignment| %>
-            <% type = assignment.class.to_s.underscore %>
-            <%= render partial: "stafftools/organizations/#{type}", locals: { :"#{type}" => assignment } %>
-          <% end %>
-        </ul>
+        <div class="boxed-group-inner">
+          <ul class="boxed-group-list standalone">
+            <% organization.all_assignments.each do |assignment| %>
+              <% type = assignment.class.to_s.underscore %>
+              <%= render partial: "stafftools/organizations/#{type}", locals: { :"#{type}" => assignment } %>
+            <% end %>
+          </ul>
+        </div>
       </div>
-    </div>
+    <% end %>
   </div>
 </div>
