@@ -1,6 +1,54 @@
 <div class="site-content">
   <div class="site-content-cap">
+    <div class="flex-table">
+      <div class="flex-table-item">
+        <span class="assignment-icon assignment-icon-individual left">
+          <%= image_tag organization.avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{organization.login}" %>
+        </span>
+
+        <h2 class="site-content-heading">
+          <%= organization.title %>
+        </h2>
+
+        <p class="assignment-type text-muted">Classroom</p>
+      </div>
+    </div>
   </div>
+
   <div class="site-content-body">
+    <div class="boxed-group">
+      <h3>Info</h3>
+
+      <div class="boxed-group-inner">
+        <p>
+          <h4>GitHub: <%= link_to organization.github_url %></h4>
+          <h4>Joined on: <span class="lead"><%= local_time(organization.created_at) %></span></h4>
+          <h4>Last updated: <span class="lead"><%= local_time(organization.updated_at) %></span></h4>
+        </p>
+      </div>
+    </div>
+
+    <div class="boxed-group">
+      <h3>Owners</h3>
+
+      <div class="boxed-group-inner">
+        <ul class="boxed-group-list standalone">
+          <%= render partial: 'stafftools/organizations/user', collection: organization.users.decorate %>
+        </ul>
+      </div>
+    </div>
+
+    <div class="boxed-group">
+      <h3>Assignments</h3>
+
+      <div class="boxed-group-inner">
+        <ul class="boxed-group-list standalone">
+          <% organization.all_assignments.each do |assignment| %>
+            <% type = assignment.class.to_s.underscore %>
+            <%= render partial: "stafftools/organizations/#{type}", locals: { :"#{type}" => assignment } %>
+          <% end %>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
