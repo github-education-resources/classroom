@@ -1,6 +1,31 @@
 <div class="site-content">
   <div class="site-content-cap">
+    <div class="flex-table-item">
+      <span class="assignment-icon assignment-icon-individual left">
+        <%= octicon('link') %>
+      </span>
+
+      <h2 class="site-content-heading">
+        <%= @assignment_invitation.key %>
+      </h2>
+
+      <p class="assignment-type text-muted">Individual assigment invitation</p>
+    </div>
   </div>
+
   <div class="site-content-body">
+    <div class="boxed-group">
+      <h3>Info</h3>
+
+      <div class="boxed-group-inner">
+        <p>
+          <h4>ID: <span class="lead"><%= @assignment_invitation.id %></span></h4>
+          <h4>Assignment: <%= link_to @assignment_invitation.assignment.title, stafftools_assignment_path(@assignment_invitation.assignment.id) %></h4>
+          <h4>Owned by: <%= link_to @assignment_invitation.organization.title, stafftools_organization_path(@assignment_invitation.organization.id) %></h4>
+          <h4>Invitation URL: <%= link_to assignment_invitation_url(@assignment_invitation) %></h4>
+          <h4>Created on: <span class="lead"><%= local_time(@assignment_invitation.created_at) %></span></h4>
+        </p>
+      </div>
+    </div>
   </div>
 </div>
