@@ -99,12 +99,12 @@ GEM
       activemodel (>= 3.0)
       activesupport (>= 3.0)
       request_store (~> 1.0)
-    elasticsearch (1.0.14)
-      elasticsearch-api (= 1.0.14)
-      elasticsearch-transport (= 1.0.14)
-    elasticsearch-api (1.0.14)
+    elasticsearch (1.0.15)
+      elasticsearch-api (= 1.0.15)
+      elasticsearch-transport (= 1.0.15)
+    elasticsearch-api (1.0.15)
       multi_json
-    elasticsearch-transport (1.0.14)
+    elasticsearch-transport (1.0.15)
       faraday
       multi_json
     erubis (2.7.0)
