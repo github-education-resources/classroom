@@ -1,6 +1,52 @@
 <div class="site-content">
   <div class="site-content-cap">
+    <div class="flex-table">
+      <div class="flex-table-item">
+        <span class="assignment-icon assignment-icon-individual left">
+          <%= octicon('person') %>
+        </span>
+
+        <h2 class="site-content-heading">
+          <%= assignment.title %>
+        </h2>
+
+        <p class="assignment-type text-muted">Individual assigment</p>
+      </div>
+    </div>
   </div>
   <div class="site-content-body">
+    <div class="boxed-group">
+      <h3>Info</h3>
+
+      <div class="boxed-group-inner">
+        <p>
+          <% creator      = assignment.creator.decorate %>
+          <% organization = assignment.organization.decorate %>
+
+          <h4>Owned by: <%= link_to organization.title, stafftools_organization_path(assignment.creator) %>
+          <h4>Created by: <%= link_to creator.login, stafftools_user_path(assignment.creator) %>
+
+          <% if assignment.starter_code? %>
+            <h4>Starter code: <%= link_to assignment.starter_code_github_url %></h4>
+          <% end %>
+
+          <h4>Invitation: <%= link_to assignment.assignment_invitation.key, stafftools_assignment_invitation_path(assignment.assignment_invitation.id) %>
+          <h4>Created on: <span class="lead"><%= local_time(assignment.created_at) %></span></h4>
+          <h4>Last updated: <span class="lead"><%= local_time(assignment.created_at) %></span></h4>
+        </p>
+      </div>
+    </div>
+
+    <% if assignment.assignment_repos %>
+      <div class="boxed-group">
+        <h3>Assignment repos</h3>
+
+        <div class="boxed-group-inner">
+          <ul class="boxed-group-list standalone">
+            <%= render partial: 'stafftools/assignments/assignment_repo', collection: assignment.assignment_repos.decorate %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>
