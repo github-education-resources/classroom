@@ -37,7 +37,6 @@ RSpec.describe Assignment, type: :model do
     let(:organization_1) { create(:organization) }
     let(:organization_2) { create(:organization) }
 
-
     it 'allows two organizations to have the same Assignment title and slug' do
       assignment_1 = create(:assignment, organization: organization_1)
       assignment_2 = create(:assignment, organization: organization_2, title: assignment_1.title)
