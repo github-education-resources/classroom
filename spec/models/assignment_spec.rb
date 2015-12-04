@@ -33,6 +33,20 @@ RSpec.describe Assignment, type: :model do
     end
   end
 
+  describe 'uniqueness of title across application' do
+    let(:organization_1) { create(:organization) }
+    let(:organization_2) { create(:organization) }
+
+
+    it 'allows two organizations to have the same Assignment title and slug' do
+      assignment_1 = create(:assignment, organization: organization_1)
+      assignment_2 = create(:assignment, organization: organization_2, title: assignment_1.title)
+
+      expect(assignment_2.title).to eql(assignment_1.title)
+      expect(assignment_2.slug).to eql(assignment_1.slug)
+    end
+  end
+
   describe '#public?' do
     it 'returns true if Assignments public_repo column is true' do
       assignment = create(:assignment)

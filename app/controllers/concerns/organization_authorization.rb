@@ -22,6 +22,6 @@ module OrganizationAuthorization
   end
 
   def set_organization
-    @organization = Organization.friendly.find(params[:organization_id])
+    @organization = Organization.find_by!(slug: params[:organization_id])
   end
 end

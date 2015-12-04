@@ -1,8 +1,6 @@
 class GroupAssignment < ActiveRecord::Base
   include GitHubPlan
-
-  extend FriendlyId
-  friendly_id :slug_candidates, use: [:slugged, :finders]
+  include Sluggable
 
   default_scope { where(deleted_at: nil) }
 
@@ -21,8 +19,8 @@ class GroupAssignment < ActiveRecord::Base
   validates :organization, presence: true
 
   validates :title, presence: true
-  validates :title, uniqueness: { scope: :organization }
   validates :title, length: { maximum: 60 }
+  validates :title, uniqueness: { scope: :organization_id }
 
   validate :uniqueness_of_title_across_organization
 
@@ -42,23 +40,8 @@ class GroupAssignment < ActiveRecord::Base
 
   private
 
-  def organization_slug
-    organization.slug
-  end
-
-  def should_generate_new_friendly_id?
-    title_changed?
-  end
-
-  def slug_candidates
-    [
-      [:title],
-      [:title, :organization_slug]
-    ]
-  end
-
   def uniqueness_of_title_across_organization
-    return unless Assignment.where(slug: normalize_friendly_id(title), organization: organization).present?
+    return unless Assignment.where(slug: slug, organization: organization).present?
     errors.add(:title, 'title is already in use for your organization')
   end
 end

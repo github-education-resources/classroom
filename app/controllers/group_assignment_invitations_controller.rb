@@ -96,7 +96,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
 
   def invitation
-    @invitation ||= GroupAssignmentInvitation.find_by_key!(params[:id])
+    @invitation ||= GroupAssignmentInvitation.find_by!(key: params[:id])
   end
   helper_method :invitation
 

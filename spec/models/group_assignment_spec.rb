@@ -16,18 +16,27 @@ RSpec.describe GroupAssignment, type: :model do
 
     let(:grouping) { Grouping.create(title: 'Grouping', organization: organization) }
 
-    let(:assignment) { Assignment.create(creator: creator, title: 'Ruby Project', organization: organization) }
-
-    let(:group_assignment) do
-      GroupAssignment.new(creator: creator,
-                          title: assignment.title,
-                          organization: organization,
-                          grouping: grouping)
-    end
+    let(:assignment) { create(:assignment, organization: organization) }
+    let(:group_assignment) { create(:group_assignment, organization: organization) }
 
     it 'validates that an Assignment in the same organization does not have the same title' do
+      group_assignment.title = assignment.title
+
       validation_message = 'Validation failed: Your assignment title is already in use for your organization'
       expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, validation_message)
+    end
+  end
+
+  describe 'uniqueness of title across application' do
+    let(:organization_1) { create(:organization) }
+    let(:organization_2) { create(:organization) }
+
+    it 'allows two organizations to have the same GroupAssignment title and slug' do
+      group_assignment_1 = create(:assignment, organization: organization_1)
+      group_assignment_2 = create(:group_assignment, organization: organization_2, title: group_assignment_1.title)
+
+      expect(group_assignment_2.title).to eql(group_assignment_1.title)
+      expect(group_assignment_2.slug).to eql(group_assignment_1.slug)
     end
   end
 
