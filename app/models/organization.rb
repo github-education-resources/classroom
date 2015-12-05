@@ -13,8 +13,11 @@ class Organization < ActiveRecord::Base
   has_and_belongs_to_many :users
 
   validates :github_id, presence: true, uniqueness: true
-  validates :title,     presence: true
-  validates :title,     length: { maximum: 60 }
+
+  validates :title, presence: true
+  validates :title, length: { maximum: 60 }
+
+  validates :slug, uniqueness: true
 
   # Public
   #
