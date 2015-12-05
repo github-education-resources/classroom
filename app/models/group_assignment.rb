@@ -22,6 +22,8 @@ class GroupAssignment < ActiveRecord::Base
   validates :title, length: { maximum: 60 }
   validates :title, uniqueness: { scope: :organization_id }
 
+  validates :slug, uniqueness: { scope: :organization_id }
+
   validate :uniqueness_of_title_across_organization
 
   alias_attribute :invitation, :group_assignment_invitation
@@ -42,6 +44,6 @@ class GroupAssignment < ActiveRecord::Base
 
   def uniqueness_of_title_across_organization
     return unless Assignment.where(slug: slug, organization: organization).present?
-    errors.add(:title, 'title is already in use for your organization')
+    errors.add(:title, 'is already in use for your organization')
   end
 end

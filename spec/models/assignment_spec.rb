@@ -3,6 +3,17 @@ require 'rails_helper'
 RSpec.describe Assignment, type: :model do
   it_behaves_like 'a default scope where deleted_at is not present'
 
+  describe 'slug uniqueness' do
+    let(:organization) { create(:organization) }
+
+    it 'verifes that the slug is unique even if the titles are unique' do
+      create(:assignment, organization: organization, title: 'assignment-1')
+      new_assignment = build(:assignment, organization: organization, title: 'assignment 1')
+
+      expect { new_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+  end
+
   describe 'when the title is updated' do
     subject { create(:assignment) }
 
