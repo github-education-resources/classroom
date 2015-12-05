@@ -35,7 +35,7 @@ RSpec.describe GroupAssignment, type: :model do
     it 'validates that an Assignment in the same organization does not have the same title' do
       group_assignment.title = assignment.title
 
-      validation_message = 'Validation failed: Your assignment title is already in use for your organization'
+      validation_message = 'Validation failed: Your assignment title must be unique'
       expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, validation_message)
     end
   end

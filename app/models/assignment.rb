@@ -19,10 +19,8 @@ class Assignment < ActiveRecord::Base
 
   validates :title, presence: true
   validates :title, length: { maximum: 60 }
-  validates :title, uniqueness: { scope: :organization_id }
 
-  validates :slug, uniqueness: { scope: :organization_id }
-
+  validate :uniqueness_of_title_and_slug
   validate :uniqueness_of_title_across_organization
 
   alias_attribute :invitation, :assignment_invitation
@@ -41,8 +39,18 @@ class Assignment < ActiveRecord::Base
 
   private
 
+  def uniqueness_of_title_and_slug
+    if new_record?
+      return unless Assignment.where(slug: slug, organization: organization).present?
+    else
+      return unless Assignment.where('slug=? AND organization_id=? AND id!=?', slug, organization_id, id).present?
+    end
+
+    errors.add(:title, :taken)
+  end
+
   def uniqueness_of_title_across_organization
     return unless GroupAssignment.where(slug: slug, organization: organization).present?
-    errors.add(:title, 'is already in use for your organization')
+    errors.add(:title, :taken)
   end
 end

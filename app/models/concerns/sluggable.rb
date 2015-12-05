@@ -5,8 +5,6 @@ module Sluggable
     before_validation do
       slugify
     end
-
-    validates :slug, presence: true
   end
 
   def slugify
