@@ -22,6 +22,11 @@
   <dd><input class="textfield" type="text" name="repo_name" value="<%= group_assignment.full_name %>" placeholder="<%= group_assignment.full_name || 'e.g. education/classroom'%>"</dd>
 </dl>
 
+<dl class="form">
+  <dt><%= f.label "Maximum number of members per team (optional)" %></dt>
+  <dd><%= f.text_field :max_members, class: 'textfield' %></dd>
+</dl>
+
 <% if @group_assignment.new_record? %>
   <% groupings_present = @organization.groupings.present? %>
 
