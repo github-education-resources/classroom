@@ -27,4 +27,3 @@ RSpec.describe NullGitHubTeam do
     end
   end
 end
-

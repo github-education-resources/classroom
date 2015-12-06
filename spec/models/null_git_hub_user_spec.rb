@@ -27,4 +27,3 @@ RSpec.describe NullGitHubUser do
     end
   end
 end
-

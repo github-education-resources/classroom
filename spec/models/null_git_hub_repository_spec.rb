@@ -21,4 +21,3 @@ RSpec.describe NullGitHubRepository do
     end
   end
 end
-

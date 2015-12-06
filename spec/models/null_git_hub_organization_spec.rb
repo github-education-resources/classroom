@@ -27,4 +27,3 @@ RSpec.describe NullGitHubOrganization do
     end
   end
 end
-
