@@ -24,3 +24,6 @@ erd.pdf
 
 # Redis dump
 dump.rdb
+
+# RubyMine
+/.idea
