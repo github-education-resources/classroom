@@ -1,4 +1,3 @@
-# rubocop:disable Metrics/ClassLength
 class StafftoolsIndex < Chewy::Index
   define_type Assignment do
     field :id
@@ -71,34 +70,26 @@ class StafftoolsIndex < Chewy::Index
     field :created_at
     field :updated_at
 
-    field :avatar_url, value: (lambda do |org|
-      begin
-        GitHubOrganization.new(org.github_client, org.github_id).organization.avatar_url
-      rescue GitHub::Forbidden, GitHub::NotFound
-        "https://avatars.githubusercontent.com/u/#{org.github_id}?v=3"
-      end
-    end)
-
-    field :html_url, value: (lambda do |org|
-      begin
-        GitHubOrganization.new(org.github_client, org.github_id).organization.html_url
-      rescue GitHub::Forbidden, GitHub::NotFound
-        NullGitHubOrganization.new.html_url
-      end
-    end)
-
     field :login, value: (lambda do |org|
       begin
-        GitHubOrganization.new(org.github_client, org.github_id).organization.login
-      rescue GitHub::Forbidden, GitHub::NotFound
+        begin
+          GitHubOrganization.new(org.github_client, org.github_id).organization.login
+        rescue GitHub::Forbidden
+          GitHubOrganization.new(application_github_client, org.github_id).organization.login
+        end
+      rescue GitHub::NotFound
         NullGitHubOrganization.new.login
       end
     end)
 
     field :name, value: (lambda do |org|
       begin
-        GitHubOrganization.new(org.github_client, org.github_id).organization.name
-      rescue GitHub::Forbidden, GitHub::NotFound
+        begin
+          GitHubOrganization.new(org.github_client, org.github_id).organization.name
+        rescue GitHub::Forbidden
+          GitHubOrganization.new(application_github_client, org.github_id).organization.name
+        end
+      rescue GitHub::NotFound
         NullGitHubOrganization.new.name
       end
     end)
@@ -110,37 +101,33 @@ class StafftoolsIndex < Chewy::Index
     field :created_at
     field :updated_at
 
-    field :avatar_url, value: (lambda do |user|
-      begin
-        GitHubUser.new(user.github_client, user.uid).user.avatar_url
-      rescue GitHub::Forbidden, GitHub::NotFound
-        "https://avatars.githubusercontent.com/u/#{user.uid}?v=3"
-      end
-    end)
-
-    field :html_url, value: (lambda do |user|
-      begin
-        GitHubUser.new(user.github_client, user.uid).user.html_url
-      rescue GitHub::Forbidden, GitHub::NotFound
-        NullGitHubUser.new.html_url
-      end
-    end)
-
     field :login, value: (lambda do |user|
       begin
-        GitHubUser.new(user.github_client, user.uid).login
-      rescue GitHub::Forbidden, GitHub::NotFound
+        begin
+          GitHubUser.new(user.github_client, user.uid).user.login
+        rescue GitHub::Forbidden
+          GitHubUser.new(application_github_client, user.uid).user.login
+        end
+      rescue GitHub::NotFound
         NullGitHubUser.new.login
       end
     end)
 
     field :name, value: (lambda do |user|
       begin
-        GitHubUser.new(user.github_client, user.uid).user.name
-      rescue GitHub::Forbidden, GitHub::NotFound
+        begin
+          GitHubUser.new(user.github_client, user.uid).user.name
+        rescue GitHub::Forbidden
+          GitHubUser.new(application_github_client, user.uid).user.name
+        end
+      rescue GitHub::NotFound
         NullGitHubUser.new.name
       end
     end)
   end
+
+  def self.application_github_client
+    Octokit::Client.new(client_id: Rails.application.secrets.github_client_id,
+                        client_secret: Rails.application.secrets.github_client_secret)
+  end
 end
-# rubocop:enable Metrics/ClassLength

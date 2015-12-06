@@ -1,6 +1,6 @@
 <div class="flex-table classroom-resource">
   <div class="flex-table-item">
-    <%= image_tag "#{user.avatar_url}&size=96", height: 48, width: 48, class: 'avatar left', alt: "@#{user.login}" %>
+    <%= image_tag github_avatar_url(user.uid, 96), height: 48, width: 48, class: 'avatar left', alt: "@#{user.login}" %>
 
     <div class="student-information">
       <%= link_to stafftools_user_path(user.id) do %>

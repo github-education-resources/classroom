@@ -10,7 +10,7 @@
           <%= user.login %>
         </h2>
 
-        <p class="assignment-type text-muted">User</p>
+        <p class="assignment-type text-muted"><%= user.staff? ? 'Staff ' : '' %> User</p>
       </div>
     </div>
   </div>
@@ -21,9 +21,12 @@
 
       <div class="boxed-group-inner">
         <p>
-          <h4>GitHub: <%= link_to user.github_url %></h4>
-          <h4>Joined on: <span class="lead"><%= local_time(user.created_at) %></span></h4>
-          <h4>Access token: <span class='lead'><%= user.token %></span></h4>
+          <h4>ID <span class="lead"><%= user.id %></span></h4>
+          <h4>GitHub ID <span class="lead"><%= user.uid %></span></h4>
+          <h4>GitHub Profile <%= link_to user.github_url, user.github_url %></h4>
+          <h4>Joined on <span class="lead"><%= local_time(user.created_at) %></span></h4>
+          <h4>Access token <span class='lead'><%= user.authorized_access_token? ? 'Authorized' : 'Rejected' %></span></h4>
+          <h4>Scopes <span class='lead'> <%= user.github_client_scopes.join(', ') %></span>
         </p>
       </div>
     </div>

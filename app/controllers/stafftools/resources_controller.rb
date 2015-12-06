@@ -14,7 +14,7 @@ module Stafftools
     private
 
     def set_resources
-      resource_query = match_phrase_prefix(params[:query].to_s)
+      resource_query = params[:query].present? ? match_phrase_prefix(params[:query]) : {}
       @resources     = StafftoolsIndex.query(resource_query).order(updated_at: :desc).page(params[:page]).per(20)
     end
 
