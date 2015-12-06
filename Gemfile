@@ -35,6 +35,7 @@ gem 'peek-sidekiq', github: 'Soliah/peek-sidekiq', ref: '261c857578ae6dc189506a3
 
 gem 'pg'
 gem 'puma'
+gem 'puma_worker_killer'
 
 gem 'rack-canonical-host'
 
