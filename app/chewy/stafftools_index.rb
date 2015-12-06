@@ -64,8 +64,6 @@ class StafftoolsIndex < Chewy::Index
   end
 
   define_type Organization do
-    include GitHub
-
     field :id
     field :slug
     field :github_id
@@ -98,8 +96,6 @@ class StafftoolsIndex < Chewy::Index
   end
 
   define_type User do
-    include GitHub
-
     field :id
     field :uid
     field :created_at
@@ -128,5 +124,10 @@ class StafftoolsIndex < Chewy::Index
         NullGitHubUser.new.name
       end
     end)
+  end
+
+  def self.application_github_client
+    Octokit::Client.new(client_id: Rails.application.secrets.github_client_id,
+                        client_secret: Rails.application.secrets.github_client_secret)
   end
 end
