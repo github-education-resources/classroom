@@ -1,14 +1,8 @@
 class Assignment < ActiveRecord::Base
   include GitHubPlan
-<<<<<<< 1f33d1c169ab0aa2661263c2fbbf073f9adce906
   include Sluggable
-=======
 
   update_index('stafftools#assignment') { self }
-
-  extend FriendlyId
-  friendly_id :title, use: [:slugged, :finders]
->>>>>>> add index updating to the rest of the resources
 
   default_scope { where(deleted_at: nil) }
 
