@@ -61,7 +61,7 @@ class AssignmentsController < ApplicationController
   end
 
   def set_assignment
-    @assignment = Assignment.find(params[:id])
+    @assignment = Assignment.find_by!(slug: params[:id])
   end
 
   def update_assignment_params

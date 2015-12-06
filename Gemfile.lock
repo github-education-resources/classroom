@@ -164,8 +164,6 @@ GEM
       faraday (~> 0.8)
     foreman (0.78.0)
       thor (~> 0.19.1)
-    friendly_id (5.1.0)
-      activerecord (>= 4.0.0)
     geo_pattern (1.4.0)
       color (~> 1.5)
     get_process_mem (0.2.0)
@@ -402,7 +400,6 @@ DEPENDENCIES
   faker
   faraday-http-cache
   foreman
-  friendly_id
   geo_pattern
   jbuilder
   jquery-turbolinks

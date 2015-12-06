@@ -12,7 +12,6 @@ gem 'coffee-rails', '~> 4.1.0'
 gem 'draper'
 
 gem 'faraday-http-cache'
-gem 'friendly_id'
 
 gem 'geo_pattern'
 

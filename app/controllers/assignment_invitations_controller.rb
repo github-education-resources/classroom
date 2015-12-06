@@ -52,7 +52,7 @@ class AssignmentInvitationsController < ApplicationController
   helper_method :decorated_organization
 
   def invitation
-    @invitation ||= AssignmentInvitation.find_by_key!(params[:id])
+    @invitation ||= AssignmentInvitation.find_by!(key: params[:id])
   end
   helper_method :invitation
 

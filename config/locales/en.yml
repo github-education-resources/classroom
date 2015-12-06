@@ -25,23 +25,30 @@ en:
       grouping:
         title: 'Your set of teams'
       group_assignment:
-        title: 'Your assignment'
+        title: 'Your assignment title'
+        slug:  'Your assignment title'
       assignment:
-        title: 'Your assignment'
+        title: 'Your assignment title'
+        slug:  'Your assignment title'
     errors:
       models:
         grouping:
           attributes:
             title:
-              blank: 'must have a name'
+              blank: 'must be present'
+              taken: 'is already in use for your organization'
         group_assignment:
           attributes:
             title:
-              blank: 'must have a title'
+              blank: 'must be present'
+            slug:
+              taken: 'must be unique'
         assignment:
           attributes:
             title:
-              blank: 'must have a title'
+              blank: 'must be present'
+            slug:
+              taken: 'must be unique'
   views:
     pagination:
       previous: 'Previous'

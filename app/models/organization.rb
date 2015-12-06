@@ -1,6 +1,5 @@
 class Organization < ActiveRecord::Base
-  extend FriendlyId
-  friendly_id :slug_candidate, use: [:slugged, :finders]
+  include Sluggable
 
   update_index('stafftools#organization') { self }
 
@@ -14,8 +13,11 @@ class Organization < ActiveRecord::Base
   has_and_belongs_to_many :users
 
   validates :github_id, presence: true, uniqueness: true
-  validates :title,     presence: true
-  validates :title,     length: { maximum: 60 }
+
+  validates :title, presence: true
+  validates :title, length: { maximum: 60 }
+
+  validates :slug, uniqueness: true
 
   # Public
   #
@@ -29,13 +31,7 @@ class Organization < ActiveRecord::Base
     users.sample.github_client
   end
 
-  private
-
-  def should_generate_new_friendly_id?
-    title_changed?
-  end
-
-  def slug_candidate
-    "#{github_id}-#{title}"
+  def slugify
+    self.slug = "#{github_id} #{title}".parameterize
   end
 end

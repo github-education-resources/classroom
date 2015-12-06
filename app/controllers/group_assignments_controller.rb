@@ -88,7 +88,7 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def set_group_assignment
-    @group_assignment = GroupAssignment.find(params[:id])
+    @group_assignment = GroupAssignment.find_by!(slug: params[:id])
   end
 
   def update_group_assignment_params
