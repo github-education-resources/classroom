@@ -68,9 +68,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
         expect_any_instance_of(ApplicationController).to receive(:flash_and_redirect_back_with_message)
         patch :accept_invitation, id: invitation.key, group: { id: group.id }
-
       end
-
     end
   end
 end
