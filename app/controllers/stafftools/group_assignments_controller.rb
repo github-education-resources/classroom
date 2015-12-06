@@ -2,6 +2,8 @@ module Stafftools
   class GroupAssignmentsController < StafftoolsController
     before_action :set_group_assignment
 
+    decorates_assigned :group_assignment
+
     def show
     end
 

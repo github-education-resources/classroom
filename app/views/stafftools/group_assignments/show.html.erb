@@ -1,6 +1,50 @@
 <div class="site-content">
   <div class="site-content-cap">
+    <span class="assignment-icon assignment-icon-group left">
+      <%= octicon('organization') %>
+    </span>
+
+    <h2 class="site-content-heading">
+      <%= group_assignment.title %>
+    </h2>
+
+    <p class="assignment-type text-muted">Group assigment</p>
   </div>
+
   <div class="site-content-body">
+    <div class="boxed-group">
+      <h3>Info</h3>
+
+      <div class="boxed-group-inner">
+        <p>
+          <% creator      = group_assignment.creator.decorate %>
+          <% organization = group_assignment.organization.decorate %>
+
+          <h4>Owned by: <%= link_to organization.title, stafftools_organization_path(organization) %>
+          <h4>Created by: <%= link_to creator.login, stafftools_user_path(creator) %>
+
+          <% if group_assignment.starter_code? %>
+            <h4>Starter code: <%= link_to group_assignment.starter_code_github_url, group_assignment.starter_code_github_url %></h4>
+          <% end %>
+
+          <h4>Grouping: <%= link_to group_assignment.grouping.title, stafftools_grouping_path(group_assignment.grouping) %></h4>
+          <h4>Invitation: <%= link_to group_assignment.group_assignment_invitation.key, stafftools_group_assignment_invitation_path(group_assignment.group_assignment_invitation.id) %>
+          <h4>Created on: <span class="lead"><%= local_time(group_assignment.created_at) %></span></h4>
+          <h4>Last updated: <span class="lead"><%= local_time(group_assignment.created_at) %></span></h4>
+        </p>
+      </div>
+    </div>
+
+    <% if group_assignment.group_assignment_repos.present? %>
+      <div class="boxed-group">
+        <h3>GroupAssignment repos</h3>
+
+        <div class="boxed-group-inner">
+          <ul class="boxed-group-list standalone">
+            <%= render partial: 'stafftools/group_assignments/group_assignment_repo', collection: group_assignment.group_assignment_repos.decorate %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>
