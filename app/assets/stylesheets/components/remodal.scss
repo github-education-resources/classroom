@@ -52,7 +52,7 @@
 }
 
 .remodal,
-.remodal-wrapper:after {
+.remodal-wrapper::after {
   vertical-align: middle;
 }
 
@@ -103,7 +103,7 @@
   opacity: 1;
 }
 
-.remodal-close:before {
+.remodal-close::before {
   font-size: 25px;
   line-height: 35px;
 

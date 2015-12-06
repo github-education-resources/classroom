@@ -24,3 +24,6 @@ erd.pdf
 
 # Redis dump
 dump.rdb
+
+# Added this file to not force others to use it.
+.overcommit.yml

@@ -21,3 +21,5 @@ notifications:
 
 env:
   - GITHUB_CLIENT_ID=client_id
+
+cache: bundler
