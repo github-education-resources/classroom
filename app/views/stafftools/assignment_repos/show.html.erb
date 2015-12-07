@@ -1,6 +1,33 @@
 <div class="site-content">
   <div class="site-content-cap">
+    <span class="assignment-icon assignment-icon-individual left">
+      <%= octicon('repo') %>
+    </span>
+
+    <h2 class="site-content-heading">
+      Assignment Repo <%= assignment_repo.id %>
+    </h2>
+
+    <p class="assignment-type text-muted">Assigment repo</p>
   </div>
+
   <div class="site-content-body">
+    <div class="boxed-group">
+      <h3>Info</h3>
+
+      <div class="boxed-group-inner">
+        <p>
+          <% creator      = assignment_repo.creator.decorate %>
+          <% organization = assignment_repo.organization.decorate %>
+
+          <h4>ID <%= assignment_repo.id %></h4>
+          <h4>Owned by <%= link_to organization.title, stafftools_organization_path(organization) %>
+          <h4>Created by <%= link_to creator.login, stafftools_user_path(creator) %>
+          <h4>Assignment <%= link_to assignment_repo.assignment.title, stafftools_assignment_path(assignment_repo.assignment.id) %>
+          <h4>User <%= link_to assignment_repo.user.decorate.login, stafftools_user_path(assignment_repo.user) %>
+          <h4>Created on <span class="lead"><%= local_time(assignment_repo.created_at) %></span></h4>
+        </p>
+      </div>
+    </div>
   </div>
 </div>
