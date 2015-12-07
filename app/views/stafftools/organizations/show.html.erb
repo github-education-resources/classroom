@@ -21,9 +21,9 @@
 
       <div class="boxed-group-inner">
         <p>
-          <h4>GitHub: <%= link_to organization.github_url %></h4>
-          <h4>Joined on: <span class="lead"><%= local_time(organization.created_at) %></span></h4>
-          <h4>Last updated: <span class="lead"><%= local_time(organization.updated_at) %></span></h4>
+          <h4>GitHub <%= link_to organization.github_url %></h4>
+          <h4>Joined on <span class="lead"><%= local_time(organization.created_at) %></span></h4>
+          <h4>Last updated <span class="lead"><%= local_time(organization.updated_at) %></span></h4>
         </p>
       </div>
     </div>

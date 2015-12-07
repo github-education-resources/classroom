@@ -19,11 +19,11 @@
 
       <div class="boxed-group-inner">
         <p>
-          <h4>ID: <span class="lead"><%= @assignment_invitation.id %></span></h4>
-          <h4>Assignment: <%= link_to @assignment_invitation.assignment.title, stafftools_assignment_path(@assignment_invitation.assignment.id) %></h4>
-          <h4>Owned by: <%= link_to @assignment_invitation.organization.title, stafftools_organization_path(@assignment_invitation.organization.id) %></h4>
-          <h4>Invitation URL: <%= link_to assignment_invitation_url(@assignment_invitation) %></h4>
-          <h4>Created on: <span class="lead"><%= local_time(@assignment_invitation.created_at) %></span></h4>
+          <h4>ID <span class="lead"><%= @assignment_invitation.id %></span></h4>
+          <h4>Assignment <%= link_to @assignment_invitation.assignment.title, stafftools_assignment_path(@assignment_invitation.assignment.id) %></h4>
+          <h4>Owned by <%= link_to @assignment_invitation.organization.title, stafftools_organization_path(@assignment_invitation.organization.id) %></h4>
+          <h4>Invitation URL <%= link_to assignment_invitation_url(@assignment_invitation), assignment_invitation_url(@assignment_invitation) %></h4>
+          <h4>Created on <span class="lead"><%= local_time(@assignment_invitation.created_at) %></span></h4>
         </p>
       </div>
     </div>

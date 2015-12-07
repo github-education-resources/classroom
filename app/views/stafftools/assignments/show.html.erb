@@ -23,16 +23,16 @@
           <% creator      = assignment.creator.decorate %>
           <% organization = assignment.organization.decorate %>
 
-          <h4>Owned by: <%= link_to organization.title, stafftools_organization_path(organization) %>
-          <h4>Created by: <%= link_to creator.login, stafftools_user_path(creator) %>
+          <h4>Owned by <%= link_to organization.title, stafftools_organization_path(organization) %>
+          <h4>Created by <%= link_to creator.login, stafftools_user_path(creator) %>
 
           <% if assignment.starter_code? %>
-            <h4>Starter code: <%= link_to assignment.starter_code_github_url, assignment.starter_code_github_url %></h4>
+            <h4>Starter code <%= link_to assignment.starter_code_github_url, assignment.starter_code_github_url %></h4>
           <% end %>
 
-          <h4>Invitation: <%= link_to assignment.assignment_invitation.key, stafftools_assignment_invitation_path(assignment.assignment_invitation.id) %>
-          <h4>Created on: <span class="lead"><%= local_time(assignment.created_at) %></span></h4>
-          <h4>Last updated: <span class="lead"><%= local_time(assignment.created_at) %></span></h4>
+          <h4>Invitation <%= link_to assignment.assignment_invitation.key, stafftools_assignment_invitation_path(assignment.assignment_invitation.id) %>
+          <h4>Created on <span class="lead"><%= local_time(assignment.created_at) %></span></h4>
+          <h4>Last updated <span class="lead"><%= local_time(assignment.created_at) %></span></h4>
         </p>
       </div>
     </div>

@@ -18,11 +18,11 @@
 
       <div class="boxed-group-inner">
         <p>
-          <h4>ID: <span class="lead"><%= @group_assignment_invitation.id %></span></h4>
-          <h4>Assignment: <%= link_to @group_assignment_invitation.group_assignment.title, stafftools_group_assignment_path(@group_assignment_invitation.group_assignment.id) %></h4>
-          <h4>Owned by: <%= link_to @group_assignment_invitation.organization.title, stafftools_organization_path(@group_assignment_invitation.organization.id) %></h4>
-          <h4>Invitation URL: <%= link_to group_assignment_invitation_url(@group_assignment_invitation) %></h4>
-          <h4>Created on: <span class="lead"><%= local_time(@group_assignment_invitation.created_at) %></span></h4>
+          <h4>ID <span class="lead"><%= @group_assignment_invitation.id %></span></h4>
+          <h4>Assignment <%= link_to @group_assignment_invitation.group_assignment.title, stafftools_group_assignment_path(@group_assignment_invitation.group_assignment.id) %></h4>
+          <h4>Owned by <%= link_to @group_assignment_invitation.organization.title, stafftools_organization_path(@group_assignment_invitation.organization.id) %></h4>
+          <h4>Invitation URL <%= link_to group_assignment_invitation_url(@group_assignment_invitation), group_assignment_invitation_url(@group_assignment_invitation) %></h4>
+          <h4>Created on <span class="lead"><%= local_time(@group_assignment_invitation.created_at) %></span></h4>
         </p>
       </div>
     </div>
