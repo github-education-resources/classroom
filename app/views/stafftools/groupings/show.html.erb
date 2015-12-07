@@ -1,6 +1,40 @@
 <div class="site-content">
   <div class="site-content-cap">
+    <span class="assignment-icon assignment-icon-group left">
+      <%= octicon('organization') %>
+    </span>
+
+    <h2 class="site-content-heading">
+      <%= @grouping.title %>
+    </h2>
+
+    <p class="assignment-type text-muted">Grouping</p>
   </div>
+
   <div class="site-content-body">
+    <div class="boxed-group">
+      <h3>Info</h3>
+
+      <div class="boxed-group-inner">
+        <% organization = @grouping.organization.decorate %>
+
+        <p>
+          <h4>Owned by <%= link_to organization.title, stafftools_organization_path(organization.id) %></h4>
+          <h4>Created on <span class="lead"><%= local_time(organization.created_at) %></span></h4>
+        </p>
+      </div>
+    </div>
+
+    <% if @grouping.groups.present? %>
+      <div class="boxed-group">
+        <h3>Groups</h3>
+
+        <div class="boxed-group-inner">
+          <ul class="boxed-group-list standalone">
+            <%= render partial: 'stafftools/groupings/group', collection: @grouping.groups %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>

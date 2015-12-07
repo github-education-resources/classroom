@@ -21,7 +21,7 @@
 
       <div class="boxed-group-inner">
         <p>
-          <h4>GitHub <%= link_to organization.github_url %></h4>
+          <h4>GitHub <%= link_to organization.github_url, organization.github_url %></h4>
           <h4>Joined on <span class="lead"><%= local_time(organization.created_at) %></span></h4>
           <h4>Last updated <span class="lead"><%= local_time(organization.updated_at) %></span></h4>
         </p>
@@ -48,6 +48,18 @@
               <% type = assignment.class.to_s.underscore %>
               <%= render partial: "stafftools/organizations/#{type}", locals: { :"#{type}" => assignment } %>
             <% end %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
+
+    <% if organization.groupings.present? %>
+      <div class="boxed-group">
+        <h3>Groupings</h3>
+
+        <div class="boxed-group-inner">
+          <ul class="boxed-group-list standalone">
+            <%= render partial: "stafftools/organizations/grouping", collection: organization.groupings %>
           </ul>
         </div>
       </div>
