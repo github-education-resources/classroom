@@ -20,7 +20,7 @@
 
         <p>
           <h4>Owned by <%= link_to organization.title, stafftools_organization_path(organization.id) %></h4>
-          <h4>Created on <span class="lead"><%= local_time(organization.created_at) %></span></h4>
+          <h4>Created on <span class="lead"><%= local_time(@grouping.created_at) %></span></h4>
         </p>
       </div>
     </div>
