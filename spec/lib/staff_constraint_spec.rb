@@ -7,7 +7,9 @@ describe StaffConstraint do
     context 'when without user session' do
       let(:request) { double('request', session: {}) }
 
-      it { expect(subject.matches?(request)).to be_falsey }
+      it 'returns false' do
+        expect(subject.matches?(request)).to be_falsey
+      end
     end
 
     context 'when with user session' do
@@ -20,13 +22,17 @@ describe StaffConstraint do
       context 'and user is a staff member' do
         let(:user) { double('user', staff?: true) }
 
-        it { expect(subject.matches?(request)).to be_truthy }
+        it 'returns true' do
+          expect(subject.matches?(request)).to be_truthy
+        end
       end
 
       context 'and user is not a staff member' do
         let(:user) { double('user', staff?: false) }
 
-        it { expect(subject.matches?(request)).to be_falsey }
+        it 'returns false' do
+          expect(subject.matches?(request)).to be_falsey
+        end
       end
     end
   end
