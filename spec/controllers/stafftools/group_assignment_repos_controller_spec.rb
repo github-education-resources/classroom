@@ -4,11 +4,11 @@ RSpec.describe Stafftools::GroupAssignmentReposController, type: :controller do
   let(:user)         { GitHubFactory.create_owner_classroom_org.users.first }
   let(:organization) { user.organizations.first                             }
 
-  let(:student)      { GitHubFactory.create_classroom_student               }
+  let(:student)      { GitHubFactory.create_classroom_student                       }
   let(:repo_access)  { RepoAccess.create(user: student, organization: organization) }
 
   let(:grouping) { Grouping.create(organization: organization, title: 'Grouping 1') }
-  let(:group)    { Group.create(title: Time.zone.now, grouping: grouping)               }
+  let(:group)    { Group.create(title: Time.zone.now, grouping: grouping)           }
 
   let(:group_assignment) do
     GroupAssignment.create(creator: user,
