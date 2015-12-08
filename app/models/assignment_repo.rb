@@ -47,7 +47,7 @@ class AssignmentRepo < ActiveRecord::Base
   #
   def repo_name
     github_user = GitHubUser.new(user.github_client)
-    "#{assignment.slug}-#{github_user.login}"
+    "#{assignment.slug}-#{github_user.login(headers: no_cache_headers)}"
   end
 
   # Public
