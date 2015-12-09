@@ -12,13 +12,13 @@
 
   @media (max-width: 43em) {
     .one-half:not(:last-child) {
-      margin-bottom: $grid-gutter * 2;
       padding-bottom: $grid-gutter * 2;
+      margin-bottom: $grid-gutter * 2;
     }
 
     .one-third:not(:last-child) {
-      margin-bottom: $grid-gutter;
       padding-bottom: $grid-gutter;
+      margin-bottom: $grid-gutter;
     }
   }
 }

@@ -41,11 +41,11 @@ main {
   margin-top: 0.3rem;
 
   @media (max-width: 34em) {
-    margin-bottom: 1rem;
     display: block;
     float: none;
-    margin-left: auto;
     margin-right: auto;
+    margin-bottom: 1rem;
+    margin-left: auto;
   }
 }
 
@@ -56,12 +56,12 @@ main {
   font-size: 0.9rem;
 
   ul {
-    list-style-type: none;
     display: inline-block;
+    list-style-type: none;
 
     li {
-      float: left;
       display: block;
+      float: left;
       margin-left: 2rem;
 
       @media (max-width: 34em) {
@@ -82,8 +82,8 @@ main {
     color: rgba(255, 255, 255, 0.5);
 
     @media (max-width: 34em) {
-      margin-left: 1rem;
       margin-right: 1rem;
+      margin-left: 1rem;
     }
   }
 
@@ -92,11 +92,11 @@ main {
   }
 
   @media (max-width: 34em) {
+    width: 100%;
     padding-top: 1rem;
     margin-bottom: 0.8rem;
-    border-top: 0.075rem solid rgba(255, 255, 255, 0.25);
     text-align: center;
-    width: 100%;
+    border-top: 0.075rem solid rgba(255, 255, 255, 0.25);
   }
 }
 
@@ -112,8 +112,8 @@ main {
   }
 
   @media (max-width: 34em) {
-    padding-left: 1rem;
     padding-right: 1rem;
+    padding-left: 1rem;
 
     .btn {
       display: none;
@@ -125,6 +125,7 @@ main {
   margin-bottom: 0;
   font-size: 2.2rem;
   font-weight: normal;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
 
   a {
     color: inherit;
@@ -138,6 +139,7 @@ main {
 .organization-login {
   margin-top: 0.2rem;
   font-size: 1rem;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
   opacity: 0.8;
 
   a {
@@ -180,12 +182,12 @@ main {
 }
 
 .site-content-heading {
+  padding-top: 0.3rem;
   margin-top: 0;
   margin-bottom: 0;
   font-size: 20px;
   font-weight: normal;
   color: #5d666f;
-  padding-top: 0.3rem;
 }
 
 .assignment-option-name {
@@ -205,9 +207,9 @@ main {
   display: inline-block;
   width: 45px;
   height: 45px;
+  margin-right: 0.7rem;
   text-align: center;
   border-radius: 50%;
-  margin-right: 0.7rem;
 
   .octicon {
     font-size: 22px;
@@ -227,13 +229,13 @@ main {
 
 .assignment-list-items {
   .assignment-list-item:not(:first-child) {
-    border-top: 1px solid #e3e3e3;
-    margin-top: 1rem;
     padding-top: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid #e3e3e3;
 
     @media (max-width: 34em) {
-      margin-top: 0.5rem;
       padding-top: 1rem;
+      margin-top: 0.5rem;
     }
   }
 
@@ -282,15 +284,15 @@ hr {
 }
 
 .dangerzone-container {
+  padding-bottom: 13px;
   border: 1px solid #e3e3e3;
   border-radius: 3px;
-  padding-bottom: 13px;
 }
 
 .invitation-content {
-  border-bottom: 1px solid #e3e3e3;
   padding-bottom: 2rem;
   margin-bottom: 2rem;
+  border-bottom: 1px solid #e3e3e3;
 
   @media (max-width: 34em) {
     padding-bottom: 1rem;
@@ -300,9 +302,9 @@ hr {
 
 .assignment-repo-list {
   .assignment-repo-list-item:not(:first-child) {
-    border-top: 1px solid #e3e3e3;
-    margin-top: 1rem;
     padding-top: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid #e3e3e3;
 
     @media (max-width: 34em) {
       margin-bottom: 0;
@@ -336,9 +338,9 @@ hr {
   }
 
   .student-login {
-    color: $brand-gray-dark;
     display: block;
     padding-top: 4px;
+    color: $brand-gray-dark;
 
     &:hover {
       color: $brand-blue;
@@ -348,9 +350,9 @@ hr {
 
 .group-assignment-repo-list {
   .group-assignment-repo-list-item:not(:first-child) {
-    border-top: 1px solid #e3e3e3;
-    margin-top: 1rem;
     padding-top: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid #e3e3e3;
   }
 }
 
@@ -376,8 +378,8 @@ hr {
   }
 
   .team-name {
-    color: $brand-gray-dark;
     display: block;
+    color: $brand-gray-dark;
 
     &:hover {
       color: $brand-blue;
@@ -399,13 +401,13 @@ hr {
 
 .organization-list-items {
   .organization-list-item:not(:first-child) {
-    border-top: 1px solid #e3e3e3;
-    margin-top: 2rem;
     padding-top: 2rem;
+    margin-top: 2rem;
+    border-top: 1px solid #e3e3e3;
 
     @media (max-width: 34em) {
-      margin-top: 1rem;
       padding-top: 1rem;
+      margin-top: 1rem;
     }
   }
 }
@@ -427,17 +429,17 @@ hr {
   }
 
   .organization-stats {
-    vertical-align: inherit;
+    padding-top: 0.5em;
     font-size: 14px;
     font-weight: bold;
-    padding-top: 0.5em;
+    vertical-align: inherit;
 
     .organization-stat-item {
       margin-right: 0.6em;
 
       .octicon {
-        font-size: 16px;
         margin-right: 4px;
+        font-size: 16px;
       }
     }
 
@@ -448,8 +450,24 @@ hr {
 }
 
 .site-footer {
-  margin-top: 1em;
-  margin-bottom: 1em;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  color: #777;
+}
+
+.made-with-heart {
+  margin-bottom: 0.3em;
+  font-size: 15px;
+
+  a {
+    position: relative;
+    top: 2px;
+    color: #777;
+    text-decoration: none;
+    transition: 0.2s color ease-in 0;
+
+    &:hover { color: #333; }
+  }
 }
 
 .desktop-invitation-content,
@@ -477,11 +495,11 @@ hr {
 }
 
 .signin-section {
-  background-color: #5fb27b;
   padding-top: 6.154em;
   padding-bottom: 6.154em;
-  color: #fff;
   margin-bottom: 3em;
+  color: #fff;
+  background-color: #5fb27b;
 
   .heading {
     font-size: 48px;
@@ -493,8 +511,8 @@ hr {
   }
 
   .subheading {
-    font-size: 21px;
     margin-bottom: 2rem;
+    font-size: 21px;
 
     @media (max-width: 34em) {
       font-size: 18px;
@@ -541,15 +559,15 @@ hr {
 }
 
 .organization-select-target {
+  float: left;
   padding: 10px;
   margin: 0 10px 20px;
+  font-weight: bold;
   text-align: center;
+  background-color: #f2f2f2;
+  background-image: none;
   border: 0;
   border-radius: 3px;
-  font-weight: bold;
-  background-image: none;
-  background-color: #f2f2f2;
-  float: left;
 
   &:hover,
   &:active,
@@ -561,8 +579,8 @@ hr {
   }
 
   &.disabled {
-    cursor: not-allowed;
     color: #999;
+    cursor: not-allowed;
 
     .organization-select-avatar {
       opacity: 0.3;
@@ -597,8 +615,8 @@ hr {
 }
 
 .classroom-user {
-  margin-top: 1rem;
   padding-top: 1rem;
+  margin-top: 1rem;
   font-size: 14px;
   border-top: 1px solid #e3e3e3;
 
@@ -633,9 +651,9 @@ hr {
   }
 
   .login {
-    color: $brand-gray-dark;
     display: block;
     padding-top: 4px;
+    color: $brand-gray-dark;
 
     &:hover {
       color: $brand-blue;

@@ -13,7 +13,7 @@
     <%= link_to organization_url(@organization), organization_url(@organization), class: 'mobile-invitation-content' %>
 
     <div class="columns desktop-invitation-content">
-      <div class="two-thirds column">
+      <div class="two-thirds">
         <div class="input-group">
           <%= content_tag :input, '', type: 'text', id: "organization-#{@organization.github_id}", value: organization_url(@organization), readonly: 'readonly' %>
           <span class="input-group-button">
