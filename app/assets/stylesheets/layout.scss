@@ -450,8 +450,24 @@ hr {
 }
 
 .site-footer {
-  margin-top: 1em;
-  margin-bottom: 1em;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  color: #777;
+}
+
+.made-with-heart {
+  margin-bottom: 0.3em;
+  font-size: 15px;
+
+  a {
+    position: relative;
+    top: 1px;
+    color: #777;
+    text-decoration: none;
+    transition: 0.2s color ease-in 0;
+
+    &:hover { color: #333; }
+  }
 }
 
 .desktop-invitation-content,
