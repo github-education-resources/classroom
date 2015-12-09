@@ -12,7 +12,8 @@ describe GitHubOrganization do
 
   describe '#admin?', :vcr do
     it 'verifies if the user is an admin of the organization' do
-      github_admin = GitHubUser.new(organization.users.first.github_client)
+      user         = organization.users.first
+      github_admin = GitHubUser.new(user.github_client, user.uid)
       expect(@github_organization.admin?(github_admin.login)).to eql(true)
     end
   end

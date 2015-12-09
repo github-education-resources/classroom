@@ -30,7 +30,7 @@ class RepoAccess < ActiveRecord::Base
 
   def add_membership_to_github_organization
     github_organization = GitHubOrganization.new(organization.github_client, organization.github_id)
-    github_user         = GitHubUser.new(user.github_client)
+    github_user         = GitHubUser.new(user.github_client, user.uid)
 
     github_organization.add_membership(github_user.login)
   end
@@ -39,7 +39,7 @@ class RepoAccess < ActiveRecord::Base
   #
   def accept_membership_to_github_organization
     github_organization = GitHubOrganization.new(user.github_client, organization.github_id)
-    github_user         = GitHubUser.new(user.github_client)
+    github_user         = GitHubUser.new(user.github_client, user.uid)
 
     github_organization.accept_membership(github_user.login)
   rescue GitHub::Error
@@ -60,6 +60,6 @@ class RepoAccess < ActiveRecord::Base
   # Internal
   #
   def title
-    GitHubUser.new(user.github_client).login
+    GitHubUser.new(user.github_client, user.uid).login
   end
 end

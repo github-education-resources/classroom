@@ -111,7 +111,7 @@ class OrganizationsController < ApplicationController
   end
 
   def set_users_github_organizations
-    github_user = GitHubUser.new(current_user.github_client)
+    github_user = GitHubUser.new(current_user.github_client, current_user.uid)
 
     @users_github_organizations = github_user.organization_memberships.map do |membership|
       {

@@ -6,9 +6,9 @@ describe GitHubUser do
     @client = oauth_client
   end
 
-  let(:github_user)       { GitHubUser.new(@client)                 }
-  let(:other_user)        { GitHubFactory.create_classroom_student  }
-  let(:other_github_user) { GitHubUser.new(@client, other_user.uid) }
+  let(:github_user)       { GitHubUser.new(@client, @client.user.id) }
+  let(:other_user)        { GitHubFactory.create_classroom_student   }
+  let(:other_github_user) { GitHubUser.new(@client, other_user.uid)  }
 
   describe '#login', :vcr do
     it 'gets the login of the user' do

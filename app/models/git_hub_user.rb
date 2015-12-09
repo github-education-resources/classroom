@@ -1,7 +1,7 @@
 class GitHubUser
   include GitHub
 
-  def initialize(client, id = nil)
+  def initialize(client, id)
     @client = client
     @id     = id
   end
