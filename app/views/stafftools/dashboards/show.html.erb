@@ -1,0 +1,12 @@
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">Dashboard</h2>
+  </div>
+
+  <div class="site-content-body">
+    <%= line_chart [
+      { name: 'Assignment repos created', data: Assignment.group_by_day(:created_at).count },
+      { name: 'Group Assignment repos created', data: GroupAssignment.group_by_day(:created_at).count }
+    ] %>
+  </div>
+</div>

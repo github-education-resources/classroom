@@ -1,5 +1,10 @@
 <nav class="menu">
-  <%= link_to stafftools_root_path, class: 'menu-item selected' do %>
+  <%= link_to stafftools_root_path, class: "menu-item #{'selected' if controller_name == 'dashboards'}" do %>
+    <%= octicon('graph') %>
+    Dashboard
+  <% end %>
+
+  <%= link_to stafftools_resources_path, class: "menu-item #{'selected' if controller_name == 'resources' }" do %>
     <%= octicon('search') %>
     Resources
   <% end %>

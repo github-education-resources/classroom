@@ -111,6 +111,7 @@ GEM
       nenv
       rspec-logsplit (>= 0.1.2)
       timers (>= 4.1.1)
+    chartkick (1.4.1)
     chewy (0.8.2)
       activesupport (>= 3.2)
       elasticsearch (>= 1.0.0)
@@ -169,6 +170,8 @@ GEM
     get_process_mem (0.2.0)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
+    groupdate (2.5.0)
+      activesupport (>= 3)
     hashie (3.4.2)
     hitimes (1.2.3)
     i18n (0.7.0)
@@ -390,6 +393,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bullet
+  chartkick
   chewy
   coffee-rails (~> 4.1.0)
   dalli
@@ -401,6 +405,7 @@ DEPENDENCIES
   faraday-http-cache
   foreman
   geo_pattern
+  groupdate
   jbuilder
   jquery-turbolinks
   kaminari

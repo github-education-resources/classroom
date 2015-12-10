@@ -6,6 +6,7 @@ gem 'rails', '4.2.4'
 gem 'airbrake'
 gem 'autoprefixer-rails'
 
+gem 'chartkick'
 gem 'chewy'
 gem 'coffee-rails', '~> 4.1.0'
 
@@ -14,6 +15,7 @@ gem 'draper'
 gem 'faraday-http-cache'
 
 gem 'geo_pattern'
+gem 'groupdate'
 
 gem 'jbuilder'
 gem 'jquery-turbolinks'
