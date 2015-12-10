@@ -16,7 +16,7 @@
   <%= form_for [@organization, @group_assignment], html: { "data-name" => @group_assignment.title, method: 'delete' } do |f| %>
     <dl class="form js-normalize-submit">
       <dt>Please type the name of the group assignment to confirm</dt>
-      <dd><input type="text" class="js-input-block"></dd>
+      <dd><input type="text" class="js-input-block" autofocus></dd>
     </dl>
 
     <%= f.submit 'Delete this group assignment', class: 'btn btn-danger btn-block js-navigation js-submit', disabled: true %>
