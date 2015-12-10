@@ -1,5 +1,8 @@
 <% if resources.total_count > 0 %>
-  <% resources.each do |resource| %>
+  <% resources_array = resources.to_a %>
+
+  <% resources_array.each_with_index do |resource, index| %>
+    <%= render_stafftools_resource_header(resource, resources_array[index - 1]) %>
     <%= render_stafftools_resource(resource) %>
   <% end %>
 
