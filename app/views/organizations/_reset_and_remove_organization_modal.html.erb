@@ -16,7 +16,7 @@
   <%= form_for @organization, html: { "data-name" => organization.login, method: 'delete' } do |f| %>
     <dl class="form js-normalize-submit">
       <dt>Please type the name of the organization to confirm</dt>
-      <dd><input type="text" class="js-input-block"></dd>
+      <dd><input type="text" class="js-input-block" autofocus></dd>
     </dl>
 
     <%= f.submit 'Reset and remove this classroom', class: 'btn btn-danger btn-block js-navigation js-submit', disabled: true %>
