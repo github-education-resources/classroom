@@ -1,13 +1,11 @@
-<div class="flex-table classroom-resource">
-  <div class="flex-table-item">
-    <%= image_tag github_avatar_url(organization.github_id, 96), height: 48, width: 48, class: 'avatar left', alt: "@#{organization.login}" %>
+<div class="classroom-resource-item">
+  <%= image_tag github_avatar_url(organization.github_id, 96), height: 48, width: 48, class: 'avatar left', alt: "@#{organization.login}" %>
 
-    <div class="student-information">
-      <%= link_to stafftools_organization_path(organization.id) do %>
-        <strong class="css-truncate-target login"><%= organization.login %></strong>
-      <% end %>
-    </div>
-
-    <span class="text-muted css-truncate css-truncate-target"><%= organization.name %></span>
+  <div class="student-information">
+    <%= link_to stafftools_organization_path(organization.id) do %>
+      <strong class="css-truncate-target login"><%= organization.login %></strong>
+    <% end %>
   </div>
+
+  <span class="text-muted css-truncate css-truncate-target"><%= organization.name %></span>
 </div>

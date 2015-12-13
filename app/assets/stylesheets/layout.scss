@@ -612,11 +612,14 @@ hr {
   margin-top: 2em;
 }
 
-.classroom-resource {
-  padding-top: 1rem;
+.classroom-resources {
+  margin-bottom: 4em;
+  border-top: solid 1px #e3e3e3;
+}
+
+.classroom-resource-item {
   margin-top: 1rem;
   font-size: 14px;
-  border-top: 1px solid #e3e3e3;
 
   &.disabled {
     a {
