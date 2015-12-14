@@ -1,12 +1,12 @@
 class AssignmentRepoDecorator < Draper::Decorator
   delegate_all
 
-  def avatar_url(size)
-    "https://avatars.githubusercontent.com/u/#{assignment_repo_user.uid}?v=3&size=#{size}"
-  end
+  delegate :full_name, to: :github_repository
 
-  def full_name
-    github_repository.full_name
+  AVATAR_BASE_URL = 'https://avatars.githubusercontent.com/u/'
+
+  def avatar_url(size)
+    "#{AVATAR_BASE_URL}#{assignment_repo_user.uid}?v=3&size=#{size}"
   end
 
   def github_url
