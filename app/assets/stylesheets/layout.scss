@@ -615,6 +615,10 @@ hr {
 .classroom-resources {
   margin-bottom: 4em;
   border-top: solid 1px #e3e3e3;
+
+  .classroom-resource-item:not(:last-child) {
+    padding-bottom: 1em;
+  }
 }
 
 .classroom-resource-item {
@@ -633,10 +637,6 @@ hr {
 
   .avatar {
     margin-right: 10px;
-
-    @media (max-width: 34em) {
-      margin-right: 0;
-    }
   }
 
   .mega-octicon-search {
@@ -645,13 +645,9 @@ hr {
 
   .css-truncate-target {
     max-width: 20rem;
-
-    @media (max-width: 34em) {
-      display: none;
-    }
   }
 
-  .login {
+  .search-result-title {
     display: block;
     padding-top: 4px;
     color: $brand-gray-dark;

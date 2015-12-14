@@ -1,11 +1,9 @@
 <div class="classroom-resource-item">
   <%= image_tag github_avatar_url(user.uid, 96), height: 48, width: 48, class: 'avatar left', alt: "@#{user.login}" %>
 
-  <div class="student-information">
-    <%= link_to stafftools_user_path(user.id) do %>
-      <strong class="css-truncate-target login"><%= user.login %></strong>
-    <% end %>
-  </div>
+  <%= link_to stafftools_user_path(user.id) do %>
+    <strong class="search-result-title"><%= user.login %></strong>
+  <% end %>
 
-  <span class="text-muted css-truncate css-truncate-target"><%= user.name %></span>
+  <span class="text-muted css-truncate css-truncate-target">Joined <%= local_time_ago(user.created_at) %></span><br>
 </div>

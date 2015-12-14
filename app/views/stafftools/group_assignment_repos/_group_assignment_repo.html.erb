@@ -3,11 +3,9 @@
     <%= octicon('repo') %>
   </span>
 
-  <div class="student-information">
-    <%= link_to stafftools_group_assignment_repo_path(group_assignment_repo.id) do %>
-      <strong class="css-truncate-target login">Group Assignment Repo: <%= group_assignment_repo.id %></strong>
-    <% end %>
-  </div>
+  <%= link_to stafftools_group_assignment_repo_path(group_assignment_repo.id) do %>
+    <strong class="search-result-title"><%= "#{group_assignment_repo.group_title}'s GroupAssignmentRepo for #{group_assignment_repo.group_assignment_title}" %></strong>
+  <% end %>
 
   <span class="text-muted css-truncate css-truncate-target">Created <%= local_time_ago(group_assignment_repo.created_at) %></span>
 </div>

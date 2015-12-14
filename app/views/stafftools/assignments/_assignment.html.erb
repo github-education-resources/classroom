@@ -3,11 +3,9 @@
     <%= octicon('person') %>
   </span>
 
-  <div class="student-information">
-    <%= link_to stafftools_assignment_path(assignment.id) do %>
-      <strong class="css-truncate-target login"><%= assignment.title %></strong>
-    <% end %>
-  </div>
+  <%= link_to stafftools_assignment_path(assignment.id) do %>
+    <strong class="search-result-title">Assignment <%= assignment.title %> for <%= assignment.organization_login %></strong>
+  <% end %>
 
   <span class="text-muted css-truncate css-truncate-target">Created <%= local_time_ago(assignment.created_at) %></span>
 </div>

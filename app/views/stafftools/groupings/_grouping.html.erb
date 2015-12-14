@@ -3,11 +3,9 @@
     <%= octicon('organization') %>
   </span>
 
-  <div class="student-information">
-    <%= link_to stafftools_grouping_path(grouping.id) do %>
-      <strong class="css-truncate-target login"><%= grouping.title %></strong>
-    <% end %>
-  </div>
+  <%= link_to stafftools_grouping_path(grouping.id) do %>
+    <strong class="search-result-title"><%= grouping.title %></strong>
+  <% end %>
 
   <span class="text-muted css-truncate css-truncate-target">Created <%= local_time_ago(grouping.created_at) %></span>
 </div>
