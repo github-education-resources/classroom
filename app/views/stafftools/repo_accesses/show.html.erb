@@ -1,30 +1,37 @@
 <div class="site-content">
-  <div class="site-content-cap">
+  <div class="stafftools-page-header clearfix">
     <span class="assignment-icon assignment-icon-individual left">
       <%= octicon('person') %>
     </span>
 
-    <h2 class="site-content-heading">
-      RepoAccess: <%= @repo_access.id %>
+    <h2 class="stafftools-heading">
+      Repository access: <%= @repo_access.id %>
     </h2>
 
-    <p class="assignment-type text-muted">RepoAccess</p>
+    <p class="assignment-type text-muted">Repository access</p>
   </div>
 
-  <div class="site-content-body">
-    <div class="boxed-group">
-      <h3>Info</h3>
+  <div class="boxed-group">
+    <h3>Repository accesses</h3>
 
-      <div class="boxed-group-inner">
-        <% owner        = @repo_access.user.decorate %>
-        <% organization = @repo_access.organization %>
+    <div class="boxed-group-inner">
+      <% owner        = @repo_access.user.decorate %>
+      <% organization = @repo_access.organization %>
 
-        <p>
-          <h4>Owned by <%= link_to owner.login, stafftools_user_path(owner) %></h4>
-          <h4>Organization <%= link_to organization.title, stafftools_organization_path(organization.id) %></h4>
-          <h4>Created on <span class="lead"><%= local_time(@repo_access.created_at) %></span></h4>
-        </p>
-      </div>
+      <table>
+        <tr>
+          <td class="text-emphasized">Owned by</td>
+          <td><%= link_to owner.login, stafftools_user_path(owner) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Organization</td>
+          <td><%= link_to organization.title, stafftools_organization_path(organization.id) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Created on</td>
+          <td><%= local_time(@repo_access.created_at) %></td>
+        </tr>
+      </table>
     </div>
   </div>
 </div>
