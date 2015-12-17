@@ -1,6 +1,10 @@
 class GroupDecorator < Draper::Decorator
   delegate_all
 
+  def github_team_url
+    "https://github.com/orgs/#{github_team.organization.login}/teams/#{github_team.slug}"
+  end
+
   def name
     github_team.name
   end

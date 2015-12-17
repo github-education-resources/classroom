@@ -1,19 +1,9 @@
-<div class="flex-table classroom-user">
-  <div class="flex-table-item">
-    <%= image_tag "#{user.avatar_url}&size=96", height: 48, width: 48, class: 'avatar left', alt: "@#{user.login}" %>
+<div class="classroom-resource-item">
+  <%= image_tag github_avatar_url(user.uid, 96), height: 48, width: 48, class: 'avatar left', alt: "@#{user.login}" %>
 
-    <div class="student-information">
-      <%= link_to user.html_url do %>
-        <strong class="css-truncate-target login"><%= user.login %></strong>
-      <% end %>
-    </div>
+  <%= link_to stafftools_user_path(user.id) do %>
+    <strong class="search-result-title"><%= user.login %></strong>
+  <% end %>
 
-    <span class="text-muted css-truncate css-truncate-target"><%= user.name %></span>
-  </div>
-
-  <div class="flex-table-item text-right">
-    <%= form_tag impersonate_stafftools_user_path(user.id) do %>
-      <%= submit_tag "Impersonate @#{user.login}", class: 'btn btn-sm btn-danger', data: { confirm: "Are you positive you want to impersonate @#{user.login}?" } %>
-    <% end %>
-  </div>
+  <span class="text-muted css-truncate css-truncate-target">Joined <%= local_time_ago(user.created_at) %></span><br>
 </div>

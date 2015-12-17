@@ -8,6 +8,29 @@ RSpec.describe Stafftools::UsersController, type: :controller do
     sign_in(user)
   end
 
+  describe 'GET #show', :vcr do
+    context 'as an unauthorized user' do
+      it 'returns a 404' do
+        expect { get :show, id: user.id }.to raise_error(ActionController::RoutingError)
+      end
+    end
+
+    context 'as an authorized user' do
+      before do
+        user.update_attributes(site_admin: true)
+        get :show, id: user.id
+      end
+
+      it 'succeeds' do
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'sets the user' do
+        expect(assigns(:user).id).to eq(user.id)
+      end
+    end
+  end
+
   describe 'POST #impersonate', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do

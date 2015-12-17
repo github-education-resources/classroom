@@ -183,6 +183,8 @@ GEM
     kaminari (0.16.3)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
+    local_time (1.0.3)
+      coffee-rails
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
@@ -404,6 +406,7 @@ DEPENDENCIES
   jbuilder
   jquery-turbolinks
   kaminari
+  local_time
   newrelic_rpm
   octokit
   omniauth

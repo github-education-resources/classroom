@@ -1,0 +1,86 @@
+<div class="site-content">
+  <div class="stafftools-page-header clearfix">
+    <span class="assignment-icon assignment-icon-individual left">
+      <%= image_tag user.avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{user.login}" %>
+    </span>
+
+    <h2 class="stafftools-heading">
+      <%= user.login %>
+    </h2>
+
+    <p class="assignment-type text-muted"><%= user.staff? ? 'Staff ' : '' %> User</p>
+  </div>
+
+  <div class="boxed-group">
+    <h3>User information</h3>
+
+    <div class="boxed-group-inner">
+      <table>
+        <tr>
+          <td class="text-emphasized">ID</td>
+          <td><%= user.id %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">GitHub ID</td>
+          <td><%= user.uid %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">GitHub profile</td>
+          <td><%= link_to user.github_url, user.github_url %></td>
+        </tr>
+        <tr>
+         <td class="text-emphasized">Joined on</td>
+         <td><%= local_time(user.created_at) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Access token</td>
+          <td><%= user.authorized_access_token? ? 'Authorized' : 'Rejected' %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Scopes</td>
+          <td><%= user.github_client_scopes.join(', ') %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <% if user.organizations.present? %>
+    <div class="boxed-group">
+      <h3>Classrooms</h3>
+
+      <div class="boxed-group-inner">
+        <ul class="boxed-group-list standalone">
+          <%= render partial: 'stafftools/users/organization', collection: user.organizations.decorate %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <% if user.repo_accesses.present? %>
+    <div class="boxed-group">
+      <h3>Organization Memberships</h3>
+
+      <div class="boxed-group-inner">
+        <ul class="boxed-group-list standalone">
+          <% user.repo_accesses.each do |repo_access| %>
+            <%= render partial: 'stafftools/users/organization', locals: { organization: repo_access.organization.decorate } %>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <% if user.id != current_user.id %>
+    <div class="boxed-group dangerzone">
+      <h3>Dangerzone</h3>
+
+      <div class="boxed-group-inner">
+        <h4>Impersonate <%= "@#{user.login}" %></h4>
+        <a data-remodal-target="impersonate-user" class="btn btn-danger boxed-action">Impersonate <%= "@#{user.login}" %></a>
+        <p>This will send you to <strong><%= user.login %></strong>'s Classroom dashboard as <strong><%= user.login %></strong>.</p>
+
+        <%= render partial: 'stafftools/users/impersonate_user_confirmation_modal', locals: { user: user } %>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -601,24 +601,18 @@ hr {
   margin-top: 2em;
 }
 
-.classroom-users {
-  .assignment-repo-list-item:not(:first-child) {
+.classroom-resources {
+  margin-bottom: 4em;
+  border-top: solid 1px #e3e3e3;
 
-    @media (max-width: 34em) {
-      margin-bottom: 0;
-    }
-  }
-
-  .blankslate {
-    margin-top: 2em;
+  .classroom-resource-item:not(:last-child) {
+    padding-bottom: 1em;
   }
 }
 
-.classroom-user {
-  padding-top: 1rem;
+.classroom-resource-item {
   margin-top: 1rem;
   font-size: 14px;
-  border-top: 1px solid #e3e3e3;
 
   &.disabled {
     a {
@@ -632,10 +626,6 @@ hr {
 
   .avatar {
     margin-right: 10px;
-
-    @media (max-width: 34em) {
-      margin-right: 0;
-    }
   }
 
   .mega-octicon-search {
@@ -644,13 +634,9 @@ hr {
 
   .css-truncate-target {
     max-width: 20rem;
-
-    @media (max-width: 34em) {
-      display: none;
-    }
   }
 
-  .login {
+  .search-result-title {
     display: block;
     padding-top: 4px;
     color: $brand-gray-dark;

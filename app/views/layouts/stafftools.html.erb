@@ -13,7 +13,7 @@
 
     <%= render 'shared/open_graph' %>
   </head>
-  <body class="site <%= controller_name %> <%= action_name %>">
+  <body class="site stafftools <%= controller_name %> <%= action_name %>">
     <div class="loading-indicator" style="display: none;"></div>
 
     <%= render 'peek/bar' %>
@@ -33,5 +33,7 @@
         </div>
       </div>
     </main>
+
+    <%= render 'shared/footer' %>
   </body>
 </html>

@@ -1,0 +1,44 @@
+<div class="site-content">
+  <div class="site-content-cap">
+    <span class="assignment-icon assignment-icon-group left">
+      <%= octicon('organization') %>
+    </span>
+
+    <h2 class="site-content-heading">
+      <%= group.title %>
+    </h2>
+
+    <p class="assignment-type text-muted">Group</p>
+  </div>
+
+  <div class="site-content-body">
+    <div class="boxed-group">
+      <h3>Info</h3>
+
+      <div class="boxed-group-inner">
+        <% organization = group.organization.decorate %>
+
+        <p>
+          <h4>Owned by <%= link_to organization.title, stafftools_organization_path(organization.id) %></h4>
+          <h4>Grouping <%= link_to group.grouping.title, stafftools_grouping_path(group.grouping) %></h4>
+          <h4>GitHub URL <%= link_to group.github_team_url, group.github_team_url %></h4>
+          <h4>Created on <span class="lead"><%= local_time(group.created_at) %></span></h4>
+        </p>
+      </div>
+    </div>
+
+    <% if group.repo_accesses.present? %>
+      <div class="boxed-group">
+        <h3>Team Members</h3>
+
+        <div class="boxed-group-inner">
+          <ul class="boxed-group-list standalone">
+            <% group.repo_accesses.each do |repo_access| %>
+              <%= render partial: 'stafftools/organizations/user', locals: { user: repo_access.user.decorate } %>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

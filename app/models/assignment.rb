@@ -2,6 +2,8 @@ class Assignment < ActiveRecord::Base
   include GitHubPlan
   include Sluggable
 
+  update_index('stafftools#assignment') { self }
+
   default_scope { where(deleted_at: nil) }
 
   has_one :assignment_invitation, dependent: :destroy, autosave: true

@@ -1,0 +1,69 @@
+<div class="site-content">
+  <div class="stafftools-page-header clearfix">
+    <span class="assignment-icon assignment-icon-group left">
+      <%= octicon('organization') %>
+    </span>
+
+    <h2 class="stafftools-heading">
+      <%= group_assignment.title %>
+    </h2>
+
+    <p class="assignment-type text-muted">Group assigment</p>
+  </div>
+
+  <div class="boxed-group">
+    <h3>Group assignment information</h3>
+
+    <div class="boxed-group-inner">
+      <% creator      = group_assignment.creator.decorate %>
+      <% organization = group_assignment.organization.decorate %>
+
+      <table>
+        <tr>
+          <td class="text-emphasized">Owned by</td>
+          <td><%= link_to organization.title, stafftools_organization_path(organization) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Created by</td>
+          <td><%= link_to creator.login, stafftools_user_path(creator) %></td>
+        </tr>
+        <% if group_assignment.starter_code? %>
+        <tr>
+          <td class="text-emphasized">Starter code</td>
+          <td><%= link_to group_assignment.starter_code_github_url, group_assignment.starter_code_github_url %></td>
+        </tr>
+        <% end %>
+        <tr>
+          <td class="text-emphasized">Grouping</td>
+          <td><%= link_to group_assignment.grouping.title, stafftools_grouping_path(group_assignment.grouping) %></td>
+
+        </tr>
+        <tr>
+          <td class="text-emphasized">Invitation</td>
+          <td><%= link_to group_assignment.group_assignment_invitation.key, stafftools_group_assignment_invitation_path(group_assignment.group_assignment_invitation.id) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Created on</td>
+          <td><%= local_time(group_assignment.created_at) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Last updated</td>
+          <td><%= local_time(group_assignment.created_at) %></td>
+
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <% if group_assignment.group_assignment_repos.present? %>
+    <div class="boxed-group">
+      <h3>Group assignment repositories</h3>
+
+      <div class="boxed-group-inner">
+        <ul class="boxed-group-list standalone">
+          <%= render partial: 'stafftools/group_assignments/group_assignment_repo', collection: group_assignment.group_assignment_repos.decorate %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,6 +1,4 @@
 class User < ActiveRecord::Base
-  include GitHub
-
   update_index('stafftools#user') { self }
 
   has_many :repo_accesses, dependent: :destroy
@@ -18,6 +16,10 @@ class User < ActiveRecord::Base
     update_attributes(user_attributes)
   end
 
+  def authorized_access_token?
+    GitHubUser.new(github_client, uid).authorized_access_token?
+  end
+
   def self.create_from_auth_hash(hash)
     create!(AuthHash.new(hash).user_info)
   end
@@ -32,7 +34,7 @@ class User < ActiveRecord::Base
   end
 
   def github_client_scopes
-    github_client.scopes(token, headers: no_cache_headers)
+    GitHubUser.new(github_client, uid).client_scopes
   end
 
   def staff?

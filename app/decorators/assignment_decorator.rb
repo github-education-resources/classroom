@@ -6,6 +6,11 @@ class AssignmentDecorator < Draper::Decorator
     github_repository.full_name
   end
 
+  def starter_code_github_url
+    return unless starter_code?
+    github_repository.html_url
+  end
+
   private
 
   def github_repository
