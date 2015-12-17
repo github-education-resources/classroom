@@ -1,6 +1,8 @@
 class AssignmentInvitation < ActiveRecord::Base
   default_scope { where(deleted_at: nil) }
 
+  update_index('stafftools#assignment_invitation') { self }
+
   has_one :organization, through: :assignment
 
   belongs_to :assignment

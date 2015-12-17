@@ -2,6 +2,8 @@ class GroupAssignmentRepo < ActiveRecord::Base
   include GitHubPlan
   include GitHubRepoable
 
+  update_index('stafftools#group_assignment_repo') { self }
+
   has_one :organization, -> { unscope(where: :deleted_at) }, through: :group_assignment
 
   has_many :repo_accesses, through: :group

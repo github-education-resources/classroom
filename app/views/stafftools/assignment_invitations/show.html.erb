@@ -1,0 +1,42 @@
+<div class="site-content">
+  <div class="stafftools-page-header clearfix">
+    <span class="assignment-icon assignment-icon-individual left">
+      <%= octicon('link') %>
+    </span>
+
+    <h2 class="stafftools-heading">
+      <%= @assignment_invitation.key %>
+    </h2>
+
+    <p class="assignment-type text-muted">Individual assigment invitation</p>
+  </div>
+
+  <div class="boxed-group">
+    <h3>Assignment invitation information</h3>
+
+    <div class="boxed-group-inner">
+      <table>
+        <tr>
+          <td class="text-emphasized">ID</td>
+          <td><%= @assignment_invitation.id %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Assignment</td>
+          <td><%= link_to @assignment_invitation.assignment.title, stafftools_assignment_path(@assignment_invitation.assignment.id) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Owned by</td>
+          <td><%= link_to @assignment_invitation.organization.title, stafftools_organization_path(@assignment_invitation.organization.id) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Invitation URL</td>
+          <td><%= link_to assignment_invitation_url(@assignment_invitation), assignment_invitation_url(@assignment_invitation) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Created on</td>
+          <td><%= local_time(@assignment_invitation.created_at) %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

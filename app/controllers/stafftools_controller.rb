@@ -1,5 +1,6 @@
 class StafftoolsController < ApplicationController
-  layout 'staff'
+  layout 'stafftools'
+
   before_action :authorize_access
 
   private

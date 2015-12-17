@@ -1,0 +1,5 @@
+<li class="clearfix">
+  <%= image_tag user.avatar_url(40), height: 20, width: 20, alt: "@#{user.login}" %>
+  <strong><%= link_to user.login, stafftools_user_path(user.id) %></strong>
+</li>
+

@@ -1,0 +1,42 @@
+<div class="site-content">
+  <div class="stafftools-page-header clearfix">
+    <span class="group-assignment-icon assignment-icon-group left">
+      <%= octicon('link') %>
+    </span>
+
+    <h2 class="stafftools-heading">
+      <%= @group_assignment_invitation.key %>
+    </h2>
+
+    <p class="assignment-type text-muted">Group assigment invitation</p>
+  </div>
+
+  <div class="boxed-group">
+    <h3>Group assignment invitation information</h3>
+
+    <div class="boxed-group-inner">
+      <table>
+        <tr>
+          <td class="text-emphasized">ID</td>
+          <td><%= @group_assignment_invitation.id %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Assignment</td>
+          <td><%= link_to @group_assignment_invitation.group_assignment.title, stafftools_group_assignment_path(@group_assignment_invitation.group_assignment.id) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Owned by</td>
+          <td><%= link_to @group_assignment_invitation.organization.title, stafftools_organization_path(@group_assignment_invitation.organization.id) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Invitation URL</td>
+          <td><%= link_to group_assignment_invitation_url(@group_assignment_invitation), group_assignment_invitation_url(@group_assignment_invitation) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Created on</td>
+          <td><%= local_time(@group_assignment_invitation.created_at) %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

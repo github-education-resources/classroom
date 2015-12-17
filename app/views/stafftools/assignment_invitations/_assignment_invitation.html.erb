@@ -1,0 +1,11 @@
+<div class="classroom-resource-item">
+  <span class="assignment-icon assignment-icon-individual left">
+    <%= octicon('link') %>
+  </span>
+
+  <%= link_to stafftools_assignment_invitation_path(assignment_invitation.id) do %>
+    <strong class="search-result-title">Assignment invitation for <%= assignment_invitation.assignment_title %></strong>
+  <% end %>
+
+  <span class="text-muted css-truncate css-truncate-target">Created <%= local_time_ago(assignment_invitation.created_at) %></span>
+</div>

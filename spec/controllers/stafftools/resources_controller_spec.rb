@@ -30,7 +30,7 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
 
       it 'has a StafftoolsIndex::Query of resources' do
         expect(assigns(:resources)).to_not be_nil
-        expect(assigns(:resources)).to be_kind_of(StafftoolsIndex::User::Query)
+        expect(assigns(:resources)).to be_kind_of(StafftoolsIndex::Query)
       end
     end
   end
@@ -55,9 +55,9 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
         expect(response).to have_http_status(:success)
       end
 
-      it 'has a StafftoolsIndex::User::Query of resources' do
+      it 'has a StafftoolsIndex::Query of resources' do
         expect(assigns(:resources)).to_not be_nil
-        expect(assigns(:resources)).to be_kind_of(StafftoolsIndex::User::Query)
+        expect(assigns(:resources)).to be_kind_of(StafftoolsIndex::Query)
       end
     end
   end

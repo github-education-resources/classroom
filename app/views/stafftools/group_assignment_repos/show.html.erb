@@ -1,0 +1,49 @@
+<div class="site-content">
+  <div class="stafftools-page-header clearfix">
+    <span class="assignment-icon assignment-icon-group left">
+      <%= octicon('repo') %>
+    </span>
+
+    <h2 class="stafftools-heading">
+      Group assignment repository <%= group_assignment_repo.id %>
+    </h2>
+
+    <p class="assignment-type text-muted">Group assigment repository</p>
+  </div>
+
+  <div class="boxed-group">
+    <h3>Group assignment repository information</h3>
+
+    <div class="boxed-group-inner">
+      <% creator      = group_assignment_repo.creator.decorate %>
+      <% organization = group_assignment_repo.organization.decorate %>
+
+      <table>
+        <tr>
+          <td class="text-emphasized"></td>
+          <td><%= group_assignment_repo.id %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Owned by</td>
+          <td><%= link_to organization.title, stafftools_organization_path(organization) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Created by</td>
+          <td><%= link_to creator.login, stafftools_user_path(creator) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Group assignment</td>
+          <td><%= link_to group_assignment_repo.group_assignment.title, stafftools_group_assignment_path(group_assignment_repo.group_assignment.id) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Group</td>
+          <td><%= link_to group_assignment_repo.group.title, stafftools_group_path(group_assignment_repo.group) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Created on</td>
+          <td><%= local_time(group_assignment_repo.created_at) %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

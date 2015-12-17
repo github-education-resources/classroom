@@ -16,6 +16,8 @@
 #
 #= require turbolinks
 #
+#= require local_time
+#
 #= require jquery-readyselector/jquery.readyselector
 #
 #= require remodal/dist/remodal

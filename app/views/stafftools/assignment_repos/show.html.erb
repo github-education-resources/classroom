@@ -1,0 +1,50 @@
+<div class="site-content">
+  <div class="stafftools-page-header clearfix">
+    <span class="assignment-icon assignment-icon-individual left">
+      <%= octicon('repo') %>
+    </span>
+
+    <h2 class="stafftools-heading">
+      Assignment repository <%= assignment_repo.id %>
+    </h2>
+
+    <p class="assignment-type text-muted">Assigment repository</p>
+  </div>
+
+  <div class="boxed-group">
+    <h3>Assignment repository information</h3>
+
+    <div class="boxed-group-inner">
+      <% creator      = assignment_repo.creator.decorate %>
+      <% organization = assignment_repo.organization.decorate %>
+
+      <table>
+        <tr>
+          <td class="text-emphasized">ID</td>
+          <td><%= assignment_repo.id %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Owned by</td>
+          <td><%= link_to organization.title, stafftools_organization_path(organization) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Created by</td>
+          <td><%= link_to creator.login, stafftools_user_path(creator) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Assignment</td>
+          <td><%= link_to assignment_repo.assignment.title, stafftools_assignment_path(assignment_repo.assignment.id) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">User</td>
+          <td><%= link_to assignment_repo.user.decorate.login, stafftools_user_path(assignment_repo.user) %></td>
+
+        </tr>
+        <tr>
+          <td class="text-emphasized">Created on</td>
+          <td><%= local_time(assignment_repo.created_at) %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

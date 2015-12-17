@@ -1,0 +1,11 @@
+<div class="classroom-resource-item">
+  <span class="group-assignment-icon assignment-icon-group left">
+    <%= octicon('repo') %>
+  </span>
+
+  <%= link_to stafftools_group_assignment_repo_path(group_assignment_repo.id) do %>
+    <strong class="search-result-title"><%= "#{group_assignment_repo.group_title}'s group assignment repository for #{group_assignment_repo.group_assignment_title}" %></strong>
+  <% end %>
+
+  <span class="text-muted css-truncate css-truncate-target">Created <%= local_time_ago(group_assignment_repo.created_at) %></span>
+</div>

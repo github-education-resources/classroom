@@ -4,6 +4,11 @@ module Stafftools
 
     before_action :set_user, except: [:stop_impersonating]
 
+    decorates_assigned :user
+
+    def show
+    end
+
     def impersonate
       session[:impersonated_user_id] = @user.id
       redirect_to root_path

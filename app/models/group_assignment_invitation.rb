@@ -1,6 +1,8 @@
 class GroupAssignmentInvitation < ActiveRecord::Base
   default_scope { where(deleted_at: nil) }
 
+  update_index('stafftools#group_assignment_invitation') { self }
+
   has_one :grouping,     through: :group_assignment
   has_one :organization, through: :group_assignment
 

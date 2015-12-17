@@ -1,0 +1,11 @@
+<div class="classroom-resource-item">
+  <span class="assignment-icon assignment-icon-individual left">
+    <%= octicon('repo') %>
+  </span>
+
+  <%= link_to stafftools_assignment_repo_path(assignment_repo.id) do %>
+    <strong class="search-result-title"><%= "#{assignment_repo.user_login}'s assignment repository for #{assignment_repo.assignment_title}" %></strong>
+  <% end %>
+
+  <span class="text-muted css-truncate css-truncate-target">Created <%= local_time_ago(assignment_repo.created_at) %></span>
+</div>
