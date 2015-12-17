@@ -90,7 +90,7 @@ Foreman is setup to manage redis, memcached, sidekiq, and elasticsearch in devel
 script/workers
 ```
 
-After that, you may start the rails server in a seperate terminal with:
+After that, you may start the rails server in a separate terminal with:
 
 ```bash
 script/server
