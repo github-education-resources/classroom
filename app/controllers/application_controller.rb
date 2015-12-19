@@ -10,10 +10,10 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate_user!
 
-  rescue_from GitHub::Error,     with: :flash_and_redirect_back_with_message
-  rescue_from GitHub::Forbidden, with: :flash_and_redirect_back_with_message
-  rescue_from GitHub::NotFound,  with: :flash_and_redirect_back_with_message
-  rescue_from NotAuthorized,     with: :flash_and_redirect_back_with_message
+  rescue_from GitHubable::Error,     with: :flash_and_redirect_back_with_message
+  rescue_from GitHubable::Forbidden, with: :flash_and_redirect_back_with_message
+  rescue_from GitHubable::NotFound,  with: :flash_and_redirect_back_with_message
+  rescue_from NotAuthorized,         with: :flash_and_redirect_back_with_message
 
   def peek_enabled?
     staff?
@@ -69,7 +69,7 @@ class ApplicationController < ActionController::Base
       case exception
       when NotAuthorized
         flash[:error] = 'You are not authorized to perform this action'
-      when GitHub::Error, GitHub::Forbidden, GitHub::NotFound
+      when GitHubable::Error, GitHubable::Forbidden, GitHubable::NotFound
         flash[:error] = 'Uh oh, an error has occured.'
       end
     end

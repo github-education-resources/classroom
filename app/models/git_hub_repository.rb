@@ -1,5 +1,5 @@
 class GitHubRepository
-  include GitHub
+  include GitHubable
 
   attr_reader :id
 

@@ -28,10 +28,10 @@ class OrganizationDecorator < Draper::Decorator
   def github_organization
     begin
       @github_organization ||= GitHubOrganization.new(github_client, github_id).organization
-    rescue GitHub::Forbidden
+    rescue GitHubable::Forbidden
       @github_organization ||= GitHubOrganization.new(application_github_client, github_id).organization
     end
-  rescue GitHub::NotFound
+  rescue GitHubable::NotFound
     NullGitHubOrganization.new
   end
 end

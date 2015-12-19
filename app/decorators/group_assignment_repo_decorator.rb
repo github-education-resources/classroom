@@ -25,13 +25,13 @@ class GroupAssignmentRepoDecorator < Draper::Decorator
 
   def github_repository
     @github_repository ||= GitHubRepository.new(creator.github_client, github_repo_id).repository
-  rescue GitHub::NotFound
+  rescue GitHubable::NotFound
     NullGitHubRepository.new
   end
 
   def github_team
     @github_team ||= GitHubTeam.new(creator.github_client, github_team_id).team
-  rescue GitHub::NotFound
+  rescue GitHubable::NotFound
     NullGitHubTeam.new
   end
 end

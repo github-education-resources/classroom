@@ -1,5 +1,5 @@
 class GitHubUser
-  include GitHub
+  include GitHubable
 
   def initialize(client, id = nil)
     @client = client
@@ -11,13 +11,13 @@ class GitHubUser
       application_github_client.check_application_authorization(@client.access_token,
                                                                 headers: no_cache_headers).present?
     end
-  rescue GitHub::NotFound
+  rescue GitHubable::NotFound
     false
   end
 
   def client_scopes
     with_error_handling { @client.scopes(@client.access_token, headers: no_cache_headers) }
-  rescue GitHub::Forbidden
+  rescue GitHubable::Forbidden
     []
   end
 

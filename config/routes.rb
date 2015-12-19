@@ -48,6 +48,8 @@ Rails.application.routes.draw do
     root to: 'resources#index'
     get '/resource_search', to: 'resources#search'
 
+    resources :notes, only: [:index, :show]
+
     resources :users, only: [:show] do
       member do
         post :impersonate

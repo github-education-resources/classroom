@@ -24,10 +24,10 @@ class UserDecorator < Draper::Decorator
   def github_user
     begin
       @github_user ||= GitHubUser.new(github_client, uid).user
-    rescue GitHub::Forbidden
+    rescue GitHubable::Forbidden
       @github_user ||= GitHubUser.new(application_github_client, uid).user
     end
-  rescue GitHub::NotFound
+  rescue GitHubable::NotFound
     NullGitHubUser.new
   end
 end

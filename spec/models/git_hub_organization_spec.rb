@@ -56,7 +56,7 @@ describe GitHubOrganization do
 
     it 'fails for an org that the token is not authenticated for' do
       unauthorized_github_organization = GitHubOrganization.new(@client, 9919)
-      expect { unauthorized_github_organization.plan }.to raise_error(GitHub::Error)
+      expect { unauthorized_github_organization.plan }.to raise_error(GitHubable::Error)
     end
   end
 end

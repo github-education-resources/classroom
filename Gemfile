@@ -14,6 +14,7 @@ gem 'draper'
 gem 'faraday-http-cache'
 
 gem 'geo_pattern'
+gem 'github-markup'
 
 gem 'jbuilder'
 gem 'jquery-turbolinks'
@@ -39,6 +40,7 @@ gem 'puma'
 gem 'puma_worker_killer'
 
 gem 'rack-canonical-host'
+gem 'redcarpet'
 
 gem 'sprockets',  '3.3.1'
 gem 'sass-rails', '~> 5.0'

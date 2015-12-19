@@ -42,9 +42,9 @@ class RepoAccess < ActiveRecord::Base
     github_user         = GitHubUser.new(user.github_client)
 
     github_organization.accept_membership(github_user.login)
-  rescue GitHub::Error
+  rescue GitHubable::Error
     silently_remove_organization_member
-    raise GitHub::Error, 'Failed to add user to the Classroom, please try again'
+    raise GitHubable::Error, 'Failed to add user to the Classroom, please try again'
   end
 
   def remove_organization_member
