@@ -53,6 +53,13 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       expect(user.assignment_repos.count).to eql(1)
     end
 
+    it 'redeems the users invitation when the Assignemnt title has special characters' do
+      assignment.update_attributes(title: 'Service实例：微信抢红包实例')
+
+      patch :accept_invitation, id: invitation.key
+      expect(user.assignment_repos.count).to eql(1)
+    end
+
     context 'github repository creation fails' do
       before do
         allow_any_instance_of(AssignmentRepo)
