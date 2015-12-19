@@ -39,7 +39,7 @@ class Note
     slug
   end
 
-  def <=> other
+  def <=>(other)
     other.title <=> title
   end
 
