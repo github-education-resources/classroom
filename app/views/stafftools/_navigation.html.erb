@@ -1,6 +1,12 @@
 <nav class="menu">
   <span class="menu-heading"><%= octicon('rocket') %> Stafftools</span>
-  <%= link_to stafftools_root_path, class: 'menu-item selected' do %>
+
+  <%= link_to stafftools_notes_path, class: 'menu-item' do %>
+    <%= octicon('book') %>
+    Notes
+  <% end %>
+
+  <%= link_to stafftools_root_path, class: 'menu-item' do %>
     <%= octicon('search') %>
     Search
   <% end %>

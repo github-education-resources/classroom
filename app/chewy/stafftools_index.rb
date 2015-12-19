@@ -13,10 +13,10 @@ class StafftoolsIndex < Chewy::Index
       begin
         begin
           GitHubOrganization.new(org.github_client, org.github_id).organization.login
-        rescue GitHub::Forbidden
+        rescue GitHubable::Forbidden
           GitHubOrganization.new(application_github_client, org.github_id).organization.login
         end
-      rescue GitHub::NotFound
+      rescue GitHubable::NotFound
         NullGitHubOrganization.new.login
       end
     end)
@@ -45,10 +45,10 @@ class StafftoolsIndex < Chewy::Index
       begin
         begin
           GitHubUser.new(user.github_client, user.uid).user.login
-        rescue GitHub::Forbidden
+        rescue GitHubable::Forbidden
           GitHubUser.new(application_github_client, user.uid).user.login
         end
-      rescue GitHub::NotFound
+      rescue GitHubable::NotFound
         NullGitHubUser.new.login
       end
     end)
@@ -67,10 +67,10 @@ class StafftoolsIndex < Chewy::Index
       begin
         begin
           GitHubOrganization.new(org.github_client, org.github_id).organization.login
-        rescue GitHub::Forbidden
+        rescue GitHubable::Forbidden
           GitHubOrganization.new(application_github_client, org.github_id).organization.login
         end
-      rescue GitHub::NotFound
+      rescue GitHubable::NotFound
         NullGitHubOrganization.new.login
       end
     end)
@@ -89,10 +89,10 @@ class StafftoolsIndex < Chewy::Index
       begin
         begin
           GitHubOrganization.new(org.github_client, org.github_id).organization.login
-        rescue GitHub::Forbidden
+        rescue GitHubable::Forbidden
           GitHubOrganization.new(application_github_client, org.github_id).organization.login
         end
-      rescue GitHub::NotFound
+      rescue GitHubable::NotFound
         NullGitHubOrganization.new.login
       end
     end)
@@ -133,10 +133,10 @@ class StafftoolsIndex < Chewy::Index
       begin
         begin
           GitHubOrganization.new(org.github_client, org.github_id).organization.login
-        rescue GitHub::Forbidden
+        rescue GitHubable::Forbidden
           GitHubOrganization.new(application_github_client, org.github_id).organization.login
         end
-      rescue GitHub::NotFound
+      rescue GitHubable::NotFound
         NullGitHubOrganization.new.login
       end
     end)
@@ -153,10 +153,10 @@ class StafftoolsIndex < Chewy::Index
       begin
         begin
           GitHubOrganization.new(org.github_client, org.github_id).organization.login
-        rescue GitHub::Forbidden
+        rescue GitHubable::Forbidden
           GitHubOrganization.new(application_github_client, org.github_id).organization.login
         end
-      rescue GitHub::NotFound
+      rescue GitHubable::NotFound
         NullGitHubOrganization.new.login
       end
     end)
@@ -167,10 +167,10 @@ class StafftoolsIndex < Chewy::Index
       begin
         begin
           GitHubUser.new(user.github_client, user.uid).user.login
-        rescue GitHub::Forbidden
+        rescue GitHubable::Forbidden
           GitHubUser.new(application_github_client, user.uid).user.login
         end
-      rescue GitHub::NotFound
+      rescue GitHubable::NotFound
         NullGitHubUser.new.login
       end
     end)
@@ -188,10 +188,10 @@ class StafftoolsIndex < Chewy::Index
       begin
         begin
           GitHubOrganization.new(org.github_client, org.github_id).organization.login
-        rescue GitHub::Forbidden
+        rescue GitHubable::Forbidden
           GitHubOrganization.new(application_github_client, org.github_id).organization.login
         end
-      rescue GitHub::NotFound
+      rescue GitHubable::NotFound
         NullGitHubOrganization.new.login
       end
     end)
@@ -200,10 +200,10 @@ class StafftoolsIndex < Chewy::Index
       begin
         begin
           GitHubOrganization.new(org.github_client, org.github_id).organization.name
-        rescue GitHub::Forbidden
+        rescue GitHubable::Forbidden
           GitHubOrganization.new(application_github_client, org.github_id).organization.name
         end
-      rescue GitHub::NotFound
+      rescue GitHubable::NotFound
         NullGitHubOrganization.new.name
       end
     end)
@@ -219,10 +219,10 @@ class StafftoolsIndex < Chewy::Index
       begin
         begin
           GitHubUser.new(user.github_client, user.uid).user.login
-        rescue GitHub::Forbidden
+        rescue GitHubable::Forbidden
           GitHubUser.new(application_github_client, user.uid).user.login
         end
-      rescue GitHub::NotFound
+      rescue GitHubable::NotFound
         NullGitHubUser.new.login
       end
     end)
@@ -231,10 +231,10 @@ class StafftoolsIndex < Chewy::Index
       begin
         begin
           GitHubUser.new(user.github_client, user.uid).user.name
-        rescue GitHub::Forbidden
+        rescue GitHubable::Forbidden
           GitHubUser.new(application_github_client, user.uid).user.name
         end
-      rescue GitHub::NotFound
+      rescue GitHubable::NotFound
         NullGitHubUser.new.name
       end
     end)

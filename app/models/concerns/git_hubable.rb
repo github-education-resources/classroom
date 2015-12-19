@@ -1,4 +1,4 @@
-module GitHub
+module GitHubable
   class Error < StandardError; end
   class Forbidden < Error; end
   class NotFound < Error; end
@@ -39,19 +39,19 @@ module GitHub
   end
 
   def raise_github_forbidden_error
-    fail GitHub::Forbidden, 'You are forbidden from performing this action on github.com'
+    fail GitHubable::Forbidden, 'You are forbidden from performing this action on github.com'
   end
 
   def raise_github_server_error
-    fail GitHub::Error, 'There seems to be a problem on github.com, please try again.'
+    fail GitHubable::Error, 'There seems to be a problem on github.com, please try again.'
   end
 
   def raise_github_error(err)
-    fail GitHub::Error, build_error_message(err.errors.first)
+    fail GitHubable::Error, build_error_message(err.errors.first)
   end
 
   def raise_github_not_found_error
-    fail GitHub::NotFound, 'Resource could not be found on github.com'
+    fail GitHubable::NotFound, 'Resource could not be found on github.com'
   end
 
   private

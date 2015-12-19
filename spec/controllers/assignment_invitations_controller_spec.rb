@@ -57,7 +57,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       before do
         allow_any_instance_of(AssignmentRepo)
           .to receive(:create_github_repository)
-          .and_raise(GitHub::Error)
+          .and_raise(GitHubable::Error)
       end
 
       it 'does not create a an assignment repo record' do
@@ -71,7 +71,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       before do
         allow_any_instance_of(GitHubRepository)
           .to receive(:get_starter_code_from)
-          .and_raise(GitHub::Error)
+          .and_raise(GitHubable::Error)
       end
 
       it 'removes the repository on GitHub' do

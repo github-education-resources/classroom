@@ -1,5 +1,5 @@
 class GitHubOrganization
-  include GitHub
+  include GitHubable
 
   def initialize(client, id)
     @client    = client
@@ -99,7 +99,7 @@ class GitHubOrganization
       if organization.owned_private_repos.present? && organization.plan.present?
         { owned_private_repos: organization.owned_private_repos, private_repos: organization.plan.private_repos }
       else
-        fail GitHub::Error, 'Cannot retrieve this organizations repo plan, please reauthenticate your token.'
+        fail GitHubable::Error, 'Cannot retrieve this organizations repo plan, please reauthenticate your token.'
       end
     end
   end
@@ -109,7 +109,7 @@ class GitHubOrganization
 
     begin
       return if admin?(github_user_login)
-    rescue GitHub::NotFound
+    rescue GitHubable::NotFound
       return
     end
 

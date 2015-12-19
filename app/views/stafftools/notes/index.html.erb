@@ -1,0 +1,11 @@
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">Notes</h2>
+  </div>
+
+  <div class="site-content-body">
+    <% @notes.each do |note| %>
+      <h1><%= link_to note.title, stafftools_note_path(note) %></h1>
+    <% end %>
+  </div>
+</div>

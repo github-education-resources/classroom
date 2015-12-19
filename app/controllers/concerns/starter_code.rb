@@ -11,10 +11,10 @@ module StarterCode
         github_repository = GitHubRepository.new(current_user.github_client, nil)
         github_repository.repository(repo_name).id
       rescue ArgumentError => err
-        raise GitHub::Error, err.message
+        raise GitHubable::Error, err.message
       end
     else
-      fail GitHub::Error, 'Invalid repository name, use the format owner/name'
+      fail GitHubable::Error, 'Invalid repository name, use the format owner/name'
     end
   end
   # rubocop:enable MethodLength
