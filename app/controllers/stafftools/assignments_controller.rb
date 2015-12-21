@@ -10,7 +10,7 @@ module Stafftools
     private
 
     def set_assignment
-      @assignment = Assignment.find_by(id: params[:id])
+      @assignment = Assignment.find_by!(id: params[:id])
     end
   end
 end

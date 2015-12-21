@@ -8,7 +8,7 @@ module Stafftools
     private
 
     def set_repo_access
-      @repo_access = RepoAccess.find_by(id: params[:id])
+      @repo_access = RepoAccess.find_by!(id: params[:id])
     end
   end
 end

@@ -8,7 +8,7 @@ module Stafftools
     private
 
     def set_group_assignment_invitation
-      @group_assignment_invitation = GroupAssignmentInvitation.find_by(id: params[:id])
+      @group_assignment_invitation = GroupAssignmentInvitation.find_by!(id: params[:id])
     end
   end
 end

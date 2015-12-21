@@ -8,7 +8,7 @@ module Stafftools
     private
 
     def set_assignment_invitation
-      @assignment_invitation = AssignmentInvitation.find_by(id: params[:id])
+      @assignment_invitation = AssignmentInvitation.find_by!(id: params[:id])
     end
   end
 end
