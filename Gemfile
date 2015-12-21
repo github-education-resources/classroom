@@ -6,6 +6,8 @@ gem 'rails', '4.2.4'
 gem 'airbrake'
 gem 'autoprefixer-rails'
 
+gem 'babosa'
+
 gem 'chewy'
 gem 'coffee-rails', '~> 4.1.0'
 

@@ -58,6 +58,7 @@ GEM
       execjs
       json
     awesome_print (1.6.1)
+    babosa (1.0.2)
     better_errors (2.1.1)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
@@ -389,6 +390,7 @@ DEPENDENCIES
   airbrake
   autoprefixer-rails
   awesome_print
+  babosa
   better_errors
   binding_of_caller
   bullet
@@ -444,4 +446,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.10.6
+   1.11.2

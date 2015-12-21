@@ -50,13 +50,18 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
     it 'redeems the users invitation' do
       patch :accept_invitation, id: invitation.key
+
+      expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
+      expect(assignment.assignment_repos.count).to eql(1)
       expect(user.assignment_repos.count).to eql(1)
     end
 
     it 'redeems the users invitation when the Assignemnt title has special characters' do
-      assignment.update_attributes(title: 'Service实例：微信抢红包实例')
-
+      assignment.update_attributes(title: '微信抢红包实例')
       patch :accept_invitation, id: invitation.key
+
+      expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
+      expect(assignment.assignment_repos.count).to eql(1)
       expect(user.assignment_repos.count).to eql(1)
     end
 
