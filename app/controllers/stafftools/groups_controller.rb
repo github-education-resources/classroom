@@ -10,7 +10,7 @@ module Stafftools
     private
 
     def set_group
-      @group = Group.find_by(id: params[:id])
+      @group = Group.find_by!(id: params[:id])
     end
   end
 end

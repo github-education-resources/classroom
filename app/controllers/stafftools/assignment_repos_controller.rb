@@ -10,7 +10,7 @@ module Stafftools
     private
 
     def set_assignment_repo
-      @assignment_repo = AssignmentRepo.find_by(id: params[:id])
+      @assignment_repo = AssignmentRepo.find_by!(id: params[:id])
     end
   end
 end

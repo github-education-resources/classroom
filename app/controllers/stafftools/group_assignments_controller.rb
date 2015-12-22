@@ -10,7 +10,7 @@ module Stafftools
     private
 
     def set_group_assignment
-      @group_assignment = GroupAssignment.find_by(id: params[:id])
+      @group_assignment = GroupAssignment.find_by!(id: params[:id])
     end
   end
 end
