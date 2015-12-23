@@ -8,7 +8,7 @@ module Stafftools
     private
 
     def set_grouping
-      @grouping = Grouping.find_by(id: params[:id])
+      @grouping = Grouping.find_by!(id: params[:id])
     end
   end
 end
