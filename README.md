@@ -20,8 +20,8 @@ First things first, you'll need to install Ruby 2.2.4. We recommend using the ex
 and [ruby-build](https://github.com/sstephenson/ruby-build)
 
 ```bash
-rbenv install 2.2.4
-rbenv global 2.2.4
+rbenv install 2.3.0
+rbenv global 2.3.0
 ```
 
 Next, you'll need to make sure that you have PostgreSQL, Redis, Memcached, and Elasticsearch installed. This can be
@@ -90,7 +90,7 @@ Foreman is setup to manage redis, memcached, sidekiq, and elasticsearch in devel
 script/workers
 ```
 
-After that, you may start the rails server in a seperate terminal with:
+After that, you may start the rails server in a separate terminal with:
 
 ```bash
 script/server
