@@ -14,6 +14,10 @@ Rails.application.configure do
       if Rails.env.test?
         Bullet.raise = true
       end
+
+      if Rails.env.production?
+        Bullet.airbrake = true
+      end
     end
   end
 end
