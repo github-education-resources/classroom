@@ -30,10 +30,6 @@ module GitHub
     { accept: 'application/vnd.github.barred-rock-preview' }
   end
 
-  def new_org_permissions_header
-    { accept: 'application/vnd.github.ironman-preview+json' }
-  end
-
   def no_cache_headers
     { 'Cache-Control' => 'no-cache, no-store' }
   end
