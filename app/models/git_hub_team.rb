@@ -34,8 +34,8 @@ class GitHubTeam
     end
   end
 
-  def team
-    with_error_handling { @client.team(@id) }
+  def team(options = {})
+    with_error_handling { @client.team(@id, options) }
   end
 
   # Public

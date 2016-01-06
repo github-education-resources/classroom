@@ -12,7 +12,7 @@ class GitHubRepository
   #
   def add_collaborator(collaborator)
     with_error_handling do
-      @client.add_collaborator(@id, collaborator, headers: new_org_permissions_header)
+      @client.add_collaborator(@id, collaborator)
     end
   end
 

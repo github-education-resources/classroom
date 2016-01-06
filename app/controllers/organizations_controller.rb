@@ -110,8 +110,9 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find_by!(slug: params[:id])
   end
 
+  # rubocop:disable AbcSize
   def set_users_github_organizations
-    github_user = GitHubUser.new(current_user.github_client)
+    github_user = GitHubUser.new(current_user.github_client, current_user.uid)
 
     @users_github_organizations = github_user.organization_memberships.map do |membership|
       {
@@ -122,6 +123,7 @@ class OrganizationsController < ApplicationController
       }
     end
   end
+  # rubocop:enable AbcSize
 
   def paginate_users_github_organizations
     @users_github_organizations = Kaminari.paginate_array(@users_github_organizations).page(params[:page]).per(24)
