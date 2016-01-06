@@ -15,8 +15,8 @@ class AssignmentRepo < ActiveRecord::Base
   validates :github_repo_id, presence:   true
   validates :github_repo_id, uniqueness: true
 
-  before_validation(on: :create) do
-    if organization
+  before_validation(on: [:create, :update]) do
+    if organization && !github_repo_id.present?
       create_github_repository
       push_starter_code
       add_user_as_collaborator

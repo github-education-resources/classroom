@@ -1,23 +1,34 @@
-<% assignment_repo = assignment_repo.decorate %>
+<% decorated_assignment_repo = assignment_repo.decorate %>
 
-<div class="flex-table assignment-repo-list-item<%= ' disabled' if assignment_repo.disabled? %>">
-  <div class="flex-table-item">
-    <%= image_tag assignment_repo.avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{assignment_repo.student_login}" %>
+<div class="flex-table assignment-repo-list-item">
+  <div class="flex-table-item<%= ' disabled' if decorated_assignment_repo.disabled? %>">
+    <%= image_tag decorated_assignment_repo.avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{decorated_assignment_repo.student_login}" %>
 
     <div class="student-information">
       <% css_class  = 'css-truncate css-truncate-target student-login' %>
-      <% css_class += ' disabled' if assignment_repo.disabled? %>
-      <%= link_to "https://github.com/#{assignment_repo.student_login}", class: css_class do %>
-        <strong class="css-truncate-target"><%= assignment_repo.student_login %></strong>
+      <% css_class += ' disabled' if decorated_assignment_repo.disabled? %>
+
+      <%= link_to "https://github.com/#{decorated_assignment_repo.student_login}", class: css_class do %>
+        <strong class="css-truncate-target"><%= decorated_assignment_repo.student_login %></strong>
+
+        <% if decorated_assignment_repo.student_name %>
+          <span class="text-muted">(<%= decorated_assignment_repo.student_name %>)</span>
+        <% end %>
       <% end %>
 
-      <span class="text-muted css-truncate css-truncate-target"><%= assignment_repo.student_name %></span>
+
+      <strong class="css-truncate css-truncate-target">
+        <%= link_to decorated_assignment_repo.full_name, decorated_assignment_repo.github_url, class: "#{'disabled' if decorated_assignment_repo.disabled?}" %>
+      </strong>
+
     </div>
   </div>
 
-  <div class="flex-table-item text-right">
-    <strong class="css-truncate css-truncate-target">
-      <%= link_to assignment_repo.full_name, assignment_repo.github_url, class: "#{'disabled' if assignment_repo.disabled?}" %>
-    </strong>
-  </div>
+  <% if decorated_assignment_repo.disabled? %>
+    <div class="flex-table-item text-right">
+      <%= form_tag organization_assignment_assignment_repo_recreate_repo_path(@organization, @assignment, assignment_repo), method: 'patch' do %>
+        <%= submit_tag 'Recreate repository', class: 'btn btn-sm btn-danger'%>
+      <% end %>
+    </div>
+  <% end %>
 </div>
