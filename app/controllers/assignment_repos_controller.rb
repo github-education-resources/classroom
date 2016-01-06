@@ -18,13 +18,13 @@ class AssignmentReposController < ApplicationController
   end
   helper_method :assignment
 
-  def organization
-    @organization ||= assignment_repo.organization
-  end
-  helper_method :organization
-
   def assignment_repo
     @assignment_repo ||= AssignmentRepo.find(params[:assignment_repo_id])
   end
   helper_method :assignment_repo
+
+  def organization
+    @organization ||= assignment_repo.organization
+  end
+  helper_method :organization
 end
