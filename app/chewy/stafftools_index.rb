@@ -116,10 +116,20 @@ class StafftoolsIndex < Chewy::Index
     field :updated_at
 
     field :group_assignment_title, value: (lambda do |group_assignment_repo|
-      group_assignment_repo.group_assignment.title
+      if group_assignment_repo.group_assignment.present?
+        group_assignment_repo.group_assignment.title
+      else
+        'Unknown'
+      end
     end)
 
-    field :group_title, value: ->(group_assignment_repo) { group_assignment_repo.group.title }
+    field :group_title, value: (lambda do |group_assignment_repo|
+      if group_assignment_repo.group.present?
+        group_assignment_repo.group.title
+      else
+        'Unknown'
+      end
+    end)
   end
 
   define_type Grouping do
