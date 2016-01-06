@@ -18,13 +18,13 @@ class GroupAssignmentReposController < ApplicationController
   end
   helper_method :group_assignment
 
-  def organization
-    @organization ||= group_assignment_repo.organization
-  end
-  helper_method :organization
-
   def group_assignment_repo
     @group_assignment_repo ||= GroupAssignmentRepo.find(params[:group_assignment_repo_id])
   end
   helper_method :group_assignment_repo
+
+  def organization
+    @organization ||= group_assignment_repo.organization
+  end
+  helper_method :organization
 end
