@@ -1,7 +1,7 @@
 class GitHubUser
   include GitHub
 
-  def initialize(client, id = nil)
+  def initialize(client, id)
     @client = client
     @id     = id
   end
@@ -23,8 +23,8 @@ class GitHubUser
 
   # Public
   #
-  def login
-    with_error_handling { @client.user(@id).login }
+  def login(options = {})
+    with_error_handling { @client.user(@id, options).login }
   end
 
   # Public
