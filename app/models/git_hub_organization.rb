@@ -114,7 +114,7 @@ class GitHubOrganization
     end
 
     with_error_handling do
-      @client.remove_organization_member(@id, github_user_login, headers: new_org_permissions_header)
+      @client.remove_organization_member(@id, github_user_login)
     end
   end
 
