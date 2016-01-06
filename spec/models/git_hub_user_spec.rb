@@ -12,11 +12,17 @@ describe GitHubUser do
 
   describe '#login', :vcr do
     it 'gets the login of the user' do
-      expect(github_user.login).to eql(@client.user.login)
+      user = @client.user
+
+      expect(github_user.login).to eql(user.login)
+      expect(WebMock).to have_requested(:get, github_url("/user/#{user.id}"))
     end
 
     it 'gets the login of another user' do
-      expect(other_github_user.login).to eql(@client.user(other_user.uid).login)
+      user = @client.user(other_user.uid)
+
+      expect(other_github_user.login).to eql(user.login)
+      expect(WebMock).to have_requested(:get, github_url("/user/#{user.id}")).twice
     end
   end
 
@@ -31,11 +37,17 @@ describe GitHubUser do
 
   describe '#user', :vcr do
     it 'gets the client users info' do
-      expect(github_user.user.id).to eql(@client.user.id)
+      id = @client.user.id
+
+      expect(github_user.user.id).to eql(id)
+      expect(WebMock).to have_requested(:get, github_url("/user/#{id}"))
     end
 
     it 'gets another users info' do
-      expect(other_github_user.user.id).to eql(@client.user(other_user.uid).id)
+      id = @client.user(other_user.uid).id
+
+      expect(other_github_user.user.id).to eql(id)
+      expect(WebMock).to have_requested(:get, github_url("/user/#{id}")).twice
     end
   end
 end
