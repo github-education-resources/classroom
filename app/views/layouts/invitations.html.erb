@@ -15,6 +15,7 @@
   <body class="<%= controller_name %> <%= action_name %>">
     <div class="loading-indicator" style="display: none;"></div>
 
+    <%= render 'shared/message_of_the_day' %>
     <%= render 'shared/invitation_header' %>
 
     <%= yield :organization_invitation_banner %>
