@@ -15,6 +15,7 @@
   <body class="site <%= controller_name %> <%= action_name %>">
 
     <main>
+      <%= render 'shared/message_of_the_day' %>
       <%= render 'shared/header' %>
       <%= yield %>
     </main>

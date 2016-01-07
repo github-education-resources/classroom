@@ -1,0 +1,7 @@
+<% if ENV['MOTD'].present? %>
+  <div class="message-of-the-day">
+    <div class="container">
+      <p><%= ENV['MOTD'].html_safe %></p>
+    </div>
+  </div>
+<% end %>

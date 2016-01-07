@@ -53,6 +53,7 @@ ENV Variable | Description |
 `CANONICAL_HOST` | the preferred hostname for the application, if set requests served on other hostnames will be redirected
 `GOOGLE_ANALYTICS_TRACKING_ID` | identifier for Google Analytics in the format `UA-.*`
 `PINGLISH_ENABLED` | Enable the `/_ping` endpoint with relevant health checks
+`MOTD` | Show the message of the day banner at the top of the site
 
 ### Development environment variables
 These values must be present in your `.env` file (created by `script/setup`).
