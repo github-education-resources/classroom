@@ -1,5 +1,3 @@
-Chewy.logger = Rails.logger
-
 # Use ActiveJob config for async index updates.
 Chewy.strategy(:active_job)
 
