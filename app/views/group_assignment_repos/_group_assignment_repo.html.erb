@@ -1,35 +1,43 @@
-<% group_assignment_repo = group_assignment_repo.decorate %>
+<% decorated_group_assignment_repo = group_assignment_repo.decorate %>
 
-<div class="flex-table group-assignment-repo-list-item<%= ' disabled' if group_assignment_repo.disabled? %>">
+<div class="flex-table group-assignment-repo-list-item<%= ' disabled' if decorated_group_assignment_repo.disabled? %>">
   <div class="flex-table-item">
-    <%= link_to group_assignment_repo.github_team_url, class: "team-name #{'disabled' if group_assignment_repo.disabled?}" do %>
-      <strong class="css-truncate css-truncate-target"><%= group_assignment_repo.team_name %></strong>
+    <%= link_to decorated_group_assignment_repo.github_team_url, class: "team-name #{'disabled' if decorated_group_assignment_repo.disabled?}" do %>
+      <strong class="css-truncate css-truncate-target"><%= decorated_group_assignment_repo.team_name %></strong>
     <% end %>
 
+    <strong class="css-truncate css-truncate-target">
+      <%= link_to decorated_group_assignment_repo.full_name, decorated_group_assignment_repo.github_repo_url, class: "assignment-repo-github-url #{'disabled' if decorated_group_assignment_repo.disabled?}" %>
+    </strong>
+  </div>
+
+  <div class="flex-table-item text-right">
     <ul>
-      <% group_assignment_repo.group.repo_accesses.limit(4).each do |repo_access| %>
+      <% decorated_group_assignment_repo.group.repo_accesses.limit(4).each do |repo_access| %>
         <% student = repo_access.user.decorate %>
 
         <li>
-          <%= link_to student.github_url, class: "tooltipped tooltipped-s #{'disabled' if group_assignment_repo.disabled?}", 'aria-label' => student.login do %>
+          <%= link_to student.github_url, class: "tooltipped tooltipped-s #{'disabled' if decorated_group_assignment_repo.disabled?}", 'aria-label' => student.login do %>
             <%= image_tag student.avatar_url(60), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.login}" %>
           <% end %>
         </li>
       <% end %>
 
-      <% if group_assignment_repo.group.repo_accesses.count > 4 %>
+      <% if decorated_group_assignment_repo.group.repo_accesses.count > 4 %>
         <li>
-          <%= link_to group_assignment_repo.github_team_url, class: "#{'disabled' if group_assignment_repo.disabled?}" do %>
+          <%= link_to decorated_group_assignment_repo.github_team_url, class: "#{'disabled' if decorated_group_assignment_repo.disabled?}" do %>
             <%= image_tag 'student-ellipse@2x.png', class: 'avatar avatar-small', height: 30, width: 30, alt: 'student ellipse' %>
           <% end %>
         </li>
       <% end %>
-    </ul>
-  </div>
 
-  <div class="flex-table-item text-right">
-    <strong class="css-truncate css-truncate-target">
-      <%= link_to group_assignment_repo.full_name, group_assignment_repo.github_repo_url, class: "assignment-repo-github-url #{'disabled' if group_assignment_repo.disabled?}" %>
-    </strong>
+      <% if decorated_group_assignment_repo.disabled? %>
+        <li>
+          <%= form_tag organization_group_assignment_group_assignment_repo_recreate_repo_path(@organization, @group_assignment, group_assignment_repo), method: 'patch' do %>
+            <%= submit_tag 'Recreate repository', class: 'btn btn-sm btn-danger'%>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
   </div>
 </div>

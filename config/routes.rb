@@ -37,8 +37,17 @@ Rails.application.routes.draw do
         patch :setup_organization
       end
 
-      resources :assignments
-      resources :group_assignments, path: 'group-assignments'
+      resources :assignments do
+        resources :assignment_repos, only: [] do
+          patch :recreate_repo
+        end
+      end
+
+      resources :group_assignments, path: 'group-assignments' do
+        resources :group_assignment_repos, only: [] do
+          patch :recreate_repo
+        end
+      end
     end
   end
 
