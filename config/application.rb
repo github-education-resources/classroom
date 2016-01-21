@@ -56,7 +56,7 @@ module Classroom
         end
 
         ping.check :memcached do
-          ActiveSupport::Cache.lookup_store(:mem_cache_store).stats.values.include? nil
+          ActiveSupport::Cache.lookup_store(:dalli_store).stats.values.include? nil
           'ok'
         end
 
