@@ -56,7 +56,7 @@ module Classroom
         end
 
         ping.check :memcached do
-          ActiveSupport::Cache.lookup_store(:mem_cache_store).stats.values.include? nil
+          Rails.cache.dalli.checkout.alive!
           'ok'
         end
 
