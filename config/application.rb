@@ -56,7 +56,9 @@ module Classroom
         end
 
         ping.check :memcached do
-          ActiveSupport::Cache.lookup_store(:dalli_store).stats.values.include? nil
+          Rails.cache.dalli.with_connection do |connection|
+            connection.alive!
+          end
           'ok'
         end
 
