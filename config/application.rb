@@ -56,9 +56,7 @@ module Classroom
         end
 
         ping.check :memcached do
-          Rails.cache.dalli.with_connection do |connection|
-            connection.alive!
-          end
+          Rails.cache.dalli.checkout.alive!
           'ok'
         end
 
