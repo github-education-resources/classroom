@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 ruby '2.3.0'
-gem 'rails', '4.2.4'
+gem 'rails', '4.2.5.1'
 
 gem 'airbrake'
 gem 'autoprefixer-rails'
@@ -40,7 +40,7 @@ gem 'puma_worker_killer'
 
 gem 'rack-canonical-host'
 
-gem 'sprockets',  '3.3.1'
+gem 'sprockets'
 gem 'sass-rails', '~> 5.0'
 gem 'sidekiq'
 gem 'sinatra'
