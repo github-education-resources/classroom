@@ -42,7 +42,7 @@ gem 'rack-canonical-host'
 
 gem 'sprockets'
 gem 'sass-rails', '~> 5.0'
-gem 'sidekiq'
+gem 'sidekiq', '~> 4.1.0'
 gem 'sinatra'
 
 gem 'turbolinks'
