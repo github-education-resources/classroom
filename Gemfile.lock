@@ -70,23 +70,6 @@ GEM
       uniform_notifier (~> 1.9.0)
     byebug (5.0.0)
       columnize (= 0.9.0)
-    celluloid (0.17.3)
-      celluloid-essentials
-      celluloid-extras
-      celluloid-fsm
-      celluloid-pool
-      celluloid-supervision
-      timers (>= 4.1.1)
-    celluloid-essentials (0.20.5)
-      timers (>= 4.1.1)
-    celluloid-extras (0.20.5)
-      timers (>= 4.1.1)
-    celluloid-fsm (0.20.5)
-      timers (>= 4.1.1)
-    celluloid-pool (0.20.5)
-      timers (>= 4.1.1)
-    celluloid-supervision (0.20.5)
-      timers (>= 4.1.1)
     chewy (0.8.2)
       activesupport (>= 3.2)
       elasticsearch (>= 1.0.0)
@@ -147,7 +130,6 @@ GEM
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     hashie (3.4.2)
-    hitimes (1.2.3)
     i18n (0.7.0)
     jbuilder (2.3.1)
       activesupport (>= 3.0.0, < 5)
@@ -275,8 +257,6 @@ GEM
     rainbow (2.0.0)
     rake (10.5.0)
     redis (3.2.2)
-    redis-namespace (1.5.2)
-      redis (~> 3.0, >= 3.0.4)
     request_store (1.2.0)
     rspec-core (3.3.2)
       rspec-support (~> 3.3.0)
@@ -316,12 +296,10 @@ GEM
     scss_lint (0.41.0)
       rainbow (~> 2.0)
       sass (~> 3.4.15)
-    sidekiq (3.5.4)
-      celluloid (~> 0.17.2)
+    sidekiq (4.1.0)
+      concurrent-ruby (~> 1.0)
       connection_pool (~> 2.2, >= 2.2.0)
-      json (~> 1.0)
       redis (~> 3.2, >= 3.2.1)
-      redis-namespace (~> 1.5, >= 1.5.2)
     simplecov (0.11.0)
       docile (~> 1.1.0)
       json (~> 1.8)
@@ -343,8 +321,6 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (2.0.1)
-    timers (4.1.1)
-      hitimes
     turbolinks (2.5.3)
       coffee-rails
     tzinfo (1.2.2)
@@ -409,7 +385,7 @@ DEPENDENCIES
   rubocop
   sass-rails (~> 5.0)
   scss_lint
-  sidekiq
+  sidekiq (~> 4.1.0)
   simplecov
   sinatra
   spring
