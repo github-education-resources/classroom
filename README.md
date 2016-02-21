@@ -24,14 +24,11 @@ rbenv install 2.3.0
 rbenv global 2.3.0
 ```
 
-Next, you'll need to make sure that you have PostgreSQL, Redis, Memcached, and Elasticsearch installed. This can be
-done easily on OSX using [Homebrew](http://brew.sh)
+Next, you'll need to make sure that you have Nodejs, PostgreSQL, Redis, Memcached, and Elasticsearch installed. This can be done easily :
+* For OSX using [Homebrew](http://brew.sh) : `brew install nodejs postgresql redis memcached elasticsearch`
+* For Linux : `apt-get install nodejs postgresql redis-server memcached`. For Elasticsearch, follow the instructions on [their website](https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-repositories.html).
 
-```bash
-brew install postgresql redis memcached elasticsearch
-```
-
-You will want to set postgresql to autostart at login via launchctl, if not already. See `brew info postgresql`. Redis and memcached may be setup similarly via launchctl or setup project wide by using foreman, described below.
+You will want to set PostgreSQL to autostart at login via launchctl, if not already. See `brew info postgresql`. Redis and memcached may be setup similarly via launchctl or setup project wide by using foreman, described below.
 
 Now, let's install the gems from the `Gemfile` ("Gems" are synonymous with libraries in other
 languages).
@@ -41,7 +38,14 @@ gem install bundler && rbenv rehash
 ```
 
 ### Setup Classroom for GitHub
-Once bundler is installed go ahead and run the `setup` script
+
+If you are using Linux, configure PostgreSQL :
+
+* Edit `/etc/postgresql/9.3/main/postgresql.conf` and uncomment `#unix_socket_permissions = 0777`
+* Create a user and give him the rights to create a database : `su postgres -s /bin/bash -c "psql -c 'CREATE USER classroom_user; ALTER USER classroom_user CREATEDB'"` (Change `classroom_user` to the username that will run the classroom server)
+
+Once bundler is installed (and PostgreSQL correctly configured for Linux users) go ahead and run the `setup` script :
+
 ```
 script/setup
 ```
