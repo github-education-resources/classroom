@@ -89,11 +89,7 @@ ENV Variable | Description |
 
 ### Running the application
 
-Foreman is setup to manage redis, memcached, sidekiq, and elasticsearch in development mode. Postgresql must be running prior executing foreman. It assumes that redis, memcached, and elasticsearch are not already running on the system. Alternatively, you may run `script/sidekiq`, if you have to have redis, memcached, and elasticsearch always running system wide. To execute foreman, and this application's dependencies, run:
-
-```bash
-script/workers
-```
+Foreman is setup to manage redis, memcached, sidekiq, and elasticsearch in development mode. Postgresql must be running prior executing foreman.
 
 After that, you may start the rails server in a separate terminal with:
 
