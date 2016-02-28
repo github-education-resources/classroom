@@ -9,6 +9,8 @@ if [ "$(uname -s)" = "Darwin" ]; then
   echo "==> Bootstrapping Homebrew OSX environment"
   brew update >/dev/null
   brew bundle check &>/dev/null || brew bundle
+
+  brew setup-nginx-conf classroom . config/dev/nginx.conf.erb
 fi
 
 echo "==> Installing gem dependencies…"

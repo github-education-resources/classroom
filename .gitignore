@@ -27,3 +27,6 @@ dump.rdb
 
 # RubyMine
 /.idea
+
+# Nginx
+config/dev/nginx.conf
