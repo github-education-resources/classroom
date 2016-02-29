@@ -1,11 +1,7 @@
 module Classroom
-  def self.redis
-    redis_url = unless Rails.env.production?
-                  "redis://localhost:6379/0"
-                else
-                  ENV['REDIS_TO_GO_URL']
-                end
+  REDIS_URL = ENV['REDISTOGO_URL'] || 'redis://localhost:6379/0'
 
-    @redis ||= Redis.new(url: redis_url)
+  def self.redis
+    @redis ||= Redis.new(url: REDIS_URL)
   end
 end
