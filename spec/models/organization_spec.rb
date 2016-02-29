@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Organization, type: :model do
-  describe 'when title is changed' do
-    subject { create(:organization) }
+  subject { create(:organization) }
 
+  describe 'when title is changed' do
     it 'updates the slug' do
       subject.update_attributes(title: 'New Title')
       expect(subject.slug).to eql("#{subject.github_id}-new-title")
@@ -11,8 +11,6 @@ RSpec.describe Organization, type: :model do
   end
 
   describe '#all_assignments' do
-    subject { create(:organization) }
-
     context 'new Organization' do
       it 'returns an empty array' do
         expect(subject.all_assignments).to be_kind_of(Array)
@@ -40,11 +38,15 @@ RSpec.describe Organization, type: :model do
     end
   end
 
-  describe '#github_client' do
-    let(:organization) { create(:organization) }
+  describe '#flipper_id' do
+    it 'should return an id' do
+      expect(subject.flipper_id).to eq("Organization:#{subject.id}")
+    end
+  end
 
+  describe '#github_client' do
     it 'selects a users github_client at random' do
-      expect(organization.github_client.class).to eql(Octokit::Client)
+      expect(subject.github_client.class).to eql(Octokit::Client)
     end
   end
 end

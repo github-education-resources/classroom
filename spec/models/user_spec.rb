@@ -26,6 +26,12 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '#flipper_id' do
+    it 'should return an id' do
+      expect(user.flipper_id).to eq("User:#{user.id}")
+    end
+  end
+
   describe '#github_client' do
     it 'sets or creates a new GitHubClient with the users token' do
       expect(user.github_client.class).to eql(Octokit::Client)

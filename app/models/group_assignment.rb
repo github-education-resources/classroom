@@ -1,4 +1,5 @@
 class GroupAssignment < ActiveRecord::Base
+  include Flippable
   include GitHubPlan
   include Sluggable
 
