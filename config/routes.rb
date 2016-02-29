@@ -44,6 +44,7 @@ Rails.application.routes.draw do
 
   namespace :stafftools do
     mount Sidekiq::Web  => '/sidekiq', constraints: StaffConstraint.new
+    mount Flipper::UI.app(Classroom.flipper) => '/flipper', constraints: StaffConstraint.new, as: 'flipper'
 
     root to: 'resources#index'
     get '/resource_search', to: 'resources#search'
