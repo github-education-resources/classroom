@@ -27,3 +27,6 @@ dump.rdb
 
 # RubyMine
 /.idea
+
+# Vim Projections
+config/projections.json
