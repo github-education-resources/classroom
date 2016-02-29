@@ -1,7 +1,9 @@
 <nav class="menu">
-  <span class="menu-heading"><%= octicon('rocket') %> Stafftools</span>
-  <%= link_to stafftools_root_path, class: 'menu-item selected' do %>
-    <%= octicon('search') %>
-    Search
-  <% end %>
+  <span class="menu-heading"><%= octicon('rocket') %> Site Admin</span>
+  <%= link_to 'Search', stafftools_root_path, class: 'menu-item selected' %>
+</nav>
+
+<nav class="menu">
+  <span class="menu-heading"><%= octicon('code') %> Developer Tools</span>
+  <%= link_to 'Features', stafftools_flipper_path, class: 'menu-item' %>
 </nav>
