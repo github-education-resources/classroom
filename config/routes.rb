@@ -16,7 +16,7 @@ Rails.application.routes.draw do
     member do
       patch :accept_invitation
       get   :successful_invitation, path: :success
-      get   :unsuccessful_invitation
+      get   :unsuccessful_invitation, path: :success
     end
   end
 
