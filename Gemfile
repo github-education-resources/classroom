@@ -12,6 +12,9 @@ gem 'coffee-rails', '~> 4.1.0'
 gem 'draper'
 
 gem 'faraday-http-cache'
+gem 'flipper'
+gem 'flipper-redis'
+gem 'flipper-ui'
 
 gem 'geo_pattern'
 
@@ -39,6 +42,7 @@ gem 'puma'
 gem 'puma_worker_killer'
 
 gem 'rack-canonical-host'
+gem 'redis-namespace'
 
 gem 'sprockets'
 gem 'sass-rails', '~> 5.0'
