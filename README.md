@@ -78,14 +78,18 @@ script/test
 Classroom for GitHub uses environmental variables for storing credentials used in testing, these values are located in your `.env` file (created by `script/setup`).
 If you are recording new cassettes, you need to make sure all of these values are present.
 
+For the test environment you will need 2 user accounts and an organization (preferably one created specifically for testing against). The first user is the admin of the organization, the other is the student for the course.
+
 ENV Variable | Description |
 :-------------------|:-----------------|
-`TEST_CLASSROOM_OWNER_ID` | The GitHub `user_id` of an organization admin.
-`TEST_CLASSROOM_OWNER_GITHUB_TOKEN` | The [Personal Access Token](https://github.com/blog/1509-personal-api-tokens) for the classroom owner
-`TEST_CLASSROOM_STUDENT_ID` | Test OAuth application client ID.
-`TEST_CLASSROOM_STUDENT_GITHUB_TOKEN` | The [Personal Access Token](https://github.com/blog/1509-personal-api-tokens) for the student
-`TEST_CLASSROOM_OWNER_ORGANIZATION_ID` | GitHub ID (preferably one created specifically for testing against).
-`TEST_CLASSROOM_OWNER_ORGANIZATION_LOGIN` | GitHub login (preferably one created specifically for testing against).
+`TEST_CLASSROOM_OWNER_ID` | The GitHub `user_id` (number) of an organization admin.
+`TEST_CLASSROOM_OWNER_GITHUB_TOKEN` | The [Personal Access Token](https://github.com/blog/1509-personal-api-tokens) for the classroom owner with the following scope: `user:email,repo,delete_repo,admin:org`.
+`TEST_CLASSROOM_STUDENT_ID` | The GitHub `user_id` (number) for the student.
+`TEST_CLASSROOM_STUDENT_GITHUB_TOKEN` | The [Personal Access Token](https://github.com/blog/1509-personal-api-tokens) for the student with the following scope: `admin:org,user:email`. 
+`TEST_CLASSROOM_OWNER_ORGANIZATION_ID` | GitHub organization ID (number).
+`TEST_CLASSROOM_OWNER_ORGANIZATION_LOGIN` | GitHub organization login name (as used in the URL of the org).
+
+To determine the IDs for your users and organization you can visit `https://api.github.com/users/[user_or_org_name]`.
 
 ### Running the application
 
