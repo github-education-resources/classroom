@@ -8,8 +8,7 @@
     <p><strong>You must add them to the Owners team in order for them to have access.</strong></p>
     <p>You can do so at <%= link_to organization.github_team_invitations_url, organization.github_team_invitations_url %></p>
 
-    <h3>2. Give them this URL</h3>
-    <p>After signing in, they will automatically be added to this classroom.</p>
+    <h3>2. Send them the URL</h3>
     <%= link_to organization_url(@organization), organization_url(@organization), class: 'mobile-invitation-content' %>
 
     <div class="columns desktop-invitation-content">
@@ -25,6 +24,7 @@
         </div>
       </div>
     </div>
+    <p>After signing in, they will automatically be added to this classroom.</p>
 
     <% if action_name == 'invite' %>
       <div class="form-actions">
