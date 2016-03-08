@@ -26,10 +26,6 @@ module GitHub
 
   protected
 
-  def import_preview_header
-    { accept: 'application/vnd.github.barred-rock-preview' }
-  end
-
   def no_cache_headers
     { 'Cache-Control' => 'no-cache, no-store' }
   end
