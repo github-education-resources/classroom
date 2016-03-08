@@ -17,6 +17,10 @@
     <div class="boxed-group-inner">
       <table>
         <tr>
+          <td class="text-emphasized">Classroom</td>
+          <td><%= link_to organization_url(organization), organization_url(organization) %></td>
+        </tr>
+        <tr>
           <td class="text-emphasized">GitHub</td>
           <td><%= link_to organization.github_url, organization.github_url %></td>
         </tr>
