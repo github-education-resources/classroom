@@ -34,13 +34,17 @@ class ApplicationController < ActionController::Base
     required_scopes.all? { |scope| current_scopes.include?(scope) }
   end
 
+  def request_scopes
+    required_scopes | current_scopes
+  end
+
   def authenticate_user!
     auth_redirect unless logged_in? && adequate_scopes?
   end
 
   def auth_redirect
     session[:pre_login_destination] = "#{request.base_url}#{request.path}"
-    session[:required_scopes] = required_scopes.join(',')
+    session[:required_scopes] = request_scopes.join(',')
     redirect_to login_path
   end
 
