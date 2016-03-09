@@ -39,7 +39,6 @@ gem 'peek-sidekiq', github: 'Soliah/peek-sidekiq', ref: '261c857578ae6dc189506a3
 
 gem 'pg'
 gem 'puma'
-gem 'puma_worker_killer'
 
 gem 'rack-canonical-host'
 gem 'redis-namespace'
@@ -76,6 +75,7 @@ group :production do
   gem 'dalli'
   gem 'newrelic_rpm'
   gem 'pinglish'
+  gem 'puma_worker_killer'
   gem 'rack-tracker'
   gem 'rails_12factor'
 end
