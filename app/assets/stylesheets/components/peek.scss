@@ -1,7 +1,59 @@
 // scss-lint:disable IdSelector
 #peek {
+  font-size: 12px;
+
+  a {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .octicon {
+    vertical-align: middle;
+  }
+
+  p {
+    display: inline-block;
+    margin: 0;
+
+    strong {
+      color: #ccc;
+    }
+  }
+
+  &.production {
+    background-color: #222;
+    background-image: none;
+  }
+
+  &.development {
+    background-color: #4c1210;
+    background-image: none;
+  }
+
+  .bucket {
+    padding: 3px 6px;
+    margin-left: 3px;
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 11px;
+    line-height: 15px;
+    color: rgba(255, 255, 255, 0.75);
+    background-color: rgba(0, 0, 0, 0.75);
+  }
+
   @media (max-width: 43em) {
     display: none;
+  }
+}
+
+.stafftools-rocket {
+  margin-top: 5px;
+  color: rgba(255, 255, 255, 0.5);
+  user-select: none;
+
+  &:hover {
+    color: #fff;
+    cursor: pointer;
   }
 }
 // scss-lint:enable IdSelector
