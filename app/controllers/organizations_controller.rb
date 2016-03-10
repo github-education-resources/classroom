@@ -10,7 +10,7 @@ class OrganizationsController < ApplicationController
   decorates_assigned :organization
 
   def index
-    @organizations = current_user.organizations.page(params[:page])
+    @organizations = current_user.organizations.includes(:users).page(params[:page])
   end
 
   def new
