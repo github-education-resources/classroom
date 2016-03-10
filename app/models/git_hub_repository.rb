@@ -26,14 +26,8 @@ class GitHubRepository
   #
   def get_starter_code_from(source)
     with_error_handling do
-      @client.put(
-        "/repositories/#{@id}/import",
-        headers: import_preview_header,
-        'vcs': 'git',
-        'vcs_url': "https://github.com/#{source.full_name}",
-        'vcs_username': @client.login,
-        'vcs_password': @client.access_token
-      )
+      credentials = { vcs_username: @client.login, vcs_password: @client.access_token }
+      @client.start_source_import(@id, 'git', "https://github.com/#{source.full_name}", credentials)
     end
   end
 

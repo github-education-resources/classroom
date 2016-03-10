@@ -1,7 +1,7 @@
 # Start development mode executables.
 # This assumes the postgresql is already running
 
-web: bundle exec puma -C config/puma.rb > /dev/null 2>&1
+web: bundle exec puma -C config/puma.rb
 rails: tail -f log/development.log
 redis: redis-server
 memcached: memcached
