@@ -21,7 +21,7 @@ Here are a few things, that will help us help you when opening an issue.
 ## Submitting a pull request
 
 0. [Fork][fork] and clone the repository
-0. Configure and install the dependencies: (See the [README](https://github.com/education/classroom/blob/readme/README.md#hacking-on-classroom-for-github) for more details)
+0. Configure and install the dependencies: (See the [README](https://github.com/education/classroom/blob/master/README.md#hacking-on-classroom-for-github) for more details)
 0. Make sure the tests pass on your machine: `script/test`
 0. Make sure the linters pass on your machine: `script/linter`
 0. Create a new branch: `git checkout -b my-branch-name`
