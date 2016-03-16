@@ -75,7 +75,7 @@ After you register your OAuth application, you should fill in the homepage url w
 To obtain your GitHub User ID for the `NON_STAFF_GITHUB_ADMIN_IDS` field, go to `https://api.github.com/users/your_username`
 
 ### Testing environment variables
-If you make a functionality change you might need to write some additional test cases - in order to do this the test values in the .env file must be filled in.
+If you want to make a functionality change to the application you will need to write tests to accompany that change. In order to do this, the test values in the .env file must be filled in.
 
 Classroom for GitHub uses [VCR](https://github.com/vcr/vcr) for recording and playing back API fixtures during test runs. These cassettes (fixtures) are part of the Git project in the `spec/support/cassettes` folder. If you're not recording new cassettes you can run the specs with existing cassettes with:
 
