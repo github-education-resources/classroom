@@ -70,6 +70,8 @@ ENV Variable | Description |
 
 To find your Client ID/Secret you can register a new OAuth app at [this](https://github.com/settings.applications/new) page - after creation you should be able to see your Client ID/Secret.
 
+To find your GitHub user ID for the 'NON_STAFF_GTIHUB_ADMIN_IDS' you can use [this](http://caius.github.io/github_id/) tool built by [caius](https://github.com/caius).
+
 ### Testing environment variables
 Classroom for GitHub uses [VCR](https://github.com/vcr/vcr) for recording and playing back API fixtures during test runs. These cassettes (fixtures) are part of the Git project in the `spec/support/cassettes` folder. If you're not recording new cassettes you can run the specs with existing cassettes with:
 
