@@ -68,7 +68,7 @@ ENV Variable | Description |
 `GITHUB_CLIENT_SECRET`| the GitHub Application Client Secret.
 `NON_STAFF_GITHUB_ADMIN_IDS` | GitHub `user_ids` of users to be granted staff level access.
 
-To find your Client ID/Secret you can register a new OAuth app at [this](https://github.com/settings.applications/new) page - after creation you should be able to see your Client ID/Secret.
+To obtain a GitHub Client ID/Secret you need to [register a new OAuth application](https://github.com/settings.applications/new).
 
 To find your GitHub user ID for the 'NON_STAFF_GTIHUB_ADMIN_IDS' you can use [this](http://caius.github.io/github_id/) tool built by [caius](https://github.com/caius).
 
