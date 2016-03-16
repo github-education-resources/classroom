@@ -2,7 +2,7 @@ class OrganizationsController < ApplicationController
   include OrganizationAuthorization
 
   before_action :authorize_organization_addition,     only: [:create]
-  before_action :set_users_github_organizations,      only: [:new, :create]
+  before_action :set_users_github_organizations,      only: [:index, :new, :create]
   before_action :paginate_users_github_organizations, only: [:new, :create]
 
   skip_before_action :set_organization, :authorize_organization_access, only: [:index, :new, :create]
@@ -121,6 +121,15 @@ class OrganizationsController < ApplicationController
         login:     membership.organization.login,
         role:      membership.role
       }
+    end
+
+    # Check if the current user has any organizations with admin privilege, if so add the user to the corresponding
+    # classroom automatically.
+    @users_github_organizations.each do |organization|
+      next unless organization[:classroom].present?
+      github_org = GitHubOrganization.new(current_user.github_client, organization[:github_id])
+      next if organization[:classroom].users.include?(current_user) || current_user.staff?
+      github_org.admin?(decorated_current_user.login) ? organization[:classroom].users << current_user : not_found
     end
   end
   # rubocop:enable AbcSize
