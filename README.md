@@ -95,6 +95,26 @@ ENV Variable | Description |
 `TEST_CLASSROOM_OWNER_ORGANIZATION_GITHUB_ID` | GitHub ID (preferably one created specifically for testing against).
 `TEST_CLASSROOM_OWNER_ORGANIZATION_GITHUB_LOGIN` | GitHub login (preferably one created specifically for testing against).
 
+To obtain these values you will need:
+
+* A teacher (your primary GitHub account)
+* A student (another Github account, created for this purpose)
+* An organisation that the teacher is an owner of, but the student does not belong to.
+
+It is best if you create your own organization for testing purposes, if you have done so:
+
+The `OWNER_GITHUB_ID' can be set as the same value as `GITHUB_CLIENT_ID` from the Development variables.
+
+To obtain the `OWNER_GITHUB_TOKEN` value, you will need to generate a [personal access token](https://github.com/blog/1509-personal-api-tokens).
+
+To get the `STUDENT_GITHUB_ID` value you will need to create another user account on GitHub and get the ID by going to `https://api.github.com/users/your_username`
+
+To get the `STUDENT_GITHUB_TOKEN` value you will need to generate another [personal access token](https://github.com/blog/1509-personal-api-tokens) for the student account.
+
+To obtain the `OWNER_ORGANIZATION_GITHUB_ID/LOGIN` you can go to `https://api.github.com/users/organization_name`.
+
+Now you should have all of the values filled in, great job!
+
 ### Running the application
 
 Foreman is setup to manage redis, memcached, sidekiq, and elasticsearch in development mode. Postgresql must be running prior executing foreman.
