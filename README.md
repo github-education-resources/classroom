@@ -68,6 +68,8 @@ ENV Variable | Description |
 `GITHUB_CLIENT_SECRET`| the GitHub Application Client Secret.
 `NON_STAFF_GITHUB_ADMIN_IDS` | GitHub `user_ids` of users to be granted staff level access.
 
+To find your Client ID/Secret you can register a new OAuth app at [this](https://github.com/settings.applications/new) page - after creation you should be able to see your Client ID/Secret.
+
 ### Testing environment variables
 Classroom for GitHub uses [VCR](https://github.com/vcr/vcr) for recording and playing back API fixtures during test runs. These cassettes (fixtures) are part of the Git project in the `spec/support/cassettes` folder. If you're not recording new cassettes you can run the specs with existing cassettes with:
 
