@@ -70,7 +70,7 @@ ENV Variable | Description |
 
 To obtain a GitHub Client ID/Secret you need to [register a new OAuth application](https://github.com/settings.applications/new).
 
-To find your GitHub user ID for the 'NON_STAFF_GTIHUB_ADMIN_IDS' you can use [this](http://caius.github.io/github_id/) tool built by [caius](https://github.com/caius).
+After you register your OAuth application, you should fill in the homepage url with `http://localhost:5000` and the authorization url with `http://localhost:5000/auth/github/callback`.
 
 ### Testing environment variables
 If you make a functionality change you might need to write some additional test cases - in order to do this the test values in the .env file must be filled in.
