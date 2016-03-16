@@ -72,6 +72,8 @@ To obtain a GitHub Client ID/Secret you need to [register a new OAuth applicatio
 
 After you register your OAuth application, you should fill in the homepage url with `http://localhost:5000` and the authorization url with `http://localhost:5000/auth/github/callback`.
 
+To obtain your GitHub User ID for the `NON_STAFF_GITHUB_ADMIN_IDS` field, go to `https://api.github.com/users/your_username`
+
 ### Testing environment variables
 If you make a functionality change you might need to write some additional test cases - in order to do this the test values in the .env file must be filled in.
 
