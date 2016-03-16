@@ -3,6 +3,7 @@ class OrganizationsController < ApplicationController
 
   before_action :authorize_organization_addition,     only: [:create]
   before_action :set_users_github_organizations,      only: [:index, :new, :create]
+  before_action :auto_scan_organizations_access,      only: [:index]
   before_action :paginate_users_github_organizations, only: [:new, :create]
 
   skip_before_action :set_organization, :authorize_organization_access, only: [:index, :new, :create]
@@ -122,9 +123,12 @@ class OrganizationsController < ApplicationController
         role:      membership.role
       }
     end
+  end
+  # rubocop:enable AbcSize
 
-    # Check if the current user has any organizations with admin privilege, if so add the user to the corresponding
-    # classroom automatically.
+  # Check if the current user has any organizations with admin privilege, if so add the user to the corresponding
+  # classroom automatically.
+  def auto_scan_organizations_access
     @users_github_organizations.each do |organization|
       next unless organization[:classroom].present?
       next if organization[:classroom].users.include?(current_user) || current_user.staff?
@@ -132,7 +136,6 @@ class OrganizationsController < ApplicationController
       github_org.admin?(decorated_current_user.login) ? organization[:classroom].users << current_user : not_found
     end
   end
-  # rubocop:enable AbcSize
 
   def paginate_users_github_organizations
     @users_github_organizations = Kaminari.paginate_array(@users_github_organizations).page(params[:page]).per(24)
