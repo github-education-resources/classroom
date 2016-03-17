@@ -35,19 +35,31 @@ RSpec.describe OrganizationsController, type: :controller do
       end
     end
 
-    context 'user not in the classroom' do
+    context 'user with admin privilege on the organization but not part of the classroom' do
       before do
+        organization.users = []
+      end
+
+      it 'adds the user to the classroom' do
+        expect(user.organizations).to be_empty
+
+        get :index
+
+        expect(user.organizations).to include(organization)
+      end
+    end
+
+    context 'user without admin privilege on the organization' do
+      before(:each) do
         sign_in(student)
       end
 
-      it 'will be added if he is admin of the GitHub organization' do
-        get :index
-        expect(assigns(:current_user).organizations.first.id).to eq(organization.id)
-      end
+      it 'does not add the user to the classroom' do
+        expect(student.organizations).to be_empty
 
-      it 'will not be added if he is not admin of the GitHub organization' do
         get :index
-        expect(assigns(:current_user).organizations.length).to eq(0)
+
+        expect(student.organizations).to be_empty
       end
     end
 
