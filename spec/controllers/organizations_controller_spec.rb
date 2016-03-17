@@ -36,7 +36,7 @@ RSpec.describe OrganizationsController, type: :controller do
     end
 
     context 'user with admin privilege on the organization but not part of the classroom' do
-      before do
+      before(:each) do
         organization.users = []
       end
 
