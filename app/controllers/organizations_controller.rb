@@ -130,15 +130,17 @@ class OrganizationsController < ApplicationController
   # classroom automatically.
   def auto_scan_organizations_access
     @users_github_organizations.each do |organization|
-      @oraganization = organization[:classroom]
-      next unless @organization.present?
-      next if @organization.users.include?(current_user)
-      if github_organization.admin?(decorated_current_user.login)
-        @organization.users << current_user
-      else
-        not_found
-      end
+      organization = organization[:classroom]
+      next unless organization.present?
+      next if organization.users.include?(current_user)
+      create_user_organization_access(organization)
     end
+  end
+
+  def create_user_organization_access(organization)
+    github_org = GitHubOrganization.new(current_user.github_client, organization.github_id)
+    return unless github_org.admin?(decorated_current_user.login)
+    organization.users << current_user
   end
 
   def paginate_users_github_organizations
