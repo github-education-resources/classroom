@@ -35,18 +35,17 @@ RSpec.describe OrganizationsController, type: :controller do
       end
     end
 
-    context 'auto add user to classroom' do
+    context 'user not in the classroom' do
       before do
-        sign_out
         sign_in(student)
       end
 
-      it 'user with admin privilege' do
+      it 'will be added if he is admin of the GitHub organization' do
         get :index
         expect(assigns(:current_user).organizations.first.id).to eq(organization.id)
       end
 
-      it 'user without admin privilege' do
+      it 'will not be added if he is not admin of the GitHub organization' do
         get :index
         expect(assigns(:current_user).organizations.length).to eq(0)
       end
