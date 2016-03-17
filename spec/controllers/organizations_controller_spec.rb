@@ -5,6 +5,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
   let(:organization)  { GitHubFactory.create_owner_classroom_org }
   let(:user)          { organization.users.first                 }
+  let(:student)       { GitHubFactory.create_classroom_student   }
 
   before do
     sign_in(user)
@@ -31,6 +32,23 @@ RSpec.describe OrganizationsController, type: :controller do
       it 'sets the users organization' do
         get :index
         expect(assigns(:organizations).first.id).to eq(organization.id)
+      end
+    end
+
+    context 'auto add user to classroom' do
+      before do
+        sign_out
+        sign_in(student)
+      end
+
+      it 'user with admin privilege' do
+        get :index
+        expect(assigns(:current_user).organizations.first.id).to eq(organization.id)
+      end
+
+      it 'user without admin privilege' do
+        get :index
+        expect(assigns(:current_user).organizations.length).to eq(0)
       end
     end
 
