@@ -103,7 +103,7 @@ To obtain these values you will need:
 
 It is best if you create your own organization for testing purposes, if you have done so:
 
-To obtain the `OWNER_GITHUB_ID' value, you can go to `https://api.github.com/orgs/organization_owner_username`.
+To obtain the `OWNER_GITHUB_ID` value, you can go to `https://api.github.com/users/organization_owner_username`.
 
 To obtain the `OWNER_GITHUB_TOKEN` value, you will need to generate a [personal access token](https://github.com/blog/1509-personal-api-tokens).
 
