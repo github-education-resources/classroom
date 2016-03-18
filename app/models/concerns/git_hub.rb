@@ -4,8 +4,9 @@ module GitHub
   class NotFound < Error; end
 
   def application_github_client
-    Octokit::Client.new(client_id: Rails.application.secrets.github_client_id,
-                        client_secret: Rails.application.secrets.github_client_secret)
+    client_id = Rails.application.secrets.github_client_id
+    client_secret = Rails.application.secrets.github_client_secret
+    Octokit::Client.new(client_id: client_id, client_secret: client_secret, auto_paginate: true)
   end
 
   # Public
