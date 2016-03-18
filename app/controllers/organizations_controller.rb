@@ -130,10 +130,10 @@ class OrganizationsController < ApplicationController
   # classroom automatically.
   def add_current_user_to_organizations
     @users_github_organizations.each do |organization|
-      organization = organization[:classroom]
-      next unless organization.present?
-      next if organization.users.include?(current_user)
-      create_user_organization_access(organization)
+      classroom = organization[:classroom]
+      if classroom.present? && !classroom.users.include?(current_user)
+        create_user_organization_access(classroom)
+      end
     end
   end
 
