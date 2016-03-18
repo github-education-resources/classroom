@@ -117,7 +117,7 @@ class OrganizationsController < ApplicationController
 
     @users_github_organizations = github_user.organization_memberships.map do |membership|
       {
-        classroom: Organization.unscoped.find_by(github_id: membership.organization.id),
+        classroom: Organization.unscoped.includes(:users).find_by(github_id: membership.organization.id),
         github_id: membership.organization.id,
         login:     membership.organization.login,
         role:      membership.role
