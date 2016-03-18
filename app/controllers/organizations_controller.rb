@@ -2,7 +2,8 @@ class OrganizationsController < ApplicationController
   include OrganizationAuthorization
 
   before_action :authorize_organization_addition,     only: [:create]
-  before_action :set_users_github_organizations,      only: [:new, :create]
+  before_action :set_users_github_organizations,      only: [:index, :new, :create]
+  before_action :add_current_user_to_organizations,   only: [:index]
   before_action :paginate_users_github_organizations, only: [:new, :create]
 
   skip_before_action :set_organization, :authorize_organization_access, only: [:index, :new, :create]
@@ -116,7 +117,7 @@ class OrganizationsController < ApplicationController
 
     @users_github_organizations = github_user.organization_memberships.map do |membership|
       {
-        classroom: Organization.unscoped.find_by(github_id: membership.organization.id),
+        classroom: Organization.unscoped.includes(:users).find_by(github_id: membership.organization.id),
         github_id: membership.organization.id,
         login:     membership.organization.login,
         role:      membership.role
@@ -124,6 +125,23 @@ class OrganizationsController < ApplicationController
     end
   end
   # rubocop:enable AbcSize
+
+  # Check if the current user has any organizations with admin privilege, if so add the user to the corresponding
+  # classroom automatically.
+  def add_current_user_to_organizations
+    @users_github_organizations.each do |organization|
+      classroom = organization[:classroom]
+      if classroom.present? && !classroom.users.include?(current_user)
+        create_user_organization_access(classroom)
+      end
+    end
+  end
+
+  def create_user_organization_access(organization)
+    github_org = GitHubOrganization.new(current_user.github_client, organization.github_id)
+    return unless github_org.admin?(decorated_current_user.login)
+    organization.users << current_user
+  end
 
   def paginate_users_github_organizations
     @users_github_organizations = Kaminari.paginate_array(@users_github_organizations).page(params[:page]).per(24)
