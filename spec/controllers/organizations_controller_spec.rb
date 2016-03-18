@@ -41,8 +41,6 @@ RSpec.describe OrganizationsController, type: :controller do
       end
 
       it 'adds the user to the classroom' do
-        expect(user.organizations).to be_empty
-
         get :index
 
         expect(user.organizations).to include(organization)
