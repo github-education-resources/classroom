@@ -3,7 +3,7 @@ class OrganizationsController < ApplicationController
 
   before_action :authorize_organization_addition,     only: [:create]
   before_action :set_users_github_organizations,      only: [:index, :new, :create]
-  before_action :auto_scan_organizations_access,      only: [:index]
+  before_action :add_current_user_to_organizations,   only: [:index]
   before_action :paginate_users_github_organizations, only: [:new, :create]
 
   skip_before_action :set_organization, :authorize_organization_access, only: [:index, :new, :create]
@@ -128,7 +128,7 @@ class OrganizationsController < ApplicationController
 
   # Check if the current user has any organizations with admin privilege, if so add the user to the corresponding
   # classroom automatically.
-  def auto_scan_organizations_access
+  def add_current_user_to_organizations
     @users_github_organizations.each do |organization|
       organization = organization[:classroom]
       next unless organization.present?
