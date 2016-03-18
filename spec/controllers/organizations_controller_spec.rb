@@ -55,8 +55,6 @@ RSpec.describe OrganizationsController, type: :controller do
       end
 
       it 'does not add the user to the classroom' do
-        expect(student.organizations).to be_empty
-
         get :index
 
         expect(student.organizations).to be_empty
