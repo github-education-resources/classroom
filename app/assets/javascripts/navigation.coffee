@@ -1,12 +1,16 @@
+# A new window/tab event can be one of the following
+# ctrlKey (Windows)
+# metaKey (OSX)
+# shiftKey (OS agnositc)
+# New tab with middle click
+is_new_window_or_tab_event = (event) ->
+  middle_click_event = (event.button && event.button == 1)
+  event.ctrlKey || event.metaKey || event.shiftKey || middle_click_event
+
 ready = ->
   $('.js-navigation').on('click', (event) ->
-    if (event.ctrlKey or # New tab (windows)
-    event.shiftKey or # New window
-    event.metaKey or # New tab (mac)
-    (event.button and event.button == 1) # New tab (middle click)
-    )
-      return
-    return $('.loading-indicator').show())
+    return if is_new_window_or_tab_event(event)
+    $('.loading-indicator').show())
 
 $(document).ready(ready)
 $(document).on('page:load', ready)
