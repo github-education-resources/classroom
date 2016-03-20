@@ -10,6 +10,16 @@
   },
 
   "env": {
+    "AIRBRAKE_ID": {
+      "description": "the ID for the application in airbrake.io, if set Airbrake will be enabled",
+      "required": false
+    },
+
+    "AIRBRAKE_PROJECT_KEY": {
+      "description": "the PROJECT_KEY for the application in airbrake.io, if set Airbrake will be enabled",
+      "required": false
+    },
+
     "GITHUB_CLIENT_ID": {
       "description": "The GitHub Application Client ID.",
       "required": true
@@ -20,39 +30,13 @@
       "required": true
     },
 
-    "LANG": {
-      "required": true
-    "AIRBRAKE_ID": {
-      "description": "the ID for the application in airbrake.io, if set Airbrake will be enabled",
-      "required": false
-    },
-
-    "RACK_ENV": {
-      "required": true
-    "AIRBRAKE_PROJECT_KEY": {
-      "description": "the PROJECT_KEY for the application in airbrake.io, if set Airbrake will be enabled",
-      "required": false
-    },
-
-    "RAILS_ENV": {
-      "required": true
-    },
-
-    "RAILS_SERVE_STATIC_FILES": {
-      "required": true
-    },
-
     "REDIS_PROVIDER": {
       "value": "REDISTOGO_URL"
     },
 
-    "SECRET_KEY_BASE": {
-      "required": true
-    },
-
     "NON_STAFF_GITHUB_ADMIN_IDS": {
       "description": "GitHub IDs of non GitHub staff members that have staff access.",
-      "required": true
+      "required": false
     }
   },
 
