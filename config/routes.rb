@@ -12,6 +12,9 @@ Rails.application.routes.draw do
   match '/auth/:provider/callback', to: 'sessions#create',  via: [:get, :post]
   match '/auth/failure',            to: 'sessions#failure', via: [:get, :post]
 
+  # autocomplete
+  get '/autocomplete/repo_name', to: 'autocomplete#search_repos'
+
   resources :assignment_invitations, path: 'assignment-invitations', only: [:show] do
     member do
       patch :accept_invitation

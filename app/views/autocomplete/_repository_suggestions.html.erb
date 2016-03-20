@@ -1,0 +1,15 @@
+<% if repos.count > 0 %>
+  <ul>
+    <% repos.each do |repo| %>
+      <li class="autocomplete-suggestion-item">
+        <%= repo[:private] ? octicon('lock') : octicon('repo') %>
+        <strong class="res-name"><%= repo[:full_name] %></strong>
+        <span class="res-desc"><%= repo[:description] %></span>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <div class="autocomplete-suggestions-empty">
+    <strong>We couldn't find any matching repositories</strong>
+  </div>
+<% end %>
