@@ -66,5 +66,10 @@ module Classroom
         end
       end
     end
+
+    #Setting invoked exceptions application for custom 404 error pages
+    require Rails.root.join("lib/not_found_exception")
+    config.exceptions_app = NotFoundException.new(Rails.public_path)
+
   end
 end

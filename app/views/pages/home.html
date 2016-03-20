@@ -1,0 +1,44 @@
+<div class="signin-section">
+  <div class="container text-center">
+    <ul>
+      <li><%= mega_octicon('book')%></li>
+      <li><%= mega_octicon('pencil')%></li>
+      <li><%= mega_octicon('mortar-board')%></li>
+      <li><%= mega_octicon('organization')%></li>
+      <li><%= mega_octicon('calendar')%></li>
+      <li><%= mega_octicon('comment-discussion')%></li>
+    </ul>
+
+    <h1 class="heading">Your course assignments on GitHub</h1>
+    <p class="subheading">Classroom for GitHub automates repository creation and access control, making it easy to distribute starter code and collect assignments on GitHub.</p>
+
+    <%= link_to 'Sign in with your GitHub account to get started', login_path, class: 'btn btn-big-mobile-friendly btn-blue' %>
+  </div>
+</div>
+
+<div class="information-section">
+  <div class="container">
+    <div class="columns">
+      <div class="one-third column">
+        <h2><%= mega_octicon('repo') %> Create assignments</h2>
+        <p>
+          Distribute assignments with starter code. Students work on assignments individually or in groups using public or private GitHub repositories.
+        </p>
+      </div>
+
+      <div class="one-third column">
+        <h2><%= mega_octicon('organization') %> Invite students</h2>
+        <p>
+          Students gain access to assignments using unique invitation URLs, eliminating the need to collect GitHub usernames in advance and manage access manually.
+        </p>
+      </div>
+
+      <div class="one-third column">
+        <h2><%= mega_octicon('graph') %> Review progress</h2>
+        <p>
+          Teachers and teaching assistants can browse submissions by assignment, making it easy to follow along with student progress.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
