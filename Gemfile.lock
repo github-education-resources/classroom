@@ -235,6 +235,7 @@ GEM
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
+    rack-timeout (0.3.2)
     rack-tracker (1.0.1)
       activesupport (>= 3.0)
       rack (>= 1.4)
@@ -397,6 +398,7 @@ DEPENDENCIES
   puma_worker_killer
   quiet_assets
   rack-canonical-host
+  rack-timeout
   rack-tracker
   rails (= 4.2.5.2)
   rails_12factor
