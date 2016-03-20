@@ -7,8 +7,6 @@ class AutocompleteController < ApplicationController
       # default: current user, last updated first
       @repos = current_user.github_search_client.repos(nil, sort: 'updated', per_page: 10, page: 1)
     end
-    # limit results to have at most 10 items
-    @repos = @repos[0..10]
     respond_to do |format|
       format.html { render partial: 'autocomplete/repository_suggestions', locals: { repos: @repos } }
     end
