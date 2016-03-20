@@ -22,10 +22,16 @@
 
     "LANG": {
       "required": true
+    "AIRBRAKE_ID": {
+      "description": "the ID for the application in airbrake.io, if set Airbrake will be enabled",
+      "required": false
     },
 
     "RACK_ENV": {
       "required": true
+    "AIRBRAKE_PROJECT_KEY": {
+      "description": "the PROJECT_KEY for the application in airbrake.io, if set Airbrake will be enabled",
+      "required": false
     },
 
     "RAILS_ENV": {
