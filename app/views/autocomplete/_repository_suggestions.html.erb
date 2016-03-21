@@ -1,7 +1,7 @@
 <% if repos.count > 0 %>
   <ul>
     <% repos.each do |repo| %>
-      <li class="autocomplete-suggestion-item">
+      <li class="js-autocomplete-suggestion-item">
         <%= repo[:private] ? octicon('lock') : octicon('repo') %>
         <strong class="res-name"><%= repo[:full_name] %></strong>
         <span class="res-desc"><%= repo[:description] %></span>
