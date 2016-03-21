@@ -10,7 +10,7 @@ class AutocompleteController < ApplicationController
   private
 
   def github_search_client
-    @github_search_client ||= current_user.github_search_client
+    @github_search_client ||= Octokit::Client.new(access_token: current_user.token, auto_paginate: false)
   end
 
   def search_github_repos(query)

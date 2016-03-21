@@ -39,11 +39,6 @@ class User < ActiveRecord::Base
     GitHubUser.new(github_client, uid).client_scopes
   end
 
-  # for searching, disable pagination so we can control the number of suggestions
-  def github_search_client
-    @github_search_client ||= Octokit::Client.new(access_token: token, auto_paginate: false)
-  end
-
   def staff?
     site_admin
   end
