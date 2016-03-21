@@ -19,7 +19,7 @@
 
 <dl class="form">
   <dt><label>Add your starter code from GitHub <small>(optional)</small> </label></dt>
-  <dd><input class="textfield js-autocomplete-textfield" type="text" name="repo_name" value="<%= group_assignment.full_name %>" placeholder="<%= group_assignment.full_name || 'e.g. education/classroom'%>" autocomplete="off"></dd>
+  <dd><input class="textfield js-autocomplete-textfield" type="text" name="repo_name" value="<%= group_assignment.full_name %>" placeholder="<%= group_assignment.full_name || 'e.g. education/classroom'%>" autocomplete="off" data-autocomplete-search-endpoint="github_repos"></dd>
   <dd class="dd-autocomplete-suggestions"><%= render_autocomplete_suggestions_container %></dd>
 </dl>
 

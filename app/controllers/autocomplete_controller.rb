@@ -1,5 +1,5 @@
 class AutocompleteController < ApplicationController
-  def search_repos
+  def github_repos
     repos = search_github_repos(params[:query])
 
     respond_to do |format|
