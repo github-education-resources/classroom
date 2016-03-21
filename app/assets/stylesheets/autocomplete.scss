@@ -7,7 +7,6 @@ dd.dd-autocomplete-suggestions {
 .autocomplete-suggestions-container {
   display: block;
 
-  // coordinates
   position: absolute;
   width: 440px;
   max-width: 100%;
@@ -15,21 +14,17 @@ dd.dd-autocomplete-suggestions {
   top: 2px;
   z-index: 1000;
 
-  // look & feel
   background: #fff;
   border: 1px solid #c1c1c1;
   border-radius: 3px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 
-  // behaviors
   overflow-x: hidden;
   overflow-y: scroll;
 
-  // list
   ul {
     list-style: none;
 
-    // item
     li {
       padding: 10px;
       cursor: pointer;
@@ -41,7 +36,6 @@ dd.dd-autocomplete-suggestions {
     }
   }
 
-  // octicon
   .octicon {
     vertical-align: text-top;
   }
@@ -50,7 +44,6 @@ dd.dd-autocomplete-suggestions {
     color: #e9dba5;
   }
 
-  // spinner
   .autocomplete-loading-indicator {
     height: 72px;
     background: image-url("octocat-spinner-32.gif") no-repeat center center;
@@ -58,7 +51,6 @@ dd.dd-autocomplete-suggestions {
 }
 
 
-// blank status
 .autocomplete-suggestions-empty {
   display: block;
   width: 100%;
