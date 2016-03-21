@@ -1,5 +1,5 @@
 class ErrorsController < ApplicationController
-	def error404
-		render template: "errors/simple_404.html.erb", status: :not_found
-	end
+  def not_found
+    render template: "errors/not_found.html.erb", status: :not_found
+  end
 end

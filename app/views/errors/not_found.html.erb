@@ -1,0 +1,18 @@
+<div class="site-content">
+  <div class="container">
+    <div class="site-content">
+      <div class="site-content-cap">
+          <h2 class="site-content-heading">
+          <% if flash[:error] %>
+            <% if flash[:error] = "Invalid Link" %>
+              <p id="error">Invalid Invitation Link! Please contact your organization.</p>
+            <% end %>
+            <% else %>
+            <p id="error">Page Could not be Found.</p>
+            <p>You may have mistyped the address or the page may have moved.</p>
+          <% end %>
+          </h2>
+      </div>
+    </div>
+  </div>
+</div>

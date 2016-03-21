@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   match '/auth/:provider/callback', to: 'sessions#create',  via: [:get, :post]
   match '/auth/failure',            to: 'sessions#failure', via: [:get, :post]
 
-  match "/404", :to => "errors#error404", :via => :all, as: :not_found
+  match "/404", :to => "errors#not_found", :via => :all, as: :not_found
 
   resources :assignment_invitations, path: 'assignment-invitations', only: [:show] do
     member do
