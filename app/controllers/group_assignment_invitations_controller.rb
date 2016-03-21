@@ -52,6 +52,10 @@ class GroupAssignmentInvitationsController < ApplicationController
     group_id = group_params[:id]
 
     return unless group_id.present?
+    group = Group.find(group_id)
+    if group && group_assignment.max_members && group.repo_accesses.count >= group_assignment.max_members
+      fail NotAuthorized, "You cannot join this team because it already has #{group_assignment.max_members} members"
+    end
     return if group_assignment.grouping.groups.find_by(id: group_id)
 
     fail NotAuthorized, 'You are not permitted to select this team'

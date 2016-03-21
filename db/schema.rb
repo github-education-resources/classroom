@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151015113741) do
+ActiveRecord::Schema.define(version: 20151206111101) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,6 +92,7 @@ ActiveRecord::Schema.define(version: 20151015113741) do
     t.integer  "creator_id"
     t.datetime "deleted_at"
     t.string   "slug",                                null: false
+    t.integer  "max_members"
   end
 
   add_index "group_assignments", ["deleted_at"], name: "index_group_assignments_on_deleted_at", using: :btree
