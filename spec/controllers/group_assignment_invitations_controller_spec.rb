@@ -58,6 +58,24 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         expect(group_assignment.group_assignment_repos.count).to eql(0)
         expect(user.repo_accesses.count).to eql(0)
       end
+
+      it 'does not allow user to join if group has reached maximum number of members' do
+        allow_any_instance_of(RepoAccess).to receive(:silently_remove_organization_member).and_return(true)
+        group = Group.create(title: 'The Group', grouping: grouping)
+        group_assignment.update(max_members: 1)
+        student = GitHubFactory.create_classroom_student
+        group.repo_accesses << RepoAccess.create(user: student, organization: organization)
+
+        expect_any_instance_of(ApplicationController).to receive(:flash_and_redirect_back_with_message)
+        patch :accept_invitation, id: invitation.key, group: { id: group.id }
+      end
+
+      it 'allows user to join a group if maximum number of members is not set' do
+        group = Group.create(title: 'The Group', grouping: grouping)
+        patch :accept_invitation, id: invitation.key, group: { id: group.id }
+        expect(group_assignment.group_assignment_repos.count).to eql(1)
+        expect(user.repo_accesses.count).to eql(1)
+      end
     end
   end
 end
