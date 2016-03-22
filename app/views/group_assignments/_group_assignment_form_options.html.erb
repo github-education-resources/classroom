@@ -24,6 +24,11 @@
   <input class="js-autocomplete-resource-id" type="hidden" name="repo_id" />
 </dl>
 
+<dl class="form">
+   <dt><%= f.label "Maximum number of members in each team (optional)" %></dt>
+   <dd><%= f.number_field :max_members, class: 'textfield' %></dd>
+</dl>
+
 <% if @group_assignment.new_record? %>
   <% groupings_present = @organization.groupings.present? %>
 
