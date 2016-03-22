@@ -22,7 +22,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
                              title: 'HTML5',
                              grouping: grouping,
                              organization: organization,
-                             public_repo: false)
+                             public_repo: true)
     end
 
     let(:invitation) { GroupAssignmentInvitation.create(group_assignment: group_assignment) }
