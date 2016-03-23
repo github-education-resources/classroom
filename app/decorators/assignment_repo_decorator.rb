@@ -40,10 +40,7 @@ class AssignmentRepoDecorator < Draper::Decorator
   end
 
   def assignment_repo_user
-    if repo_access
-      @assignment_repo_user = repo_access.user
-    else
-      @assignment_repo_user = user
-    end
+    return repo_access.user if repo_access
+    user
   end
 end

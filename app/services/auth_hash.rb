@@ -32,8 +32,6 @@ class AuthHash
     raw_info[:site_admin]
   end
 
-  private
-
   def non_staff_github_admins_ids
     return [] unless ENV['NON_STAFF_GITHUB_ADMIN_IDS'].present?
     ENV['NON_STAFF_GITHUB_ADMIN_IDS'].split(',').compact.delete_if(&:empty?)
