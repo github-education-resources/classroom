@@ -1,7 +1,7 @@
 <% content_for :organization_banner do %>
   <div class="organization-banner" style="background-image: <%= organization.geo_pattern_data_uri %>">
     <div class="container">
-      <%= link_to 'Settings', edit_organization_path(@organization), class: 'btn btn-green' %>
+      <%= link_to 'Manage classroom', edit_organization_path(@organization), class: 'btn btn-green' %>
       <h1 class="organization-name"><%= link_to @organization.title, @organization %></h1>
       <p class="organization-login"><%= link_to "@#{organization.login}", organization.github_url %></p>
     </div>
