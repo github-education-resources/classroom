@@ -41,6 +41,7 @@ gem 'pg'
 gem 'puma'
 
 gem 'rack-canonical-host'
+gem 'rack-timeout'
 gem 'redis-namespace'
 
 gem 'sprockets'
