@@ -56,7 +56,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     check_group_members_not_exceed(group)
     return if group_assignment.grouping.groups.find_by(id: group_id)
 
-    fail NotAuthorized, 'You are not permitted to select this team'
+    raise NotAuthorized, 'You are not permitted to select this team'
   end
 
   def check_group_members_not_exceed(group)

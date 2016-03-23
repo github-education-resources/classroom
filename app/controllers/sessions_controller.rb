@@ -11,7 +11,6 @@ class SessionsController < ApplicationController
     'user:email,repo,delete_repo,admin:org'
   end
 
-  # rubocop:disable AbcSize
   def create
     auth_hash = request.env['omniauth.auth']
     user      = User.find_by_auth_hash(auth_hash) || User.new
@@ -26,7 +25,6 @@ class SessionsController < ApplicationController
 
     redirect_to url
   end
-  # rubocop:enable AbcSize
 
   def destroy
     reset_session

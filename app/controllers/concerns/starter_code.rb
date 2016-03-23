@@ -14,7 +14,7 @@ module StarterCode
         raise GitHub::Error, err.message
       end
     else
-      fail GitHub::Error, 'Invalid repository name, use the format owner/name'
+      raise GitHub::Error, 'Invalid repository name, use the format owner/name'
     end
   end
   # rubocop:enable MethodLength
