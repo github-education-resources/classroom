@@ -37,7 +37,7 @@
       <dd>
         <%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'textfield' %>
         <%= button_tag(type: 'submit', class: 'btn btn-green js-navigation js-form-submit') do %>
-          <i class="octicon octicon-plus"></i> Create team
+          <%= octicon('plus') %> Create team
         <% end %>
       </dd>
     </dl>
