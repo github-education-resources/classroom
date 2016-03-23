@@ -7,7 +7,7 @@ delay = do ->
 
 update_textfield = (list_element) ->
   $(list_element).removeClass('suggestion-focused')
-  $('.js-autocomplete-textfield').val($(list_element).find('.res-name')[0].innerHTML)
+  $('.js-autocomplete-textfield').val($(list_element).data('name'))
 
 ready = ->
   $('.js-autocomplete-textfield').on('focus input', ->
