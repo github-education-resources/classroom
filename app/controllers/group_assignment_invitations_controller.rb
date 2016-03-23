@@ -62,7 +62,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   def check_group_members_not_exceed(group)
     return unless group.present? && group_assignment.present? && group_assignment.max_members.present?
     return unless group.repo_accesses.count >= group_assignment.max_members
-    fail NotAuthorized, "This team has reached its maximum member limit of #{group_assignment.max_members}."
+    raise NotAuthorized, "This team has reached its maximum member limit of #{group_assignment.max_members}."
   end
 
   def decorated_group_assignment_repo
