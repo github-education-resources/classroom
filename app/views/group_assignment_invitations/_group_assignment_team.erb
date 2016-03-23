@@ -15,7 +15,7 @@
     <span class="team-name" itemprop="name"><%= group_assignment_repo.team_name %></span>
     <p class="team-description" itemprop="description"><%=group_member_count%> <% if group_member_count != 1%>members<% else %>member<% end %></p>
     <div class="team-members">
-      <% group_assignment_repo.group.repo_accesses.limit(10).each do |repo_access| %>
+      <% group_assignment_repo.group.repo_accesses.limit(7).each do |repo_access| %>
           <% student = repo_access.user.decorate %>
           <%= link_to student.github_url, class: "tooltipped tooltipped-s #{'disabled' if group_assignment_repo.disabled?}", 'aria-label' => student.login do %>
               <%= image_tag student.avatar_url(30), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.login}" %>
