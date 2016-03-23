@@ -54,7 +54,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     return unless group_id.present?
     return if group_assignment.grouping.groups.find_by(id: group_id)
 
-    fail NotAuthorized, 'You are not permitted to select this team'
+    raise NotAuthorized, 'You are not permitted to select this team'
   end
 
   def decorated_group_assignment_repo
