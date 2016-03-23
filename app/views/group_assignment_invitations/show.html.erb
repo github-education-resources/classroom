@@ -36,7 +36,9 @@
       <dt><label><%= 'OR' if @groups.present? %> Create a new team</label></dt>
       <dd>
         <%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'textfield' %>
-        <%= submit_tag 'Create team', class: 'btn btn-green js-navigation js-form-submit', disabled: true %>
+        <%= button_tag(type: 'submit', class: 'btn btn-green js-navigation js-form-submit') do %>
+          <i class="octicon octicon-plus"></i> Create Team
+        <% end %>
       </dd>
     </dl>
   <% end %>
