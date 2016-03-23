@@ -99,7 +99,7 @@ class GitHubOrganization
       if organization.owned_private_repos.present? && organization.plan.present?
         { owned_private_repos: organization.owned_private_repos, private_repos: organization.plan.private_repos }
       else
-        fail GitHub::Error, 'Cannot retrieve this organizations repo plan, please reauthenticate your token.'
+        raise GitHub::Error, 'Cannot retrieve this organizations repo plan, please reauthenticate your token.'
       end
     end
   end

@@ -29,7 +29,7 @@ class GitHubTeam
   def add_team_repository(full_name)
     with_error_handling do
       unless @client.add_team_repository(@id, full_name)
-        fail GitHub::Error, 'Could not add team to the GitHub repository'
+        raise GitHub::Error, 'Could not add team to the GitHub repository'
       end
     end
   end
