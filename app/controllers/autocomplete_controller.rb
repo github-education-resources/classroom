@@ -1,13 +1,17 @@
 class AutocompleteController < ApplicationController
   def github_repos
-    repos = search_github_repos(params[:query])
+    @repos = search_github_repos(params[:query])
 
     respond_to do |format|
-      format.html { render partial: 'autocomplete/repository_suggestions', locals: { repos: repos } }
+      format.html { render partial: 'autocomplete/repository_suggestions', locals: { repos: @repos } }
     end
   end
 
   private
+
+  def required_scopes
+    %w(repo)
+  end
 
   def github_search_client
     @github_search_client ||= Octokit::Client.new(access_token: current_user.token, auto_paginate: false)
