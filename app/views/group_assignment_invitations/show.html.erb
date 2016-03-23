@@ -17,9 +17,8 @@
     <p>Please be certain that the team you are selecting is the correct team as you cannot change this later</p>
   </div>
 
-  <hr>
-
   <% if @groups.present? %>
+    <hr>
     <p><label>Join an existing team</label></p>
     <div class="team-select-grid">
       <% @group_assignment.group_assignment_repos.each do |repo| %>
