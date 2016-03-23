@@ -7,7 +7,6 @@ class GroupAssignmentInvitationsController < ApplicationController
   before_action :authorize_group_access, only: [:accept_invitation]
 
   def show
-    @group_assignment_repos = invitation.group_assignment.group_assignment_repos
     @groups = invitation.groups.map { |group| [group.title, group.id] }
   end
 
