@@ -5,7 +5,7 @@
     <% group_member_count = group_assignment_repo.group.repo_accesses.count %>
     <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, :class => "team-actions-form", method: :patch) do %>
         <%= hidden_field_tag 'group[id]', group_assignment_repo.id %>
-        <% if group_member_count >= group_assignment.max_members %>
+        <% if group_assignment.max_members.present? && group_member_count >= group_assignment.max_members %>
             <%= submit_tag 'Full', class: 'btn', disabled: true %>
         <% else %>
             <%= submit_tag 'Join', class: 'btn' %>
