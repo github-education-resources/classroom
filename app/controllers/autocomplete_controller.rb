@@ -9,10 +9,6 @@ class AutocompleteController < ApplicationController
 
   private
 
-  def required_scopes
-    %w(repo)
-  end
-
   def github_search_client
     @github_search_client ||= Octokit::Client.new(access_token: current_user.token, auto_paginate: false)
   end
