@@ -31,7 +31,7 @@ RSpec.describe AssignmentsController, type: :controller do
       end.to change { Assignment.count }
     end
 
-    context 'valid starter_code input' do
+    context 'valid starter_code repo_name input' do
       before do
         post :create,
              organization_id: organization.slug,
@@ -44,7 +44,7 @@ RSpec.describe AssignmentsController, type: :controller do
       end
     end
 
-    context 'invalid starter_code input' do
+    context 'invalid starter_code repo_name input' do
       before do
         request.env['HTTP_REFERER'] = 'http://test.host/classrooms/new'
 
@@ -64,6 +64,23 @@ RSpec.describe AssignmentsController, type: :controller do
 
       it 'provides a friendly error message' do
         expect(flash[:error]).to eql('Invalid repository name, use the format owner/name')
+      end
+    end
+
+    context 'repo_id for starter_code is passed' do
+      before do
+        post :create,
+             organization_id: organization.slug,
+             assignment:      attributes_for(:assignment),
+             repo_id:         8514 # 'rails/rails'
+      end
+
+      it 'creates a new Assignment' do
+        expect(Assignment.count).to eql(1)
+      end
+
+      it 'sets correct starter_code_repo for the new Assignment' do
+        expect(Assignment.first.starter_code_repo_id).to be(8514)
       end
     end
   end

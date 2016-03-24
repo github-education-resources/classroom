@@ -2,8 +2,8 @@
   <ul>
     <% repos.each do |repo| %>
       <li class="js-autocomplete-suggestion-item"
-          data-id="<%= repo[:id] %>"
-          data-name="<%= repo[:full_name] %>">
+          data-res-id="<%= repo[:id] %>"
+          data-res-name="<%= repo[:full_name] %>">
         <%= repo[:private] ? octicon('lock') : octicon('repo') %>
         <strong><%= repo[:full_name] %></strong>
         <span><%= repo[:description] %></span>

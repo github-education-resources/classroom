@@ -7,7 +7,8 @@ delay = do ->
 
 update_textfield = (list_element) ->
   $(list_element).removeClass('suggestion-focused')
-  $('.js-autocomplete-textfield').val($(list_element).data('name'))
+  $('.js-autocomplete-textfield').val($(list_element).data('res-name'))
+  $('.js-autocomplete-resource-id').val($(list_element).data('res-id'))
 
 ready = ->
   $('.js-autocomplete-textfield').on('focus input', ->
@@ -47,7 +48,12 @@ ready = ->
 
   $('.js-autocomplete-textfield').on('blur', ->
     selected_items = $('.js-autocomplete-suggestion-item.suggestion-focused')
-    update_textfield(selected_items.first()) if selected_items.length == 1
+
+    if (selected_items.length == 1)
+      update_textfield(selected_items.first())
+    else
+      $('.js-autocomplete-resource-id').removeAttr('value')
+
     $('.js-autocomplete-suggestions-container').hide()
   )
 
