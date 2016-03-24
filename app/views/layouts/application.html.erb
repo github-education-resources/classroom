@@ -22,7 +22,7 @@
     <main>
       <%= yield :organization_banner %>
 
-      <%= render 'shared/flash_messages' %>
+      <%= render 'shared/flash_messages' unless flash[:error].present?%>
 
       <div class="site-content">
         <div class="container">

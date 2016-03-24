@@ -83,9 +83,9 @@ class ApplicationController < ActionController::Base
     unless flash[:error].present?
       case exception
       when ActionController::RoutingError
-        redirect_to not_found_path, status: :not_found, flash: { error: 'Page Not Found' }
+        redirect_to not_found_path, status: :not_found, flash: { error: "Page Not Found" }
       when ActiveRecord::RecordNotFound
-        redirect_to not_found_path, status: :not_found, flash: { error: 'Invalid Link' }
+        redirect_to not_found_path, status: :not_found, flash: { error: "Invalid Link" }
       end
     end
   end
