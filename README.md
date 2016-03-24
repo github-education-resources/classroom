@@ -11,6 +11,10 @@ Assignments are the core of Classroom for GitHub. Teachers can easily create an 
 
 ## Hacking on Classroom for GitHub
 
+### Help wanted
+
+If you're interested in helping out with Classroom development and looking for a place to get started, check out the issues labeled [`help-wanted`](https://github.com/education/classroom/issues?q=is%3Aissue+is%3Aopen+label%3Ahelp-wanted) and feel free to ask any questions you have before diving into the code.
+
 ### Get started
 New to Ruby? No worries! You can follow these instructions to install a local server.
 
@@ -53,7 +57,8 @@ script/setup
 ### Production environment variables
 ENV Variable | Description |
 :-------------------|:-----------------|
-`AIRBRAKE_API_KEY` | the API key for airbrake.io, if set Airbrake will be enabled
+`AIRBRAKE_ID` | the ID for application in airbrake.io, if set Airbrake will be enabled
+`AIRBRAKE_PROJECT_KEY` | the PROJECT_KEY in airbrake.io, if set Airbrake will be enabled
 `CANONICAL_HOST` | the preferred hostname for the application, if set requests served on other hostnames will be redirected
 `GOOGLE_ANALYTICS_TRACKING_ID` | identifier for Google Analytics in the format `UA-.*`
 `PINGLISH_ENABLED` | Enable the `/_ping` endpoint with relevant health checks
