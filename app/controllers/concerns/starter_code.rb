@@ -1,5 +1,4 @@
 module StarterCode
-  include GitHub
   extend ActiveSupport::Concern
 
   # rubocop:disable MethodLength
