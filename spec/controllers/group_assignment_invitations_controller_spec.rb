@@ -75,6 +75,18 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         end
       end
 
+      context 'group has not reached maximum number of members' do
+        let(:group)   { Group.create(title: 'The Group', grouping: grouping) }
+
+        before(:each) do
+          group_assignment.update(max_members: 1)
+        end
+
+        it 'allows user to join' do
+          patch :accept_invitation, id: invitation.key, group: { id: group.id }
+        end
+      end
+
       context 'group does not have maximum number of members' do
         let(:group) { Group.create(title: 'The Group', grouping: grouping) }
 
