@@ -11,6 +11,10 @@ Assignments are the core of Classroom for GitHub. Teachers can easily create an 
 
 ## Hacking on Classroom for GitHub
 
+### Help wanted
+
+If you're interested in helping out with Classroom development and looking for a place to get started, check out the issues labeled [`help-wanted`](https://github.com/education/classroom/issues?q=is%3Aissue+is%3Aopen+label%3Ahelp-wanted) and feel free to ask any questions you have before diving into the code.
+
 ### Get started
 New to Ruby? No worries! You can follow these instructions to install a local server.
 
