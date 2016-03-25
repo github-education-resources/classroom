@@ -65,7 +65,11 @@ class AssignmentsController < ApplicationController
   end
 
   def starter_code_repo_id_param
-    params[:repo_id].present? ? params[:repo_id] : starter_code_repository_id(params[:repo_name])
+    if params[:repo_id].present?
+      validate_starter_code_repository_id(params[:repo_id])
+    else
+      starter_code_repository_id(params[:repo_name])
+    end
   end
 
   def update_assignment_params
