@@ -50,7 +50,7 @@ class GroupAssignmentRepo < ActiveRecord::Base
   # Public
   #
   def repo_name
-    headers     = { headers: GitHubAPIHeaders.no_cache_no_store }
+    headers     = { headers: GitHub::APIHeaders.no_cache_no_store }
     github_team = GitHubTeam.new(creator.github_client, github_team_id).team(headers)
 
     "#{group_assignment.slug}-#{github_team.slug}"
