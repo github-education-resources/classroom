@@ -1,6 +1,4 @@
 class GitHubOrganization
-  include GitHub
-
   def initialize(client, id)
     @client    = client
     @id        = id
@@ -11,7 +9,7 @@ class GitHubOrganization
   def accept_membership(user_github_login)
     return if organization_member?(user_github_login)
 
-    with_error_handling do
+    GitHub::Errors.with_error_handling do
       @client.update_organization_membership(login, state: 'active')
     end
   end
@@ -19,7 +17,7 @@ class GitHubOrganization
   def add_membership(user_github_login)
     return if organization_member?(user_github_login)
 
-    with_error_handling do
+    GitHub::Errors.with_error_handling do
       @client.update_organization_membership(login, user: user_github_login)
     end
   end
@@ -27,7 +25,7 @@ class GitHubOrganization
   # Public
   #
   def admin?(user_github_login)
-    with_error_handling do
+    GitHub::Errors.with_error_handling do
       membership = @client.organization_membership(login, user: user_github_login)
       membership.role == 'admin' && membership.state == 'active'
     end
@@ -38,7 +36,7 @@ class GitHubOrganization
   def create_repository(repo_name, users_repo_options = {})
     repo_options = github_repo_default_options.merge(users_repo_options)
 
-    repo = with_error_handling do
+    repo = GitHub::Errors.with_error_handling do
       @client.create_repository(repo_name, repo_options)
     end
 
@@ -54,7 +52,7 @@ class GitHubOrganization
   # Public
   #
   def create_team(team_name)
-    github_team = with_error_handling do
+    github_team = GitHub::Errors.with_error_handling do
       @client.create_team(@id,
                           description: "#{team_name} created by Classroom for GitHub",
                           name: team_name,
@@ -73,28 +71,28 @@ class GitHubOrganization
   # Public
   #
   def login
-    with_error_handling { @client.organization(@id).login }
+    GitHub::Errors.with_error_handling { @client.organization(@id).login }
   end
 
   # Public
   #
   def organization
-    with_error_handling { @client.organization(@id) }
+    GitHub::Errors.with_error_handling { @client.organization(@id) }
   end
 
   # Public
   #
   def organization_members(options = {})
-    with_error_handling { @client.organization_members(@id, options) }
+    GitHub::Errors.with_error_handling { @client.organization_members(@id, options) }
   end
 
   def organization_member?(user_github_login)
-    with_error_handling { @client.organization_member?(@id, user_github_login) }
+    GitHub::Errors.with_error_handling { @client.organization_member?(@id, user_github_login) }
   end
 
   def plan
-    with_error_handling do
-      organization = @client.organization(@id, headers: no_cache_headers)
+    GitHub::Errors.with_error_handling do
+      organization = @client.organization(@id, headers: GitHub::APIHeaders.no_cache_no_store)
 
       if organization.owned_private_repos.present? && organization.plan.present?
         { owned_private_repos: organization.owned_private_repos, private_repos: organization.plan.private_repos }
@@ -113,7 +111,7 @@ class GitHubOrganization
       return
     end
 
-    with_error_handling do
+    GitHub::Errors.with_error_handling do
       @client.remove_organization_member(@id, github_user_login)
     end
   end
