@@ -1,5 +1,4 @@
 module GitHubPlan
-  include GitHub
   extend ActiveSupport::Concern
 
   included do
