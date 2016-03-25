@@ -1,6 +1,4 @@
 class GitHubRepository
-  include GitHub
-
   attr_reader :id
 
   def initialize(client, id)
@@ -11,7 +9,7 @@ class GitHubRepository
   # Public
   #
   def add_collaborator(collaborator)
-    with_error_handling do
+    GitHub::Errors.with_error_handling do
       @client.add_collaborator(@id, collaborator)
     end
   end
@@ -19,13 +17,13 @@ class GitHubRepository
   # Public
   #
   def full_name
-    with_error_handling { @client.repository(@id).full_name }
+    GitHub::Errors.with_error_handling { @client.repository(@id).full_name }
   end
 
   # Public
   #
   def get_starter_code_from(source)
-    with_error_handling do
+    GitHub::Errors.with_error_handling do
       credentials = { vcs_username: @client.login, vcs_password: @client.access_token }
       @client.start_source_import(@id, 'git', "https://github.com/#{source.full_name}", credentials)
     end
@@ -34,7 +32,7 @@ class GitHubRepository
   # Public
   #
   def repository(full_repo_name = nil)
-    with_error_handling do
+    GitHub::Errors.with_error_handling do
       @client.repository(full_repo_name || @id)
     end
   end
