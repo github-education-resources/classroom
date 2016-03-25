@@ -57,17 +57,25 @@ class AssignmentsController < ApplicationController
       .permit(:title, :public_repo)
       .merge(creator: current_user,
              organization: @organization,
-             starter_code_repo_id: starter_code_repository_id(params[:repo_name]))
+             starter_code_repo_id: starter_code_repo_id_param)
   end
 
   def set_assignment
     @assignment = @organization.assignments.find_by!(slug: params[:id])
   end
 
+  def starter_code_repo_id_param
+    if params[:repo_id].present?
+      validate_starter_code_repository_id(params[:repo_id])
+    else
+      starter_code_repository_id(params[:repo_name])
+    end
+  end
+
   def update_assignment_params
     params
       .require(:assignment)
       .permit(:title, :public_repo)
-      .merge(starter_code_repo_id: starter_code_repository_id(params[:repo_name]))
+      .merge(starter_code_repo_id: starter_code_repo_id_param)
   end
 end

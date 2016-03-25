@@ -17,4 +17,16 @@ module StarterCode
     end
   end
   # rubocop:enable MethodLength
+
+  def validate_starter_code_repository_id(repo_id)
+    if repo_id.is_a?(Integer) || (repo_id.is_a?(String) && repo_id =~ /^[0-9]+$/)
+      begin
+        GitHubRepository.new(current_user.github_client, repo_id.to_i).repository.id
+      rescue ArgumentError => err
+        raise GitHub::Error, err.message
+      end
+    else
+      raise GitHub::Error, 'Invalid repository name, please check it again'
+    end
+  end
 end
