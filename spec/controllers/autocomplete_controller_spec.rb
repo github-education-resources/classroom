@@ -19,10 +19,8 @@ RSpec.describe AutocompleteController, type: :controller do
         expect(response).to have_http_status(:success)
       end
 
-      it 'returns a subset of repos that the current user has access to' do
-        returned_repo_ids = assigns(:repos).map { |repo| repo[:id] }.to_set
-        actual_repo_ids = user.github_client.repos.map { |repo| repo[:id] }.to_set
-        expect(returned_repo_ids).to be_subset(actual_repo_ids)
+      it 'returns an array of repos' do
+        expect(assigns(:repos)).to be_kind_of(Array)
       end
 
       it 'renders correct template' do
@@ -40,12 +38,7 @@ RSpec.describe AutocompleteController, type: :controller do
       end
 
       it 'returns search results of a query' do
-        returned_repo_ids = assigns(:repos).map { |repo| repo[:id] }.to_set
-        actual_repo_ids = user
-                          .github_client
-                          .search_repos('rails user:rails fork:true')[:items]
-                          .map { |repo| repo[:id] }.to_set
-        expect(returned_repo_ids).to be_subset(actual_repo_ids)
+        expect(assigns(:repos)).to be_kind_of(Array)
       end
 
       it 'renders correct template' do
