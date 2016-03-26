@@ -23,7 +23,7 @@ describe GitHub::Search do
 
     context 'search parameters are defined' do
       it 'queries the github repo search api' do
-        search_url = 'search/repositories?page=1&per_page=10&q=rails%20in:name%20fork:true%20user:rails'
+        search_url = 'search/repositories?page=1&per_page=10&q=rails%20in:name%20fork:true%20user:rails&sort=updated'
         subject.search_github_repositories('rails/rails')
 
         expect(WebMock).to have_requested(:get, github_url(search_url))
