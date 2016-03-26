@@ -41,16 +41,7 @@ class StafftoolsIndex < Chewy::Index
 
     field :user_login, value: (lambda do |assignment_repo|
       user = assignment_repo.user || assignment_repo.repo_access.user
-
-      begin
-        begin
-          GitHubUser.new(user.github_client, user.uid).user.login
-        rescue GitHub::Forbidden
-          GitHubUser.new(Classroom.github_client, user.uid).user.login
-        end
-      rescue GitHub::NotFound
-        NullGitHubUser.new.login
-      end
+      user.github_user.login
     end)
   end
 
@@ -161,19 +152,7 @@ class StafftoolsIndex < Chewy::Index
       end
     end)
 
-    field :user_login, value: (lambda do |repo_access|
-      user = repo_access.user
-
-      begin
-        begin
-          GitHubUser.new(user.github_client, user.uid).user.login
-        rescue GitHub::Forbidden
-          GitHubUser.new(Classroom.github_client, user.uid).user.login
-        end
-      rescue GitHub::NotFound
-        NullGitHubUser.new.login
-      end
-    end)
+    field :user_login, value: ->(repo_access) { repo_access.user.github_user.login }
   end
 
   define_type Organization do
@@ -238,6 +217,8 @@ class StafftoolsIndex < Chewy::Index
         NullGitHubUser.new.name
       end
     end)
+    field :login, value: ->(user) { user.github_user.login }
+    field :name,  value: ->(user) { user.github_user.name || user.github_user.login }
   end
 end
 # rubocop:enable ClassLength
