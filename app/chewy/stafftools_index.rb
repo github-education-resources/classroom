@@ -40,17 +40,7 @@ class StafftoolsIndex < Chewy::Index
     field :assignment_title, value: ->(assignment_invitation) { assignment_invitation.assignment.title }
 
     field :user_login, value: (lambda do |assignment_repo|
-      user = assignment_repo.user
-
-      begin
-        begin
-          GitHubUser.new(user.github_client, user.uid).user.login
-        rescue GitHub::Forbidden
-          GitHubUser.new(Classroom.github_client, user.uid).user.login
-        end
-      rescue GitHub::NotFound
-        NullGitHubUser.new.login
-      end
+      assignment_repo.user.github_user.login
     end)
   end
 
