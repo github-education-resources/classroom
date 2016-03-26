@@ -1,6 +1,6 @@
 class AutocompleteController < ApplicationController
   def github_repos
-    github_search = GitHub::Search.new(current_user.token, auto_paginate: false)
+    github_search = GitHub::Search.new(current_user.token, current_user.uid, auto_paginate: false)
     @repos        = github_search.search_github_repositories(params[:query])
 
     respond_to do |format|
