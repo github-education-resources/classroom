@@ -15,8 +15,8 @@
         </li>
 
         <li>
-          <%= link_to decorated_current_user.github_url, class: 'tooltipped tooltipped-s', 'aria-label' => 'View GitHub profile' do %>
-            <%= image_tag decorated_current_user.avatar_url(40), class: 'avatar', alt: "@#{decorated_current_user.login}", height: 20, width: 20 %>
+          <%= link_to current_user.github_user.html_url, class: 'tooltipped tooltipped-s', 'aria-label' => 'View GitHub profile' do %>
+            <%= image_tag current_user.github_user.avatar_url(40), class: 'avatar', alt: "@#{current_user.github_user.login}", height: 20, width: 20 %>
           <% end %>
         </li>
 
