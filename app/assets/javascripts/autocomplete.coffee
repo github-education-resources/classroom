@@ -11,7 +11,7 @@ update_textfield = (list_element) ->
   $('.js-autocomplete-resource-id').val($(list_element).data('res-id'))
 
 ready = ->
-  $('.js-autocomplete-textfield').on('focus input', ->
+  $('.js-autocomplete-textfield').on('change keyup', ->
     return unless $(this).is(':focus')
     textfield = this
     query = textfield.value
@@ -43,7 +43,7 @@ ready = ->
 
         $('.js-autocomplete-suggestions-container').show()
 
-    ), 200
+    ), 500
   )
 
   $('.js-autocomplete-textfield').on('blur', ->
