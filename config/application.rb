@@ -66,8 +66,7 @@ module Classroom
         end
 
         ping.check :elasticsearch do
-          raise unless Chewy.client.cluster.health['status'] == 'green'
-          'ok'
+          Chewy.client.cluster.health['status'] == 'green' ? 'ok' : false  
         end
       end
     end
