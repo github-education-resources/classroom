@@ -14,7 +14,9 @@ describe GitHub::Search do
       end
 
       it 'returns a subset of repos that the user has access to' do
-        repo_ids = subject.search_github_repositories('').map(&:id).to_set
+        repos, _error_message = subject.search_github_repositories('')
+
+        repo_ids = repos.map(&:id).to_set
         expect_repo_ids = user.github_client.repos.map(&:id).to_set
 
         expect(repo_ids).to be_subset(expect_repo_ids)
@@ -30,7 +32,9 @@ describe GitHub::Search do
       end
 
       it 'returns search results of a query' do
-        returned_repo_ids = subject.search_github_repositories('rails/rails').map(&:id).to_set
+        returned_repos, _error_message = subject.search_github_repositories('rails/rails')
+
+        returned_repo_ids = returned_repos.map(&:id).to_set
         actual_repo_ids = user
                           .github_client
                           .search_repos('rails user:rails fork:true')[:items]
