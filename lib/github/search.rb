@@ -10,14 +10,16 @@ module GitHub
     end
 
     def search_github_repositories(query, options = { sort: 'updated', per_page: 10, page: 1 })
-      GitHub::Errors.with_error_handling do
+      return GitHub::Errors.with_error_handling do
         if query.present?
           search_query = build_github_repositories_query(query)
           search_client.search_repos(search_query, options)[:items]
         else
           search_client.repos(@github_id, options)
         end
-      end
+      end, ''
+    rescue GitHub::Error => err
+      return [], err.message
     end
 
     private
