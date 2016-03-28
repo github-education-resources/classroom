@@ -44,6 +44,22 @@ RSpec.describe GroupAssignment, type: :model do
     end
   end
 
+  describe 'exclusion of reserved words from title' do
+    let(:organization) { create(:organization) }
+
+    it 'ensures RecordInvalid error when GroupAssignment title is \'new\'' do
+      expect do
+        create(:group_assignment, organization: organization, title: 'new')
+      end.to raise_error(ActiveRecord::RecordInvalid, 'Validation failed: Your assignment title is reserved')
+    end
+
+    it 'ensures RecordInvalid error when GroupAssignment title is \'update\'' do
+      expect do
+        create(:group_assignment, organization: organization, title: 'update')
+      end.to raise_error(ActiveRecord::RecordInvalid, 'Validation failed: Your assignment title is reserved')
+    end
+  end
+
   context 'with group_assignment' do
     subject { create(:group_assignment) }
 
