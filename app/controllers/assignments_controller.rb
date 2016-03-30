@@ -61,6 +61,8 @@ class AssignmentsController < ApplicationController
   end
 
   def set_assignment
+    @assignment = @organization.assignments.find_by!(id: params[:id])
+  rescue ActiveRecord::RecordNotFound
     @assignment = @organization.assignments.find_by!(slug: params[:id])
   end
 

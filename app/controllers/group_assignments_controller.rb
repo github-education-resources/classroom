@@ -88,6 +88,8 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def set_group_assignment
+    @group_assignment = @organization.group_assignments.find_by!(id: params[:id])
+  rescue ActiveRecord::RecordNotFound
     @group_assignment = @organization.group_assignments.find_by!(slug: params[:id])
   end
 

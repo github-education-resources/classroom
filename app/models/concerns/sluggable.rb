@@ -10,8 +10,4 @@ module Sluggable
   def slugify
     self.slug = title.parameterize
   end
-
-  def to_param
-    slug
-  end
 end
