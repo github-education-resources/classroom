@@ -113,6 +113,12 @@ RSpec.describe AssignmentsController, type: :controller do
       get :show, organization_id: organization.id, id: assignment.id
       expect(response).to have_http_status(:success)
     end
+
+    it 'redirects to id based routes when access through slug' do
+      get :show, organization_id: organization.slug, id: assignment.slug
+
+      expect(response).to redirect_to(organization_assignment_path(organization, assignment))
+    end
   end
 
   describe 'GET #edit', :vcr do

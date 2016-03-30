@@ -135,6 +135,12 @@ RSpec.describe OrganizationsController, type: :controller do
       expect(response.status).to eq(200)
       expect(assigns(:organization)).to_not be_nil
     end
+
+    it 'redirects to id based routes when access through slug' do
+      get :show, id: organization.slug
+
+      expect(response).to redirect_to(organization_path(organization))
+    end
   end
 
   describe 'GET #edit', :vcr do
