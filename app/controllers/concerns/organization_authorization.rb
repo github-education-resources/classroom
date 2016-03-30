@@ -25,5 +25,6 @@ module OrganizationAuthorization
     @organization = Organization.find_by!(id: params[:organization_id])
   rescue ActiveRecord::RecordNotFound
     @organization = Organization.find_by!(slug: params[:organization_id])
+    redirect_to action: params[:action], id: params[:id], organization_id: @organization.id
   end
 end

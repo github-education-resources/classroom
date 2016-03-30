@@ -111,6 +111,7 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find_by!(id: params[:id])
   rescue ActiveRecord::RecordNotFound
     @organization = Organization.find_by!(slug: params[:id])
+    redirect_to action: params[:action], id: @organization.id
   end
 
   # rubocop:disable AbcSize

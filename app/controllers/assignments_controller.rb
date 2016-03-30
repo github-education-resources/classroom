@@ -64,6 +64,7 @@ class AssignmentsController < ApplicationController
     @assignment = @organization.assignments.find_by!(id: params[:id])
   rescue ActiveRecord::RecordNotFound
     @assignment = @organization.assignments.find_by!(slug: params[:id])
+    redirect_to action: params[:action], id: @assignment.id, organization_id: params[:organization_id]
   end
 
   def starter_code_repo_id_param
