@@ -130,7 +130,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
   describe 'GET #show', :vcr do
     it 'returns success and sets the organization' do
-      get :show, id: organization.slug
+      get :show, id: organization.id
 
       expect(response.status).to eq(200)
       expect(assigns(:organization)).to_not be_nil
@@ -139,7 +139,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
   describe 'GET #edit', :vcr do
     it 'returns success and sets the organization' do
-      get :edit, id: organization.slug
+      get :edit, id: organization.id
 
       expect(response).to have_http_status(:success)
       expect(assigns(:organization)).to_not be_nil
@@ -149,7 +149,7 @@ RSpec.describe OrganizationsController, type: :controller do
   describe 'PATCH #update', :vcr do
     it 'correctly updates the organization' do
       options = { title: 'New Title' }
-      patch :update, id: organization.slug, organization: options
+      patch :update, id: organization.id, organization: options
 
       expect(response).to redirect_to(organization_path(Organization.find(organization.id)))
     end
@@ -157,12 +157,12 @@ RSpec.describe OrganizationsController, type: :controller do
 
   describe 'DELETE #destroy', :vcr do
     it 'sets the `deleted_at` column for the organization' do
-      expect { delete :destroy, id: organization.slug }.to change { Organization.all.count }
+      expect { delete :destroy, id: organization.id }.to change { Organization.all.count }
       expect(Organization.unscoped.find(organization.id).deleted_at).not_to be_nil
     end
 
     it 'calls the DestroyResource background job' do
-      delete :destroy, id: organization.slug
+      delete :destroy, id: organization.id
 
       assert_enqueued_jobs 1 do
         DestroyResourceJob.perform_later(organization)
@@ -170,14 +170,14 @@ RSpec.describe OrganizationsController, type: :controller do
     end
 
     it 'redirects back to the index page' do
-      delete :destroy, id: organization.slug
+      delete :destroy, id: organization.id
       expect(response).to redirect_to(organizations_path)
     end
   end
 
   describe 'GET #invite', :vcr do
     it 'returns success and sets the organization' do
-      get :invite, id: organization.slug
+      get :invite, id: organization.id
 
       expect(response.status).to eq(200)
       expect(assigns(:organization)).to_not be_nil
@@ -186,7 +186,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
   describe 'GET #setup', :vcr do
     it 'returns success and sets the organization' do
-      get :setup, id: organization.slug
+      get :setup, id: organization.id
 
       expect(response.status).to eq(200)
       expect(assigns(:organization)).to_not be_nil
@@ -196,7 +196,7 @@ RSpec.describe OrganizationsController, type: :controller do
   describe 'PATCH #setup_organization', :vcr do
     before(:each) do
       options = { title: 'New Title' }
-      patch :update, id: organization.slug, organization: options
+      patch :update, id: organization.id, organization: options
     end
 
     it 'correctly updates the organization' do
