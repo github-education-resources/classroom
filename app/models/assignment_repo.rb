@@ -57,8 +57,8 @@ class AssignmentRepo < ActiveRecord::Base
   end
 
   ## Legacy purposes
+  alias original_user user
   def user
-    return user if user.present?
-    repo_access.user
+    original_user || repo_access.user
   end
 end
