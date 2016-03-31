@@ -55,4 +55,10 @@ class AssignmentRepo < ActiveRecord::Base
   def starter_code_repo_id
     assignment.starter_code_repo_id
   end
+
+  ## Legacy purposes
+  def user
+    return user if user.present?
+    repo_access.user
+  end
 end
