@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module StafftoolsResourceRenderHelper
   def render_stafftools_resource(resource)
     type = resource._data['_type']

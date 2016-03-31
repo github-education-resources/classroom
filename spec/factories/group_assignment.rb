@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 FactoryGirl.define do
   factory :group_assignment do
     title        { "#{Faker::Company.name} Group Assignment"                      }

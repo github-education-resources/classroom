@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 OmniAuth.config.test_mode = true
 
 VCR.use_cassette 'auth_user' do

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class GroupAssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode

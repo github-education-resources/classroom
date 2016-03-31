@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class GitHubOrganization
   def initialize(client, id)
     @client    = client

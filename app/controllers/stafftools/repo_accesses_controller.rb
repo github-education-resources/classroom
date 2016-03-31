@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Stafftools
   class RepoAccessesController < StafftoolsController
     before_action :set_repo_access

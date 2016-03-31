@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Assignment < ActiveRecord::Base
   include Flippable
   include GitHubPlan
