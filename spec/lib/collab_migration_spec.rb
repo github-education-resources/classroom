@@ -1,5 +1,4 @@
 require 'rails_helper'
-require_relative '../../lib/collab_migration'
 
 RSpec.describe CollabMigration do
   let(:organization) { GitHubFactory.create_owner_classroom_org }
