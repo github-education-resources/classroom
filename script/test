@@ -28,6 +28,8 @@ else
   script/update
 fi
 
+RUBYOPTS=--debug=frozen-string-literal
+
 echo "===> Running tests..."
 
 if [ -n "$1" ]; then

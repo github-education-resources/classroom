@@ -6,6 +6,8 @@ set -e
 
 cd "$(dirname "$0")/.."
 
+RUBYOPTS=--debug=frozen-string-literal
+
 echo "==> Running rubocop..."
 bundle exec rubocop
 
