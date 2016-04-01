@@ -19,6 +19,7 @@
         <% organization = group.organization.decorate %>
 
         <p>
+          <h4>ID <%= group.id %></h4>
           <h4>Owned by <%= link_to organization.title, stafftools_organization_path(organization.id) %></h4>
           <h4>Grouping <%= link_to group.grouping.title, stafftools_grouping_path(group.grouping) %></h4>
           <h4>GitHub URL <%= link_to group.github_team_url, group.github_team_url %></h4>
