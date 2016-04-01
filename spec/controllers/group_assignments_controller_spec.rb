@@ -57,7 +57,6 @@ RSpec.describe GroupAssignmentsController, type: :controller do
 
     it 'redirects to id based routes when access through slug' do
       get :show, organization_id: organization.slug, id: group_assignment.slug
-
       expect(response).to redirect_to(organization_group_assignment_path(organization, group_assignment))
     end
   end
