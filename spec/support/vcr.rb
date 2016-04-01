@@ -85,6 +85,3 @@ def use_vcr_placeholder_for(text, replacement)
     end
   end
 end
-
-WebMock.allow_net_connect!
-VCR.turn_off!(:ignore_cassettes => true)
