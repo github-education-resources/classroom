@@ -96,4 +96,8 @@ class ApplicationController < ActionController::Base
   def true_user
     @true_user ||= User.find(session[:user_id]) if session[:user_id]
   end
+
+  def action
+    params[:action]
+  end
 end

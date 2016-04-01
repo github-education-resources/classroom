@@ -91,8 +91,7 @@ class GroupAssignmentsController < ApplicationController
     @group_assignment = @organization.group_assignments.find_by!(id: params[:id])
   rescue ActiveRecord::RecordNotFound
     @group_assignment = @organization.group_assignments.find_by!(slug: params[:id])
-    redirect_to action: params[:action], id: @group_assignment.id, organization_id: params[:organization_id],
-                status: 301
+    redirect_to action: action, id: @group_assignment.id, organization_id: @organization.id, status: 301
   end
 
   def starter_code_repo_id_param
