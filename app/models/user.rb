@@ -13,13 +13,13 @@ class User < ActiveRecord::Base
   validates :uid, presence: true
   validates :uid, uniqueness: true
 
+  def avatar_url(size = 40)
+    "#{github_user.avatar_url}&size=#{size}"
+  end
+
   def assign_from_auth_hash(hash)
     user_attributes = AuthHash.new(hash).user_info
     update_attributes(user_attributes)
-  end
-
-  def authorized_access_token?
-    GitHubUser.new(github_client, uid).authorized_access_token?
   end
 
   def self.create_from_auth_hash(hash)
@@ -35,8 +35,8 @@ class User < ActiveRecord::Base
     @github_client ||= Octokit::Client.new(access_token: token, auto_paginate: true)
   end
 
-  def github_client_scopes
-    GitHubUser.new(github_client, uid).client_scopes
+  def github_user
+    @github_user ||= GitHubUser.new(github_client, uid)
   end
 
   def staff?
