@@ -4,6 +4,10 @@
   border-radius: 3px;
   background: #fff;
 
+  &:first-child {
+    margin-top: 1rem;
+  }
+
   h3 {
     margin-top: 0;
   }
