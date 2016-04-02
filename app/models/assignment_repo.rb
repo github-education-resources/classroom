@@ -55,4 +55,19 @@ class AssignmentRepo < ActiveRecord::Base
   def starter_code_repo_id
     assignment.starter_code_repo_id
   end
+
+  # Public: This method is used for legacy purposes
+  # until we can get the transition finally completed
+  #
+  # We used to create one person teams for Assignments,
+  # however when the new organization permissions came out
+  # https://github.com/blog/2020-improved-organization-permissions
+  # we were able to move these students over to being an outside collaborator
+  # so when we deleted the AssignmentRepo we would remove the student as well.
+  #
+  # Returns the User associated with the AssignmentRepo
+  alias original_user user
+  def user
+    original_user || repo_access.user
+  end
 end
