@@ -23,7 +23,6 @@ class GroupAssignment < ActiveRecord::Base
 
   validates :title, presence: true
   validates :title, length: { maximum: 60 }
-  validates :title, exclusion: { in: GroupAssignmentsController.action_methods.to_a }
 
   validates :slug, uniqueness: { scope: :organization_id }
 
