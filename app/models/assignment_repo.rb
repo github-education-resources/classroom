@@ -15,17 +15,17 @@ class AssignmentRepo < ActiveRecord::Base
   validates :github_repo_id, presence:   true
   validates :github_repo_id, uniqueness: true
 
-  before_destroy :silently_destroy_github_repository
-
-  # Public
-  #
-  def setup_github_repository(repo_name_suffix = nil)
-    return unless organization.present?
-    @repo_name_suffix = repo_name_suffix
-    create_github_repository
-    push_starter_code
-    add_user_as_collaborator
+  before_validation(on: :create) do
+    if organization
+      unless github_repository
+        create_github_repository
+        push_starter_code
+      end
+      add_user_as_collaborator
+    end
   end
+
+  before_destroy :silently_destroy_github_repository
 
   # Public
   #
@@ -43,6 +43,12 @@ class AssignmentRepo < ActiveRecord::Base
   #
   def github_team_id
     repo_access.present? ? repo_access.github_team_id : nil
+  end
+
+  # Public
+  #
+  def assign_repo_name_suffix(repo_name_suffix)
+    @repo_name_suffix = repo_name_suffix
   end
 
   # Public
