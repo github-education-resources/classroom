@@ -13,7 +13,7 @@ RSpec.describe CollabMigration do
     Assignment.create(organization: organization,
                       title: 'gitignore',
                       creator: creator,
-                      public_repo: false)
+                      public_repo: true)
   end
 
   describe 'repo_access with an assignment_repo', :vcr do

@@ -34,7 +34,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
                         title: 'ruby-project',
                         starter_code_repo_id: '1062897',
                         organization: organization,
-                        public_repo: false)
+                        public_repo: true)
     end
 
     let(:invitation) { AssignmentInvitation.create(assignment: assignment) }
