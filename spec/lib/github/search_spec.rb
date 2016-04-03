@@ -3,7 +3,7 @@ require 'rails_helper'
 describe GitHub::Search do
   let(:user) { GitHubFactory.create_classroom_student }
 
-  subject { described_class.new(user.token, user.uid) }
+  subject { described_class.new(id: user.uid, access_token: user.access_token) }
 
   describe '#search_github_repositories', :vcr do
     context 'search parameters are not defined' do
@@ -17,7 +17,7 @@ describe GitHub::Search do
         repos, _error_message = subject.search_github_repositories('')
 
         repo_ids = repos.map(&:id).to_set
-        expect_repo_ids = user.github_client.repos.map(&:id).to_set
+        expect_repo_ids = user.github_user.client.repos.map(&:id).to_set
 
         expect(repo_ids).to be_subset(expect_repo_ids)
       end
@@ -36,7 +36,8 @@ describe GitHub::Search do
 
         returned_repo_ids = returned_repos.map(&:id).to_set
         actual_repo_ids = user
-                          .github_client
+                          .github_user
+                          .client
                           .search_repos('rails user:rails fork:true')[:items]
                           .map(&:id).to_set
 
