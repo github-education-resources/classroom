@@ -8,7 +8,7 @@ RSpec.describe Stafftools::AssignmentReposController, type: :controller do
     Assignment.create(creator: user,
                       title: 'Learn Ruby',
                       organization: user.organizations.first,
-                      public_repo: true)
+                      public_repo: false)
   end
 
   let(:assignment_repo) { AssignmentRepo.create(assignment: assignment, user: student) }
