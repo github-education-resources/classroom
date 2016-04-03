@@ -25,35 +25,24 @@ class AssignmentRepo < ActiveRecord::Base
 
   before_destroy :silently_destroy_github_repository
 
-  # Public
-  #
-  def creator
-    assignment.creator
+  delegate :creator, :starter_code_repo_id, :starter_code?, to: :assignment
+  delegate :github_user,                                    to: :user
+
+  def disabled?
+    return @disabled if @disabled
+    @disabled = (github_repository.disabled? || github_user.disabled?)
   end
 
-  # Public
-  #
-  def private?
-    !assignment.public_repo?
-  end
-
-  # Public
-  #
   def github_team_id
     repo_access.present? ? repo_access.github_team_id : nil
   end
 
-  # Public
-  #
-  def repo_name
-    github_user = GitHubUser.new(user.github_client, user.uid)
-    "#{assignment.slug}-#{github_user.login(headers: GitHub::APIHeaders.no_cache_no_store)}"
+  def private?
+    !assignment.public_repo?
   end
 
-  # Public
-  #
-  def starter_code_repo_id
-    assignment.starter_code_repo_id
+  def repo_name
+    "#{assignment.slug}-#{github_user.login(headers: GitHub::APIHeaders.no_cache_no_store)}"
   end
 
   # Public: This method is used for legacy purposes

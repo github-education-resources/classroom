@@ -10,4 +10,6 @@ class Grouping < ActiveRecord::Base
 
   validates :title, presence: true
   validates :title, uniqueness: { scope: :organization }
+
+  delegate :github_organization, to: :organization
 end

@@ -30,6 +30,11 @@ class GroupAssignment < ActiveRecord::Base
 
   alias_attribute :invitation, :group_assignment_invitation
 
+  delegate :github_user, to: :creator
+  alias github_creator github_user
+
+  delegate :github_organization, to: :organization
+
   def private?
     !public_repo
   end
@@ -40,6 +45,12 @@ class GroupAssignment < ActiveRecord::Base
 
   def starter_code?
     starter_code_repo_id.present?
+  end
+
+  def starter_code_github_repository
+    return unless starter_code?
+    @starter_code_github_repository ||= GitHubRepository.new(id: starter_code_repo_id,
+                                                             access_token: creator.access_token)
   end
 
   private

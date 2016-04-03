@@ -9,13 +9,10 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :organizations
 
   validates :token, presence: true, uniqueness: true
+  alias_attribute :access_token, :token
 
   validates :uid, presence: true
   validates :uid, uniqueness: true
-
-  def avatar_url(size = 40)
-    "#{github_user.avatar_url}&size=#{size}"
-  end
 
   def assign_from_auth_hash(hash)
     user_attributes = AuthHash.new(hash).user_info
@@ -31,12 +28,8 @@ class User < ActiveRecord::Base
     find_by(conditions)
   end
 
-  def github_client
-    @github_client ||= Octokit::Client.new(access_token: token, auto_paginate: true)
-  end
-
   def github_user
-    @github_user ||= GitHubUser.new(github_client, uid)
+    @github_user ||= GitHubUser.new(id: uid, access_token: access_token)
   end
 
   def staff?
