@@ -19,24 +19,13 @@ class AssignmentRepo < ActiveRecord::Base
 
   # Public
   #
-  def setup_github_repository
-    if organization.present?
-      # unless github_repository
-      #   create_github_repository
-      #   push_starter_code
-      # end
-      create_github_repository
-      push_starter_code
-      add_user_as_collaborator
-    end
-  end
-
-  # Public
-  #
-  def set_repo_name_suffix(repo_name_suffix)
+  def setup_github_repository(repo_name_suffix = nil)
+    return unless organization.present?
     @repo_name_suffix = repo_name_suffix
+    create_github_repository
+    push_starter_code
+    add_user_as_collaborator
   end
-
 
   # Public
   #
@@ -60,8 +49,9 @@ class AssignmentRepo < ActiveRecord::Base
   #
   def repo_name
     github_user = GitHubUser.new(user.github_client, user.uid)
-    return "#{assignment.slug}-#{github_user.login(headers: GitHub::APIHeaders.no_cache_no_store)}" unless @repo_name_suffix.present?
-    "#{assignment.slug}-#{github_user.login(headers: GitHub::APIHeaders.no_cache_no_store)}-#{@repo_name_suffix}"
+    repo_name = "#{assignment.slug}-#{github_user.login(headers: GitHub::APIHeaders.no_cache_no_store)}"
+    return repo_name if @repo_name_suffix.nil?
+    "#{repo_name}-#{@repo_name_suffix}"
   end
 
   # Public

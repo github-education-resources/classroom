@@ -4,7 +4,7 @@ class AssignmentInvitationsController < ApplicationController
   before_action :check_user_not_previous_acceptee, only: [:show]
 
   def accept_invitation
-    users_assignment_repo = invitation.redeem_for(current_user)
+    users_assignment_repo = invitation.redeem_for(current_user, params[:repo_name_suffix])
     if users_assignment_repo.present?
       redirect_to successful_invitation_assignment_invitation_path
     else
@@ -25,7 +25,8 @@ class AssignmentInvitationsController < ApplicationController
   def github_repository
     github_repository = GitHubRepository.new(current_user.github_client, nil)
     begin
-      @github_repository ||= github_repository.repository("#{decorated_organization.login}/#{assignment.slug}-#{decorated_current_user.login}")
+      repo_name = "#{decorated_organization.login}/#{assignment.slug}-#{decorated_current_user.login}"
+      @github_repository ||= github_repository.repository(repo_name)
     rescue GitHub::NotFound
       @github_repository ||= nil
     end
@@ -67,7 +68,6 @@ class AssignmentInvitationsController < ApplicationController
   helper_method :organization
 
   def check_user_not_previous_acceptee
-    pp assignment.users
     return unless assignment.users.include?(current_user)
     redirect_to successful_invitation_assignment_invitation_path
   end

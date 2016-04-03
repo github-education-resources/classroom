@@ -20,12 +20,10 @@ module GitHubRepoable
   # Public
   #
   def github_repository
-    begin
-      github_repository = github_organization.repository(repo_name)
-      self.github_repo_id = github_repository.id
-    rescue Octokit::NotFound
-      nil
-    end
+    github_repository = github_organization.repository(repo_name)
+    self.github_repo_id = github_repository.id
+  rescue Octokit::NotFound
+    nil
   end
 
   # Public
