@@ -1,4 +1,6 @@
 AllCops:
+  TargetRubyVersion: 2.3
+
   Include:
     - '**/Rakefile'
     - '**/config.ru'
@@ -24,8 +26,8 @@ Metrics/ClassLength:
 Metrics/LineLength:
   Max: 120
 
-Rails/Delegate:
+Rails/HasAndBelongsToMany:
   Enabled: false
 
-Rails/HasAndBelongsToMany:
+Style/FrozenStringLiteralComment:
   Enabled: false
