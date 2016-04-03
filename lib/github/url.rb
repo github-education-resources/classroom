@@ -1,6 +1,6 @@
 module GitHub
   module URL
-    def self.avatar(id:, size:)
+    def self.avatar(id:, size: 40)
       "https://avatars.githubusercontent.com/u/#{id}?v=3&size=#{size}"
     end
 
