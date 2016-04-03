@@ -99,9 +99,8 @@ linters:
     enabled: false
 
   PropertySortOrder:
-    enabled: false
+    enabled: true
     ignore_unspecified: true
-    severity: warning
     order:
       - position
       - top

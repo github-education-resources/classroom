@@ -20,18 +20,17 @@
 }
 
 .remodal {
-  box-sizing: border-box;
   width: 455px;
   height: 305px;
-  margin-bottom: 25em;
+  box-sizing: border-box;
   padding: 15px;
-  border-radius: 5px;
-
-  transform: translate3d(0, 0, 0);
-
+  margin-bottom: 25em;
   color: inherit;
   background: #fff;
+  border-radius: 5px;
   box-shadow: 0 0 18px rgba(0, 0, 0, 0.4);
+
+  transform: translate3d(0, 0, 0);
 
   .form {
     margin-bottom: 0.8rem;
@@ -52,7 +51,7 @@
 }
 
 .remodal,
-.remodal-wrapper:after {
+.remodal-wrapper::after {
   vertical-align: middle;
 }
 
@@ -60,28 +59,25 @@
   position: absolute;
   top: 8px;
   right: 5px;
-  padding: 10px;
-
   display: block;
+  padding: 10px;
   overflow: visible;
-
-  cursor: pointer;
-  transition: color 0.2s;
-  text-decoration: none;
-
   color: #333;
-  opacity: 0.25;
+  text-decoration: none;
+  cursor: pointer;
+  background: transparent;
   border: 0;
   outline: 0;
-  background: transparent;
+  opacity: 0.25;
+  transition: color 0.2s;
 }
 
 .remodal-header {
-  margin: -15px -15px 15px;
-  border-bottom: 1px solid #e5e5e5;
   padding: 15.5px;
+  margin: -15px -15px 15px;
   font-size: 18px;
   font-weight: normal;
+  border-bottom: 1px solid #e5e5e5;
 }
 
 .remodal-description {
@@ -89,11 +85,11 @@
 }
 
 .remodal-warning {
+  padding: 10px 15px;
+  margin: -16px -15px 15px;
   color: #796620;
   background-color: #f8eec7;
   border-color: #f2e09a;
-  margin: -16px -15px 15px;
-  padding: 10px 15px;
   border-style: solid;
   border-width: 1px 0;
 }
@@ -104,17 +100,13 @@
 }
 
 .remodal-close:before {
-  font-size: 25px;
-  line-height: 35px;
-
   position: absolute;
   top: 0;
   left: 0;
-
   display: block;
-
   width: 35px;
-
+  font-size: 25px;
+  line-height: 35px;
   text-align: center;
 }
 
@@ -129,29 +121,25 @@
 
 @keyframes remodal-opening-keyframes {
   from {
-    transform: scale(1.05);
-
     opacity: 0;
+    transform: scale(1.05);
   }
 
   to {
-    transform: none;
-
     opacity: 1;
+    transform: none;
   }
 }
 
 @keyframes remodal-closing-keyframes {
   from {
-    transform: scale(1);
-
     opacity: 1;
+    transform: scale(1);
   }
 
   to {
-    transform: scale(0.95);
-
     opacity: 0;
+    transform: scale(0.95);
   }
 }
 
