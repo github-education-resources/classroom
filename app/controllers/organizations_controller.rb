@@ -1,17 +1,22 @@
+# rubocop:disable ClassLength
 class OrganizationsController < ApplicationController
   include OrganizationAuthorization
 
   before_action :authorize_organization_addition,     only: [:create]
-  before_action :set_users_github_organizations,      only: [:index, :new, :create]
-  before_action :add_current_user_to_organizations,   only: [:index]
+  before_action :set_users_github_organizations,      only: [:new, :create, :async_index]
+  before_action :add_current_user_to_organizations,   only: [:async_index]
   before_action :paginate_users_github_organizations, only: [:new, :create]
+  before_action :set_organizations,                   only: [:index, :async_index]
 
-  skip_before_action :set_organization, :authorize_organization_access, only: [:index, :new, :create]
+  skip_before_action :set_organization, :authorize_organization_access, only: [:index, :new, :create, :async_index]
 
   decorates_assigned :organization
 
   def index
-    @organizations = current_user.organizations.includes(:users).page(params[:page])
+  end
+
+  def async_index
+    render partial: 'organizations/organizations_list'
   end
 
   def new
@@ -111,6 +116,10 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find_by!(slug: params[:id])
   end
 
+  def set_organizations
+    @organizations = current_user.organizations.includes(:users).page(params[:page])
+  end
+
   # rubocop:disable AbcSize
   def set_users_github_organizations
     github_user = GitHubUser.new(current_user.github_client, current_user.uid)
@@ -153,3 +162,4 @@ class OrganizationsController < ApplicationController
       .permit(:title)
   end
 end
+# rubocop:enable ClassLength

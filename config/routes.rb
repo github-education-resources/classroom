@@ -44,6 +44,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get '/classrooms-async', to: 'organizations#async_index'
+
   namespace :stafftools do
     constraints StaffConstraint.new do
       mount Sidekiq::Web  => '/sidekiq'

@@ -188,6 +188,10 @@ main {
   font-size: 20px;
   font-weight: normal;
   color: #5d666f;
+
+  &.inline {
+    display: inline-block;
+  }
 }
 
 .assignment-option-name {
