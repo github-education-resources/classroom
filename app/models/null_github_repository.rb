@@ -1,6 +1,5 @@
 class NullGitHubRepository < NullGitHubResource
-  private
-
+  # Internal
   def null_github_attributes
     {
       full_name:  'Deleted repository',

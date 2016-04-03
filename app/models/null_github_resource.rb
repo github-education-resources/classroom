@@ -3,6 +3,11 @@ class NullGitHubResource
     set_null_github_attributes
   end
 
+  # Internal
+  def null_github_attributes
+    []
+  end
+
   private
 
   def set_null_github_attributes

@@ -1,6 +1,5 @@
 class NullGitHubTeam < NullGitHubResource
-  private
-
+  # Internal
   def null_github_attributes
     {
       name: 'Deleted team',
