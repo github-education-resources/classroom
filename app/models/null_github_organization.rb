@@ -1,13 +1,12 @@
 class NullGitHubOrganization < NullGitHubResource
-  def html_url
-    '#'
-  end
+  private
 
-  def login
-    'ghost'
-  end
-
-  def name
-    'Deleted organization'
+  def null_github_attributes
+    {
+      login:      'ghost',
+      avatar_url: 'https://avatars.githubusercontent.com/u/10137?v=3',
+      html_url:   'https://github.com/ghost',
+      name:       'Deleted organization'
+    }
   end
 end

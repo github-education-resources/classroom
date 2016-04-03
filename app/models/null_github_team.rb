@@ -1,13 +1,10 @@
 class NullGitHubTeam < NullGitHubResource
-  def name
-    'Deleted team'
-  end
+  private
 
-  def organization
-    NullGitHubOrganization.new
-  end
-
-  def slug
-    'ghost'
+  def null_github_attributes
+    {
+      name: 'Deleted team',
+      slug: 'ghost'
+    }
   end
 end
