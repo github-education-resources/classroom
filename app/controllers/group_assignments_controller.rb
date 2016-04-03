@@ -7,9 +7,6 @@ class GroupAssignmentsController < ApplicationController
 
   before_action :authorize_grouping_access, only: [:create, :update]
 
-  decorates_assigned :organization
-  decorates_assigned :group_assignment
-
   def new
     @group_assignment = GroupAssignment.new
   end
