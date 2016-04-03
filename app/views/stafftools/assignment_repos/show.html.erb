@@ -5,7 +5,7 @@
     </span>
 
     <h2 class="stafftools-heading">
-      Assignment repository <%= assignment_repo.id %>
+      Assignment repository <%= @assignment_repo.id %>
     </h2>
 
     <p class="assignment-type text-muted">Assigment repository</p>
@@ -15,13 +15,21 @@
     <h3>Assignment repository information</h3>
 
     <div class="boxed-group-inner">
-      <% creator      = assignment_repo.creator.decorate %>
-      <% organization = assignment_repo.organization.decorate %>
+      <% creator      = @assignment_repo.creator%>
+      <% organization = @assignment_repo.organization %>
 
       <table>
         <tr>
           <td class="text-emphasized">ID</td>
-          <td><%= assignment_repo.id %></td>
+          <td><%= @assignment_repo.id %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">GitHub ID</td>
+          <td><%= @assignment_repo.github_repo_id %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">GitHub URL</td>
+          <td><%= link_to @assignment_repo.github_repository.html_url, @assignment_repo.github_repository.html_url %></td>
         </tr>
         <tr>
           <td class="text-emphasized">Owned by</td>
@@ -29,20 +37,19 @@
         </tr>
         <tr>
           <td class="text-emphasized">Created by</td>
-          <td><%= link_to creator.login, stafftools_user_path(creator) %></td>
+          <td><%= link_to creator.github_user.login, stafftools_user_path(creator) %></td>
         </tr>
         <tr>
           <td class="text-emphasized">Assignment</td>
-          <td><%= link_to assignment_repo.assignment.title, stafftools_assignment_path(assignment_repo.assignment.id) %></td>
+          <td><%= link_to @assignment_repo.assignment.title, stafftools_assignment_path(@assignment_repo.assignment.id) %></td>
         </tr>
         <tr>
           <td class="text-emphasized">User</td>
-          <td><%= link_to assignment_repo.user.decorate.login, stafftools_user_path(assignment_repo.user) %></td>
-
+          <td><%= link_to @assignment_repo.github_user.login, stafftools_user_path(@assignment_repo.user) %></td>
         </tr>
         <tr>
           <td class="text-emphasized">Created on</td>
-          <td><%= local_time(assignment_repo.created_at) %></td>
+          <td><%= local_time(@assignment_repo.created_at) %></td>
         </tr>
       </table>
     </div>

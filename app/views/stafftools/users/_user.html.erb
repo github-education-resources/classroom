@@ -1,5 +1,5 @@
 <div class="classroom-resource-item">
-  <%= image_tag github_avatar_url(user.uid, 96), height: 48, width: 48, class: 'avatar left', alt: "@#{user.login}" %>
+  <%= image_tag GitHub::URL.avatar(id: user.uid, size: 96), height: 48, width: 48, class: 'avatar left', alt: "@#{user.login}" %>
 
   <%= link_to stafftools_user_path(user.id) do %>
     <strong class="search-result-title"><%= user.login %></strong>

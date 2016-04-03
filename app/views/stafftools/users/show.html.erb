@@ -1,7 +1,7 @@
 <div class="site-content">
   <div class="stafftools-page-header clearfix">
     <span class="assignment-icon assignment-icon-individual left">
-      <%= image_tag @user.avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{@user.github_user.login}" %>
+      <%= image_tag GitHub::URL.avatar(id: @user.uid, size: 96), height: 48, width: 48, class: 'avatar left', alt: "@#{@user.github_user.login}" %>
     </span>
 
     <h2 class="stafftools-heading">
@@ -50,7 +50,7 @@
 
       <div class="boxed-group-inner">
         <ul class="boxed-group-list standalone">
-          <%= render partial: 'stafftools/users/organization', collection: @user.organizations.decorate %>
+          <%= render partial: 'stafftools/users/organization', collection: @user.organizations %>
         </ul>
       </div>
     </div>
@@ -63,7 +63,7 @@
       <div class="boxed-group-inner">
         <ul class="boxed-group-list standalone">
           <% @user.repo_accesses.each do |repo_access| %>
-            <%= render partial: 'stafftools/users/organization', locals: { organization: repo_access.organization.decorate } %>
+            <%= render partial: 'stafftools/users/organization', locals: { organization: repo_access.organization } %>
           <% end %>
         </ul>
       </div>
