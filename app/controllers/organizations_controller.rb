@@ -122,7 +122,7 @@ class OrganizationsController < ApplicationController
   end
 
   def create_user_organization_access(organization)
-    return unless current_user.github_user.active_admin?(organization.github_organization)
+    return unless current_user.github_user.active_admin?(github_organization: organization.github_organization)
     organization.users << current_user
   end
 
