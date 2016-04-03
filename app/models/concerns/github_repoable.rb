@@ -19,6 +19,17 @@ module GitHubRepoable
 
   # Public
   #
+  def github_repository
+    begin
+      github_repository = github_organization.repository(repo_name)
+      self.github_repo_id = github_repository.id
+    rescue Octokit::NotFound
+      nil
+    end
+  end
+
+  # Public
+  #
   def create_github_repository
     repo_description = "#{repo_name} created by Classroom for GitHub"
     github_repository = github_organization.create_repository(repo_name,

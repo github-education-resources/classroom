@@ -5,7 +5,6 @@ class AssignmentInvitationsController < ApplicationController
 
   def accept_invitation
     users_assignment_repo = invitation.redeem_for(current_user)
-
     if users_assignment_repo.present?
       redirect_to successful_invitation_assignment_invitation_path
     else
@@ -22,6 +21,16 @@ class AssignmentInvitationsController < ApplicationController
   end
 
   private
+
+  def github_repository
+    github_repository = GitHubRepository.new(current_user.github_client, nil)
+    begin
+      @github_repository ||= github_repository.repository("#{decorated_organization.login}/#{assignment.slug}-#{decorated_current_user.login}")
+    rescue GitHub::NotFound
+      @github_repository ||= nil
+    end
+  end
+  helper_method :github_repository
 
   def required_scopes
     %w(user:email)
@@ -62,6 +71,7 @@ class AssignmentInvitationsController < ApplicationController
   helper_method :organization
 
   def check_user_not_previous_acceptee
+    pp assignment.users
     return unless assignment.users.include?(current_user)
     redirect_to successful_invitation_assignment_invitation_path
   end
