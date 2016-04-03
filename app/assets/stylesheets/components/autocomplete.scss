@@ -1,24 +1,25 @@
-dd.dd-autocomplete-suggestions {
+// scss-lint:disable QualifyingElement
+dl.dd-autocomplete-suggestions {
   position: relative;
 }
 
 .autocomplete-suggestions-container {
+  position: absolute;
+  top: 2px;
+  z-index: 1000;
   display: block;
 
-  position: absolute;
   width: 440px;
   max-width: 100%;
   max-height: 180px;
-  top: 2px;
-  z-index: 1000;
+
+  overflow-x: hidden;
+  overflow-y: scroll;
 
   background: #fff;
   border: 1px solid #c1c1c1;
   border-radius: 3px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-
-  overflow-x: hidden;
-  overflow-y: scroll;
 
   ul {
     list-style: none;
@@ -28,8 +29,8 @@ dd.dd-autocomplete-suggestions {
       cursor: pointer;
 
       &.suggestion-focused {
-        background-color: $brand-blue;
         color: #fff;
+        background-color: $brand-blue;
       }
     }
   }
@@ -47,7 +48,7 @@ dd.dd-autocomplete-suggestions {
     background: image-url("octocat-spinner-32.gif") no-repeat center center;
   }
 }
-
+// scss-lint:enable QualifyingElement
 
 .autocomplete-suggestions-empty {
   display: block;
