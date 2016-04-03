@@ -1,7 +1,10 @@
 class GitHubResource
-  def initialize(client, id)
-    @client = client
-    @id     = id
+  attr_reader :access_token, :client, :id
+
+  def initialize(id:, access_token:, auto_paginate: true)
+    @access_token = access_token
+    @client       = Octokit::Client.new(access_token: access_token, auto_paginate: auto_paginate)
+    @id           = id
 
     create_github_attribute_methods(client, id, github_attributes)
   end
@@ -23,6 +26,9 @@ class GitHubResource
   # This allows us to perform actions such as
   #
   #   github_user.login
+  #   #=> "tarebyte"
+  #
+  #   github_user.login(headers: GitHub::APIHeaders.no_cache_no_store)
   #   #=> "tarebyte"
   #
   # Without having to create each method
@@ -49,15 +55,18 @@ class GitHubResource
   end
   # rubocop:enable MethodLength
 
+  # Internal
   def github_attributes
     []
   end
 
+  # Internal
   # Example "GitHubUser" -> :user
   def github_type
     self.class.to_s.gsub(/GitHub/, '').downcase.to_sym
   end
 
+  # Internal
   def null_github_object
     @null_github_object ||= Object.const_get("Null#{self.class}").new
   end
