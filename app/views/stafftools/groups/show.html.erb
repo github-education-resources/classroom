@@ -5,7 +5,7 @@
     </span>
 
     <h2 class="site-content-heading">
-      <%= group.title %>
+      <%= @group.title %>
     </h2>
 
     <p class="assignment-type text-muted">Group</p>
@@ -16,26 +16,45 @@
       <h3>Info</h3>
 
       <div class="boxed-group-inner">
-        <% organization = group.organization.decorate %>
+        <% organization = @group.organization %>
 
-        <p>
-          <h4>ID <%= group.id %></h4>
-          <h4>Owned by <%= link_to organization.title, stafftools_organization_path(organization.id) %></h4>
-          <h4>Grouping <%= link_to group.grouping.title, stafftools_grouping_path(group.grouping) %></h4>
-          <h4>GitHub URL <%= link_to group.github_team_url, group.github_team_url %></h4>
-          <h4>Created on <span class="lead"><%= local_time(group.created_at) %></span></h4>
-        </p>
+        <table>
+          <tr>
+            <td class="text-emphasized">ID</td>
+            <td><%= @group.id %></td>
+          </tr>
+          <tr>
+            <td class="text-emphasized">GitHub ID</td>
+            <td><%= @group.github_team_id %></td>
+          </tr>
+          <tr>
+            <td class="text-emphasized">Owned by</td>
+            <td><%= link_to organization.title, stafftools_organization_path(organization.id) %></td>
+          </tr>
+          <tr>
+            <td class="text-emphasized">Grouping</td>
+            <td><%= link_to @group.grouping.title, stafftools_grouping_path(@group.grouping) %></td>
+          </tr>
+          <tr>
+            <td class="text-emphasized">GitHub URL</td>
+            <td><%= link_to @group.github_team_url, @group.github_team_url %></td>
+          </tr>
+          <tr>
+            <td class="text-emphasized">Created on</td>
+            <td><%= local_time(@group.created_at) %></span></td>
+          </tr>
+        </table>
       </div>
     </div>
 
-    <% if group.repo_accesses.present? %>
+    <% if @group.repo_accesses.present? %>
       <div class="boxed-group">
         <h3>Team Members</h3>
 
         <div class="boxed-group-inner">
           <ul class="boxed-group-list standalone">
-            <% group.repo_accesses.each do |repo_access| %>
-              <%= render partial: 'stafftools/organizations/user', locals: { user: repo_access.user.decorate } %>
+            <% @group.repo_accesses.includes(:user).each do |repo_access| %>
+              <%= render partial: 'stafftools/organizations/user', locals: { user: repo_access.user } %>
             <% end %>
           </ul>
         </div>

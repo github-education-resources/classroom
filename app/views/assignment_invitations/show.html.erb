@@ -16,7 +16,7 @@
     <div class="markdown-body">
       <p>
         Accepting this assignment will give you access to the <strong><%= "#{assignment.slug}-#{current_user.github_user.login}" %></strong>
-        repository in the <%= link_to "@#{decorated_organization.login}", decorated_organization.github_url %> organization on GitHub.
+        repository in the <%= link_to "@#{organization.github_organization.login}", organization.github_organization.html_url %> organization on GitHub.
       </p>
     </div>
 
