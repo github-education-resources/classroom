@@ -20,6 +20,16 @@
 
       <table>
         <tr>
+          <td class="text-emphasized">ID</td>
+          <td><%= @repo_access.id %></td>
+        </tr>
+        <% if @repo_access.github_team_id.present? %>
+          <tr>
+            <td class="text-emphasized">GitHub Team ID</td>
+            <td><%= @repo_access.github_team_id %></td>
+          </tr>
+        <% end %>
+        <tr>
           <td class="text-emphasized">Owned by</td>
           <td><%= link_to owner.login, stafftools_user_path(owner) %></td>
         </tr>
