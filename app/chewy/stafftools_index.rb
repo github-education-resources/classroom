@@ -1,4 +1,3 @@
-# rubocop:disable ClassLength
 class StafftoolsIndex < Chewy::Index
   define_type Assignment do
     field :id
@@ -7,19 +6,7 @@ class StafftoolsIndex < Chewy::Index
     field :created_at
     field :updated_at
 
-    field :organization_login, value: (lambda do |assignment|
-      org = assignment.organization
-
-      begin
-        begin
-          GitHubOrganization.new(org.github_client, org.github_id).organization.login
-        rescue GitHub::Forbidden
-          GitHubOrganization.new(Classroom.github_client, org.github_id).organization.login
-        end
-      rescue GitHub::NotFound
-        NullGitHubOrganization.new.login
-      end
-    end)
+    field :organization_login, value: ->(assignment) { assignment.github_organization.login }
   end
 
   define_type AssignmentInvitation do
@@ -37,11 +24,8 @@ class StafftoolsIndex < Chewy::Index
     field :created_at
     field :updated_at
 
-    field :assignment_title, value: ->(assignment_invitation) { assignment_invitation.assignment.title }
-
-    field :user_login, value: (lambda do |assignment_repo|
-      assignment_repo.user.github_user.login
-    end)
+    field :assignment_title, value: ->(assignment_repo)  { assignment_repo.assignment.title  }
+    field :user_login,       value: ->(assignment_repo)  { assignment_repo.github_user.login }
   end
 
   define_type Group do
@@ -51,19 +35,7 @@ class StafftoolsIndex < Chewy::Index
     field :created_at
     field :updated_at
 
-    field :organization_login, value: (lambda do |group_assignment|
-      org = group_assignment.organization
-
-      begin
-        begin
-          GitHubOrganization.new(org.github_client, org.github_id).organization.login
-        rescue GitHub::Forbidden
-          GitHubOrganization.new(Classroom.github_client, org.github_id).organization.login
-        end
-      rescue GitHub::NotFound
-        NullGitHubOrganization.new.login
-      end
-    end)
+    field :organization_login, value: ->(group) { group.github_organization.login }
   end
 
   define_type GroupAssignment do
@@ -73,19 +45,7 @@ class StafftoolsIndex < Chewy::Index
     field :created_at
     field :updated_at
 
-    field :organization_login, value: (lambda do |group_assignment|
-      org = group_assignment.organization
-
-      begin
-        begin
-          GitHubOrganization.new(org.github_client, org.github_id).organization.login
-        rescue GitHub::Forbidden
-          GitHubOrganization.new(Classroom.github_client, org.github_id).organization.login
-        end
-      rescue GitHub::NotFound
-        NullGitHubOrganization.new.login
-      end
-    end)
+    field :organization_login, value: ->(group_assignment) { group_assignment.github_organization.login }
   end
 
   define_type GroupAssignmentInvitation do
@@ -105,11 +65,8 @@ class StafftoolsIndex < Chewy::Index
     field :created_at
     field :updated_at
 
-    field :group_assignment_title, value: (lambda do |group_assignment_repo|
-      group_assignment_repo.group_assignment.title
-    end)
-
-    field :group_title, value: ->(group_assignment_repo) { group_assignment_repo.group.title }
+    field :group_assignment_title, value: ->(group_assignment_repo) { group_assignment_repo.group_assignment.title  }
+    field :group_title,            value: ->(group_assignment_repo) { group_assignment_repo.group.title             }
   end
 
   define_type Grouping do
@@ -117,19 +74,7 @@ class StafftoolsIndex < Chewy::Index
     field :created_at
     field :updated_at
 
-    field :organization_login, value: (lambda do |repo_access|
-      org = repo_access.organization
-
-      begin
-        begin
-          GitHubOrganization.new(org.github_client, org.github_id).organization.login
-        rescue GitHub::Forbidden
-          GitHubOrganization.new(Classroom.github_client, org.github_id).organization.login
-        end
-      rescue GitHub::NotFound
-        NullGitHubOrganization.new.login
-      end
-    end)
+    field :organization_login, value: ->(github_organization) { github_organization.login }
   end
 
   define_type RepoAccess do
@@ -137,21 +82,8 @@ class StafftoolsIndex < Chewy::Index
     field :created_at
     field :updated_at
 
-    field :organization_login, value: (lambda do |repo_access|
-      org = repo_access.organization
-
-      begin
-        begin
-          GitHubOrganization.new(org.github_client, org.github_id).organization.login
-        rescue GitHub::Forbidden
-          GitHubOrganization.new(Classroom.github_client, org.github_id).organization.login
-        end
-      rescue GitHub::NotFound
-        NullGitHubOrganization.new.login
-      end
-    end)
-
-    field :user_login, value: ->(repo_access) { repo_access.user.github_user.login }
+    field :organization_login, value: ->(repo_access) { repo_access.github_organization.login }
+    field :user_login,         value: ->(repo_access) { repo_access.github_user.login         }
   end
 
   define_type Organization do
@@ -162,28 +94,9 @@ class StafftoolsIndex < Chewy::Index
     field :created_at
     field :updated_at
 
-    field :login, value: (lambda do |org|
-      begin
-        begin
-          GitHubOrganization.new(org.github_client, org.github_id).organization.login
-        rescue GitHub::Forbidden
-          GitHubOrganization.new(Classroom.github_client, org.github_id).organization.login
-        end
-      rescue GitHub::NotFound
-        NullGitHubOrganization.new.login
-      end
-    end)
-
-    field :name, value: (lambda do |org|
-      begin
-        begin
-          GitHubOrganization.new(org.github_client, org.github_id).organization.name
-        rescue GitHub::Forbidden
-          GitHubOrganization.new(Classroom.github_client, org.github_id).organization.name
-        end
-      rescue GitHub::NotFound
-        NullGitHubOrganization.new.name
-      end
+    field :login, value: ->(organization) { organization.github_organization.login }
+    field :name,  value: (lambda do |organization|
+      organization.github_organization.name || organization.github_organization.login
     end)
   end
 
@@ -193,31 +106,7 @@ class StafftoolsIndex < Chewy::Index
     field :created_at
     field :updated_at
 
-    field :login, value: (lambda do |user|
-      begin
-        begin
-          GitHubUser.new(user.github_client, user.uid).user.login
-        rescue GitHub::Forbidden
-          GitHubUser.new(Classroom.github_client, user.uid).user.login
-        end
-      rescue GitHub::NotFound
-        NullGitHubUser.new.login
-      end
-    end)
-
-    field :name, value: (lambda do |user|
-      begin
-        begin
-          GitHubUser.new(user.github_client, user.uid).user.name
-        rescue GitHub::Forbidden
-          GitHubUser.new(Classroom.github_client, user.uid).user.name
-        end
-      rescue GitHub::NotFound
-        NullGitHubUser.new.name
-      end
-    end)
-    field :login, value: ->(user) { user.github_user.login }
+    field :login, value: ->(user) { user.github_user.login                          }
     field :name,  value: ->(user) { user.github_user.name || user.github_user.login }
   end
 end
-# rubocop:enable ClassLength
