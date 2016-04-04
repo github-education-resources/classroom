@@ -43,10 +43,6 @@ class GitHubOrganization < GitHubResource
     @disabled = (login == 'ghost')
   end
 
-  def members(**options)
-    GitHub::Errors.with_error_handling { client.organization_members(id, options) }
-  end
-
   def member?(github_user:)
     GitHub::Errors.with_error_handling { client.organization_member?(id, github_user.login) }
   end
