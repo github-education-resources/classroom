@@ -2,6 +2,15 @@ class AssignmentInvitationsController < ApplicationController
   layout 'layouts/invitations'
 
   before_action :check_user_not_previous_acceptee, only: [:show]
+  before_action :check_repo_name_suffix_not_empty, only: [:accept_invitation]
+
+  def check_repo_name_suffix_not_empty
+    return if params[:repo_name_suffix].nil?
+    if params[:repo_name_suffix].empty?
+      flash[:error] = 'Repository name suffix can not be empty'
+      redirect_to :back
+    end
+  end
 
   def accept_invitation
     users_assignment_repo = invitation.redeem_for(current_user, params[:repo_name_suffix])
