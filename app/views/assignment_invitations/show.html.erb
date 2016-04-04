@@ -18,15 +18,15 @@
         The <strong><%= link_to "#{github_repository.name}", github_repository.html_url %></strong> repository already exists in the <%= link_to "@#{decorated_organization.login}", decorated_organization.github_url %> organization on GitHub.
       </p>
       <p>
-        To accept this assignment, you can either add yourself as a collaborator to the repository or create a new repository by appending a suffix to the existing repository name.
+        To accept this assignment, you can either use the existing repository or create a new repository by appending a suffix to the existing repository name.
       </p>
     </div>
 
     <hr/>
 
-    <p>Add yourself as a collaborator to the repository <strong><%= link_to "#{github_repository.name}", github_repository.html_url %></strong></p>
+    <p>Use the existing repository <strong><%= link_to "#{github_repository.name}", github_repository.html_url %></strong></p>
     <%= form_tag({ controller: :assignment_invitations, action: :accept_invitation}, method: :patch) do %>
-        <%= submit_tag 'Join as a collaborator', class: 'btn btn-green js-navigation' %>
+        <%= submit_tag 'Use the existing repository', class: 'btn btn-green js-navigation' %>
     <% end %>
 
     <hr/>
