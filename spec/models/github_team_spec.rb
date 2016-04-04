@@ -24,7 +24,7 @@ describe GitHubTeam do
 
     after(:each) do
       github_organization.delete_team(github_team: @github_team)
-      github_organization.remove_organization_member(github_user: github_student)
+      github_organization.remove_member(member: github_student)
     end
 
     context 'team membership' do

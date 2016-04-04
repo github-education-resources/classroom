@@ -42,7 +42,7 @@ class RepoAccess < ActiveRecord::Base
   end
 
   def remove_organization_member
-    github_organization.remove_organization_member(github_user: github_user)
+    github_organization.remove_member(member: github_user)
   end
 
   def silently_remove_organization_member

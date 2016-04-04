@@ -65,15 +65,15 @@ class GitHubOrganization < GitHubResource
     end
   end
 
-  def remove_organization_member(github_user:)
+  def remove_member(member:)
     begin
-      return if github_user.active_admin?(github_organization: self)
+      return if member.active_admin?(github_organization: self)
     rescue GitHub::NotFound
       return
     end
 
     GitHub::Errors.with_error_handling do
-      client.remove_organization_member(id, github_user.login)
+      client.remove_organization_member(id, member.login)
     end
   end
 
