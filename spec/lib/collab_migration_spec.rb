@@ -1,12 +1,11 @@
 require 'rails_helper'
-require_relative '../../lib/collab_migration'
 
 RSpec.describe CollabMigration do
   let(:organization) { GitHubFactory.create_owner_classroom_org }
   let(:student)      { GitHubFactory.create_classroom_student   }
   let(:repo_access)  { RepoAccess.create(user: student, organization: organization) }
 
-  let(:github_organization) { GitHubOrganization.new(organization.github_client, organization.github_id) }
+  let(:github_organization) { organization.github_organization }
 
   let(:assignment) do
     creator = organization.users.first
@@ -20,7 +19,6 @@ RSpec.describe CollabMigration do
     before(:each) do
       @assignment_repo = AssignmentRepo.create(assignment: assignment, user: student)
       @assignment_repo.update_attributes(user: nil, repo_access: repo_access)
-      @assignment_repo.save
     end
 
     after(:each) do
@@ -29,23 +27,18 @@ RSpec.describe CollabMigration do
 
     it 'adds the user as a collaborator to the assignment_repos GitHub repo' do
       CollabMigration.new(repo_access).migrate
-
-      github_user_login = GitHubUser.new(student.github_client, student.uid).login
-      add_user_request = "/repositories/#{@assignment_repo.github_repo_id}/collaborators/#{github_user_login}"
-
+      add_user_request = "/repositories/#{@assignment_repo.github_repo_id}/collaborators/#{student.github_user.login}"
       expect(WebMock).to have_requested(:put, github_url(add_user_request)).times(2)
     end
 
     context 'with a `github_team_id`' do
       before(:each) do
-        github_organization = GitHubOrganization.new(organization.github_client, organization.github_id)
-        @github_team        = github_organization.create_team('Test Team')
-
-        repo_access.update_attribute(:github_team_id, @github_team.id)
+        @github_team = github_organization.create_team(name: 'Test Team')
+        repo_access.update_attributes(github_team_id: @github_team.id)
       end
 
       after(:each) do
-        organization.github_client.delete_team(@github_team.id)
+        github_organization.organization.delete_team(github_team: @github_team)
       end
 
       it 'deletes the GitHub team' do
