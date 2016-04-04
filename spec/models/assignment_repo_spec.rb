@@ -9,7 +9,7 @@ RSpec.describe AssignmentRepo, type: :model do
       Assignment.create(creator: organization.users.first,
                         title: 'Learn Ruby',
                         organization: organization,
-                        public_repo: false,
+                        #public_repo: false,
                         starter_code_repo_id: 1_062_897)
     end
 
@@ -45,6 +45,18 @@ RSpec.describe AssignmentRepo, type: :model do
           end
         end
       end
+
+      # describe 'after_create' do
+      #   describe '#copy_starter_repo_open_issues' do
+      #     it 'invokes copy_starter_repo_open_issues if copy_open_issues is true' do
+      #
+      #     end
+      #
+      #     it 'does not invoke copy_starter_repo_open_issues if copy_open_issues is false' do
+      #
+      #     end
+      #   end
+      # end
 
       describe 'before_destroy' do
         describe '#silently_destroy_github_repository' do
@@ -82,6 +94,24 @@ RSpec.describe AssignmentRepo, type: :model do
 
         it 'returns the user' do
           expect(@assignment_repo.user).to eql(student)
+        end
+      end
+    end
+
+    describe '#copy_starter_repo_open_issues' do
+      include ActiveJob::TestHelper
+
+      it 'enqueues the CopyOpenIssues background job' do
+        job_args = [@assignment_repo.creator, assignment.starter_code_repo_id, @assignment_repo.github_repo_id]
+        assert_enqueued_with(job: CopyOpenIssuesJob, args: job_args, queue: 'issue_copier') do
+          @assignment_repo.copy_starter_repo_open_issues
+        end
+      end
+
+      it 'does not enqueue the CopyOpenIssues background job if starter_code_repo_id is not present' do
+        assignment.starter_code_repo_id = nil
+        assert_no_enqueued_jobs do
+          @assignment_repo.copy_starter_repo_open_issues
         end
       end
     end
