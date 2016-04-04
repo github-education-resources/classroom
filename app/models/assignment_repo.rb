@@ -23,6 +23,10 @@ class AssignmentRepo < ActiveRecord::Base
     end
   end
 
+  after_create do
+    copy_starter_repo_open_issues if assignment.copy_open_issues?
+  end
+
   before_destroy :silently_destroy_github_repository
 
   # Public
