@@ -22,4 +22,7 @@
   <dd><input class="textfield js-autocomplete-textfield" type="text" name="repo_name" value="<%= assignment.full_name %>" placeholder="<%= assignment.full_name || 'e.g. education/classroom'%>" autocomplete="off" data-autocomplete-search-endpoint="github_repos"></dd>
   <dd class="dd-autocomplete-suggestions"><%= render_autocomplete_suggestions_container %></dd>
   <input class="js-autocomplete-resource-id" type="hidden" name="repo_id" />
+  <div class="form-checkbox">
+    <label><%= f.check_box :copy_open_issues %> Copy the open issues to each student repository</label>
+  </div>
 </dl>
