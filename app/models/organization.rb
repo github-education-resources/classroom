@@ -29,7 +29,7 @@ class Organization < ActiveRecord::Base
   end
 
   def geo_pattern_data_uri
-    @geo_pattern_data_uri = GeoPattern.generate(github_id, color: '#5fb27b').to_data_uri
+    @geo_pattern_data_uri ||= GeoPattern.generate(github_id, color: '#5fb27b').to_data_uri
   end
 
   def github_organization
