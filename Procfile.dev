@@ -5,5 +5,5 @@ web: bundle exec puma -C config/puma.rb
 rails: tail -f log/development.log
 redis: redis-server
 memcached: memcached
-worker: bundle exec sidekiq -q chewy -q trash_can
+worker: bundle exec sidekiq -q chewy -q issue_copier -q trash_can
 elasticsearch: elasticsearch
