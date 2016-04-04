@@ -24,9 +24,9 @@ RSpec.describe GroupAssignmentRepo, type: :model do
     end
 
     after(:each) do
-      group.destroy
-      repo_access.destroy
-      @group_assignment_repo.destroy if @group_assignment_repo
+      Group.destroy_all
+      RepoAccess.destroy_all
+      GroupAssignmentRepo.destroy_all
     end
 
     describe 'callbacks', :vcr do
@@ -46,7 +46,7 @@ RSpec.describe GroupAssignmentRepo, type: :model do
 
         describe '#add_team_to_github_repository' do
           it 'adds the team to the repository' do
-            github_repo = GitHubRepository.new(organization.github_client, @group_assignment_repo.github_repo_id)
+            github_repo = @group_assignment_repo.github_repository
             add_github_team_url = github_url("/teams/#{group.github_team_id}/repos/#{github_repo.full_name}")
             expect(WebMock).to have_requested(:put, add_github_team_url)
           end
@@ -65,9 +65,64 @@ RSpec.describe GroupAssignmentRepo, type: :model do
       end
     end
 
-    describe '#creator' do
-      it 'returns the group assignments creator' do
-        expect(@group_assignment_repo.creator).to eql(group_assignment.creator)
+    describe '#disabled?' do
+      let(:github_organization) { @group_assignment_repo.github_organization }
+
+      context 'repository is missing' do
+        before do
+          github_organization.delete_repository(github_repository: @group_assignment_repo.github_repository)
+        end
+
+        it 'returns true' do
+          expect(@group_assignment_repo.disabled?).to be_truthy
+        end
+      end
+
+      context 'team is missing' do
+        before do
+          github_organization.delete_team(github_team: @group_assignment_repo.github_team)
+        end
+
+        it 'returns true' do
+          expect(@group_assignment_repo.disabled?).to be_truthy
+        end
+      end
+    end
+
+    context 'delegated from the GroupAssignment' do
+      describe '#creator' do
+        it 'returns the group assignments creator' do
+          expect(@group_assignment_repo.creator).to eql(group_assignment.creator)
+        end
+      end
+
+      describe '#starter_code?' do
+        it 'returns true if the group_assignment has starter_code' do
+          expect(@group_assignment_repo.starter_code?).to eql(@group_assignment_repo.group_assignment.starter_code?)
+        end
+      end
+
+      describe '#starter_code_repo_id' do
+        it 'returns the same id as the group_assignment' do
+          expected_id = @group_assignment_repo.group_assignment.starter_code_repo_id
+          actual_id   = @group_assignment_repo.starter_code_repo_id
+
+          expect(actual_id).to eql(expected_id)
+        end
+      end
+    end
+
+    context 'delegated from the Group' do
+      describe '#github_team' do
+        it 'has a GitHubTeam' do
+          expect(@group_assignment_repo.github_team).to be_instance_of(GitHubTeam)
+        end
+      end
+
+      describe '#github_team_id' do
+        it 'has the same github_team_id as it\'s group' do
+          expect(@group_assignment_repo.github_team_id).to eql(@group_assignment_repo.group.github_team_id)
+        end
       end
     end
   end
