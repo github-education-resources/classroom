@@ -1,4 +1,3 @@
-# rubocop:disable ClassLength
 class OrganizationsController < ApplicationController
   include OrganizationAuthorization
 
@@ -113,6 +112,10 @@ class OrganizationsController < ApplicationController
       .merge(title: title)
   end
 
+  def organization_service
+    @organization_service ||= OrganizationService.new(current_user)
+  end
+
   def set_organization
     @organization = Organization.find_by!(slug: params[:id])
   end
@@ -121,36 +124,14 @@ class OrganizationsController < ApplicationController
     @organizations = current_user.organizations.includes(:users).page(params[:page])
   end
 
-  # rubocop:disable AbcSize
   def set_users_github_organizations
-    github_user = GitHubUser.new(current_user.github_client, current_user.uid)
-
-    @users_github_organizations = github_user.organization_memberships.map do |membership|
-      {
-        classroom: Organization.unscoped.includes(:users).find_by(github_id: membership.organization.id),
-        github_id: membership.organization.id,
-        login:     membership.organization.login,
-        role:      membership.role
-      }
-    end
+    @users_github_organizations = organization_service.github_organizations
   end
-  # rubocop:enable AbcSize
 
   # Check if the current user has any organizations with admin privilege, if so add the user to the corresponding
   # classroom automatically.
   def add_current_user_to_organizations
-    @users_github_organizations.each do |organization|
-      classroom = organization[:classroom]
-      if classroom.present? && !classroom.users.include?(current_user)
-        create_user_organization_access(classroom)
-      end
-    end
-  end
-
-  def create_user_organization_access(organization)
-    github_org = GitHubOrganization.new(current_user.github_client, organization.github_id)
-    return unless github_org.admin?(decorated_current_user.login)
-    organization.users << current_user
+    @organization_service.add_user_to_organizations
   end
 
   def paginate_users_github_organizations
@@ -163,4 +144,3 @@ class OrganizationsController < ApplicationController
       .permit(:title)
   end
 end
-# rubocop:enable ClassLength
