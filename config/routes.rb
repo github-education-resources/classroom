@@ -32,6 +32,10 @@ Rails.application.routes.draw do
 
   scope path_names: { edit: 'settings' } do
     resources :organizations, path: 'classrooms' do
+      collection do
+        get :user_organizations, path: 'user-organizations'
+      end
+
       member do
         get   :invite
         get   :new_assignment, path: 'new-assignment'
@@ -43,8 +47,6 @@ Rails.application.routes.draw do
       resources :group_assignments, path: 'group-assignments'
     end
   end
-
-  get '/classrooms-async', to: 'organizations#async_index'
 
   namespace :stafftools do
     constraints StaffConstraint.new do

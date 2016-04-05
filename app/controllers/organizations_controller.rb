@@ -3,19 +3,20 @@ class OrganizationsController < ApplicationController
   include OrganizationAuthorization
 
   before_action :authorize_organization_addition,     only: [:create]
-  before_action :set_users_github_organizations,      only: [:new, :create, :async_index]
-  before_action :add_current_user_to_organizations,   only: [:async_index]
+  before_action :set_users_github_organizations,      only: [:new, :create, :user_organizations]
+  before_action :add_current_user_to_organizations,   only: [:user_organizations]
   before_action :paginate_users_github_organizations, only: [:new, :create]
-  before_action :set_organizations,                   only: [:index, :async_index]
+  before_action :set_organizations,                   only: [:index, :user_organizations]
 
-  skip_before_action :set_organization, :authorize_organization_access, only: [:index, :new, :create, :async_index]
+  skip_before_action :set_organization, :authorize_organization_access,
+                     only: [:index, :new, :create, :user_organizations]
 
   decorates_assigned :organization
 
   def index
   end
 
-  def async_index
+  def user_organizations
     render partial: 'organizations/organizations_list'
   end
 

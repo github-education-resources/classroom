@@ -43,14 +43,14 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
-  describe 'GET #async_index', :vcr do
+  describe 'GET #user_organizations', :vcr do
     context 'user with admin privilege on the organization but not part of the classroom' do
       before(:each) do
         organization.users = []
       end
 
       it 'adds the user to the classroom' do
-        get :async_index
+        get :user_organizations
 
         expect(user.organizations).to include(organization)
       end
@@ -62,7 +62,7 @@ RSpec.describe OrganizationsController, type: :controller do
       end
 
       it 'does not add the user to the classroom' do
-        get :async_index
+        get :user_organizations
 
         expect(student.organizations).to be_empty
       end
