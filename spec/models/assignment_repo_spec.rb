@@ -9,7 +9,7 @@ RSpec.describe AssignmentRepo, type: :model do
       Assignment.create(creator: organization.users.first,
                         title: 'Learn Ruby',
                         organization: organization,
-                        #public_repo: false,
+                        # public_repo: false,
                         starter_code_repo_id: 1_062_897)
     end
 
