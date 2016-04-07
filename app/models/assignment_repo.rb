@@ -17,8 +17,10 @@ class AssignmentRepo < ActiveRecord::Base
 
   before_validation(on: :create) do
     if organization
-      create_github_repository
-      push_starter_code
+      unless github_repository
+        create_github_repository
+        push_starter_code
+      end
       add_user_as_collaborator
     end
   end
@@ -45,9 +47,17 @@ class AssignmentRepo < ActiveRecord::Base
 
   # Public
   #
+  def assign_repo_name_suffix(repo_name_suffix)
+    @repo_name_suffix = repo_name_suffix
+  end
+
+  # Public
+  #
   def repo_name
     github_user = GitHubUser.new(user.github_client, user.uid)
-    "#{assignment.slug}-#{github_user.login(headers: GitHub::APIHeaders.no_cache_no_store)}"
+    repo_name = "#{assignment.slug}-#{github_user.login(headers: GitHub::APIHeaders.no_cache_no_store)}"
+    return repo_name if @repo_name_suffix.nil?
+    "#{repo_name}-#{@repo_name_suffix}"
   end
 
   # Public

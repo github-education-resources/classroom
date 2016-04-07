@@ -33,6 +33,12 @@ class GitHubOrganization
 
   # Public
   #
+  def repository(repo_name)
+    @client.repository("#{login}/#{repo_name}")
+  end
+
+  # Public
+  #
   def create_repository(repo_name, users_repo_options = {})
     repo_options = github_repo_default_options.merge(users_repo_options)
 

@@ -14,13 +14,19 @@ class AssignmentInvitation < ActiveRecord::Base
 
   after_initialize :assign_key
 
-  def redeem_for(invitee)
+  def redeem_for(invitee, repo_name_suffix = nil)
     if (repo_access = RepoAccess.find_by(user: invitee, organization: organization))
       assignment_repo = AssignmentRepo.find_by(assignment: assignment, repo_access: repo_access)
       return assignment_repo if assignment_repo.present?
     end
+    create_assignment(invitee, repo_name_suffix)
+  end
 
-    AssignmentRepo.find_or_create_by!(assignment: assignment, user: invitee)
+  def create_assignment(invitee, repo_name_suffix)
+    assignment_repo = AssignmentRepo.find_or_initialize_by(assignment: assignment, user: invitee)
+    assignment_repo.assign_repo_name_suffix(repo_name_suffix)
+    assignment_repo.save!
+    assignment_repo
   end
 
   def title

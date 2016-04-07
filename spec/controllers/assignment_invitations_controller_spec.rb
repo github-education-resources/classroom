@@ -67,6 +67,37 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
     end
 
+    context 'github repository already exists' do
+      let(:assignment_repo) { AssignmentRepo.new(assignment: assignment, user: user) }
+
+      before do
+        assignment_repo.create_github_repository
+      end
+
+      it 'redeems the users invitation' do
+        patch :accept_invitation, id: invitation.key
+        expect(user.assignment_repos.count).to eql(1)
+      end
+
+      it 'adds the user as a collaborator to the assignment repo' do
+        patch :accept_invitation, id: invitation.key
+        adding_collaborator_regex = %r{\A#{github_url('/repositories')}/\d+/collaborators/#{user.decorate.login}\z}
+        expect(WebMock).to have_requested(:put, adding_collaborator_regex)
+      end
+
+      it 'creates a new assignment repo with a suffixed repo name' do
+        repo_name_suffix = 'new'
+        patch :accept_invitation, id: invitation.key, repo_name_suffix: repo_name_suffix
+        expect(WebMock).to have_requested(:get, github_url("/repos/#{classroom_owner_organization_github_login}"\
+                                                           "/#{assignment_repo.repo_name}-#{repo_name_suffix}"))
+        expect(user.assignment_repos.count).to eql(1)
+      end
+
+      after(:each) do
+        assignment_repo.destroy_github_repository
+      end
+    end
+
     context 'github import fails' do
       before do
         allow_any_instance_of(GitHubRepository)
