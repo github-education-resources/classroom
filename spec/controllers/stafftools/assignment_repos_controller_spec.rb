@@ -4,7 +4,9 @@ RSpec.describe Stafftools::AssignmentReposController, type: :controller do
   let(:user)    { GitHubFactory.create_owner_classroom_org.users.first }
   let(:student) { GitHubFactory.create_classroom_student               }
 
-  let(:assignment) { create(:assignment, creator: user, organization: user.organizations.first, public_repo: false) }
+  let(:organization) { user.organizations.first }
+
+  let(:assignment) { Assignment.create(title: 'HTML5', creator: user, organization: organization, public_repo: false) }
 
   let(:assignment_repo) { AssignmentRepo.create(assignment: assignment, user: student) }
 
