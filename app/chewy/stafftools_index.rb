@@ -40,7 +40,7 @@ class StafftoolsIndex < Chewy::Index
     field :assignment_title, value: ->(assignment_invitation) { assignment_invitation.assignment.title }
 
     field :user_login, value: (lambda do |assignment_repo|
-      user = assignment_repo.user || assignment_repo.repo_access.user
+      user = assignment_repo.user
 
       begin
         begin
