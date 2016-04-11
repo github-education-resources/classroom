@@ -19,12 +19,6 @@ module GitHubRepoable
 
   # Public
   #
-  def github_repository?
-    github_organization.repository?(repo_name)
-  end
-
-  # Public
-  #
   def create_github_repository
     repo_description = "#{repo_name} created by Classroom for GitHub"
     github_repository = github_organization.create_repository(repo_name,
