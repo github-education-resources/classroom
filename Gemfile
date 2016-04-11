@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 ruby '2.3.0'
-gem 'rails', '4.2.5.2'
+gem 'rails', '4.2.6'
 
 gem 'airbrake'
 gem 'autoprefixer-rails'
@@ -41,6 +41,7 @@ gem 'pg'
 gem 'puma'
 
 gem 'rack-canonical-host'
+gem 'rack-timeout'
 gem 'redis-namespace'
 
 gem 'sprockets'

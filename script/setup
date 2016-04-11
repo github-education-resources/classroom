@@ -19,7 +19,9 @@ if [ -z "$RAILS_ENV" ] && [ -z "$RACK_ENV" ]; then
   # time. Or things needed to be run to to reset the application back to first
   # use experience. These things are scoped to the application's domain.
 
-  cp -n .env-example .env
+  if ! [ -r ".env" ]; then
+      cp .env-example .env
+  fi
 fi
 
 echo "==> Your app is almost ready! Please make sure you fill out your .env file."

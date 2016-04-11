@@ -49,16 +49,15 @@
 }
 
 .btn-big {
+  max-width: 100%;
   padding: 1rem 2rem;
   font-size: 1rem;
-  max-width: 100%;
-
 }
 
 .btn-big-mobile-friendly {
+  max-width: 100%;
   padding: 1rem 2rem;
   font-size: 1rem;
-  max-width: 100%;
 
   @media (max-width: 34em) {
     padding: 1rem;

@@ -18,7 +18,7 @@ RSpec.describe AssignmentRepo, type: :model do
     end
 
     after(:each) do
-      @assignment_repo.destroy if @assignment_repo
+      AssignmentRepo.destroy_all
     end
 
     describe 'callbacks' do
@@ -61,6 +61,28 @@ RSpec.describe AssignmentRepo, type: :model do
     describe '#creator' do
       it 'returns the assignments creator' do
         expect(@assignment_repo.creator).to eql(assignment.creator)
+      end
+    end
+
+    describe '#user' do
+      it 'returns the user' do
+        expect(@assignment_repo.user).to eql(student)
+      end
+
+      context 'assignment_repo has a user through a repo_access' do
+        before do
+          assignment.update_attributes(title: "#{assignment.title}-2")
+          repo_access = RepoAccess.create(user: student, organization: organization)
+          @assignment_repo = AssignmentRepo.create(assignment: assignment, repo_access: repo_access)
+        end
+
+        after do
+          RepoAccess.destroy_all
+        end
+
+        it 'returns the user' do
+          expect(@assignment_repo.user).to eql(student)
+        end
       end
     end
   end

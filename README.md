@@ -11,6 +11,10 @@ Assignments are the core of Classroom for GitHub. Teachers can easily create an 
 
 ## Hacking on Classroom for GitHub
 
+### Help wanted
+
+If you're interested in helping out with Classroom development and looking for a place to get started, check out the issues labeled [`help-wanted`](https://github.com/education/classroom/issues?q=is%3Aissue+is%3Aopen+label%3Ahelp-wanted) and feel free to ask any questions you have before diving into the code.
+
 ### Get started
 New to Ruby? No worries! You can follow these instructions to install a local server.
 
@@ -53,7 +57,8 @@ script/setup
 ### Production environment variables
 ENV Variable | Description |
 :-------------------|:-----------------|
-`AIRBRAKE_API_KEY` | the API key for airbrake.io, if set Airbrake will be enabled
+`AIRBRAKE_ID` | the ID for application in airbrake.io, if set Airbrake will be enabled
+`AIRBRAKE_PROJECT_KEY` | the PROJECT_KEY in airbrake.io, if set Airbrake will be enabled
 `CANONICAL_HOST` | the preferred hostname for the application, if set requests served on other hostnames will be redirected
 `GOOGLE_ANALYTICS_TRACKING_ID` | identifier for Google Analytics in the format `UA-.*`
 `PINGLISH_ENABLED` | Enable the `/_ping` endpoint with relevant health checks
@@ -68,7 +73,15 @@ ENV Variable | Description |
 `GITHUB_CLIENT_SECRET`| the GitHub Application Client Secret.
 `NON_STAFF_GITHUB_ADMIN_IDS` | GitHub `user_ids` of users to be granted staff level access.
 
+To obtain your `GitHub Client ID/Secret` you need to [register a new OAuth application](https://github.com/settings/applications/new).
+
+After you register your OAuth application, you should fill in the homepage url with `http://localhost:5000` and the authorization url with `http://localhost:5000/auth/github/callback`.
+
+To obtain your GitHub User ID for the `NON_STAFF_GITHUB_ADMIN_IDS` field, go to `https://api.github.com/users/your_username`
+
 ### Testing environment variables
+If you want to make a functionality change to the application you will need to write tests to accompany that change. In order to do this, the test values in the .env file must be filled in.
+
 Classroom for GitHub uses [VCR](https://github.com/vcr/vcr) for recording and playing back API fixtures during test runs. These cassettes (fixtures) are part of the Git project in the `spec/support/cassettes` folder. If you're not recording new cassettes you can run the specs with existing cassettes with:
 
 ```bash
@@ -86,6 +99,26 @@ ENV Variable | Description |
 `TEST_CLASSROOM_STUDENT_GITHUB_TOKEN` | The [Personal Access Token](https://github.com/blog/1509-personal-api-tokens) for the student
 `TEST_CLASSROOM_OWNER_ORGANIZATION_GITHUB_ID` | GitHub ID (preferably one created specifically for testing against).
 `TEST_CLASSROOM_OWNER_ORGANIZATION_GITHUB_LOGIN` | GitHub login (preferably one created specifically for testing against).
+
+To obtain these values you will need:
+
+* A teacher (your primary GitHub account)
+* A student (another Github account, created for this purpose)
+* An organisation that the teacher is an owner of, but the student does not belong to.
+
+It is best if you create your own organization for testing purposes, if you have done so:
+
+To obtain the `OWNER_GITHUB_ID` value, you can go to `https://api.github.com/users/organization_owner_username`.
+
+To obtain the `OWNER_GITHUB_TOKEN` value, you will need to generate a [personal access token](https://github.com/blog/1509-personal-api-tokens).
+
+To get the `STUDENT_GITHUB_ID` value you will need to create another user account on GitHub and get the ID by going to `https://api.github.com/users/student_username`
+
+To get the `STUDENT_GITHUB_TOKEN` value you will need to generate another [personal access token](https://github.com/blog/1509-personal-api-tokens) for the student account.
+
+To obtain the `OWNER_ORGANIZATION_GITHUB_ID/LOGIN` you can go to `https://api.github.com/orgs/organization_name`.
+
+Now you should have all of the values filled in, great job!
 
 ### Running the application
 

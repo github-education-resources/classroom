@@ -17,23 +17,28 @@
     <p>Please be certain that the team you are selecting is the correct team as you cannot change this later</p>
   </div>
 
+  <% if @groups.present? %>
+    <hr>
+    <p><label>Join an existing team</label></p>
+    <div class="team-select-grid">
+      <% @group_assignment.group_assignment_repos.each do |repo| %>
+          <%= render partial: 'group_assignment_team', locals: {repo: repo} %>
+      <% end %>
+      <div style="clear:both"></div>
+    </div>
+  <% end %>
+
   <hr>
 
   <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, method: :patch) do %>
-    <% if @groups.present? %>
-      <dt><label>Join an existing team</label></dt>
-      <dl class="form">
-        <dd><%= select :group, :id, options_for_select(@groups), include_blank: true %></dd>
-      </dl>
-    <% end %>
-
     <dl class="form">
       <dt><label><%= 'OR' if @groups.present? %> Create a new team</label></dt>
-      <dd><%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'textfield' %></dd>
+      <dd>
+        <%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'textfield' %>
+        <%= button_tag(type: 'submit', class: 'btn btn-green js-navigation js-form-submit') do %>
+          <%= octicon('plus') %> Create team
+        <% end %>
+      </dd>
     </dl>
-
-    <div class="form-actions">
-      <%= submit_tag 'Join team', class: 'btn btn-green js-navigation js-form-submit', disabled: true %>
-    </div>
   <% end %>
 </div>

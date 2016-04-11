@@ -1,6 +1,4 @@
 class UserDecorator < Draper::Decorator
-  include GitHub
-
   delegate_all
 
   def avatar_url(size)
@@ -25,7 +23,7 @@ class UserDecorator < Draper::Decorator
     begin
       @github_user ||= GitHubUser.new(github_client, uid).user
     rescue GitHub::Forbidden
-      @github_user ||= GitHubUser.new(application_github_client, uid).user
+      @github_user ||= GitHubUser.new(Classroom.github_client, uid).user
     end
   rescue GitHub::NotFound
     NullGitHubUser.new

@@ -1,0 +1,23 @@
+<% if error_message.present? %>
+  <div class="autocomplete-suggestions-empty">
+    <strong><%= error_message %></strong>
+  </div>
+<% else %>
+  <% if repos.count > 0 %>
+    <ul>
+      <% repos.each do |repo| %>
+        <li class="js-autocomplete-suggestion-item"
+          data-res-id="<%= repo[:id] %>"
+          data-res-name="<%= repo[:full_name] %>">
+          <%= repo[:private] ? octicon('lock') : octicon('repo') %>
+          <strong><%= repo[:full_name] %></strong>
+          <span><%= repo[:description] %></span>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <div class="autocomplete-suggestions-empty">
+      <strong>We couldn't find any matching repositories</strong>
+    </div>
+  <% end %>
+<% end %>

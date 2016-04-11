@@ -1,0 +1,62 @@
+// scss-lint:disable QualifyingElement
+dd.dd-autocomplete-suggestions {
+  position: relative;
+}
+
+.autocomplete-suggestions-container {
+  position: absolute;
+  top: 2px;
+  z-index: 1000;
+  display: block;
+
+  width: 440px;
+  max-width: 100%;
+  max-height: 180px;
+
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+  background: #fff;
+  border: 1px solid #c1c1c1;
+  border-radius: 3px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+
+  ul {
+    list-style: none;
+
+    li {
+      padding: 10px;
+      cursor: pointer;
+
+      &.suggestion-focused {
+        color: #fff;
+        background-color: $brand-blue;
+      }
+    }
+  }
+
+  .octicon {
+    vertical-align: text-top;
+  }
+
+  .octicon-lock {
+    color: #e9dba5;
+  }
+
+  .autocomplete-loading-indicator {
+    height: 72px;
+    background: image-url("octocat-spinner-32.gif") no-repeat center center;
+  }
+}
+// scss-lint:enable QualifyingElement
+
+.autocomplete-suggestions-empty {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+
+  > strong {
+    color: #bbb;
+  }
+}

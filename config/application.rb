@@ -64,6 +64,15 @@ module Classroom
           Sidekiq.redis { |redis| redis.ping }
           'ok'
         end
+
+        ping.check :elasticsearch do
+          status = Chewy.client.cluster.health['status'] || 'unavailable'
+          if status == 'green'
+            'ok'
+          else
+            raise "Elasticsearch status is #{status}"
+          end
+        end
       end
     end
   end

@@ -1,5 +1,4 @@
 module GitHubPlan
-  include GitHub
   extend ActiveSupport::Concern
 
   included do
@@ -22,6 +21,6 @@ module GitHubPlan
     a larger plan for free at https://education.github.com/discount
     ERROR
 
-    fail GitHub::Error, error_message
+    raise GitHub::Error, error_message
   end
 end
