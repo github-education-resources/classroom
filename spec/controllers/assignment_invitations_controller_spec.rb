@@ -74,31 +74,17 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         assignment_repo.create_github_repository
       end
 
-      it 'creates a new assignment repo with a name suffix' do
+      it 'creates a new assignment repo' do
         patch :accept_invitation, id: invitation.key
-        expect(WebMock).to have_requested(:get, github_url("/repos/#{classroom_owner_organization_github_login}"\
-                                                           "/#{assignment_repo.repo_name}-1"))
         expect(user.assignment_repos.count).to eql(1)
       end
 
-      context 'modified repository name still exists' do
-        let(:assignment_repo_with_suffix) { AssignmentRepo.new(assignment: assignment, user: user) }
+      it 'new repository name has expected suffix' do
+        patch :accept_invitation, id: invitation.key
 
-        before do
-          assignment_repo_with_suffix.assign_repo_name_suffix
-          assignment_repo_with_suffix.create_github_repository
-        end
-
-        it 'creates a new assignment repo with a increased name suffix' do
-          patch :accept_invitation, id: invitation.key
-          expect(WebMock).to have_requested(:get, github_url("/repos/#{classroom_owner_organization_github_login}"\
-                                                             "/#{assignment_repo.repo_name}-2"))
-          expect(user.assignment_repos.count).to eql(1)
-        end
-
-        after do
-          assignment_repo_with_suffix.destroy_github_repository
-        end
+        expect(WebMock).to have_requested(:post,
+                                          github_url("/organizations/#{organization.github_id}/repos"))
+          .with(body: /^.*#{assignment_repo.repo_name}-1.*$/)
       end
 
       after do
