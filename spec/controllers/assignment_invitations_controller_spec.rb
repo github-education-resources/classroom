@@ -67,7 +67,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
     end
 
-    context 'github repository already exists' do
+    context 'github repository with the same name already exists' do
       let(:assignment_repo) { AssignmentRepo.new(assignment: assignment, user: user) }
 
       before do
