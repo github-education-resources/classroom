@@ -1,7 +1,5 @@
 module GitHub
   class RepoName
-    attr_accessor :search_client
-
     def initialize(client, organization_login, user_login, assignment_slug)
       @client = client
       @organization_login = organization_login
