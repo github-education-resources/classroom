@@ -2,26 +2,24 @@ module GitHub
   class RepoName
     attr_accessor :search_client
 
-    def initialize(user_login, assignment_slug, github_organization_login)
-      @user_login = user_login
-      @assignment_slug = assignment_slug
-      @github_organization_login = github_organization_login
-      @repo_name_client = Octokit::Client.new
-      @suffix = 0
-      @suffix +=1 while repository?
+    def initialize(organization, user, assignment)
+      @organization = organization
+      @user = user
+      @assignment = assignment
+
+      @suffix_number = 0
+      @suffix_number += 1 while repository?
     end
 
     def repository?
-      @repo_name_client.repository?("#{@github_organization_login}/#{repo_name}")
-    end
-
-    def repo_name_base
-      "#{@assignment_slug}-#{@user_login}"
+      @organization.github_client.repository?("#{@organization.decorate.login}/#{repo_name}")
     end
 
     def repo_name
-      return repo_name_base if @suffix.zero?
-      "#{repo_name_base}-#{@suffix}"
+      base_name = "#{@assignment.slug}-#{@user.decorate.login}"
+      return base_name if @suffix_number.zero?
+      suffix = @suffix_number.to_s
+      "#{base_name[0, 99 - suffix.length]}-#{suffix}"
     end
   end
 end

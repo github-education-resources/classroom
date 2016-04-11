@@ -46,7 +46,7 @@ class AssignmentRepo < ActiveRecord::Base
   # Public
   #
   def repo_name
-    @repo_name ||= GitHub::RepoName.new(user.decorate.login, assignment.slug, organization.decorate.login).repo_name
+    @repo_name ||= GitHub::RepoName.new(organization, user, assignment).repo_name
   end
 
   # Public
