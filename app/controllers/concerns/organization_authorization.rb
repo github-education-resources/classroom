@@ -9,7 +9,8 @@ module OrganizationAuthorization
     return if @organization.users.include?(current_user)
 
     begin
-      github_organization.admin?(decorated_current_user.login) ? @organization.users << current_user : not_found
+      not_found unless current_user.github_user.active_admin?(github_organization: @organization.github_organization)
+      @organization.users << current_user
     rescue
       not_found
     end

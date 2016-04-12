@@ -1,23 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe NullGitHubTeam do
+  it_behaves_like 'a NullGitHubResource descendant with attributes'
+
   subject { described_class.new }
 
   describe '#name' do
     it 'returns Deleted team' do
       expect(subject.name).to eql('Deleted team')
-    end
-  end
-
-  describe '#null?' do
-    it 'returns true' do
-      expect(subject.null?).to be(true)
-    end
-  end
-
-  describe '#organization' do
-    it 'returns a NullGitHubOrganization' do
-      expect(subject.organization.class).to eql(NullGitHubOrganization)
     end
   end
 

@@ -9,8 +9,6 @@ gem 'autoprefixer-rails'
 gem 'chewy'
 gem 'coffee-rails', '~> 4.1.0'
 
-gem 'draper'
-
 gem 'faraday-http-cache'
 gem 'flipper'
 gem 'flipper-redis'

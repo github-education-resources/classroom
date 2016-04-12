@@ -14,6 +14,8 @@ class AssignmentInvitation < ActiveRecord::Base
 
   after_initialize :assign_key
 
+  delegate :title, to: :assignment
+
   def redeem_for(invitee)
     if (repo_access = RepoAccess.find_by(user: invitee, organization: organization))
       assignment_repo = AssignmentRepo.find_by(assignment: assignment, repo_access: repo_access)
@@ -21,10 +23,6 @@ class AssignmentInvitation < ActiveRecord::Base
     end
 
     AssignmentRepo.find_or_create_by!(assignment: assignment, user: invitee)
-  end
-
-  def title
-    assignment.title
   end
 
   def to_param

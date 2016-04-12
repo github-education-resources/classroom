@@ -4,8 +4,6 @@ module Stafftools
 
     before_action :set_user, except: [:stop_impersonating]
 
-    decorates_assigned :user
-
     def show
     end
 

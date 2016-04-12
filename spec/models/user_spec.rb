@@ -4,6 +4,12 @@ RSpec.describe User, type: :model do
   let(:github_omniauth_hash) { OmniAuth.config.mock_auth[:github] }
   let(:user)                 { create(:user) }
 
+  describe '#access_token' do
+    it 'is an alias for #token' do
+      expect(user.access_token).to eql(user.token)
+    end
+  end
+
   describe '#assign_from_auth_hash' do
     it 'updates the users attributes' do
       user.assign_from_auth_hash(github_omniauth_hash)
@@ -32,9 +38,9 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#github_client' do
-    it 'sets or creates a new GitHubClient with the users token' do
-      expect(user.github_client.class).to eql(Octokit::Client)
+  describe '#github_user' do
+    it 'has an instance of GitHubUser' do
+      expect(user.github_user).to be_instance_of(GitHubUser)
     end
   end
 
@@ -42,17 +48,8 @@ RSpec.describe User, type: :model do
     it 'returns if the User is a site_admin' do
       expect(user.staff?).to be(false)
 
-      user.site_admin = true
-      user.save!
-
+      user.update_attributes(site_admin: true)
       expect(user.staff?).to be(true)
-    end
-  end
-
-  describe '#github_client_scopes', :vcr do
-    it 'returns an Array of scopes' do
-      user.assign_from_auth_hash(github_omniauth_hash)
-      expect(user.github_client_scopes).to eq(%w(admin:org delete_repo repo user:email))
     end
   end
 end

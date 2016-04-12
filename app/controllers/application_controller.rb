@@ -3,10 +3,9 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  class NotAuthorized < StandardError
-  end
+  class NotAuthorized < StandardError; end
 
-  helper_method :current_user, :decorated_current_user, :decorated_true_user, :logged_in?, :staff?, :true_user
+  helper_method :current_user, :logged_in?, :staff?, :true_user
 
   before_action :authenticate_user!
 
@@ -23,7 +22,7 @@ class ApplicationController < ActionController::Base
 
   def current_scopes
     return [] unless logged_in?
-    session[:current_scopes] ||= current_user.github_client_scopes
+    session[:current_scopes] ||= current_user.github_user.client_scopes
   end
 
   def required_scopes
@@ -42,14 +41,6 @@ class ApplicationController < ActionController::Base
     session[:pre_login_destination] = "#{request.base_url}#{request.path}"
     session[:required_scopes] = required_scopes.join(',')
     redirect_to login_path
-  end
-
-  def decorated_current_user
-    @decorated_current_user ||= current_user.decorate
-  end
-
-  def decorated_true_user
-    @decorated_true_user ||= true_user.decorate
   end
 
   def current_user

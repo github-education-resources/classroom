@@ -4,16 +4,24 @@ RSpec.describe Group, type: :model do
   let(:organization) { GitHubFactory.create_owner_classroom_org }
   let(:grouping)     { Grouping.create(title: 'Grouping 1', organization: organization) }
 
+  after(:each) do
+    Group.destroy_all
+  end
+
+  describe '#github_team', :vcr do
+    let(:group) { Group.create(grouping: grouping, title: 'Toon Town') }
+
+    it 'has a GitHubTeam' do
+      expect(group.github_team).to be_instance_of(GitHubTeam)
+    end
+  end
+
   describe 'callbacks', :vcr do
     let(:organization) { GitHubFactory.create_owner_classroom_org }
     let(:grouping)     { Grouping.create(title: 'Grouping 1', organization: organization) }
 
     before(:each) do
       @group = Group.create(grouping: grouping, title: 'Toon Town')
-    end
-
-    after(:each) do
-      @group.destroy if @group
     end
 
     describe 'before_validation' do
@@ -39,9 +47,7 @@ RSpec.describe Group, type: :model do
       describe 'before_add' do
         describe '#add_member_to_github_team' do
           it 'adds the user to the GitHub team' do
-            github_user     = GitHubUser.new(@repo_access.user.github_client, @repo_access.user.uid)
-            memberships_url = "teams/#{@group.github_team_id}/memberships/#{github_user.login}"
-
+            memberships_url = "teams/#{@group.github_team_id}/memberships/#{@repo_access.github_user.login}"
             expect(WebMock).to have_requested(:put, github_url(memberships_url))
           end
         end
@@ -50,9 +56,9 @@ RSpec.describe Group, type: :model do
       describe 'before_destroy' do
         describe '#remove_from_github_team' do
           it 'removes the user from the GitHub team' do
-            github_user = GitHubUser.new(@repo_access.user.github_client, @repo_access.user.github_client)
-
+            github_user = @repo_access.github_user
             @group.repo_accesses.delete(@repo_access)
+
             rmv_from_team_github_url = github_url("/teams/#{@group.github_team_id}/memberships/#{github_user.login}")
             expect(WebMock).to have_requested(:delete, rmv_from_team_github_url)
           end

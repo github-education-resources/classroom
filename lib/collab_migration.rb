@@ -11,10 +11,8 @@ class CollabMigration
     return unless @repo_access.github_team_id.present?
 
     begin
-      github_organization.delete_team(@repo_access.github_team_id)
-
-      @repo_access.github_team_id = nil
-      @repo_access.save
+      github_organization.delete_team(github_team: @repo_access.github_team)
+      @repo_access.update_attributes(github_team_id: nil)
     rescue Octokit::Unauthorized => e
       Rails.logger.info e
     end
@@ -23,16 +21,15 @@ class CollabMigration
   protected
 
   def add_user_as_collaborator(assignment_repo)
-    repository = GitHubRepository.new(organization.github_client, assignment_repo.github_repo_id)
-    repository.add_collaborator(github_user.login)
+    assignment_repo.github_repository.add_collaborator(github_user: github_user)
   end
 
   def github_organization
-    @github_organization ||= GitHubOrganization.new(organization.github_client, organization.github_id)
+    @github_organization ||= organization.github_organization
   end
 
   def github_user
-    @github_user ||= GitHubUser.new(@repo_access.user.github_client, @repo_access.user.uid)
+    @github_user ||= @repo_access.github_user
   end
 
   def organization

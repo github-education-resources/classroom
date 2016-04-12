@@ -1,11 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe NullGitHubUser do
+  it_behaves_like 'a NullGitHubResource descendant with attributes'
+
   subject { described_class.new }
 
   describe '#html_url' do
     it 'returns #' do
-      expect(subject.html_url).to eql('#')
+      expect(subject.html_url).to eql('https://github.com/ghost')
     end
   end
 
@@ -18,12 +20,6 @@ RSpec.describe NullGitHubUser do
   describe '#name' do
     it 'returns Deleted user' do
       expect(subject.name).to eql('Deleted user')
-    end
-  end
-
-  describe '#null?' do
-    it 'returns true' do
-      expect(subject.null?).to be(true)
     end
   end
 end

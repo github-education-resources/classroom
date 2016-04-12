@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :organizations
 
   validates :token, presence: true, uniqueness: true
+  alias_attribute :access_token, :token
 
   validates :uid, presence: true
   validates :uid, uniqueness: true
@@ -16,10 +17,6 @@ class User < ActiveRecord::Base
   def assign_from_auth_hash(hash)
     user_attributes = AuthHash.new(hash).user_info
     update_attributes(user_attributes)
-  end
-
-  def authorized_access_token?
-    GitHubUser.new(github_client, uid).authorized_access_token?
   end
 
   def self.create_from_auth_hash(hash)
@@ -31,12 +28,8 @@ class User < ActiveRecord::Base
     find_by(conditions)
   end
 
-  def github_client
-    @github_client ||= Octokit::Client.new(access_token: token, auto_paginate: true)
-  end
-
-  def github_client_scopes
-    GitHubUser.new(github_client, uid).client_scopes
+  def github_user
+    @github_user ||= GitHubUser.new(id: uid, access_token: access_token)
   end
 
   def staff?

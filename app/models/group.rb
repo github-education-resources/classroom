@@ -26,25 +26,13 @@ class Group < ActiveRecord::Base
 
   private
 
-  # Internal
-  #
   def add_member_to_github_team(repo_access)
-    user = repo_access.user
-
-    github_team = GitHubTeam.new(organization.github_client, github_team_id)
-    github_user = GitHubUser.new(user.github_client, user.uid)
-
-    github_team.add_team_membership(github_user.login)
+    github_user = repo_access.github_user
+    github_team.add_team_membership(github_user: github_user)
   end
 
-  # Internal
-  #
   def remove_from_github_team(repo_access)
-    user = repo_access.user
-
-    github_team = GitHubTeam.new(organization.github_client, github_team_id)
-    github_user = GitHubUser.new(user.github_client, user.uid)
-
-    github_team.remove_team_membership(github_user.login)
+    github_user = repo_access.github_user
+    github_team.remove_team_membership(github_user: github_user)
   end
 end

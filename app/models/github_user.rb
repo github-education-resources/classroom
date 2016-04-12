@@ -1,14 +1,25 @@
-class GitHubUser
-  def initialize(client, id)
-    @client = client
-    @id     = id
+class GitHubUser < GitHubResource
+  def accept_membership_to(github_organization:)
+    return if github_organization.member?(github_user: self)
+
+    GitHub::Errors.with_error_handling do
+      client.update_organization_membership(github_organization.login, state: 'active')
+    end
+  end
+
+  def active_admin?(github_organization:)
+    GitHub::Errors.with_error_handling do
+      membership = client.organization_membership(github_organization.login, user: login)
+      membership.role == 'admin' && membership.state == 'active'
+    end
   end
 
   def authorized_access_token?
     GitHub::Errors.with_error_handling do
-      Classroom.github_client.check_application_authorization(@client.access_token,
-                                                              headers: GitHub::APIHeaders.no_cache_no_store
-                                                             ).present?
+      Classroom.github_client.check_application_authorization(
+        access_token,
+        headers: GitHub::APIHeaders.no_cache_no_store
+      ).present?
     end
   rescue GitHub::NotFound
     false
@@ -16,29 +27,25 @@ class GitHubUser
 
   def client_scopes
     GitHub::Errors.with_error_handling do
-      @client.scopes(@client.access_token, headers: GitHub::APIHeaders.no_cache_no_store)
+      client.scopes(access_token, headers: GitHub::APIHeaders.no_cache_no_store)
     end
   rescue GitHub::Forbidden
     []
   end
 
-  # Public
-  #
-  def login(options = {})
-    GitHub::Errors.with_error_handling { @client.user(@id, options).login }
+  def disabled?
+    return @disabled if defined?(@disabled)
+    @disabled = (login == 'ghost')
   end
 
-  # Public
-  #
   def organization_memberships
     GitHub::Errors.with_error_handling do
-      @client.organization_memberships(state: 'active', headers: GitHub::APIHeaders.no_cache_no_store)
+      client.organization_memberships(state: 'active', headers: GitHub::APIHeaders.no_cache_no_store)
     end
   end
 
-  # Public
-  #
-  def user
-    GitHub::Errors.with_error_handling { @client.user(@id) }
+  # Internal
+  def github_attributes
+    %w(login avatar_url html_url name)
   end
 end

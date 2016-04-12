@@ -1,5 +1,18 @@
 class NullGitHubResource
-  def null?
-    true
+  def initialize
+    set_null_github_attributes
+  end
+
+  # Internal
+  def null_github_attributes
+    []
+  end
+
+  private
+
+  def set_null_github_attributes
+    null_github_attributes.each do |attr, value|
+      define_singleton_method(attr) { value }
+    end
   end
 end
