@@ -1,15 +1,15 @@
-# Classroom for GitHub
+# GitHub Classroom
 [![Build Status](https://travis-ci.org/education/classroom.svg?branch=master)](https://travis-ci.org/education/classroom)
 
-Classroom for GitHub is a [Ruby on Rails](http://rubyonrails.org/) application designed to automate repository creation and access control, making it easy for teachers to distribute starter code and collect assignments on GitHub
+GitHub Classroom is a [Ruby on Rails](http://rubyonrails.org/) application designed to automate repository creation and access control, making it easy for teachers to distribute starter code and collect assignments on GitHub
 
-![Classroom for GitHub screenshot](https://cloud.githubusercontent.com/assets/123345/9819714/95b26b9c-58a7-11e5-99e9-d65996d53687.png)
+![GitHub Classroom screenshot](https://cloud.githubusercontent.com/assets/123345/9819714/95b26b9c-58a7-11e5-99e9-d65996d53687.png)
 
 ## How it works
 
-Assignments are the core of Classroom for GitHub. Teachers can easily create an assignment and distribute it to students using a private invitation URL. Optional starter code can be provided for individual or group work. It's even possible to delegate assignment creation and management to co-teachers and teaching assistants by adding them as organization administrators.
+Assignments are the core of GitHub Classroom. Teachers can easily create an assignment and distribute it to students using a private invitation URL. Optional starter code can be provided for individual or group work. It's even possible to delegate assignment creation and management to co-teachers and teaching assistants by adding them as organization administrators.
 
-## Hacking on Classroom for GitHub
+## Hacking on GitHub Classroom
 
 ### Help wanted
 
@@ -41,7 +41,7 @@ languages).
 gem install bundler && rbenv rehash
 ```
 
-### Setup Classroom for GitHub
+### Setup GitHub Classroom
 
 If you are using Linux, configure PostgreSQL :
 
@@ -82,13 +82,13 @@ To obtain your GitHub User ID for the `NON_STAFF_GITHUB_ADMIN_IDS` field, go to 
 ### Testing environment variables
 If you want to make a functionality change to the application you will need to write tests to accompany that change. In order to do this, the test values in the .env file must be filled in.
 
-Classroom for GitHub uses [VCR](https://github.com/vcr/vcr) for recording and playing back API fixtures during test runs. These cassettes (fixtures) are part of the Git project in the `spec/support/cassettes` folder. If you're not recording new cassettes you can run the specs with existing cassettes with:
+GitHub Classroom uses [VCR](https://github.com/vcr/vcr) for recording and playing back API fixtures during test runs. These cassettes (fixtures) are part of the Git project in the `spec/support/cassettes` folder. If you're not recording new cassettes you can run the specs with existing cassettes with:
 
 ```bash
 script/test
 ```
 
-Classroom for GitHub uses environmental variables for storing credentials used in testing, these values are located in your `.env` file (created by `script/setup`).
+GitHub Classroom uses environmental variables for storing credentials used in testing, these values are located in your `.env` file (created by `script/setup`).
 If you are recording new cassettes, you need to make sure all of these values are present.
 
 ENV Variable | Description |
@@ -130,11 +130,11 @@ After that, you may start the rails server in a separate terminal with:
 script/server
 ```
 
-And that's it! You should have a working instance of Classroom for GitHub located [here](http://localhost:5000)
+And that's it! You should have a working instance of GitHub Classroom located [here](http://localhost:5000)
 
 ## Deployment
 
-We strongly encourage you to use [https://classroom.github.com](https://classroom.github.com), but if you would like your own version Classroom for GitHub can be easily deployed to Heroku.
+We strongly encourage you to use [https://classroom.github.com](https://classroom.github.com), but if you would like your own version GitHub Classroom can be easily deployed to Heroku.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
@@ -144,4 +144,4 @@ We'd love to have you participate. Please check out [contributing guidelines](CO
 ## Contributors
 Classroom is developed by these [contributors](https://github.com/education/classroom/graphs/contributors).
 
-Shout out to [GitHub Summer of Code](https://github.com/blog/1970-students-work-on-open-source-with-github-this-summer) student, [Mark Tareshawty](http://marktareshawty.com), from [The Ohio State University](https://www.osu.edu/) for his work on Classroom for GitHub.
+Shout out to [GitHub Summer of Code](https://github.com/blog/1970-students-work-on-open-source-with-github-this-summer) student, [Mark Tareshawty](http://marktareshawty.com), from [The Ohio State University](https://www.osu.edu/) for his work on GitHub Classroom.

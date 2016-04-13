@@ -54,7 +54,7 @@ class GitHubOrganization
   def create_team(team_name)
     github_team = GitHub::Errors.with_error_handling do
       @client.create_team(@id,
-                          description: "#{team_name} created by Classroom for GitHub",
+                          description: "#{team_name} created by GitHub Classroom",
                           name: team_name,
                           permission: 'push')
     end
