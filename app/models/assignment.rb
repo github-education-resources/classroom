@@ -11,8 +11,7 @@ class Assignment < ActiveRecord::Base
   has_one :assignment_invitation, dependent: :destroy, autosave: true
 
   has_many :assignment_repos, dependent: :destroy
-  has_many :repo_accesses,    through:   :assignment_repos
-  has_many :users,            through:   :repo_accesses
+  has_many :users,            through:   :assignment_repos
 
   belongs_to :creator, class_name: User
   belongs_to :organization
