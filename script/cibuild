@@ -11,8 +11,6 @@ cd "$(dirname "$0")/.."
 echo "Running tests ..."
 date "+%H:%M:%S"
 
-RUBYOPTS=--debug=frozen-string-literal
-
 # run tests.
 script/test
 
