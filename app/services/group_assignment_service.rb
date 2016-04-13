@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class GroupAssignmentService
   def initialize(new_group_assignment_params, new_grouping_params)
     @grouping_id                 = new_group_assignment_params[:grouping_id]
