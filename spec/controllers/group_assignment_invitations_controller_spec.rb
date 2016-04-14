@@ -97,6 +97,31 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
           expect(user.repo_accesses.count).to eql(1)
         end
       end
+
+      context 'github repository with the same name already exists' do
+        let(:group)   { Group.create(title: 'The Group', grouping: grouping) }
+        let(:group_assignment_repo) { GroupAssignmentRepo.new(group_assignment: group_assignment, group: group) }
+
+        before do
+          group_assignment_repo.create_github_repository
+        end
+
+        it 'creates a new group assignment repo' do
+          patch :accept_invitation, id: invitation.key, group: { id: group.id }
+          expect(group_assignment.group_assignment_repos.count).to eql(1)
+        end
+
+        it 'new repository name has expected suffix' do
+          patch :accept_invitation, id: invitation.key, group: { id: group.id }
+
+          expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
+            .with(body: /^.*#{group_assignment_repo.repo_name}-1.*$/)
+        end
+
+        after do
+          group_assignment_repo.destroy_github_repository
+        end
+      end
     end
   end
 end
