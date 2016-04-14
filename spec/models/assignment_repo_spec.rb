@@ -103,21 +103,19 @@ RSpec.describe AssignmentRepo, type: :model do
 
         context 'github repository name is too long' do
           let(:github_organization) { GitHubOrganization.new(organization.github_client, organization.github_id) }
-          let(:long_assignment_slug) { 'a' * 60 }
-          let(:long_user_login) { 'u' * 39 }
-          let(:long_repo_name) { "#{long_assignment_slug}-#{long_user_login}" }
+          let(:long_repo_name) { "#{'a' * 60}-#{'u' * 39}" }
 
           before do
             github_organization.create_repository(long_repo_name, private: true, description: 'Nothing here')
+            new_assignment_repo.stub(:base_name).and_return(long_repo_name)
           end
 
           it 'truncates the repository name into 100 characters' do
-            repo_name = @assignment_repo.github_repo_name(long_assignment_slug, long_user_login)
-            expect(repo_name.length).to eql(100)
+            expect(new_assignment_repo.generate_github_repo_name.length).to eql(100)
           end
 
           it 'does not remove the repository name suffix' do
-            repo_name = @assignment_repo.github_repo_name(long_assignment_slug, long_user_login)
+            repo_name = new_assignment_repo.generate_github_repo_name
             expect(repo_name).to end_with('-1')
           end
 
