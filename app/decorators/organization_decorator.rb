@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class OrganizationDecorator < Draper::Decorator
   delegate_all
 

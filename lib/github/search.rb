@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module GitHub
   class Search
     attr_accessor :search_client

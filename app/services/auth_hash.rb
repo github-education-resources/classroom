@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AuthHash
   def self.extract_user_info(hash)
     AuthHash.new(hash).user_info

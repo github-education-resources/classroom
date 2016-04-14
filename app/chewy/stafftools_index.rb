@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # rubocop:disable ClassLength
 class StafftoolsIndex < Chewy::Index
   define_type Assignment do

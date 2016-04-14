@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Stafftools
   class AssignmentReposController < StafftoolsController
     before_action :set_assignment_repo
