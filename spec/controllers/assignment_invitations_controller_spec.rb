@@ -83,8 +83,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       it 'new repository name has expected suffix' do
         patch :accept_invitation, id: invitation.key
 
-        expect(WebMock).to have_requested(:post,
-                                          github_url("/organizations/#{organization.github_id}/repos"))
+        expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
           .with(body: /^.*#{assignment_repo.repo_name}-1.*$/)
       end
 
