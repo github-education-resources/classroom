@@ -27,7 +27,7 @@ module Nameable
     return base_name if @suffix_number.zero?
 
     suffix = "-#{@suffix_number}"
-    base_name.truncate(100 - suffix.length) + suffix
+    base_name.truncate(100 - suffix.length, omission: '') + suffix
   end
 
   def organization_login
