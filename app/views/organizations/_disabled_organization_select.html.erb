@@ -1,4 +1,4 @@
-<% aria_label = org[:role] != 'admin' ? 'You cannot add this organization to classroom because you are not an owner' : 'Another owner has already added this organization to Classroom for GitHub' %>
+<% aria_label = org[:role] != 'admin' ? 'You cannot add this organization to classroom because you are not an owner' : 'Another owner has already added this organization to GitHub Classroom' %>
 
 <div class="organization-select-target disabled tooltipped tooltipped-s" aria-label="<%= aria_label %>">
   <%= image_tag "https://avatars.githubusercontent.com/u/#{org[:github_id]}?v=3&size=200", class: 'avatar organization-select-avatar', width: 100, height: 100, alt: "@#{org[:login]}" %>

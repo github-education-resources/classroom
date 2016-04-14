@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Stafftools
   class UsersController < StafftoolsController
     skip_before_action :authorize_access, only: [:stop_impersonating]
