@@ -115,8 +115,7 @@ RSpec.describe AssignmentRepo, type: :model do
           end
 
           it 'does not remove the repository name suffix' do
-            repo_name = new_assignment_repo.generate_github_repo_name
-            expect(repo_name).to end_with('-1')
+            expect(new_assignment_repo.generate_github_repo_name).to end_with('-1')
           end
 
           after do
