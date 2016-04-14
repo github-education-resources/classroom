@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160321131514) do
+ActiveRecord::Schema.define(version: 20160402070009) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,14 +44,15 @@ ActiveRecord::Schema.define(version: 20160321131514) do
 
   create_table "assignments", force: :cascade do |t|
     t.boolean  "public_repo",          default: true
-    t.string   "title",                               null: false
+    t.string   "title",                                null: false
     t.integer  "organization_id"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
     t.integer  "starter_code_repo_id"
     t.integer  "creator_id"
     t.datetime "deleted_at"
-    t.string   "slug",                                null: false
+    t.string   "slug",                                 null: false
+    t.boolean  "copy_open_issues",     default: false, null: false
   end
 
   add_index "assignments", ["deleted_at"], name: "index_assignments_on_deleted_at", using: :btree
@@ -83,16 +84,17 @@ ActiveRecord::Schema.define(version: 20160321131514) do
 
   create_table "group_assignments", force: :cascade do |t|
     t.boolean  "public_repo",          default: true
-    t.string   "title",                               null: false
+    t.string   "title",                                null: false
     t.integer  "grouping_id"
     t.integer  "organization_id"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
     t.integer  "starter_code_repo_id"
     t.integer  "creator_id"
     t.datetime "deleted_at"
-    t.string   "slug",                                null: false
+    t.string   "slug",                                 null: false
     t.integer  "max_members"
+    t.boolean  "copy_open_issues",     default: false, null: false
   end
 
   add_index "group_assignments", ["deleted_at"], name: "index_group_assignments_on_deleted_at", using: :btree

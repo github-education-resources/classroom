@@ -1,3 +1,4 @@
 :queues:
   - chewy
+  - issue_copier
   - trash_can

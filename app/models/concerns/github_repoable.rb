@@ -20,6 +20,14 @@ module GitHubRepoable
 
   # Public
   #
+  def copy_starter_repo_open_issues
+    return true unless starter_code_repo_id
+
+    CopyOpenIssuesJob.perform_later(creator, starter_code_repo_id, github_repo_id)
+  end
+
+  # Public
+  #
   def create_github_repository
     repo_description = "#{repo_name} created by GitHub Classroom"
     github_repository = github_organization.create_repository(repo_name,
