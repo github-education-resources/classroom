@@ -2,21 +2,38 @@
 module Nameable
   extend ActiveSupport::Concern
 
-  def github_repo_name(assignment_slug, user_login)
-    suffix_number = 0
-    suffix_number += 1 while
-        GitHubRepository.present?(organization.github_client, full_name(assignment_slug, user_login, suffix_number))
-    suffixed_repo_name(assignment_slug, user_login, suffix_number)
+  def generate_github_repo_name
+    @suffix_number = 0
+
+    loop do
+      break unless GitHubRepository.present?(organization.github_client, full_name)
+      @suffix_number += 1
+    end
+
+    suffixed_repo_name
   end
 
-  def full_name(assignment_slug, user_login, suffix_number)
-    "#{organization.decorate.login}/#{suffixed_repo_name(assignment_slug, user_login, suffix_number)}"
+  private
+
+  def base_name
+    @base_name ||= "#{slug}-#{name}"
   end
 
-  def suffixed_repo_name(assignment_slug, user_login, suffix_number)
-    base_name = "#{assignment_slug}-#{user_login}"
-    return base_name if suffix_number.zero?
-    suffix = suffix_number.to_s
-    "#{base_name[0, 99 - suffix.length]}-#{suffix}"
+  def full_name
+    "#{organization_login}/#{suffixed_repo_name}"
+  end
+
+  def suffixed_repo_name
+    return base_name if @suffix_number.zero?
+
+    suffix = "-#{@suffix_number}"
+    base_name.truncate(100 - suffix.length) + suffix
+  end
+
+  def organization_login
+    return @organization_login if defined?(@organization_login)
+
+    github_organization = GitHubOrganization.new(organization.github_client, organization.github_id)
+    @organization_login = github_organization.login(headers: GitHub::APIHeaders.no_cache_no_store)
   end
 end
