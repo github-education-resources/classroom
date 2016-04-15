@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Stafftools
   class GroupAssignmentsController < StafftoolsController
     before_action :set_group_assignment

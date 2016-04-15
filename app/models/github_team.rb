@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class GitHubTeam
   attr_reader :id
 

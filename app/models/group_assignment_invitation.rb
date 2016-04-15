@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class GroupAssignmentInvitation < ActiveRecord::Base
   default_scope { where(deleted_at: nil) }
 
