@@ -10,7 +10,12 @@ is_new_window_or_tab_event = (event) ->
 ready = ->
   $('.js-navigation').on('click', (event) ->
     return if is_new_window_or_tab_event(event)
-    $('.loading-indicator').show())
+    $('.loading-indicator').show()
+
+    $('body').addClass('no-scroll')
+    # disable mobile scrolling event
+    $('body').on('touchmove', (e) -> e.preventDefault())
+  )
 
 $(document).ready(ready)
 $(document).on('page:load', ready)
