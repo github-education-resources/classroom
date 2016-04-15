@@ -17,8 +17,8 @@
       </div>
 
       <div class="form-actions">
-        <%= f.submit 'Save changes', class: 'btn btn-green' %>
-        <%= link_to 'Continue', invite_organization_path(@organization), class: 'btn', role: 'button' %>
+        <input type="button" name="commit" value="Save changes" class="btn btn-green update_organization">
+        <a class="btn update_organization" role="button" href=<%=invite_organization_path(@organization)%> >Continue</a>
       </div>
     <% end %>
   </div>
