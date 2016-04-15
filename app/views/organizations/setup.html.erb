@@ -17,8 +17,8 @@
       </div>
 
       <div class="form-actions">
-        <input type="button" name="commit" value="Save changes" class="btn btn-green update_organization">
-        <a class="btn update_organization" role="button" href=<%=invite_organization_path(@organization)%> >Continue</a>
+        <%= submit_tag 'Save changes', :type => 'button', class: 'btn btn-green update_organization' %>
+        <%= link_to 'Continue', invite_organization_path(@organization), class: 'btn update_organization', role: 'button' %>
       </div>
     <% end %>
   </div>
