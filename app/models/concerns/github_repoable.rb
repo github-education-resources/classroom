@@ -18,17 +18,6 @@ module GitHubRepoable
     delete_github_repository_on_failure { repository.add_collaborator(github_user.login) }
   end
 
-  def add_submodule
-    client = organization.github_client
-    assignment_repo_name = "gsoc2016/assignments"
-    ref = client.ref(assignment_repo_name, "heads")
-    sha = ref[0]['object']['sha']
-    blob = client.create_blob(assignment_repo_name, "[submodule \"#{repo_name}\"]\n 	path = golf\n	url = https://github.com/#{@github_organization.login}/#{repo_name}")
-    tree = client.create_tree(assignment_repo_name, [ { :path => "golf", :mode => "160000", :type => "commit", :sha => "5d415a8cadcad658f5f24c4d5de550c687231ce9"}, { :path => ".gitmodules", :mode => "100644", :type => "blob", :sha => blob } ])
-    commit = client.create_commit(assignment_repo_name, "Create tree", tree.sha, sha)
-    client.update_ref(assignment_repo_name, 'heads/master', commit.sha)
-  end
-
   # Public
   #
   def create_github_repository

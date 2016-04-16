@@ -24,6 +24,16 @@
     </div>
   </div>
 
+  <% if Classroom.flipper[:snapshot].enabled? %>
+    <div class="site-content-body">
+      <%= form_tag({ controller: :assignments, action: :snapshot }, method: :patch) do %>
+        <button aria-label="Create snapshot for submissions" class="btn js-navigation " type="submit">
+          <%= octicon('plus') %> Create snapshot for submissions
+        </button>
+      <% end %>
+    </div>
+  <% end %>
+
   <div class="site-content-body">
     <div class="invitation-content">
       <%= render @assignment.assignment_invitation %>

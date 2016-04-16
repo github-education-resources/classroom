@@ -3,6 +3,7 @@ class Assignment < ActiveRecord::Base
   include Flippable
   include GitHubPlan
   include Sluggable
+  include Snapshotable
 
   update_index('stafftools#assignment') { self }
 
