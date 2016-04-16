@@ -36,8 +36,11 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_user!
-    auth_redirect unless logged_in? && adequate_scopes?
-    update_last_active_at_timestamp
+    if logged_in? && adequate_scopes?
+      update_last_active_at_timestamp
+    else
+      auth_redirect
+    end
   end
 
   def auth_redirect
