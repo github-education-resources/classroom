@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Grouping < ActiveRecord::Base
   update_index('stafftools#grouping') { self }
 

@@ -1,8 +1,12 @@
 .outline-box {
   padding: 20px;
+  background: #fff;
   border: 1px solid #d8d8d8;
   border-radius: 3px;
-  background: #fff;
+
+  &:first-child {
+    margin-top: 1rem;
+  }
 
   h3 {
     margin-top: 0;
@@ -10,8 +14,8 @@
 
   .octicon-x {
     float: right;
-    opacity: 0.3;
     cursor: pointer;
+    opacity: 0.3;
 
     &:hover {
       opacity: 1;
