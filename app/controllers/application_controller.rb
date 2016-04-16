@@ -37,12 +37,17 @@ class ApplicationController < ActionController::Base
 
   def authenticate_user!
     auth_redirect unless logged_in? && adequate_scopes?
+    update_last_active_at_timestamp
   end
 
   def auth_redirect
     session[:pre_login_destination] = "#{request.base_url}#{request.path}"
     session[:required_scopes] = required_scopes.join(',')
     redirect_to login_path
+  end
+
+  def update_last_active_at_timestamp
+    current_user.update_attributes(last_active_at: Time.zone.now)
   end
 
   def decorated_current_user
