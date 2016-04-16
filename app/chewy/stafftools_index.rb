@@ -215,6 +215,7 @@ class StafftoolsIndex < Chewy::Index
     field :uid
     field :created_at
     field :updated_at
+    field :last_active_at
 
     field :login, value: (lambda do |user|
       begin
