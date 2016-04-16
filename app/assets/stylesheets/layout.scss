@@ -470,6 +470,20 @@ hr {
   }
 }
 
+.github-buttons {
+  iframe {
+    height: 20px;
+  }
+
+  .star {
+    width: 84px;
+  }
+
+  .watch {
+    width: 90px;
+  }
+}
+
 .desktop-invitation-content,
 .settings,
 .student-information,
