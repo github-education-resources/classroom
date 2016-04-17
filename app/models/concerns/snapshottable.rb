@@ -1,5 +1,5 @@
 # frozen_string_literal: false
-module Snapshotable
+module Snapshottable
   extend ActiveSupport::Concern
 
   def create_github_repository_if_not_exists
@@ -23,11 +23,21 @@ module Snapshotable
   end
 
   def snapshot_git_url
-    "https://github.com/#{full_snapshot_repo_name}"
+    "https://github.com/#{full_snapshot_repo_name}.git"
   end
 
   def full_snapshot_repo_name
     "#{github_organization.login}/#{slugify}"
+  end
+
+  def readme_file
+    "## #{Time.zone.now.strftime('Snapshot created at %Y-%m-%d %I:%M:%S %Z %z')}\n\n"\
+    "This is a snapshot containing all submissions of the assignment #{title} \n\n"\
+    "**Please don't modify this snapshot manually.** \n\n"\
+    "To clone this snapshot, please use the following command: \n"\
+    "```\n"\
+    "git clone --recursive #{snapshot_git_url}\n"\
+    "```\n"
   end
 
   def gitmodules_file
@@ -55,8 +65,10 @@ module Snapshotable
 
   def git_objects
     git_objects = submodules
-    blob = client.create_blob(full_snapshot_repo_name, gitmodules_file)
-    git_objects.push(path: '.gitmodules', mode: '100644', type: 'blob', sha: blob)
+    gitmodules_blob = client.create_blob(full_snapshot_repo_name, gitmodules_file)
+    readme_blob = client.create_blob(full_snapshot_repo_name, readme_file)
+    git_objects.push(path: '.gitmodules', mode: '100644', type: 'blob', sha: gitmodules_blob)
+    git_objects.push(path: 'README.md', mode: '100644', type: 'blob', sha: readme_blob)
     git_objects
   end
 
