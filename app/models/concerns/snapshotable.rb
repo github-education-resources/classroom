@@ -4,7 +4,9 @@ module Snapshotable
 
   def create_github_repository_if_not_exists
     unless client.repository?(full_snapshot_repo_name, headers: GitHub::APIHeaders.no_cache_no_store)
-      github_organization.create_repository(snapshot_repo_name, description: 'Snapshot repo baby!', auto_init: true)
+      github_organization.create_repository(snapshot_repo_name,
+                                            description: 'Snapshot repo created by GitHub Classroom.',
+                                            auto_init: true)
     end
   end
 
