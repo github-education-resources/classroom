@@ -24,7 +24,7 @@
     </div>
   </div>
 
-  <% if Classroom.flipper[:snapshot].enabled? %>
+  <% if Classroom.flipper[:snapshot].enabled? current_user %>
     <div class="site-content-body">
       <%= form_tag({ controller: :assignments, action: :snapshot }, method: :patch) do %>
         <button aria-label="Create snapshot for submissions" class="btn js-navigation " type="submit">

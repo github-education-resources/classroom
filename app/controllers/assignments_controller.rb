@@ -52,7 +52,7 @@ class AssignmentsController < ApplicationController
   end
 
   def snapshot
-    return unless Classroom.flipper[:snapshot].enabled?
+    return unless Classroom.flipper[:snapshot].enabled? current_user
     begin
       @assignment.create_snapshot
       flash[:success] = "Snapshot is generated: #{@assignment.snapshot_git_url}"
