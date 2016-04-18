@@ -22,8 +22,7 @@ ready = ->
     $('.js-autocomplete-suggestions-list').html('')
 
     delay (->
-      $.get "/autocomplete/#{$(textfield).data('autocomplete-search-endpoint')}?" +
-          "query=#{query}", (data) ->
+      $.get "/autocomplete/#{$(textfield).data('autocomplete-search-endpoint')}?query=#{query}", (data) ->
         # handle outdated responses
         return unless query == textfield.value && $(textfield).is(':focus')
 
