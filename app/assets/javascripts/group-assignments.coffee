@@ -9,8 +9,7 @@ $('.group_assignments').ready ->
   )
 
 $form_values_present = () ->
-  $present('group_assignment_title') && ($present('grouping_title') ||
-    $present('group_assignment_grouping_id'))
+  $present('group_assignment_title') && ($present('grouping_title') || $present('group_assignment_grouping_id'))
 
 $present = (id) ->
   $el = $("##{id}")

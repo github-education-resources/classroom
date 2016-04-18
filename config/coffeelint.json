@@ -34,7 +34,7 @@
     "level": "warn"
   },
   "eol_last": {
-    "level": "ignore"
+    "level": "error"
   },
   "indentation": {
     "value": 2,
@@ -44,7 +44,7 @@
     "value": "unix"
   },
   "max_line_length": {
-    "value": 80,
+    "value": 120,
     "level": "error",
     "limitComments": true
   },
