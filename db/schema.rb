@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 20160321131514) do
   create_table "assignments", force: :cascade do |t|
     t.boolean  "public_repo",          default: true
     t.string   "title",                               null: false
+    t.string   "email_domain"
     t.integer  "organization_id"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
