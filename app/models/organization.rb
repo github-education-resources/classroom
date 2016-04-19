@@ -16,8 +16,9 @@ class Organization < ActiveRecord::Base
 
   validates :github_id, presence: true, uniqueness: true
 
-  validates :title, presence: true
-  validates :title, length: { maximum: 60 }
+  validates :title, presence: true, length: { maximum: 60 }
+  validates :email_domain, length: { maximum: 80 },
+            format: { with: (/(@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z)/i), message: 'is not valid' }, :allow_blank => true
 
   validates :slug, uniqueness: true
 

@@ -128,12 +128,13 @@ ActiveRecord::Schema.define(version: 20160321131514) do
   add_index "groups_repo_accesses", ["repo_access_id"], name: "index_groups_repo_accesses_on_repo_access_id", using: :btree
 
   create_table "organizations", force: :cascade do |t|
-    t.integer  "github_id",  null: false
-    t.string   "title",      null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "github_id",    null: false
+    t.string   "title",        null: false
+    t.string   "email_domain"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
     t.datetime "deleted_at"
-    t.string   "slug",       null: false
+    t.string   "slug",         null: false
   end
 
   add_index "organizations", ["deleted_at"], name: "index_organizations_on_deleted_at", using: :btree
