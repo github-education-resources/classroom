@@ -32,8 +32,8 @@ class GitHubRepository
 
   # Public
   #
-  def self.present?(client, full_repo_name)
-    client.repository?(full_repo_name)
+  def self.present?(client, full_name)
+    client.repository?(full_name)
   end
 
   # Public
