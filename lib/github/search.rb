@@ -23,6 +23,10 @@ module GitHub
       return [], err.message
     end
 
+    def search_github_user_emails
+      @search_client.emails
+    end
+
     private
 
     def build_github_repositories_query(query)
