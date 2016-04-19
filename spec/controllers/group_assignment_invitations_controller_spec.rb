@@ -119,6 +119,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         after do
           organization.github_client.delete_repository(@original_repository.id)
           GroupAssignmentRepo.destroy_all
+          Group.destroy_all
         end
       end
     end
