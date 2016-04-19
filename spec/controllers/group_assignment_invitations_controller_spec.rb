@@ -99,10 +99,9 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       end
 
       context 'github repository with the same name already exists' do
-        let(:group)   { Group.create(title: 'The Group', grouping: grouping) }
-        let(:group_assignment_repo) { GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group) }
-
         before do
+          group = Group.create(title: 'The Group', grouping: grouping)
+          group_assignment_repo = GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
           @original_repository = organization.github_client.repository(group_assignment_repo.github_repo_id)
           group_assignment_repo.delete
           patch :accept_invitation, id: invitation.key, group: { id: group.id }
@@ -114,7 +113,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
         it 'new repository name has expected suffix' do
           expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
-            .with(body: /^.*#{group_assignment_repo.repo_name}-1.*$/)
+            .with(body: /^.*#{@original_repository.name}-1.*$/)
         end
 
         after do

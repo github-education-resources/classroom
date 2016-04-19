@@ -69,9 +69,8 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
 
     context 'github repository with the same name already exists' do
-      let(:assignment_repo) { AssignmentRepo.create!(assignment: assignment, user: user) }
-
       before do
+        assignment_repo = AssignmentRepo.create!(assignment: assignment, user: user)
         @original_repository = organization.github_client.repository(assignment_repo.github_repo_id)
         assignment_repo.delete
         patch :accept_invitation, id: invitation.key
@@ -83,7 +82,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
       it 'new repository name has expected suffix' do
         expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
-          .with(body: /^.*#{assignment_repo.repo_name}-1.*$/)
+          .with(body: /^.*#{@original_repository.name}-1.*$/)
       end
 
       after do
