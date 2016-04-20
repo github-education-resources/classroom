@@ -13,6 +13,7 @@
 #= require jquery/dist/jquery
 #= require jquery.turbolinks
 #= require jquery-ujs/src/rails
+#= require jquery.browser/dist/jquery.browser
 #
 #= require turbolinks
 #
