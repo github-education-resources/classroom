@@ -17,7 +17,7 @@
 |sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)
 |tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)
 |vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700
-|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4)) ///
+|yas\-|your|zeto|zte\-/i///.test(a.substr(0, 4)) 
   return
 ) navigator.userAgent or navigator.vendor or window.opera
 
