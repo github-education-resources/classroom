@@ -1,0 +1,54 @@
+<div class="site-content-body">
+  <h3><%=
+    message = 'To accept this assignment you will need a verified ';
+
+    domains = assignment.email_domain.split(', ');
+
+    if domains.length == 1
+      message += domains[0] + ' email address.';
+    elsif domains.length == 2
+      message += domains[0] + ' or ' + domains[1] + ' email address.';
+    else
+      message += 'email address from one of the following domains: ' + assignment.email_domain;
+    end
+
+    message;
+    %></h3>
+
+  <%=
+    message = ""
+
+    github_search          = GitHub::Search.new(current_user.token, current_user.uid)
+    results = github_search.search_github_user_emails
+
+    passed = false
+
+    domains = assignment.email_domain.split(', ')
+
+    results.each do |result|
+      domains.each do |domain|
+        if (result.email.end_with? domain) && result.verified
+          message = 'You have a verified ' + domain + ' email address!'
+          passed = true
+        elsif (result.email.end_with? domain)
+          message = 'You have an unverified ' + domain + ' email address. Check your email for a verification message or go to https://github.com/settings/emails to send a new verification email.';
+        end
+        break if passed
+      end
+      break if passed
+    end
+
+
+    if passed
+      @emailVerified = true;
+      message;
+    elsif message != ""
+      message
+    else
+      render 'assignment_invitations/assignment_invitation_add_email'
+    end
+
+
+  %>
+</div>
+
