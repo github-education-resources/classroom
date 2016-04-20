@@ -10,6 +10,5 @@ module GitHub
     def add_email(email_address)
       @add_client.add_email(email_address)
     end
-
   end
 end
