@@ -1,0 +1,13 @@
+<%= form_for @assignment, url: { action: :add_email }, method: :post do |f| %>
+    <%= render 'shared/error_messages', object: f.object %>
+
+    <div class="columns">
+      <div class="two-thirds column">
+        <dl class="form">
+          <dt><label>Please add a matching email address</label></dt>
+          <dd class="bottom_margin"><input class="textfield" placeholder="Add an email address" type="email"></dd>
+          <%= f.submit 'Add Email', class: 'btn btn-green' %>
+        </dl>
+      </div>
+    </div>
+<% end %>
