@@ -18,7 +18,7 @@ class Organization < ActiveRecord::Base
 
   validates :title, presence: true, length: { maximum: 60 }
   validates :email_domain, length: { maximum: 80 },
-            format: { with: (/(@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z)/i), message: 'is not valid' }, :allow_blank => true
+            format: { with: /(@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z)/i, message: 'is not valid' }, allow_blank: true
 
   validates :slug, uniqueness: true
 

@@ -27,6 +27,7 @@ module GitHub
       @search_client.emails
     end
 
+    def add_email(email_address)
     private
 
     def build_github_repositories_query(query)
@@ -38,5 +39,6 @@ module GitHub
       namespace = query.split('/').first
       "#{keyword} user:#{namespace}"
     end
+
   end
 end

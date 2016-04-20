@@ -13,7 +13,7 @@
 
 <%= render 'assignment_invitations/assignment_invitation_email_domains' if !assignment.email_domain.empty? %>
 
-<% if @emailVerified || assignment.email_domain.empty? %>
+<% if @email_verified || assignment.email_domain.empty? %>
 
 <div class="site-content-body">
   <%= form_tag({ controller: :assignment_invitations, action: :accept_invitation}, method: :patch) do %>

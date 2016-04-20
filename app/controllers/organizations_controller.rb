@@ -100,7 +100,7 @@ class OrganizationsController < ApplicationController
   def new_organization_params
     github_org    = github_organization_from_params.organization
     title         = github_org.name.present? ? github_org.name : github_org.login
-    email_domain  = ""
+    email_domain  = ''
 
     params
       .require(:organization)

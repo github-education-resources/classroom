@@ -4,7 +4,7 @@ module GitHub
     attr_accessor :add_client
 
     def initialize(access_token)
-      @add_client = Octokit::Client.new(:access_token => access_token);
+      @add_client = Octokit::Client.new(access_token: access_token)
     end
 
     def add_email(email_address)
@@ -13,6 +13,3 @@ module GitHub
 
   end
 end
-
-
-
