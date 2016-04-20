@@ -71,8 +71,8 @@ class GitHubOrganization
 
   # Public
   #
-  def login
-    GitHub::Errors.with_error_handling { @client.organization(@id).login }
+  def login(options = {})
+    GitHub::Errors.with_error_handling { @client.organization(@id, options).login }
   end
 
   # Public
