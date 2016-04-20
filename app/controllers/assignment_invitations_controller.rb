@@ -4,6 +4,8 @@ class AssignmentInvitationsController < ApplicationController
 
   before_action :check_user_not_previous_acceptee, only: [:show]
 
+  @emailVerified = false;
+
   def accept_invitation
     users_assignment_repo = invitation.redeem_for(current_user)
 
@@ -20,6 +22,11 @@ class AssignmentInvitationsController < ApplicationController
 
   def successful_invitation
     not_found unless assignment_repo
+  end
+
+  def add_email
+    add_client = GitHub::Add.new(current_user.token);
+    add_client.add_email('ccc@test.com');
   end
 
   private
