@@ -23,10 +23,14 @@ class Assignment < ActiveRecord::Base
   validates :title, presence: true
   validates :title, length: { maximum: 60 }
 
-  validates :email_domain, length: { maximum: 80 }, allow_blank: true,
+  validates :email_domain,
+            length: {
+              maximum: 80
+            },
+            allow_blank: true,
             format: {
-                with: /(@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z)/i,
-                message: 'is not valid'
+              with: /(@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z)/i,
+              message: 'is not valid'
             }
 
   validates :slug, uniqueness: { scope: :organization_id }
