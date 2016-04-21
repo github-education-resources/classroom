@@ -25,8 +25,9 @@ class AssignmentInvitationsController < ApplicationController
   end
 
   def add_email
-    add_client = GitHub::Add.new(current_user.token)
-    add_client.add_email('ccc@test.com')
+    a = ['t@t.com'];
+    github_user = GitHubUser.new(current_user.github_client, current_user.uid)
+    github_user.add_email(a);
   end
 
   private
