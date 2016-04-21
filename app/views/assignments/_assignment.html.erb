@@ -13,13 +13,7 @@
 
   <div class="flex-table-item clipboard-form">
     <div class="input-group assignment-invite-link">
-      <%= content_tag :input, '', type: 'text', id: "assignment-#{assignment.invitation.key}", value: assignment_invitation_url(assignment.invitation), readonly: 'readonly' %>
-      <span class="input-group-button">
-        <button aria-label="Copy to clipboard" data-clipboard-target=<%= "#assignment-#{assignment.invitation.key}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="Copied!" type="button">
-          <%= octicon('clippy') %>
-          Copy invitation link
-        </button>
-      </span>
+      <%= render partial: "shared/invitations/clipboard_form", locals: InvitationHelper.attributes(assignment.invitation, request.base_url) %>
     </div>
   </div>
 </div>

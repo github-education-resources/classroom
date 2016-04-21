@@ -33,3 +33,6 @@ config/dev/nginx.conf
 
 # Vim Projections
 config/projections.json
+
+# byebug
+.byebug_history
