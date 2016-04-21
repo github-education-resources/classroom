@@ -2,6 +2,7 @@
 class GroupAssignmentRepo < ActiveRecord::Base
   include GitHubPlan
   include GitHubRepoable
+  include Nameable
 
   update_index('stafftools#group_assignment_repo') { self }
 
@@ -51,15 +52,24 @@ class GroupAssignmentRepo < ActiveRecord::Base
   # Public
   #
   def repo_name
-    headers     = { headers: GitHub::APIHeaders.no_cache_no_store }
-    github_team = GitHubTeam.new(creator.github_client, github_team_id).team(headers)
-
-    "#{group_assignment.slug}-#{github_team.slug}"
+    @repo_name ||= generate_github_repo_name
   end
 
   # Public
   #
   def starter_code_repo_id
     group_assignment.starter_code_repo_id
+  end
+
+  private
+
+  delegate :slug, to: :group_assignment
+
+  def name
+    return @name if defined?(@name)
+
+    headers     = { headers: GitHub::APIHeaders.no_cache_no_store }
+    github_team = GitHubTeam.new(creator.github_client, github_team_id).team(headers)
+    @name = github_team.slug
   end
 end

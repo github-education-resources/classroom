@@ -2,6 +2,7 @@
 class AssignmentRepo < ActiveRecord::Base
   include GitHubPlan
   include GitHubRepoable
+  include Nameable
 
   update_index('stafftools#assignment_repo') { self }
 
@@ -47,8 +48,7 @@ class AssignmentRepo < ActiveRecord::Base
   # Public
   #
   def repo_name
-    github_user = GitHubUser.new(user.github_client, user.uid)
-    "#{assignment.slug}-#{github_user.login(headers: GitHub::APIHeaders.no_cache_no_store)}"
+    @repo_name ||= generate_github_repo_name
   end
 
   # Public
@@ -70,5 +70,16 @@ class AssignmentRepo < ActiveRecord::Base
   alias original_user user
   def user
     original_user || repo_access.user
+  end
+
+  private
+
+  delegate :slug, to: :assignment
+
+  def name
+    return @name if defined?(@name)
+
+    github_user = GitHubUser.new(user.github_client, user.uid)
+    @name = github_user.login(headers: GitHub::APIHeaders.no_cache_no_store)
   end
 end
