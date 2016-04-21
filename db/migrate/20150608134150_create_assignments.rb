@@ -3,7 +3,7 @@ class CreateAssignments < ActiveRecord::Migration
     create_table :assignments do |t|
       t.boolean    :public_repo,  default: true
       t.string     :title,        null: false
-      t.string  :emaildomain,      null: true
+      t.string  :email_domain,      null: true
 
       t.belongs_to :organization, index: true
 
