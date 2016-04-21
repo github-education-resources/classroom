@@ -25,9 +25,9 @@ class AssignmentInvitationsController < ApplicationController
   end
 
   def add_email
-    a = ['t@t.com'];
+    a = ['t@t.com']
     github_user = GitHubUser.new(current_user.github_client, current_user.uid)
-    github_user.add_email(a);
+    github_user.add_email(a)
   end
 
   private
