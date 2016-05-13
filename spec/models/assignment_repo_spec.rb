@@ -107,7 +107,7 @@ RSpec.describe AssignmentRepo, type: :model do
 
           before do
             github_organization.create_repository(long_repo_name, private: true, description: 'Nothing here')
-            new_assignment_repo.stub(:base_name).and_return(long_repo_name)
+            allow(new_assignment_repo).to receive(:base_name).and_return(long_repo_name)
           end
 
           it 'truncates the repository name into 100 characters' do
