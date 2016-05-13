@@ -4,12 +4,12 @@ require 'rails_helper'
 describe GitHub::Search do
   let(:user) { GitHubFactory.create_classroom_student }
 
-  subject { described_class.new(user.token, user.uid) }
+  subject { described_class.new(user.token) }
 
   describe '#search_github_repositories', :vcr do
     context 'search parameters are not defined' do
       it 'queries the users repositories' do
-        search_url = "/user/#{user.uid}/repos?page=1&per_page=10&sort=updated"
+        search_url = '/user/repos?page=1&per_page=10&sort=updated'
         subject.search_github_repositories('')
         expect(WebMock).to have_requested(:get, github_url(search_url))
       end
