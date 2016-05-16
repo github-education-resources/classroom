@@ -29,35 +29,6 @@ RSpec.describe OrganizationsController, type: :controller do
         get :index
         expect(response).to have_http_status(:success)
       end
-
-      it 'sets the users organization' do
-        get :index
-        expect(assigns(:organizations).first.id).to eq(organization.id)
-      end
-    end
-
-    context 'user with admin privilege on the organization but not part of the classroom' do
-      before(:each) do
-        organization.users = []
-      end
-
-      it 'adds the user to the classroom' do
-        get :index
-
-        expect(user.organizations).to include(organization)
-      end
-    end
-
-    context 'user without admin privilege on the organization' do
-      before(:each) do
-        sign_in(student)
-      end
-
-      it 'does not add the user to the classroom' do
-        get :index
-
-        expect(student.organizations).to be_empty
-      end
     end
 
     context 'authenticated user with an invalid token' do
@@ -69,6 +40,32 @@ RSpec.describe OrganizationsController, type: :controller do
       it 'redirects to login_path' do
         get :index
         expect(response).to redirect_to(login_path)
+      end
+    end
+  end
+
+  describe 'GET #user_organizations', :vcr do
+    context 'user with admin privilege on the organization but not part of the classroom' do
+      before(:each) do
+        organization.users = []
+      end
+
+      it 'adds the user to the classroom' do
+        get :user_organizations
+
+        expect(user.organizations).to include(organization)
+      end
+    end
+
+    context 'user without admin privilege on the organization' do
+      before(:each) do
+        sign_in(student)
+      end
+
+      it 'does not add the user to the classroom' do
+        get :user_organizations
+
+        expect(student.organizations).to be_empty
       end
     end
   end

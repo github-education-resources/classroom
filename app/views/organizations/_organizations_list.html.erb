@@ -1,0 +1,13 @@
+<% if @organizations.present? %>
+  <%= render @organizations %>
+  <%= render partial: 'shared/pagination', locals: { collection: @organizations } %>
+<% else %>
+  <div class="blankslate large-format spacious clean-background">
+    <h3>You’re not managing any classrooms yet.</h3>
+    <p>You can begin creating assignments once you have at least one classroom.</p>
+
+    <%= link_to new_organization_path, class: 'btn btn-green btn-big', role: 'button' do %>
+      Create your first classroom
+    <% end %>
+  </div>
+<% end %>

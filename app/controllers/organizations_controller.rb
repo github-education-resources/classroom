@@ -3,16 +3,21 @@ class OrganizationsController < ApplicationController
   include OrganizationAuthorization
 
   before_action :authorize_organization_addition,     only: [:create]
-  before_action :set_users_github_organizations,      only: [:index, :new, :create]
-  before_action :add_current_user_to_organizations,   only: [:index]
+  before_action :set_users_github_organizations,      only: [:new, :create, :user_organizations]
+  before_action :add_current_user_to_organizations,   only: [:user_organizations]
   before_action :paginate_users_github_organizations, only: [:new, :create]
+  before_action :set_organizations,                   only: [:index, :user_organizations]
 
-  skip_before_action :set_organization, :authorize_organization_access, only: [:index, :new, :create]
+  skip_before_action :set_organization, :authorize_organization_access,
+                     only: [:index, :new, :create, :user_organizations]
 
   decorates_assigned :organization
 
   def index
-    @organizations = current_user.organizations.includes(:users).page(params[:page])
+  end
+
+  def user_organizations
+    render partial: 'organizations/organizations_list'
   end
 
   def new
@@ -98,40 +103,26 @@ class OrganizationsController < ApplicationController
       .merge(title: title)
   end
 
+  def organization_service
+    @organization_service ||= OrganizationService.new(current_user)
+  end
+
   def set_organization
     @organization = Organization.find_by!(slug: params[:id])
   end
 
-  # rubocop:disable AbcSize
-  def set_users_github_organizations
-    github_user = GitHubUser.new(current_user.github_client, current_user.uid)
-
-    @users_github_organizations = github_user.organization_memberships.map do |membership|
-      {
-        classroom: Organization.unscoped.includes(:users).find_by(github_id: membership.organization.id),
-        github_id: membership.organization.id,
-        login:     membership.organization.login,
-        role:      membership.role
-      }
-    end
+  def set_organizations
+    @organizations = current_user.organizations.includes(:users).page(params[:page])
   end
-  # rubocop:enable AbcSize
+
+  def set_users_github_organizations
+    @users_github_organizations = organization_service.github_organizations
+  end
 
   # Check if the current user has any organizations with admin privilege, if so add the user to the corresponding
   # classroom automatically.
   def add_current_user_to_organizations
-    @users_github_organizations.each do |organization|
-      classroom = organization[:classroom]
-      if classroom.present? && !classroom.users.include?(current_user)
-        create_user_organization_access(classroom)
-      end
-    end
-  end
-
-  def create_user_organization_access(organization)
-    github_org = GitHubOrganization.new(current_user.github_client, organization.github_id)
-    return unless github_org.admin?(decorated_current_user.login)
-    organization.users << current_user
+    @organization_service.add_user_to_organizations
   end
 
   def paginate_users_github_organizations
