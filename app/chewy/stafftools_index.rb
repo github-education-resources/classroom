@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # rubocop:disable ClassLength
 class StafftoolsIndex < Chewy::Index
   define_type Assignment do
@@ -14,7 +15,7 @@ class StafftoolsIndex < Chewy::Index
         begin
           GitHubOrganization.new(org.github_client, org.github_id).organization.login
         rescue GitHub::Forbidden
-          GitHubOrganization.new(application_github_client, org.github_id).organization.login
+          GitHubOrganization.new(Classroom.github_client, org.github_id).organization.login
         end
       rescue GitHub::NotFound
         NullGitHubOrganization.new.login
@@ -40,13 +41,13 @@ class StafftoolsIndex < Chewy::Index
     field :assignment_title, value: ->(assignment_invitation) { assignment_invitation.assignment.title }
 
     field :user_login, value: (lambda do |assignment_repo|
-      user = assignment_repo.user || assignment_repo.repo_access.user
+      user = assignment_repo.user
 
       begin
         begin
           GitHubUser.new(user.github_client, user.uid).user.login
         rescue GitHub::Forbidden
-          GitHubUser.new(application_github_client, user.uid).user.login
+          GitHubUser.new(Classroom.github_client, user.uid).user.login
         end
       rescue GitHub::NotFound
         NullGitHubUser.new.login
@@ -68,7 +69,7 @@ class StafftoolsIndex < Chewy::Index
         begin
           GitHubOrganization.new(org.github_client, org.github_id).organization.login
         rescue GitHub::Forbidden
-          GitHubOrganization.new(application_github_client, org.github_id).organization.login
+          GitHubOrganization.new(Classroom.github_client, org.github_id).organization.login
         end
       rescue GitHub::NotFound
         NullGitHubOrganization.new.login
@@ -90,7 +91,7 @@ class StafftoolsIndex < Chewy::Index
         begin
           GitHubOrganization.new(org.github_client, org.github_id).organization.login
         rescue GitHub::Forbidden
-          GitHubOrganization.new(application_github_client, org.github_id).organization.login
+          GitHubOrganization.new(Classroom.github_client, org.github_id).organization.login
         end
       rescue GitHub::NotFound
         NullGitHubOrganization.new.login
@@ -134,7 +135,7 @@ class StafftoolsIndex < Chewy::Index
         begin
           GitHubOrganization.new(org.github_client, org.github_id).organization.login
         rescue GitHub::Forbidden
-          GitHubOrganization.new(application_github_client, org.github_id).organization.login
+          GitHubOrganization.new(Classroom.github_client, org.github_id).organization.login
         end
       rescue GitHub::NotFound
         NullGitHubOrganization.new.login
@@ -154,7 +155,7 @@ class StafftoolsIndex < Chewy::Index
         begin
           GitHubOrganization.new(org.github_client, org.github_id).organization.login
         rescue GitHub::Forbidden
-          GitHubOrganization.new(application_github_client, org.github_id).organization.login
+          GitHubOrganization.new(Classroom.github_client, org.github_id).organization.login
         end
       rescue GitHub::NotFound
         NullGitHubOrganization.new.login
@@ -168,7 +169,7 @@ class StafftoolsIndex < Chewy::Index
         begin
           GitHubUser.new(user.github_client, user.uid).user.login
         rescue GitHub::Forbidden
-          GitHubUser.new(application_github_client, user.uid).user.login
+          GitHubUser.new(Classroom.github_client, user.uid).user.login
         end
       rescue GitHub::NotFound
         NullGitHubUser.new.login
@@ -189,7 +190,7 @@ class StafftoolsIndex < Chewy::Index
         begin
           GitHubOrganization.new(org.github_client, org.github_id).organization.login
         rescue GitHub::Forbidden
-          GitHubOrganization.new(application_github_client, org.github_id).organization.login
+          GitHubOrganization.new(Classroom.github_client, org.github_id).organization.login
         end
       rescue GitHub::NotFound
         NullGitHubOrganization.new.login
@@ -201,7 +202,7 @@ class StafftoolsIndex < Chewy::Index
         begin
           GitHubOrganization.new(org.github_client, org.github_id).organization.name
         rescue GitHub::Forbidden
-          GitHubOrganization.new(application_github_client, org.github_id).organization.name
+          GitHubOrganization.new(Classroom.github_client, org.github_id).organization.name
         end
       rescue GitHub::NotFound
         NullGitHubOrganization.new.name
@@ -220,7 +221,7 @@ class StafftoolsIndex < Chewy::Index
         begin
           GitHubUser.new(user.github_client, user.uid).user.login
         rescue GitHub::Forbidden
-          GitHubUser.new(application_github_client, user.uid).user.login
+          GitHubUser.new(Classroom.github_client, user.uid).user.login
         end
       rescue GitHub::NotFound
         NullGitHubUser.new.login
@@ -232,17 +233,12 @@ class StafftoolsIndex < Chewy::Index
         begin
           GitHubUser.new(user.github_client, user.uid).user.name
         rescue GitHub::Forbidden
-          GitHubUser.new(application_github_client, user.uid).user.name
+          GitHubUser.new(Classroom.github_client, user.uid).user.name
         end
       rescue GitHub::NotFound
         NullGitHubUser.new.name
       end
     end)
-  end
-
-  def self.application_github_client
-    Octokit::Client.new(client_id: Rails.application.secrets.github_client_id,
-                        client_secret: Rails.application.secrets.github_client_secret)
   end
 end
 # rubocop:enable ClassLength

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CollabMigration
   attr_accessor :repo_access
 

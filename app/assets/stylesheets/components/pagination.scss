@@ -7,24 +7,24 @@
   background-color: #fff;
 
   .disabled {
-    background-color: #fafafa;
-    cursor: default;
     color: #d3d3d3;
+    cursor: default;
+    background-color: #fafafa;
 
     &:hover {
-      background-color: #fafafa;
       color: #d3d3d3;
+      background-color: #fafafa;
     }
   }
 
   a,
   em,
   span {
-    font-size: 13px;
-    font-weight: bold;
-    font-style: normal;
     padding: 7px 12px;
     margin-right: -4px;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: bold;
     border-top: 1px solid #e5e5e5;
     border-bottom: 1px solid #e5e5e5;
     border-left: 1px solid #e5e5e5;
@@ -35,10 +35,10 @@
     }
 
     &.current {
-      background-color: $brand-blue;
-      color: #fff;
-      border-color: $brand-blue;
       z-index: 3;
+      color: #fff;
+      background-color: $brand-blue;
+      border-color: $brand-blue;
     }
 
     &:first-child {

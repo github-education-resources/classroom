@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe GroupAssignmentInvitationsController, type: :controller do
@@ -22,7 +23,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
                              title: 'HTML5',
                              grouping: grouping,
                              organization: organization,
-                             public_repo: false)
+                             public_repo: true)
     end
 
     let(:invitation) { GroupAssignmentInvitation.create(group_assignment: group_assignment) }
@@ -57,6 +58,69 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
         expect(group_assignment.group_assignment_repos.count).to eql(0)
         expect(user.repo_accesses.count).to eql(0)
+      end
+
+      context 'group has reached maximum number of members' do
+        let(:group)   { Group.create(title: 'The Group', grouping: grouping) }
+        let(:student) { GitHubFactory.create_classroom_student }
+
+        before(:each) do
+          allow_any_instance_of(RepoAccess).to receive(:silently_remove_organization_member).and_return(true)
+          group_assignment.update(max_members: 1)
+          group.repo_accesses << RepoAccess.create(user: student, organization: organization)
+        end
+
+        it 'does not allow user to join' do
+          expect_any_instance_of(ApplicationController).to receive(:flash_and_redirect_back_with_message)
+          patch :accept_invitation, id: invitation.key, group: { id: group.id }
+        end
+      end
+
+      context 'group has not reached maximum number of members' do
+        let(:group)   { Group.create(title: 'The Group', grouping: grouping) }
+
+        before(:each) do
+          group_assignment.update(max_members: 1)
+        end
+
+        it 'allows user to join' do
+          patch :accept_invitation, id: invitation.key, group: { id: group.id }
+        end
+      end
+
+      context 'group does not have maximum number of members' do
+        let(:group) { Group.create(title: 'The Group', grouping: grouping) }
+
+        it 'allows user to join' do
+          patch :accept_invitation, id: invitation.key, group: { id: group.id }
+          expect(group_assignment.group_assignment_repos.count).to eql(1)
+          expect(user.repo_accesses.count).to eql(1)
+        end
+      end
+
+      context 'github repository with the same name already exists' do
+        before do
+          group = Group.create(title: 'The Group', grouping: grouping)
+          group_assignment_repo = GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
+          @original_repository = organization.github_client.repository(group_assignment_repo.github_repo_id)
+          group_assignment_repo.delete
+          patch :accept_invitation, id: invitation.key, group: { id: group.id }
+        end
+
+        it 'creates a new group assignment repo' do
+          expect(group_assignment.group_assignment_repos.count).to eql(1)
+        end
+
+        it 'new repository name has expected suffix' do
+          expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
+            .with(body: /^.*#{@original_repository.name}-1.*$/)
+        end
+
+        after do
+          organization.github_client.delete_repository(@original_repository.id)
+          GroupAssignmentRepo.destroy_all
+          Group.destroy_all
+        end
       end
     end
   end

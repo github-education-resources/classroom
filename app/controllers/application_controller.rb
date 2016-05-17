@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -83,7 +84,7 @@ class ApplicationController < ActionController::Base
   end
 
   def not_found
-    fail ActionController::RoutingError  
+    raise ActionController::RoutingError, 'Not Found'
   end
 
   def redirect_to_not_found(exception)
@@ -95,7 +96,7 @@ class ApplicationController < ActionController::Base
         flash[:error] = 'Not Found' 
       end
     end
-    redirect_to not_found_path
+    redirect_to not_found_path    
   end
 
   def redirect_to_root

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe AssignmentRepo, type: :model do
@@ -18,7 +19,7 @@ RSpec.describe AssignmentRepo, type: :model do
     end
 
     after(:each) do
-      @assignment_repo.destroy if @assignment_repo
+      AssignmentRepo.destroy_all
     end
 
     describe 'callbacks' do
@@ -61,6 +62,66 @@ RSpec.describe AssignmentRepo, type: :model do
     describe '#creator' do
       it 'returns the assignments creator' do
         expect(@assignment_repo.creator).to eql(assignment.creator)
+      end
+    end
+
+    describe '#user' do
+      it 'returns the user' do
+        expect(@assignment_repo.user).to eql(student)
+      end
+
+      context 'assignment_repo has a user through a repo_access' do
+        before do
+          assignment.update_attributes(title: "#{assignment.title}-2")
+          repo_access = RepoAccess.create(user: student, organization: organization)
+          @assignment_repo = AssignmentRepo.create(assignment: assignment, repo_access: repo_access)
+        end
+
+        after do
+          RepoAccess.destroy_all
+        end
+
+        it 'returns the user' do
+          expect(@assignment_repo.user).to eql(student)
+        end
+      end
+    end
+
+    describe '#nameable' do
+      context 'github repository with the same name does not exist' do
+        it 'has correct repository name' do
+          expect(@assignment_repo.repo_name).to eql("#{assignment.slug}-#{student.decorate.login}")
+        end
+      end
+
+      context 'github repository with the same name already exists' do
+        let(:new_assignment_repo) { AssignmentRepo.create(assignment: assignment, user: student) }
+
+        it 'has correct repository name' do
+          expect(new_assignment_repo.repo_name).to eql("#{assignment.slug}-#{student.decorate.login}-1")
+        end
+
+        context 'github repository name is too long' do
+          let(:github_organization) { GitHubOrganization.new(organization.github_client, organization.github_id) }
+          let(:long_repo_name) { "#{'a' * 60}-#{'u' * 39}" }
+
+          before do
+            github_organization.create_repository(long_repo_name, private: true, description: 'Nothing here')
+            allow(new_assignment_repo).to receive(:base_name).and_return(long_repo_name)
+          end
+
+          it 'truncates the repository name into 100 characters' do
+            expect(new_assignment_repo.generate_github_repo_name.length).to eql(100)
+          end
+
+          it 'does not remove the repository name suffix' do
+            expect(new_assignment_repo.generate_github_repo_name).to end_with('-1')
+          end
+
+          after do
+            github_organization.delete_repository("#{github_organization.login}/#{long_repo_name}")
+          end
+        end
       end
     end
   end

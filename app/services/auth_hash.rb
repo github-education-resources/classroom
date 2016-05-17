@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AuthHash
   def self.extract_user_info(hash)
     AuthHash.new(hash).user_info
@@ -31,8 +32,6 @@ class AuthHash
     return true if non_staff_github_admins_ids.include?(uid)
     raw_info[:site_admin]
   end
-
-  private
 
   def non_staff_github_admins_ids
     return [] unless ENV['NON_STAFF_GITHUB_ADMIN_IDS'].present?

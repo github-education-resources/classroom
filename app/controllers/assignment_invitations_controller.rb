@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AssignmentInvitationsController < ApplicationController
   layout 'layouts/invitations'
 
@@ -33,11 +34,7 @@ class AssignmentInvitationsController < ApplicationController
   helper_method :assignment
 
   def assignment_repo
-    @assignment_repo = AssignmentRepo.find_by(assignment: assignment, user: current_user)
-    return @assignment_repo if @assignment_repo.present?
-
-    repo_access      = current_user.repo_accesses.find_by(organization: organization)
-    @assignment_repo = AssignmentRepo.find_by(assignment: assignment, repo_access: repo_access)
+    @assignment_repo ||= AssignmentRepo.find_by(assignment: assignment, user: current_user)
   end
   helper_method :assignment_repo
 
