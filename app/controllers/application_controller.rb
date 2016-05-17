@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
   rescue_from GitHub::Forbidden, with: :flash_and_redirect_back_with_message
   rescue_from GitHub::NotFound,  with: :flash_and_redirect_back_with_message
   rescue_from NotAuthorized,     with: :flash_and_redirect_back_with_message
-  rescue_from ActiveRecord::RecordNotFound, with: :not_found  
+  rescue_from ActiveRecord::RecordNotFound, with: :redirect_to_not_found
 
   def peek_enabled?
     staff?
@@ -82,7 +82,11 @@ class ApplicationController < ActionController::Base
     !current_user.nil?
   end
 
-  def not_found(exception)
+  def not_found
+    fail ActionController::RoutingError  
+  end
+
+  def redirect_to_not_found(exception)
     unless flash[:error].present?   
       case exception
       when ActiveRecord::RecordNotFound
