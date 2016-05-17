@@ -1,0 +1,9 @@
+<form>
+  <% if mobile? %>
+    <%= render partial: "shared/invitations/mobile", locals: local_assigns %>
+  <% else %>
+    <%# if for some reason the user has a really tiny desktop screen fallback to the mobile view" %>
+    <%= render partial: "shared/invitations/mobile", locals: local_assigns %>
+    <%= render partial: "shared/invitations/desktop", locals: local_assigns %>
+  <% end %>
+</form>

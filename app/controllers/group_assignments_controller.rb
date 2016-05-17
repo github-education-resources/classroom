@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class GroupAssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
@@ -70,10 +71,10 @@ class GroupAssignmentsController < ApplicationController
   def new_group_assignment_params
     params
       .require(:group_assignment)
-      .permit(:title, :public_repo, :grouping_id)
+      .permit(:title, :public_repo, :grouping_id, :max_members)
       .merge(creator: current_user,
              organization: @organization,
-             starter_code_repo_id: starter_code_repository_id(params[:repo_name]))
+             starter_code_repo_id: starter_code_repo_id_param)
   end
 
   def new_grouping_params
@@ -91,10 +92,18 @@ class GroupAssignmentsController < ApplicationController
     @group_assignment = @organization.group_assignments.find_by!(slug: params[:id])
   end
 
+  def starter_code_repo_id_param
+    if params[:repo_id].present?
+      validate_starter_code_repository_id(params[:repo_id])
+    else
+      starter_code_repository_id(params[:repo_name])
+    end
+  end
+
   def update_group_assignment_params
     params
       .require(:group_assignment)
-      .permit(:title, :public_repo)
-      .merge(starter_code_repo_id: starter_code_repository_id(params[:repo_name]))
+      .permit(:title, :public_repo, :max_members)
+      .merge(starter_code_repo_id: starter_code_repo_id_param)
   end
 end

@@ -36,7 +36,7 @@ main {
 }
 
 .site-logo {
-  width: 230px;
+  width: 188px;
   height: 20px;
   margin-top: 0.3rem;
 
@@ -644,5 +644,39 @@ hr {
     &:hover {
       color: $brand-blue;
     }
+  }
+}
+
+.team-panel {
+  position: relative;
+  padding: 15px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #eee;
+  border-radius: 3px;
+}
+
+.team-actions-form {
+  float: right;
+}
+
+.team-name {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.team-members {
+  padding: 10px 15px;
+  margin: 0 -15px -15px;
+  list-style-type: none;
+  background-color: #f8f8f8;
+  border-top: 1px solid #eee;
+  border-radius: 0 0 3px 3px;
+
+  a {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    vertical-align: top;
   }
 }

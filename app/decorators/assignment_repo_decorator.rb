@@ -1,8 +1,9 @@
+# frozen_string_literal: true
 class AssignmentRepoDecorator < Draper::Decorator
   delegate_all
 
   def avatar_url(size)
-    "https://avatars.githubusercontent.com/u/#{assignment_repo_user.uid}?v=3&size=#{size}"
+    "https://avatars.githubusercontent.com/u/#{assignment_repo.user.uid}?v=3&size=#{size}"
   end
 
   def full_name
@@ -34,13 +35,8 @@ class AssignmentRepoDecorator < Draper::Decorator
   end
 
   def student
-    @student ||= GitHubUser.new(creator.github_client, assignment_repo_user.uid).user
+    @student ||= GitHubUser.new(creator.github_client, assignment_repo.user.uid).user
   rescue GitHub::NotFound
     NullGitHubUser.new
-  end
-
-  def assignment_repo_user
-    return repo_access.user if repo_access
-    user
   end
 end

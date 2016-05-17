@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Stafftools
   class GroupsController < StafftoolsController
     before_action :set_group

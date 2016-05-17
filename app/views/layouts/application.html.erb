@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Classroom for GitHub</title>
+    <title>GitHub Classroom</title>
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
     <%= csrf_meta_tags %>
@@ -22,7 +22,11 @@
     <main>
       <%= yield :organization_banner %>
 
+<<<<<<< HEAD
       <%= render 'shared/flash_messages' unless flash[:error].present?%>
+=======
+      <%= render 'shared/flash_messages' unless flash[:error].present? %>
+>>>>>>> cc88e69180f246d872a1c2828ccceeceabe36604
 
       <div class="site-content">
         <div class="container">

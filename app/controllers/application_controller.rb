@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -14,8 +15,7 @@ class ApplicationController < ActionController::Base
   rescue_from GitHub::Forbidden, with: :flash_and_redirect_back_with_message
   rescue_from GitHub::NotFound,  with: :flash_and_redirect_back_with_message
   rescue_from NotAuthorized,     with: :flash_and_redirect_back_with_message
-  rescue_from ActionController::RoutingError, with: :flash_and_display_404
-  rescue_from ActiveRecord::RecordNotFound, with: :flash_and_display_404  
+  rescue_from ActiveRecord::RecordNotFound, with: :redirect_to_not_found
 
   def peek_enabled?
     staff?
@@ -79,16 +79,6 @@ class ApplicationController < ActionController::Base
     redirect_to :back
   end
 
-  def flash_and_display_404(exception)
-    unless flash[:error].present?
-      case exception
-      when ActionController::RoutingError
-        redirect_to not_found_path, status: :not_found, flash: { error: "Page Not Found" }
-      when ActiveRecord::RecordNotFound
-        redirect_to not_found_path, status: :not_found, flash: { error: "Invalid Link" }
-      end
-    end
-  end
 
   def logged_in?
     !current_user.nil?
@@ -96,6 +86,18 @@ class ApplicationController < ActionController::Base
 
   def not_found
     raise ActionController::RoutingError, 'Not Found'
+  end
+
+  def redirect_to_not_found(exception)
+    unless flash[:error].present?   
+      case exception
+      when ActiveRecord::RecordNotFound
+        flash[:error] = 'Invalid Link' 
+      else
+        flash[:error] = 'Not Found' 
+      end
+    end
+    redirect_to not_found_path    
   end
 
   def redirect_to_root

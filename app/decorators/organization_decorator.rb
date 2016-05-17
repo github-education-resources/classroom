@@ -1,6 +1,5 @@
+# frozen_string_literal: true
 class OrganizationDecorator < Draper::Decorator
-  include GitHub
-
   delegate_all
 
   def avatar_url(size)
@@ -29,7 +28,7 @@ class OrganizationDecorator < Draper::Decorator
     begin
       @github_organization ||= GitHubOrganization.new(github_client, github_id).organization
     rescue GitHub::Forbidden
-      @github_organization ||= GitHubOrganization.new(application_github_client, github_id).organization
+      @github_organization ||= GitHubOrganization.new(Classroom.github_client, github_id).organization
     end
   rescue GitHub::NotFound
     NullGitHubOrganization.new
