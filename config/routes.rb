@@ -11,12 +11,8 @@ Rails.application.routes.draw do
 
   match '/auth/:provider/callback', to: 'sessions#create',  via: [:get, :post]
   match '/auth/failure',            to: 'sessions#failure', via: [:get, :post]
-
-<<<<<<< HEAD
-  match "/404", :to => "errors#not_found", :via => :all, as: :not_found
-=======
+  
   get '/autocomplete/github_repos', to: 'autocomplete#github_repos'
->>>>>>> cc88e69180f246d872a1c2828ccceeceabe36604
 
   resources :assignment_invitations, path: 'assignment-invitations', only: [:show] do
     member do
