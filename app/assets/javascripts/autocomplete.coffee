@@ -13,8 +13,11 @@ update_textfield = (list_element) ->
 ready = ->
   $('.js-autocomplete-textfield').on('change keyup', ->
     return unless $(this).is(':focus')
+
     textfield = this
-    query = textfield.value
+    unless query = textfield.value.trim()
+      $('.js-autocomplete-suggestions-container').hide()
+      return
 
     $('.js-autocomplete-loading-indicator').show()
     $('.js-autocomplete-suggestions-container').show()
@@ -24,7 +27,7 @@ ready = ->
     delay (->
       $.get "/autocomplete/#{$(textfield).data('autocomplete-search-endpoint')}?query=#{query}", (data) ->
         # handle outdated responses
-        return unless query == textfield.value && $(textfield).is(':focus')
+        return unless query == textfield.value.trim() && $(textfield).is(':focus')
 
         $('.js-autocomplete-suggestions-list').html(data)
 
