@@ -99,7 +99,10 @@ class OrganizationsController < ApplicationController
   end
 
   def set_organization
+    @organization = Organization.find_by!(id: params[:id])
+  rescue ActiveRecord::RecordNotFound
     @organization = Organization.find_by!(slug: params[:id])
+    redirect_to action: action, id: @organization.id, status: 301
   end
 
   # rubocop:disable AbcSize

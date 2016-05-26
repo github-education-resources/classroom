@@ -23,6 +23,8 @@ module OrganizationAuthorization
   end
 
   def set_organization
+    @organization = Organization.find_by!(id: params[:organization_id])
+  rescue ActiveRecord::RecordNotFound
     @organization = Organization.find_by!(slug: params[:organization_id])
   end
 end
