@@ -76,6 +76,10 @@ class AssignmentRepo < ActiveRecord::Base
 
   delegate :slug, to: :assignment
 
+  def give_admin_permission?
+    assignment.students_are_repo_admins?
+  end
+
   def name
     return @name if defined?(@name)
 
