@@ -27,7 +27,7 @@
       padding: 10px;
       cursor: pointer;
 
-      &.suggestion-focused {
+      &:hover {
         color: #fff;
         background-color: $brand-blue;
       }

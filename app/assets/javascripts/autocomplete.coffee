@@ -10,18 +10,25 @@ update_textfield = (list_element) ->
   $('.js-autocomplete-textfield').val($(list_element).data('res-name'))
   $('.js-autocomplete-resource-id').val($(list_element).data('res-id'))
 
-ready = ->
-  $('.js-autocomplete-textfield').on('change keyup', ->
-    return unless $(this).is(':focus')
+set_suggestions_visible = (visible) ->
+  if visible
+    $('.js-autocomplete-suggestions-container').show()
+  else
+    $('.js-autocomplete-suggestions-container').hide()
 
-    textfield = this
-    unless query = textfield.value.trim()
-      $('.js-autocomplete-suggestions-container').hide()
+ready = ->
+  $('.js-autocomplete-textfield').on('input', ->
+
+    $('.js-autocomplete-resource-id').removeAttr('value')
+
+    unless query = this.value.trim()
+      set_suggestions_visible(false)
       return
 
-    $('.js-autocomplete-suggestions-container').show()
+    textfield = this
 
     $('.js-autocomplete-suggestions-list').html('')
+    set_suggestions_visible(true)
 
     delay (->
       $.get "/autocomplete/#{$(textfield).data('autocomplete-search-endpoint')}?query=#{query}", (data) ->
@@ -30,31 +37,32 @@ ready = ->
 
         $('.js-autocomplete-suggestions-list').html(data)
 
-        # Resolve an issue with `onBlur`.
-        # When clicking the item in the suggestion list,
-        # the `onBlur` event will take place before `onClick`.
-        # So when a user hovers the item, we can mark that item first
-        # and retrieve the hovered item when `onBlur` is fired.
-        $('.js-autocomplete-suggestion-item').hover(->
-          $(this).addClass('suggestion-focused')
-        , ->
-          $(this).removeClass('suggestion-focused')
+        $('.js-autocomplete-suggestion-item').click(->
+          update_textfield(this)
+          set_suggestions_visible(false)
         )
 
-        $('.js-autocomplete-suggestions-container').show()
-
+        set_suggestions_visible(true)
     ), 500
   )
 
-  $('.js-autocomplete-textfield').on('blur', ->
-    selected_items = $('.js-autocomplete-suggestion-item.suggestion-focused')
+  # Behavior:
+  #   keep the suggestion list when:
+  #     - right clicking
+  #     - click js-autocomplete-textfield
+  #     - click js-autocomplete-suggestion-item and its children
+  #   dismiss the suggestion list when:
+  #     - js-autocomplete-textfield and user click other element
+  $(document).on('mousedown', (event) ->
+    return if (
+      event.button == 2 ||
+      $(event.target).hasClass('js-autocomplete-suggestion-item') ||
+      $(event.target).parents('.js-autocomplete-suggestion-item').length > 0 ||
+      $(event.target).hasClass('js-autocomplete-textfield')
+    )
 
-    if (selected_items.length == 1)
-      update_textfield(selected_items.first())
-    else
-      $('.js-autocomplete-resource-id').removeAttr('value')
-
-    $('.js-autocomplete-suggestions-container').hide()
+    if $('.js-autocomplete-textfield').is(':focus')
+      set_suggestions_visible(false)
   )
 
 $(document).ready(ready)
