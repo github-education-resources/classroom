@@ -37,7 +37,7 @@ class User < ActiveRecord::Base
   end
 
   def github_client_scopes
-    GitHubUser.new(github_client, uid).client_scopes
+    GitHub::Token.scopes(token, github_client)
   end
 
   def staff?
