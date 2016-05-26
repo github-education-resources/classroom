@@ -14,6 +14,8 @@ class User < ActiveRecord::Base
   validates :uid, presence: true
   validates :uid, uniqueness: true
 
+  before_save :ensure_no_token_scope_loss
+
   def assign_from_auth_hash(hash)
     user_attributes = AuthHash.new(hash).user_info
     update_attributes(user_attributes)
@@ -42,5 +44,33 @@ class User < ActiveRecord::Base
 
   def staff?
     site_admin
+  end
+
+  private
+
+  # Internal: We need to make sure that the user
+  # doesn't reduce the scope of their token. In
+  # the event that their token is needed to
+  # perform other functions.
+  #
+  # If the token that is trying to be set is
+  # lower than the one we have toss it, and use the one we have.
+  #
+  # If the token has the same scopes but is newer, or has more scopes
+  # let the token be set.
+  #
+  # See https://github.com/education/classroom/issues/445
+  def ensure_no_token_scope_loss
+    return true if token_was.blank?
+    return true unless token_changed?
+
+    old_scopes = GitHub::Token.scopes(token_was)
+    new_scopes = GitHub::Token.scopes(token)
+
+    # This is naive, if the token scopes ever change
+    # come back an revist this.
+    return true if old_scopes.size < new_scopes.size
+
+    self.token = token_was
   end
 end
