@@ -123,6 +123,12 @@ ready = ->
   #     - click js-autocomplete-suggestion-item and its children
   #   dismiss the suggestion list when:
   #     - js-autocomplete-textfield and user click other element
+  #     - focus other elements
+
+  $('.js-autocomplete-textfield').on('blur', (event) ->
+    set_suggestions_visible(false) if event.relatedTarget
+  )
+
   $(document).on('mousedown', (event) ->
     return if (
       event.button == 2 ||
