@@ -19,7 +19,6 @@ ready = ->
       $('.js-autocomplete-suggestions-container').hide()
       return
 
-    $('.js-autocomplete-loading-indicator').show()
     $('.js-autocomplete-suggestions-container').show()
 
     $('.js-autocomplete-suggestions-list').html('')
@@ -30,8 +29,6 @@ ready = ->
         return unless query == textfield.value.trim() && $(textfield).is(':focus')
 
         $('.js-autocomplete-suggestions-list').html(data)
-
-        $('.js-autocomplete-loading-indicator').hide()
 
         # Resolve an issue with `onBlur`.
         # When clicking the item in the suggestion list,
