@@ -27,7 +27,7 @@
       padding: 10px;
       cursor: pointer;
 
-      &:hover {
+      &.highlighted {
         color: #fff;
         background-color: $brand-blue;
       }
