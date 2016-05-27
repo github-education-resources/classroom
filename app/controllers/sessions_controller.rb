@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
   end
 
   def default_required_scopes
-    'user:email,repo,delete_repo,admin:org'
+    Classroom::Scopes::TEACHER.join(',')
   end
 
   def create
