@@ -15,4 +15,9 @@ describe Classroom::Scopes do
   it 'has the correct scopes for a student accepting an individual assignment' do
     expect(subject::ASSIGNMENT_STUDENT).to eql(%w(user:email))
   end
+
+  it 'ensures that the scopes are correctly sized' do
+    expect(subject::TEACHER.size).to be > subject::GROUP_ASSIGNMENT_STUDENT.size
+    expect(subject::GROUP_ASSIGNMENT_STUDENT.size).to be > subject::ASSIGNMENT_STUDENT.size
+  end
 end
