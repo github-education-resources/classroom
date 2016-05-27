@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
   end
 
   def required_scopes
-    %w(user:email repo delete_repo admin:org)
+    Classroom::Scopes::TEACHER
   end
 
   def adequate_scopes?
