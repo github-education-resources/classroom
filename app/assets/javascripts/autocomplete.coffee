@@ -94,7 +94,7 @@ ready = ->
 
   # handle non-input events
   $('.js-autocomplete-textfield').on('keydown', (event) ->
-    if event.key == 'Enter'
+    if event.keyCode == 13 # Enter
       event.preventDefault()
       return false
   )
@@ -102,17 +102,17 @@ ready = ->
   $('.js-autocomplete-textfield').on('keyup', (event) ->
     return if event.ctrlKey || event.metaKey || event.shiftKey
 
-    switch event.key
-      when 'Enter'
+    switch event.keyCode
+      when 13 # Enter
         highlighted_items = $('.js-autocomplete-suggestion-item.highlighted')
         if highlighted_items.length == 1
           update_textfield(highlighted_items[0])
           set_suggestions_visible(false)
-      when 'Escape'
+      when 27 # Escape
         set_suggestions_visible(false)
-      when 'ArrowUp'
+      when 38 # ArrowUp
         highlight_previous_item()
-      when 'ArrowDown'
+      when 40 # ArrowDown
         highlight_next_item()
   )
 
