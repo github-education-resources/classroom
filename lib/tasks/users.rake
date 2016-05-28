@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 namespace :users do
   desc "Find all teachers that don't have the correct scopes"
   task find_deficient_organization_scopes: :environment do
