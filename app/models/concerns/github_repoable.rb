@@ -8,18 +8,14 @@ module GitHubRepoable
     github_repository = GitHubRepository.new(organization.github_client, github_repo_id)
     github_team       = GitHubTeam.new(organization.github_client, github_team_id)
 
-    options = {}
-    options[:permission] = 'admin' if give_admin_permission?
-    github_team.add_team_repository(github_repository.full_name, options)
+    github_team.add_team_repository(github_repository.full_name, repository_permissions)
   end
 
   def add_user_as_collaborator
     github_user = GitHubUser.new(user.github_client, user.uid)
     repository  = GitHubRepository.new(organization.github_client, github_repo_id)
 
-    options = {}
-    options[:permission] = 'admin' if give_admin_permission?
-    delete_github_repository_on_failure { repository.add_collaborator(github_user.login, options) }
+    delete_github_repository_on_failure { repository.add_collaborator(github_user.login, repository_permissions) }
   end
 
   # Public
@@ -73,5 +69,13 @@ module GitHubRepoable
   #
   def github_organization
     @github_organization ||= GitHubOrganization.new(organization.github_client, organization.github_id)
+  end
+
+  # Internal
+  #
+  def repository_permissions
+    {}.tap do |options|
+      options[:permission] = 'admin' if give_admin_permission?
+    end
   end
 end
