@@ -18,7 +18,7 @@ namespace :users do
 
         next if (Classroom::Scopes::TEACHER - user.github_client_scopes).empty?
 
-        puts "User #{user.id} for Organization #{organization.id}"
+        puts "User #{user.uid} for Organization #{organization.github_id}"
       rescue => e
         puts e
       end
