@@ -129,16 +129,16 @@ ready = ->
     set_suggestions_visible(false) if event.relatedTarget
   )
 
-  $(document).on('mousedown', (event) ->
-    return if (
-      event.button == 2 ||
-      $(event.target).hasClass('js-autocomplete-suggestion-item') ||
-      $(event.target).parents('.js-autocomplete-suggestion-item').length > 0 ||
-      $(event.target).hasClass('js-autocomplete-textfield')
-    )
-
-    if $('.js-autocomplete-textfield').is(':focus')
-      set_suggestions_visible(false)
+$(document).ready(ready)
+$(document).on('mousedown', (event) ->
+  console.log('mouse down')
+  return if (
+    event.button == 2 ||
+    $(event.target).hasClass('js-autocomplete-suggestion-item') ||
+    $(event.target).parents('.js-autocomplete-suggestion-item').length > 0 ||
+    $(event.target).hasClass('js-autocomplete-textfield')
   )
 
-$(document).ready(ready)
+  if $('.js-autocomplete-textfield').is(':focus')
+    set_suggestions_visible(false)
+)
