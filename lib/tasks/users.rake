@@ -9,7 +9,7 @@ namespace :users do
 
     results = []
 
-    OrganizationsUser.all.each do |organizations_user|
+    OrganizationsUser.includes(:organization, :user).all.each do |organizations_user|
       progress_bar.increment
       organization = organizations_user.organization
       user         = organizations_user.user
