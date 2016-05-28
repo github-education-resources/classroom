@@ -43,6 +43,7 @@ gem 'puma'
 gem 'rack-canonical-host'
 gem 'rack-timeout', require: false
 gem 'redis-namespace'
+gem 'ruby-progressbar'
 
 gem 'sprockets'
 gem 'sass-rails', '~> 5.0'
