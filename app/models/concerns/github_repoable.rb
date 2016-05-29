@@ -73,6 +73,13 @@ module GitHubRepoable
 
   # Internal
   #
+  def give_admin_permission?
+    student_assignment = respond_to?(:assignment) ? assignment : group_assignment
+    student_assignment.students_are_repo_admins?
+  end
+
+  # Internal
+  #
   def repository_permissions
     {}.tap do |options|
       options[:permission] = 'admin' if give_admin_permission?
