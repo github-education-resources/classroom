@@ -3,6 +3,7 @@ tap "homebrew/versions"
 tap "github/bootstrap"
 
 brew "nodejs"
+brew "terminal-notifier"
 
 brew "elasticsearch17", restart_service: :changed
 brew "memcached",       restart_service: :changed

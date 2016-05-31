@@ -62,8 +62,8 @@ RSpec.describe OrganizationsController, type: :controller do
 
     context 'authenticated user with an invalid token' do
       before do
-        user.token = '12345'
-        user.save!
+        allow(user).to receive(:ensure_no_token_scope_loss).and_return(true)
+        user.update_attributes(token: '1234')
       end
 
       it 'redirects to login_path' do
