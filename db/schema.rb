@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160321131514) do
+ActiveRecord::Schema.define(version: 20160524234655) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,15 +43,16 @@ ActiveRecord::Schema.define(version: 20160321131514) do
   add_index "assignment_repos", ["user_id"], name: "index_assignment_repos_on_user_id", using: :btree
 
   create_table "assignments", force: :cascade do |t|
-    t.boolean  "public_repo",          default: true
-    t.string   "title",                               null: false
+    t.boolean  "public_repo",                default: true
+    t.string   "title",                                     null: false
     t.integer  "organization_id"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
     t.integer  "starter_code_repo_id"
     t.integer  "creator_id"
     t.datetime "deleted_at"
-    t.string   "slug",                                null: false
+    t.string   "slug",                                      null: false
+    t.integer  "student_identifier_type_id", default: 0
   end
 
   add_index "assignments", ["deleted_at"], name: "index_assignments_on_deleted_at", using: :btree
@@ -159,6 +160,25 @@ ActiveRecord::Schema.define(version: 20160321131514) do
   add_index "repo_accesses", ["github_team_id"], name: "index_repo_accesses_on_github_team_id", unique: true, using: :btree
   add_index "repo_accesses", ["organization_id"], name: "index_repo_accesses_on_organization_id", using: :btree
   add_index "repo_accesses", ["user_id"], name: "index_repo_accesses_on_user_id", using: :btree
+
+  create_table "student_identifier_types", force: :cascade do |t|
+    t.integer "organization_id"
+    t.string  "name"
+    t.string  "description"
+    t.integer "content_type"
+  end
+
+  add_index "student_identifier_types", ["organization_id"], name: "index_student_identifier_types_on_organization_id", using: :btree
+
+  create_table "student_identifiers", force: :cascade do |t|
+    t.integer "organization_id"
+    t.integer "user_id"
+    t.integer "student_identifier_type_id"
+    t.string  "value"
+  end
+
+  add_index "student_identifiers", ["organization_id"], name: "index_student_identifiers_on_organization_id", using: :btree
+  add_index "student_identifiers", ["user_id"], name: "index_student_identifiers_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.integer  "uid",                        null: false
