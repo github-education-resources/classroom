@@ -21,6 +21,13 @@
     </div>
 
     <div class="form-actions">
+      <% if @assignment.student_identifier_type.present? and student_identifier.nil? %>
+        <dl class="form">
+          <dt>You are required to provide your <b><%= @assignment.student_identifier_type.name %></b>(<%= @assignment.student_identifier_type.description %>) before accepting the assignment:</dt>
+          <dd><%= text_field_tag 'student_identifier', nil, placeholder: @assignment.student_identifier_type.name, class: 'textfield' %></dd>
+        </dl>
+      <% end %>
+
       <%= submit_tag 'Accept this assignment', class: 'btn btn-green js-navigation' %>
     </div>
   <% end %>
