@@ -29,9 +29,16 @@ class AssignmentsController < ApplicationController
   end
 
   def edit
+    @student_identifier_types = @organization.student_identifier_types.map do |student_identifier|
+      [student_identifier.name, student_identifier.id]
+    end
   end
 
   def update
+    if params.key?(:student_identifier_type)
+      @assignment.student_identifier_type = StudentIdentifierType.find_by(id: student_identifier_params[:id])
+    end
+
     if @assignment.update_attributes(update_assignment_params)
       flash[:success] = "Assignment \"#{@assignment.title}\" updated"
       redirect_to organization_assignment_path(@organization, @assignment)
@@ -78,5 +85,11 @@ class AssignmentsController < ApplicationController
       .require(:assignment)
       .permit(:title, :public_repo)
       .merge(starter_code_repo_id: starter_code_repo_id_param)
+  end
+
+  def student_identifier_params
+    params
+      .require(:student_identifier_type)
+      .permit(:id, :name, :description)
   end
 end
