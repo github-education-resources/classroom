@@ -2,6 +2,7 @@
 class Organization < ActiveRecord::Base
   include Flippable
   include Sluggable
+  include Rails.application.routes.url_helpers
 
   update_index('stafftools#organization') { self }
 
@@ -21,6 +22,12 @@ class Organization < ActiveRecord::Base
 
   validates :slug, uniqueness: true
 
+  validates :webhook_id, uniqueness: true
+
+  before_validation(on: :create) { setup_webhook }
+
+  before_destroy :delete_all_webhooks
+
   def all_assignments(with_invitations: false)
     return assignments + group_assignments unless with_invitations
 
@@ -35,5 +42,19 @@ class Organization < ActiveRecord::Base
 
   def slugify
     self.slug = "#{github_id} #{title}".parameterize
+  end
+
+  def delete_all_webhooks
+    @github_organization ||= GitHubOrganization.new(github_client, github_id)
+    @github_organization.delete_all_org_hooks
+    self.webhook_id = nil
+    self.is_webhook_active = false
+  end
+
+  def setup_webhook
+    @github_organization ||= GitHubOrganization.new(github_client, github_id)
+    hook_url = webhook_events_url
+    hook = @github_organization.create_org_hook(config: { url: hook_url })
+    self.webhook_id ||= hook.id
   end
 end

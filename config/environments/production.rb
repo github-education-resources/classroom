@@ -95,4 +95,6 @@ Rails.application.configure do
   config.middleware.use(Rack::Tracker) do
     handler :google_analytics, { tracker: ENV['GOOGLE_ANALYTICS_TRACKING_ID'] }
   end
+
+  Rails.application.routes.default_url_options[:host] = ENV['APPLICATION_HOST']
 end
