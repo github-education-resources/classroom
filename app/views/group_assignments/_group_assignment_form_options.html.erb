@@ -33,7 +33,7 @@
   <% groupings_present = @organization.groupings.present? %>
 
   <% if groupings_present %>
-    <dt><label>Choose an existing group of teams</label></dt>
+    <dt><label>Choose an existing set of teams</label></dt>
     <dl class="form">
       <dd>
         <%= select :group_assignment, :grouping_id, options_for_select(@groupings), include_blank: true %>
