@@ -1,0 +1,17 @@
+<%= render 'organizations/organization_banner' %>
+
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">
+      <span class="assignment-icon assignment-icon-individual">
+        <%= octicon('tag') %>
+      </span>
+      Student identifiers
+    </h2>
+  </div>
+
+  <div class="site-content-body assignment-list-items">
+    <%= render @student_identifier_types %>
+  </div>
+</div>
+

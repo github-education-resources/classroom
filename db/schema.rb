@@ -163,9 +163,9 @@ ActiveRecord::Schema.define(version: 20160524234655) do
 
   create_table "student_identifier_types", force: :cascade do |t|
     t.integer "organization_id"
-    t.string  "name"
-    t.string  "description"
-    t.integer "content_type"
+    t.string  "name",            null: false
+    t.string  "description",     null: false
+    t.integer "content_type",    null: false
   end
 
   add_index "student_identifier_types", ["organization_id"], name: "index_student_identifier_types_on_organization_id", using: :btree
@@ -174,7 +174,7 @@ ActiveRecord::Schema.define(version: 20160524234655) do
     t.integer "organization_id"
     t.integer "user_id"
     t.integer "student_identifier_type_id"
-    t.string  "value"
+    t.string  "value",                      null: false
   end
 
   add_index "student_identifiers", ["organization_id"], name: "index_student_identifiers_on_organization_id", using: :btree

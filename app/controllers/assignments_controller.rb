@@ -36,7 +36,11 @@ class AssignmentsController < ApplicationController
 
   def update
     if params.key?(:student_identifier_type)
-      @assignment.student_identifier_type = StudentIdentifierType.find_by(id: student_identifier_params[:id])
+      if student_identifier_params.key?(:id)
+        @assignment.student_identifier_type = StudentIdentifierType.find_by(id: student_identifier_params[:id], organization: @organization)
+      else
+        @assignment.student_identifier_type = nil
+      end
     end
 
     if @assignment.update_attributes(update_assignment_params)

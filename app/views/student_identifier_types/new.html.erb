@@ -1,0 +1,34 @@
+<%= render 'organizations/organization_banner' %>
+
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">
+      <span class="assignment-icon assignment-icon-individual">
+        <%= octicon('tag') %>
+      </span>
+      New identifier type
+    </h2>
+  </div>
+</div>
+
+<div class="site-content-body">
+  <%= form_for [@organization, @student_identifier_type] do |f| %>
+    <dl class="form">
+      <dt><%= f.label :name %></dt>
+      <dd><%= f.text_field :name, class: 'textfield' %></dd>
+    </dl>
+    <dl class="form">
+      <dt><%= f.label :description %></dt>
+      <dd><%= f.text_field :description, class: 'textfield' %></dd>
+    </dl>
+    <dl class="form">
+      <dt><%= f.label :content_type %></dt>
+      <%= f.select :content_type, StudentIdentifierType.content_types.map { |key, value| [key.humanize, key] } %>
+    </dl>
+
+    <div class="form-actions">
+      <%= f.submit 'Save changes', class: 'btn btn-green js-navigation' %>
+      <%= link_to 'Cancel', [@organization, @assignment], class: 'btn', role: 'button' %>
+    </div>
+  <% end %>
+</div>

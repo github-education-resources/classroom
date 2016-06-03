@@ -32,10 +32,5 @@
       <%= select(:student_identifier_type, :id, options_for_select(@student_identifier_types, selected = @assignment.student_identifier_type.present? ? @assignment.student_identifier_type.id : nil), include_blank: true ) %>
     </dl>
 
-    <dt><label>Or create a new student identifier type</label></dt>
-    <dd><input class="textfield" type="text" value="" placeholder="Name" name="student_identifier_type[name]" id="student_identifier_type_name"></dd>
-    <br/>
-    <dd><input class="textfield" type="text" value="" placeholder="Description" name="student_identifier_type[description]" id="student_identifier_type_description"></dd>
-
   <% end %>
 </dl>

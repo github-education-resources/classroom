@@ -1,0 +1,12 @@
+<div class="assignment-list-item flex-table">
+  <div class="flex-table-item">
+    <%= student_identifier_type.name %>
+
+    <p class="assignment-type text-muted"><%= student_identifier_type.description %></p>
+  </div>
+
+  <%= form_for [@organization, student_identifier_type], html: { method: 'delete' } do |f| %>
+    <%= f.submit 'Delete', class: 'btn btn-danger js-submit' %>
+  <% end %>
+
+</div>
