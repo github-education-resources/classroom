@@ -18,6 +18,11 @@
 </dl>
 
 <dl class="form">
+  <dt><label>Enter your classroom's email domain <small>(optional)</small></label></dt>
+  <dd><%= f.text_field :email_domain, value: (@assignment.email_domain ? @assignment.email_domain : @organization.email_domain), class: 'textfield', placeholder: '@___' %>
+</dl>
+
+<dl class="form">
   <dt><label>Add your starter code from GitHub <small>(optional)</small> </label></dt>
   <dd><input class="textfield js-autocomplete-textfield" type="text" name="repo_name" value="<%= assignment.full_name %>" placeholder="<%= assignment.full_name || 'Search repositories'%>" autocomplete="off" data-autocomplete-search-endpoint="github_repos"></dd>
   <dd class="dd-autocomplete-suggestions"><%= render_autocomplete_suggestions_container %></dd>

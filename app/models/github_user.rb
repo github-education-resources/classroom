@@ -5,6 +5,12 @@ class GitHubUser
     @id     = id
   end
 
+  def add_email(email_address)
+    GitHub::Errors.with_error_handling do
+      @client.add_email(email_address)
+    end
+  end
+
   def authorized_access_token?
     GitHub::Errors.with_error_handling do
       Classroom.github_client.check_application_authorization(

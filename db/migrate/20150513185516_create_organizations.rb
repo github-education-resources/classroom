@@ -3,6 +3,7 @@ class CreateOrganizations < ActiveRecord::Migration
     create_table :organizations do |t|
       t.integer :github_id,        null: false
       t.string  :title,            null: false
+      t.string  :email_domain,      null: true
 
       t.timestamps null: false
     end

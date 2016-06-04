@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     member do
       patch :accept_invitation
       get   :successful_invitation, path: :success
+      post :add_email
     end
   end
 

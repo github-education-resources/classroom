@@ -4,6 +4,8 @@ class AssignmentInvitationsController < ApplicationController
 
   before_action :check_user_not_previous_acceptee, only: [:show]
 
+  @email_verified = false
+
   def accept_invitation
     users_assignment_repo = invitation.redeem_for(current_user)
 
@@ -20,6 +22,12 @@ class AssignmentInvitationsController < ApplicationController
 
   def successful_invitation
     not_found unless assignment_repo
+  end
+
+  def add_email
+    a = ['t@t.com']
+    github_user = GitHubUser.new(current_user.github_client, current_user.uid)
+    github_user.add_email(a)
   end
 
   private

@@ -88,14 +88,16 @@ class OrganizationsController < ApplicationController
   end
 
   def new_organization_params
-    github_org = github_organization_from_params.organization
-    title      = github_org.name.present? ? github_org.name : github_org.login
+    github_org    = github_organization_from_params.organization
+    title         = github_org.name.present? ? github_org.name : github_org.login
+    email_domain  = ''
 
     params
       .require(:organization)
       .permit(:github_id)
-      .merge(users: [current_user])
-      .merge(title: title)
+      .merge(users: [current_user],
+             title: title,
+             email_domain: email_domain)
   end
 
   def set_organization
@@ -141,6 +143,6 @@ class OrganizationsController < ApplicationController
   def update_organization_params
     params
       .require(:organization)
-      .permit(:title)
+      .permit(:title, :email_domain)
   end
 end
