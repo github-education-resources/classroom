@@ -39,7 +39,11 @@ Rails.application.routes.draw do
         patch :setup_organization
       end
 
-      resources :assignments
+      resources :assignments do
+        member do
+          patch :snapshot
+        end
+      end
       resources :group_assignments, path: 'group-assignments'
     end
   end

@@ -116,6 +116,18 @@ RSpec.describe AssignmentsController, type: :controller do
     end
   end
 
+  describe 'PATCH #snapshot', :vcr do
+    before do
+      Classroom.flipper[:snapshot].enable
+    end
+
+    it 'correctly pushes the commit to the snapshot repository' do
+      patch :snapshot, id: assignment.slug, organization_id: organization.slug
+      expect(WebMock).to have_requested(:post, github_url("/repos/#{classroom_owner_organization_github_login}"\
+                                                          "/#{assignment.slug}/git/commits"))
+    end
+  end
+
   describe 'GET #edit', :vcr do
     it 'returns success and sets the assignment' do
       get :edit, id: assignment.slug, organization_id: organization.slug

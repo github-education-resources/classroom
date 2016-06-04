@@ -7,6 +7,7 @@ class AssignmentsController < ApplicationController
 
   decorates_assigned :organization
   decorates_assigned :assignment
+  decorates_assigned :snapshot_repo_name
 
   def new
     @assignment = Assignment.new
@@ -48,6 +49,17 @@ class AssignmentsController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def snapshot
+    return unless Classroom.flipper[:snapshot].enabled? current_user
+    begin
+      @assignment.create_snapshot
+      flash[:success] = "Snapshot is generated: #{@assignment.snapshot_git_url}"
+    rescue Octokit::Conflict
+      flash[:error] = 'Can not create the snapshot repository'
+    end
+    redirect_to organization_assignment_path(@organization, @assignment)
   end
 
   private
