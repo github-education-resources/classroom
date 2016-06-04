@@ -5,5 +5,8 @@
     <strong class="search-result-title"><%= user.login %></strong>
   <% end %>
 
-  <span class="text-muted css-truncate css-truncate-target">Joined <%= local_time_ago(user.created_at) %></span><br>
+  <span class="text-muted css-truncate css-truncate-target">
+    Joined <%= local_time_ago(user.created_at) %> /
+    Last active: <%= user.last_active_at.present? ? local_time_ago(user.last_active_at) : 'Unknown' %>
+  </span><br>
 </div>
