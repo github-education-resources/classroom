@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.3.0'
+ruby '2.3.1'
 gem 'rails', '4.2.6'
 
 gem 'airbrake'
@@ -41,7 +41,7 @@ gem 'pg'
 gem 'puma'
 
 gem 'rack-canonical-host'
-gem 'rack-timeout'
+gem 'rack-timeout', require: false
 gem 'redis-namespace'
 
 gem 'sprockets'
@@ -64,12 +64,15 @@ group :development, :test do
   gem 'awesome_print', require: 'ap'
   gem 'bullet'
   gem 'dotenv-rails'
+  gem 'guard-rspec', require: false
   gem 'pry-rails'
   gem 'pry-byebug'
   gem 'rspec-rails'
   gem 'rubocop',   require: false
   gem 'scss_lint', require: false
+  gem 'coffeelint', require: false
   gem 'spring'
+  gem 'terminal-notifier-guard'
 end
 
 group :production do

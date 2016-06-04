@@ -32,6 +32,12 @@ class GitHubRepository
 
   # Public
   #
+  def self.present?(client, full_name)
+    client.repository?(full_name)
+  end
+
+  # Public
+  #
   def repository(full_repo_name = nil)
     GitHub::Errors.with_error_handling do
       @client.repository(full_repo_name || @id)
