@@ -29,10 +29,8 @@ class Organization < ActiveRecord::Base
   end
 
   def github_client
-    return @github_client if defined?(@github_client)
-
     token = users.limit(1).order('RANDOM()').pluck(:token)[0]
-    @github_client = Octokit::Client.new(access_token: token)
+    Octokit::Client.new(access_token: token)
   end
 
   def slugify
