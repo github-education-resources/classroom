@@ -5,7 +5,7 @@ RSpec.describe User, type: :model do
   let(:github_omniauth_hash) { OmniAuth.config.mock_auth[:github] }
   let(:user)                 { create(:user) }
 
-  describe '#assign_from_auth_hash' do
+  describe '#assign_from_auth_hash', :vcr do
     it 'updates the users attributes' do
       user.assign_from_auth_hash(github_omniauth_hash)
       expect(github_omniauth_hash.credentials.token).to eq(user.token)
@@ -54,6 +54,19 @@ RSpec.describe User, type: :model do
     it 'returns an Array of scopes' do
       user.assign_from_auth_hash(github_omniauth_hash)
       expect(user.github_client_scopes).to eq(%w(admin:org delete_repo repo user:email))
+    end
+  end
+
+  describe 'tokens', :vcr do
+    it 'does not allow a User to lose their token scope' do
+      student = GitHubFactory.create_classroom_student
+
+      good_token = student.token
+      bad_token  = 'e72e16c7e42f292c6912e7710c838347ae178b4a'
+
+      student.update_attributes(token: bad_token)
+
+      expect(student.token).to eql(good_token)
     end
   end
 end

@@ -64,6 +64,7 @@ group :development, :test do
   gem 'awesome_print', require: 'ap'
   gem 'bullet'
   gem 'dotenv-rails'
+  gem 'guard-rspec', require: false
   gem 'pry-rails'
   gem 'pry-byebug'
   gem 'rspec-rails'
@@ -71,6 +72,7 @@ group :development, :test do
   gem 'scss_lint', require: false
   gem 'coffeelint', require: false
   gem 'spring'
+  gem 'terminal-notifier-guard'
 end
 
 group :production do
