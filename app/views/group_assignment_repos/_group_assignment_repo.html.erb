@@ -7,7 +7,7 @@
     <% end %>
 
     <ul>
-      <% group_assignment_repo.group.repo_accesses.limit(4).each do |repo_access| %>
+      <% group_assignment_repo.group.repo_accesses.includes(:user).limit(4).each do |repo_access| %>
         <% student = repo_access.user.decorate %>
 
         <li>
