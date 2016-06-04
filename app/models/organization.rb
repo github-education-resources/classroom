@@ -21,12 +21,18 @@ class Organization < ActiveRecord::Base
 
   validates :slug, uniqueness: true
 
-  def all_assignments
-    assignments + group_assignments
+  def all_assignments(with_invitations: false)
+    return assignments + group_assignments unless with_invitations
+
+    assignments.includes(:assignment_invitation) + \
+      group_assignments.includes(:group_assignment_invitation)
   end
 
   def github_client
-    users.sample.github_client
+    return @github_client if defined?(@github_client)
+
+    token = users.limit(1).order('RANDOM()').pluck(:token)[0]
+    @github_client = Octokit::Client.new(access_token: token)
   end
 
   def slugify
