@@ -37,7 +37,7 @@ class ApplicationController < ActionController::Base
 
   def authenticate_user!
     if logged_in? && adequate_scopes?
-      update_last_active_at_timestamp
+      become_active
     else
       auth_redirect
     end
@@ -49,8 +49,8 @@ class ApplicationController < ActionController::Base
     redirect_to login_path
   end
 
-  def update_last_active_at_timestamp
-    current_user.update_attributes(last_active_at: Time.zone.now)
+  def become_active
+    current_user.become_active
   end
 
   def decorated_current_user
