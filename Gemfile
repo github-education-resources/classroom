@@ -70,6 +70,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'rubocop',   require: false
   gem 'scss_lint', require: false
+  gem 'coffeelint', require: false
   gem 'spring'
   gem 'terminal-notifier-guard'
 end

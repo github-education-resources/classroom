@@ -77,6 +77,10 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.10.0)
+    coffeelint (1.14.0)
+      coffee-script
+      execjs
+      json
     color (1.8)
     concurrent-ruby (1.0.2)
     concurrent-ruby-ext (1.0.2)
@@ -397,6 +401,7 @@ DEPENDENCIES
   bullet
   chewy
   coffee-rails (~> 4.1.0)
+  coffeelint
   dalli
   database_cleaner
   dotenv-rails
