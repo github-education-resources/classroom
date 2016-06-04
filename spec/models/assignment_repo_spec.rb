@@ -90,7 +90,7 @@ RSpec.describe AssignmentRepo, type: :model do
     describe '#nameable' do
       context 'github repository with the same name does not exist' do
         it 'has correct repository name' do
-          expect(@assignment_repo.repo_name).to eql("#{assignment.slug}-#{student.decorate.login}")
+          expect(@assignment_repo.repo_name).to eql("#{assignment.slug}-#{student.github_user.login}")
         end
       end
 
@@ -98,7 +98,7 @@ RSpec.describe AssignmentRepo, type: :model do
         let(:new_assignment_repo) { AssignmentRepo.create(assignment: assignment, user: student) }
 
         it 'has correct repository name' do
-          expect(new_assignment_repo.repo_name).to eql("#{assignment.slug}-#{student.decorate.login}-1")
+          expect(new_assignment_repo.repo_name).to eql("#{assignment.slug}-#{student.github_user.login}-1")
         end
 
         context 'github repository name is too long' do
