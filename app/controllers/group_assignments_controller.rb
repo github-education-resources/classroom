@@ -89,7 +89,10 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def set_group_assignment
-    @group_assignment = @organization.group_assignments.find_by!(slug: params[:id])
+    @group_assignment = @organization
+                        .group_assignments
+                        .includes(:group_assignment_invitation)
+                        .find_by!(slug: params[:id])
   end
 
   def starter_code_repo_id_param

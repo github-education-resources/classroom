@@ -3,21 +3,18 @@ module GitHub
   class Search
     attr_accessor :search_client
 
-    def initialize(access_token, github_id, options = { auto_paginate: false })
+    def initialize(access_token, options = { auto_paginate: false })
       options[:access_token] = access_token
 
-      @github_id = github_id
       @search_client = Octokit::Client.new(options)
     end
 
     def search_github_repositories(query, options = { sort: 'updated', per_page: 10, page: 1 })
+      return [], '' unless query.present?
+
       return GitHub::Errors.with_error_handling do
-        if query.present?
-          search_query = build_github_repositories_query(query)
-          search_client.search_repos(search_query, options)[:items]
-        else
-          search_client.repos(@github_id, options)
-        end
+        search_query = build_github_repositories_query(query)
+        search_client.search_repos(search_query, options)[:items]
       end, ''
     rescue GitHub::Error => err
       return [], err.message
