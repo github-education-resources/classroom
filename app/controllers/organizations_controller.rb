@@ -30,7 +30,10 @@ class OrganizationsController < ApplicationController
   end
 
   def show
-    @assignments = Kaminari.paginate_array(@organization.all_assignments.sort_by(&:updated_at)).page(params[:page])
+    @assignments = Kaminari
+                   .paginate_array(@organization.all_assignments(with_invitations: true)
+                   .sort_by(&:updated_at))
+                   .page(params[:page])
   end
 
   def edit
