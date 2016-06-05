@@ -9,12 +9,16 @@ class User < ActiveRecord::Base
 
   has_and_belongs_to_many :organizations
 
+  validates :last_active_at, presence: true
+
   validates :token, presence: true, uniqueness: true
 
   validates :uid, presence: true
   validates :uid, uniqueness: true
 
   before_save :ensure_no_token_scope_loss
+
+  before_validation(on: :create) { ensure_last_active_at_presence }
 
   def assign_from_auth_hash(hash)
     user_attributes = AuthHash.new(hash).user_info
@@ -79,5 +83,9 @@ class User < ActiveRecord::Base
     return true if old_scopes.size < new_scopes.size
 
     self.token = token_was
+  end
+
+  def ensure_last_active_at_presence
+    self.last_active_at ||= Time.zone.now
   end
 end
