@@ -18,6 +18,10 @@ class GroupAssignmentsController < ApplicationController
   def create
     @group_assignment = build_group_assignment
 
+    if params.key?(:student_identifier_type)
+      @group_assignment.student_identifier_type = StudentIdentifierType.find_by(id: student_identifier_params[:id])
+    end
+
     if @group_assignment.save
       flash[:success] = "\"#{@group_assignment.title}\" has been created!"
       redirect_to organization_group_assignment_path(@organization, @group_assignment)
@@ -31,9 +35,16 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def edit
+    @student_identifier_types = @organization.student_identifier_types.map do |student_identifier|
+      [student_identifier.name, student_identifier.id]
+    end
   end
 
   def update
+    if params.key?(:student_identifier_type)
+      @group_assignment.student_identifier_type = StudentIdentifierType.find_by(id: student_identifier_params[:id])
+    end
+
     if @group_assignment.update_attributes(update_group_assignment_params)
       flash[:success] = "Assignment \"#{@group_assignment.title}\" updated"
       redirect_to organization_group_assignment_path(@organization, @group_assignment)
@@ -106,4 +117,17 @@ class GroupAssignmentsController < ApplicationController
       .permit(:title, :public_repo, :max_members)
       .merge(starter_code_repo_id: starter_code_repo_id_param)
   end
+
+  def student_identifier_params
+    params
+      .require(:student_identifier_type)
+      .permit(:id, :name, :description)
+  end
+
+  def student_identifier_types
+    @student_identifier_types ||= @organization.student_identifier_types.map do |student_identifier|
+      [student_identifier.name, student_identifier.id]
+    end
+  end
+  helper_method :student_identifier_types
 end

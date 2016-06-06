@@ -18,13 +18,23 @@ class GroupAssignmentInvitation < ActiveRecord::Base
 
   after_initialize :assign_key
 
-  def redeem_for(invitee, selected_group = nil, new_group_title = nil)
+  def redeem_for(invitee, selected_group = nil, new_group_title = nil, identifier_value = nil)
+    create_student_identifier(invitee, identifier_value)
+
     repo_access    = RepoAccess.find_or_create_by!(user: invitee, organization: organization)
     invitees_group = group(repo_access, selected_group, new_group_title)
 
     invitees_group.repo_accesses << repo_access unless invitees_group.repo_accesses.include?(repo_access)
 
     group_assignment_repo(invitees_group)
+  end
+
+  def create_student_identifier(invitee, identifier_value)
+    return unless group_assignment.student_identifier_type.present? && identifier_value.present?
+    StudentIdentifier.find_or_create_by!(organization: organization,
+                                         user: invitee,
+                                         student_identifier_type: group_assignment.student_identifier_type,
+                                         value: identifier_value)
   end
 
   def title

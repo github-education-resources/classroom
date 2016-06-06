@@ -48,3 +48,14 @@
     <dd><input class="textfield" type="text" value="<%= suggested_name unless groupings_present %>" placeholder="<%= suggested_name if groupings_present %>" name="grouping[title]" id="grouping_title"></dd>
   </dl>
 <% end %>
+
+<dl class="form">
+  <% if @group_assignment.present? %>
+    <dt><label>Use a student identifier type</label></dt>
+
+    <dl class="form">
+      <%= select(:student_identifier_type, :id, options_for_select(student_identifier_types, selected = @group_assignment.student_identifier_type.present? ? @group_assignment.student_identifier_type.id : nil), include_blank: true ) %>
+    </dl>
+
+  <% end %>
+</dl>

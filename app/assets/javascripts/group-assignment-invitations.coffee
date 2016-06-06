@@ -10,6 +10,12 @@ $('.group_assignment_invitations.show').ready ->
       $submitButton.prop('disabled', true)
   )
 
+  $('form').submit( ->
+    hiddenField = $(this).find('#student_identifier_hidden')
+    hiddenField.val($('#student_identifier').val())
+    true
+  )
+
 $form_values_present = () ->
   $present('group_title') || $present('group_id')
 

@@ -15,7 +15,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
 
   def accept_assignment
-    users_group_assignment_repo = invitation.redeem_for(current_user, group)
+    users_group_assignment_repo = invitation.redeem_for(current_user, group, nil, params[:student_identifier])
 
     if users_group_assignment_repo.present?
       redirect_to successful_invitation_group_assignment_invitation_path
@@ -26,10 +26,10 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
 
   def accept_invitation
-    selected_group       = Group.find_by(id: group_params[:id])
     selected_group_title = group_params[:title]
 
-    users_group_assignment_repo = invitation.redeem_for(current_user, selected_group, selected_group_title)
+    users_group_assignment_repo = invitation.redeem_for(current_user, selected_group,
+                                                        selected_group_title, params[:student_identifier])
 
     if users_group_assignment_repo.present?
       redirect_to successful_invitation_group_assignment_invitation_path
@@ -81,6 +81,11 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
   helper_method :decorated_group
 
+  def selected_group
+    @selected_group ||= Group.find_by(id: group_params[:id])
+  end
+  helper_method :selected_group
+
   def group
     repo_access = current_user.repo_accesses.find_by(organization: organization)
     return unless repo_access.present? && repo_access.groups.present?
@@ -113,6 +118,12 @@ class GroupAssignmentInvitationsController < ApplicationController
     @organization ||= group_assignment.organization
   end
   helper_method :organization
+
+  def student_identifier
+    @student_identifier ||= StudentIdentifier.find_by(user: current_user,
+                                                      student_identifier_type: group_assignment.student_identifier_type)
+  end
+  helper_method :student_identifier
 
   def check_group_not_previous_acceptee
     return unless group.present? && group_assignment_repo.present?

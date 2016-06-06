@@ -6,8 +6,11 @@ class StudentIdentifier < ActiveRecord::Base
   belongs_to :student_identifier_type
 
   validates :organization, presence: true
-  validates :organization, uniqueness: { scope: :user }
+  validates :organization, uniqueness: { scope: [:user, :student_identifier_type] }
 
   validates :user, presence: true
-  validates :user, uniqueness: { scope: :organization }
+  validates :user, uniqueness: { scope: [:organization, :student_identifier_type] }
+
+  validates :student_identifier_type, presence: true
+  validates :student_identifier_type, uniqueness: { scope: [:user, :organization] }
 end
