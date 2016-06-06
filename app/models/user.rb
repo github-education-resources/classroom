@@ -46,6 +46,10 @@ class User < ActiveRecord::Base
     site_admin
   end
 
+  def identifier(identifier_type)
+    StudentIdentifier.find_by(user: self, student_identifier_type: identifier_type)
+  end
+
   private
 
   # Internal: We need to make sure that the user
