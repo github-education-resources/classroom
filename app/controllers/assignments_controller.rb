@@ -69,7 +69,7 @@ class AssignmentsController < ApplicationController
   end
 
   def set_assignment
-    @assignment = @organization.assignments.find_by!(slug: params[:id])
+    @assignment = @organization.assignments.includes(:assignment_invitation).find_by!(slug: params[:id])
   end
 
   def starter_code_repo_id_param
