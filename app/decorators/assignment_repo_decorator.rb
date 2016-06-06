@@ -26,6 +26,12 @@ class AssignmentRepoDecorator < Draper::Decorator
     student.name
   end
 
+  def student_identifier
+    student_identifier = assignment_repo.user.identifier(assignment_repo.assignment.student_identifier_type)
+    return '' unless student_identifier.present?
+    student_identifier.value
+  end
+
   private
 
   def github_repository
