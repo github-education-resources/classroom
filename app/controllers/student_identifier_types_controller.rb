@@ -15,7 +15,7 @@ class StudentIdentifierTypesController < ApplicationController
   def create
     @student_identifier_type = StudentIdentifierType.new(new_student_identifier_type_params)
     if @student_identifier_type.save
-      flash[:success] = '\"#{@student_identifier_type.name}\" has been created!'
+      flash[:success] = "\"#{student_identifier_type.name}\" has been created!"
       redirect_to action: 'index'
     else
       render :new
@@ -26,7 +26,7 @@ class StudentIdentifierTypesController < ApplicationController
     student_identifier_type = StudentIdentifierType.find_by(id: params[:id])
     if student_identifier_type.update_attributes(deleted_at: Time.zone.now)
       DestroyResourceJob.perform_later(student_identifier_type)
-      flash[:success] = '\"#{student_identifier_type.name}\" is being deleted'
+      flash[:success] = "\"#{student_identifier_type.name}\" is being deleted"
     end
     redirect_to action: 'index'
   end

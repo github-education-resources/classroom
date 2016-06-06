@@ -34,6 +34,16 @@
     <% end %>
   </div>
 
+  <div class="site-content">
+    <div class="site-content-cap">
+      <h2 class="site-content-heading">Student identifiers</h2>
+    </div>
+
+    <div class="site-content-body markdown-body">
+      <%= link_to 'Manage student identifier types', organization_student_identifier_types_path(@organization), class: 'btn btn-green', role: 'button'%>
+    </div>
+  </div>
+
   <%= render partial: 'organizations/invite_users' %>
   <%= render partial: 'organizations/reset_and_remove_organization_modal' %>
 </div>

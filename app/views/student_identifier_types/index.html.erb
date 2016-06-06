@@ -2,6 +2,9 @@
 
 <div class="site-content">
   <div class="site-content-cap">
+    <% if @student_identifier_types.present? %>
+      <%= link_to 'New identifier', new_organization_student_identifier_type_path(@organization), class: 'btn btn-green right', role: 'button'%>
+    <% end %>
     <h2 class="site-content-heading">
       <span class="assignment-icon assignment-icon-individual">
         <%= octicon('tag') %>
@@ -11,7 +14,16 @@
   </div>
 
   <div class="site-content-body assignment-list-items">
-    <%= render @student_identifier_types %>
+    <% if @student_identifier_types.present? %>
+      <%= render @student_identifier_types %>
+    <% else %>
+      <div class="blankslate large-format spacious clean-background">
+        <h3>This organization doesn’t have any student identifier types yet.</h3>
+        <%= link_to new_organization_student_identifier_type_path(@organization), class: 'btn btn-green btn-big', role: 'button' do %>
+            Create your first student identifier type
+        <% end %>
+      </div>
+    <% end %>
   </div>
 </div>
 
