@@ -25,7 +25,7 @@ class AuthHash
   end
 
   def token
-    user_hash.fetch('credentials', {}).fetch('token')
+    user_hash.fetch('credentials') { {} }.fetch('token')
   end
 
   def site_admin
@@ -39,6 +39,6 @@ class AuthHash
   end
 
   def raw_info
-    user_hash.fetch('extra', {}).fetch('raw_info', {})
+    user_hash.fetch('extra') { {} }.fetch('raw_info') { {} }
   end
 end
