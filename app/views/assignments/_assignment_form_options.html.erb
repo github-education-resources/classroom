@@ -26,10 +26,10 @@
 
 <dl class="form">
   <% if @assignment.present? %>
-    <dt><label>Use an existing student identifier type</label></dt>
+    <dt><label>Use a student identifier type</label></dt>
 
     <dl class="form">
-      <%= select(:student_identifier_type, :id, options_for_select(@student_identifier_types, selected = @assignment.student_identifier_type.present? ? @assignment.student_identifier_type.id : nil), include_blank: true ) %>
+      <%= select(:student_identifier_type, :id, options_for_select(student_identifier_types, selected = @assignment.student_identifier_type.present? ? @assignment.student_identifier_type.id : nil), include_blank: true ) %>
     </dl>
 
   <% end %>

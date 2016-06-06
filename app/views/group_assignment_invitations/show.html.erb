@@ -17,6 +17,12 @@
     <p>Please be certain that the team you are selecting is the correct team as you cannot change this later</p>
   </div>
 
+  <% if @group_assignment.student_identifier_type.present? and student_identifier.nil? %>
+    <div class="form-actions">
+      <%= render partial: 'shared/identifier_form', locals: {student_identifier_type: @group_assignment.student_identifier_type} %>
+    </div>
+  <% end %>
+
   <% if @groups.present? %>
     <hr>
     <p><label>Join an existing team</label></p>
@@ -34,6 +40,7 @@
     <dl class="form">
       <dt><label><%= 'OR' if @groups.present? %> Create a new team</label></dt>
       <dd>
+        <%= hidden_field_tag 'student_identifier', nil, id: 'student_identifier_hidden', class: 'textfield' %>
         <%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'textfield' %>
         <%= button_tag(type: 'submit', class: 'btn btn-green js-navigation js-form-submit') do %>
           <%= octicon('plus') %> Create team

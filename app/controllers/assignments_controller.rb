@@ -29,19 +29,10 @@ class AssignmentsController < ApplicationController
   end
 
   def edit
-    @student_identifier_types = @organization.student_identifier_types.map do |student_identifier|
-      [student_identifier.name, student_identifier.id]
-    end
   end
 
   def update
-    if params.key?(:student_identifier_type)
-      if student_identifier_params.key?(:id)
-        @assignment.student_identifier_type = StudentIdentifierType.find_by(id: student_identifier_params[:id], organization: @organization)
-      else
-        @assignment.student_identifier_type = nil
-      end
-    end
+    @assignment.student_identifier_type = student_identifier_type_param
 
     if @assignment.update_attributes(update_assignment_params)
       flash[:success] = "Assignment \"#{@assignment.title}\" updated"
@@ -63,6 +54,13 @@ class AssignmentsController < ApplicationController
 
   private
 
+  def student_identifier_types
+    @student_identifier_types ||= @organization.student_identifier_types.map do |student_identifier|
+      [student_identifier.name, student_identifier.id]
+    end
+  end
+  helper_method :student_identifier_types
+
   def new_assignment_params
     params
       .require(:assignment)
@@ -74,6 +72,13 @@ class AssignmentsController < ApplicationController
 
   def set_assignment
     @assignment = @organization.assignments.includes(:assignment_invitation).find_by!(slug: params[:id])
+  end
+
+  def student_identifier_type_param
+    unless params.key?(:student_identifier_type) && params.key?(:student_identifier_type)
+      return nil
+    end
+    StudentIdentifierType.find_by(id: student_identifier_params[:id], organization: @organization)
   end
 
   def starter_code_repo_id_param

@@ -1,0 +1,10 @@
+<dl class="form">
+  <dt>You are required to provide your <b><%= student_identifier_type.name %></b>(<%= student_identifier_type.description %>) before accepting the assignment:</dt>
+  <dd>
+    <% case student_identifier_type.content_type
+         when 'text' %> <%= text_field_tag 'student_identifier', nil, placeholder: student_identifier_type.name, class: 'textfield' %>
+    <% when 'number' %> <%= number_field_tag 'student_identifier', nil, placeholder: student_identifier_type.name, class: 'textfield' %>
+    <% when 'email' %> <%= email_field_tag 'student_identifier', nil, placeholder: student_identifier_type.name, class: 'textfield' %>
+    <% end %>
+  </dd>
+</dl>
