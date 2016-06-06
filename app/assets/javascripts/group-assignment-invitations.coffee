@@ -13,7 +13,6 @@ $('.group_assignment_invitations.show').ready ->
   $('form').submit( ->
     hiddenField = $(this).find('#student_identifier_hidden')
     hiddenField.val($('#student_identifier').val())
-    true
   )
 
 $form_values_present = () ->
