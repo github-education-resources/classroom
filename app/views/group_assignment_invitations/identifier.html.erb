@@ -14,6 +14,5 @@
 <div class="site-content-body">
   <%= form_tag({ controller: :group_assignment_invitations, action: :submit_identifier}, method: :patch) do %>
       <%= render partial: 'shared/identifier_form', locals: {student_identifier_type: group_assignment.student_identifier_type} %>
-      <%= submit_tag 'Continue', class: 'btn btn-green js-navigation' %>
   <% end %>
 </div>
