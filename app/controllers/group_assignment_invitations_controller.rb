@@ -135,7 +135,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   helper_method :student_identifier
 
   def check_user_identified
-    return unless assignment.student_identifier_type.present?
+    return unless group_assignment.student_identifier_type.present?
     return if student_identifier.present?
     redirect_to identifier_group_assignment_invitation_path
   end
