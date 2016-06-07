@@ -4,7 +4,6 @@
   <div class="team-panel">
     <% group_member_count = group_assignment_repo.group.repo_accesses.count %>
     <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, :class => "team-actions-form", method: :patch) do %>
-      <%= hidden_field_tag 'student_identifier', nil, id: 'student_identifier_hidden', class: 'textfield' %>
       <%= hidden_field_tag 'group[id]', group_assignment_repo.group.id %>
       <% if group_assignment.max_members.present? && group_member_count >= group_assignment.max_members %>
         <%= submit_tag 'Full', class: 'btn', disabled: true %>
