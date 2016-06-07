@@ -17,12 +17,6 @@
     <p>Please be certain that the team you are selecting is the correct team as you cannot change this later</p>
   </div>
 
-  <% if @group_assignment.student_identifier_type.present? and student_identifier.nil? %>
-    <div class="form-actions">
-      <%= render partial: 'shared/identifier_form', locals: {student_identifier_type: @group_assignment.student_identifier_type} %>
-    </div>
-  <% end %>
-
   <% if @groups.present? %>
     <hr>
     <p><label>Join an existing team</label></p>
