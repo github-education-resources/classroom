@@ -13,7 +13,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
 
   def identifier
-    not_found if student_identifier
+    not_found if student_identifier || group_assignment.student_identifier_type.nil?
   end
 
   def submit_identifier
