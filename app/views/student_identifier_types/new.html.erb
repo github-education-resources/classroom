@@ -23,12 +23,15 @@
     </dl>
     <dl class="form">
       <dt><%= f.label :content_type %></dt>
-      <%= f.select :content_type, StudentIdentifierType.content_types.map { |key, value| [key.humanize, key] } %>
+      <dd><%= f.select :content_type, StudentIdentifierType.content_types.map { |key, value| [key.humanize, key] } %></dd>
     </dl>
 
     <div class="form-actions">
       <%= f.submit 'Save changes', class: 'btn btn-green js-navigation' %>
       <%= link_to 'Cancel', [@organization, @assignment], class: 'btn', role: 'button' %>
     </div>
+    <p class="note">
+      Please do not ask students to provide any confidential information (e.g. SSN or bank account number) as their identifiers.
+    </p>
   <% end %>
 </div>
