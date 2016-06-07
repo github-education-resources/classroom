@@ -20,6 +20,7 @@ class AssignmentInvitationsController < ApplicationController
   end
 
   def identifier
+    not_found if student_identifier || assignment.student_identifier_type.nil?
   end
 
   def submit_identifier
