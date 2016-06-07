@@ -2,6 +2,7 @@
 class GroupAssignmentInvitationsController < ApplicationController
   layout 'layouts/invitations'
 
+  before_action :check_user_identified, only: [:show]
   before_action :check_group_not_previous_acceptee, only: [:show]
   before_action :check_user_not_group_member,       only: [:show]
 
@@ -11,11 +12,24 @@ class GroupAssignmentInvitationsController < ApplicationController
     @groups = invitation.groups.map { |group| [group.title, group.id] }
   end
 
+  def identifier
+    not_found if student_identifier
+  end
+
+  def submit_identifier
+    if invitation.create_student_identifier(current_user, params[:student_identifier]).present?
+      redirect_to group_assignment_invitation_path
+    else
+      flash[:error] = 'An error has occured, please refresh the page and try again.'
+      redirect_to identifier_group_assignment_invitation_path
+    end
+  end
+
   def accept
   end
 
   def accept_assignment
-    users_group_assignment_repo = invitation.redeem_for(current_user, group, nil, params[:student_identifier])
+    users_group_assignment_repo = invitation.redeem_for(current_user, group, nil)
 
     if users_group_assignment_repo.present?
       redirect_to successful_invitation_group_assignment_invitation_path
@@ -27,9 +41,9 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   def accept_invitation
     selected_group_title = group_params[:title]
+    selected_group = Group.find_by(id: group_params[:id])
 
-    users_group_assignment_repo = invitation.redeem_for(current_user, selected_group,
-                                                        selected_group_title, params[:student_identifier])
+    users_group_assignment_repo = invitation.redeem_for(current_user, selected_group, selected_group_title)
 
     if users_group_assignment_repo.present?
       redirect_to successful_invitation_group_assignment_invitation_path
@@ -81,11 +95,6 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
   helper_method :decorated_group
 
-  def selected_group
-    @selected_group ||= Group.find_by(id: group_params[:id])
-  end
-  helper_method :selected_group
-
   def group
     repo_access = current_user.repo_accesses.find_by(organization: organization)
     return unless repo_access.present? && repo_access.groups.present?
@@ -124,6 +133,12 @@ class GroupAssignmentInvitationsController < ApplicationController
                                                       student_identifier_type: group_assignment.student_identifier_type)
   end
   helper_method :student_identifier
+
+  def check_user_identified
+    return unless assignment.student_identifier_type.present?
+    return if student_identifier.present?
+    redirect_to identifier_group_assignment_invitation_path
+  end
 
   def check_group_not_previous_acceptee
     return unless group.present? && group_assignment_repo.present?

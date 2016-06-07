@@ -15,8 +15,7 @@ class AssignmentInvitation < ActiveRecord::Base
 
   after_initialize :assign_key
 
-  def redeem_for(invitee, identifier_value = nil)
-    create_student_identifier(invitee, identifier_value)
+  def redeem_for(invitee)
     if (repo_access = RepoAccess.find_by(user: invitee, organization: organization))
       assignment_repo = AssignmentRepo.find_by(assignment: assignment, repo_access: repo_access)
       return assignment_repo if assignment_repo.present?
@@ -27,10 +26,10 @@ class AssignmentInvitation < ActiveRecord::Base
 
   def create_student_identifier(invitee, identifier_value)
     return unless assignment.student_identifier_type.present? && identifier_value.present?
-    StudentIdentifier.find_or_create_by!(organization: organization,
-                                         user: invitee,
-                                         student_identifier_type: assignment.student_identifier_type,
-                                         value: identifier_value)
+    StudentIdentifier.find_or_create_by(organization: organization,
+                                        user: invitee,
+                                        student_identifier_type: assignment.student_identifier_type,
+                                        value: identifier_value)
   end
 
   def title
