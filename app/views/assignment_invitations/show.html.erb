@@ -21,10 +21,6 @@
     </div>
 
     <div class="form-actions">
-      <% if @assignment.student_identifier_type.present? and student_identifier.nil? %>
-        <%= render partial: 'shared/identifier_form', locals: {student_identifier_type: assignment.student_identifier_type} %>
-      <% end %>
-
       <%= submit_tag 'Accept this assignment', class: 'btn btn-green js-navigation' %>
     </div>
   <% end %>

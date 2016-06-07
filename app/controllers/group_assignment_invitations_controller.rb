@@ -2,9 +2,9 @@
 class GroupAssignmentInvitationsController < ApplicationController
   layout 'layouts/invitations'
 
-  before_action :check_user_identified, only: [:show]
   before_action :check_group_not_previous_acceptee, only: [:show]
   before_action :check_user_not_group_member,       only: [:show]
+  before_action :check_user_identified, only: [:show]
 
   before_action :authorize_group_access, only: [:accept_invitation]
 
