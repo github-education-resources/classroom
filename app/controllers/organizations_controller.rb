@@ -21,6 +21,7 @@ class OrganizationsController < ApplicationController
 
   def create
     @organization = Organization.new(new_organization_params)
+    @organization.setup_webhook(webhook_events_url)
 
     if @organization.save
       redirect_to setup_organization_path(@organization)

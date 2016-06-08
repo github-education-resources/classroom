@@ -50,6 +50,8 @@ class GitHubOrganization
       hooks = @client.org_hooks(@id)
       hooks.each { |hook| @client.remove_org_hook(@id, hook.id) }
     end
+  rescue GitHub::NotFound
+    return
   end
 
   # Public

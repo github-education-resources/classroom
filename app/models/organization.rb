@@ -2,7 +2,6 @@
 class Organization < ActiveRecord::Base
   include Flippable
   include Sluggable
-  include Rails.application.routes.url_helpers
 
   update_index('stafftools#organization') { self }
 
@@ -22,9 +21,7 @@ class Organization < ActiveRecord::Base
 
   validates :slug, uniqueness: true
 
-  validates :webhook_id, uniqueness: true
-
-  before_validation(on: :create) { setup_webhook }
+  validates :webhook_id, uniqueness: true, allow_nil: true
 
   before_destroy :delete_all_webhooks
 
@@ -37,6 +34,7 @@ class Organization < ActiveRecord::Base
 
   def github_client
     token = users.limit(1).order('RANDOM()').pluck(:token)[0]
+    token = users.sample.token unless token.present?
     Octokit::Client.new(access_token: token)
   end
 
@@ -51,9 +49,9 @@ class Organization < ActiveRecord::Base
     self.is_webhook_active = false
   end
 
-  def setup_webhook
+  def setup_webhook(hook_url)
+    delete_all_webhooks
     @github_organization ||= GitHubOrganization.new(github_client, github_id)
-    hook_url = webhook_events_url
     hook = @github_organization.create_org_hook(config: { url: hook_url })
     self.webhook_id ||= hook.id
   end
