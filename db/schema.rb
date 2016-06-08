@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160603023306) do
+ActiveRecord::Schema.define(version: 20160527062518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,13 +29,12 @@ ActiveRecord::Schema.define(version: 20160603023306) do
   add_index "assignment_invitations", ["key"], name: "index_assignment_invitations_on_key", unique: true, using: :btree
 
   create_table "assignment_repos", force: :cascade do |t|
-    t.integer  "github_repo_id",                         null: false
+    t.integer  "github_repo_id", null: false
     t.integer  "repo_access_id"
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
     t.integer  "assignment_id"
     t.integer  "user_id"
-    t.boolean  "is_starter_code_pushed", default: false
   end
 
   add_index "assignment_repos", ["assignment_id"], name: "index_assignment_repos_on_assignment_id", using: :btree
@@ -72,12 +71,11 @@ ActiveRecord::Schema.define(version: 20160603023306) do
   add_index "group_assignment_invitations", ["key"], name: "index_group_assignment_invitations_on_key", unique: true, using: :btree
 
   create_table "group_assignment_repos", force: :cascade do |t|
-    t.integer  "github_repo_id",                         null: false
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.integer  "github_repo_id",      null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.integer  "group_assignment_id"
-    t.integer  "group_id",                               null: false
-    t.boolean  "is_starter_code_pushed", default: false
+    t.integer  "group_id",            null: false
   end
 
   add_index "group_assignment_repos", ["github_repo_id"], name: "index_group_assignment_repos_on_github_repo_id", unique: true, using: :btree
@@ -137,7 +135,6 @@ ActiveRecord::Schema.define(version: 20160603023306) do
     t.datetime "deleted_at"
     t.string   "slug",                              null: false
     t.string   "webhook_id"
-    t.string   "webhook_secret"
     t.boolean  "is_webhook_active", default: false
   end
 
