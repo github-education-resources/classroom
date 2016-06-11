@@ -20,7 +20,7 @@
               <%= link_to stop_impersonating_stafftools_user_path(current_user), class: 'tooltipped tooltipped-s', method: :delete, 'aria-label' => "Stop impersonating @#{current_user.github_user.login}" do %>
                 <div class="avatar-parent-child left">
                   <%= image_tag current_user.github_user.github_avatar_url(40), class: 'avatar', alt: "@#{current_user.github_user.login}", height: 20, width: 20 %>
-                  <%= image_tag true_user.github_user.avatar_url(20), class: 'avatar avatar-child', alt: "@#{true_user.github_user.login}", height: 10, width: 10 %>
+                  <%= image_tag true_user.github_user.github_avatar_url(20), class: 'avatar avatar-child', alt: "@#{true_user.github_user.login}", height: 10, width: 10 %>
                 </div>
               <% end %>
             <% else %>
