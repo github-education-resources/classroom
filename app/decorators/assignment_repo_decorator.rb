@@ -15,7 +15,7 @@ class AssignmentRepoDecorator < Draper::Decorator
   end
 
   def disabled?
-    github_repository.null? || student.null?
+    github_repository.null? || !student.on_github?
   end
 
   def student_login
@@ -35,8 +35,6 @@ class AssignmentRepoDecorator < Draper::Decorator
   end
 
   def student
-    @student ||= GitHubUser.new(creator.github_client, assignment_repo.user.uid).user
-  rescue GitHub::NotFound
-    NullGitHubUser.new
+    @student ||= GitHubUser.new(creator.github_client, assignment_repo.user.uid)
   end
 end

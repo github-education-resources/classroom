@@ -45,6 +45,13 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '#github_user' do
+    it 'sets or creates a new GitHubUser with the users uid' do
+      expect(user.github_user.class).to eql(GitHubUser)
+      expect(user.github_user.id).to eql(user.uid)
+    end
+  end
+
   describe '#staff?' do
     it 'returns if the User is a site_admin' do
       expect(user.staff?).to be(false)

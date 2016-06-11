@@ -16,9 +16,9 @@
     <p class="team-description" itemprop="description"><%= pluralize(group_member_count, 'member') %></p>
     <div class="team-members">
       <% group_assignment_repo.group.repo_accesses.limit(7).each do |repo_access| %>
-          <% student = repo_access.user.decorate %>
-          <%= link_to student.github_url, class: "tooltipped tooltipped-s #{'disabled' if group_assignment_repo.disabled?}", 'aria-label' => student.login do %>
-              <%= image_tag student.avatar_url(30), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.login}" %>
+          <% student = repo_access.user %>
+          <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s #{'disabled' if group_assignment_repo.disabled?}", 'aria-label' => student.github_user.login do %>
+            <%= image_tag student.github_user.github_avatar_url(30), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.github_user.login}" %>
           <% end %>
       <% end %>
       <% if group_member_count > 7 %>

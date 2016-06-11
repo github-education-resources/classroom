@@ -4,9 +4,15 @@ require 'rails_helper'
 RSpec.describe NullGitHubUser do
   subject { described_class.new }
 
+  describe '#avatar_url' do
+    it 'returns the avatar url for ghost user' do
+      expect(subject.avatar_url).to eql('https://avatars.githubusercontent.com/u/10137?v=3')
+    end
+  end
+
   describe '#html_url' do
-    it 'returns #' do
-      expect(subject.html_url).to eql('#')
+    it 'returns the html url for ghost user' do
+      expect(subject.html_url).to eql('https://github.com/ghost')
     end
   end
 

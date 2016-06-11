@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   class NotAuthorized < StandardError
   end
 
-  helper_method :current_user, :decorated_current_user, :decorated_true_user, :logged_in?, :staff?, :true_user
+  helper_method :current_user, :logged_in?, :staff?, :true_user
 
   before_action :authenticate_user!
 
@@ -51,14 +51,6 @@ class ApplicationController < ActionController::Base
 
   def become_active
     current_user.become_active
-  end
-
-  def decorated_current_user
-    @decorated_current_user ||= current_user.decorate
-  end
-
-  def decorated_true_user
-    @decorated_true_user ||= true_user.decorate
   end
 
   def current_user
