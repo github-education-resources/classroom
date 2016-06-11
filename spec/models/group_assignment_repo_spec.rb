@@ -15,7 +15,7 @@ RSpec.describe GroupAssignmentRepo, type: :model do
                              grouping: grouping,
                              title: 'Learn JavaScript',
                              organization: organization,
-                             public_repo: false,
+                             public_repo: true,
                              starter_code_repo_id: 1_062_897)
     end
 
@@ -50,6 +50,20 @@ RSpec.describe GroupAssignmentRepo, type: :model do
             github_repo = GitHubRepository.new(organization.github_client, @group_assignment_repo.github_repo_id)
             add_github_team_url = github_url("/teams/#{group.github_team_id}/repos/#{github_repo.full_name}")
             expect(WebMock).to have_requested(:put, add_github_team_url)
+          end
+
+          context 'when students_are_repo_admins is true' do
+            before do
+              group_assignment.update(students_are_repo_admins: true)
+              @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
+            end
+
+            it 'adds the team to the repository' do
+              github_repo = GitHubRepository.new(organization.github_client, @group_assignment_repo.github_repo_id)
+              add_github_team_url = github_url("/teams/#{group.github_team_id}/repos/#{github_repo.full_name}")
+              permission_param = { permission: 'admin' }
+              expect(WebMock).to have_requested(:put, add_github_team_url).with(body: hash_including(permission_param))
+            end
           end
         end
       end

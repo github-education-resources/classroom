@@ -9,9 +9,9 @@ class GitHubRepository
 
   # Public
   #
-  def add_collaborator(collaborator)
+  def add_collaborator(collaborator, options = {})
     GitHub::Errors.with_error_handling do
-      @client.add_collaborator(@id, collaborator)
+      @client.add_collaborator(@id, collaborator, options)
     end
   end
 
