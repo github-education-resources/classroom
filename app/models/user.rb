@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
   end
 
   def authorized_access_token?
-    GitHubUser.new(github_client, uid).authorized_access_token?
+    github_user.authorized_access_token?
   end
 
   def self.create_from_auth_hash(hash)
@@ -38,6 +38,10 @@ class User < ActiveRecord::Base
 
   def github_client
     @github_client ||= Octokit::Client.new(access_token: token, auto_paginate: true)
+  end
+
+  def github_user
+    @github_user ||= GitHubUser.new(github_client, uid)
   end
 
   def github_client_scopes
