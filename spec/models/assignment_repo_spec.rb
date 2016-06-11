@@ -10,7 +10,7 @@ RSpec.describe AssignmentRepo, type: :model do
       Assignment.create(creator: organization.users.first,
                         title: 'Learn Ruby',
                         organization: organization,
-                        public_repo: false,
+                        public_repo: true,
                         starter_code_repo_id: 1_062_897)
     end
 
@@ -43,6 +43,20 @@ RSpec.describe AssignmentRepo, type: :model do
             add_user_request = "/repositories/#{@assignment_repo.github_repo_id}/collaborators/#{github_user_login}"
 
             expect(WebMock).to have_requested(:put, github_url(add_user_request))
+          end
+
+          context 'when students_are_repo_admins is true' do
+            before do
+              assignment.update(students_are_repo_admins: true)
+              @assignment_repo = AssignmentRepo.create(assignment: assignment, user: student)
+            end
+
+            it 'adds the user as a collaborator to the GitHub repository with admin permission' do
+              github_user_login = GitHubUser.new(student.github_client, student.uid).login
+              add_user_request = "/repositories/#{@assignment_repo.github_repo_id}/collaborators/#{github_user_login}"
+
+              expect(WebMock).to have_requested(:put, github_url(add_user_request)).with(body: { permission: 'admin' })
+            end
           end
         end
       end
