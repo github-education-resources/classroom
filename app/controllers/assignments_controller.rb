@@ -55,14 +55,14 @@ class AssignmentsController < ApplicationController
   def new_assignment_params
     params
       .require(:assignment)
-      .permit(:title, :public_repo)
+      .permit(:title, :public_repo, :students_are_repo_admins)
       .merge(creator: current_user,
              organization: @organization,
              starter_code_repo_id: starter_code_repo_id_param)
   end
 
   def set_assignment
-    @assignment = @organization.assignments.find_by!(slug: params[:id])
+    @assignment = @organization.assignments.includes(:assignment_invitation).find_by!(slug: params[:id])
   end
 
   def starter_code_repo_id_param
