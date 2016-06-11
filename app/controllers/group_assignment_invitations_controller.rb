@@ -71,11 +71,6 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
   helper_method :decorated_group_assignment_repo
 
-  def decorated_organization
-    @decorated_organization ||= organization.decorate
-  end
-  helper_method :decorated_organization
-
   def decorated_group
     @decorated_group ||= group.decorate
   end
