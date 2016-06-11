@@ -15,7 +15,7 @@
     <h3>Assignment information</h3>
 
     <div class="boxed-group-inner">
-      <% creator      = assignment.creator.decorate %>
+      <% creator      = assignment.creator %>
       <% organization = assignment.organization.decorate %>
 
       <table>
@@ -29,7 +29,7 @@
         </tr>
         <tr>
           <td class="text-emphasized">Created by</td>
-          <td><%= link_to creator.login, stafftools_user_path(creator) %></td>
+          <td><%= link_to creator.github_user.login, stafftools_user_path(creator) %></td>
         </tr>
         <% if assignment.starter_code? %>
         <tr>
