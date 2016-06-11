@@ -4,6 +4,6 @@
 
     <h3>Update your repository permissions</h3>
     <p>The GitHub “Default repository permission” must be set to “None” to ensure full privacy of group assignment repositories.</p>
-    <%= link_to 'Update your permissions', "https://github.com/organizations/#{organization.login}/settings/member_privileges", class: 'btn btn-sm btn-green', role: 'button', target: "_blank" %>
+    <%= link_to 'Update your permissions', "https://github.com/organizations/#{organization.github_organization.login}/settings/member_privileges", class: 'btn btn-sm btn-green', role: 'button', target: "_blank" %>
   </div>
 <% end %>

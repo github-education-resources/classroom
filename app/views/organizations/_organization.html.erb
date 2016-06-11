@@ -1,14 +1,12 @@
-<% organization = organization.decorate %>
-
 <div class="flex-table organization-list-item">
   <div class="flex-table-item">
-    <%= image_tag organization.avatar_url(120), class: 'avatar left', height: 60, width: 60, alt: "@#{organization.login}" %>
+    <%= image_tag organization.github_organization.github_avatar_url(120), class: 'avatar left', height: 60, width: 60, alt: "@#{organization.github_organization.login}" %>
 
     <%= link_to organization, class: 'organization-title' do %>
       <strong class="css-truncate-target"><%= organization.title %></strong>
     <% end %>
 
-    <span class="text-muted css-truncate-target">@<%= organization.login %></span>
+    <span class="text-muted css-truncate-target">@<%= organization.github_organization.login %></span>
   </div>
 
   <div class="flex-table-item organization-stats text-right">

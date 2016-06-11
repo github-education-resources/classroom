@@ -50,7 +50,7 @@
 
       <div class="boxed-group-inner">
         <ul class="boxed-group-list standalone">
-          <%= render partial: 'stafftools/users/organization', collection: @user.organizations.decorate %>
+          <%= render partial: 'stafftools/users/organization', collection: @user.organizations %>
         </ul>
       </div>
     </div>
@@ -62,8 +62,8 @@
 
       <div class="boxed-group-inner">
         <ul class="boxed-group-list standalone">
-          <% user.repo_accesses.each do |repo_access| %>
-            <%= render partial: 'stafftools/users/organization', locals: { organization: repo_access.organization.decorate } %>
+          <% @user.repo_accesses.each do |repo_access| %>
+            <%= render partial: 'stafftools/users/organization', locals: { organization: repo_access.organization } %>
           <% end %>
         </ul>
       </div>
