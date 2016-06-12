@@ -445,6 +445,7 @@ DEPENDENCIES
   redis-namespace
   rspec-rails
   rubocop
+  ruby-progressbar
   sass-rails (~> 5.0)
   scss_lint
   sidekiq (~> 4.1.0)
