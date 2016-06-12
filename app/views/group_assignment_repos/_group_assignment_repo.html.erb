@@ -5,31 +5,39 @@
     <%= link_to group_assignment_repo.github_team_url, class: "team-name #{'disabled' if group_assignment_repo.disabled?}" do %>
       <strong class="css-truncate css-truncate-target"><%= group_assignment_repo.team_name %></strong>
     <% end %>
-
-    <ul>
-      <% group_assignment_repo.group.repo_accesses.limit(4).each do |repo_access| %>
-        <% student = repo_access.user.decorate %>
-
-        <li>
-          <%= link_to student.github_url, class: "tooltipped tooltipped-s #{'disabled' if group_assignment_repo.disabled?}", 'aria-label' => student.login do %>
-            <%= image_tag student.avatar_url(60), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.login}" %>
-          <% end %>
-        </li>
-      <% end %>
-
-      <% if group_assignment_repo.group.repo_accesses.count > 4 %>
-        <li>
-          <%= link_to group_assignment_repo.github_team_url, class: "#{'disabled' if group_assignment_repo.disabled?}" do %>
-            <%= image_tag 'student-ellipse@2x.png', class: 'avatar avatar-small', height: 30, width: 30, alt: 'student ellipse' %>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
   </div>
-
   <div class="flex-table-item text-right">
     <strong class="css-truncate css-truncate-target">
       <%= link_to group_assignment_repo.full_name, group_assignment_repo.github_repo_url, class: "assignment-repo-github-url #{'disabled' if group_assignment_repo.disabled?}" %>
     </strong>
   </div>
 </div>
+
+<div class="group-assignment-team-members">
+
+  <% group_assignment_repo.group.repo_accesses.each do |repo_access| %>
+      <% student = repo_access.user.decorate %>
+
+      <div class="member">
+        <%= link_to student.github_url, class: "team-member-list-avatar #{'disabled' if group_assignment_repo.disabled?}", 'aria-label' => student.login do %>
+            <%= image_tag student.avatar_url(60), class: 'avatar avatar-small ', height: 40, width: 40, alt: "@#{student.login}" %>
+        <% end %>
+        <div class="team-member-content">
+          <span class="team-member-username">
+            <%= link_to student.login, student.github_url %>
+            <% student_identifier = student.identifier(group_assignment_repo.group_assignment.student_identifier_type) %>
+            <% if student_identifier.present? %>
+            <span class="labels">
+              <span class="label"><%= student_identifier.value %></span>
+            </span>
+            <% end %>
+          </span>
+          <p class="team-member-description" itemprop="name">
+            <%= student.name %>
+          </p>
+        </div>
+      </div>
+  <% end %>
+
+</div>
+
