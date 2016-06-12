@@ -46,7 +46,7 @@
   <% end %>
 
   <dl class="form">
-    <dt><label><%= 'OR' if groupings_present %> Create a reusable set of teams</label></dt>
+    <dt><label><%= 'OR' if groupings_present %> Create a new set of teams</label></dt>
     <% time           = Time.zone.now %>
     <% suggested_name = Time.zone.now.strftime("Teams formed on %B #{time.day.ordinalize}, %Y") %>
     <dd><input class="textfield" type="text" value="<%= suggested_name unless groupings_present %>" placeholder="<%= suggested_name if groupings_present %>" name="grouping[title]" id="grouping_title"></dd>
