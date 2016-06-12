@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class StafftoolsIndex < Chewy::Index
-  define_type Assignment do
+  define_type Assignment.includes(:organization) do
     field :id
     field :slug
     field :title
@@ -10,7 +10,7 @@ class StafftoolsIndex < Chewy::Index
     field :organization_login, value: ->(assignment) { assignment.organization.github_organization.login }
   end
 
-  define_type AssignmentInvitation do
+  define_type AssignmentInvitation.includes(:assignment) do
     field :id
     field :key
     field :created_at
@@ -19,27 +19,27 @@ class StafftoolsIndex < Chewy::Index
     field :assignment_title, value: ->(assignment_invitation) { assignment_invitation.assignment.title }
   end
 
-  define_type AssignmentRepo do
+  define_type AssignmentRepo.includes(:assignment, :repo_access, :user) do
     field :id
     field :github_repo_id
     field :created_at
     field :updated_at
 
-    field :assignment_title, value: ->(assignment_invitation) { assignment_invitation.assignment.title }
-    field :user_login,       value: ->(assignment_repo)       { assignment_repo.user.github_user.login }
+    field :assignment_title, value: ->(assignment_repo) { assignment_repo.assignment.title }
+    field :user_login,       value: ->(assignment_repo) { assignment_repo.user.github_user.login }
   end
 
-  define_type Group do
+  define_type Group.includes(:organization) do
     field :id
     field :title
     field :github_team_id
     field :created_at
     field :updated_at
 
-    field :organization_login, value: ->(group_assignment) { group_assignment.organization.github_organization.login }
+    field :organization_login, value: ->(group) { group.organization.github_organization.login }
   end
 
-  define_type GroupAssignment do
+  define_type GroupAssignment.includes(:organization) do
     field :id
     field :slug
     field :title
@@ -49,7 +49,7 @@ class StafftoolsIndex < Chewy::Index
     field :organization_login, value: ->(group_assignment) { group_assignment.organization.github_organization.login }
   end
 
-  define_type GroupAssignmentInvitation do
+  define_type GroupAssignmentInvitation.includes(:group_assignment) do
     field :id
     field :key
     field :created_at
@@ -60,28 +60,25 @@ class StafftoolsIndex < Chewy::Index
     end)
   end
 
-  define_type GroupAssignmentRepo do
+  define_type GroupAssignmentRepo.includes(:group_assignment, :group) do
     field :id
     field :github_repo_id
     field :created_at
     field :updated_at
 
-    field :group_assignment_title, value: (lambda do |group_assignment_repo|
-      group_assignment_repo.group_assignment.title
-    end)
-
-    field :group_title, value: ->(group_assignment_repo) { group_assignment_repo.group.title }
+    field :group_assignment_title, value: ->(group_assignment_repo) { group_assignment_repo.group_assignment.title }
+    field :group_title,            value: ->(group_assignment_repo) { group_assignment_repo.group.title            }
   end
 
-  define_type Grouping do
+  define_type Grouping.includes(:organization) do
     field :title
     field :created_at
     field :updated_at
 
-    field :organization_login, value: ->(repo_access) { repo_access.organization.github_organization.login }
+    field :organization_login, value: ->(grouping) { grouping.organization.github_organization.login }
   end
 
-  define_type RepoAccess do
+  define_type RepoAccess.includes(:organization, :user) do
     field :id
     field :created_at
     field :updated_at
@@ -98,8 +95,8 @@ class StafftoolsIndex < Chewy::Index
     field :created_at
     field :updated_at
 
-    field :login, value: ->(org) { org.github_organization.login }
-    field :name,  value: ->(org) { org.github_organization.name  }
+    field :login, value: ->(organization) { organization.github_organization.login }
+    field :name,  value: ->(organization) { organization.github_organization.name  }
   end
 
   define_type User do
