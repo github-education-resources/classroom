@@ -680,17 +680,17 @@ hr {
 }
 
 .group-assignment-team-members {
+  display: table;
+  width: 100%;
   padding: 10px 15px;
   margin: 0 -15px -15px;
+  clear: both;
   list-style-type: none;
   border-radius: 0 0 3px 3px;
-  clear: both;
-  width: 100%;
-  display: table;
 
   .member {
-    width: 50%;
     float: left;
+    width: 50%;
     padding-right: 10px;
     margin-top: 10px;
   }
@@ -704,6 +704,7 @@ hr {
 .team-member-content {
   margin-left: 50px;
 }
+
 .team-member-username {
   margin: 0;
   font-size: 14px;
@@ -727,5 +728,5 @@ hr {
   color: #666;
   background-color: #eee;
   border-radius: 2px;
-  box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.12);
 }
