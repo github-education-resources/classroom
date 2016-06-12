@@ -5,14 +5,16 @@
     <%= image_tag assignment_repo.avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{assignment_repo.student_login}" %>
 
     <div class="student-information">
-      <% css_class  = 'css-truncate css-truncate-target student-login' %>
+      <% css_class  = 'css-truncate css-truncate-target' %>
       <% css_class += ' disabled' if assignment_repo.disabled? %>
+      <span class="student-login">
       <%= link_to "https://github.com/#{assignment_repo.student_login}", class: css_class do %>
-        <strong class="css-truncate-target"><%= assignment_repo.student_login %></strong>
+        <%= assignment_repo.student_login %>
       <% end %>
+        <span class="label"><%= assignment_repo.student_identifier %></span>
+      </span>
 
-      <span class="text-muted css-truncate css-truncate-target"><%= assignment_repo.student_name %></span>
-      <span class="text-muted css-truncate css-truncate-target"><%= assignment_repo.student_identifier %></span>
+      <p class="student-description"><%= assignment_repo.student_name %></p>
     </div>
   </div>
 
