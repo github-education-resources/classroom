@@ -33,6 +33,10 @@
          <td><%= local_time(@user.created_at) %></td>
         </tr>
         <tr>
+         <td class="text-emphasized">Last active</td>
+         <td><%= local_time(@user.last_active_at) %></td>
+        </tr>
+        <tr>
           <td class="text-emphasized">Access token</td>
           <td><%= @user.authorized_access_token? ? 'Authorized' : 'Rejected' %></td>
         </tr>
