@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 class GitHubUser < GitHubResource
-  def github_avatar_url(size = 40)
-    "#{avatar_url}&size=#{size}"
-  end
-
   def authorized_access_token?
     GitHub::Errors.with_error_handling do
       Classroom.github_client.check_application_authorization(
@@ -13,6 +9,10 @@ class GitHubUser < GitHubResource
     end
   rescue GitHub::NotFound
     false
+  end
+
+  def github_avatar_url(size = 40)
+    "#{avatar_url}&size=#{size}"
   end
 
   def organization_memberships

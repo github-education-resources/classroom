@@ -33,6 +33,10 @@ class Organization < ActiveRecord::Base
     Octokit::Client.new(access_token: token)
   end
 
+  def github_organization
+    @github_organization ||= GitHubOrganization.new(github_client, github_id)
+  end
+
   def slugify
     self.slug = "#{github_id} #{title}".parameterize
   end
