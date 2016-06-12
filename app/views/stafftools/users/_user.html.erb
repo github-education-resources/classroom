@@ -7,6 +7,6 @@
 
   <span class="text-muted css-truncate css-truncate-target">
     Joined <%= local_time_ago(user.created_at) %> /
-    Last active: <%= user.last_active_at.present? ? local_time_ago(user.last_active_at) : 'Unknown' %>
+    Last active: <%= local_time_ago(user.last_active_at) %>
   </span><br>
 </div>
