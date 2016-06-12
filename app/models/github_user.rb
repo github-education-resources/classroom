@@ -20,6 +20,10 @@ class GitHubUser
     GitHub::Errors.with_error_handling { @client.user(@id, options).login }
   end
 
+  def name(options = {})
+    GitHub::Errors.with_error_handling { @client.user(@id, options).name }
+  end
+
   def organization_memberships
     GitHub::Errors.with_error_handling do
       @client.organization_memberships(state: 'active', headers: GitHub::APIHeaders.no_cache_no_store)
