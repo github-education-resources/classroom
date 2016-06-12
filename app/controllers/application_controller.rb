@@ -36,11 +36,8 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_user!
-    if logged_in? && adequate_scopes?
-      become_active
-    else
-      auth_redirect
-    end
+    return become_active if logged_in? && adequate_scopes?
+    auth_redirect
   end
 
   def auth_redirect
