@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
 
   has_and_belongs_to_many :organizations
 
+  validates :last_active_at, presence: true
+
   validates :token, presence: true, uniqueness: true
 
   validates :uid, presence: true
@@ -50,6 +52,13 @@ class User < ActiveRecord::Base
 
   def staff?
     site_admin
+  end
+
+  # This updates the `last_active_at` column without
+  # updating the model, but keeps the index updated.
+  def become_active
+    update_columns(last_active_at: Time.zone.now)
+    self.class.update_index('stafftools#user') { self }
   end
 
   private
