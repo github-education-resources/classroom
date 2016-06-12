@@ -12,6 +12,10 @@
 </div>
 
 <div class="site-content-body">
+  <div class="flash flash-with-icon flash-form">
+    <span class="octicon octicon-alert"></span>
+    Please do not ask students to provide any confidential information (e.g. SSN or bank account number) as their identifiers.
+  </div>
   <%= form_for [@organization, @student_identifier_type] do |f| %>
     <dl class="form">
       <dt><%= f.label :name %></dt>
@@ -30,8 +34,5 @@
       <%= f.submit 'Save changes', class: 'btn btn-green js-navigation' %>
       <%= link_to 'Cancel', [@organization, @assignment], class: 'btn', role: 'button' %>
     </div>
-    <p class="note">
-      Please do not ask students to provide any confidential information (e.g. SSN or bank account number) as their identifiers.
-    </p>
   <% end %>
 </div>
