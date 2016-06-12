@@ -1,12 +1,5 @@
 # frozen_string_literal: true
-class GitHubOrganization
-  def initialize(client, id)
-    @client    = client
-    @id        = id
-  end
-
-  # Public
-  #
+class GitHubOrganization < GitHubResource
   def accept_membership(user_github_login)
     return if organization_member?(user_github_login)
 
@@ -23,8 +16,6 @@ class GitHubOrganization
     end
   end
 
-  # Public
-  #
   def admin?(user_github_login)
     GitHub::Errors.with_error_handling do
       membership = @client.organization_membership(login, user: user_github_login)
@@ -32,8 +23,6 @@ class GitHubOrganization
     end
   end
 
-  # Public
-  #
   def create_repository(repo_name, users_repo_options = {})
     repo_options = github_repo_default_options.merge(users_repo_options)
 
@@ -44,14 +33,10 @@ class GitHubOrganization
     GitHubRepository.new(@client, repo.id)
   end
 
-  # Public
-  #
   def delete_repository(repo_id)
     @client.delete_repository(repo_id)
   end
 
-  # Public
-  #
   def create_team(team_name)
     github_team = GitHub::Errors.with_error_handling do
       @client.create_team(@id,
@@ -63,26 +48,18 @@ class GitHubOrganization
     GitHubTeam.new(@client, github_team.id)
   end
 
-  # Public
-  #
   def delete_team(team_id)
     @client.delete_team(team_id)
   end
 
-  # Public
-  #
-  def login(options = {})
-    GitHub::Errors.with_error_handling { @client.organization(@id, options).login }
+  def geo_pattern_data_uri
+    @geo_pattern_data_uri ||= GeoPattern.generate(id, color: '#5fb27b').to_data_uri
   end
 
-  # Public
-  #
-  def organization
-    GitHub::Errors.with_error_handling { @client.organization(@id) }
+  def github_avatar_url(size = 40)
+    "#{avatar_url}&size=#{size}"
   end
 
-  # Public
-  #
   def organization_members(options = {})
     GitHub::Errors.with_error_handling { @client.organization_members(@id, options) }
   end
@@ -117,10 +94,16 @@ class GitHubOrganization
     end
   end
 
+  def team_invitations_url
+    "https://github.com/orgs/#{login}/invitations/new"
+  end
+
   private
 
-  # Internal
-  #
+  def attributes
+    %w(login avatar_url html_url name)
+  end
+
   def github_repo_default_options
     {
       has_issues:    true,

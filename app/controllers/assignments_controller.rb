@@ -5,7 +5,6 @@ class AssignmentsController < ApplicationController
 
   before_action :set_assignment, except: [:new, :create]
 
-  decorates_assigned :organization
   decorates_assigned :assignment
 
   def new
@@ -64,7 +63,7 @@ class AssignmentsController < ApplicationController
   def new_assignment_params
     params
       .require(:assignment)
-      .permit(:title, :public_repo)
+      .permit(:title, :public_repo, :students_are_repo_admins)
       .merge(creator: current_user,
              organization: @organization,
              starter_code_repo_id: starter_code_repo_id_param)

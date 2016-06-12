@@ -16,15 +16,15 @@
 <div class="group-assignment-team-members">
 
   <% group_assignment_repo.group.repo_accesses.each do |repo_access| %>
-      <% student = repo_access.user.decorate %>
+      <% student = repo_access.user %>
 
       <div class="member">
-        <%= link_to student.github_url, class: "team-member-list-avatar #{'disabled' if group_assignment_repo.disabled?}", 'aria-label' => student.login do %>
-            <%= image_tag student.avatar_url(60), class: 'avatar avatar-small ', height: 40, width: 40, alt: "@#{student.login}" %>
+        <%= link_to student.github_user.html_url, class: "team-member-list-avatar #{'disabled' if group_assignment_repo.disabled?}", 'aria-label' => student.github_user.login do %>
+            <%= image_tag student.github_user.github_avatar_url(60), class: 'avatar avatar-small ', height: 40, width: 40, alt: "@#{student.github_user.login}" %>
         <% end %>
         <div class="team-member-content">
           <span class="team-member-username">
-            <%= link_to student.login, student.github_url %>
+            <%= link_to student.github_user.login, student.github_user.html_url %>
             <% student_identifier = student.identifier(group_assignment_repo.group_assignment.student_identifier_type) %>
             <% if student_identifier.present? %>
             <span class="labels">
@@ -33,7 +33,7 @@
             <% end %>
           </span>
           <p class="team-member-description" itemprop="name">
-            <%= student.name %>
+            <%= student.github_user.name %>
           </p>
         </div>
       </div>
