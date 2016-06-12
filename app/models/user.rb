@@ -54,10 +54,10 @@ class User < ActiveRecord::Base
     site_admin
   end
 
+  # This updates the `last_active_at` column without
+  # updating the model, but keeps the index updated.
   def become_active
-    # we don't want to touch updated_at
     update_columns(last_active_at: Time.zone.now)
-    # but we still want indexes to work
     self.class.update_index('stafftools#user') { self }
   end
 
