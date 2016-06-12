@@ -15,7 +15,7 @@
     <h3>Repository accesses</h3>
 
     <div class="boxed-group-inner">
-      <% owner        = @repo_access.user.decorate %>
+      <% owner        = @repo_access.user %>
       <% organization = @repo_access.organization %>
 
       <table>
@@ -31,7 +31,7 @@
         <% end %>
         <tr>
           <td class="text-emphasized">Owned by</td>
-          <td><%= link_to owner.login, stafftools_user_path(owner) %></td>
+          <td><%= link_to owner.github_user.login, stafftools_user_path(owner) %></td>
         </tr>
         <tr>
           <td class="text-emphasized">Organization</td>

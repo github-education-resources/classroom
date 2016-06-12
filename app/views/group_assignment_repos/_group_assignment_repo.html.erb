@@ -8,11 +8,11 @@
 
     <ul>
       <% group_assignment_repo.group.repo_accesses.limit(4).each do |repo_access| %>
-        <% student = repo_access.user.decorate %>
+        <% student = repo_access.user %>
 
         <li>
-          <%= link_to student.github_url, class: "tooltipped tooltipped-s #{'disabled' if group_assignment_repo.disabled?}", 'aria-label' => student.login do %>
-            <%= image_tag student.avatar_url(60), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.login}" %>
+          <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s #{'disabled' if group_assignment_repo.disabled?}", 'aria-label' => student.github_user.login do %>
+            <%= image_tag student.github_user.github_avatar_url(60), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.github_user.login}" %>
           <% end %>
         </li>
       <% end %>

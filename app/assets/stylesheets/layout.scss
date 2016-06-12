@@ -680,3 +680,8 @@ hr {
     vertical-align: top;
   }
 }
+
+.no-scroll {
+  height: 100%;
+  overflow: hidden;
+}

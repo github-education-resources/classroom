@@ -11,19 +11,28 @@ describe GitHubUser do
   let(:other_user)        { GitHubFactory.create_classroom_student   }
   let(:other_github_user) { GitHubUser.new(@client, other_user.uid)  }
 
-  describe '#login', :vcr do
-    it 'gets the login of the user' do
-      user = @client.user
-
-      expect(github_user.login).to eql(user.login)
-      expect(WebMock).to have_requested(:get, github_url("/user/#{user.id}"))
+  describe '#github_avatar_url', :vcr do
+    it 'returns the correct url with a default size of 40' do
+      expected_url = "https://avatars.githubusercontent.com/u/#{github_user.id}?v=3&size=40"
+      expect(github_user.github_avatar_url).to eql(expected_url)
     end
 
-    it 'gets the login of another user' do
-      user = @client.user(other_user.uid)
+    it 'has a customizeable size' do
+      size         = 90
+      expected_url = "https://avatars.githubusercontent.com/u/#{github_user.id}?v=3&size=#{size}"
 
-      expect(other_github_user.login).to eql(user.login)
-      expect(WebMock).to have_requested(:get, github_url("/user/#{user.id}")).twice
+      expect(github_user.github_avatar_url(size)).to eql(expected_url)
+    end
+  end
+
+  GitHubUser.new(@client, 123).send(:attributes).each do |attribute|
+    describe "##{attribute}", :vcr do
+      it "gets the #{attribute} of the user" do
+        user = @client.user
+
+        expect(github_user.send(attribute)).to eql(user.send(attribute))
+        expect(WebMock).to have_requested(:get, github_url("/user/#{user.id}"))
+      end
     end
   end
 
@@ -33,22 +42,6 @@ describe GitHubUser do
 
       expect(WebMock).to have_requested(:get, github_url('/user/memberships/orgs?state=active'))
       expect(organization_memberships).to be_kind_of(Array)
-    end
-  end
-
-  describe '#user', :vcr do
-    it 'gets the client users info' do
-      id = @client.user.id
-
-      expect(github_user.user.id).to eql(id)
-      expect(WebMock).to have_requested(:get, github_url("/user/#{id}"))
-    end
-
-    it 'gets another users info' do
-      id = @client.user(other_user.uid).id
-
-      expect(other_github_user.user.id).to eql(id)
-      expect(WebMock).to have_requested(:get, github_url("/user/#{id}")).twice
     end
   end
 end

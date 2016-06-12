@@ -44,12 +44,6 @@ describe GitHubOrganization do
     end
   end
 
-  describe '#login', :vcr do
-    it 'gets the login for the GitHub Organization' do
-      expect(@github_organization.login).to eql(organization.title)
-    end
-  end
-
   describe '#plan', :vcr do
     it 'gets the plan for an organization' do
       expect(@github_organization.plan[:owned_private_repos]).not_to be_nil
@@ -59,6 +53,17 @@ describe GitHubOrganization do
     it 'fails for an org that the token is not authenticated for' do
       unauthorized_github_organization = GitHubOrganization.new(@client, 9919)
       expect { unauthorized_github_organization.plan }.to raise_error(GitHub::Error)
+    end
+  end
+
+  GitHubOrganization.new(@client, 123).send(:attributes).each do |attribute|
+    describe "##{attribute}", :vcr do
+      it "gets the #{attribute} of the organization" do
+        gh_organization = @client.organization(organization.github_id)
+
+        expect(@github_organization.send(attribute)).to eql(gh_organization.send(attribute))
+        expect(WebMock).to have_requested(:get, github_url("/organizations/#{organization.github_id}")).twice
+      end
     end
   end
 end

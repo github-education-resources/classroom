@@ -15,8 +15,8 @@
     <h3>Assignment repository information</h3>
 
     <div class="boxed-group-inner">
-      <% creator      = assignment_repo.creator.decorate %>
-      <% organization = assignment_repo.organization.decorate %>
+      <% creator      = assignment_repo.creator %>
+      <% organization = assignment_repo.organization %>
 
       <table>
         <tr>
@@ -29,7 +29,7 @@
         </tr>
         <tr>
           <td class="text-emphasized">Created by</td>
-          <td><%= link_to creator.login, stafftools_user_path(creator) %></td>
+          <td><%= link_to creator.github_user.login, stafftools_user_path(creator) %></td>
         </tr>
         <tr>
           <td class="text-emphasized">Assignment</td>
@@ -37,7 +37,7 @@
         </tr>
         <tr>
           <td class="text-emphasized">User</td>
-          <td><%= link_to assignment_repo.user.decorate.login, stafftools_user_path(assignment_repo.user) %></td>
+          <td><%= link_to assignment_repo.user.github_user.login, stafftools_user_path(assignment_repo.user) %></td>
 
         </tr>
         <tr>

@@ -1,11 +1,11 @@
 <div class="site-content">
   <div class="stafftools-page-header clearfix">
     <span class="assignment-icon assignment-icon-individual left">
-      <%= image_tag organization.avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{organization.login}" %>
+      <%= image_tag @organization.github_organization.github_avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{@organization.github_organization.login}" %>
     </span>
 
     <h2 class="stafftools-heading">
-      <%= organization.title %>
+      <%= @organization.title %>
     </h2>
 
     <p class="assignment-type text-muted">Classroom</p>
@@ -18,27 +18,27 @@
       <table>
         <tr>
           <td class="text-emphasized">ID</td>
-          <td><%= organization.id %></td>
+          <td><%= @organization.id %></td>
         </tr>
         <tr>
           <td class="text-emphasized">GitHub ID</td>
-          <td><%= organization.github_id %></td>
+          <td><%= @organization.github_id %></td>
         </tr>
         <tr>
           <td class="text-emphasized">Classroom</td>
-          <td><%= link_to organization_url(organization), organization_url(organization) %></td>
+          <td><%= link_to organization_url(@organization), organization_url(@organization) %></td>
         </tr>
         <tr>
           <td class="text-emphasized">GitHub</td>
-          <td><%= link_to organization.github_url, organization.github_url %></td>
+          <td><%= link_to @organization.github_organization.html_url, @organization.github_organization.html_url %></td>
         </tr>
         <tr>
           <td class="text-emphasized">Joined on</td>
-          <td><%= local_time(organization.created_at) %></td>
+          <td><%= local_time(@organization.created_at) %></td>
         </tr>
         <tr>
           <td class="text-emphasized">Last updated</td>
-          <td><%= local_time(organization.updated_at) %></td>
+          <td><%= local_time(@organization.updated_at) %></td>
         </tr>
       </table>
     </div>
@@ -49,18 +49,18 @@
 
     <div class="boxed-group-inner">
       <ul class="boxed-group-list standalone">
-        <%= render partial: 'stafftools/organizations/user', collection: organization.users.decorate %>
+        <%= render partial: 'stafftools/organizations/user', collection: @organization.users %>
       </ul>
     </div>
   </div>
 
-  <% if organization.all_assignments.present? %>
+  <% if @organization.all_assignments.present? %>
     <div class="boxed-group">
       <h3>Assignments</h3>
 
       <div class="boxed-group-inner">
         <ul class="boxed-group-list standalone">
-          <% organization.all_assignments.each do |assignment| %>
+          <% @organization.all_assignments.each do |assignment| %>
             <% type = assignment.class.to_s.underscore %>
             <%= render partial: "stafftools/organizations/#{type}", locals: { :"#{type}" => assignment } %>
           <% end %>
@@ -69,13 +69,13 @@
     </div>
   <% end %>
 
-  <% if organization.groupings.present? %>
+  <% if @organization.groupings.present? %>
     <div class="boxed-group">
       <h3>Groupings</h3>
 
       <div class="boxed-group-inner">
         <ul class="boxed-group-list standalone">
-          <%= render partial: "stafftools/organizations/grouping", collection: organization.groupings %>
+          <%= render partial: "stafftools/organizations/grouping", collection: @organization.groupings %>
         </ul>
       </div>
     </div>

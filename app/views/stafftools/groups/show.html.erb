@@ -16,7 +16,7 @@
       <h3>Info</h3>
 
       <div class="boxed-group-inner">
-        <% organization = group.organization.decorate %>
+        <% organization = group.organization %>
 
         <p>
           <h4>ID <%= group.id %></h4>
@@ -35,7 +35,7 @@
         <div class="boxed-group-inner">
           <ul class="boxed-group-list standalone">
             <% group.repo_accesses.each do |repo_access| %>
-              <%= render partial: 'stafftools/organizations/user', locals: { user: repo_access.user.decorate } %>
+              <%= render partial: 'stafftools/organizations/user', locals: { user: repo_access.user } %>
             <% end %>
           </ul>
         </div>
