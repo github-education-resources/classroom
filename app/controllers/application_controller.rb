@@ -36,13 +36,18 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_user!
-    auth_redirect unless logged_in? && adequate_scopes?
+    return become_active if logged_in? && adequate_scopes?
+    auth_redirect
   end
 
   def auth_redirect
     session[:pre_login_destination] = "#{request.base_url}#{request.path}"
     session[:required_scopes] = required_scopes.join(',')
     redirect_to login_path
+  end
+
+  def become_active
+    current_user.become_active
   end
 
   def current_user
