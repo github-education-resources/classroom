@@ -1,11 +1,28 @@
 # frozen_string_literal: true
-class GitHubRepository < GitHubResource
+class GitHubRepository
+  attr_reader :id
+
+  def initialize(client, id)
+    @client = client
+    @id     = id
+  end
+
+  # Public
+  #
   def add_collaborator(collaborator, options = {})
     GitHub::Errors.with_error_handling do
       @client.add_collaborator(@id, collaborator, options)
     end
   end
 
+  # Public
+  #
+  def full_name
+    GitHub::Errors.with_error_handling { @client.repository(@id).full_name }
+  end
+
+  # Public
+  #
   def get_starter_code_from(source)
     GitHub::Errors.with_error_handling do
       credentials = { vcs_username: @client.login, vcs_password: @client.access_token }
@@ -13,20 +30,17 @@ class GitHubRepository < GitHubResource
     end
   end
 
+  # Public
+  #
   def self.present?(client, full_name)
     client.repository?(full_name)
   end
 
-  def self.find_by_name_with_owner!(client, full_name)
+  # Public
+  #
+  def repository(full_repo_name = nil)
     GitHub::Errors.with_error_handling do
-      repository = client.repository(full_name)
-      GitHubRepository.new(client, repository.id)
+      @client.repository(full_repo_name || @id)
     end
-  end
-
-  private
-
-  def attributes
-    %w(name full_name html_url)
   end
 end
