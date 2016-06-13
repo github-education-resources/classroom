@@ -3,8 +3,6 @@ module Stafftools
   class AssignmentReposController < StafftoolsController
     before_action :set_assignment_repo
 
-    decorates_assigned :assignment_repo
-
     def show
     end
 

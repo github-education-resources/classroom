@@ -53,11 +53,6 @@ class AssignmentInvitationsController < ApplicationController
   end
   helper_method :assignment_repo
 
-  def decorated_assignment_repo
-    @decorated_assignment_repo ||= assignment_repo.decorate
-  end
-  helper_method :decorated_assignment_repo
-
   def invitation
     @invitation ||= AssignmentInvitation.find_by!(key: params[:id])
   end

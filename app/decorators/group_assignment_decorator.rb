@@ -15,8 +15,6 @@ class GroupAssignmentDecorator < Draper::Decorator
   private
 
   def github_repository
-    @github_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id).repository
-  rescue GitHub::NotFound
-    NullGitHubRepository.new
+    @github_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id)
   end
 end
