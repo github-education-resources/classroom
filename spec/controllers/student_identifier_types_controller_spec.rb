@@ -7,7 +7,12 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
   let(:organization)  { GitHubFactory.create_owner_classroom_org }
   let(:user)          { organization.users.first                 }
   let(:student)       { GitHubFactory.create_classroom_student   }
-  let(:student_identifier_type) { StudentIdentifierType.create!(organization: organization, name: 'Test', description: 'Test', content_type: 'text') }
+  let(:student_identifier_type) do
+    StudentIdentifierType.create!(organization: organization,
+                                  name: 'Test',
+                                  description: 'Test',
+                                  content_type: 'text')
+  end
 
   before do
     sign_in(user)
@@ -32,10 +37,11 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
   end
 
   describe 'DELETE #destroy', :vcr do
-
     it 'sets the `deleted_at` column' do
       student_identifier_type
-      expect { delete :destroy, id: student_identifier_type.id, organization_id: organization }.to change { StudentIdentifierType.all.count }
+      expect do
+        delete :destroy, id: student_identifier_type.id, organization_id: organization
+      end.to change { StudentIdentifierType.all.count }
       expect(StudentIdentifierType.unscoped.find(student_identifier_type.id).deleted_at).not_to be_nil
     end
 
