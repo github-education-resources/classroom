@@ -10,7 +10,7 @@
       <% end %>
     <% end %>
 
-    <span class="team-name" itemprop="name"><%= group_assignment_repo.team_name %></span>
+    <span class="team-name" itemprop="name"><%= group_assignment_repo.github_team.name %></span>
     <p class="team-description" itemprop="description"><%= pluralize(group_member_count, 'member') %></p>
     <div class="team-members">
       <% group_assignment_repo.group.repo_accesses.limit(7).each do |repo_access| %>
