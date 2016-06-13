@@ -1,23 +1,21 @@
-<% assignment_repo = assignment_repo.decorate %>
-
 <div class="flex-table assignment-repo-list-item<%= ' disabled' if assignment_repo.disabled? %>">
   <div class="flex-table-item">
-    <%= image_tag assignment_repo.avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{assignment_repo.student_login}" %>
+    <%= image_tag assignment_repo.github_user.github_avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{assignment_repo.github_user.login}" %>
 
     <div class="student-information">
       <% css_class  = 'css-truncate css-truncate-target student-login' %>
       <% css_class += ' disabled' if assignment_repo.disabled? %>
-      <%= link_to "https://github.com/#{assignment_repo.student_login}", class: css_class do %>
-        <strong class="css-truncate-target"><%= assignment_repo.student_login %></strong>
+      <%= link_to "https://github.com/#{assignment_repo.github_user.login}", class: css_class do %>
+        <strong class="css-truncate-target"><%= assignment_repo.github_user.login %></strong>
       <% end %>
 
-      <span class="text-muted css-truncate css-truncate-target"><%= assignment_repo.student_name %></span>
+      <span class="text-muted css-truncate css-truncate-target"><%= assignment_repo.github_user.name %></span>
     </div>
   </div>
 
   <div class="flex-table-item text-right">
     <strong class="css-truncate css-truncate-target">
-      <%= link_to assignment_repo.full_name, assignment_repo.github_url, class: "#{'disabled' if assignment_repo.disabled?}" %>
+      <%= link_to assignment_repo.github_repository.full_name, assignment_repo.github_repository.html_url, class: "#{'disabled' if assignment_repo.disabled?}" %>
     </strong>
   </div>
 </div>
