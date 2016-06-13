@@ -3,7 +3,7 @@ class GroupAssignmentRepoDecorator < Draper::Decorator
   delegate_all
 
   def disabled?
-    github_repository.null? || !github_team.on_github?
+    !github_repository.on_github? || !github_team.on_github?
   end
 
   def full_name
@@ -25,9 +25,7 @@ class GroupAssignmentRepoDecorator < Draper::Decorator
   private
 
   def github_repository
-    @github_repository ||= GitHubRepository.new(creator.github_client, github_repo_id).repository
-  rescue GitHub::NotFound
-    NullGitHubRepository.new
+    @github_repository ||= GitHubRepository.new(creator.github_client, github_repo_id)
   end
 
   def github_team
