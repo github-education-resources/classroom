@@ -71,11 +71,6 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
   helper_method :decorated_group_assignment_repo
 
-  def decorated_group
-    @decorated_group ||= group.decorate
-  end
-  helper_method :decorated_group
-
   def group
     repo_access = current_user.repo_accesses.find_by(organization: organization)
     return unless repo_access.present? && repo_access.groups.present?

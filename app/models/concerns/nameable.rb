@@ -31,8 +31,8 @@ module Nameable
   end
 
   def organization_login
-    return @organization_login if defined?(@organization_login)
-    @organization_login = \
-      organization.github_organization.login(headers: GitHub::APIHeaders.no_cache_no_store)
+    @organization_login ||= organization.github_organization.login(
+      headers: GitHub::APIHeaders.no_cache_no_store
+    )
   end
 end

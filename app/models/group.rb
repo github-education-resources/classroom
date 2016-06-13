@@ -25,27 +25,17 @@ class Group < ActiveRecord::Base
 
   before_destroy :silently_destroy_github_team
 
-  private
-
-  # Internal
-  #
-  def add_member_to_github_team(repo_access)
-    user = repo_access.user
-
-    github_team = GitHubTeam.new(organization.github_client, github_team_id)
-    github_user = GitHubUser.new(user.github_client, user.uid)
-
-    github_team.add_team_membership(github_user.login)
+  def github_team
+    @github_team ||= GitHubTeam.new(organization.github_client, github_team_id)
   end
 
-  # Internal
-  #
+  private
+
+  def add_member_to_github_team(repo_access)
+    github_team.add_team_membership(repo_access.user.github_user.login)
+  end
+
   def remove_from_github_team(repo_access)
-    user = repo_access.user
-
-    github_team = GitHubTeam.new(organization.github_client, github_team_id)
-    github_user = GitHubUser.new(user.github_client, user.uid)
-
-    github_team.remove_team_membership(github_user.login)
+    github_team.remove_team_membership(repo_access.user.github_user.login)
   end
 end

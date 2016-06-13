@@ -3,7 +3,7 @@ class GroupAssignmentRepoDecorator < Draper::Decorator
   delegate_all
 
   def disabled?
-    github_repository.null? || github_team.null?
+    github_repository.null? || !github_team.on_github?
   end
 
   def full_name
@@ -11,7 +11,7 @@ class GroupAssignmentRepoDecorator < Draper::Decorator
   end
 
   def github_team_url
-    "https://github.com/orgs/#{github_team.organization.login}/teams/#{github_team.slug}"
+    github_team.html_url
   end
 
   def github_repo_url
@@ -31,8 +31,6 @@ class GroupAssignmentRepoDecorator < Draper::Decorator
   end
 
   def github_team
-    @github_team ||= GitHubTeam.new(creator.github_client, github_team_id).team
-  rescue GitHub::NotFound
-    NullGitHubTeam.new
+    @github_team ||= group.github_team
   end
 end
