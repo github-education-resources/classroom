@@ -5,8 +5,6 @@ class AssignmentsController < ApplicationController
 
   before_action :set_assignment, except: [:new, :create]
 
-  decorates_assigned :assignment
-
   def new
     @assignment = Assignment.new
   end

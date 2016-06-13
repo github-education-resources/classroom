@@ -41,6 +41,11 @@ class Assignment < ActiveRecord::Base
     starter_code_repo_id.present?
   end
 
+  def starter_code_repository
+    return unless starter_code?
+    @starter_code_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id)
+  end
+
   private
 
   def uniqueness_of_slug_across_organization
