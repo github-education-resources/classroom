@@ -5,7 +5,7 @@
     </span>
 
     <h2 class="stafftools-heading">
-      <%= assignment.title %>
+      <%= @assignment.title %>
     </h2>
 
     <p class="assignment-type text-muted">Individual assigment</p>
@@ -15,51 +15,48 @@
     <h3>Assignment information</h3>
 
     <div class="boxed-group-inner">
-      <% creator      = assignment.creator %>
-      <% organization = assignment.organization %>
-
       <table>
         <tr>
           <td class="text-emphasized">ID</td>
-          <td><%= assignment.id %></td>
+          <td><%= @assignment.id %></td>
         </tr>
         <tr>
           <td class="text-emphasized">Owned by</td>
-          <td><%= link_to organization.title, stafftools_organization_path(organization.id) %></td>
+          <td><%= link_to @assignment.organization.title, stafftools_organization_path(@assignment.organization.id) %></td>
         </tr>
         <tr>
           <td class="text-emphasized">Created by</td>
-          <td><%= link_to creator.github_user.login, stafftools_user_path(creator) %></td>
+          <td><%= link_to @assignment.creator.github_user.login, stafftools_user_path(@assignment.creator) %></td>
         </tr>
-        <% if assignment.starter_code? %>
+        <% if @assignment.starter_code? %>
         <tr>
           <td class="text-emphasized">Starter code</td>
-          <td><%= link_to assignment.starter_code_github_url, assignment.starter_code_github_url %></td>
+          <td><%= link_to @assignment.starter_code_repository.html_url, @assignment.starter_code_repository.html_url %></td>
         </tr>
         <% end %>
         <tr>
           <td class="text-emphasized">Invitation</td>
-          <td><%= link_to assignment.assignment_invitation.key, stafftools_assignment_invitation_path(assignment.assignment_invitation.id) %></td>
+          <td><%= link_to @assignment.assignment_invitation.key, stafftools_assignment_invitation_path(@assignment.assignment_invitation.id) %></td>
         </tr>
         <tr>
           <td class="text-emphasized">Created on</td>
-          <td><%= local_time(assignment.created_at) %></td>
+          <td><%= local_time(@assignment.created_at) %></td>
         </tr>
         <tr>
           <td class="text-emphasized">Last updated</td>
-          <td><%= local_time(assignment.created_at) %></td>
+          <td><%= local_time(@assignment.created_at) %></td>
         </tr>
       </table>
     </div>
   </div>
 
-  <% if assignment.assignment_repos.present? %>
+  <% if @assignment.assignment_repos.present? %>
     <div class="boxed-group">
       <h3>Assignment repositories</h3>
 
       <div class="boxed-group-inner">
         <ul class="boxed-group-list standalone">
-          <%= render partial: 'stafftools/assignments/assignment_repo', collection: assignment.assignment_repos.decorate %>
+          <%= render partial: 'stafftools/assignments/assignment_repo', collection: @assignment.assignment_repos.decorate %>
         </ul>
       </div>
     </div>

@@ -18,24 +18,32 @@ describe GitHubRepository do
     @client.delete_repository(@github_repository.id)
   end
 
-  describe '#full_name', :vcr do
-    it 'gets the full_name (owner/repo_name) of the repository' do
-      expect(@github_repository.full_name).to eql("#{organization.title}/test-repository")
-      expect(WebMock).to have_requested(:get, github_url("/repositories/#{@github_repository.id}"))
+  describe '#present?', :vcr do
+    it 'returns true if the repo is present' do
+      expect(GitHubRepository.present?(@client, 'rails/rails')).to be_truthy
+    end
+
+    it 'returns false if the repo is not present' do
+      expect(GitHubRepository.present?(@client, 'foobar/jim')).to be_falsey
     end
   end
 
-  describe '#push_to', :vcr do
-    it 'mirrors the repository to the destination' do
+  describe '#find_by_name_with_owner!', :vcr do
+    it 'raises a GitHubError if it cannot find the repo' do
+      expect do
+        GitHubRepository.find_by_name_with_owner!(@client, 'foobar/jim')
+      end.to raise_error(GitHub::Error)
     end
   end
 
-  describe '#repository', :vcr do
-    it 'returns a new GitRepository object' do
-      github_repository      = GitHubRepository.new(@client, nil)
-      test_github_repository = github_repository.repository("#{organization.title}/test-repository")
+  GitHubRepository.new(@client, 123).send(:attributes).each do |attribute|
+    describe "##{attribute}", :vcr do
+      it "gets the #{attribute} of the repository " do
+        repository = @client.repository(@github_repository.id)
 
-      expect(test_github_repository.id).to eql(@github_repository.id)
+        expect(@github_repository.send(attribute)).to eql(repository.send(attribute))
+        expect(WebMock).to have_requested(:get, github_url("/repositories/#{repository.id}")).twice
+      end
     end
   end
 end

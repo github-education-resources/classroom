@@ -64,7 +64,7 @@ RSpec.describe AssignmentsController, type: :controller do
       end
 
       it 'provides a friendly error message' do
-        expect(flash[:error]).to eql('Invalid repository name, use the format owner/name')
+        expect(flash[:error]).to eql('Invalid repository name, use the format owner/name.')
       end
     end
 
@@ -104,7 +104,7 @@ RSpec.describe AssignmentsController, type: :controller do
       end
 
       it 'provides a friendly error message' do
-        expect(flash[:error]).to eql('Invalid repository name, please check it again')
+        expect(flash[:error]).to eql('Invalid repository selection, please check it again.')
       end
     end
   end
