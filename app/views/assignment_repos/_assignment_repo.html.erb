@@ -11,7 +11,9 @@
       <%= link_to "https://github.com/#{assignment_repo.student_login}", class: css_class do %>
         <%= assignment_repo.student_login %>
       <% end %>
-        <span class="label"><%= assignment_repo.student_identifier %></span>
+        <% if assignment_repo.student_identifier.present? %>
+          <span class="label"><%= assignment_repo.student_identifier.value %></span>
+        <% end %>
       </span>
 
       <p class="student-description"><%= assignment_repo.student_name %></p>
