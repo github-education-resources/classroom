@@ -5,7 +5,7 @@
     </span>
 
     <h2 class="site-content-heading">
-      <%= group.title %>
+      <%= @group.title %>
     </h2>
 
     <p class="assignment-type text-muted">Group</p>
@@ -16,25 +16,23 @@
       <h3>Info</h3>
 
       <div class="boxed-group-inner">
-        <% organization = group.organization %>
-
         <p>
-          <h4>ID <%= group.id %></h4>
-          <h4>Owned by <%= link_to organization.title, stafftools_organization_path(organization.id) %></h4>
-          <h4>Grouping <%= link_to group.grouping.title, stafftools_grouping_path(group.grouping) %></h4>
-          <h4>GitHub URL <%= link_to group.github_team_url, group.github_team_url %></h4>
-          <h4>Created on <span class="lead"><%= local_time(group.created_at) %></span></h4>
+          <h4>ID <span class="lead"><%= @group.id %></span></h4>
+          <h4>Owned by <%= link_to @group.organization.title, stafftools_organization_path(@group.organization.id) %></h4>
+          <h4>Grouping <%= link_to @group.grouping.title, stafftools_grouping_path(@group.grouping) %></h4>
+          <h4>GitHub URL <%= link_to @group.github_team.html_url, @group.github_team.html_url %></h4>
+          <h4>Created on <span class="lead"><%= local_time(@group.created_at) %></span></h4>
         </p>
       </div>
     </div>
 
-    <% if group.repo_accesses.present? %>
+    <% if @group.repo_accesses.present? %>
       <div class="boxed-group">
         <h3>Team Members</h3>
 
         <div class="boxed-group-inner">
           <ul class="boxed-group-list standalone">
-            <% group.repo_accesses.each do |repo_access| %>
+            <% @group.repo_accesses.each do |repo_access| %>
               <%= render partial: 'stafftools/organizations/user', locals: { user: repo_access.user } %>
             <% end %>
           </ul>
