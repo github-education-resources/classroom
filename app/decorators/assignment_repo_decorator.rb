@@ -27,8 +27,7 @@ class AssignmentRepoDecorator < Draper::Decorator
   end
 
   def student_identifier
-    student_identifier = assignment_repo.user.identifier(assignment_repo.assignment.student_identifier_type)
-    return student_identifier
+    assignment_repo.user.identifier(assignment_repo.assignment.student_identifier_type)
   end
 
   private
