@@ -31,34 +31,15 @@ class GroupAssignmentRepo < ActiveRecord::Base
 
   before_destroy :silently_destroy_github_repository
 
-  # Public
-  #
-  def creator
-    group_assignment.creator
-  end
+  delegate :creator, :starter_code_repo_id, to: :group_assignment
+  delegate :github_team_id,                 to: :group
 
-  # Public
-  #
   def private?
     !group_assignment.public_repo?
   end
 
-  # Public
-  #
-  def github_team_id
-    group.github_team_id
-  end
-
-  # Public
-  #
   def repo_name
     @repo_name ||= generate_github_repo_name
-  end
-
-  # Public
-  #
-  def starter_code_repo_id
-    group_assignment.starter_code_repo_id
   end
 
   private
@@ -66,10 +47,6 @@ class GroupAssignmentRepo < ActiveRecord::Base
   delegate :slug, to: :group_assignment
 
   def name
-    return @name if defined?(@name)
-
-    headers     = { headers: GitHub::APIHeaders.no_cache_no_store }
-    github_team = GitHubTeam.new(creator.github_client, github_team_id).team(headers)
-    @name = github_team.slug
+    @name ||= group.github_team.slug(headers: GitHub::APIHeaders.no_cache_no_store)
   end
 end
