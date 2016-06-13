@@ -26,6 +26,14 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
     end
   end
 
+  describe 'GET #new', :vcr do
+    it 'returns success status' do
+      get :new, organization_id: organization.slug
+
+      expect(response).to have_http_status(:success)
+    end
+  end
+
   describe 'POST #create', :vcr do
     it 'creates a new StudentIdentifierType' do
       expect do
