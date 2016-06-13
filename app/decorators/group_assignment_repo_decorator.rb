@@ -3,7 +3,7 @@ class GroupAssignmentRepoDecorator < Draper::Decorator
   delegate_all
 
   def disabled?
-    github_repository.null? || !github_team.on_github?
+    !github_repository.on_github? || !github_team.on_github?
   end
 
   def full_name
