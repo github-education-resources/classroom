@@ -66,11 +66,6 @@ class GroupAssignmentInvitationsController < ApplicationController
     raise NotAuthorized, "This team has reached its maximum member limit of #{group_assignment.max_members}."
   end
 
-  def decorated_group_assignment_repo
-    @decorated_group_assignment_repo ||= group_assignment_repo.decorate
-  end
-  helper_method :decorated_group_assignment_repo
-
   def group
     repo_access = current_user.repo_accesses.find_by(organization: organization)
     return unless repo_access.present? && repo_access.groups.present?
