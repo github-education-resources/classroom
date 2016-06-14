@@ -21,8 +21,8 @@
     <hr>
     <p><label>Join an existing team</label></p>
     <div class="team-select-grid">
-      <% @group_assignment.group_assignment_repos.each do |repo| %>
-          <%= render partial: 'group_assignment_team', locals: {repo: repo} %>
+      <% @group_assignment.group_assignment_repos.each do |group_assignment_repo| %>
+        <%= render partial: 'group_assignment_team', locals: { group_assignment_repo: group_assignment_repo} %>
       <% end %>
       <div style="clear:both"></div>
     </div>

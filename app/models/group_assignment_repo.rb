@@ -34,6 +34,19 @@ class GroupAssignmentRepo < ActiveRecord::Base
   delegate :creator, :starter_code_repo_id, to: :group_assignment
   delegate :github_team_id,                 to: :group
 
+  # TODO: Move to a view model
+  def disabled?
+    !github_repository.on_github? || !github_team.on_github?
+  end
+
+  def github_repository
+    @github_repository ||= GitHubRepository.new(organization.github_client, github_repo_id)
+  end
+
+  def github_team
+    @github_team ||= group.github_team
+  end
+
   def private?
     !group_assignment.public_repo?
   end
