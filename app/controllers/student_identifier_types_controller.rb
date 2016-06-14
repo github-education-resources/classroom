@@ -2,8 +2,6 @@
 class StudentIdentifierTypesController < ApplicationController
   include OrganizationAuthorization
 
-  decorates_assigned :organization
-
   def index
     @student_identifier_types = @organization.student_identifier_types
   end
