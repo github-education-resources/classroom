@@ -60,6 +60,30 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
   end
 
+  describe 'PATCH #submit_identifier', :vcr do
+    let(:invitation) { create(:assignment_invitation) }
+
+    before(:each) do
+      invitation.assignment.student_identifier_type = student_identifier_type
+      invitation.assignment.save
+      sign_in(user)
+    end
+
+    after(:each) do
+      StudentIdentifier.destroy_all
+    end
+
+    it 'creates the students identifier' do
+      patch :submit_identifier, id: invitation.key, student_identifier: 'test value'
+      expect(StudentIdentifier.count).to eql(1)
+    end
+
+    it 'has correct identifier value' do
+      patch :submit_identifier, id: invitation.key, student_identifier: 'test value'
+      expect(StudentIdentifier.first.value).to eql('test value')
+    end
+  end
+
   describe 'PATCH #accept_invitation', :vcr do
     let(:organization) { GitHubFactory.create_owner_classroom_org }
     let(:user)         { GitHubFactory.create_classroom_student   }
