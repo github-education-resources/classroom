@@ -72,7 +72,6 @@ RSpec.describe GroupAssignmentsController, type: :controller do
         expect(GroupAssignment.first.student_identifier_type.id).to eql(student_identifier_type.id)
       end
     end
-
   end
 
   describe 'GET #show', :vcr do
