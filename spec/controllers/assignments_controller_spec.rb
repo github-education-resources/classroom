@@ -8,6 +8,12 @@ RSpec.describe AssignmentsController, type: :controller do
   let(:user)         { organization.users.first                 }
 
   let(:assignment) { Assignment.create(title: 'Assignment', creator: user, organization: organization) }
+  let(:student_identifier_type) do
+    StudentIdentifierType.create!(organization: organization,
+                                  name: 'Test',
+                                  description: 'Test',
+                                  content_type: 'text')
+  end
 
   before do
     sign_in(user)
@@ -65,6 +71,24 @@ RSpec.describe AssignmentsController, type: :controller do
 
       it 'provides a friendly error message' do
         expect(flash[:error]).to eql('Invalid repository name, use the format owner/name.')
+      end
+    end
+
+    context 'has student identifier type' do
+      before do
+        post :create,
+             organization_id:         organization.slug,
+             assignment:              attributes_for(:assignment),
+             repo_name:               'rails/rails',
+             student_identifier_type: { id: student_identifier_type.id }
+      end
+
+      it 'creates a new Assignment' do
+        expect(Assignment.count).to eql(1)
+      end
+
+      it 'sets correct student identifier type for the new Assignment' do
+        expect(Assignment.first.student_identifier_type.id).to eql(student_identifier_type.id)
       end
     end
 

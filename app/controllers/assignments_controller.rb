@@ -11,6 +11,7 @@ class AssignmentsController < ApplicationController
 
   def create
     @assignment = Assignment.new(new_assignment_params)
+    @assignment.student_identifier_type = student_identifier_type_param
     @assignment.build_assignment_invitation
 
     if @assignment.save
