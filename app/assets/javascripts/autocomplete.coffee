@@ -131,7 +131,6 @@ ready = ->
 
 $(document).ready(ready)
 $(document).on('mousedown', (event) ->
-  console.log('mouse down')
   return if (
     event.button == 2 ||
     $(event.target).hasClass('js-autocomplete-suggestion-item') ||
