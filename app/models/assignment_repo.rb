@@ -52,6 +52,11 @@ class AssignmentRepo < ActiveRecord::Base
     @repo_name ||= generate_github_repo_name
   end
 
+  # TODO: Review this further
+  def student_identifier
+    user.identifier(assignment.student_identifier_type)
+  end
+
   # Public: This method is used for legacy purposes
   # until we can get the transition finally completed
   #
