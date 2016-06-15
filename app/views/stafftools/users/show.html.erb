@@ -8,7 +8,9 @@
       <%= @user.github_user.login %>
     </h2>
 
-    <p class="assignment-type text-muted"><%= @user.staff? ? 'Staff ' : '' %> User</p>
+    <p class="assignment-type text-muted">
+      <%= content_tag(:span, 'Staff', class: 'staff-badge') if @user.staff? %> User
+    </p>
   </div>
 
   <div class="boxed-group">
