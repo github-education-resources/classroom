@@ -82,6 +82,11 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       patch :submit_identifier, id: invitation.key, student_identifier: 'test value'
       expect(StudentIdentifier.first.value).to eql('test value')
     end
+
+    it 'redirects to the accepting page' do
+      patch :submit_identifier, id: invitation.key, student_identifier: 'test value'
+      expect(response).to redirect_to(assignment_invitation_path)
+    end
   end
 
   describe 'PATCH #accept_invitation', :vcr do
