@@ -1,22 +1,5 @@
-$('.assignment_invitations.identifier, .group_assignment_invitations.identifier').ready ->
-  $form = $('form')
-
+('.assignment_invitations.identifier, .group_assignment_invitations.identifier').ready ->
   $('form').on('change keyup', ->
-    $submitButton = $('.js-form-submit')
-
-    if $form_values_present()
-      $submitButton.prop('disabled', false)
-    else
-      $submitButton.prop('disabled', true)
+    console.log($('student_identifier').length)
+    $('.js-form-submit').prop('disabled', $('#student_identifier').val().length == 0)
   )
-
-$form_values_present = () ->
-  $present('student_identifier')
-
-$present = (id) ->
-  $el = $("##{id}")
-
-  if $el.length != 0
-    return $el.val().length != 0
-
-  false
