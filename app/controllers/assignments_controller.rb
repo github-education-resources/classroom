@@ -73,9 +73,7 @@ class AssignmentsController < ApplicationController
   end
 
   def student_identifier_type_param
-    unless params.key?(:student_identifier_type) && params.key?(:student_identifier_type)
-      return nil
-    end
+    return unless params.key?(:student_identifier_type) && params.key?(:student_identifier_type)
     StudentIdentifierType.find_by(id: student_identifier_params[:id], organization: @organization)
   end
 
