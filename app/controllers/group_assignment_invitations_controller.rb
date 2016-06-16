@@ -40,8 +40,8 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
 
   def accept_invitation
+    selected_group       = Group.find_by(id: group_params[:id])
     selected_group_title = group_params[:title]
-    selected_group = Group.find_by(id: group_params[:id])
 
     users_group_assignment_repo = invitation.redeem_for(current_user, selected_group, selected_group_title)
 
