@@ -54,8 +54,8 @@ class User < ActiveRecord::Base
     site_admin
   end
 
-  def identifier(identifier_type)
-    StudentIdentifier.find_by(user: self, student_identifier_type: identifier_type)
+  def identifier(type)
+    StudentIdentifier.find_by(user: self, student_identifier_type: type)
   end
 
   # This updates the `last_active_at` column without
