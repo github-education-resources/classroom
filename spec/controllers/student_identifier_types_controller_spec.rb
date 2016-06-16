@@ -7,12 +7,8 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
   let(:organization)  { GitHubFactory.create_owner_classroom_org }
   let(:user)          { organization.users.first                 }
   let(:student)       { GitHubFactory.create_classroom_student   }
-  let(:student_identifier_type) do
-    StudentIdentifierType.create!(organization: organization,
-                                  name: 'Test',
-                                  description: 'Test',
-                                  content_type: 'text')
-  end
+
+  let(:student_identifier_type) { GitHubFactory.create_student_identifier(organization) }
 
   before do
     sign_in(user)

@@ -8,12 +8,8 @@ RSpec.describe AssignmentsController, type: :controller do
   let(:user)         { organization.users.first                 }
 
   let(:assignment) { Assignment.create(title: 'Assignment', creator: user, organization: organization) }
-  let(:student_identifier_type) do
-    StudentIdentifierType.create!(organization: organization,
-                                  name: 'Test',
-                                  description: 'Test',
-                                  content_type: 'text')
-  end
+
+  let(:student_identifier_type) { GitHubFactory.create_student_identifier(organization) }
 
   before do
     sign_in(user)

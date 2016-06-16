@@ -5,12 +5,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
   let(:organization) { GitHubFactory.create_owner_classroom_org }
   let(:user)         { GitHubFactory.create_classroom_student   }
 
-  let(:student_identifier_type) do
-    StudentIdentifierType.create!(organization: organization,
-                                  name: 'Test',
-                                  description: 'Test',
-                                  content_type: 'text')
-  end
+  let(:student_identifier_type) { GitHubFactory.create_student_identifier(organization) }
 
   describe 'GET #show', :vcr do
     let(:invitation) { create(:assignment_invitation) }

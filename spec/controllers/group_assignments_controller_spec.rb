@@ -11,12 +11,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
     GroupAssignment.create(attributes_for(:group_assignment).merge(organization: organization, creator: user))
   end
 
-  let(:student_identifier_type) do
-    StudentIdentifierType.create!(organization: organization,
-                                  name: 'Test',
-                                  description: 'Test',
-                                  content_type: 'text')
-  end
+  let(:student_identifier_type) { GitHubFactory.create_student_identifier(organization) }
 
   before do
     sign_in(user)
