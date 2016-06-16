@@ -37,6 +37,9 @@ class OrganizationsController < ApplicationController
   def edit
   end
 
+  def invitation
+  end
+
   def update
     if @organization.update_attributes(update_organization_params)
       flash[:success] = "Organization \"#{@organization.title}\" updated"
