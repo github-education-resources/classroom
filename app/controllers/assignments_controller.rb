@@ -53,7 +53,7 @@ class AssignmentsController < ApplicationController
   private
 
   def student_identifier_types
-    @student_identifier_types ||= @organization.student_identifier_types.map do |student_identifier|
+    @student_identifier_types ||= @organization.student_identifier_types.select(:name, :id).map do |student_identifier|
       [student_identifier.name, student_identifier.id]
     end
   end
