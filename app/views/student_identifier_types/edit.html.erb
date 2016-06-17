@@ -2,9 +2,7 @@
 
 <div class="site-content">
   <div class="site-content-cap">
-    <h2 class="site-content-heading">
-      New identifier type
-    </h2>
+    <h2 class="site-content-heading">Edit identifier type</h2>
   </div>
 </div>
 
@@ -16,7 +14,7 @@
   <%= form_for [@organization, @student_identifier_type] do |f| %>
     <%= render partial: 'student_identifier_types/form_options', locals: { f: f } %>
     <div class="form-actions">
-      <%= f.submit 'Create Identifier', class: 'btn btn-green js-navigation' %>
+      <%= f.submit 'Save changes', class: 'btn btn-green js-navigation' %>
       <%= link_to 'Cancel', organization_student_identifier_types_path(@organization), class: 'btn', role: 'button'%>
     </div>
   <% end %>

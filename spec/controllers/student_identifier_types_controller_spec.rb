@@ -40,6 +40,33 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
     end
   end
 
+  describe 'GET #edit', :vcr do
+    it 'returns success status' do
+      student_identifier_type
+      get :edit, organization_id: organization.slug, id: student_identifier_type.id
+
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe 'PATCH #update', :vcr do
+    before(:each) do
+      options = { name: 'Test2', description: 'Test2', content_type: 'email' }
+      patch :update,
+            organization_id: organization.slug,
+            id: student_identifier_type.id,
+            student_identifier_type: options
+    end
+
+    it 'correctly updates the student identifier type' do
+      expect(StudentIdentifierType.find(student_identifier_type.id).name).to eql('Test2')
+    end
+
+    it 'redirects to the identifier index page on success' do
+      expect(response).to redirect_to(organization_student_identifier_types_path(organization))
+    end
+  end
+
   describe 'DELETE #destroy', :vcr do
     it 'sets the `deleted_at` column' do
       student_identifier_type
