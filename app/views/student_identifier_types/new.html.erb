@@ -17,7 +17,7 @@
     <%= render partial: 'student_identifier_types/form_options', locals: { f: f } %>
     <div class="form-actions">
       <%= f.submit 'Create Identifier', class: 'btn btn-green js-navigation' %>
-      <%= link_to 'Cancel', organization_student_identifier_types_path(@organization), class: 'btn', role: 'button'%>
+      <%= link_to 'Cancel', session[:return_to], class: 'btn', role: 'button'%>
     </div>
   <% end %>
 </div>

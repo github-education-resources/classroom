@@ -3,6 +3,7 @@ class StudentIdentifierTypesController < ApplicationController
   include OrganizationAuthorization
 
   before_action :set_student_identifier_type, only: [:edit, :update]
+  before_action :save_referer, only: [:new]
 
   def index
     @student_identifier_types = @organization.student_identifier_types
@@ -19,7 +20,7 @@ class StudentIdentifierTypesController < ApplicationController
     @student_identifier_type = StudentIdentifierType.new(student_identifier_type_params)
     if @student_identifier_type.save
       flash[:success] = "\"#{student_identifier_type.name}\" has been created!"
-      redirect_to action: 'index'
+      redirect_to session.delete(:return_to) || { action: 'index' }
     else
       render :new
     end
@@ -55,6 +56,10 @@ class StudentIdentifierTypesController < ApplicationController
 
   def set_student_identifier_type
     @student_identifier_type = StudentIdentifierType.find_by(id: params[:id])
+  end
+
+  def save_referer
+    session[:return_to] = request.referer
   end
 
   def student_identifier_type

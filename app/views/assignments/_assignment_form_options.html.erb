@@ -37,7 +37,7 @@
         <%= select(:student_identifier_type, :id, options_for_select(student_identifier_types, selected = @assignment.student_identifier_type.present? ? @assignment.student_identifier_type.id : nil), include_blank: true ) %>
       </dl>
     <% else %>
-      <%= link_to new_organization_student_identifier_type_path(@organization), class: 'btn btn-primary js-navigation' do %>
+      <%= link_to new_organization_student_identifier_type_path(@organization), class: 'btn btn-green js-navigation' do %>
         <%= octicon('plus') %>
           Create your first student identifier
       <% end %>
