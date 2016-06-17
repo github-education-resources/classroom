@@ -9,8 +9,6 @@ class OrganizationsController < ApplicationController
 
   skip_before_action :set_organization, :authorize_organization_access, only: [:index, :new, :create]
 
-  decorates_assigned :organization
-
   def index
     @organizations = current_user.organizations.includes(:users).page(params[:page])
   end
@@ -42,6 +40,9 @@ class OrganizationsController < ApplicationController
   def edit
   end
 
+  def invitation
+  end
+
   def update
     if @organization.update_attributes(update_organization_params)
       flash[:success] = "Organization \"#{@organization.title}\" updated"
@@ -55,7 +56,7 @@ class OrganizationsController < ApplicationController
     if @organization.update_attributes(deleted_at: Time.zone.now)
       DestroyResourceJob.perform_later(@organization)
 
-      flash[:success] = "Your organization, @#{organization.login} is being reset"
+      flash[:success] = "Your organization, @#{@organization.github_organization.login} is being reset"
       redirect_to organizations_path
     else
       render :edit
@@ -84,7 +85,7 @@ class OrganizationsController < ApplicationController
   def authorize_organization_addition
     new_github_organization = github_organization_from_params
 
-    return if new_github_organization.admin?(decorated_current_user.login)
+    return if new_github_organization.admin?(current_user.github_user.login)
     raise NotAuthorized, 'You are not permitted to add this organization as a classroom'
   end
 
@@ -94,7 +95,7 @@ class OrganizationsController < ApplicationController
   end
 
   def new_organization_params
-    github_org = github_organization_from_params.organization
+    github_org = github_organization_from_params
     title      = github_org.name.present? ? github_org.name : github_org.login
 
     params
@@ -108,11 +109,8 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find_by!(slug: params[:id])
   end
 
-  # rubocop:disable AbcSize
   def set_users_github_organizations
-    github_user = GitHubUser.new(current_user.github_client, current_user.uid)
-
-    @users_github_organizations = github_user.organization_memberships.map do |membership|
+    @users_github_organizations = current_user.github_user.organization_memberships.map do |membership|
       {
         classroom: Organization.unscoped.includes(:users).find_by(github_id: membership.organization.id),
         github_id: membership.organization.id,
@@ -121,10 +119,9 @@ class OrganizationsController < ApplicationController
       }
     end
   end
-  # rubocop:enable AbcSize
 
-  # Check if the current user has any organizations with admin privilege, if so add the user to the corresponding
-  # classroom automatically.
+  # Check if the current user has any organizations with admin privilege,
+  # if so add the user to the corresponding classroom automatically.
   def add_current_user_to_organizations
     @users_github_organizations.each do |organization|
       classroom = organization[:classroom]
@@ -136,7 +133,7 @@ class OrganizationsController < ApplicationController
 
   def create_user_organization_access(organization)
     github_org = GitHubOrganization.new(current_user.github_client, organization.github_id)
-    return unless github_org.admin?(decorated_current_user.login)
+    return unless github_org.admin?(current_user.github_user.login)
     organization.users << current_user
   end
 

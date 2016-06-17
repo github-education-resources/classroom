@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
 
   has_and_belongs_to_many :organizations
 
+  validates :last_active_at, presence: true
+
   validates :token, presence: true, uniqueness: true
 
   validates :uid, presence: true
@@ -16,13 +18,15 @@ class User < ActiveRecord::Base
 
   before_save :ensure_no_token_scope_loss
 
+  before_validation(on: :create) { ensure_last_active_at_presence }
+
   def assign_from_auth_hash(hash)
     user_attributes = AuthHash.new(hash).user_info
     update_attributes(user_attributes)
   end
 
   def authorized_access_token?
-    GitHubUser.new(github_client, uid).authorized_access_token?
+    github_user.authorized_access_token?
   end
 
   def self.create_from_auth_hash(hash)
@@ -38,12 +42,23 @@ class User < ActiveRecord::Base
     @github_client ||= Octokit::Client.new(access_token: token, auto_paginate: true)
   end
 
+  def github_user
+    @github_user ||= GitHubUser.new(github_client, uid)
+  end
+
   def github_client_scopes
     GitHub::Token.scopes(token, github_client)
   end
 
   def staff?
     site_admin
+  end
+
+  # This updates the `last_active_at` column without
+  # updating the model, but keeps the index updated.
+  def become_active
+    update_columns(last_active_at: Time.zone.now)
+    self.class.update_index('stafftools#user') { self }
   end
 
   private
@@ -72,5 +87,9 @@ class User < ActiveRecord::Base
     return true if old_scopes.size < new_scopes.size
 
     self.token = token_was
+  end
+
+  def ensure_last_active_at_presence
+    self.last_active_at ||= Time.zone.now
   end
 end

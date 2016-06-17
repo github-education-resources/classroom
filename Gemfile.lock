@@ -97,11 +97,6 @@ GEM
     dotenv-rails (2.1.1)
       dotenv (= 2.1.1)
       railties (>= 4.0, < 5.1)
-    draper (2.1.0)
-      actionpack (>= 3.0)
-      activemodel (>= 3.0)
-      activesupport (>= 3.0)
-      request_store (~> 1.0)
     elasticsearch (1.0.17)
       elasticsearch-api (= 1.0.17)
       elasticsearch-transport (= 1.0.17)
@@ -304,7 +299,6 @@ GEM
     redis (3.3.0)
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
-    request_store (1.3.1)
     rspec (3.4.0)
       rspec-core (~> 3.4.0)
       rspec-expectations (~> 3.4.0)
@@ -405,7 +399,6 @@ DEPENDENCIES
   dalli
   database_cleaner
   dotenv-rails
-  draper
   factory_girl_rails
   faker
   faraday-http-cache

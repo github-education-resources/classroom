@@ -1,10 +1,5 @@
 # frozen_string_literal: true
-class GitHubUser
-  def initialize(client, id)
-    @client = client
-    @id     = id
-  end
-
+class GitHubUser < GitHubResource
   def authorized_access_token?
     GitHub::Errors.with_error_handling do
       Classroom.github_client.check_application_authorization(
@@ -16,8 +11,8 @@ class GitHubUser
     false
   end
 
-  def login(options = {})
-    GitHub::Errors.with_error_handling { @client.user(@id, options).login }
+  def github_avatar_url(size = 40)
+    "#{avatar_url}&size=#{size}"
   end
 
   def organization_memberships
@@ -26,7 +21,9 @@ class GitHubUser
     end
   end
 
-  def user
-    GitHub::Errors.with_error_handling { @client.user(@id) }
+  private
+
+  def attributes
+    %w(login avatar_url html_url name)
   end
 end

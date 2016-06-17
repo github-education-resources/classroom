@@ -1,17 +1,8 @@
 # frozen_string_literal: true
-class GitHubRepository
-  attr_reader :id
-
-  def initialize(client, id)
-    @client = client
-    @id     = id
-  end
-
-  # Public
-  #
-  def add_collaborator(collaborator)
+class GitHubRepository < GitHubResource
+  def add_collaborator(collaborator, options = {})
     GitHub::Errors.with_error_handling do
-      @client.add_collaborator(@id, collaborator)
+      @client.add_collaborator(@id, collaborator, options)
     end
   end
 
@@ -38,17 +29,20 @@ class GitHubRepository
     end
   end
 
-  # Public
-  #
   def self.present?(client, full_name)
     client.repository?(full_name)
   end
 
-  # Public
-  #
-  def repository(full_repo_name = nil)
+  def self.find_by_name_with_owner!(client, full_name)
     GitHub::Errors.with_error_handling do
-      @client.repository(full_repo_name || @id)
+      repository = client.repository(full_name)
+      GitHubRepository.new(client, repository.id)
     end
+  end
+
+  private
+
+  def attributes
+    %w(name full_name html_url)
   end
 end

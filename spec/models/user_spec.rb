@@ -12,6 +12,16 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '#become_active' do
+    it 'updates the last_active_at attribute' do
+      expect { user.become_active }.to change { user.last_active_at }
+    end
+
+    it 'does not change the updated_at column' do
+      expect { user.become_active }.to_not change { user.updated_at }
+    end
+  end
+
   describe '#create_from_auth_hash' do
     it 'creates a valid user' do
       expect { User.create_from_auth_hash(github_omniauth_hash) }.to change { User.count }
@@ -36,6 +46,13 @@ RSpec.describe User, type: :model do
   describe '#github_client' do
     it 'sets or creates a new GitHubClient with the users token' do
       expect(user.github_client.class).to eql(Octokit::Client)
+    end
+  end
+
+  describe '#github_user' do
+    it 'sets or creates a new GitHubUser with the users uid' do
+      expect(user.github_user.class).to eql(GitHubUser)
+      expect(user.github_user.id).to eql(user.uid)
     end
   end
 

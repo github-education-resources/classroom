@@ -21,17 +21,33 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
         user.update_attributes(site_admin: true)
       end
 
-      before(:each) do
-        get :index
+      context 'without URL parameters' do
+        before(:each) do
+          get :index
+        end
+
+        it 'returns a success status' do
+          expect(response).to have_http_status(:success)
+        end
+
+        it 'does not have any resources' do
+          expect(assigns(:resources)).to be_nil
+        end
       end
 
-      it 'returns a success status' do
-        expect(response).to have_http_status(:success)
-      end
+      context 'with URL parameters' do
+        before(:each) do
+          get :index, query: '1'
+        end
 
-      it 'has a StafftoolsIndex::Query of resources' do
-        expect(assigns(:resources)).to_not be_nil
-        expect(assigns(:resources)).to be_kind_of(StafftoolsIndex::Query)
+        it 'returns a success status' do
+          expect(response).to have_http_status(:success)
+        end
+
+        it 'has a StafftoolsIndex::Query of resources' do
+          expect(assigns(:resources)).to_not be_nil
+          expect(assigns(:resources)).to be_kind_of(StafftoolsIndex::Query)
+        end
       end
     end
   end
@@ -48,17 +64,33 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
         user.update_attributes(site_admin: true)
       end
 
-      before(:each) do
-        get :search
+      context 'without URL parameters' do
+        before(:each) do
+          get :search
+        end
+
+        it 'returns a succcess status' do
+          expect(response).to have_http_status(:success)
+        end
+
+        it 'does not have any resources' do
+          expect(assigns(:resources)).to be_nil
+        end
       end
 
-      it 'returns a succcess status' do
-        expect(response).to have_http_status(:success)
-      end
+      context 'with URL parameters' do
+        before(:each) do
+          get :search, query: '1'
+        end
 
-      it 'has a StafftoolsIndex::Query of resources' do
-        expect(assigns(:resources)).to_not be_nil
-        expect(assigns(:resources)).to be_kind_of(StafftoolsIndex::Query)
+        it 'returns a succcess status' do
+          expect(response).to have_http_status(:success)
+        end
+
+        it 'has a StafftoolsIndex::Query of resources' do
+          expect(assigns(:resources)).to_not be_nil
+          expect(assigns(:resources)).to be_kind_of(StafftoolsIndex::Query)
+        end
       end
     end
   end

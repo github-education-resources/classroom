@@ -13,7 +13,7 @@
 
 <div class="site-content-body">
   <div class="markdown-body">
-    <p>Accepting this assignment will give your team access to the assignment repository in the <%= link_to "@#{decorated_organization.login}", decorated_organization.github_url %> organization on GitHub.</p>
+    <p>Accepting this assignment will give your team access to the assignment repository in the <%= link_to "@#{organization.github_organization.login}", organization.github_organization.html_url %> organization on GitHub.</p>
     <p>Please be certain that the team you are selecting is the correct team as you cannot change this later</p>
   </div>
 
@@ -21,8 +21,8 @@
     <hr>
     <p><label>Join an existing team</label></p>
     <div class="team-select-grid">
-      <% @group_assignment.group_assignment_repos.each do |repo| %>
-          <%= render partial: 'group_assignment_team', locals: {repo: repo} %>
+      <% @group_assignment.group_assignment_repos.each do |group_assignment_repo| %>
+        <%= render partial: 'group_assignment_team', locals: { group_assignment_repo: group_assignment_repo} %>
       <% end %>
       <div style="clear:both"></div>
     </div>

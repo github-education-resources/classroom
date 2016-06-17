@@ -8,9 +8,6 @@ class GroupAssignmentsController < ApplicationController
 
   before_action :authorize_grouping_access, only: [:create, :update]
 
-  decorates_assigned :organization
-  decorates_assigned :group_assignment
-
   def new
     @group_assignment = GroupAssignment.new
   end
@@ -61,7 +58,7 @@ class GroupAssignmentsController < ApplicationController
     return unless grouping_id.present?
     return if @organization.groupings.find_by(id: grouping_id)
 
-    raise NotAuthorized, 'You are not permitted to select this group of teams'
+    raise NotAuthorized, 'You are not permitted to select this set of teams'
   end
 
   def build_group_assignment
@@ -71,7 +68,7 @@ class GroupAssignmentsController < ApplicationController
   def new_group_assignment_params
     params
       .require(:group_assignment)
-      .permit(:title, :public_repo, :grouping_id, :max_members)
+      .permit(:title, :public_repo, :grouping_id, :max_members, :students_are_repo_admins)
       .merge(creator: current_user,
              organization: @organization,
              starter_code_repo_id: starter_code_repo_id_param)
