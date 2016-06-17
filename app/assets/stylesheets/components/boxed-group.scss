@@ -1,10 +1,7 @@
 .boxed-group {
   position: relative;
+  margin-top: 1rem;
   border-radius: 3px;
-
-  &:not(:last-child) {
-    margin-bottom: 30px;
-  }
 
   h3 {
     display: block;
@@ -49,6 +46,10 @@
     .lead {
       font-size: inherit;
     }
+  }
+
+  > form {
+    padding: 10px 0;
   }
 }
 

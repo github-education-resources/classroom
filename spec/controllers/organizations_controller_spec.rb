@@ -147,6 +147,15 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
+  describe 'GET #invitation', :vcr do
+    it 'returns success and sets the organization' do
+      get :invitation, id: organization.slug
+
+      expect(response).to have_http_status(:success)
+      expect(assigns(:organization)).to_not be_nil
+    end
+  end
+
   describe 'PATCH #update', :vcr do
     it 'correctly updates the organization' do
       options = { title: 'New Title' }
