@@ -11,6 +11,7 @@ class AssignmentsController < ApplicationController
 
   def create
     @assignment = Assignment.new(new_assignment_params)
+    @assignment.student_identifier_type = student_identifier_type_param
     @assignment.build_assignment_invitation
 
     if @assignment.save
@@ -29,6 +30,8 @@ class AssignmentsController < ApplicationController
   end
 
   def update
+    @assignment.student_identifier_type = student_identifier_type_param
+
     if @assignment.update_attributes(update_assignment_params)
       flash[:success] = "Assignment \"#{@assignment.title}\" updated"
       redirect_to organization_assignment_path(@organization, @assignment)
@@ -49,6 +52,13 @@ class AssignmentsController < ApplicationController
 
   private
 
+  def student_identifier_types
+    @student_identifier_types ||= @organization.student_identifier_types.select(:name, :id).map do |student_identifier|
+      [student_identifier.name, student_identifier.id]
+    end
+  end
+  helper_method :student_identifier_types
+
   def new_assignment_params
     params
       .require(:assignment)
@@ -60,6 +70,11 @@ class AssignmentsController < ApplicationController
 
   def set_assignment
     @assignment = @organization.assignments.includes(:assignment_invitation).find_by!(slug: params[:id])
+  end
+
+  def student_identifier_type_param
+    return unless params.key?(:student_identifier_type) && params.key?(:student_identifier_type)
+    StudentIdentifierType.find_by(id: student_identifier_params[:id], organization: @organization)
   end
 
   def starter_code_repo_id_param
@@ -75,5 +90,11 @@ class AssignmentsController < ApplicationController
       .require(:assignment)
       .permit(:title, :public_repo)
       .merge(starter_code_repo_id: starter_code_repo_id_param)
+  end
+
+  def student_identifier_params
+    params
+      .require(:student_identifier_type)
+      .permit(:id, :name, :description)
   end
 end

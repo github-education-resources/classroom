@@ -24,6 +24,14 @@ class AssignmentInvitation < ActiveRecord::Base
     AssignmentRepo.find_or_create_by!(assignment: assignment, user: invitee)
   end
 
+  def create_student_identifier(invitee, identifier_value)
+    return unless assignment.student_identifier_type.present? && identifier_value.present?
+    StudentIdentifier.find_or_create_by(organization: organization,
+                                        user: invitee,
+                                        student_identifier_type: assignment.student_identifier_type,
+                                        value: identifier_value)
+  end
+
   def title
     assignment.title
   end

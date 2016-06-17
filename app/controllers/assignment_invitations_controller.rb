@@ -2,6 +2,7 @@
 class AssignmentInvitationsController < ApplicationController
   layout 'layouts/invitations'
 
+  before_action :check_user_has_identifier, only: [:show]
   before_action :check_user_not_previous_acceptee, only: [:show]
 
   def accept_invitation
@@ -16,6 +17,20 @@ class AssignmentInvitationsController < ApplicationController
   end
 
   def show
+  end
+
+  def identifier
+    not_found if student_identifier || assignment.student_identifier_type.nil?
+  end
+
+  def submit_identifier
+    student_identifier = invitation.create_student_identifier(current_user, params[:student_identifier])
+    if student_identifier.present?
+      redirect_to assignment_invitation_path
+    else
+      flash[:error] = 'An error has occured, please refresh the page and try again.'
+      redirect_to identifier_assignment_invitation_path
+    end
   end
 
   def successful_invitation
@@ -47,6 +62,18 @@ class AssignmentInvitationsController < ApplicationController
     @organization ||= assignment.organization
   end
   helper_method :organization
+
+  def student_identifier
+    @student_identifier ||= StudentIdentifier.find_by(user: current_user,
+                                                      student_identifier_type: assignment.student_identifier_type)
+  end
+  helper_method :student_identifier
+
+  def check_user_has_identifier
+    return unless assignment.student_identifier_type.present?
+    return if student_identifier.present?
+    redirect_to identifier_assignment_invitation_path
+  end
 
   def check_user_not_previous_acceptee
     return unless assignment.users.include?(current_user)

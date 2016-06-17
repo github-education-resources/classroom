@@ -16,6 +16,8 @@ Rails.application.routes.draw do
 
   resources :assignment_invitations, path: 'assignment-invitations', only: [:show] do
     member do
+      get   :identifier
+      patch :submit_identifier
       patch :accept_invitation
       get   :successful_invitation, path: :success
     end
@@ -23,6 +25,8 @@ Rails.application.routes.draw do
 
   resources :group_assignment_invitations, path: 'group-assignment-invitations', only: [:show] do
     member do
+      get   :identifier
+      patch :submit_identifier
       get   :accept
       patch :accept_assignment
       patch :accept_invitation
@@ -41,6 +45,7 @@ Rails.application.routes.draw do
 
       resources :assignments
       resources :group_assignments, path: 'group-assignments'
+      resources :student_identifier_types, path: 'identifiers', except: [:show]
     end
   end
 

@@ -52,3 +52,21 @@
     <dd><input class="textfield" type="text" value="<%= suggested_name unless groupings_present %>" placeholder="<%= suggested_name if groupings_present %>" name="grouping[title]" id="grouping_title"></dd>
   </dl>
 <% end %>
+
+<dl class="form">
+  <% if @group_assignment.present? %>
+    <dt><label>Use a student identifier type</label></dt>
+
+    <% if student_identifier_types.present? %>
+      <dl class="form">
+        <%= select(:student_identifier_type, :id, options_for_select(student_identifier_types, selected = @group_assignment.student_identifier_type.present? ? @group_assignment.student_identifier_type.id : nil), include_blank: true ) %>
+      </dl>
+    <% else %>
+      <%= link_to new_organization_student_identifier_type_path(@organization), class: 'btn btn-green js-navigation' do %>
+        <%= octicon('plus') %>
+        Create your first student identifier
+      <% end %>
+    <% end %>
+
+  <% end %>
+</dl>

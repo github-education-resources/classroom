@@ -1,0 +1,30 @@
+<%= render 'organizations/organization_banner' %>
+
+<div class="site-content">
+  <div class="site-content-cap">
+    <div class="flex-table">
+      <div class="flex-table-item">
+        <h2 class="site-content-heading">Student identifiers</h2>
+      </div>
+
+      <div class="flex-table-item settings">
+        <% if @student_identifier_types.present? %>
+            <%= link_to 'New identifier type', new_organization_student_identifier_type_path(@organization), class: 'btn btn-green js-navigation right', role: 'button'%>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="site-content-body identifier-type-list-items">
+    <% if @student_identifier_types.present? %>
+      <%= render @student_identifier_types %>
+    <% else %>
+      <div class="blankslate large-format spacious clean-background">
+        <h3>This organization doesn't have any student identifier types yet.</h3>
+        <%= link_to new_organization_student_identifier_type_path(@organization), class: 'btn btn-green btn-big', role: 'button' do %>
+            Create your first student identifier type
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

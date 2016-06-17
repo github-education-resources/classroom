@@ -11,6 +11,8 @@ RSpec.describe GroupAssignmentsController, type: :controller do
     GroupAssignment.create(attributes_for(:group_assignment).merge(organization: organization, creator: user))
   end
 
+  let(:student_identifier_type) { GitHubFactory.create_student_identifier(organization) }
+
   before do
     sign_in(user)
   end
@@ -47,6 +49,23 @@ RSpec.describe GroupAssignmentsController, type: :controller do
         post :create, organization_id: organization.slug,
                       group_assignment: { title: 'Learn Ruby', grouping_id: other_group_assignment.grouping_id }
       end.not_to change { GroupAssignment.count }
+    end
+
+    context 'has student identifier type' do
+      before do
+        post :create, organization_id: organization.slug,
+                      group_assignment: { title: 'Learn JavaScript' },
+                      grouping:         { title: 'Grouping 1'       },
+                      student_identifier_type: { id: student_identifier_type.id }
+      end
+
+      it 'creates a new Assignment' do
+        expect(GroupAssignment.count).to eql(1)
+      end
+
+      it 'sets correct student identifier type for the new Assignment' do
+        expect(GroupAssignment.first.student_identifier_type.id).to eql(student_identifier_type.id)
+      end
     end
   end
 
