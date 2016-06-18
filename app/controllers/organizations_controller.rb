@@ -40,6 +40,10 @@ class OrganizationsController < ApplicationController
   def invitation
   end
 
+  def show_groupings
+    @groupings = @organization.groupings
+  end
+
   def update
     if @organization.update_attributes(update_organization_params)
       flash[:success] = "Organization \"#{@organization.title}\" updated"
