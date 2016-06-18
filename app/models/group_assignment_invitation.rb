@@ -27,14 +27,6 @@ class GroupAssignmentInvitation < ActiveRecord::Base
     group_assignment_repo(invitees_group)
   end
 
-  def create_student_identifier(invitee, identifier_value)
-    return unless group_assignment.student_identifier_type.present? && identifier_value.present?
-    StudentIdentifier.find_or_create_by(organization: organization,
-                                        user: invitee,
-                                        student_identifier_type: group_assignment.student_identifier_type,
-                                        value: identifier_value)
-  end
-
   def title
     group_assignment.title
   end
