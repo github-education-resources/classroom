@@ -1,4 +1,5 @@
 <li class="clearfix">
-  <%= octicon('organization') %>
-  <strong><%= link_to grouping.title, organization_grouping_path(@organization, grouping.id) %></strong>
+  <a class="btn btn-sm right" href="#">Edit</a>
+  <span class="octicon octicon-organization"></span>
+  <strong><%= link_to grouping.title, stafftools_grouping_path(grouping.id) %></strong>
 </li>
