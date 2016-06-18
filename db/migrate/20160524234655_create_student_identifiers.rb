@@ -13,6 +13,7 @@ class CreateStudentIdentifiers < ActiveRecord::Migration
       t.belongs_to :user,         index: true
       t.belongs_to :student_identifier_type
       t.string :value, null: false
+      t.datetime :deleted_at
     end
 
     add_column :assignments, :student_identifier_type_id, :integer
