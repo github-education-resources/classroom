@@ -5,6 +5,7 @@ class GroupingsController < ApplicationController
   before_action :set_grouping
 
   def show
+    not_found unless Classroom.flipper[:team_management].enabled? current_user
   end
 
   private

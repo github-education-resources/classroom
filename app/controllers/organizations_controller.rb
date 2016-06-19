@@ -41,6 +41,7 @@ class OrganizationsController < ApplicationController
   end
 
   def show_groupings
+    not_found unless Classroom.flipper[:team_management].enabled? current_user
     @groupings = @organization.groupings
   end
 
