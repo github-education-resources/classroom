@@ -1,9 +1,8 @@
 <div class="one-half left team">
   <div class="team-panel">
-    <form accept-charset="UTF-8" action="/orgs/gsoc2016/teams/kiss/members?member=dinever" class="team-actions-form" data-form-nonce="47e2c5ac173e8f301bc683a6aa3d96d3b33e5222" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="✓"><input name="authenticity_token" type="hidden" value="cg0TcGnkvg3EciDDgc7lEPYtO48dX5UhJMo6sqTS0fuKcqZvjZFsdz3y0TtGKrxqItKe/uVAupIC7BoIccaczg=="></div>
-      <button class="right btn btn-sm" data-ga-click="Orgs, join team, location:team listings; text:Join">
-        Manage
-      </button>
+    <a class="right btn btn-sm" href="#">
+      Manage
+    </a>
     </form>
     <span class="team-name" itemprop="name"><%= group.title %></span>
     <p class="team-description" itemprop="description"><%= pluralize(group.repo_accesses.count, 'student') %></p>
