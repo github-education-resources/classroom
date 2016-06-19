@@ -20,7 +20,7 @@
   <% if @groups.present? %>
     <hr>
     <p><label>Join an existing team</label></p>
-    <div class="team-select-grid">
+    <div class="team-grid">
       <% @group_assignment.group_assignment_repos.each do |group_assignment_repo| %>
         <%= render partial: 'group_assignment_team', locals: { group_assignment_repo: group_assignment_repo} %>
       <% end %>

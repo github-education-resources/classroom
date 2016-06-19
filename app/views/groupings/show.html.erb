@@ -7,11 +7,11 @@
     </div>
     <div class="three-fourths column">
 
-      <div class="boxed-group">
-        <h3>Teams</h3>
-        <div class="boxed-group-inner clearfix">
+      <div class="team-grid">
 
-        </div>
+        <%= render partial: "group", collection: @grouping.groups %>
+
+        <div style="clear:both"></div>
       </div>
 
     </div>
