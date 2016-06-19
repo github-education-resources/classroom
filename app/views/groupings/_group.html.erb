@@ -8,15 +8,17 @@
     <span class="team-name" itemprop="name"><%= group.title %></span>
     <p class="team-description" itemprop="description"><%= pluralize(group.repo_accesses.count, 'student') %></p>
     <div class="team-members">
-      <a class="tooltipped tooltipped-s " aria-label="homersimpson2016" href="https://github.com/homersimpson2016">
-        <img class="avatar avatar-small " height="30" width="30" alt="@homersimpson2016" src="https://avatars.githubusercontent.com/u/16110057?v=3&amp;size=30">
-      </a>
-      <a class="tooltipped tooltipped-s " aria-label="dinever" href="https://github.com/dinever">
-        <img class="avatar avatar-small " height="30" width="30" alt="@dinever" src="https://avatars.githubusercontent.com/u/1311594?v=3&amp;size=30">
-      </a>
-      <a class="tooltipped tooltipped-s " aria-label="flouberry2" href="https://github.com/flouberry2">
-        <img class="avatar avatar-small " height="30" width="30" alt="@flouberry2" src="https://avatars.githubusercontent.com/u/16110027?v=3&amp;size=30">
-      </a>
+      <% group.repo_accesses.each do |repo_access| %>
+        <% student = repo_access.user %>
+        <%= link_to student.github_user.html_url, class: 'tooltipped tooltipped-s', 'aria-label' => student.github_user.login do %>
+            <%= image_tag student.github_user.github_avatar_url(30), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.github_user.login}" %>
+        <% end %>
+      <% end %>
+      <% if group.repo_accesses.count > 7 %>
+        <%= link_to '#' do %>
+          <%= image_tag 'student-ellipse@2x.png', class: 'avatar avatar-small', height: 30, width: 30, alt: 'student ellipse' %>
+        <% end %>
+      <% end %>
     </div>
   </div>
 </div>
