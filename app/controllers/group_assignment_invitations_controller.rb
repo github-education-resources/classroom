@@ -72,6 +72,7 @@ class GroupAssignmentInvitationsController < ApplicationController
 
     @group ||= repo_access.groups.find_by(grouping: group_assignment.grouping)
   end
+  helper_method :group
 
   def group_assignment
     @group_assignment ||= invitation.group_assignment
