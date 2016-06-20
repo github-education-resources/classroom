@@ -22,6 +22,8 @@ class Organization < ActiveRecord::Base
 
   validates :slug, uniqueness: true
 
+  validates :webhook_id, uniqueness: true, allow_nil: true
+
   def all_assignments(with_invitations: false)
     return assignments + group_assignments unless with_invitations
 
