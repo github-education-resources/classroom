@@ -15,5 +15,4 @@ class Grouping < ActiveRecord::Base
   validates :title, uniqueness: { scope: :organization }
 
   validates :slug, uniqueness: { scope: :organization_id }
-
 end
