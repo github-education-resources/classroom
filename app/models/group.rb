@@ -20,7 +20,7 @@ class Group < ActiveRecord::Base
   validates :title, presence: true
   validates :title, length: { maximum: 39 }
 
-  validates :slug, uniqueness: { scope: :grouping_id }
+  validates :slug, uniqueness: { scope: :grouping }
 
   before_validation(on: :create) do
     create_github_team if organization
