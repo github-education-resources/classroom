@@ -43,16 +43,17 @@ ActiveRecord::Schema.define(version: 20160612130650) do
   add_index "assignment_repos", ["user_id"], name: "index_assignment_repos_on_user_id", using: :btree
 
   create_table "assignments", force: :cascade do |t|
-    t.boolean  "public_repo",              default: true
-    t.string   "title",                                    null: false
+    t.boolean  "public_repo",                default: true
+    t.string   "title",                                      null: false
     t.integer  "organization_id"
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
     t.integer  "starter_code_repo_id"
     t.integer  "creator_id"
     t.datetime "deleted_at"
-    t.string   "slug",                                     null: false
-    t.boolean  "students_are_repo_admins", default: false, null: false
+    t.string   "slug",                                       null: false
+    t.integer  "student_identifier_type_id"
+    t.boolean  "students_are_repo_admins",   default: false, null: false
   end
 
   add_index "assignments", ["deleted_at"], name: "index_assignments_on_deleted_at", using: :btree
@@ -83,18 +84,19 @@ ActiveRecord::Schema.define(version: 20160612130650) do
   add_index "group_assignment_repos", ["group_assignment_id"], name: "index_group_assignment_repos_on_group_assignment_id", using: :btree
 
   create_table "group_assignments", force: :cascade do |t|
-    t.boolean  "public_repo",              default: true
-    t.string   "title",                                    null: false
+    t.boolean  "public_repo",                default: true
+    t.string   "title",                                      null: false
     t.integer  "grouping_id"
     t.integer  "organization_id"
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
     t.integer  "starter_code_repo_id"
     t.integer  "creator_id"
     t.datetime "deleted_at"
-    t.string   "slug",                                     null: false
+    t.string   "slug",                                       null: false
     t.integer  "max_members"
-    t.boolean  "students_are_repo_admins", default: false, null: false
+    t.integer  "student_identifier_type_id"
+    t.boolean  "students_are_repo_admins",   default: false, null: false
   end
 
   add_index "group_assignments", ["deleted_at"], name: "index_group_assignments_on_deleted_at", using: :btree
@@ -161,6 +163,26 @@ ActiveRecord::Schema.define(version: 20160612130650) do
   add_index "repo_accesses", ["github_team_id"], name: "index_repo_accesses_on_github_team_id", unique: true, using: :btree
   add_index "repo_accesses", ["organization_id"], name: "index_repo_accesses_on_organization_id", using: :btree
   add_index "repo_accesses", ["user_id"], name: "index_repo_accesses_on_user_id", using: :btree
+
+  create_table "student_identifier_types", force: :cascade do |t|
+    t.integer  "organization_id"
+    t.string   "name",            null: false
+    t.string   "description",     null: false
+    t.integer  "content_type",    null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "student_identifier_types", ["organization_id"], name: "index_student_identifier_types_on_organization_id", using: :btree
+
+  create_table "student_identifiers", force: :cascade do |t|
+    t.integer "organization_id"
+    t.integer "user_id"
+    t.integer "student_identifier_type_id"
+    t.string  "value",                      null: false
+  end
+
+  add_index "student_identifiers", ["organization_id"], name: "index_student_identifiers_on_organization_id", using: :btree
+  add_index "student_identifiers", ["user_id"], name: "index_student_identifiers_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.integer  "uid",                            null: false

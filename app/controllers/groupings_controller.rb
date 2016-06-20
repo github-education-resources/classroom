@@ -8,9 +8,29 @@ class GroupingsController < ApplicationController
     not_found unless Classroom.flipper[:team_management].enabled? current_user
   end
 
+  def edit
+    not_found unless Classroom.flipper[:team_management].enabled? current_user
+  end
+
+  def update
+    not_found unless Classroom.flipper[:team_management].enabled? current_user
+    if @grouping.update_attributes(update_grouping_params)
+      flash[:success] = "Set of teams \"#{@grouping.title}\" updated"
+      redirect_to settings_teams_organization_path(@organization)
+    else
+      render :edit
+    end
+  end
+
   private
 
   def set_grouping
     @grouping = Grouping.find_by!(id: params[:id])
+  end
+
+  def update_grouping_params
+    params
+      .require(:grouping)
+      .permit(:title)
   end
 end

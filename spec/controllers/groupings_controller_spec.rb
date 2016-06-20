@@ -21,4 +21,22 @@ RSpec.describe GroupingsController, type: :controller do
       expect(assigns(:grouping)).to_not be_nil
     end
   end
+
+  describe 'GET #edit', :vcr do
+    it 'returns success status' do
+      get :edit, organization_id: organization.slug, id: grouping.id
+
+      expect(response.status).to eq(200)
+      expect(assigns(:grouping)).to_not be_nil
+    end
+  end
+
+  describe 'PATCH #update', :vcr do
+    it 'correctly updates the grouping' do
+      options = { title: 'Fall 2015' }
+      patch :update, organization_id: organization.slug, id: grouping.id, grouping: options
+
+      expect(response).to redirect_to(settings_teams_organization_path(organization))
+    end
+  end
 end
