@@ -13,6 +13,43 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     end
   end
 
+  describe 'GET #accept', :vcr do
+    let(:organization)  { GitHubFactory.create_owner_classroom_org                         }
+    let(:grouping)      { Grouping.create(title: 'Grouping 1', organization: organization) }
+    let(:group)         { Group.create(title: 'The Group', grouping: grouping)             }
+    let(:student)       { GitHubFactory.create_classroom_student                           }
+
+    let(:group_assignment) do
+      GroupAssignment.create(creator: organization.users.first,
+                             title: 'HTML5',
+                             grouping: grouping,
+                             organization: organization,
+                             public_repo: true)
+    end
+
+    let(:invitation) { GroupAssignmentInvitation.create(group_assignment: group_assignment) }
+
+    context 'user is already a member of a group in the grouping' do
+      render_views
+
+      before do
+        sign_in(student)
+        group.repo_accesses << RepoAccess.create(user: student, organization: organization)
+      end
+
+      it 'returns success status' do
+        get :accept, id: invitation.key
+        expect(response).to have_http_status(:success)
+      end
+
+      after(:each) do
+        RepoAccess.destroy_all
+        Group.destroy_all
+        GroupAssignmentRepo.destroy_all
+      end
+    end
+  end
+
   describe 'PATCH #accept_invitation', :vcr do
     let(:organization)  { GitHubFactory.create_owner_classroom_org }
     let(:user)          { GitHubFactory.create_classroom_student   }
