@@ -677,11 +677,15 @@ hr {
       border-top: 1px solid #eee;
       border-radius: 0 0 3px 3px;
 
-      a {
+      a.student-avatar {
         display: inline-block;
         width: 30px;
         height: 30px;
         vertical-align: top;
+      }
+
+      .member:not(:first-child) {
+        margin-top: 10px;
       }
     }
   }
@@ -690,4 +694,39 @@ hr {
 .no-scroll {
   height: 100%;
   overflow: hidden;
+}
+
+.student-avatar {
+  float: left;
+  margin-right: 10px;
+}
+
+.student-information {
+  margin-left: 50px;
+}
+
+.student-login {
+  margin: 0;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 20px;
+}
+
+.student-description {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: #767676;
+}
+
+.label {
+  display: inline-block;
+  padding: 3px 4px;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1;
+  color: #666;
+  background-color: #eee;
+  border-radius: 2px;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.12);
 }
