@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160620143002) do
+ActiveRecord::Schema.define(version: 20160621020153) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -112,7 +112,6 @@ ActiveRecord::Schema.define(version: 20160620143002) do
   end
 
   add_index "groupings", ["organization_id"], name: "index_groupings_on_organization_id", using: :btree
-  add_index "groupings", ["slug"], name: "index_groupings_on_slug", using: :btree
 
   create_table "groups", force: :cascade do |t|
     t.integer  "github_team_id", null: false
@@ -125,7 +124,6 @@ ActiveRecord::Schema.define(version: 20160620143002) do
 
   add_index "groups", ["github_team_id"], name: "index_groups_on_github_team_id", unique: true, using: :btree
   add_index "groups", ["grouping_id"], name: "index_groups_on_grouping_id", using: :btree
-  add_index "groups", ["slug"], name: "index_groups_on_slug", using: :btree
 
   create_table "groups_repo_accesses", id: false, force: :cascade do |t|
     t.integer "group_id"
