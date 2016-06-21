@@ -34,8 +34,9 @@ gem 'peek-git'
 gem 'peek-performance_bar'
 gem 'peek-pg'
 gem 'peek-sidekiq', github: 'Soliah/peek-sidekiq', ref: '261c857578ae6dc189506a35194785a4db51e54c'
-
 gem 'pg'
+gem 'pry-rails'
+gem 'pry-byebug'
 gem 'puma'
 
 gem 'rack-canonical-host'
@@ -63,8 +64,6 @@ group :development, :test do
   gem 'bullet'
   gem 'dotenv-rails'
   gem 'guard-rspec', require: false
-  gem 'pry-rails'
-  gem 'pry-byebug'
   gem 'rspec-rails'
   gem 'rubocop',   require: false
   gem 'scss_lint', require: false
