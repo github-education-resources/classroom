@@ -28,6 +28,11 @@ main {
   flex: 1;
 }
 
+svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .site-header {
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -212,19 +217,24 @@ main {
   border-radius: 50%;
 
   .octicon {
-    font-size: 22px;
-    line-height: 45px;
+    margin-top: 11px;
   }
 }
 
 .assignment-icon-individual {
-  color: #555;
   background-color: rgba(216, 216, 216, 0.3);
+
+  .octicon {
+    fill: #555;
+  }
 }
 
 .assignment-icon-group {
-  color: #f3f3f3;
   background-color: #555;
+
+  .octicon {
+    fill: #f3f3f3;
+  }
 }
 
 .assignment-list-items {
