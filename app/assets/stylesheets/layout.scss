@@ -28,9 +28,10 @@ main {
   flex: 1;
 }
 
-svg {
+.octicon {
   display: inline-block;
   vertical-align: middle;
+  fill: currentColor;
 }
 
 .site-header {
@@ -227,7 +228,7 @@ svg {
   background-color: rgba(216, 216, 216, 0.3);
 
   .octicon {
-    fill: #555;
+    color: #555;
   }
 }
 
@@ -235,7 +236,7 @@ svg {
   background-color: #555;
 
   .octicon {
-    fill: #f3f3f3;
+    color: #f3f3f3;
   }
 }
 
@@ -535,7 +536,7 @@ hr {
     font-weight: normal;
   }
 
-  .mega-octicon {
+  .octicon {
     font-size: 38px;
   }
 
@@ -565,7 +566,7 @@ hr {
     font-size: 16px;
   }
 
-  .mega-octicon {
+  .octicon {
     font-size: 21px;
   }
 }
@@ -640,7 +641,7 @@ hr {
     margin-right: 10px;
   }
 
-  .mega-octicon-search {
+  .octicon-search {
     opacity: 0.3;
   }
 
