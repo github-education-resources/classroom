@@ -47,6 +47,7 @@ gem 'sprockets'
 gem 'sass-rails', '~> 5.0'
 gem 'sidekiq', '~> 4.1.0'
 gem 'sinatra'
+gem 'octicons_helper', github: 'primer/octicons_helper'
 
 gem 'turbolinks'
 
