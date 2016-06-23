@@ -15,7 +15,7 @@
     <%= render partial: 'shared/pagination', locals: { collection: resources } %>
   <% else %>
     <div class="blankslate">
-      <%= mega_octicon('search') %>
+      <%= octicon 'search', height: 22 %>
       <h3>We couldn't find any matching resources</h3>
     </div>
   <% end %>
