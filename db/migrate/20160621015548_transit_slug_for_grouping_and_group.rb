@@ -1,20 +1,20 @@
 class TransitSlugForGroupingAndGroup < ActiveRecord::Migration
   def up
-    Grouping.all.each do |grouping|
-      slug = grouping.slugify
-      suffix_number = 0
-      loop do
-        break unless Grouping.where(slug: suffixed_slug(slug, suffix_number), organization: grouping.organization).present?
-        suffix_number += 1
+    %w(Grouping Group).each do |model|
+      klass = model.constantize
+
+      klass.includes(:organization).all.each do |g|
+        slug = g.slugify
+        suffix_number = 0
+
+        loop do
+          break unless klass.where(slug: suffixed_slug(slug, suffix_number), organization: g.organization).present?
+          suffix_number += 1
+        end
+
+        g.slug = suffixed_slug(slug, suffix_number)
+        g.save!(validate: false)
       end
-
-      grouping.slug = suffixed_slug(slug, suffix_number)
-      grouping.save!(validate: false)
-    end
-
-    Group.all.each do |group|
-      group.slugify
-      group.save!
     end
   end
 
