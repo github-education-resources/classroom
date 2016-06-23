@@ -6,13 +6,13 @@
 <dl class="form">
   <div class="form-checkbox">
     <label><%= f.radio_button :public_repo, true %> Public</label>
-    <%= mega_octicon('repo') %>
+    <%= octicon 'repo', height: 32 %>
     <span class="note">Submit assignments using public repositories. All submissions will be visible to the world.</span>
   </div>
 
   <div class="form-checkbox">
     <label><%= f.radio_button :public_repo, false %> Private</label>
-    <%= mega_octicon('lock') %>
+    <%= octicon 'lock', height: 32 %>
     <span class="note">Submit assignments using private repositories. Submissions will only be visible to the submitter and organization owners.</span>
   </div>
 

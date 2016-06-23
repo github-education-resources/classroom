@@ -1,7 +1,7 @@
 <%= content_tag :input, '', type: 'text', id: "#{type}-#{key}", value: url, readonly: 'readonly' %>
 <span class="input-group-button">
   <button aria-label="Copy to clipboard" data-clipboard-target=<%= "##{type}-#{key}" %> class="js-clipboard btn tooltipped tooltipped-s" type="button">
-    <%= octicon('clippy') %>
+    <%= octicon 'clippy' %>
     Copy invitation link
   </button>
 </span>

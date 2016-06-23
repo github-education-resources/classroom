@@ -18,7 +18,7 @@
           <%= content_tag :input, '', type: 'text', id: "organization-#{@organization.github_id}", value: organization_url(@organization), readonly: 'readonly' %>
           <span class="input-group-button">
             <button aria-label="Copy to clipboard" data-clipboard-target=<%= "#organization-#{@organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="Copied!" type="button">
-              <%= octicon('clippy') %>
+              <%= octicon 'clippy' %>
               Copy classroom link
             </button>
           </span>
