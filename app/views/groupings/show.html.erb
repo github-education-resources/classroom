@@ -8,10 +8,22 @@
   <div class="site-content-body">
     <% if @grouping.groups.present? %>
       <div class="team-grid">
-
-        <%= render partial: "group", collection: @grouping.groups %>
-
-        <div style="clear:both"></div>
+        <div class="columns">
+          <div class="one-half column">
+            <% @grouping.groups.each do |group| %>
+                <% if cycle('odd', 'even') == 'odd' %>
+                    <%= render partial: "group", locals: { group: group } %>
+                <% end %>
+            <% end %>
+          </div>
+          <div class="one-half column">
+            <% @grouping.groups.each do |group| %>
+                <% if cycle('odd', 'even') == 'even' %>
+                    <%= render partial: "group", locals: { group: group } %>
+                <% end %>
+            <% end %>
+          </div>
+        </div>
       </div>
     <% else %>
       <div class="blankslate">

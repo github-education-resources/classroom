@@ -685,9 +685,13 @@ hr {
 
       a.student-avatar {
         display: inline-block;
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
         vertical-align: top;
+      }
+
+      .member {
+        overflow: hidden;
       }
 
       .member:not(:first-child) {
@@ -723,6 +727,16 @@ hr {
   font-size: 14px;
   line-height: 20px;
   color: #767676;
+}
+
+.student-handle {
+  height: 40px;
+  float: left;
+  width: 24px;
+
+  svg {
+    height: 40px;
+  }
 }
 
 .label {
