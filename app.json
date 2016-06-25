@@ -10,7 +10,7 @@
   },
 
   "env": {
-    "AIRBRAKE_ID": {
+    "AIRBRAKE_PROJECT_ID": {
       "description": "the ID for the application in airbrake.io, if set Airbrake will be enabled",
       "required": false
     },
