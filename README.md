@@ -57,7 +57,7 @@ script/setup
 ### Production environment variables
 ENV Variable | Description |
 :-------------------|:-----------------|
-`AIRBRAKE_ID` | the ID for application in airbrake.io, if set Airbrake will be enabled
+`AIRBRAKE_PROJECT_ID` | the ID for application in airbrake.io, if set Airbrake will be enabled
 `AIRBRAKE_PROJECT_KEY` | the PROJECT_KEY in airbrake.io, if set Airbrake will be enabled
 `CANONICAL_HOST` | the preferred hostname for the application, if set requests served on other hostnames will be redirected
 `GOOGLE_ANALYTICS_TRACKING_ID` | identifier for Google Analytics in the format `UA-.*`
