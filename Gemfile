@@ -42,6 +42,7 @@ gem 'puma'
 
 gem 'rack-canonical-host'
 gem 'rack-timeout', require: false
+gem 'rails-controller-testing'
 gem 'redis-namespace'
 
 gem 'sprockets'
