@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class GroupAssignment < ActiveRecord::Base
+class GroupAssignment < ApplicationRecord
   include Flippable
   include GitHubPlan
   include Sluggable
