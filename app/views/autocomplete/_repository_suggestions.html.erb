@@ -9,7 +9,7 @@
         <li class="js-autocomplete-suggestion-item"
           data-res-id="<%= repo[:id] %>"
           data-res-name="<%= repo[:full_name] %>">
-          <%= repo[:private] ? octicon 'lock' : octicon 'repo' %>
+          <%= repo[:private] ? octicon('lock') : octicon('repo') %>
           <strong><%= repo[:full_name] %></strong>
           <span><%= repo[:description] %></span>
         </li>
