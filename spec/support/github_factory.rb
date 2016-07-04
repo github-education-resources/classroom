@@ -12,11 +12,4 @@ module GitHubFactory
                         github_id: classroom_owner_organization_github_id,
                         users:     [owner])
   end
-
-  def self.create_student_identifier_type(organization)
-    StudentIdentifierType.create!(organization: organization,
-                                  name: 'Test',
-                                  description: 'Test',
-                                  content_type: 'text')
-  end
 end
