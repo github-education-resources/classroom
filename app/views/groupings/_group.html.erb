@@ -5,24 +5,15 @@
   <span class="team-name" itemprop="name"><%= group.title %></span>
   <p class="team-description" itemprop="description"><%= pluralize(group.repo_accesses.count, 'student') %></p>
   <div class="team-members">
-    <% group.repo_accesses.each do |repo_access| %>
-      <% student = repo_access.user %>
-      <div class="member">
-        <span class="student-handle" title="Drag to move">
-          <%= octicon 'grabber' %>
-        </span>
-        <%= link_to student.github_user.html_url, class: 'student-avatar', aria: student.github_user.login do %>
-            <%= image_tag student.github_user.github_avatar_url(60), class: 'avatar avatar-small', height: 40, width: 40, alt: "@#{student.github_user.login}" %>
-        <% end %>
-        <div class="student-information">
-          <span class="student-login">
-            <%= link_to student.github_user.login, student.github_user.html_url %>
-          </span>
-          <p class="student-description" itemprop="name">
-            <%= student.github_user.name %>
-          </p>
+    <ul>
+      <% group.repo_accesses.limit(4).each do |repo_access| %>
+        <% student = repo_access.user %>
+        <div class="member-draggable">
+          <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s", 'aria-label' => student.github_user.login do %>
+            <%= image_tag student.github_user.github_avatar_url(60), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.github_user.login}" %>
+          <% end %>
         </div>
-      </div>
-    <% end %>
+      <% end %>
+    </ul>
   </div>
 </div>

@@ -697,6 +697,11 @@ hr {
       .member:not(:first-child) {
         margin-top: 10px;
       }
+
+      .member-draggable {
+        display: inline-block;
+        margin: 0 5px 5px 0;
+      }
     }
   }
 }
