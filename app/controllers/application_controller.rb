@@ -72,7 +72,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    redirect_to :back
+    redirect_back(fallback_location: (request.referer || root_path))
   end
 
   def logged_in?
