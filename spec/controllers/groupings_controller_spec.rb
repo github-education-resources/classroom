@@ -15,7 +15,7 @@ RSpec.describe GroupingsController, type: :controller do
 
   describe 'GET #show', :vcr do
     it 'returns success status' do
-      get :show, organization_id: organization.slug, id: grouping.id
+      get :show, organization_id: organization.slug, id: grouping.slug
 
       expect(response.status).to eq(200)
       expect(assigns(:grouping)).to_not be_nil
