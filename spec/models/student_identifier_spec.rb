@@ -10,7 +10,7 @@ RSpec.describe StudentIdentifier, type: :model do
     let(:organization)            { create(:organization)    }
     let(:user)                    { organization.users.first }
 
-    let(:student_identifier_type) { StudentIdentifierType.create(organization)                       }
+    let(:student_identifier_type) { create(:student_identifier_type, organization: organization)                     }
     let(:group_assignment)        { create(:group_assignment, organization: organization, user: user, value: 'Test') }
 
     it 'verifies uniqueness of organization, user and student identifier type' do
