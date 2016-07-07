@@ -5,6 +5,8 @@ class CreateStudentIdentifiers < ActiveRecord::Migration
       t.string :name, null: false
       t.string :description, null: false
       t.integer :content_type, null: false
+      t.datetime :created_at
+      t.datetime :updated_at
       t.datetime :deleted_at
     end
 
@@ -13,6 +15,8 @@ class CreateStudentIdentifiers < ActiveRecord::Migration
       t.belongs_to :user,         index: true
       t.belongs_to :student_identifier_type
       t.string :value, null: false
+      t.datetime :created_at
+      t.datetime :updated_at
       t.datetime :deleted_at
     end
 
