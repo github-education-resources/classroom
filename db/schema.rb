@@ -189,6 +189,7 @@ ActiveRecord::Schema.define(version: 20160621020153) do
   end
 
   add_index "student_identifiers", ["organization_id"], name: "index_student_identifiers_on_organization_id", using: :btree
+  add_index "student_identifiers", ["student_identifier_type_id"], name: "index_student_identifiers_on_student_identifier_type_id", using: :btree
   add_index "student_identifiers", ["user_id"], name: "index_student_identifiers_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|

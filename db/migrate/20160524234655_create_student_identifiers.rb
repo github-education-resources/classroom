@@ -22,5 +22,7 @@ class CreateStudentIdentifiers < ActiveRecord::Migration
 
     add_column :assignments, :student_identifier_type_id, :integer
     add_column :group_assignments, :student_identifier_type_id, :integer
+
+    add_index :student_identifiers, :student_identifier_type_id
   end
 end
