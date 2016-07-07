@@ -16,6 +16,8 @@ class Assignment < ApplicationRecord
   belongs_to :creator, class_name: User
   belongs_to :organization
 
+  belongs_to :student_identifier_type
+
   validates :creator, presence: true
 
   validates :organization, presence: true
