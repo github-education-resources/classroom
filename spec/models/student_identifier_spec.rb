@@ -18,13 +18,13 @@ RSpec.describe StudentIdentifier, type: :model do
              student_identifier_type: student_identifier_type,
              value: 'Test')
 
-      new_group_assignment = build(:student_identifier,
-                                   organization: organization,
-                                   user: user,
-                                   student_identifier_type: student_identifier_type,
-                                   value: 'Test 2')
+      student_identifier = build(:student_identifier,
+                                 organization: organization,
+                                 user: user,
+                                 student_identifier_type: student_identifier_type,
+                                 value: 'Test 2')
 
-      expect { new_group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { student_identifier.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
   end
 end
