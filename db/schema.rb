@@ -166,6 +166,32 @@ ActiveRecord::Schema.define(version: 20160621020153) do
   add_index "repo_accesses", ["organization_id"], name: "index_repo_accesses_on_organization_id", using: :btree
   add_index "repo_accesses", ["user_id"], name: "index_repo_accesses_on_user_id", using: :btree
 
+  create_table "student_identifier_types", force: :cascade do |t|
+    t.integer  "organization_id"
+    t.string   "name",            null: false
+    t.string   "description",     null: false
+    t.integer  "content_type",    null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "student_identifier_types", ["organization_id"], name: "index_student_identifier_types_on_organization_id", using: :btree
+
+  create_table "student_identifiers", force: :cascade do |t|
+    t.integer  "organization_id"
+    t.integer  "user_id"
+    t.integer  "student_identifier_type_id"
+    t.string   "value",                      null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "student_identifiers", ["organization_id"], name: "index_student_identifiers_on_organization_id", using: :btree
+  add_index "student_identifiers", ["student_identifier_type_id"], name: "index_student_identifiers_on_student_identifier_type_id", using: :btree
+  add_index "student_identifiers", ["user_id"], name: "index_student_identifiers_on_user_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.integer  "uid",                            null: false
     t.string   "token",                          null: false
