@@ -164,7 +164,6 @@ ActiveRecord::Schema.define(version: 20160621020153) do
     t.index ["organization_id"], name: "index_student_identifier_types_on_organization_id", using: :btree
   end
 
-
   create_table "student_identifiers", force: :cascade do |t|
     t.integer  "organization_id"
     t.integer  "user_id"
