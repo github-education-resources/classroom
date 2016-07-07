@@ -17,13 +17,13 @@ RSpec.describe StudentIdentifier, type: :model do
              student_identifier_type: student_identifier_type,
              value: 'Test')
 
-      student_identifier = build(:student_identifier,
-                                 organization: organization,
-                                 user: user,
-                                 student_identifier_type: student_identifier_type,
-                                 value: 'Test 2')
+      new_student_identifier = build(:student_identifier,
+                                     organization: organization,
+                                     user: user,
+                                     student_identifier_type: student_identifier_type,
+                                     value: 'Test 2')
 
-      expect { student_identifier.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { new_student_identifier.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
   end
 end
