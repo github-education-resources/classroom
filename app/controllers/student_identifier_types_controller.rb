@@ -5,14 +5,17 @@ class StudentIdentifierTypesController < ApplicationController
   before_action :save_referer, only: [:new]
 
   def index
+    not_found unless Classroom.flipper[:student_identifier].enabled? current_user
     @student_identifier_types = @organization.student_identifier_types
   end
 
   def new
+    not_found unless Classroom.flipper[:student_identifier].enabled? current_user
     @student_identifier_type = StudentIdentifierType.new
   end
 
   def create
+    not_found unless Classroom.flipper[:student_identifier].enabled? current_user
     @student_identifier_type = StudentIdentifierType.new(student_identifier_type_params)
     if @student_identifier_type.save
       flash[:success] = "\"#{student_identifier_type.name}\" has been created!"

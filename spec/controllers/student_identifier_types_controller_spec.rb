@@ -12,6 +12,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
 
   before do
     sign_in(user)
+    Classroom.flipper[:student_identifier].enable
   end
 
   describe 'GET #index', :vcr do
