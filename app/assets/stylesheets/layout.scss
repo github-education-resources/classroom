@@ -692,58 +692,6 @@ hr {
   overflow: hidden;
 }
 
-.group-assignment-team-members {
-  display: table;
-  width: 100%;
-  padding: 10px 15px;
-  margin: 0 -15px -15px;
-  clear: both;
-  list-style-type: none;
-  border-radius: 0 0 3px 3px;
-
-  .member {
-    float: left;
-    width: 50%;
-    padding-right: 10px;
-    margin-top: 10px;
-  }
-}
-
-.student-avatar {
-  float: left;
-  margin-right: 10px;
-}
-
-.student-information {
-  margin-left: 50px;
-}
-
-.student-login {
-  margin: 0;
-  font-size: 14px;
-  font-weight: bold;
-  line-height: 20px;
-}
-
-.student-description {
-  margin: 0;
-  font-size: 14px;
-  line-height: 20px;
-  color: #767676;
-}
-
-.label {
-  display: inline-block;
-  padding: 3px 4px;
-  font-size: 11px;
-  font-weight: bold;
-  line-height: 1;
-  color: #666;
-  background-color: #eee;
-  border-radius: 2px;
-  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.12);
-}
-
 .identifier-type-list-items {
   padding: 10px 0;
 
