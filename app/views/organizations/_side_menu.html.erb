@@ -1,7 +1,8 @@
 <nav class="menu">
   <span class="menu-heading">Classroom settings</span>
-  <%= link_to 'Classroom profile', edit_organization_path, class: "menu-item #{'selected' if current_page?(edit_organization_path)}" %>
+  <%= link_to 'Classroom profile', edit_organization_path(@organization), class: "menu-item #{'selected' if current_page?(edit_organization_path(@organization))}" %>
+  <%= link_to 'Student identifiers', organization_student_identifier_types_path(@organization), class: "menu-item #{'selected' if current_page?(organization_student_identifier_types_path(@organization))}" %>
   <%= link_to 'Invite other administrators',
     settings_invitations_organization_path(@organization),
-    class: "menu-item #{'selected' if current_page?(settings_invitations_organization_path)}" %>
+    class: "menu-item #{'selected' if current_page?(settings_invitations_organization_path(@organization))}" %>
 </nav>

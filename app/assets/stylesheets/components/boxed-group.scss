@@ -29,6 +29,13 @@
   }
 }
 
+.boxed-group-action {
+  position: relative;
+  z-index: 2;
+  float: right;
+  margin: 6px 10px 0 0;
+}
+
 .boxed-group-inner {
   padding: 1px 10px;
   font-size: 13px;
