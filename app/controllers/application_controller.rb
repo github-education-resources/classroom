@@ -28,7 +28,11 @@ class ApplicationController < ActionController::Base
   end
 
   def required_scopes
-    Classroom::Scopes::TEACHER
+    if Classroom.flipper[:explicit_assignment_submission].enabled? current_user
+      Classroom::Scopes::ExplicitSubmission::TEACHER
+    else
+      Classroom::Scopes::TEACHER
+    end
   end
 
   def adequate_scopes?

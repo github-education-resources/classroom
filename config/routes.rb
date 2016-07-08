@@ -76,4 +76,6 @@ Rails.application.routes.draw do
     resources :groupings, only: [:show]
     resources :groups,    only: [:show]
   end
+
+  post '/webhook/events', to: 'webhook#events'
 end

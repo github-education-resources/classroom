@@ -6,6 +6,22 @@ class GitHubRepository < GitHubResource
     end
   end
 
+  # Public
+  #
+  def create_release(tag_name, options = {})
+    GitHub::Errors.with_error_handling do
+      @client.create_release(@id, tag_name, options)
+    end
+  end
+
+  # Public
+  #
+  def full_name
+    GitHub::Errors.with_error_handling { @client.repository(@id).full_name }
+  end
+
+  # Public
+  #
   def get_starter_code_from(source)
     GitHub::Errors.with_error_handling do
       credentials = { vcs_username: @client.login, vcs_password: @client.access_token }

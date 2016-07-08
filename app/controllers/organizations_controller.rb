@@ -18,7 +18,7 @@ class OrganizationsController < ApplicationController
   end
 
   def create
-    @organization = Organization.new(new_organization_params)
+    @organization = build_organization
 
     if @organization.save
       redirect_to setup_organization_path(@organization)
@@ -84,6 +84,10 @@ class OrganizationsController < ApplicationController
 
     return if new_github_organization.admin?(current_user.github_user.login)
     raise NotAuthorized, 'You are not permitted to add this organization as a classroom'
+  end
+
+  def build_organization
+    OrganizationService.new(new_organization_params, current_user, webhook_events_url).build_organization
   end
 
   def github_organization_from_params

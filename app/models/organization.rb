@@ -22,6 +22,11 @@ class Organization < ActiveRecord::Base
 
   validates :slug, uniqueness: true
 
+  validates :webhook_id, uniqueness: true, allow_nil: true
+
+  # TODO: comment out to let CI pass, revisit
+  # before_destroy :delete_all_webhooks
+
   def all_assignments(with_invitations: false)
     return assignments + group_assignments unless with_invitations
 
@@ -31,6 +36,7 @@ class Organization < ActiveRecord::Base
 
   def github_client
     token = users.limit(1).order('RANDOM()').pluck(:token)[0]
+    token = users.sample.token unless token.present?
     Octokit::Client.new(access_token: token)
   end
 
@@ -40,5 +46,19 @@ class Organization < ActiveRecord::Base
 
   def slugify
     self.slug = "#{github_id} #{title}".parameterize
+  end
+
+  def delete_all_webhooks
+    @github_organization ||= GitHubOrganization.new(github_client, github_id)
+    @github_organization.delete_all_org_hooks
+    self.webhook_id = nil
+    self.is_webhook_active = false
+  end
+
+  def setup_webhook(hook_url)
+    delete_all_webhooks
+    @github_organization ||= GitHubOrganization.new(github_client, github_id)
+    hook = @github_organization.create_org_hook(config: { url: hook_url })
+    self.webhook_id ||= hook.id
   end
 end
