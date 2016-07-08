@@ -58,7 +58,7 @@ Rails.application.configure do
   }
 
   dalli_store_config = {
-    namespace:  ENV['CLASSROOM'],
+    namespace:  'CLASSROOM',
     expires_in: (ENV['REQUEST_CACHE_TIMEOUT'] || 30).to_i.minutes,
     pool_size:  5
   }
