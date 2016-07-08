@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class StudentIdentifier < ActiveRecord::Base
+class StudentIdentifier < ApplicationRecord
   default_scope { where(deleted_at: nil) }
 
   belongs_to :user
