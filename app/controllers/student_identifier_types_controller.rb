@@ -33,7 +33,7 @@ class StudentIdentifierTypesController < ApplicationController
   private
 
   def check_flipper
-    not_found unless Classroom.flipper[:student_identifier].enabled? current_user
+    not_found unless student_identifier_enabled?
   end
 
   def set_student_identifier_type

@@ -79,6 +79,10 @@ class ApplicationController < ActionController::Base
     !current_user.nil?
   end
 
+  def student_identifier_enabled?
+    Classroom.flipper[:student_identifier].enabled?(current_user)
+  end
+
   def not_found
     raise ActionController::RoutingError, 'Not Found'
   end
