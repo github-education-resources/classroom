@@ -40,4 +40,32 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
       end.to change { StudentIdentifierType.count }
     end
   end
+
+  context 'flipper not enabled' do
+    before do
+      Classroom.flipper[:student_identifier].disable
+    end
+
+    describe 'GET #index', :vcr do
+      it 'returns a 404' do
+        expect { get :index, organization_id: organization.slug }.to raise_error(ActionController::RoutingError)
+      end
+    end
+
+    describe 'GET #new', :vcr do
+      it 'returns a 404' do
+        expect { get :new, organization_id: organization.slug }.to raise_error(ActionController::RoutingError)
+      end
+    end
+
+    describe 'POST #create', :vcr do
+      it 'returns a 404' do
+        expect do
+          post :create,
+               organization_id: organization.slug,
+               student_identifier_type: { name: 'Test', description: 'Test', content_type: 'text' }
+        end.to raise_error(ActionController::RoutingError)
+      end
+    end
+  end
 end
