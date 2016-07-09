@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   class NotAuthorized < StandardError
   end
 
-  helper_method :current_user, :logged_in?, :staff?, :true_user
+  helper_method :current_user, :logged_in?, :staff?, :true_user, :student_identifier_enabled?
 
   before_action :authenticate_user!
 
