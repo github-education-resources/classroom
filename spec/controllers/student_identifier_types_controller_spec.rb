@@ -29,6 +29,19 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
 
       expect(response).to have_http_status(:success)
     end
+
+    context 'different referring page' do
+      let(:referer) { 'where_i_came_from' }
+
+      before do
+        request.env['HTTP_REFERER'] = referer
+      end
+
+      it 'sets the session correctly' do
+        get :new, organization_id: organization.slug
+        expect(session['return_to']).to equal(referer)
+      end
+    end
   end
 
   describe 'POST #create', :vcr do
