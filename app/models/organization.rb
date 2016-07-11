@@ -46,6 +46,11 @@ class Organization < ActiveRecord::Base
     self.slug = "#{github_id} #{title}".parameterize
   end
 
+  def create_organization_webhook(webhook_url)
+    webhook = github_organization.create_organization_webhook(config: { url: webhook_url })
+    update_attributes(webhook_id: webhook.id)
+  end
+
   def silently_remove_organization_webhook
     github_organization.remove_organization_webhook(webhook_id)
     true
