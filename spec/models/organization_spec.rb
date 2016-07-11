@@ -63,7 +63,7 @@ RSpec.describe Organization, type: :model do
         expect { subject.create_organization_webhook('http://example.com') }.to change { subject.webhook_id }
       end
 
-      it 'creates a webhook on GitHub.com' do
+      it 'creates a webhook on GitHub' do
         org_id = subject.github_id
         subject.create_organization_webhook('http://example.com')
         expect(WebMock).to have_requested(:post, github_url("/organizations/#{org_id}/hooks"))
