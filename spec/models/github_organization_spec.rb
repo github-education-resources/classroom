@@ -58,7 +58,7 @@ describe GitHubOrganization do
 
   describe '#create_organization_webhook', :vcr do
     before do
-      @org_hook = @github_organization.create_organization_webhook(config: { url: 'http://example.com' })
+      @org_hook = @github_organization.create_organization_webhook(config: { url: 'http://localhost' })
     end
 
     after do
@@ -72,7 +72,7 @@ describe GitHubOrganization do
 
   describe '#remove_organization_webhook', :vcr do
     before do
-      @org_hook = @github_organization.create_organization_webhook(config: { url: 'http://example.com' })
+      @org_hook = @github_organization.create_organization_webhook(config: { url: 'http://localhost' })
     end
 
     it 'successfully removes the GitHub organization webhook' do
