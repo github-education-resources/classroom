@@ -50,4 +50,18 @@ RSpec.describe Organization, type: :model do
       expect(subject.github_client.class).to eql(Octokit::Client)
     end
   end
+
+  context 'with valid organization', :vcr do
+    let(:subject) { GitHubFactory.create_owner_classroom_org }
+
+    after(:each) do
+      subject.destroy
+    end
+
+    describe '#create_organization_webhook', :vcr do
+      it 'sets webhook_id' do
+        expect { subject.create_organization_webhook('http://example.com') }.to change { subject.webhook_id }
+      end
+    end
+  end
 end
