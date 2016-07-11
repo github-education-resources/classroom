@@ -70,6 +70,18 @@ describe GitHubOrganization do
     end
   end
 
+  describe '#remove_organization_webhook', :vcr do
+    before do
+      @org_hook = @github_organization.create_organization_webhook(config: { url: 'http://example.com' })
+    end
+
+    it 'successfully removes the GitHub organization webhook' do
+      @github_organization.remove_organization_webhook(@org_hook.id)
+      expect(WebMock).to have_requested(:delete,
+                                        github_url("/organizations/#{organization.github_id}/hooks/#{@org_hook.id}"))
+    end
+  end
+
   GitHubOrganization.new(@client, 123).send(:attributes).each do |attribute|
     describe "##{attribute}", :vcr do
       it "gets the #{attribute} of the organization" do
