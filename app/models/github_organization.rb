@@ -98,6 +98,19 @@ class GitHubOrganization < GitHubResource
     "https://github.com/orgs/#{login}/invitations/new"
   end
 
+  # Public
+  #
+  def create_organization_webhook(config: {}, options: {})
+    GitHub::Errors.with_error_handling do
+      hook_config = github_org_hook_default_config.merge(config)
+                                                  .tap { |hash| hash[:secret] = ENV['WEBHOOK_SECRET'] }
+      hook_options = github_org_hook_default_options.merge(options)
+      @client.create_org_hook(@id, hook_config, hook_options)
+    end
+  end
+
+  # Public
+  #
   def remove_organization_webhook(webhook_id)
     return unless webhook_id.present?
     @client.remove_org_hook(@id, webhook_id)
@@ -115,6 +128,23 @@ class GitHubOrganization < GitHubResource
       has_wiki:      true,
       has_downloads: true,
       organization:  @id
+    }
+  end
+
+  # Internal
+  #
+  def github_org_hook_default_config
+    {
+      content_type: 'json'
+    }
+  end
+
+  # Internal
+  #
+  def github_org_hook_default_options
+    {
+      events: %w(push release),
+      active: true
     }
   end
 end
