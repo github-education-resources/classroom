@@ -98,6 +98,11 @@ class GitHubOrganization < GitHubResource
     "https://github.com/orgs/#{login}/invitations/new"
   end
 
+  def remove_organization_webhook(webhook_id)
+    return unless webhook_id.present?
+    @client.remove_org_hook(@id, webhook_id)
+  end
+
   private
 
   def attributes
