@@ -1,12 +1,14 @@
 <div class="team-panel">
-  <a class="right btn btn-sm" href="#">
-    Manage
-  </a>
-  <span class="team-name" itemprop="name"><%= group.title %></span>
-  <p class="team-description" itemprop="description"><%= pluralize(group.repo_accesses.count, 'student') %></p>
+  <div class="team-info">
+    <a class="right btn btn-sm" href="#">
+      Manage
+    </a>
+    <span class="team-name" itemprop="name"><%= group.title %></span>
+    <p class="team-description" itemprop="description"><%= pluralize(group.repo_accesses.count, 'student') %></p>
+  </div>
   <div class="team-members">
     <ul>
-      <% group.repo_accesses.limit(4).each do |repo_access| %>
+      <% group.repo_accesses.each do |repo_access| %>
         <% student = repo_access.user %>
         <div class="member-draggable">
           <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s", 'aria-label' => student.github_user.login do %>

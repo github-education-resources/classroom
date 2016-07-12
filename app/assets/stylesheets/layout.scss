@@ -659,7 +659,6 @@ hr {
 
   .team-panel {
     position: relative;
-    padding: 15px;
     margin-right: 10px;
     margin-bottom: 20px;
     background-color: #fff;
@@ -675,11 +674,18 @@ hr {
       font-weight: bold;
     }
 
+    .team-info {
+      padding: 15px;
+      background-color: #f8f8f8;
+
+      .team-description {
+        line-height: 0;
+      }
+    }
+
     .team-members {
       padding: 10px 15px;
-      margin: 0 -15px -15px;
       list-style-type: none;
-      background-color: #f8f8f8;
       border-top: 1px solid #eee;
       border-radius: 0 0 3px 3px;
 
