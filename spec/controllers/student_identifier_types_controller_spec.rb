@@ -12,49 +12,54 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
 
   before do
     sign_in(user)
-    Classroom.flipper[:student_identifier].enable
   end
 
-  describe 'GET #index', :vcr do
-    it 'returns success status' do
-      get :index, organization_id: organization.slug
-
-      expect(response).to have_http_status(:success)
-    end
-  end
-
-  describe 'GET #new', :vcr do
-    it 'returns success status' do
-      get :new, organization_id: organization.slug
-
-      expect(response).to have_http_status(:success)
+  context 'flipper is not enabled for the user' do
+    before do
+      Classroom.flipper[:student_identifier].enable
     end
 
-    context 'different referring page' do
-      let(:referer) { 'where_i_came_from' }
+    describe 'GET #index', :vcr do
+      it 'returns success status' do
+        get :index, organization_id: organization.slug
 
-      before do
-        request.env['HTTP_REFERER'] = referer
+        expect(response).to have_http_status(:success)
       end
+    end
 
-      it 'sets the session correctly' do
+    describe 'GET #new', :vcr do
+      it 'returns success status' do
         get :new, organization_id: organization.slug
-        expect(session['return_to']).to equal(referer)
+
+        expect(response).to have_http_status(:success)
+      end
+
+      context 'different referring page' do
+        let(:referer) { 'where_i_came_from' }
+
+        before do
+          request.env['HTTP_REFERER'] = referer
+        end
+
+        it 'sets the session correctly' do
+          get :new, organization_id: organization.slug
+          expect(session['return_to']).to equal(referer)
+        end
+      end
+    end
+
+    describe 'POST #create', :vcr do
+      it 'creates a new StudentIdentifierType' do
+        expect do
+          post :create,
+               organization_id: organization.slug,
+               student_identifier_type: { name: 'Test', description: 'Test', content_type: 'text' }
+        end.to change { StudentIdentifierType.count }
       end
     end
   end
 
-  describe 'POST #create', :vcr do
-    it 'creates a new StudentIdentifierType' do
-      expect do
-        post :create,
-             organization_id: organization.slug,
-             student_identifier_type: { name: 'Test', description: 'Test', content_type: 'text' }
-      end.to change { StudentIdentifierType.count }
-    end
-  end
-
-  context 'flipper not enabled' do
+  context 'flipper is not enabled for the user' do
     before do
       Classroom.flipper[:student_identifier].disable
     end
