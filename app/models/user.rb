@@ -54,6 +54,10 @@ class User < ActiveRecord::Base
     site_admin
   end
 
+  def identifier(type)
+    StudentIdentifier.find_by(user: self, student_identifier_type: type)
+  end
+
   # This updates the `last_active_at` column without
   # updating the model, but keeps the index updated.
   def become_active
