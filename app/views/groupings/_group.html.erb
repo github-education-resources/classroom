@@ -4,7 +4,7 @@
       Manage
     </a>
     <span class="team-name" itemprop="name"><%= group.title %></span>
-    <p class="team-description" itemprop="description"><%= pluralize(group.repo_accesses.count, 'student') %></p>
+    <span class="team-description" itemprop="description"><%= pluralize(group.repo_accesses.count, 'student') %></span>
   </div>
   <div class="team-members">
     <ul>

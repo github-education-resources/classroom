@@ -688,8 +688,15 @@ hr {
       padding: 10px 15px 5px;
       background-color: #f8f8f8;
 
+      .btn {
+        margin: -4px -8px 0 0;
+      }
+
       .team-description {
+        margin-left: 3px;
+        font-style: italic;
         line-height: 0;
+        color: #777;
       }
     }
 
