@@ -657,6 +657,16 @@ hr {
 
   margin-top: 1rem;
 
+  .team-left {
+    float: left;
+    padding-right: 5px;
+  }
+
+  .team-right {
+    float: left;
+    padding-left: 5px;
+  }
+
   .team-panel {
     position: relative;
     margin-right: 10px;
