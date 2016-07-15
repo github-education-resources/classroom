@@ -79,6 +79,10 @@ class ApplicationController < ActionController::Base
     !current_user.nil?
   end
 
+  def team_management_enabled?
+    Classroom.flipper[:team_management].enabled? current_user
+  end
+
   def not_found
     raise ActionController::RoutingError, 'Not Found'
   end
