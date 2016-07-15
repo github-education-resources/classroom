@@ -6,6 +6,7 @@ class OrganizationsController < ApplicationController
   before_action :set_users_github_organizations,      only: [:index, :new, :create]
   before_action :add_current_user_to_organizations,   only: [:index]
   before_action :paginate_users_github_organizations, only: [:new, :create]
+  before_action :ensure_team_management_flipper_is_enabled?, only: [:show_groupings]
 
   skip_before_action :set_organization, :authorize_organization_access, only: [:index, :new, :create]
 
@@ -41,7 +42,6 @@ class OrganizationsController < ApplicationController
   end
 
   def show_groupings
-    not_found unless Classroom.flipper[:team_management].enabled? current_user
     @groupings = @organization.groupings
   end
 

@@ -22,6 +22,10 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def ensure_team_management_flipper_is_enabled?
+    not_found unless Classroom.flipper[:team_management].enabled? current_user
+  end
+
   def current_scopes
     return [] unless logged_in?
     session[:current_scopes] ||= current_user.github_client_scopes
@@ -77,10 +81,6 @@ class ApplicationController < ActionController::Base
 
   def logged_in?
     !current_user.nil?
-  end
-
-  def team_management_enabled?
-    Classroom.flipper[:team_management].enabled? current_user
   end
 
   def not_found
