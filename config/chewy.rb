@@ -1,4 +1,4 @@
-SEARCH_URL = ENV['ELASTICSEARCH_URL'] || "http://localhost:9200}/"
+SEARCH_URL = ENV['ELASTICSEARCH_URL'] || "http://localhost:9200/"
 
 Chewy.settings = { host: SEARCH_URL }
 
