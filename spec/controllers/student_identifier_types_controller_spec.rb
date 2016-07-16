@@ -14,7 +14,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
     sign_in(user)
   end
 
-  context 'flipper is not enabled for the user' do
+  context 'flipper is enabled for the user' do
     before do
       Classroom.flipper[:student_identifier].enable
     end
