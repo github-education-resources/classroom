@@ -1,0 +1,21 @@
+<div class="remodal-bg">
+  <%= render 'organizations/organization_banner' %>
+
+  <div class="columns">
+    <div class="one-fourth column">
+      <%= render partial: 'organizations/side_menu' %>
+    </div>
+    <div class="three-fourths column">
+
+      <div class="boxed-group">
+        <h3>Set of teams</h3>
+        <div class="boxed-group-inner clearfix">
+          <ul class="boxed-group-list standalone">
+            <%= render partial: "organizations/grouping", collection: @organization.groupings %>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

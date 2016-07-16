@@ -653,41 +653,127 @@ hr {
   }
 }
 
-.team-panel {
-  position: relative;
-  padding: 15px;
-  margin-right: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #eee;
-  border-radius: 3px;
-}
+.team-grid {
 
-.team-actions-form {
-  float: right;
-}
+  margin-top: 1rem;
 
-.team-name {
-  font-size: 1rem;
-  font-weight: bold;
-}
+  .team-left {
+    float: left;
+    padding-right: 5px;
+  }
 
-.team-members {
-  padding: 10px 15px;
-  margin: 0 -15px -15px;
-  list-style-type: none;
-  background-color: #f8f8f8;
-  border-top: 1px solid #eee;
-  border-radius: 0 0 3px 3px;
+  .team-right {
+    float: left;
+    padding-left: 5px;
+  }
 
-  a {
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    vertical-align: top;
+  .team-panel {
+    position: relative;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+
+    .team-actions-form {
+      float: right;
+    }
+
+    .team-name {
+      margin-right: 3px;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .team-info {
+      padding: 10px 15px 5px;
+      background-color: #f8f8f8;
+
+      .btn {
+        margin: -4px -8px 0 0;
+      }
+
+      .team-description {
+        line-height: 0;
+        color: #777;
+      }
+    }
+
+    .team-members {
+      padding: 10px 15px;
+      list-style-type: none;
+      border-top: 1px solid #eee;
+      border-radius: 0 0 3px 3px;
+
+      a.student-avatar {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        vertical-align: top;
+      }
+
+      .member {
+        overflow: hidden;
+      }
+
+      .member:not(:first-child) {
+        margin-top: 10px;
+      }
+
+      .member-draggable {
+        display: inline-block;
+        margin: 0 5px 5px 0;
+      }
+    }
   }
 }
 
 .no-scroll {
   height: 100%;
   overflow: hidden;
+}
+
+.student-avatar {
+  float: left;
+  margin-right: 10px;
+}
+
+.student-information {
+  margin-left: 50px;
+}
+
+.student-login {
+  margin: 0;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 20px;
+}
+
+.student-description {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: #767676;
+}
+
+.student-handle {
+  float: left;
+  width: 24px;
+  height: 40px;
+
+  svg {
+    height: 40px;
+  }
+}
+
+.label {
+  display: inline-block;
+  padding: 3px 4px;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1;
+  color: #666;
+  background-color: #eee;
+  border-radius: 2px;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.12);
 }
