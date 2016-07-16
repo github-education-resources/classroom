@@ -156,6 +156,31 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
+  describe 'GET #show_groupings', :vcr do
+    context 'flipper is enabled' do
+      before do
+        Classroom.flipper[:team_management].enable
+      end
+
+      it 'returns success and sets the organization' do
+        get :show_groupings, id: organization.slug
+
+        expect(response).to have_http_status(:success)
+        expect(assigns(:organization)).to_not be_nil
+      end
+
+      after do
+        Classroom.flipper[:team_management].disable
+      end
+    end
+
+    context 'flipper is not enabled' do
+      it 'returns success and sets the organization' do
+        expect { get :show_groupings, id: organization.slug }.to raise_error(ActionController::RoutingError)
+      end
+    end
+  end
+
   describe 'PATCH #update', :vcr do
     it 'correctly updates the organization' do
       options = { title: 'New Title' }
