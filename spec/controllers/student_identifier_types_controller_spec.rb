@@ -57,13 +57,13 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
         end.to change { StudentIdentifierType.count }
       end
     end
+
+    after do
+      Classroom.flipper[:student_identifier].disable
+    end
   end
 
   context 'flipper is not enabled for the user' do
-    before do
-      Classroom.flipper[:student_identifier].disable
-    end
-
     describe 'GET #index', :vcr do
       it 'returns a 404' do
         expect { get :index, organization_id: organization.slug }.to raise_error(ActionController::RoutingError)
