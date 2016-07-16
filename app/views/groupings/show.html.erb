@@ -23,6 +23,7 @@
                 <% end %>
             <% end %>
           </div>
+          <% reset_cycle %>
           <div class="one-half team-right">
             <% @grouping.groups.each do |group| %>
                 <% if cycle('odd', 'even') == 'even' %>
