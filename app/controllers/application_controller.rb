@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def ensure_team_management_flipper_is_enabled?
+  def ensure_team_management_flipper_is_enabled
     not_found unless Classroom.flipper[:team_management].enabled? current_user
   end
 
