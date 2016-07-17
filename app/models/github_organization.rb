@@ -128,9 +128,7 @@ class GitHubOrganization < GitHubResource
   end
 
   def github_org_hook_default_config
-    {
-      content_type: 'json'
-    }
+    { content_type: 'json' }
   end
 
   def github_org_hook_default_options
