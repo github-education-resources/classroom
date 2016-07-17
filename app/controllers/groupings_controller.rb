@@ -9,11 +9,9 @@ class GroupingsController < ApplicationController
   end
 
   def edit
-    not_found unless Classroom.flipper[:team_management].enabled? current_user
   end
 
   def update
-    not_found unless Classroom.flipper[:team_management].enabled? current_user
     if @grouping.update_attributes(update_grouping_params)
       flash[:success] = "Set of teams \"#{@grouping.title}\" updated"
       redirect_to settings_teams_organization_path(@organization)
