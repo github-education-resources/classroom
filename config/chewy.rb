@@ -1,7 +1,3 @@
-SEARCH_URL = ENV['ELASTICSEARCH_URL'] || "http://localhost:9200/"
-
-Chewy.settings = { host: SEARCH_URL }
-
 # Use ActiveJob config for async index updates.
 Chewy.strategy(:active_job)
 

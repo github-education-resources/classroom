@@ -1,0 +1,11 @@
+# config/chewy.yml
+# separate environment configs
+test:
+  host: 'localhost:9200'
+  prefix: 'test'
+
+development:
+  host: 'localhost:9200'
+
+production:
+  host: <%= ENV['BONSAI_URL'] %>
