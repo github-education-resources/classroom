@@ -101,7 +101,7 @@ class GitHubOrganization < GitHubResource
   def create_organization_webhook(config: {}, options: {})
     GitHub::Errors.with_error_handling do
       hook_config = github_org_hook_default_config.merge(config)
-                                                  .tap { |hash| hash[:secret] = ENV['WEBHOOK_SECRET'] }
+                                                  .tap { |hash| hash[:secret] = webhook_secret }
       hook_options = github_org_hook_default_options.merge(options)
       @client.create_org_hook(@id, hook_config, hook_options)
     end
@@ -136,5 +136,9 @@ class GitHubOrganization < GitHubResource
       events: %w(push release),
       active: true
     }
+  end
+
+  def webhook_secret
+    Rails.application.secrets.webhook_secret
   end
 end
