@@ -20,7 +20,7 @@
           <% end %>
       <% end %>
       <% if group_member_count > 7 %>
-        <%= link_to group_assignment_repo.github_team_url, class: "#{'disabled' if group_assignment_repo.disabled?}" do %>
+        <%= link_to group_assignment_repo.github_team.html_url, class: "#{'disabled' if group_assignment_repo.disabled?}" do %>
           <%= image_tag 'student-ellipse@2x.png', class: 'avatar avatar-small', height: 30, width: 30, alt: 'student ellipse' %>
         <% end %>
       <% end %>

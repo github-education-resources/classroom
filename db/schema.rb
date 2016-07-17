@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160612130650) do
+ActiveRecord::Schema.define(version: 20160621020153) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,6 +108,7 @@ ActiveRecord::Schema.define(version: 20160612130650) do
     t.integer  "organization_id"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+    t.string   "slug",            null: false
   end
 
   add_index "groupings", ["organization_id"], name: "index_groupings_on_organization_id", using: :btree
@@ -118,6 +119,7 @@ ActiveRecord::Schema.define(version: 20160612130650) do
     t.datetime "updated_at",     null: false
     t.integer  "grouping_id"
     t.string   "title",          null: false
+    t.string   "slug",           null: false
   end
 
   add_index "groups", ["github_team_id"], name: "index_groups_on_github_team_id", unique: true, using: :btree
@@ -169,19 +171,25 @@ ActiveRecord::Schema.define(version: 20160612130650) do
     t.string   "name",            null: false
     t.string   "description",     null: false
     t.integer  "content_type",    null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
     t.datetime "deleted_at"
   end
 
   add_index "student_identifier_types", ["organization_id"], name: "index_student_identifier_types_on_organization_id", using: :btree
 
   create_table "student_identifiers", force: :cascade do |t|
-    t.integer "organization_id"
-    t.integer "user_id"
-    t.integer "student_identifier_type_id"
-    t.string  "value",                      null: false
+    t.integer  "organization_id"
+    t.integer  "user_id"
+    t.integer  "student_identifier_type_id"
+    t.string   "value",                      null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.datetime "deleted_at"
   end
 
   add_index "student_identifiers", ["organization_id"], name: "index_student_identifiers_on_organization_id", using: :btree
+  add_index "student_identifiers", ["student_identifier_type_id"], name: "index_student_identifiers_on_student_identifier_type_id", using: :btree
   add_index "student_identifiers", ["user_id"], name: "index_student_identifiers_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|

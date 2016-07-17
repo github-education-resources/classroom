@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class Grouping < ActiveRecord::Base
+  include Sluggable
+
   update_index('stafftools#grouping') { self }
 
   has_many :groups, dependent: :destroy
@@ -11,4 +13,6 @@ class Grouping < ActiveRecord::Base
 
   validates :title, presence: true
   validates :title, uniqueness: { scope: :organization }
+
+  validates :slug, uniqueness: { scope: :organization }
 end

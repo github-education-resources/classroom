@@ -28,6 +28,12 @@ main {
   flex: 1;
 }
 
+.octicon {
+  display: inline-block;
+  vertical-align: middle;
+  fill: currentColor;
+}
+
 .site-header {
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -212,6 +218,7 @@ main {
   border-radius: 50%;
 
   .octicon {
+    height: 45px;
     font-size: 22px;
     line-height: 45px;
   }
@@ -461,7 +468,6 @@ hr {
 
   a {
     position: relative;
-    top: 2px;
     color: #777;
     text-decoration: none;
     transition: 0.2s color ease-in 0;
@@ -523,7 +529,7 @@ hr {
     font-weight: normal;
   }
 
-  .mega-octicon {
+  .octicon {
     font-size: 38px;
   }
 
@@ -553,7 +559,7 @@ hr {
     font-size: 16px;
   }
 
-  .mega-octicon {
+  .octicon {
     font-size: 21px;
   }
 }
@@ -628,7 +634,7 @@ hr {
     margin-right: 10px;
   }
 
-  .mega-octicon-search {
+  .octicon-search {
     opacity: 0.3;
   }
 

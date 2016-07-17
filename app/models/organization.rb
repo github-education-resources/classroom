@@ -7,10 +7,11 @@ class Organization < ActiveRecord::Base
 
   default_scope { where(deleted_at: nil) }
 
-  has_many :assignments,       dependent: :destroy
-  has_many :groupings,         dependent: :destroy
-  has_many :group_assignments, dependent: :destroy
-  has_many :repo_accesses,     dependent: :destroy
+  has_many :assignments,              dependent: :destroy
+  has_many :groupings,                dependent: :destroy
+  has_many :group_assignments,        dependent: :destroy
+  has_many :repo_accesses,            dependent: :destroy
+  has_many :student_identifier_types, dependent: :destroy
 
   has_and_belongs_to_many :users
 
