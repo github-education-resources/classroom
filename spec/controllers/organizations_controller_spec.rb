@@ -157,15 +157,27 @@ RSpec.describe OrganizationsController, type: :controller do
   end
 
   describe 'GET #show_groupings', :vcr do
-    before do
-      Classroom.flipper[:team_management].enable
+    context 'flipper is enabled' do
+      before do
+        Classroom.flipper[:team_management].enable
+      end
+
+      it 'returns success and sets the organization' do
+        get :show_groupings, id: organization.slug
+
+        expect(response).to have_http_status(:success)
+        expect(assigns(:organization)).to_not be_nil
+      end
+
+      after do
+        Classroom.flipper[:team_management].disable
+      end
     end
 
-    it 'returns success and sets the organization' do
-      get :show_groupings, id: organization.slug
-
-      expect(response).to have_http_status(:success)
-      expect(assigns(:organization)).to_not be_nil
+    context 'flipper is not enabled' do
+      it 'returns success and sets the organization' do
+        expect { get :show_groupings, id: organization.slug }.to raise_error(ActionController::RoutingError)
+      end
     end
   end
 

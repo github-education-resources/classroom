@@ -1,17 +1,19 @@
 <div class="one-half left team">
   <div class="team-panel">
-    <% group_member_count = group_assignment_repo.group.repo_accesses.count %>
-    <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, :class => "team-actions-form", method: :patch) do %>
-      <%= hidden_field_tag 'group[id]', group_assignment_repo.group.id %>
-      <% if group_assignment.max_members.present? && group_member_count >= group_assignment.max_members %>
-        <%= submit_tag 'Full', class: 'btn', disabled: true %>
-      <% else %>
-        <%= submit_tag 'Join', class: 'btn' %>
+    <div class="team-info">
+      <% group_member_count = group_assignment_repo.group.repo_accesses.count %>
+      <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, :class => "team-actions-form", method: :patch) do %>
+          <%= hidden_field_tag 'group[id]', group_assignment_repo.group.id %>
+          <% if group_assignment.max_members.present? && group_member_count >= group_assignment.max_members %>
+              <%= submit_tag 'Full', class: 'btn', disabled: true %>
+          <% else %>
+              <%= submit_tag 'Join', class: 'btn' %>
+          <% end %>
       <% end %>
-    <% end %>
 
-    <span class="team-name" itemprop="name"><%= group_assignment_repo.github_team.name %></span>
-    <p class="team-description" itemprop="description"><%= pluralize(group_member_count, 'member') %></p>
+      <span class="team-name" itemprop="name"><%= group_assignment_repo.github_team.name %></span>
+      <p class="team-description" itemprop="description"><%= pluralize(group_member_count, 'member') %></p>
+    </div>
     <div class="team-members">
       <% group_assignment_repo.group.repo_accesses.limit(7).each do |repo_access| %>
           <% student = repo_access.user %>

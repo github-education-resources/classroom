@@ -1,23 +1,21 @@
-<div class="one-half left team">
-  <div class="team-panel">
+<div class="team-panel">
+  <div class="team-info">
     <a class="right btn btn-sm" href="#">
       Manage
     </a>
-    </form>
-    <span class="team-name" itemprop="name"><%= group.title %></span>
-    <p class="team-description" itemprop="description"><%= pluralize(group.repo_accesses.count, 'student') %></p>
-    <div class="team-members">
+    <strong class="team-name" itemprop="name"><%= group.title %></strong>
+    <span class="team-description" itemprop="description"><%= pluralize(group.repo_accesses.count, 'student') %></span>
+  </div>
+  <div class="team-members">
+    <ul>
       <% group.repo_accesses.each do |repo_access| %>
         <% student = repo_access.user %>
-        <%= link_to student.github_user.html_url, class: 'tooltipped tooltipped-s', 'aria-label' => student.github_user.login do %>
-            <%= image_tag student.github_user.github_avatar_url(30), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.github_user.login}" %>
-        <% end %>
+        <div class="member-draggable">
+          <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s", 'aria-label' => student.github_user.login do %>
+            <%= image_tag student.github_user.github_avatar_url(60), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.github_user.login}" %>
+          <% end %>
+        </div>
       <% end %>
-      <% if group.repo_accesses.count > 7 %>
-        <%= link_to '#' do %>
-          <%= image_tag 'student-ellipse@2x.png', class: 'avatar avatar-small', height: 30, width: 30, alt: 'student ellipse' %>
-        <% end %>
-      <% end %>
-    </div>
+    </ul>
   </div>
 </div>

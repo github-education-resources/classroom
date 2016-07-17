@@ -2,10 +2,10 @@
 class GroupingsController < ApplicationController
   include OrganizationAuthorization
 
+  before_action :ensure_team_management_flipper_is_enabled
   before_action :set_grouping
 
   def show
-    not_found unless Classroom.flipper[:team_management].enabled? current_user
   end
 
   def edit
@@ -25,7 +25,7 @@ class GroupingsController < ApplicationController
   private
 
   def set_grouping
-    @grouping = Grouping.find_by!(id: params[:id])
+    @grouping = Grouping.find_by!(slug: params[:id])
   end
 
   def update_grouping_params
