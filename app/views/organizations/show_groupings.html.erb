@@ -11,7 +11,13 @@
         <h3>Set of teams</h3>
         <div class="boxed-group-inner clearfix">
           <ul class="boxed-group-list standalone">
-            <%= render partial: "organizations/grouping", collection: @organization.groupings %>
+            <% if @organization.groupings.present? %>
+              <%= render partial: "organizations/grouping", collection: @organization.groupings %>
+            <% else %>
+              <div class="blankslate clean-background">
+                <p><h4>This classroom doesn’t have any sets of teams yet.</h4></p>
+              </div>
+            <% end %>
           </ul>
         </div>
       </div>
