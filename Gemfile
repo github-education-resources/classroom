@@ -1,13 +1,13 @@
 source 'https://rubygems.org'
 
 ruby '2.3.1'
-gem 'rails', '4.2.6'
+gem 'rails', '~> 5.0'
 
 gem 'airbrake'
 gem 'autoprefixer-rails'
 
 gem 'chewy'
-gem 'coffee-rails', '~> 4.1.0'
+gem 'coffee-rails', '~> 4.2', '>= 4.2.1'
 
 gem 'faraday-http-cache'
 gem 'flipper'
@@ -24,6 +24,7 @@ gem 'kaminari'
 gem 'local_time'
 
 gem 'octokit'
+gem 'octicons_helper', github: 'primer/octicons_helper', ref: 'fa28cb06c67ce0a1974a9e3238483d79157503c2'
 gem 'omniauth'
 gem 'omniauth-github'
 
@@ -41,13 +42,13 @@ gem 'puma'
 
 gem 'rack-canonical-host'
 gem 'rack-timeout', require: false
+gem 'rails-controller-testing'
 gem 'redis-namespace'
 
 gem 'sprockets'
-gem 'sass-rails', '~> 5.0'
-gem 'sidekiq', '~> 4.1.0'
-gem 'sinatra'
-gem 'octicons_helper', github: 'primer/octicons_helper', ref: 'fa28cb06c67ce0a1974a9e3238483d79157503c2'
+gem 'sass-rails', '~> 5.0', '>= 5.0.5'
+gem 'sidekiq', '~> 4.1'
+gem 'sinatra', github: 'sinatra'
 
 gem 'turbolinks'
 
@@ -57,7 +58,6 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'foreman'
-  gem 'quiet_assets'
 end
 
 group :development, :test do

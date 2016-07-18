@@ -49,11 +49,11 @@ Rails.application.routes.draw do
 
   namespace :stafftools do
     constraints StaffConstraint.new do
-      mount Sidekiq::Web  => '/sidekiq'
+      mount Sidekiq::Web => '/sidekiq'
       mount Flipper::UI.app(Classroom.flipper) => '/flipper', as: 'flipper'
     end
 
-    root to: 'resources#index'
+    root 'resources#index', as: :root
     get '/resource_search', to: 'resources#search'
 
     resources :users, only: [:show] do

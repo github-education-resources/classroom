@@ -7,7 +7,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
     context 'unauthenticated request' do
       it 'redirects the new user to sign in with GitHub' do
-        get :show, id: invitation.key
+        get :show, params: { id: invitation.key }
         expect(response).to redirect_to(login_path)
       end
     end
@@ -38,7 +38,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       end
 
       it 'returns success status' do
-        get :accept, id: invitation.key
+        get :accept, params: { id: invitation.key }
         expect(response).to have_http_status(:success)
       end
 
@@ -78,7 +78,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       end
 
       it 'redeems the users invitation' do
-        patch :accept_invitation, id: invitation.key, group: { title: 'Code Squad' }
+        patch :accept_invitation, params: { id: invitation.key, group: { title: 'Code Squad' } }
 
         expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/teams"))
         expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
@@ -91,7 +91,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         other_grouping = Grouping.create(title: 'Other Grouping', organization: organization)
         other_group    = Group.create(title: 'The Group', grouping: other_grouping)
 
-        patch :accept_invitation, id: invitation.key, group: { id: other_group.id }
+        patch :accept_invitation, params: { id: invitation.key, group: { id: other_group.id } }
 
         expect(group_assignment.group_assignment_repos.count).to eql(0)
         expect(user.repo_accesses.count).to eql(0)
@@ -109,7 +109,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
         it 'does not allow user to join' do
           expect_any_instance_of(ApplicationController).to receive(:flash_and_redirect_back_with_message)
-          patch :accept_invitation, id: invitation.key, group: { id: group.id }
+          patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
         end
       end
 
@@ -121,7 +121,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         end
 
         it 'allows user to join' do
-          patch :accept_invitation, id: invitation.key, group: { id: group.id }
+          patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
         end
       end
 
@@ -129,7 +129,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         let(:group) { Group.create(title: 'The Group', grouping: grouping) }
 
         it 'allows user to join' do
-          patch :accept_invitation, id: invitation.key, group: { id: group.id }
+          patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
           expect(group_assignment.group_assignment_repos.count).to eql(1)
           expect(user.repo_accesses.count).to eql(1)
         end
@@ -141,7 +141,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
           group_assignment_repo = GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
           @original_repository = organization.github_client.repository(group_assignment_repo.github_repo_id)
           group_assignment_repo.delete
-          patch :accept_invitation, id: invitation.key, group: { id: group.id }
+          patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
         end
 
         it 'creates a new group assignment repo' do
