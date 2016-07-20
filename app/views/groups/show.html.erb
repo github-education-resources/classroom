@@ -1,1 +1,25 @@
-cool
+<%= render 'organizations/organization_banner' %>
+
+<div class="site-content">
+  <div class="site-content-cap">
+    <div class="flex-table">
+      <div class="flex-table-item">
+        <span class="assignment-icon assignment-icon-individual left">
+          <%= octicon 'jersey', height: 22 %>
+        </span>
+
+        <h2 class="site-content-heading">
+          <%= @group.title %>
+        </h2>
+
+        <p class="assignment-type text-muted">Team</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="site-content-body">
+    <div class="team-members">
+      <%= render partial: 'member', collection: @group.repo_accesses, as: :repo_access %>
+    </div>
+  </div>
+</div>

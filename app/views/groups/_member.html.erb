@@ -1,0 +1,41 @@
+<% student = repo_access.user %>
+<div class="team-member flex-table">
+  <div class="flex-table-item">
+    <%= link_to student.github_user.html_url, class: "student-avatar" do %>
+        <%= image_tag student.github_user.github_avatar_url(40), class: 'avatar avatar-small ', height: 40, width: 40, alt: "@#{student.github_user.login}" %>
+    <% end %>
+    <div class="student-information">
+      <span class="student-login">
+        <%= link_to student.github_user.login, student.github_user.html_url %>
+      </span>
+      <p class="student-description" itemprop="name">
+        <%= student.github_user.name %>
+      </p>
+    </div>
+  </div>
+  <div class="flex-table-item text-right">
+    <button data-remodal-target="remove-member" class="btn btn-danger" type="button">
+      Remove from team
+    </button>
+    <div class="remodal text-left" data-remodal-id="remove-member">
+      <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
+      <h2 class="remodal-header text-left">Are you sure you want to delete this?</h2>
+
+      <div class="remodal-warning">
+        Unexpected things will happen if you don't read this!
+      </div>
+
+      <div class="remodal-description">
+        <p>
+          This action <strong>CANNOT</strong> be undone.
+          This will permanently remove the student <strong>@<%= student.github_user.login %></strong> from the team <strong><%= @group.title %></strong>.
+        </p>
+      </div>
+
+      <%= form_for [@organization, @grouping, @group], url: remove_membership_organization_grouping_group_path(@organization, @grouping, @group, student), html: { method: 'delete' } do |f| %>
+        <%= f.submit 'Remove student', class: 'btn btn-danger btn-block js-navigation js-submit' %>
+      <% end %>
+
+    </div>
+  </div>
+</div>
