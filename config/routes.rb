@@ -42,7 +42,11 @@ Rails.application.routes.draw do
       end
 
       resources :groupings, only: [:show] do
-        resources :groups, only: [:show]
+        resources :groups, only: [:show] do
+          member do
+            delete '/memberships/:user_id', to: 'groups#remove_membership', as: 'remove_membership'
+          end
+        end
       end
       resources :assignments
       resources :group_assignments, path: 'group-assignments'
