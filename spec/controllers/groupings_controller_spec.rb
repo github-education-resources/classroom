@@ -48,7 +48,7 @@ RSpec.describe GroupingsController, type: :controller do
         expect(Grouping.find(grouping.id).title).to eql(update_options[:title])
       end
 
-      it 'redirects back correctly' do
+      it 'correctly redirects back' do
         expect(response).to redirect_to(settings_teams_organization_path(organization))
       end
     end
