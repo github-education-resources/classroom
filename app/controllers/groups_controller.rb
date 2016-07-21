@@ -15,7 +15,7 @@ class GroupsController < ApplicationController
 
     if repo_access.present?
       @group.repo_accesses.delete(repo_access)
-      flash[:success] = "\@\"#{@user.github_user.login}\" has been removed from group \"#{@group.title}\"!"
+      flash[:success] = "\@#{@user.github_user.login} has been removed from group \"#{@group.title}\"!"
     else
       flash[:error] = 'Student is not a member of this classroom'
     end
