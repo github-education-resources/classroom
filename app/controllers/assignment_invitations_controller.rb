@@ -3,6 +3,7 @@ class AssignmentInvitationsController < ApplicationController
   layout 'layouts/invitations'
 
   before_action :check_user_not_previous_acceptee, only: [:show]
+  before_action :ensure_github_repo_exists, only: [:successful_invitation]
 
   def accept_invitation
     users_assignment_repo = invitation.redeem_for(current_user)
@@ -19,7 +20,6 @@ class AssignmentInvitationsController < ApplicationController
   end
 
   def successful_invitation
-    not_found unless assignment_repo
   end
 
   private
@@ -51,5 +51,13 @@ class AssignmentInvitationsController < ApplicationController
   def check_user_not_previous_acceptee
     return unless assignment.users.include?(current_user)
     redirect_to successful_invitation_assignment_invitation_path
+  end
+
+  def ensure_github_repo_exists
+    return not_found unless assignment_repo
+    return if assignment_repo.github_repository.present?
+
+    assignment_repo.destroy
+    @assignment_repo = invitation.redeem_for(current_user)
   end
 end
