@@ -31,7 +31,7 @@
     },
 
     "REDIS_PROVIDER": {
-      "value": "REDISTOGO_URL"
+      "value": "REDIS_URL"
     },
 
     "NON_STAFF_GITHUB_ADMIN_IDS": {
@@ -43,8 +43,8 @@
   "addons": [
     "bonsai",
     "heroku-postgresql",
+    "heroku-redis",
     "memcachedcloud",
-    "newrelic",
-    "redistogo"
+    "newrelic"
   ]
 }

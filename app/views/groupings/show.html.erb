@@ -1,0 +1,43 @@
+<%= render 'organizations/organization_banner' %>
+
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading"><%= @grouping.title %></h2>
+  </div>
+
+  <div class="site-content-body">
+
+    <div class="markdown-body">
+    <p>
+      You can <b>drag and drop</b> the student avatars to move them from one team to another.
+    </p>
+      </div>
+
+    <% if @grouping.groups.present? %>
+      <div class="team-grid">
+        <div class="columns">
+          <div class="one-half team-left">
+            <% @grouping.groups.each do |group| %>
+                <% if cycle('odd', 'even') == 'odd' %>
+                    <%= render partial: "group", locals: { group: group } %>
+                <% end %>
+            <% end %>
+          </div>
+          <% reset_cycle %>
+          <div class="one-half team-right">
+            <% @grouping.groups.each do |group| %>
+                <% if cycle('odd', 'even') == 'even' %>
+                    <%= render partial: "group", locals: { group: group } %>
+                <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <div class="blankslate">
+        <h3>"<%= @grouping.title %>" does not have any teams.</h3>
+        <p>Share group assignment invitation links with your students to get started.</p>
+      </div>
+    <% end %>
+  </div>
+</div>
