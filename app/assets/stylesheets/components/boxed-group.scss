@@ -3,7 +3,7 @@
   margin-top: 1rem;
   border-radius: 3px;
 
-  h3 {
+  > h3 {
     display: block;
     padding: 9px 10px 10px;
     margin: 0;
@@ -27,6 +27,13 @@
       border-top: 0;
     }
   }
+}
+
+.boxed-group-action {
+  position: relative;
+  z-index: 2;
+  float: right;
+  margin: 6px 10px 0 0;
 }
 
 .boxed-group-inner {

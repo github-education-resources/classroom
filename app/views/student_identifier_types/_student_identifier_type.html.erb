@@ -1,0 +1,8 @@
+<div class="identifier-type-list-item flex-table">
+  <div class="flex-table-item">
+    <strong><%= student_identifier_type.name %></strong>
+    <p class="identifier-type-description text-muted"><%= student_identifier_type.description %></p>
+  </div>
+
+  <small class="meta-data right"><%= pluralize(student_identifier_type.student_identifiers.count , 'student') %></small>
+</div>
