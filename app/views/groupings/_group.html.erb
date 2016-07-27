@@ -7,7 +7,7 @@
     <span class="team-description" itemprop="description"><%= pluralize(group.repo_accesses.count, 'student') %></span>
   </div>
   <div class="team-members">
-    <ul>
+    <ul class="member-list-draggable">
       <% group.repo_accesses.each do |repo_access| %>
         <% student = repo_access.user %>
         <div class="member-draggable">
