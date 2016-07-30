@@ -44,7 +44,7 @@ Rails.application.routes.draw do
       resources :groupings, only: [:show]
       resources :assignments
       resources :group_assignments, path: 'group-assignments'
-      resources :student_identifier_types, path: 'identifiers', only: [:index, :new, :create]
+      resources :student_identifier_types, path: 'identifiers', except: [:show]
     end
   end
 
