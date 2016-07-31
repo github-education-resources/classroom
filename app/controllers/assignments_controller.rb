@@ -49,13 +49,21 @@ class AssignmentsController < ApplicationController
 
   private
 
+  def student_identifier_types
+    @student_identifier_types ||= @organization.student_identifier_types.select(:name, :id).map do |student_identifier|
+      [student_identifier.name, student_identifier.id]
+    end
+  end
+  helper_method :student_identifier_types
+
   def new_assignment_params
     params
       .require(:assignment)
       .permit(:title, :public_repo, :students_are_repo_admins)
       .merge(creator: current_user,
              organization: @organization,
-             starter_code_repo_id: starter_code_repo_id_param)
+             starter_code_repo_id: starter_code_repo_id_param,
+             student_identifier_type: student_identifier_type_param)
   end
 
   def set_assignment
@@ -70,10 +78,21 @@ class AssignmentsController < ApplicationController
     end
   end
 
+  def student_identifier_type_param
+    return unless params.key?(:student_identifier_type)
+    StudentIdentifierType.find_by(id: student_identifier_type_params[:id], organization: @organization)
+  end
+
   def update_assignment_params
     params
       .require(:assignment)
       .permit(:title, :public_repo)
-      .merge(starter_code_repo_id: starter_code_repo_id_param)
+      .merge(starter_code_repo_id: starter_code_repo_id_param, student_identifier_type: student_identifier_type_param)
+  end
+
+  def student_identifier_type_params
+    params
+      .require(:student_identifier_type)
+      .permit(:id)
   end
 end

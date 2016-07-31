@@ -9,6 +9,8 @@ RSpec.describe AssignmentsController, type: :controller do
 
   let(:assignment) { Assignment.create(title: 'Assignment', creator: user, organization: organization) }
 
+  let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
+
   before do
     sign_in(user)
   end
@@ -107,6 +109,28 @@ RSpec.describe AssignmentsController, type: :controller do
         expect(flash[:error]).to eql('Invalid repository selection, please check it again.')
       end
     end
+
+    context 'flipper is enabled for the user' do
+      before do
+        Classroom.flipper[:student_identifier].enable
+        post :create,
+             organization_id:         organization.slug,
+             assignment:              attributes_for(:assignment),
+             student_identifier_type: { id: student_identifier_type.id }
+      end
+
+      it 'creates a new Assignment' do
+        expect(Assignment.count).to eql(1)
+      end
+
+      it 'sets correct student identifier type for the new Assignment' do
+        expect(Assignment.first.student_identifier_type.id).to eql(student_identifier_type.id)
+      end
+
+      after do
+        Classroom.flipper[:student_identifier].disable
+      end
+    end
   end
 
   describe 'GET #show', :vcr do
@@ -131,6 +155,25 @@ RSpec.describe AssignmentsController, type: :controller do
       patch :update, id: assignment.slug, organization_id: organization.slug, assignment: options
 
       expect(response).to redirect_to(organization_assignment_path(organization, Assignment.find(assignment.id)))
+    end
+
+    context 'flipper is enabled for the user' do
+      before do
+        Classroom.flipper[:student_identifier].enable
+        patch :update,
+              id:                      assignment.slug,
+              organization_id:         organization.slug,
+              assignment:              attributes_for(:assignment),
+              student_identifier_type: { id: student_identifier_type.id }
+      end
+
+      it 'correctly updates the assignment' do
+        expect(Assignment.first.student_identifier_type.id).to eql(student_identifier_type.id)
+      end
+
+      after do
+        Classroom.flipper[:student_identifier].disable
+      end
     end
   end
 
