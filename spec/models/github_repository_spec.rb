@@ -18,7 +18,7 @@ describe GitHubRepository do
     @client.delete_repository(@github_repository.id)
   end
 
-  describe '#present?', :vcr do
+  describe '::present?', :vcr do
     it 'returns true if the repo is present' do
       expect(GitHubRepository.present?(@client, 'rails/rails')).to be_truthy
     end
