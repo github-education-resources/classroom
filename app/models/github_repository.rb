@@ -14,7 +14,7 @@ class GitHubRepository < GitHubResource
   end
 
   def present?
-    @client.repository?(@id).present?
+    self.class.present?(@client, @id)
   end
 
   def self.present?(client, full_name)
