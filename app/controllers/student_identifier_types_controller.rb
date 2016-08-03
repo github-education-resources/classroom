@@ -2,7 +2,7 @@
 class StudentIdentifierTypesController < ApplicationController
   include OrganizationAuthorization
 
-  before_action :ensure_flipper_is_enabled
+  before_action :ensure_student_identifier_flipper_is_enabled
   before_action :save_referer, only: [:new]
 
   def index
@@ -31,10 +31,6 @@ class StudentIdentifierTypesController < ApplicationController
   end
 
   private
-
-  def ensure_flipper_is_enabled
-    not_found unless student_identifier_enabled?
-  end
 
   def set_student_identifier_type
     @student_identifier_type = StudentIdentifierType.find_by(id: params[:id])
