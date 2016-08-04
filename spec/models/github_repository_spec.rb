@@ -18,31 +18,48 @@ describe GitHubRepository do
     @client.delete_repository(@github_repository.id)
   end
 
-  describe '::present?', :vcr do
-    it 'returns true if the repo is present' do
-      expect(GitHubRepository.present?(@client, 'rails/rails')).to be_truthy
+  describe 'class methods' do
+    describe '::present?', :vcr do
+      it 'returns true if the repo is present' do
+        expect(GitHubRepository.present?(@client, 'rails/rails')).to be_truthy
+      end
+
+      it 'returns false if the repo is not present' do
+        expect(GitHubRepository.present?(@client, 'foobar/jim')).to be_falsey
+      end
     end
 
-    it 'returns false if the repo is not present' do
-      expect(GitHubRepository.present?(@client, 'foobar/jim')).to be_falsey
+    describe '::find_by_name_with_owner!', :vcr do
+      it 'raises a GitHubError if it cannot find the repo' do
+        expect do
+          GitHubRepository.find_by_name_with_owner!(@client, 'foobar/jim')
+        end.to raise_error(GitHub::Error)
+      end
     end
   end
 
-  describe '#find_by_name_with_owner!', :vcr do
-    it 'raises a GitHubError if it cannot find the repo' do
-      expect do
-        GitHubRepository.find_by_name_with_owner!(@client, 'foobar/jim')
-      end.to raise_error(GitHub::Error)
+  describe 'instance methods' do
+    describe '#present?', :vcr do
+      it 'returns true if the repo is present' do
+        # 8514 is rails/rails
+        github_repository = GitHubRepository.new(@client, 8514)
+        expect(github_repository.present?).to be_truthy
+      end
+
+      it 'returns false if the repo is not present' do
+        github_repository = GitHubRepository.new(@client, -1)
+        expect(github_repository.present?).to be_falsey
+      end
     end
-  end
 
-  GitHubRepository.new(@client, 123).send(:attributes).each do |attribute|
-    describe "##{attribute}", :vcr do
-      it "gets the #{attribute} of the repository " do
-        repository = @client.repository(@github_repository.id)
+    GitHubRepository.new(@client, 123).send(:attributes).each do |attribute|
+      describe "##{attribute}", :vcr do
+        it "gets the #{attribute} of the repository " do
+          repository = @client.repository(@github_repository.id)
 
-        expect(@github_repository.send(attribute)).to eql(repository.send(attribute))
-        expect(WebMock).to have_requested(:get, github_url("/repositories/#{repository.id}")).twice
+          expect(@github_repository.send(attribute)).to eql(repository.send(attribute))
+          expect(WebMock).to have_requested(:get, github_url("/repositories/#{repository.id}")).twice
+        end
       end
     end
   end
