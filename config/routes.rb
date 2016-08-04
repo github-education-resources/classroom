@@ -44,6 +44,7 @@ Rails.application.routes.draw do
       resources :groupings, only: [:show, :edit, :update]
       resources :assignments
       resources :group_assignments, path: 'group-assignments'
+      resources :student_identifier_types, path: 'identifiers', only: [:index, :new, :create]
     end
   end
 

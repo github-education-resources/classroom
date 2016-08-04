@@ -1,11 +1,19 @@
 <nav class="menu">
   <span class="menu-heading">Classroom settings</span>
-  <%= link_to 'Classroom profile', edit_organization_path(@organization), class: "menu-item #{'selected' if current_page?(edit_organization_path(@organization))}" %>
-  <% if Classroom.flipper[:team_management].enabled? current_user %>
-  <%= link_to 'Team management',
-              settings_teams_organization_path(@organization),
-              class: "menu-item #{'selected' if current_page?(settings_teams_organization_path(@organization))}" %>
+
+  <%= link_to 'Classroom profile', edit_organization_path(@organization),
+              class: "menu-item #{'selected' if current_page?(edit_organization_path(@organization))}" %>
+
+  <% if student_identifier_enabled? %>
+    <%= link_to 'Student identifiers', organization_student_identifier_types_path(@organization),
+                class: "menu-item #{'selected' if current_page?(organization_student_identifier_types_path(@organization))}" %>
   <% end %>
+
+  <% if student_identifier_enabled? %>
+    <%= link_to 'Team management', settings_teams_organization_path(@organization),
+                class: "menu-item #{'selected' if current_page?(settings_teams_organization_path(@organization))}" %>
+  <% end %>
+
   <%= link_to 'Invite other administrators',
               settings_invitations_organization_path(@organization),
               class: "menu-item #{'selected' if current_page?(settings_invitations_organization_path(@organization))}" %>

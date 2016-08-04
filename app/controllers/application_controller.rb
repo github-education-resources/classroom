@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   class NotAuthorized < StandardError
   end
 
-  helper_method :current_user, :logged_in?, :staff?, :true_user
+  helper_method :current_user, :logged_in?, :staff?, :true_user, :student_identifier_enabled?
 
   before_action :authenticate_user!
 
@@ -81,6 +81,10 @@ class ApplicationController < ActionController::Base
 
   def logged_in?
     !current_user.nil?
+  end
+
+  def student_identifier_enabled?
+    Classroom.flipper[:student_identifier].enabled?(current_user)
   end
 
   def not_found
