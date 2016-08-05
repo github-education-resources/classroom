@@ -26,6 +26,33 @@ RSpec.describe GroupingsController, type: :controller do
       end
     end
 
+    describe 'GET #edit', :vcr do
+      it 'returns success status' do
+        get :edit, organization_id: organization.slug, id: grouping.slug
+
+        expect(response.status).to eq(200)
+        expect(assigns(:grouping)).to_not be_nil
+      end
+    end
+
+    describe 'PATCH #update', :vcr do
+      let(:update_options) do
+        { title: 'Fall 2015' }
+      end
+
+      before do
+        patch :update, organization_id: organization.slug, id: grouping.slug, grouping: update_options
+      end
+
+      it 'correctly updates the grouping' do
+        expect(Grouping.find(grouping.id).title).to eql(update_options[:title])
+      end
+
+      it 'correctly redirects back' do
+        expect(response).to redirect_to(settings_teams_organization_path(organization))
+      end
+    end
+
     after do
       Classroom.flipper[:team_management].disable
     end
@@ -38,6 +65,25 @@ RSpec.describe GroupingsController, type: :controller do
           get :show,
               organization_id: organization.slug,
               id: grouping.slug
+        end.to raise_error(ActionController::RoutingError)
+      end
+    end
+
+    describe 'GET #edit', :vcr do
+      it 'returns success status' do
+        expect do
+          get :edit,
+              organization_id: organization.slug,
+              id: grouping.slug
+        end.to raise_error(ActionController::RoutingError)
+      end
+    end
+
+    describe 'PATCH #update', :vcr do
+      it 'correctly updates the grouping' do
+        update_options = { title: 'Fall 2015' }
+        expect do
+          patch :update, organization_id: organization.slug, id: grouping.slug, grouping: update_options
         end.to raise_error(ActionController::RoutingError)
       end
     end
