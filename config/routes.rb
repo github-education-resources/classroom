@@ -42,6 +42,7 @@ Rails.application.routes.draw do
       end
 
       resources :groupings, only: [:show] do
+      resources :groupings, only: [:show, :edit, :update] do
         resources :groups, only: [:show] do
           member do
             patch '/memberships/:user_id', to: 'groups#add_membership', as: 'add_membership'
@@ -51,7 +52,7 @@ Rails.application.routes.draw do
       end
       resources :assignments
       resources :group_assignments, path: 'group-assignments'
-      resources :student_identifier_types, path: 'identifiers', only: [:index, :new, :create]
+      resources :student_identifier_types, path: 'identifiers', except: [:show]
     end
   end
 

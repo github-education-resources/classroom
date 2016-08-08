@@ -8,7 +8,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
   let(:user)          { organization.users.first                 }
   let(:student)       { GitHubFactory.create_classroom_student   }
 
-  let(:student_identifier_type) { GitHubFactory.create_student_identifier(organization) }
+  let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
 
   before do
     sign_in(user)
@@ -58,6 +58,56 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
       end
     end
 
+    describe 'GET #edit', :vcr do
+      it 'returns success status' do
+        student_identifier_type
+        get :edit, organization_id: organization.slug, id: student_identifier_type.id
+
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    describe 'PATCH #update', :vcr do
+      before(:each) do
+        options = { name: 'Test2', description: 'Test2', content_type: 'email' }
+        patch :update,
+              organization_id: organization.slug,
+              id: student_identifier_type.id,
+              student_identifier_type: options
+      end
+
+      it 'correctly updates the student identifier type' do
+        expect(StudentIdentifierType.find(student_identifier_type.id).name).to eql('Test2')
+      end
+
+      it 'redirects to the identifier index page on success' do
+        expect(response).to redirect_to(organization_student_identifier_types_path(organization))
+      end
+    end
+
+    describe 'DELETE #destroy', :vcr do
+      it 'sets the `deleted_at` column' do
+        student_identifier_type
+        expect do
+          delete :destroy, id: student_identifier_type.id, organization_id: organization
+        end.to change { StudentIdentifierType.all.count }
+        expect(StudentIdentifierType.unscoped.find(student_identifier_type.id).deleted_at).not_to be_nil
+      end
+
+      it 'calls the DestroyResource background job' do
+        delete :destroy, id: student_identifier_type.id, organization_id: organization
+
+        assert_enqueued_jobs 1 do
+          DestroyResourceJob.perform_later(student_identifier_type)
+        end
+      end
+
+      it 'redirects back to the student identifier type index' do
+        delete :destroy, id: student_identifier_type.id, organization_id: organization
+        expect(response).to redirect_to(organization_student_identifier_types_path(organization))
+      end
+    end
+
     after do
       Classroom.flipper[:student_identifier].disable
     end
@@ -82,6 +132,36 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
           post :create,
                organization_id: organization.slug,
                student_identifier_type: { name: 'Test', description: 'Test', content_type: 'text' }
+        end.to raise_error(ActionController::RoutingError)
+      end
+    end
+
+    describe 'GET #edit', :vcr do
+      it 'returns a 404' do
+        student_identifier_type
+        expect do
+          get :edit, organization_id: organization.slug, id: student_identifier_type.id
+        end.to raise_error(ActionController::RoutingError)
+      end
+    end
+
+    describe 'PATCH #update', :vcr do
+      it 'returns a 404' do
+        options = { name: 'Test2', description: 'Test2', content_type: 'email' }
+        expect do
+          patch :update,
+                organization_id: organization.slug,
+                id: student_identifier_type.id,
+                student_identifier_type: options
+        end.to raise_error(ActionController::RoutingError)
+      end
+    end
+
+    describe 'DELETE #destroy', :vcr do
+      it 'returns a 404' do
+        student_identifier_type
+        expect do
+          delete :destroy, id: student_identifier_type.id, organization_id: organization
         end.to raise_error(ActionController::RoutingError)
       end
     end

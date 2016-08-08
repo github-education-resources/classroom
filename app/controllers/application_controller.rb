@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   class NotAuthorized < StandardError
   end
 
-  helper_method :current_user, :logged_in?, :staff?, :true_user, :student_identifier_enabled?
+  helper_method :current_user, :logged_in?, :staff?, :true_user, :student_identifier_enabled?, :team_management_enabled?
 
   before_action :authenticate_user!
 
@@ -23,7 +23,11 @@ class ApplicationController < ActionController::Base
   private
 
   def ensure_team_management_flipper_is_enabled
-    not_found unless Classroom.flipper[:team_management].enabled? current_user
+    not_found unless team_management_enabled?
+  end
+
+  def ensure_student_identifier_flipper_is_enabled
+    not_found unless student_identifier_enabled?
   end
 
   def current_scopes
@@ -85,6 +89,10 @@ class ApplicationController < ActionController::Base
 
   def student_identifier_enabled?
     Classroom.flipper[:student_identifier].enabled?(current_user)
+  end
+
+  def team_management_enabled?
+    Classroom.flipper[:team_management].enabled?(current_user)
   end
 
   def not_found
