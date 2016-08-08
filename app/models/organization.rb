@@ -22,6 +22,10 @@ class Organization < ActiveRecord::Base
 
   validates :slug, uniqueness: true
 
+  validates :webhook_id, uniqueness: true, allow_nil: true
+
+  before_destroy :silently_remove_organization_webhook
+
   def all_assignments(with_invitations: false)
     return assignments + group_assignments unless with_invitations
 
@@ -40,5 +44,15 @@ class Organization < ActiveRecord::Base
 
   def slugify
     self.slug = "#{github_id} #{title}".parameterize
+  end
+
+  def create_organization_webhook(webhook_url)
+    webhook = github_organization.create_organization_webhook(config: { url: webhook_url })
+    update_attributes(webhook_id: webhook.id)
+  end
+
+  def silently_remove_organization_webhook
+    github_organization.remove_organization_webhook(webhook_id)
+    true
   end
 end

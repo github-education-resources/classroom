@@ -1,0 +1,30 @@
+<div class="remodal-bg">
+  <%= render 'organizations/organization_banner' %>
+  <div class="columns">
+    <div class="one-fourth column">
+      <%= render partial: 'organizations/side_menu' %>
+    </div>
+    <div class="three-fourths column">
+      <div class="boxed-group">
+        <% if @student_identifier_types.present? %>
+            <%= link_to 'New identifier type', new_organization_student_identifier_type_path(@organization), class: 'btn btn-sm boxed-group-action', role: 'button'%>
+        <% end %>
+        <h3>Student identifier types</h3>
+        <div class="boxed-group-inner clearfix">
+          <% if @student_identifier_types.present? %>
+              <div class="identifier-type-list-items">
+                <%= render @student_identifier_types %>
+              </div>
+          <% else %>
+              <div class="blankslate large-format spacious clean-background">
+                <h3>This organization doesn't have any student identifier types yet.</h3>
+                <%= link_to new_organization_student_identifier_type_path(@organization), class: 'btn btn-green btn-big', role: 'button' do %>
+                    Create your first student identifier type
+                <% end %>
+              </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
