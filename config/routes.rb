@@ -41,7 +41,6 @@ Rails.application.routes.draw do
         get   'settings/teams',       to: 'organizations#show_groupings'
       end
 
-      resources :groupings, only: [:show] do
       resources :groupings, only: [:show, :edit, :update] do
         resources :groups, only: [:show] do
           member do
