@@ -7,6 +7,8 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   before_action :authorize_group_access, only: [:accept_invitation]
 
+  before_action :ensure_github_repo_exists, only: [:successful_invitation]
+
   def show
     @groups = invitation.groups.map { |group| [group.title, group.id] }
   end
@@ -29,7 +31,6 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
 
   def successful_invitation
-    not_found unless group_assignment_repo
   end
 
   private
@@ -108,5 +109,16 @@ class GroupAssignmentInvitationsController < ApplicationController
   def check_user_not_group_member
     return unless group.present?
     redirect_to accept_group_assignment_invitation_path
+  end
+
+  def ensure_github_repo_exists
+    return not_found unless group_assignment_repo
+    return if group_assignment_repo.github_repository.present?
+
+    group = group_assignment_repo.group
+
+    group_assignment_repo.destroy
+    @group_assignment_repo = nil
+    create_group_assignment_repo(selected_group: group)
   end
 end
