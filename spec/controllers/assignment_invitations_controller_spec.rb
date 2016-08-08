@@ -122,7 +122,6 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     before(:each) do
       sign_in(user)
       @assignment_repo = AssignmentRepo.create!(assignment: assignment, user: user)
-      @github_repository = organization.github_client.repository(@assignment_repo.github_repo_id)
     end
 
     after(:each) do
