@@ -15,27 +15,16 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
 
   def accept_assignment
-    users_group_assignment_repo = invitation.redeem_for(current_user, group)
-
-    if users_group_assignment_repo.present?
-      redirect_to successful_invitation_group_assignment_invitation_path
-    else
-      flash[:error] = 'An error has occured, please refresh the page and try again.'
-      redirect_to :show
-    end
+    create_group_assignment_repo { redirect_to successful_invitation_group_assignment_invitation_path }
   end
 
   def accept_invitation
     selected_group       = Group.find_by(id: group_params[:id])
     selected_group_title = group_params[:title]
 
-    users_group_assignment_repo = invitation.redeem_for(current_user, selected_group, selected_group_title)
-
-    if users_group_assignment_repo.present?
+    create_group_assignment_repo(selected_group: selected_group,
+                                 new_group_title: selected_group_title) do
       redirect_to successful_invitation_group_assignment_invitation_path
-    else
-      flash[:error] = 'An error has occured, please refresh the page and try again.'
-      redirect_to :show
     end
   end
 
@@ -73,6 +62,17 @@ class GroupAssignmentInvitationsController < ApplicationController
     @group ||= repo_access.groups.find_by(grouping: group_assignment.grouping)
   end
   helper_method :group
+
+  def create_group_assignment_repo(selected_group: group, new_group_title: nil)
+    users_group_assignment_repo = invitation.redeem_for(current_user, selected_group, new_group_title)
+
+    if users_group_assignment_repo.present?
+      yield if block_given?
+    else
+      flash[:error] = 'An error has occured, please refresh the page and try again.'
+      redirect_to :show
+    end
+  end
 
   def group_assignment
     @group_assignment ||= invitation.group_assignment
