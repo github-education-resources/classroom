@@ -50,4 +50,42 @@ RSpec.describe Organization, type: :model do
       expect(subject.github_client.class).to eql(Octokit::Client)
     end
   end
+
+  context 'with valid organization', :vcr do
+    let(:subject) { GitHubFactory.create_owner_classroom_org }
+
+    after(:each) do
+      subject.destroy
+    end
+
+    describe '#create_organization_webhook' do
+      it 'sets webhook_id' do
+        expect { subject.create_organization_webhook('http://localhost') }.to change { subject.webhook_id }
+      end
+
+      it 'creates a webhook on GitHub' do
+        org_id = subject.github_id
+        subject.create_organization_webhook('http://localhost')
+        expect(WebMock).to have_requested(:post, github_url("/organizations/#{org_id}/hooks"))
+      end
+    end
+
+    describe 'callbacks' do
+      describe 'before_destroy' do
+        describe '#silently_remove_organization_webhook' do
+          before do
+            subject.create_organization_webhook('http://localhost')
+          end
+
+          it 'deletes the webhook from GitHub' do
+            org_id = subject.github_id
+            webhook_id = subject.webhook_id
+            subject.destroy
+
+            expect(WebMock).to have_requested(:delete, github_url("/organizations/#{org_id}/hooks/#{webhook_id}"))
+          end
+        end
+      end
+    end
+  end
 end
