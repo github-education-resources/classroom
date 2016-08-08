@@ -29,7 +29,7 @@ class GroupsController < ApplicationController
   end
 
   def set_group
-    @group = Group.find_by!(slug: params[:id])
+    @group = Group.includes(:repo_accesses).find_by!(slug: params[:id])
   end
 
   def set_member
