@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class GroupAssignmentRepo < ActiveRecord::Base
+class GroupAssignmentRepo < ApplicationRecord
   include GitHubPlan
   include GitHubRepoable
   include Nameable
