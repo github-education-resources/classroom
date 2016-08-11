@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class RepoAccess < ActiveRecord::Base
+class RepoAccess < ApplicationRecord
   include GitHubTeamable
 
   update_index('stafftools#repo_access') { self }
