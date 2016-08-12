@@ -95,7 +95,7 @@ class GitHubOrganization < GitHubResource
   end
 
   def team_invitations_url
-    "https://github.com/orgs/#{login}/invitations/new"
+    "https://github.com/orgs/#{login}/people"
   end
 
   def create_organization_webhook(config: {}, options: {})
