@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   include Flippable
 
   update_index('stafftools#user') { self }

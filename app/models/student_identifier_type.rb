@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class StudentIdentifierType < ActiveRecord::Base
+class StudentIdentifierType < ApplicationRecord
   default_scope { where(deleted_at: nil) }
 
   belongs_to :organization, -> { unscope(where: :deleted_at) }
