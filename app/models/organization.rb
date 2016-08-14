@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class Organization < ActiveRecord::Base
+class Organization < ApplicationRecord
   include Flippable
   include Sluggable
 
