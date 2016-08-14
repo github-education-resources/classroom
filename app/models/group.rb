@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class Group < ActiveRecord::Base
+class Group < ApplicationRecord
   include GitHubTeamable
   include Sluggable
 
