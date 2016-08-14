@@ -60,8 +60,8 @@ class AssignmentInvitationsController < ApplicationController
   def ensure_github_repo_exists
     return not_found unless assignment_repo
     return if assignment_repo
-      .github_repository
-      .present?(headers: GitHub::APIHeaders.no_cache_no_store)
+              .github_repository
+              .present?(headers: GitHub::APIHeaders.no_cache_no_store)
 
     assignment_repo.destroy
     @assignment_repo = nil

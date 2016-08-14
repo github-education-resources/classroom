@@ -114,8 +114,8 @@ class GroupAssignmentInvitationsController < ApplicationController
   def ensure_github_repo_exists
     return not_found unless group_assignment_repo
     return if group_assignment_repo
-      .github_repository
-      .present?(headers: GitHub::APIHeaders.no_cache_no_store)
+              .github_repository
+              .present?(headers: GitHub::APIHeaders.no_cache_no_store)
 
     group = group_assignment_repo.group
 
