@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class AssignmentInvitation < ActiveRecord::Base
+class AssignmentInvitation < ApplicationRecord
   default_scope { where(deleted_at: nil) }
 
   update_index('stafftools#assignment_invitation') { self }

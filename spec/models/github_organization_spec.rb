@@ -82,6 +82,13 @@ describe GitHubOrganization do
     end
   end
 
+  describe '#team_invitations_url', :vcr do
+    it 'points to the people url' do
+      url = "https://github.com/orgs/#{@github_organization.login}/people"
+      expect(@github_organization.team_invitations_url).to eql(url)
+    end
+  end
+
   GitHubOrganization.new(@client, 123).send(:attributes).each do |attribute|
     describe "##{attribute}", :vcr do
       it "gets the #{attribute} of the organization" do

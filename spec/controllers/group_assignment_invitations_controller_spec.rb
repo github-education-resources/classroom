@@ -161,4 +161,48 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       end
     end
   end
+
+  describe 'GET #successful_invitation' do
+    let(:organization)  { GitHubFactory.create_owner_classroom_org }
+    let(:user)          { GitHubFactory.create_classroom_student   }
+    let(:grouping)      { Grouping.create(title: 'Grouping 1', organization: organization) }
+    let(:group)         { Group.create(title: 'The Group', grouping: grouping)             }
+
+    let(:group_assignment) do
+      GroupAssignment.create(creator: organization.users.first,
+                             title: 'HTML5',
+                             grouping: grouping,
+                             organization: organization,
+                             public_repo: true)
+    end
+
+    let(:invitation) { GroupAssignmentInvitation.create(group_assignment: group_assignment) }
+
+    before(:each) do
+      sign_in(user)
+      group.repo_accesses << RepoAccess.create!(user: user, organization: organization)
+      @group_assignment_repo = GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
+    end
+
+    after(:each) do
+      RepoAccess.destroy_all
+      Group.destroy_all
+      GroupAssignmentRepo.destroy_all
+    end
+
+    context 'delete github repository after accepting a invitation successfully', :vcr do
+      before do
+        organization.github_client.delete_repository(@group_assignment_repo.github_repo_id)
+        get :successful_invitation, id: invitation.key
+      end
+
+      it 'deletes the old group assignment repo' do
+        expect { @group_assignment_repo.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it 'creates a new group assignment repo for the group' do
+        expect(GroupAssignmentRepo.last.id).not_to eq(@group_assignment_repo.id)
+      end
+    end
+  end
 end
