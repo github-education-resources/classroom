@@ -3,15 +3,13 @@ class GroupsController < ApplicationController
   include OrganizationAuthorization
 
   before_action :ensure_team_management_flipper_is_enabled
-  before_action :set_group
-  before_action :set_grouping
   before_action :set_member, only: [:add_membership, :remove_membership]
 
   def add_membership
     repo_access = RepoAccess.find_by(user: @user, organization: @organization)
 
     if repo_access.present?
-      @group.repo_accesses << repo_access
+      group.repo_accesses << repo_access
       render nothing: true, status: 204
     else
       render json: {
@@ -24,7 +22,7 @@ class GroupsController < ApplicationController
     repo_access = RepoAccess.find_by(user: @user, organization: @organization)
 
     if repo_access.present?
-      @group.repo_accesses.delete(repo_access)
+      group.repo_accesses.delete(repo_access)
       render nothing: true, status: 204
     else
       render json: {
@@ -35,13 +33,15 @@ class GroupsController < ApplicationController
 
   private
 
-  def set_grouping
-    @grouping = Grouping.find_by!(slug: params[:grouping_id])
+  def grouping
+    @grouping ||= Grouping.find_by!(slug: params[:grouping_id])
   end
+  helper_method :grouping
 
-  def set_group
-    @group = Group.includes(:repo_accesses).find_by!(slug: params[:id])
+  def group
+    @group ||= Group.includes(:repo_accesses).find_by!(slug: params[:id])
   end
+  helper_method :group
 
   def set_member
     @user = User.find_by!(id: params[:user_id])
