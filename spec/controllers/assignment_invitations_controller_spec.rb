@@ -104,4 +104,43 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
     end
   end
+
+  describe 'GET #successful_invitation' do
+    let(:organization) { GitHubFactory.create_owner_classroom_org }
+    let(:user)         { GitHubFactory.create_classroom_student   }
+
+    let(:assignment) do
+      Assignment.create(creator: organization.users.first,
+                        title: 'ruby-project',
+                        starter_code_repo_id: '1062897',
+                        organization: organization,
+                        public_repo: false)
+    end
+
+    let(:invitation) { AssignmentInvitation.create(assignment: assignment) }
+
+    before(:each) do
+      sign_in(user)
+      @assignment_repo = AssignmentRepo.create!(assignment: assignment, user: user)
+    end
+
+    after(:each) do
+      AssignmentRepo.destroy_all
+    end
+
+    context 'delete github repository after accepting a invitation successfully', :vcr do
+      before do
+        organization.github_client.delete_repository(@assignment_repo.github_repo_id)
+        get :successful_invitation, id: invitation.key
+      end
+
+      it 'deletes the old assignment repo' do
+        expect { @assignment_repo.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it 'creates a new assignment repo for the student' do
+        expect(AssignmentRepo.last.id).not_to eq(@assignment_repo.id)
+      end
+    end
+  end
 end
