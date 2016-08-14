@@ -728,6 +728,12 @@ hr {
   }
 }
 
+.team-members {
+  .team-member:not(:first-child) {
+    margin-top: 10px;
+  }
+}
+
 .no-scroll {
   height: 100%;
   overflow: hidden;

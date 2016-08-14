@@ -1,8 +1,6 @@
 <div class="team-panel">
   <div class="team-info">
-    <a class="right btn btn-sm" href="#">
-      Manage
-    </a>
+    <%= link_to 'Manage', organization_grouping_group_path(@organization, @grouping, group), class: 'right btn btn-sm' %>
     <strong class="team-name" itemprop="name"><%= group.title %></strong>
     <span class="team-description" itemprop="description"><%= pluralize(group.repo_accesses.count, 'student') %></span>
   </div>

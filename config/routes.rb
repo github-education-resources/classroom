@@ -41,7 +41,13 @@ Rails.application.routes.draw do
         get   'settings/teams',       to: 'organizations#show_groupings'
       end
 
-      resources :groupings, only: [:show, :edit, :update]
+      resources :groupings, only: [:show, :edit, :update] do
+        resources :groups, only: [:show] do
+          member do
+            delete '/memberships/:user_id', to: 'groups#remove_membership', as: 'remove_membership'
+          end
+        end
+      end
       resources :assignments
       resources :group_assignments, path: 'group-assignments'
       resources :student_identifier_types, path: 'identifiers', except: [:show]
