@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class SessionsController < ApplicationController
-  skip_before_action :authenticate_user!, :set_organization, :authorize_organization_access
+  skip_before_action :authenticate_user!
 
   def new
     scopes = session[:required_scopes] || default_required_scopes
