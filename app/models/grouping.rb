@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class Grouping < ActiveRecord::Base
+class Grouping < ApplicationRecord
   include Sluggable
 
   update_index('stafftools#grouping') { self }

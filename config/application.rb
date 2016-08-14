@@ -32,10 +32,6 @@ module Classroom
     # Append directories to autoload paths
     config.autoload_paths += Dir["#{Rails.root}/lib"]
 
-    # Precompile Fonts
-    # Compile all font types except octicons-local
-    config.assets.precompile << %r(octicons/octicons/octicons+\.(?:svg|eot|woff|ttf)$)
-
     # Configure the generators
     config.generators do |g|
       g.test_framework :rspec, fixture: false
@@ -61,12 +57,13 @@ module Classroom
         end
 
         ping.check :redis do
-          Sidekiq.redis { |redis| redis.ping }
+          Sidekiq.redis(&:ping)
           'ok'
         end
 
         ping.check :elasticsearch do
           status = Chewy.client.cluster.health['status'] || 'unavailable'
+
           if status == 'green'
             'ok'
           else
