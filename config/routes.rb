@@ -39,13 +39,13 @@ Rails.application.routes.draw do
         patch :setup_organization
         get   'settings/invitations', to: 'organizations#invitation'
         get   'settings/teams',       to: 'organizations#show_groupings'
-        post  'events',               to: 'webhook_events#create'
       end
 
       resources :groupings, only: [:show, :edit, :update]
       resources :assignments
       resources :group_assignments, path: 'group-assignments'
       resources :student_identifier_types, path: 'identifiers', except: [:show]
+      resources :webhook_events, path: 'events', only: [:create]
     end
   end
 
