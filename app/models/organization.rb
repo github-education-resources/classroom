@@ -38,16 +38,16 @@ class Organization < ApplicationRecord
     Octokit::Client.new(access_token: token)
   end
 
-  def github_organization
-    @github_organization ||= GitHubOrganization.new(github_client, github_id)
+  def github_organization(client = nil)
+    @github_organization ||= GitHubOrganization.new(client || github_client, github_id)
   end
 
   def slugify
     self.slug = "#{github_id} #{title}".parameterize
   end
 
-  def create_organization_webhook(webhook_url)
-    webhook = github_organization.create_organization_webhook(config: { url: webhook_url })
+  def create_organization_webhook(webhook_url, client = nil)
+    webhook = github_organization(client).create_organization_webhook(config: { url: webhook_url })
     update_attributes(webhook_id: webhook.id)
   end
 
