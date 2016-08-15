@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 class WebhookEventsController < ApplicationController
+  skip_before_action :verify_authenticity_token
   skip_before_action :authenticate_user!
 
   before_action :verify_payload_signature
@@ -40,8 +41,8 @@ class WebhookEventsController < ApplicationController
   end
 
   def verify_organization_presence
-    payload_github_id = params.dig(:organization, :id)
-    path_github_id = params[:organization_id].split('-').first
+    payload_github_id = params.dig(:organization, :id).to_s
+    path_github_id = params[:id].split('-').first.to_s
     return not_found unless payload_github_id == path_github_id
     @organization ||= Organization.find_by(github_id: payload_github_id)
     not_found unless @organization.present?
