@@ -13,12 +13,15 @@ RSpec.describe WebhookEventsController, type: :controller do
         before(:each) do
           payload = File.read("#{Rails.root}/spec/fixtures/webhook_events/ping.json").strip
 
-          algorithm = 'sha1'
-          signature = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new(algorithm),
-                                              Rails.application.secrets.webhook_secret,
-                                              payload)
+          if Rails.application.secrets.webhook_secret.present?
+            algorithm = 'sha1'
+            signature = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new(algorithm),
+                                                Rails.application.secrets.webhook_secret,
+                                                payload)
 
-          request.headers['X-Hub-Signature'] = "#{algorithm}=#{signature}"
+            request.headers['X-Hub-Signature'] = "#{algorithm}=#{signature}"
+          end
+
           request.headers['X-GitHub-Event'] = 'ping'
           request.headers['CONTENT_TYPE'] = 'application/json'
 
