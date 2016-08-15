@@ -7,7 +7,8 @@ module OrganizationWebhook
       return yield if block_given?
     end
 
-    @organization.create_organization_webhook(events_organization_url(@organization), current_user.github_client)
+    @organization.create_organization_webhook(organization_webhook_events_url(@organization),
+                                              current_user.github_client)
     yield if block_given?
   rescue => err
     @organization.destroy
