@@ -70,7 +70,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     if users_group_assignment_repo.present?
       yield if block_given?
     else
-      flash[:error] = 'An error has occured, please refresh the page and try again.'
+      flash[:error] = 'An error has occurred, please refresh the page and try again.'
       redirect_to :show
     end
   end
