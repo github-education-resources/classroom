@@ -11,7 +11,16 @@ RSpec.describe WebhookEventsController, type: :controller do
     describe 'ping event' do
       context 'valid payload signature' do
         before(:each) do
-          payload = File.read("#{Rails.root}/spec/fixtures/webhook_events/ping.json").strip
+          params = {
+            sender: {
+              id: user.uid
+            },
+            organization: {
+              id: organization.github_id
+            }
+          }
+
+          payload = params.to_json
 
           if Rails.application.secrets.webhook_secret.present?
             algorithm = 'sha1'
@@ -25,10 +34,15 @@ RSpec.describe WebhookEventsController, type: :controller do
           request.headers['X-GitHub-Event'] = 'ping'
           request.headers['CONTENT_TYPE'] = 'application/json'
 
-          post :create, payload, JSON.parse(payload).merge(organization_id: organization.slug)
+          post :create, payload, params.merge(organization_id: organization.slug)
         end
         it 'returns success' do
           expect(response).to have_http_status(:success)
+        end
+
+        it 'updates organization is_webhook_active value' do
+          organization.reload
+          expect(organization.is_webhook_active).to be_truthy
         end
       end
     end
