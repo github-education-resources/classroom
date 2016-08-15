@@ -32,12 +32,17 @@ class WebhookEventsController < ApplicationController
   end
 
   def verify_payload_signature
-    algorithm, signature = request.headers['X-Hub-Signature'].split('=')
+    return unless Rails.application.secrets.webhook_secret.present?
 
-    payload_validated = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new(algorithm),
-                                                Rails.application.secrets.webhook_secret,
-                                                request.body.read) == signature
+    algorithm, signature = request.headers['X-Hub-Signature'].split('=')
+    payload_validated = actual_payload_signature(algorithm) == signature
     not_found unless payload_validated
+  end
+
+  def actual_payload_signature(algorithm)
+    OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new(algorithm),
+                            Rails.application.secrets.webhook_secret,
+                            request.body.read)
   end
 
   def verify_organization_presence
