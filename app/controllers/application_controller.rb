@@ -76,7 +76,7 @@ class ApplicationController < ActionController::Base
       when NotAuthorized
         flash[:error] = 'You are not authorized to perform this action'
       when GitHub::Error, GitHub::Forbidden, GitHub::NotFound
-        flash[:error] = 'Uh oh, an error has occured.'
+        flash[:error] = 'Uh oh, an error has occurred.'
       end
     end
 
