@@ -127,6 +127,41 @@ RSpec.describe OrganizationsController, type: :controller do
 
       expect(response).to redirect_to(setup_organization_path(Organization.last))
     end
+
+    context 'explicit assignment submission flipper is enabled' do
+      before do
+        Classroom.flipper[:explicit_assignment_submission].enable
+        Organization.destroy_all
+      end
+
+      before(:each) do
+        organization_params = {
+          title: organization.title,
+          github_id: organization.github_id,
+          users: organization.users
+        }
+        organization.destroy!
+
+        post :create, organization: organization_params
+      end
+
+      it 'should set webhook_id for the organization' do
+        expect(Organization.last.webhook_id).to be_truthy
+      end
+
+      it 'should create an organization webhook on GitHub.com' do
+        new_org = Organization.last
+        expect(new_org.github_client.org_hook(new_org.github_id, new_org.webhook_id)).to be_truthy
+      end
+
+      after(:each) do
+        Organization.destroy_all
+      end
+
+      after do
+        Classroom.flipper[:explicit_assignment_submission].disable
+      end
+    end
   end
 
   describe 'GET #show', :vcr do
