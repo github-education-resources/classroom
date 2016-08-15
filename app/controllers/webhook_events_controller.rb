@@ -42,7 +42,7 @@ class WebhookEventsController < ApplicationController
 
   def verify_organization_presence
     payload_github_id = params.dig(:organization, :id).to_s
-    path_github_id = params[:id].split('-').first.to_s
+    path_github_id = params[:organization_id].split('-').first.to_s
     return not_found unless payload_github_id == path_github_id
     @organization ||= Organization.find_by(github_id: payload_github_id)
     not_found unless @organization.present?
