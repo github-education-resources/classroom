@@ -12,6 +12,12 @@ RSpec.describe WebhookEventsController, type: :controller do
       context 'valid payload signature' do
         before(:each) do
           params = {
+            zen: 'Design for failure.',
+            hook_id: 999,
+            hook: {
+              type: 'Organization',
+              id: 999
+            },
             sender: {
               id: user.uid
             },
