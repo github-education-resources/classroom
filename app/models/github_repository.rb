@@ -13,8 +13,12 @@ class GitHubRepository < GitHubResource
     end
   end
 
-  def self.present?(client, full_name)
-    client.repository?(full_name)
+  def present?(**options)
+    self.class.present?(@client, @id, options)
+  end
+
+  def self.present?(client, full_name, **options)
+    client.repository?(full_name, options)
   end
 
   def self.find_by_name_with_owner!(client, full_name)
