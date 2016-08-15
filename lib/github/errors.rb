@@ -29,7 +29,7 @@ module GitHub
 
       # rubocop:disable AbcSize
       def build_error_message(error)
-        return 'An error has occured' unless error.errors.present?
+        return 'An error has occurred' unless error.errors.present?
 
         error.errors.map do |err|
           error_message = []
