@@ -41,6 +41,7 @@ RSpec.describe WebhookEventsController, type: :controller do
 
           post :create, payload, params.merge(organization_id: organization.slug)
         end
+
         it 'returns success' do
           expect(response).to have_http_status(:success)
         end
