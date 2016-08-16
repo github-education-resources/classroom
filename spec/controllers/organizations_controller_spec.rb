@@ -145,11 +145,11 @@ RSpec.describe OrganizationsController, type: :controller do
         post :create, organization: organization_params
       end
 
-      it 'should set webhook_id for the organization' do
+      it 'sets webhook_id for the organization' do
         expect(Organization.last.webhook_id).to be_truthy
       end
 
-      it 'should create an organization webhook on GitHub.com' do
+      it 'creates an organization webhook on GitHub.com' do
         new_org = Organization.last
         expect(new_org.github_client.org_hook(new_org.github_id, new_org.webhook_id)).to be_truthy
       end
