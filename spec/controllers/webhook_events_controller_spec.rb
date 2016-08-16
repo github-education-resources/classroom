@@ -38,7 +38,6 @@ RSpec.describe WebhookEventsController, type: :controller do
           end
 
           request.headers['X-GitHub-Event'] = 'ping'
-          request.headers['CONTENT_TYPE'] = 'application/json'
 
           post :create, payload, params.merge(organization_id: organization.slug)
         end
