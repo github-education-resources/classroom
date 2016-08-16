@@ -1,3 +1,4 @@
 :queues:
   - chewy
   - trash_can
+  - github_webhook
