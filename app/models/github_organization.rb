@@ -107,6 +107,10 @@ class GitHubOrganization < GitHubResource
     end
   end
 
+  def ping_organization_webhook(webhook_id)
+    @client.ping_org_hook(@id, webhook_id)
+  end
+
   def remove_organization_webhook(webhook_id)
     return unless webhook_id.present?
     @client.remove_org_hook(@id, webhook_id)

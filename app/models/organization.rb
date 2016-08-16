@@ -52,6 +52,13 @@ class Organization < ApplicationRecord
     update_attributes(webhook_id: webhook.id)
   end
 
+  def ping_organization_webhook(client = nil)
+    return unless webhook_id.present?
+
+    GitHubOrganization.new(client || github_client, github_id)
+                      .ping_organization_webhook(webhook_id)
+  end
+
   def silently_remove_organization_webhook
     github_organization.remove_organization_webhook(webhook_id)
     true
