@@ -1,5 +1,10 @@
 <%= render 'organizations/organization_banner' %>
 
+<%= javascript_tag do %>
+    window.organization_id = "<%= @organization.slug %>";
+    window.grouping_id = "<%= @grouping.slug %>";
+<% end %>
+
 <div class="site-content">
   <div class="site-content-cap">
     <h2 class="site-content-heading"><%= @grouping.title %></h2>
