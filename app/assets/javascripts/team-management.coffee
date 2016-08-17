@@ -36,7 +36,7 @@ $('.groupings.show').ready ->
           update_student_count_text(target, target_group_id)
         )
       error: (jqXHR, exception) ->
-        show_flash_message jqXHR.responseJSON.message, 'flash-error'
+        show_flash_message(jqXHR.responseJSON.message, 'flash-error')
         target.removeChild(el)
         source.appendChild(el)
     })
