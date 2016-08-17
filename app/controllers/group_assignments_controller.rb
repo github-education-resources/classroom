@@ -52,6 +52,13 @@ class GroupAssignmentsController < ApplicationController
 
   private
 
+  def student_identifier_types
+    @student_identifier_types ||= @organization.student_identifier_types.select(:name, :id).map do |student_identifier|
+      [student_identifier.name, student_identifier.id]
+    end
+  end
+  helper_method :student_identifier_types
+
   def authorize_grouping_access
     grouping_id = new_group_assignment_params[:grouping_id]
 
@@ -71,7 +78,8 @@ class GroupAssignmentsController < ApplicationController
       .permit(:title, :public_repo, :grouping_id, :max_members, :students_are_repo_admins)
       .merge(creator: current_user,
              organization: @organization,
-             starter_code_repo_id: starter_code_repo_id_param)
+             starter_code_repo_id: starter_code_repo_id_param,
+             student_identifier_type: student_identifier_type_param)
   end
 
   def new_grouping_params
@@ -100,10 +108,21 @@ class GroupAssignmentsController < ApplicationController
     end
   end
 
+  def student_identifier_type_param
+    return unless params.key?(:student_identifier_type)
+    StudentIdentifierType.find_by(id: student_identifier_type_params[:id], organization: @organization)
+  end
+
   def update_group_assignment_params
     params
       .require(:group_assignment)
       .permit(:title, :public_repo, :max_members)
-      .merge(starter_code_repo_id: starter_code_repo_id_param)
+      .merge(starter_code_repo_id: starter_code_repo_id_param, student_identifier_type: student_identifier_type_param)
+  end
+
+  def student_identifier_type_params
+    params
+      .require(:student_identifier_type)
+      .permit(:id)
   end
 end
