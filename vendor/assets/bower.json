@@ -8,6 +8,7 @@
     "jquery.turbolinks": "kossnocorp/jquery.turbolinks#~2.1.0",
     "remodal": "~1.0.3",
     "clipboard": "~1.5.3",
-    "js-cookie": "~2.0.4"
+    "js-cookie": "~2.0.4",
+    "dragula": "3.7.1"
   }
 }

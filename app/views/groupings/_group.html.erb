@@ -4,14 +4,14 @@
       Manage
     </a>
     <strong class="team-name" itemprop="name"><%= group.title %></strong>
-    <span class="team-description" itemprop="description"><%= pluralize(group.repo_accesses.count, 'student') %></span>
+    <span class="team-description" group-description-id="<%= group.slug %>" itemprop="description"><%= pluralize(group.repo_accesses.count, 'student') %></span>
   </div>
   <div class="team-members">
-    <ul>
+    <ul class="member-list-draggable" group-id="<%= group.slug %>">
       <% group.repo_accesses.each do |repo_access| %>
         <% student = repo_access.user %>
         <div class="member-draggable">
-          <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s", 'aria-label' => student.github_user.login do %>
+          <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s", 'aria-label' => student.github_user.login, 'user-id' => student.id do %>
             <%= image_tag student.github_user.github_avatar_url(60), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.github_user.login}" %>
           <% end %>
         </div>
