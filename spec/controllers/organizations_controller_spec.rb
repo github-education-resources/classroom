@@ -154,6 +154,12 @@ RSpec.describe OrganizationsController, type: :controller do
         expect(new_org.github_client.org_hook(new_org.github_id, new_org.webhook_id)).to be_truthy
       end
 
+      it 'calls the PingOrganizationWebhook background job' do
+        assert_enqueued_jobs 1 do
+          PingOrganizationWebhookJob.set(wait: 1.minute).perform_later(organization)
+        end
+      end
+
       after(:each) do
         Organization.destroy_all
       end
