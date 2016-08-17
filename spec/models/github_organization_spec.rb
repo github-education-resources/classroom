@@ -70,6 +70,22 @@ describe GitHubOrganization do
     end
   end
 
+  describe '#ping_organization_webhook', :vcr do
+    before do
+      @org_hook = @github_organization.create_organization_webhook(config: { url: 'http://localhost' })
+      @github_organization.ping_organization_webhook(@org_hook.id)
+    end
+
+    after do
+      @client.remove_org_hook(organization.github_id, @org_hook.id)
+    end
+
+    it 'sends a ping request to GitHub API' do
+      ping_hook_api_url = github_url("/organizations/#{organization.github_id}/hooks/#{@org_hook.id}/pings")
+      expect(WebMock).to have_requested(:post, ping_hook_api_url)
+    end
+  end
+
   describe '#remove_organization_webhook', :vcr do
     before do
       @org_hook = @github_organization.create_organization_webhook(config: { url: 'http://localhost' })
