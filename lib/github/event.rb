@@ -9,7 +9,7 @@ module GitHub
       @event_client = Octokit::Client.new(options)
     end
 
-    def latest_push_event(repo_id, options = { per_page: 50, page: 1 })
+    def latest_push_event(repo_id, options = { per_page: 100, page: 1 })
       events = event_client.events(repo_id, options).filter { |e| e.type == 'PushEvent' }
       events.length.positive? ? events.first : nil
     end
