@@ -2,6 +2,8 @@
 tap "homebrew/versions"
 tap "github/bootstrap"
 
+cask "java"
+
 brew "nodejs"
 brew "terminal-notifier"
 
