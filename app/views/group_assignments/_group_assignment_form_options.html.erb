@@ -33,6 +33,8 @@
    <dd><%= f.number_field :max_members, class: 'textfield' %></dd>
 </dl>
 
+<%= render 'shared/assignment_student_identifier_type_options', assignment: @group_assignment, student_identifier_types: student_identifier_types %>
+
 <% if @group_assignment.new_record? %>
   <% groupings_present = @organization.groupings.present? %>
 

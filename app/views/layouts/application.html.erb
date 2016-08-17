@@ -22,7 +22,9 @@
     <main>
       <%= yield :organization_banner %>
 
-      <%= render 'shared/flash_messages' %>
+      <div id="flash-messages">
+        <%= render 'shared/flash_messages' %>
+      </div>
 
       <div class="site-content">
         <div class="container">
