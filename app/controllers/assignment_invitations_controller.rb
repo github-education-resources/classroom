@@ -18,7 +18,7 @@ class AssignmentInvitationsController < ApplicationController
   private
 
   def required_scopes
-    Classroom::Scopes::ASSIGNMENT_STUDENT
+    GitHubClassroom::Scopes::ASSIGNMENT_STUDENT
   end
 
   def assignment

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-describe Classroom::Scopes do
+describe GitHubClassroom::Scopes do
   subject { described_class }
 
   it 'has the correct scopes for a teacher' do
