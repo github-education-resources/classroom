@@ -700,7 +700,7 @@ hr {
     }
 
     .team-members {
-      padding: 10px 15px;
+      padding: 10px 15px 5px;
       list-style-type: none;
       border-top: 1px solid #eee;
       border-radius: 0 0 3px 3px;
@@ -719,12 +719,32 @@ hr {
       .member:not(:first-child) {
         margin-top: 10px;
       }
-
-      .member-draggable {
-        display: inline-block;
-        margin: 0 5px 5px 0;
-      }
     }
+  }
+}
+
+.team-members {
+  .team-member:not(:first-child) {
+    margin-top: 10px;
+  }
+}
+
+.member-list-draggable {
+  min-height: 35px;
+}
+
+.member-draggable {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin: 0 5px 5px 0;
+
+  a {
+    cursor: grab;
+  }
+
+  .avatar {
+    vertical-align: baseline;
   }
 }
 
