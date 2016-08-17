@@ -65,6 +65,10 @@ module GitHubRepoable
     end
   end
 
+  def latest_push_event
+    @latest_push_event ||= github_repository.latest_push_event
+  end
+
   # Internal
   #
   def github_organization
