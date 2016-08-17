@@ -22,6 +22,10 @@ class GitHubRepository < GitHubResource
     self.class.present?(@client, @id, options)
   end
 
+  def latest_push_event
+    github_event.latest_push_event(@id)
+  end
+
   def self.present?(client, full_name, **options)
     client.repository?(full_name, options)
   end
@@ -37,5 +41,9 @@ class GitHubRepository < GitHubResource
 
   def attributes
     %w(name full_name html_url)
+  end
+
+  def github_event
+    @github_event ||= GitHub::Event.new(@client.access_token)
   end
 end
