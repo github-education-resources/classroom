@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module GitHub
-  class Search
+  class Event
     attr_accessor :event_client
 
     def initialize(access_token, options = { auto_paginate: false })
@@ -10,7 +10,7 @@ module GitHub
     end
 
     def latest_push_event(repo_id, options = { per_page: 100, page: 1 })
-      events = event_client.events(repo_id, options).filter { |e| e.type == 'PushEvent' }
+      events = event_client.repository_events(repo_id, options).select { |e| e.type == 'PushEvent' }
       events.length.positive? ? events.first : nil
     end
   end
