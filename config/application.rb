@@ -72,5 +72,9 @@ module Classroom
         end
       end
     end
+
+    #Setting invoked exceptions application for custom 404 error pages
+    config.exceptions_app = self.routes
+
   end
 end
