@@ -18,7 +18,7 @@ $('.groupings.show').ready ->
     revertOnSpill: true
   })
 
-  drake.on('drop', (el, source, target) ->
+  drake.on('drop', (el, target, source) ->
     user_id = el.children[0].getAttribute('user-id')
     source_group_id = source.getAttribute('group-id')
     target_group_id = target.getAttribute('group-id')
