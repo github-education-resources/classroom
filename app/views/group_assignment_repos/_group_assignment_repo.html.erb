@@ -29,6 +29,6 @@
     <strong class="css-truncate css-truncate-target">
       <%= link_to group_assignment_repo.github_repository.full_name, group_assignment_repo.github_repository.html_url, class: "assignment-repo-github-url #{'disabled' if group_assignment_repo.disabled?}" %>
     </strong>
-    <%= render_github_repo_status(group_assignment_repo.github_repository) %>
+    <%= render_github_repo_status(group_assignment_repo.github_repository) unless group_assignment_repo.disabled? %>
   </div>
 </div>
