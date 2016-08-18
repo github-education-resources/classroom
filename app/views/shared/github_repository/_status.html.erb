@@ -1,0 +1,11 @@
+<div class="github-repo-status">
+  <%= octicon('repo-push') %>
+  <% if latest_push.present? %>
+    <%= link_to link_to_latest_push, class: 'github-tree-link' do %>
+      <%= local_time_ago(latest_push.created_at) %>
+    <% end %>
+    <%= render partial: 'shared/github_repository/build_status', locals: { build_status: build_status } %>
+  <% else %>
+    Unknown
+  <% end %>
+</div>
