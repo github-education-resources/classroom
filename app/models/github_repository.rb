@@ -26,6 +26,10 @@ class GitHubRepository < GitHubResource
     github_event.latest_push_event(@id)
   end
 
+  def commit_status(ref, **options)
+    @client.combined_status(@id, ref, options)
+  end
+
   def self.present?(client, full_name, **options)
     client.repository?(full_name, options)
   end
