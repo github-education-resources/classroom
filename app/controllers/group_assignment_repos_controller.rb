@@ -24,6 +24,7 @@ class GroupAssignmentReposController < ApplicationController
                        .includes(:group_assignment_invitation)
                        .find_by!(slug: params[:group_assignment_id])
     @group_assignment_repo = GroupAssignmentRepo.find_by!(group_assignment: group_assignment, id: params[:id])
+    not_found unless @group_assignment_repo.present?
   end
 
   def github_repo
