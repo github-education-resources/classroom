@@ -18,7 +18,8 @@ module GitHubRepositoryStatusRenderHelper
 
   def build_status_of_latest_push(github_repo, latest_push)
     return nil unless latest_push.present?
-    github_repo.commit_status(latest_push.payload.ref)
+    github_repo.commit_status(latest_push.payload.ref,
+                              headers: GitHub::APIHeaders.no_cache_no_store)
   end
 
   def tooltip_text_for_build_status(status)
