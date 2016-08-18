@@ -10,8 +10,11 @@ module GitHub
     end
 
     def latest_push_event(repo_id, options = { per_page: 100, page: 1 })
-      events = event_client.repository_events(repo_id, options)
-                           .select { |e| e.type == 'PushEvent' || e.type == 'CreateEvent' }
+      events = event_client.repository_events(repo_id, options).select do |event|
+        event.type == 'PushEvent' ||
+          (event.type == 'CreateEvent' && event.payload.ref.present?)
+      end
+
       events.length.positive? ? events.first : nil
     end
   end
