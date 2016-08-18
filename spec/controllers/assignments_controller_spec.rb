@@ -159,7 +159,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
     context 'flipper is enabled for the user' do
       before do
-        Classroom.flipper[:student_identifier].enable
+        GitHubClassroom.flipper[:student_identifier].enable
         patch :update,
               id:                      assignment.slug,
               organization_id:         organization.slug,
@@ -172,7 +172,7 @@ RSpec.describe AssignmentsController, type: :controller do
       end
 
       after do
-        Classroom.flipper[:student_identifier].disable
+        GitHubClassroom.flipper[:student_identifier].disable
       end
     end
   end
