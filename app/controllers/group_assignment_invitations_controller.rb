@@ -2,6 +2,7 @@
 class GroupAssignmentInvitationsController < ApplicationController
   layout 'layouts/invitations'
 
+  before_action :check_user_identified, only: [:show]
   before_action :check_group_not_previous_acceptee, only: [:show]
   before_action :check_user_not_group_member,       only: [:show]
 
@@ -11,6 +12,19 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   def show
     @groups = invitation.groups.map { |group| [group.title, group.id] }
+  end
+
+  def identifier
+    not_found if student_identifier || group_assignment.student_identifier_type.nil?
+  end
+
+  def submit_identifier
+    if invitation.create_student_identifier(current_user, params[:student_identifier]).present?
+      redirect_to group_assignment_invitation_path
+    else
+      flash[:error] = 'An error has occured, please refresh the page and try again.'
+      redirect_to identifier_group_assignment_invitation_path
+    end
   end
 
   def accept
@@ -100,6 +114,18 @@ class GroupAssignmentInvitationsController < ApplicationController
     @organization ||= group_assignment.organization
   end
   helper_method :organization
+
+  def student_identifier
+    @student_identifier ||= StudentIdentifier.find_by(user: current_user,
+                                                      student_identifier_type: group_assignment.student_identifier_type)
+  end
+  helper_method :student_identifier
+
+  def check_user_identified
+    return unless group_assignment.student_identifier_type.present?
+    return if student_identifier.present?
+    redirect_to identifier_group_assignment_invitation_path
+  end
 
   def check_group_not_previous_acceptee
     return unless group.present? && group_assignment_repo.present?

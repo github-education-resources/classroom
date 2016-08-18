@@ -1,0 +1,18 @@
+<%= render 'organizations/organization_invitation_banner' %>
+
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">
+      <span class="assignment-icon assignment-icon-individual">
+        <%= octicon('person') %>
+      </span>
+      Accept the <strong><%= assignment.title %></strong> assignment
+    </h2>
+  </div>
+</div>
+
+<div class="site-content-body">
+  <%= form_tag controller: :assignment_invitations, action: :submit_identifier, method: :post do %>
+      <%= render partial: 'shared/identifier_form', locals: { student_identifier_type: assignment.student_identifier_type } %>
+  <% end %>
+</div>
