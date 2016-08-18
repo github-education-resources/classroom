@@ -29,6 +29,11 @@
     <strong class="css-truncate css-truncate-target">
       <%= link_to group_assignment_repo.github_repository.full_name, group_assignment_repo.github_repository.html_url, class: "assignment-repo-github-url #{'disabled' if group_assignment_repo.disabled?}" %>
     </strong>
-    <%= render_github_repo_status(group_assignment_repo.github_repository) unless group_assignment_repo.disabled? %>
+    <% unless group_assignment_repo.disabled? %>
+      <%= render partial: 'shared/github_repository/status_container',
+                 locals: {
+                   status_url: github_repo_status_organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo)
+                 } %>
+    <% end %>
   </div>
 </div>
