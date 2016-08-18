@@ -65,14 +65,6 @@ module GitHubRepoable
     end
   end
 
-  def latest_push_event
-    @latest_push_event ||= github_repository.latest_push_event
-  end
-
-  def latest_commit_status
-    @latest_commit_status ||= github_repository.commit_status(latest_push_event.payload.ref)
-  end
-
   # Internal
   #
   def github_organization
