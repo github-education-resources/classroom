@@ -31,6 +31,10 @@ class GitHubRepository < GitHubResource
     @client.combined_status(@id, ref, options)
   end
 
+  def html_url_to(ref:)
+    "#{html_url}/tree/#{ref}"
+  end
+
   def self.present?(client, full_name, **options)
     client.repository?(full_name, options)
   end
