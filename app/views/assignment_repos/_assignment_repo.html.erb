@@ -17,14 +17,6 @@
     <strong class="css-truncate css-truncate-target">
       <%= link_to assignment_repo.github_repository.full_name, assignment_repo.github_repository.html_url, class: "#{'disabled' if assignment_repo.disabled?}" %>
     </strong>
-
-    <div class="student-github-repo-status">
-      <%= octicon('repo-push') %>
-      <% if assignment_repo.latest_push_event.present? %>
-        <%= local_time_ago(assignment_repo.latest_push_event.created_at) %>
-      <% else %>
-        Unknown
-      <% end %>
-    </div>
+    <%= render_github_repo_status(assignment_repo.github_repository) %>
   </div>
 </div>

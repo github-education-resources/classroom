@@ -358,10 +358,6 @@ hr {
     display: inline-block;
     padding-top: 4px;
   }
-
-  .student-github-repo-status {
-    padding-top: 4px;
-  }
 }
 
 .group-assignment-repo-list {
@@ -805,5 +801,34 @@ hr {
     text-overflow: ellipsis;
     white-space: nowrap;
     vertical-align: top;
+  }
+}
+
+.github-repo-status {
+  padding-top: 4px;
+  color: $brand-gray;
+
+  .github-tree-link {
+    color: $brand-gray;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .github-build-status {
+    cursor: pointer;
+  }
+
+  .github-build-success {
+    color: $status-open;
+  }
+
+  .github-build-failure {
+    color: $status-closed;
+  }
+
+  .github-build-pending {
+    color: $status-pending;
   }
 }
