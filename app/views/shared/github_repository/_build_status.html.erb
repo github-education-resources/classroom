@@ -1,13 +1,6 @@
 <% if build_status.total_count.positive? %>
   <span class="tooltipped tooltipped-s github-build-status github-build-<%= build_status.state %>"
         aria-label="<%= tooltip_text_for_build_status(build_status.state) %>">
-    <% case build_status.state %>
-    <% when 'success' %>
-      <%= octicon('check') %>
-    <% when 'failure' %>
-      <%= octicon('x') %>
-    <% when 'pending' %>
-      <%= octicon('primitive-dot') %>
-    <% end %>
+    <%= octicon(octicon_name_for_build_status(build_status.state)) %>
   </span>
 <% end %>
