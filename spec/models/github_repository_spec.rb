@@ -143,6 +143,14 @@ describe GitHubRepository do
       end
     end
 
+    describe '#html_url_to(:ref)', :vcr do
+      it 'returns the html url to specific ref' do
+        github_repository = GitHubRepository.new(@client, 8514) # 8514 is rails/rails
+        expected_html_url_to_master = 'https://github.com/rails/rails/tree/refs/heads/master'
+        expect(github_repository.html_url_to(ref: 'refs/heads/master')).to eql(expected_html_url_to_master)
+      end
+    end
+
     GitHubRepository.new(@client, 123).send(:attributes).each do |attribute|
       describe "##{attribute}", :vcr do
         it "gets the #{attribute} of the repository " do
