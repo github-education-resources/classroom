@@ -101,6 +101,48 @@ describe GitHubRepository do
       end
     end
 
+    describe '#latest_push_event', :vcr do
+      it 'queries GitHub events API' do
+        repo_id = 8514 # 8514 is rails/rails
+        github_repository = GitHubRepository.new(@client, repo_id)
+        github_repository.latest_push_event
+
+        expect(WebMock).to have_requested(:get, github_url("/repositories/#{repo_id}/events?page=1&per_page=100"))
+      end
+    end
+
+    describe '#commit_status', :vcr do
+      before(:each) do
+        @repo_id = 8514 # 8514 is rails/rails
+        @ref = 'refs/heads/master'
+      end
+
+      context 'without options' do
+        it 'queries GitHub commit status API' do
+          github_repository = GitHubRepository.new(@client, @repo_id)
+          github_repository.commit_status(@ref)
+
+          expect(WebMock).to have_requested(:get,
+                                            github_url("/repositories/#{@repo_id}/commits/#{@ref}/status"))
+        end
+      end
+
+      context 'with options' do
+        before do
+          @custom_options = { headers: GitHub::APIHeaders.no_cache_no_store }
+        end
+
+        it 'uses custom options when requesting GitHub API' do
+          github_repository = GitHubRepository.new(@client, @repo_id)
+          github_repository.commit_status(@ref, @custom_options)
+
+          expect(WebMock).to have_requested(:get,
+                                            github_url("/repositories/#{@repo_id}/commits/#{@ref}/status"))
+            .with(@custom_options)
+        end
+      end
+    end
+
     GitHubRepository.new(@client, 123).send(:attributes).each do |attribute|
       describe "##{attribute}", :vcr do
         it "gets the #{attribute} of the repository " do
