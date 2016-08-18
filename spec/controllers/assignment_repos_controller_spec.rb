@@ -6,7 +6,6 @@ RSpec.describe AssignmentReposController, type: :controller do
 
   let(:organization) { GitHubFactory.create_owner_classroom_org }
   let(:user)         { organization.users.first                 }
-  let(:student)      { GitHubFactory.create_classroom_student   }
 
   let(:assignment) do
     Assignment.create(creator: organization.users.first,
@@ -22,7 +21,7 @@ RSpec.describe AssignmentReposController, type: :controller do
 
   describe 'GET #github_repo_status', :vcr do
     before(:each) do
-      @assignment_repo = AssignmentRepo.create!(assignment: assignment, user: student)
+      @assignment_repo = AssignmentRepo.create!(assignment: assignment, user: user)
     end
 
     context 'unauthenticated request' do
