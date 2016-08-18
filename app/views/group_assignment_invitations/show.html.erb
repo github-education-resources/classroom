@@ -19,11 +19,29 @@
 
   <% if @groups.present? %>
     <hr>
-    <p><label>Join an existing team</label></p>
+
+    <div class="markdown-body">
+      <p><label>Join an existing team</label></p>
+    </div>
     <div class="team-grid">
-      <% @group_assignment.group_assignment_repos.each do |group_assignment_repo| %>
-        <%= render partial: 'group_assignment_team', locals: { group_assignment_repo: group_assignment_repo} %>
-      <% end %>
+      <div class="columns">
+        <div class="one-half team-left">
+          <% @group_assignment.group_assignment_repos.each do |group_assignment_repo| %>
+              <% if cycle('odd', 'even') == 'odd' %>
+                <%= render partial: 'group_assignment_team', locals: { group_assignment_repo: group_assignment_repo } %>
+              <% end %>
+          <% end %>
+        </div>
+        <% reset_cycle %>
+        <div class="one-half team-right">
+          <% @group_assignment.group_assignment_repos.each do |group_assignment_repo| %>
+              <% if cycle('odd', 'even') == 'even' %>
+                <%= render partial: 'group_assignment_team', locals: { group_assignment_repo: group_assignment_repo } %>
+              <% end %>
+          <% end %>
+        </div>
+      </div>
+
       <div style="clear:both"></div>
     </div>
   <% end %>
