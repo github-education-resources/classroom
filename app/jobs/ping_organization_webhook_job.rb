@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class PingOrganizationWebhookJob < ApplicationJob
-  queue_as :github_webhook
+  queue_as :github_webhooks
 
   rescue_from(GitHub::Error) do
     retry_job wait: 1.minute, queue: :github_webhook_failures
