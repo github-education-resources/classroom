@@ -11,30 +11,19 @@ RSpec.describe WebhookEventsController, type: :controller do
     describe 'ping event' do
       context 'valid payload signature' do
         before(:each) do
-          params = {
-            zen: 'Design for failure.',
-            hook_id: 999,
-            hook: {
-              type: 'Organization',
-              id: 999
-            },
-            sender: {
-              id: user.uid
-            },
-            organization: {
-              id: organization.github_id
-            }
-          }
+          params = JSON.parse(File.open("#{Rails.root}/spec/support/fixtures/webhook_payloads/ping.json").read)
+          params.symbolize_keys!
+          params[:sender][:id] = user.uid
+          params[:organization][:id] = organization.github_id
 
           payload = params.to_json
 
           if Rails.application.secrets.webhook_secret.present?
-            algorithm = 'sha1'
-            signature = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new(algorithm),
+            signature = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'),
                                                 Rails.application.secrets.webhook_secret,
                                                 payload)
 
-            request.headers['X-Hub-Signature'] = "#{algorithm}=#{signature}"
+            request.headers['X-Hub-Signature'] = "sha1=#{signature}"
           end
 
           request.headers['X-GitHub-Event'] = 'ping'
