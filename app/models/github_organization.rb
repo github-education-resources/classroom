@@ -108,12 +108,15 @@ class GitHubOrganization < GitHubResource
   end
 
   def ping_organization_webhook(webhook_id)
-    @client.ping_org_hook(@id, webhook_id)
+    GitHub::Errors.with_error_handling { @client.ping_org_hook(@id, webhook_id) }
   end
 
   def remove_organization_webhook(webhook_id)
     return unless webhook_id.present?
-    @client.remove_org_hook(@id, webhook_id)
+
+    GitHub::Errors.with_error_handling do
+      @client.remove_org_hook(@id, webhook_id)
+    end
   end
 
   private
