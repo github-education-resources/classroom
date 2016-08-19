@@ -17,6 +17,17 @@
     <main>
       <%= render 'shared/message_of_the_day' %>
       <%= render 'shared/header' %>
+
+      <div id="flash-messages">
+        <% flash.each do |type, message| %>
+          <%= content_tag :div, class: "flash #{primer_class_for('alert')}" do %>
+            <div class="container text-center">
+              <strong><%= message %></strong>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+
       <%= yield %>
     </main>
 
