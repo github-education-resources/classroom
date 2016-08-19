@@ -33,7 +33,6 @@ class SessionsController < ApplicationController
   end
 
   def failure
-    reset_session
     redirect_to root_path, alert: 'There was a problem authenticating with GitHub, please try again.'
   end
 end
