@@ -3,7 +3,7 @@ class WebhookEventsController < ApplicationController
   skip_before_action :verify_authenticity_token
   skip_before_action :authenticate_user!
 
-  before_action :verify_payload_signature
+  before_action :receive_and_verify_payload
   before_action :verify_organization_presence
   before_action :verify_sender_presence
 
@@ -31,18 +31,27 @@ class WebhookEventsController < ApplicationController
     @event_handler ||= "handle_#{event_name}".to_sym
   end
 
-  def verify_payload_signature
+  def receive_and_verify_payload
+    payload_body = request.body.read
+
+    unless payload_body.present?
+      render json: { message: 'No payload received.' }, status: :bad_request
+    end
+
     return unless Rails.application.secrets.webhook_secret.present?
 
-    algorithm, signature = request.headers['X-Hub-Signature'].split('=')
-    payload_validated = actual_payload_signature(algorithm) == signature
-    not_found unless payload_validated
+    verify_signature(payload_body)
   end
 
-  def actual_payload_signature(algorithm)
-    OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new(algorithm),
-                            Rails.application.secrets.webhook_secret,
-                            request.body.read)
+  def verify_signature(payload)
+    payload_signature = 'sha1=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'),
+                                                          Rails.application.secrets.webhook_secret,
+                                                          payload)
+    received_signature = request.env['HTTP_X_HUB_SIGNATURE']
+
+    unless received_signature && Rack::Utils.secure_compare(payload_signature, received_signature)
+      render json: { message: 'Invalid payload signature.' }, status: :forbidden
+    end
   end
 
   def verify_organization_presence
