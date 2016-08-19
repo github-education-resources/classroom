@@ -92,7 +92,7 @@ class ApplicationController < ActionController::Base
   end
 
   def explicit_assignment_submission_enabled?
-    Classroom.flipper[:explicit_assignment_submission].enabled?(current_user)
+    GitHubClassroom.flipper[:explicit_assignment_submission].enabled?(current_user)
   end
 
   def student_identifier_enabled?

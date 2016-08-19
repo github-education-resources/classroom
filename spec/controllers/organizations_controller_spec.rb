@@ -130,7 +130,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
     context 'explicit assignment submission flipper is enabled' do
       before do
-        Classroom.flipper[:explicit_assignment_submission].enable
+        GitHubClassroom.flipper[:explicit_assignment_submission].enable
         Organization.destroy_all
       end
 
@@ -165,7 +165,7 @@ RSpec.describe OrganizationsController, type: :controller do
       end
 
       after do
-        Classroom.flipper[:explicit_assignment_submission].disable
+        GitHubClassroom.flipper[:explicit_assignment_submission].disable
       end
     end
   end
