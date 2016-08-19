@@ -200,7 +200,7 @@ RSpec.describe OrganizationsController, type: :controller do
   describe 'GET #show_groupings', :vcr do
     context 'flipper is enabled' do
       before do
-        Classroom.flipper[:team_management].enable
+        GitHubClassroom.flipper[:team_management].enable
       end
 
       it 'returns success and sets the organization' do
@@ -211,7 +211,7 @@ RSpec.describe OrganizationsController, type: :controller do
       end
 
       after do
-        Classroom.flipper[:team_management].disable
+        GitHubClassroom.flipper[:team_management].disable
       end
     end
 

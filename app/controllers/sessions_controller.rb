@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
   end
 
   def default_required_scopes
-    Classroom::Scopes::TEACHER.join(',')
+    GitHubClassroom::Scopes::TEACHER.join(',')
   end
 
   def create

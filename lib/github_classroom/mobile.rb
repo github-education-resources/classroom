@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module Classroom
+module GitHubClassroom
   module Mobile
     # Public: Does the user agent say that we're on a mobile device?
     #

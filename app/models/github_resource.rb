@@ -13,12 +13,14 @@ class GitHubResource
     @client.access_token
   end
 
-  def on_github?(options = {})
+  def on_github?(options = {}) # rubocop:disable Metrics/MethodLength
     resource = begin
                  GitHub::Errors.with_error_handling { @client.send(github_type, *[@id, options]) }
                rescue GitHub::Error
                  begin
-                   GitHub::Errors.with_error_handling { Classroom.github_client.send(github_type, *[@id, options]) }
+                   GitHub::Errors.with_error_handling do
+                     GitHubClassroom.github_client.send(github_type, *[@id, options])
+                   end
                  rescue GitHub::Error
                    nil
                  end
@@ -59,7 +61,9 @@ class GitHubResource
           GitHub::Errors.with_error_handling { client.send(github_type, *[id, options])[attribute] }
         rescue GitHub::Error
           begin
-            GitHub::Errors.with_error_handling { Classroom.github_client.send(github_type, *[id, options])[attribute] }
+            GitHub::Errors.with_error_handling do
+              GitHubClassroom.github_client.send(github_type, *[id, options])[attribute]
+            end
           rescue GitHub::Error
             null_github_object.send(attribute)
           end

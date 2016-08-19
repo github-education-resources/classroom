@@ -5,7 +5,7 @@ module Mobile
     #
     # Returns a boolean.
     def mobile?
-      Classroom::Mobile.mobile_user_agent?(request.user_agent.to_s)
+      GitHubClassroom::Mobile.mobile_user_agent?(request.user_agent.to_s)
     end
   end
 end
