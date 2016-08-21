@@ -16,10 +16,12 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   def identifier
     not_found if student_identifier || group_assignment.student_identifier_type.nil?
+    @student_identifier = StudentIdentifier.new
   end
 
   def submit_identifier
-    if invitation.create_student_identifier(current_user, params[:student_identifier]).present?
+    @student_identifier = StudentIdentifier.new(new_student_identifier_params)
+    if @student_identifier.save
       redirect_to group_assignment_invitation_path
     else
       flash[:error] = 'An error has occured, please refresh the page and try again.'
@@ -103,6 +105,15 @@ class GroupAssignmentInvitationsController < ApplicationController
     params
       .require(:group)
       .permit(:id, :title)
+  end
+
+  def new_student_identifier_params
+    params
+      .require(:student_identifier)
+      .permit(:value)
+      .merge(user: current_user,
+             organization: organization,
+             student_identifier_type: group_assignment.student_identifier_type)
   end
 
   def invitation

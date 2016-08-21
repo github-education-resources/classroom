@@ -2,7 +2,6 @@
 class AssignmentInvitationsController < ApplicationController
   layout 'layouts/invitations'
 
-
   before_action :check_user_has_identifier, only: [:show]
   before_action :check_user_not_previous_acceptee, only: [:show]
   before_action :ensure_github_repo_exists, only: [:successful_invitation]
@@ -16,15 +15,15 @@ class AssignmentInvitationsController < ApplicationController
 
   def identifier
     not_found if student_identifier || assignment.student_identifier_type.nil?
+    @student_identifier = StudentIdentifier.new
   end
 
   def submit_identifier
-    student_identifier = invitation.create_student_identifier(current_user, params[:student_identifier])
-    if student_identifier.present?
+    @student_identifier = StudentIdentifier.new(new_student_identifier_params)
+    if @student_identifier.save
       redirect_to assignment_invitation_path
     else
-      flash[:error] = 'An error has occured, please refresh the page and try again.'
-      redirect_to identifier_assignment_invitation_path
+      render :identifier
     end
   end
 
@@ -73,6 +72,15 @@ class AssignmentInvitationsController < ApplicationController
                                                       student_identifier_type: assignment.student_identifier_type)
   end
   helper_method :student_identifier
+
+  def new_student_identifier_params
+    params
+      .require(:student_identifier)
+      .permit(:value)
+      .merge(user: current_user,
+             organization: organization,
+             student_identifier_type: assignment.student_identifier_type)
+  end
 
   def check_user_has_identifier
     return unless assignment.student_identifier_type.present?
