@@ -5,7 +5,7 @@ class Group < ApplicationRecord
 
   update_index('stafftools#group') { self }
 
-  has_one :organization, -> { unscope(where: :deleted_at) }, through: :grouping
+  has_one :classroom, -> { unscope(where: :deleted_at) }, through: :grouping
 
   belongs_to :grouping
 
@@ -23,13 +23,13 @@ class Group < ApplicationRecord
   validates :slug, uniqueness: { scope: :grouping }
 
   before_validation(on: :create) do
-    create_github_team if organization
+    create_github_team if classroom
   end
 
   before_destroy :silently_destroy_github_team
 
   def github_team
-    @github_team ||= GitHubTeam.new(organization.github_client, github_team_id)
+    @github_team ||= GitHubTeam.new(classroom.github_client, github_team_id)
   end
 
   private

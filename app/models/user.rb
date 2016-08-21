@@ -7,7 +7,7 @@ class User < ApplicationRecord
   has_many :repo_accesses, dependent: :destroy
   has_many :assignment_repos
 
-  has_and_belongs_to_many :organizations
+  has_and_belongs_to_many :classrooms
 
   validates :last_active_at, presence: true
 

@@ -5,44 +5,44 @@ RSpec.describe Assignment, type: :model do
   it_behaves_like 'a default scope where deleted_at is not present'
 
   describe 'slug uniqueness' do
-    let(:organization) { create(:organization) }
+    let(:classroom) { create(:classroom) }
 
     it 'verifes that the slug is unique even if the titles are unique' do
-      create(:assignment, organization: organization, title: 'assignment-1')
-      new_assignment = build(:assignment, organization: organization, title: 'assignment 1')
+      create(:assignment, classroom: classroom, title: 'assignment-1')
+      new_assignment = build(:assignment, classroom: classroom, title: 'assignment 1')
 
       expect { new_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
   end
 
-  describe 'uniqueness of title across organization' do
-    let(:organization) { create(:organization)    }
-    let(:creator)      { organization.users.first }
+  describe 'uniqueness of title across classroom' do
+    let(:classroom) { create(:classroom)    }
+    let(:creator)   { classroom.users.first }
 
-    let(:grouping)     { Grouping.create(title: 'Grouping', organization: organization) }
+    let(:grouping) { Grouping.create(title: 'Grouping', classroom: classroom) }
 
     let(:group_assignment) do
       GroupAssignment.create(creator: creator,
                              title: 'Ruby Project',
-                             organization: organization,
+                             classroom: classroom,
                              grouping: grouping)
     end
 
-    let(:assignment) { Assignment.new(creator: creator, title: group_assignment.title, organization: organization) }
+    let(:assignment) { Assignment.new(creator: creator, title: group_assignment.title, classroom: classroom) }
 
-    it 'validates that a GroupAssignment in the same organization does not have the same title' do
+    it 'validates that a GroupAssignment in the same classroom does not have the same title' do
       validation_message = 'Validation failed: Your assignment title must be unique'
       expect { assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, validation_message)
     end
   end
 
   describe 'uniqueness of title across application' do
-    let(:organization_1) { create(:organization) }
-    let(:organization_2) { create(:organization) }
+    let(:classroom_1) { create(:classroom) }
+    let(:classroom_2) { create(:classroom) }
 
-    it 'allows two organizations to have the same Assignment title and slug' do
-      assignment_1 = create(:assignment, organization: organization_1)
-      assignment_2 = create(:assignment, organization: organization_2, title: assignment_1.title)
+    it 'allows two classrooms to have the same Assignment title and slug' do
+      assignment_1 = create(:assignment, classroom: classroom_1)
+      assignment_2 = create(:assignment, classroom: classroom_2, title: assignment_1.title)
 
       expect(assignment_2.title).to eql(assignment_1.title)
       expect(assignment_2.slug).to eql(assignment_1.slug)

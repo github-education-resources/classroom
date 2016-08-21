@@ -6,7 +6,7 @@ class GroupAssignmentRepo < ApplicationRecord
 
   update_index('stafftools#group_assignment_repo') { self }
 
-  has_one :organization, -> { unscope(where: :deleted_at) }, through: :group_assignment
+  has_one :classroom, -> { unscope(where: :deleted_at) }, through: :group_assignment
 
   has_many :repo_accesses, through: :group
 
@@ -22,7 +22,7 @@ class GroupAssignmentRepo < ApplicationRecord
   validates :group, uniqueness: { scope: :group_assignment }
 
   before_validation(on: :create) do
-    if organization
+    if classroom
       create_github_repository
       push_starter_code
       add_team_to_github_repository
@@ -40,7 +40,7 @@ class GroupAssignmentRepo < ApplicationRecord
   end
 
   def github_repository
-    @github_repository ||= GitHubRepository.new(organization.github_client, github_repo_id)
+    @github_repository ||= GitHubRepository.new(classroom.github_client, github_repo_id)
   end
 
   def github_team

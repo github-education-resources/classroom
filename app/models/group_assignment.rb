@@ -14,7 +14,7 @@ class GroupAssignment < ApplicationRecord
 
   belongs_to :creator, class_name: User
   belongs_to :grouping
-  belongs_to :organization
+  belongs_to :classroom
   belongs_to :student_identifier_type
 
   validates :creator, presence: true
@@ -28,7 +28,7 @@ class GroupAssignment < ApplicationRecord
 
   validates :slug, uniqueness: { scope: :organization_id }
 
-  validate :uniqueness_of_slug_across_organization
+  validate :uniqueness_of_slug_across_classroom
 
   alias_attribute :invitation, :group_assignment_invitation
 
@@ -51,8 +51,8 @@ class GroupAssignment < ApplicationRecord
 
   private
 
-  def uniqueness_of_slug_across_organization
-    return unless Assignment.where(slug: slug, organization: organization).present?
+  def uniqueness_of_slug_across_classroom
+    return unless Assignment.where(slug: slug, classroom_id: classroom_id).present?
     errors.add(:slug, :taken)
   end
 end

@@ -3,13 +3,13 @@ require 'rails_helper'
 
 RSpec.describe AssignmentRepo, type: :model do
   context 'with created objects', :vcr do
-    let(:organization) { GitHubFactory.create_owner_classroom_org  }
-    let(:student)      { GitHubFactory.create_classroom_student    }
+    let(:classroom) { GitHubFactory.create_owner_classroom_org  }
+    let(:student)   { GitHubFactory.create_classroom_student    }
 
     let(:assignment) do
-      Assignment.create(creator: organization.users.first,
+      Assignment.create(creator: classroom.users.first,
                         title: 'Learn Ruby',
-                        organization: organization,
+                        classroom: classroom,
                         public_repo: true,
                         starter_code_repo_id: 1_062_897)
     end
@@ -26,7 +26,8 @@ RSpec.describe AssignmentRepo, type: :model do
       describe 'before_validation' do
         describe '#create_github_repository' do
           it 'creates the repository on GitHub' do
-            expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
+            url = github_url("/organizations/#{classroom.github_organization_id}/repos")
+            expect(WebMock).to have_requested(:post, url)
           end
         end
 
@@ -87,7 +88,7 @@ RSpec.describe AssignmentRepo, type: :model do
       context 'assignment_repo has a user through a repo_access' do
         before do
           assignment.update_attributes(title: "#{assignment.title}-2")
-          repo_access = RepoAccess.create(user: student, organization: organization)
+          repo_access = RepoAccess.create(user: student, classroom: classroom)
           @assignment_repo = AssignmentRepo.create(assignment: assignment, repo_access: repo_access)
         end
 
@@ -116,7 +117,10 @@ RSpec.describe AssignmentRepo, type: :model do
         end
 
         context 'github repository name is too long' do
-          let(:github_organization) { GitHubOrganization.new(organization.github_client, organization.github_id) }
+          let(:github_organization) do
+            GitHubOrganization.new(classroom.github_client, classroom.github_organization_id)
+          end
+
           let(:long_repo_name) { "#{'a' * 60}-#{'u' * 39}" }
 
           before do

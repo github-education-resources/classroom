@@ -31,14 +31,14 @@ Rails.application.routes.draw do
   end
 
   scope path_names: { edit: 'settings' } do
-    resources :organizations, path: 'classrooms' do
+    resources :classrooms do
       member do
         get   :invite
         get   :new_assignment, path: 'new-assignment'
         get   :setup
-        patch :setup_organization
-        get   'settings/invitations', to: 'organizations#invitation'
-        get   'settings/teams',       to: 'organizations#show_groupings'
+        patch :setup_classroom
+        get   'settings/invitations', to: 'classrooms#invitation'
+        get   'settings/teams',       to: 'classrooms#show_groupings'
       end
 
       resources :groupings, only: [:show, :edit, :update] do
@@ -71,7 +71,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :organizations, path: 'classrooms', only: [:show]
+    resources :classrooms, only: [:show]
 
     resources :repo_accesses, only: [:show]
 

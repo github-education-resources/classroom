@@ -14,20 +14,20 @@ class Assignment < ApplicationRecord
   has_many :users,            through:   :assignment_repos
 
   belongs_to :creator, class_name: User
-  belongs_to :organization
+  belongs_to :classroom
 
   belongs_to :student_identifier_type
 
   validates :creator, presence: true
 
-  validates :organization, presence: true
+  validates :classroom, presence: true
 
   validates :title, presence: true
   validates :title, length: { maximum: 60 }
 
-  validates :slug, uniqueness: { scope: :organization_id }
+  validates :slug, uniqueness: { scope: :classroom_id }
 
-  validate :uniqueness_of_slug_across_organization
+  validate :uniqueness_of_slug_across_classroom
 
   alias_attribute :invitation, :assignment_invitation
 
@@ -50,8 +50,8 @@ class Assignment < ApplicationRecord
 
   private
 
-  def uniqueness_of_slug_across_organization
-    return unless GroupAssignment.where(slug: slug, organization: organization).present?
+  def uniqueness_of_slug_across_classroom
+    return unless GroupAssignment.where(slug: slug, classroom_id: classroom_id).present?
     errors.add(:slug, :taken)
   end
 end

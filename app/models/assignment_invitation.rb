@@ -4,7 +4,7 @@ class AssignmentInvitation < ApplicationRecord
 
   update_index('stafftools#assignment_invitation') { self }
 
-  has_one :organization, through: :assignment
+  has_one :classroom, through: :assignment
 
   belongs_to :assignment
 
@@ -16,7 +16,7 @@ class AssignmentInvitation < ApplicationRecord
   after_initialize :assign_key
 
   def redeem_for(invitee)
-    if (repo_access = RepoAccess.find_by(user: invitee, organization: organization))
+    if (repo_access = RepoAccess.find_by(user: invitee, classroom_id: classroom))
       assignment_repo = AssignmentRepo.find_by(assignment: assignment, repo_access: repo_access)
       return assignment_repo if assignment_repo.present?
     end
