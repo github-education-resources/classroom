@@ -15,4 +15,6 @@ class StudentIdentifier < ApplicationRecord
 
   validates :student_identifier_type, presence: true
   validates :student_identifier_type, uniqueness: { scope: [:user, :organization] }
+
+  validates :value, presence: true
 end
