@@ -2,6 +2,11 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentInvitationsController, type: :controller do
+  let(:organization) { GitHubFactory.create_owner_classroom_org }
+  let(:user)         { GitHubFactory.create_classroom_student   }
+
+  let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
+
   describe 'GET #show', :vcr do
     let(:invitation) { create(:assignment_invitation) }
 
@@ -22,6 +27,33 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       it 'will bring you to the page' do
         get :show, id: invitation.key
         expect(response).to have_http_status(:success)
+      end
+    end
+
+    context 'student identifier required' do
+      before(:each) do
+        invitation.assignment.student_identifier_type = student_identifier_type
+        invitation.assignment.save
+        sign_in(user)
+      end
+
+      it 'redirects to the identifier page' do
+        get :show, id: invitation.key
+        expect(response).to redirect_to(identifier_assignment_invitation_path)
+      end
+
+      context 'user already has identifier recorded' do
+        before do
+          StudentIdentifier.create(organization: organization,
+                                   user: user,
+                                   student_identifier_type: student_identifier_type,
+                                   value: '123')
+        end
+
+        it 'will bring you to the page' do
+          get :show, id: invitation.key
+          expect(response).to have_http_status(:success)
+        end
       end
     end
   end
