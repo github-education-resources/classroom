@@ -8,9 +8,9 @@
   <dt>Please do not input any confidential information (e.g. SSN or bank account number) in the following form.</dt>
   <dd>
     <% case student_identifier_type.content_type
-         when 'text' %> <%= text_field_tag 'student_identifier', nil, placeholder: student_identifier_type.name, class: 'textfield' %>
-    <% when 'number' %> <%= number_field_tag 'student_identifier', nil, placeholder: student_identifier_type.name, class: 'textfield' %>
-    <% when 'email' %> <%= email_field_tag 'student_identifier', nil, placeholder: student_identifier_type.name, class: 'textfield' %>
+         when 'text' %> <%= f.text_field :value, placeholder: student_identifier_type.name, class: 'textfield' %>
+    <% when 'number' %> <%= f.number_field :value, placeholder: student_identifier_type.name, class: 'textfield' %>
+    <% when 'email' %> <%= f.email_field :value, placeholder: student_identifier_type.name, class: 'textfield' %>
     <% end %>
   </dd>
 </dl>
