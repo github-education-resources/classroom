@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable ClassLength
 class GroupAssignmentInvitationsController < ApplicationController
   layout 'layouts/invitations'
 
@@ -24,8 +25,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     if @student_identifier.save
       redirect_to group_assignment_invitation_path
     else
-      flash[:error] = 'An error has occured, please refresh the page and try again.'
-      redirect_to identifier_group_assignment_invitation_path
+      render :identifier
     end
   end
 
