@@ -1,31 +1,30 @@
-<div class="one-half left team">
   <div class="team-panel">
-    <div class="team-info">
-      <% group_member_count = group_assignment_repo.group.repo_accesses.count %>
+    <div class="boxed-group">
+      <% group = group_assignment_repo.group %>
       <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, :class => "team-actions-form", method: :patch) do %>
-          <%= hidden_field_tag 'group[id]', group_assignment_repo.group.id %>
-          <% if group_assignment.max_members.present? && group_member_count >= group_assignment.max_members %>
-              <%= submit_tag 'Full', class: 'btn', disabled: true %>
+          <%= hidden_field_tag 'group[id]', group.id %>
+          <% if group_assignment.max_members.present? && group.repo_accesses.count >= group_assignment.max_members %>
+              <%= submit_tag 'Full', class: 'btn btn-sm boxed-group-action', disabled: true %>
           <% else %>
-              <%= submit_tag 'Join', class: 'btn' %>
+              <%= submit_tag 'Join', class: 'btn btn-sm boxed-group-action' %>
           <% end %>
       <% end %>
-
-      <span class="team-name" itemprop="name"><%= group_assignment_repo.github_team.name %></span>
-      <p class="team-description" itemprop="description"><%= pluralize(group_member_count, 'member') %></p>
-    </div>
-    <div class="team-members">
-      <% group_assignment_repo.group.repo_accesses.limit(7).each do |repo_access| %>
-          <% student = repo_access.user %>
-          <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s #{'disabled' if group_assignment_repo.disabled?}", 'aria-label' => student.github_user.login do %>
-            <%= image_tag student.github_user.github_avatar_url(30), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.github_user.login}" %>
-          <% end %>
-      <% end %>
-      <% if group_member_count > 7 %>
-        <%= link_to group_assignment_repo.github_team.html_url, class: "#{'disabled' if group_assignment_repo.disabled?}" do %>
-          <%= image_tag 'student-ellipse@2x.png', class: 'avatar avatar-small', height: 30, width: 30, alt: 'student ellipse' %>
-        <% end %>
-      <% end %>
+      <h3><%= group.title %>
+        <span class="team-description"><%= pluralize(group.repo_accesses.count, 'student') %></span>
+      </h3>
+      <div class="boxed-group-inner clearfix">
+        <div class="team-members">
+          <ul class="member-list" group-id="<%= group.slug %>">
+            <% group.repo_accesses.each do |repo_access| %>
+                <% student = repo_access.user %>
+                <li class="member">
+                  <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s", 'aria-label' => student.github_user.login, 'user-id' => student.id do %>
+                      <%= image_tag student.github_user.github_avatar_url(60), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.github_user.login}" %>
+                  <% end %>
+                </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
-</div>

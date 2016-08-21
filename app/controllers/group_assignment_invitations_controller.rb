@@ -36,7 +36,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   private
 
   def required_scopes
-    Classroom::Scopes::GROUP_ASSIGNMENT_STUDENT
+    GitHubClassroom::Scopes::GROUP_ASSIGNMENT_STUDENT
   end
 
   def authorize_group_access

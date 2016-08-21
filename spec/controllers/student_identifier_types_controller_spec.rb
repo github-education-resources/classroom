@@ -16,7 +16,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
 
   context 'flipper is enabled for the user' do
     before do
-      Classroom.flipper[:student_identifier].enable
+      GitHubClassroom.flipper[:student_identifier].enable
     end
 
     describe 'GET #index', :vcr do
@@ -109,7 +109,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
     end
 
     after do
-      Classroom.flipper[:student_identifier].disable
+      GitHubClassroom.flipper[:student_identifier].disable
     end
   end
 

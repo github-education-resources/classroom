@@ -1,4 +1,4 @@
-module Classroom
+module GitHubClassroom
   def self.github_client(options = {})
     client_options = {
       client_id:     Rails.application.secrets.github_client_id,

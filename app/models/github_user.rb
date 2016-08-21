@@ -2,7 +2,7 @@
 class GitHubUser < GitHubResource
   def authorized_access_token?
     GitHub::Errors.with_error_handling do
-      Classroom.github_client.check_application_authorization(
+      GitHubClassroom.github_client.check_application_authorization(
         @client.access_token,
         headers: GitHub::APIHeaders.no_cache_no_store
       ).present?
