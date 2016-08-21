@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160621020153) do
+ActiveRecord::Schema.define(version: 20160821201257) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 20160621020153) do
   create_table "assignments", force: :cascade do |t|
     t.boolean  "public_repo",                default: true
     t.string   "title",                                      null: false
-    t.integer  "organization_id"
+    t.integer  "classroom_id"
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
     t.integer  "starter_code_repo_id"
@@ -56,9 +56,32 @@ ActiveRecord::Schema.define(version: 20160621020153) do
     t.boolean  "students_are_repo_admins",   default: false, null: false
   end
 
+  add_index "assignments", ["classroom_id"], name: "index_assignments_on_classroom_id", using: :btree
   add_index "assignments", ["deleted_at"], name: "index_assignments_on_deleted_at", using: :btree
-  add_index "assignments", ["organization_id"], name: "index_assignments_on_organization_id", using: :btree
   add_index "assignments", ["slug"], name: "index_assignments_on_slug", using: :btree
+
+  create_table "classrooms", force: :cascade do |t|
+    t.integer  "github_organization_id",                 null: false
+    t.string   "title",                                  null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.datetime "deleted_at"
+    t.string   "slug",                                   null: false
+    t.string   "webhook_id"
+    t.boolean  "is_webhook_active",      default: false
+  end
+
+  add_index "classrooms", ["deleted_at"], name: "index_classrooms_on_deleted_at", using: :btree
+  add_index "classrooms", ["github_organization_id"], name: "index_classrooms_on_github_organization_id", unique: true, using: :btree
+  add_index "classrooms", ["slug"], name: "index_classrooms_on_slug", using: :btree
+
+  create_table "classrooms_users", id: false, force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "classroom_id"
+  end
+
+  add_index "classrooms_users", ["classroom_id"], name: "index_classrooms_users_on_classroom_id", using: :btree
+  add_index "classrooms_users", ["user_id"], name: "index_classrooms_users_on_user_id", using: :btree
 
   create_table "group_assignment_invitations", force: :cascade do |t|
     t.string   "key",                 null: false
@@ -87,7 +110,7 @@ ActiveRecord::Schema.define(version: 20160621020153) do
     t.boolean  "public_repo",                default: true
     t.string   "title",                                      null: false
     t.integer  "grouping_id"
-    t.integer  "organization_id"
+    t.integer  "classroom_id"
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
     t.integer  "starter_code_repo_id"
@@ -99,19 +122,19 @@ ActiveRecord::Schema.define(version: 20160621020153) do
     t.boolean  "students_are_repo_admins",   default: false, null: false
   end
 
+  add_index "group_assignments", ["classroom_id"], name: "index_group_assignments_on_classroom_id", using: :btree
   add_index "group_assignments", ["deleted_at"], name: "index_group_assignments_on_deleted_at", using: :btree
-  add_index "group_assignments", ["organization_id"], name: "index_group_assignments_on_organization_id", using: :btree
   add_index "group_assignments", ["slug"], name: "index_group_assignments_on_slug", using: :btree
 
   create_table "groupings", force: :cascade do |t|
-    t.string   "title",           null: false
-    t.integer  "organization_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.string   "slug",            null: false
+    t.string   "title",        null: false
+    t.integer  "classroom_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.string   "slug",         null: false
   end
 
-  add_index "groupings", ["organization_id"], name: "index_groupings_on_organization_id", using: :btree
+  add_index "groupings", ["classroom_id"], name: "index_groupings_on_classroom_id", using: :btree
 
   create_table "groups", force: :cascade do |t|
     t.integer  "github_team_id", null: false
@@ -133,55 +156,32 @@ ActiveRecord::Schema.define(version: 20160621020153) do
   add_index "groups_repo_accesses", ["group_id"], name: "index_groups_repo_accesses_on_group_id", using: :btree
   add_index "groups_repo_accesses", ["repo_access_id"], name: "index_groups_repo_accesses_on_repo_access_id", using: :btree
 
-  create_table "organizations", force: :cascade do |t|
-    t.integer  "github_id",                         null: false
-    t.string   "title",                             null: false
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
-    t.datetime "deleted_at"
-    t.string   "slug",                              null: false
-    t.string   "webhook_id"
-    t.boolean  "is_webhook_active", default: false
-  end
-
-  add_index "organizations", ["deleted_at"], name: "index_organizations_on_deleted_at", using: :btree
-  add_index "organizations", ["github_id"], name: "index_organizations_on_github_id", unique: true, using: :btree
-  add_index "organizations", ["slug"], name: "index_organizations_on_slug", using: :btree
-
-  create_table "organizations_users", id: false, force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "organization_id"
-  end
-
-  add_index "organizations_users", ["organization_id"], name: "index_organizations_users_on_organization_id", using: :btree
-  add_index "organizations_users", ["user_id"], name: "index_organizations_users_on_user_id", using: :btree
-
   create_table "repo_accesses", force: :cascade do |t|
     t.integer  "github_team_id"
-    t.integer  "organization_id"
+    t.integer  "classroom_id"
     t.integer  "user_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
+  add_index "repo_accesses", ["classroom_id"], name: "index_repo_accesses_on_classroom_id", using: :btree
   add_index "repo_accesses", ["github_team_id"], name: "index_repo_accesses_on_github_team_id", unique: true, using: :btree
-  add_index "repo_accesses", ["organization_id"], name: "index_repo_accesses_on_organization_id", using: :btree
   add_index "repo_accesses", ["user_id"], name: "index_repo_accesses_on_user_id", using: :btree
 
   create_table "student_identifier_types", force: :cascade do |t|
-    t.integer  "organization_id"
-    t.string   "name",            null: false
-    t.string   "description",     null: false
-    t.integer  "content_type",    null: false
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.integer  "classroom_id"
+    t.string   "name",         null: false
+    t.string   "description",  null: false
+    t.integer  "content_type", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
     t.datetime "deleted_at"
   end
 
-  add_index "student_identifier_types", ["organization_id"], name: "index_student_identifier_types_on_organization_id", using: :btree
+  add_index "student_identifier_types", ["classroom_id"], name: "index_student_identifier_types_on_classroom_id", using: :btree
 
   create_table "student_identifiers", force: :cascade do |t|
-    t.integer  "organization_id"
+    t.integer  "classroom_id"
     t.integer  "user_id"
     t.integer  "student_identifier_type_id"
     t.string   "value",                      null: false
@@ -190,7 +190,7 @@ ActiveRecord::Schema.define(version: 20160621020153) do
     t.datetime "deleted_at"
   end
 
-  add_index "student_identifiers", ["organization_id"], name: "index_student_identifiers_on_organization_id", using: :btree
+  add_index "student_identifiers", ["classroom_id"], name: "index_student_identifiers_on_classroom_id", using: :btree
   add_index "student_identifiers", ["student_identifier_type_id"], name: "index_student_identifiers_on_student_identifier_type_id", using: :btree
   add_index "student_identifiers", ["user_id"], name: "index_student_identifiers_on_user_id", using: :btree
 
