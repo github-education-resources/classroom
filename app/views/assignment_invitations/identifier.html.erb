@@ -12,7 +12,8 @@
 </div>
 
 <div class="site-content-body">
-  <%= form_tag controller: :assignment_invitations, action: :submit_identifier, method: :post do %>
-      <%= render partial: 'shared/identifier_form', locals: { student_identifier_type: assignment.student_identifier_type } %>
+  <%= form_for [@organization, @student_identifier], :url => submit_identifier_assignment_invitation_path do |f| %>
+      <%= render 'shared/error_messages', object: f.object %>
+      <%= render partial: 'shared/identifier_form', locals: { f: f, student_identifier_type: assignment.student_identifier_type } %>
   <% end %>
 </div>
