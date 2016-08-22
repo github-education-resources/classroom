@@ -2,7 +2,12 @@
 require 'rails_helper'
 
 RSpec.describe GroupAssignmentInvitationsController, type: :controller do
-  describe 'GET #show' do
+  let(:organization) { GitHubFactory.create_owner_classroom_org }
+  let(:user)         { GitHubFactory.create_classroom_student   }
+
+  let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
+
+  describe 'GET #show', :vcr do
     let(:invitation) { create(:group_assignment_invitation) }
 
     context 'unauthenticated request' do
@@ -10,6 +15,63 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         get :show, id: invitation.key
         expect(response).to redirect_to(login_path)
       end
+    end
+
+    context 'student identifier required' do
+      before(:each) do
+        invitation.group_assignment.student_identifier_type = student_identifier_type
+        invitation.group_assignment.save
+        sign_in(user)
+      end
+
+      it 'redirects to the identifier page' do
+        get :show, id: invitation.key
+        expect(response).to redirect_to(identifier_group_assignment_invitation_path)
+      end
+
+      context 'user already has an identifier value' do
+        before do
+          StudentIdentifier.create(organization: organization,
+                                   user: user,
+                                   student_identifier_type: student_identifier_type,
+                                   value: 'test value')
+        end
+
+        it 'will bring user to the page' do
+          get :show, id: invitation.key
+          expect(response).to have_http_status(:success)
+        end
+      end
+    end
+  end
+
+  describe 'PATCH #submit_identifier', :vcr do
+    let(:invitation) { create(:group_assignment_invitation) }
+    let(:options)    { { value: 'test value' }              }
+
+    before(:each) do
+      invitation.group_assignment.student_identifier_type = student_identifier_type
+      invitation.group_assignment.save
+      sign_in(user)
+    end
+
+    after(:each) do
+      StudentIdentifier.destroy_all
+    end
+
+    it 'creates the students identifier' do
+      patch :submit_identifier, id: invitation.key, student_identifier: options
+      expect(StudentIdentifier.count).to eql(1)
+    end
+
+    it 'has correct identifier value' do
+      patch :submit_identifier, id: invitation.key, student_identifier: options
+      expect(StudentIdentifier.first.value).to eql('test value')
+    end
+
+    it 'redirects to the accepting page' do
+      patch :submit_identifier, id: invitation.key, student_identifier: options
+      expect(response).to redirect_to(group_assignment_invitation_path)
     end
   end
 

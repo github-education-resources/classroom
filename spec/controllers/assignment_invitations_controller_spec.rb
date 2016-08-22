@@ -42,15 +42,15 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         expect(response).to redirect_to(identifier_assignment_invitation_path)
       end
 
-      context 'user already has identifier recorded' do
+      context 'user already has an identifier value' do
         before do
           StudentIdentifier.create(organization: organization,
                                    user: user,
                                    student_identifier_type: student_identifier_type,
-                                   value: '123')
+                                   value: 'test value')
         end
 
-        it 'will bring you to the page' do
+        it 'will bring user to the page' do
           get :show, id: invitation.key
           expect(response).to have_http_status(:success)
         end
