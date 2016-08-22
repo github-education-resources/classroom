@@ -53,7 +53,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
 
     context 'flipper is enabled for the user' do
       before do
-        Classroom.flipper[:student_identifier].enable
+        GitHubClassroom.flipper[:student_identifier].enable
         post :create,
              organization_id:         organization.slug,
              group_assignment:        { title: 'Learn JavaScript' },
@@ -70,7 +70,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
       end
 
       after do
-        Classroom.flipper[:student_identifier].disable
+        GitHubClassroom.flipper[:student_identifier].disable
       end
     end
   end
@@ -102,7 +102,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
 
     context 'flipper is enabled for the user' do
       before do
-        Classroom.flipper[:student_identifier].enable
+        GitHubClassroom.flipper[:student_identifier].enable
         options = { title: 'JavaScript Calculator' }
         patch :update,
               id:                      group_assignment.slug,
@@ -116,7 +116,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
       end
 
       after do
-        Classroom.flipper[:student_identifier].disable
+        GitHubClassroom.flipper[:student_identifier].disable
       end
     end
   end
