@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class GroupAssignmentReposController < GitHubReposController
+class GroupAssignmentReposController < GitHubRepositoriesController
   include OrganizationAuthorization
 
   before_action :set_group_assignment_repo

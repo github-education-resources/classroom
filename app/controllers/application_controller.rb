@@ -30,6 +30,10 @@ class ApplicationController < ActionController::Base
     not_found unless student_identifier_enabled?
   end
 
+  def ensure_explicit_assignment_submission_is_enabled
+    not_found unless explicit_assignment_submission_enabled?
+  end
+
   def current_scopes
     return [] unless logged_in?
     session[:current_scopes] ||= current_user.github_client_scopes
@@ -93,6 +97,10 @@ class ApplicationController < ActionController::Base
 
   def team_management_enabled?
     GitHubClassroom.flipper[:team_management].enabled?(current_user)
+  end
+
+  def explicit_assignment_submission_enabled?
+    GitHubClassroom.flipper[:explicit_assignment_submission].enabled?(current_user)
   end
 
   def not_found
