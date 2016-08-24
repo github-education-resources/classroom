@@ -17,6 +17,12 @@ class GitHubRepository < GitHubResource
     self.class.present?(@client, @id, options)
   end
 
+  def releases(**options)
+    GitHub::Errors.with_error_handling do
+      @client.releases(@id, options)
+    end
+  end
+
   def self.present?(client, full_name, **options)
     client.repository?(full_name, options)
   end
