@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class GitHubRepositoriesController < ApplicationController
-  before_action :ensure_explicit_assignment_submission_is_enabled
+  before_action :ensure_explicit_assignment_submission_is_enabled, only: [:latest_release]
 
   def latest_release
     render partial: 'shared/github_repository/latest_release',
