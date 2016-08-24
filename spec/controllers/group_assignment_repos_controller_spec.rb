@@ -21,7 +21,7 @@ RSpec.describe GroupAssignmentReposController, type: :controller do
     sign_in(user)
   end
 
-  describe 'GET #github_repo_status', :vcr do
+  describe 'GET #status', :vcr do
     before(:each) do
       group = Group.create(title: 'The Group', grouping: grouping)
       @group_assignment_repo = GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
@@ -33,9 +33,9 @@ RSpec.describe GroupAssignmentReposController, type: :controller do
       end
 
       it 'redirects to the login page' do
-        get :github_repo_status, organization_id: organization.slug,
-                                 group_assignment_id: group_assignment.slug,
-                                 id: @group_assignment_repo.id
+        get :repo_status, organization_id: organization.slug,
+                          group_assignment_id: group_assignment.slug,
+                          id: @group_assignment_repo.id
         expect(response).to redirect_to(login_path)
       end
     end
@@ -47,9 +47,9 @@ RSpec.describe GroupAssignmentReposController, type: :controller do
 
       context 'valid parameters' do
         before(:each) do
-          get :github_repo_status, organization_id: organization.slug,
-                                   group_assignment_id: group_assignment.slug,
-                                   id: @group_assignment_repo.id
+          get :repo_status, organization_id: organization.slug,
+                            group_assignment_id: group_assignment.slug,
+                            id: @group_assignment_repo.id
         end
 
         it 'returns success' do
@@ -64,9 +64,9 @@ RSpec.describe GroupAssignmentReposController, type: :controller do
       context 'invalid parameters' do
         it 'returns a 404' do
           expect do
-            get :github_repo_status, organization_id: organization.slug,
-                                     group_assignment_id: group_assignment.slug,
-                                     id: @group_assignment_repo.id + 1
+            get :repo_status, organization_id: organization.slug,
+                              group_assignment_id: group_assignment.slug,
+                              id: @group_assignment_repo.id + 1
           end.to raise_error(ActionController::RoutingError)
         end
       end
