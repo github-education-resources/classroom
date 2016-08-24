@@ -30,7 +30,7 @@
       <%= link_to group_assignment_repo.github_repository.full_name, group_assignment_repo.github_repository.html_url, class: "assignment-repo-github-url #{'disabled' if group_assignment_repo.disabled?}" %>
     </strong>
     <% unless group_assignment_repo.disabled? %>
-      <%= render partial: 'shared/github_repository/lastet_release_container',
+      <%= render partial: 'shared/github_repository/latest_release_container',
                  locals: { latest_release_url: latest_release_organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo) } %>
     <% end %>
   </div>
