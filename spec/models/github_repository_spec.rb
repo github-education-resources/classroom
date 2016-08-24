@@ -101,6 +101,37 @@ describe GitHubRepository do
       end
     end
 
+    describe '#releases', :vcr do
+      before(:each) do
+        @repo_id = 417_862 # 417862 is octokit/octokit.rb
+      end
+
+      context 'without options' do
+        it 'queries GitHub releases API' do
+          github_repository = GitHubRepository.new(@client, @repo_id)
+          github_repository.releases
+
+          expect(WebMock).to have_requested(:get,
+                                            github_url("/repositories/#{@repo_id}/releases"))
+        end
+      end
+
+      context 'with options' do
+        before do
+          @custom_options = { headers: GitHub::APIHeaders.no_cache_no_store }
+        end
+
+        it 'uses custom options when requesting GitHub API' do
+          github_repository = GitHubRepository.new(@client, @repo_id)
+          github_repository.releases(@custom_options)
+
+          expect(WebMock).to have_requested(:get,
+                                            github_url("/repositories/#{@repo_id}/releases"))
+            .with(@custom_options)
+        end
+      end
+    end
+
     GitHubRepository.new(@client, 123).send(:attributes).each do |attribute|
       describe "##{attribute}", :vcr do
         it "gets the #{attribute} of the repository " do
