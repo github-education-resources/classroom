@@ -1,0 +1,10 @@
+<div class="github-repo-latest-release">
+  <%= octicon('tag') %>
+  <% if latest_release.present? %>
+    <%= link_to latest_release.html_url, class: 'github-release-link' do %>
+      Submitted <%= local_time_ago(latest_release) %>
+    <% end %>
+  <% else %>
+    No submission yet
+  <% end %>
+</div>
