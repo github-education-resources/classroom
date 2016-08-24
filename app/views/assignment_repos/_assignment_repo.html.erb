@@ -20,7 +20,7 @@
     <% unless assignment_repo.disabled? %>
       <%= render partial: 'shared/github_repository/status_container',
                  locals: {
-                   status_url: github_repo_status_organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo)
+                   status_url: repo_status_organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo)
                  } %>
     <% end %>
   </div>

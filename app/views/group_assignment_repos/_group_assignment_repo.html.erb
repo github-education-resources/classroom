@@ -32,7 +32,7 @@
     <% unless group_assignment_repo.disabled? %>
       <%= render partial: 'shared/github_repository/status_container',
                  locals: {
-                   status_url: github_repo_status_organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo)
+                   status_url: repo_status_organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo)
                  } %>
     <% end %>
   </div>
