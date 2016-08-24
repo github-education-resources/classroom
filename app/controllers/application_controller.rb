@@ -30,6 +30,10 @@ class ApplicationController < ActionController::Base
     not_found unless student_identifier_enabled?
   end
 
+  def ensure_teacher_dashboard_is_enabled
+    not_found unless teacher_dashboard_enabled?
+  end
+
   def current_scopes
     return [] unless logged_in?
     session[:current_scopes] ||= current_user.github_client_scopes
@@ -94,6 +98,11 @@ class ApplicationController < ActionController::Base
   def team_management_enabled?
     GitHubClassroom.flipper[:team_management].enabled?(current_user)
   end
+
+  def teacher_dashboard_enabled?
+    GitHubClassroom.flipper[:teacher_dashboard].enabled?(current_user)
+  end
+  helper_method :teacher_dashboard_enabled?
 
   def not_found
     raise ActionController::RoutingError, 'Not Found'

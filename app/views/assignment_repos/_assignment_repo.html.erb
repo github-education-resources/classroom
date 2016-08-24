@@ -17,7 +17,7 @@
     <strong class="css-truncate css-truncate-target">
       <%= link_to assignment_repo.github_repository.full_name, assignment_repo.github_repository.html_url, class: "#{'disabled' if assignment_repo.disabled?}" %>
     </strong>
-    <% unless assignment_repo.disabled? %>
+    <% if teacher_dashboard_enabled? && !assignment_repo.disabled? %>
       <%= render partial: 'shared/github_repository/status_container',
                  locals: {
                    status_url: repo_status_organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo)

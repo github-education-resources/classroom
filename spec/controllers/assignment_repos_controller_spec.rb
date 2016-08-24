@@ -16,7 +16,12 @@ RSpec.describe AssignmentReposController, type: :controller do
   end
 
   before do
+    GitHubClassroom.flipper[:teacher_dashboard].enable
     sign_in(user)
+  end
+
+  after do
+    GitHubClassroom.flipper[:teacher_dashboard].disable
   end
 
   describe 'GET #status', :vcr do

@@ -2,6 +2,8 @@
 class GitHubRepositoriesController < ApplicationController
   include GitHubRepoStatus
 
+  before_action :ensure_teacher_dashboard_is_enabled, only: [:repo_status]
+
   def repo_status
     push_event = github_repo.latest_push_event
 
