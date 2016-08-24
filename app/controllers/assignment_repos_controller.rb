@@ -7,7 +7,7 @@ class AssignmentReposController < GitHubRepositoriesController
   private
 
   def set_assignment_repo
-    assignment = @organization.assignments.includes(:assignment_invitation).find_by(slug: params[:assignment_id])
+    assignment = @organization.assignments.find_by(slug: params[:assignment_id])
     @assignment_repo = AssignmentRepo.find_by(assignment: assignment, id: params[:id])
     not_found unless @assignment_repo.present?
   end
