@@ -51,17 +51,17 @@ Rails.application.routes.draw do
       end
 
       resources :assignments do
-        resources :assignment_repos, path: 'repos', only: [:github_repo_latest_release] do
+        resources :assignment_repos, path: 'repos', only: [:latest_release] do
           member do
-            get :github_repo_latest_release, path: 'latest_release'
+            get :latest_release, path: 'latest-release'
           end
         end
       end
 
       resources :group_assignments, path: 'group-assignments' do
-        resources :group_assignment_repos, path: 'repos', only: [:github_repo_latest_release] do
+        resources :group_assignment_repos, path: 'repos', only: [:latest_release] do
           member do
-            get :github_repo_latest_release, path: 'latest_release'
+            get :latest_release, path: 'latest-release'
           end
         end
       end

@@ -31,9 +31,7 @@
     </strong>
     <% unless group_assignment_repo.disabled? %>
       <%= render partial: 'shared/github_repository/lastet_release_container',
-                 locals: {
-                   latest_release_url: github_repo_latest_release_organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo)
-                  } %>
+                 locals: { latest_release_url: latest_release_organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo) } %>
     <% end %>
   </div>
 </div>
