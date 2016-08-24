@@ -102,6 +102,7 @@ class ApplicationController < ActionController::Base
   def explicit_assignment_submission_enabled?
     GitHubClassroom.flipper[:explicit_assignment_submission].enabled?(current_user)
   end
+  helper_method :explicit_assignment_submission_enabled?
 
   def not_found
     raise ActionController::RoutingError, 'Not Found'
