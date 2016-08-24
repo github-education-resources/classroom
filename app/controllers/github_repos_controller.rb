@@ -8,6 +8,7 @@ class GitHubReposController < ApplicationController
   private
 
   def github_repo_latest_release
-    github_repo.releases.select { |release| !(release.prerelease || release.draft) }.first
+    github_repo.releases(headers: GitHub::APIHeaders.no_cache_no_store)
+               .select { |release| !(release.prerelease || release.draft) }.first
   end
 end
