@@ -30,10 +30,10 @@ en:
         slug:  'Your team'
       group_assignment:
         title: 'Your assignment title'
-        slug:  'Your assignment title'
+        slug:  'Your assignment slug'
       assignment:
         title: 'Your assignment title'
-        slug:  'Your assignment title'
+        slug:  'Your assignment slug'
     errors:
       models:
         grouping:

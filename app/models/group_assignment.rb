@@ -27,6 +27,8 @@ class GroupAssignment < ApplicationRecord
   validates :title, length: { maximum: 60 }
 
   validates :slug, uniqueness: { scope: :organization_id }
+  validates :slug, format: { with: /\A[-a-zA-Z0-9_]+\z/,
+                             message: "only allows letters, numbers, dashes and underscores" }
 
   validate :uniqueness_of_slug_across_organization
 
