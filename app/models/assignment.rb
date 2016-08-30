@@ -2,6 +2,7 @@
 class Assignment < ApplicationRecord
   include Flippable
   include GitHubPlan
+  include Sluggable
 
   update_index('stafftools#assignment') { self }
 
