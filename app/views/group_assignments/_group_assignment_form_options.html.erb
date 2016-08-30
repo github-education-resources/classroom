@@ -4,6 +4,11 @@
 </dl>
 
 <dl class="form">
+  <dt><%= f.label :slug %></dt>
+  <dd><%= f.text_field :slug, class: 'textfield' %></dd>
+</dl>
+
+<dl class="form">
   <div class="form-checkbox">
     <label><%= f.radio_button :public_repo, true %> Public</label>
     <%= octicon 'repo', height: 32 %>
