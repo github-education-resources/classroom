@@ -344,10 +344,15 @@ urlify = (string, replacement) ->
       result
     ), '').replace(/^\s+|\s+$/g, '').replace(/[-\s]+/g, replacement or '-').replace '#{replacement}$', ''
 
-ready = ->
-  $('#assignment_title').on('keyup', ->
+$('.assignments').ready( ->
+  $('#assignment_title').on('change paste keyup click', ->
     $('#assignment_slug').val(urlify($('#assignment_title').val()));
   )
+)
 
-$('.assignments').ready(ready)
+$('.group_assignments').ready( ->
+  $('#group_assignment_title').on('change paste keyup click', ->
+    $('#group_assignment_slug').val(urlify($('#group_assignment_title').val()));
+  )
+)
 
