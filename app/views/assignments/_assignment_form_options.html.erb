@@ -6,18 +6,26 @@
 <dl class="form">
   <div class="form-checkbox">
     <label><%= f.radio_button :public_repo, true %> Public</label>
-    <%= mega_octicon('repo') %>
+    <%= octicon 'repo', height: 32 %>
     <span class="note">Submit assignments using public repositories. All submissions will be visible to the world.</span>
   </div>
 
   <div class="form-checkbox">
     <label><%= f.radio_button :public_repo, false %> Private</label>
-    <%= mega_octicon('lock') %>
+    <%= octicon 'lock', height: 32 %>
     <span class="note">Submit assignments using private repositories. Submissions will only be visible to the submitter and organization owners.</span>
+  </div>
+
+  <div class="form-checkbox">
+    <label><%= f.check_box :students_are_repo_admins %> Give students Admin permissions on their repository</label>
   </div>
 </dl>
 
 <dl class="form">
   <dt><label>Add your starter code from GitHub <small>(optional)</small> </label></dt>
-  <dd><input class="textfield" type="text" name="repo_name" value="<%= assignment.full_name %>" placeholder="<%= assignment.full_name || 'e.g. education/classroom'%>"</dd>
+  <dd><input class="textfield js-autocomplete-textfield" type="text" name="repo_name" value="<%= @assignment.starter_code_repository.try(:full_name) %>" placeholder="<%= @assignment.starter_code_repository.try(:full_name) || 'Search repositories'%>" autocomplete="off" data-autocomplete-search-endpoint="github_repos"></dd>
+  <dd class="dd-autocomplete-suggestions"><%= render_autocomplete_suggestions_container %></dd>
+  <input class="js-autocomplete-resource-id" type="hidden" name="repo_id" />
 </dl>
+
+<%= render 'shared/assignment_student_identifier_type_options', assignment: @assignment, student_identifier_types: student_identifier_types %>

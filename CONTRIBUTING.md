@@ -8,7 +8,7 @@ Hi there! We're thrilled that you'd like to contribute to this project. Your hel
 
 ## Opening an issue
 
-Thank you for taking the time to open an issue, your feedback helps make Classroom for GitHub better.
+Thank you for taking the time to open an issue, your feedback helps make GitHub Classroom better.
 Before opening an issue, please be sure that your issue hasn't already been asked by using [GitHub search](https://help.github.com/articles/searching-issues/)
 
 Here are a few things, that will help us help you when opening an issue.
@@ -21,11 +21,12 @@ Here are a few things, that will help us help you when opening an issue.
 ## Submitting a pull request
 
 0. [Fork][fork] and clone the repository
-0. Configure and install the dependencies: (See the [README](https://github.com/education/classroom/blob/readme/README.md#hacking-on-classroom-for-github) for more details)
+0. Configure and install the dependencies: (See the [README](https://github.com/education/classroom/blob/master/README.md#hacking-on-classroom-for-github) for more details)
 0. Make sure the tests pass on your machine: `script/test`
 0. Make sure the linters pass on your machine: `script/linter`
 0. Create a new branch: `git checkout -b my-branch-name`
 0. Make your change, add tests, and make sure the tests still pass
+0. Accept the [Contributor License Agreement](https://cla.github.com/education/accept)
 0. Push to your fork and [submit a pull request][pr]
 0. Pat your self on the back and wait for your pull request to be reviewed and merged.
 

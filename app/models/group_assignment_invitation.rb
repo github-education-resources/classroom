@@ -1,4 +1,5 @@
-class GroupAssignmentInvitation < ActiveRecord::Base
+# frozen_string_literal: true
+class GroupAssignmentInvitation < ApplicationRecord
   default_scope { where(deleted_at: nil) }
 
   update_index('stafftools#group_assignment_invitation') { self }

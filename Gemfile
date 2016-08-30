@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
-ruby '2.3.0'
-gem 'rails', '4.2.4'
+ruby '2.3.1'
+gem 'rails', '4.2.7.1'
 
 gem 'airbrake'
 gem 'autoprefixer-rails'
@@ -11,9 +11,10 @@ gem 'babosa'
 gem 'chewy'
 gem 'coffee-rails', '~> 4.1.0'
 
-gem 'draper'
-
 gem 'faraday-http-cache'
+gem 'flipper'
+gem 'flipper-redis'
+gem 'flipper-ui'
 
 gem 'geo_pattern'
 
@@ -35,19 +36,22 @@ gem 'peek-git'
 gem 'peek-performance_bar'
 gem 'peek-pg'
 gem 'peek-sidekiq', github: 'Soliah/peek-sidekiq', ref: '261c857578ae6dc189506a35194785a4db51e54c'
-
 gem 'pg'
+gem 'pry-rails'
+gem 'pry-byebug'
 gem 'puma'
-gem 'puma_worker_killer'
 
 gem 'rack-canonical-host'
+gem 'rack-timeout', require: false
+gem 'redis-namespace'
 
-gem 'sprockets',  '3.3.1'
+gem 'sprockets'
 gem 'sass-rails', '~> 5.0'
-gem 'sidekiq'
+gem 'sidekiq', '~> 4.1.0'
 gem 'sinatra'
+gem 'octicons_helper', github: 'primer/octicons_helper', ref: 'fa28cb06c67ce0a1974a9e3238483d79157503c2'
 
-gem 'turbolinks'
+gem 'turbolinks', '~> 2.5.3'
 
 gem 'uglifier', '>= 1.3.0'
 
@@ -62,18 +66,20 @@ group :development, :test do
   gem 'awesome_print', require: 'ap'
   gem 'bullet'
   gem 'dotenv-rails'
-  gem 'pry-rails'
-  gem 'pry-byebug'
+  gem 'guard-rspec', require: false
   gem 'rspec-rails'
   gem 'rubocop',   require: false
   gem 'scss_lint', require: false
+  gem 'coffeelint', require: false
   gem 'spring'
+  gem 'terminal-notifier-guard'
 end
 
 group :production do
   gem 'dalli'
   gem 'newrelic_rpm'
   gem 'pinglish'
+  gem 'puma_worker_killer'
   gem 'rack-tracker'
   gem 'rails_12factor'
 end

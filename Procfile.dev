@@ -1,8 +1,8 @@
-# Start development mode executables. Assumes that postgresql is already
-# running. 'script/server' should be run in a separate terminal.
-#
-#   Run this file by executing: 'script/workers'
+# Start development mode executables.
+# This assumes the postgresql is already running
 
+web: bundle exec puma -C config/puma.rb
+rails: tail -f log/development.log
 redis: redis-server
 memcached: memcached
 worker: bundle exec sidekiq -q chewy -q trash_can

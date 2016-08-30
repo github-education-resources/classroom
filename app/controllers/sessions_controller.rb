@@ -1,5 +1,6 @@
+# frozen_string_literal: true
 class SessionsController < ApplicationController
-  skip_before_action :authenticate_user!, :set_organization, :authorize_organization_access
+  skip_before_action :authenticate_user!
 
   def new
     scopes = session[:required_scopes] || default_required_scopes
@@ -8,10 +9,9 @@ class SessionsController < ApplicationController
   end
 
   def default_required_scopes
-    'user:email,repo,delete_repo,admin:org'
+    GitHubClassroom::Scopes::TEACHER.join(',')
   end
 
-  # rubocop:disable AbcSize
   def create
     auth_hash = request.env['omniauth.auth']
     user      = User.find_by_auth_hash(auth_hash) || User.new
@@ -26,7 +26,6 @@ class SessionsController < ApplicationController
 
     redirect_to url
   end
-  # rubocop:enable AbcSize
 
   def destroy
     reset_session
@@ -34,6 +33,6 @@ class SessionsController < ApplicationController
   end
 
   def failure
-    redirect_to root_path, alert: params[:message]
+    redirect_to root_path, alert: 'There was a problem authenticating with GitHub, please try again.'
   end
 end

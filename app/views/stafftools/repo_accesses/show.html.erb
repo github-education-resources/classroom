@@ -1,7 +1,7 @@
 <div class="site-content">
   <div class="stafftools-page-header clearfix">
     <span class="assignment-icon assignment-icon-individual left">
-      <%= octicon('person') %>
+      <%= octicon 'person', height: 22 %>
     </span>
 
     <h2 class="stafftools-heading">
@@ -15,13 +15,23 @@
     <h3>Repository accesses</h3>
 
     <div class="boxed-group-inner">
-      <% owner        = @repo_access.user.decorate %>
+      <% owner        = @repo_access.user %>
       <% organization = @repo_access.organization %>
 
       <table>
         <tr>
+          <td class="text-emphasized">ID</td>
+          <td><%= @repo_access.id %></td>
+        </tr>
+        <% if @repo_access.github_team_id.present? %>
+          <tr>
+            <td class="text-emphasized">GitHub Team ID</td>
+            <td><%= @repo_access.github_team_id %></td>
+          </tr>
+        <% end %>
+        <tr>
           <td class="text-emphasized">Owned by</td>
-          <td><%= link_to owner.login, stafftools_user_path(owner) %></td>
+          <td><%= link_to owner.github_user.login, stafftools_user_path(owner) %></td>
         </tr>
         <tr>
           <td class="text-emphasized">Organization</td>

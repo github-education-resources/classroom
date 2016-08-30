@@ -1,6 +1,8 @@
-class GroupAssignmentRepo < ActiveRecord::Base
+# frozen_string_literal: true
+class GroupAssignmentRepo < ApplicationRecord
   include GitHubPlan
   include GitHubRepoable
+  include Nameable
 
   update_index('stafftools#group_assignment_repo') { self }
 
@@ -29,34 +31,35 @@ class GroupAssignmentRepo < ActiveRecord::Base
 
   before_destroy :silently_destroy_github_repository
 
-  # Public
-  #
-  def creator
-    group_assignment.creator
+  delegate :creator, :starter_code_repo_id, to: :group_assignment
+  delegate :github_team_id,                 to: :group
+
+  # TODO: Move to a view model
+  def disabled?
+    !github_repository.on_github? || !github_team.on_github?
   end
 
-  # Public
-  #
+  def github_repository
+    @github_repository ||= GitHubRepository.new(organization.github_client, github_repo_id)
+  end
+
+  def github_team
+    @github_team ||= group.github_team
+  end
+
   def private?
     !group_assignment.public_repo?
   end
 
-  # Public
-  #
-  def github_team_id
-    group.github_team_id
-  end
-
-  # Public
-  #
   def repo_name
-    github_team = GitHubTeam.new(creator.github_client, github_team_id).team
-    "#{group_assignment.slug}-#{github_team.slug}"
+    @repo_name ||= generate_github_repo_name
   end
 
-  # Public
-  #
-  def starter_code_repo_id
-    group_assignment.starter_code_repo_id
+  private
+
+  delegate :slug, to: :group_assignment
+
+  def name
+    @name ||= group.github_team.slug(headers: GitHub::APIHeaders.no_cache_no_store)
   end
 end

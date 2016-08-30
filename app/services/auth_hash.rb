@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AuthHash
   def self.extract_user_info(hash)
     AuthHash.new(hash).user_info
@@ -24,7 +25,7 @@ class AuthHash
   end
 
   def token
-    user_hash.fetch('credentials', {}).fetch('token')
+    user_hash.fetch('credentials') { {} }.fetch('token')
   end
 
   def site_admin
@@ -32,14 +33,12 @@ class AuthHash
     raw_info[:site_admin]
   end
 
-  private
-
   def non_staff_github_admins_ids
     return [] unless ENV['NON_STAFF_GITHUB_ADMIN_IDS'].present?
     ENV['NON_STAFF_GITHUB_ADMIN_IDS'].split(',').compact.delete_if(&:empty?)
   end
 
   def raw_info
-    user_hash.fetch('extra', {}).fetch('raw_info', {})
+    user_hash.fetch('extra') { {} }.fetch('raw_info') { {} }
   end
 end

@@ -1,5 +1,5 @@
 <div class="remodal text-left" data-remodal-id="delete-assignment">
-  <button data-remodal-action="close" class="remodal-close"><%= octicon('x') %></button>
+  <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
   <h2 class="remodal-header text-left">Are you sure you want to delete this?</h2>
 
   <div class="remodal-warning">
@@ -9,9 +9,9 @@
   <div class="remodal-description">
     <p>
       This action <strong>CANNOT</strong> be undone.
-      This will permanently delete the <strong><%= @assignment.title %></strong> assignment from Classroom for GitHub.
+      This will permanently delete the <strong><%= @assignment.title %></strong> assignment from GitHub Classroom.
       In addition this will also delete <strong><%= pluralize(@assignment.assignment_repos.count, 'participant repository') %></strong>
-      under the <strong><%= organization.login %></strong> organization.
+      under the <strong><%= @organization.github_organization.login %></strong> organization.
     </p>
   </div>
 

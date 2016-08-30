@@ -1,4 +1,5 @@
-class RepoAccess < ActiveRecord::Base
+# frozen_string_literal: true
+class RepoAccess < ApplicationRecord
   include GitHubTeamable
 
   update_index('stafftools#repo_access') { self }
@@ -29,19 +30,12 @@ class RepoAccess < ActiveRecord::Base
   private
 
   def add_membership_to_github_organization
-    github_organization = GitHubOrganization.new(organization.github_client, organization.github_id)
-    github_user         = GitHubUser.new(user.github_client)
-
-    github_organization.add_membership(github_user.login)
+    organization.github_organization.add_membership(user.github_user.login)
   end
 
-  # Interal
-  #
   def accept_membership_to_github_organization
     github_organization = GitHubOrganization.new(user.github_client, organization.github_id)
-    github_user         = GitHubUser.new(user.github_client)
-
-    github_organization.accept_membership(github_user.login)
+    github_organization.accept_membership(user.github_user.login)
   rescue GitHub::Error
     silently_remove_organization_member
     raise GitHub::Error, 'Failed to add user to the Classroom, please try again'
@@ -57,9 +51,7 @@ class RepoAccess < ActiveRecord::Base
     true # Destroy ActiveRecord object even if we fail to delete the repository
   end
 
-  # Internal
-  #
   def title
-    GitHubUser.new(user.github_client).login
+    user.github_user.login
   end
 end

@@ -5,8 +5,8 @@
 
   <div class="site-content-body markdown-body">
     <h3>1. Add them to your GitHub Organization</h3>
-    <p><strong>You must add them to the Owners team in order for them to have access.</strong></p>
-    <p>You can do so at <%= link_to organization.github_team_invitations_url, organization.github_team_invitations_url %></p>
+    <p><strong>You must add them to the Organization as an Owner in order for them to have access.</strong></p>
+    <p>You can do so at <%= link_to @organization.github_organization.team_invitations_url, @organization.github_organization.team_invitations_url %></p>
 
     <h3>2. Give them this URL</h3>
     <p>After signing in, they will automatically be added to this classroom.</p>
@@ -18,7 +18,7 @@
           <%= content_tag :input, '', type: 'text', id: "organization-#{@organization.github_id}", value: organization_url(@organization), readonly: 'readonly' %>
           <span class="input-group-button">
             <button aria-label="Copy to clipboard" data-clipboard-target=<%= "#organization-#{@organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="Copied!" type="button">
-              <%= octicon('clippy') %>
+              <%= octicon 'clippy' %>
               Copy classroom link
             </button>
           </span>

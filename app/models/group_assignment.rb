@@ -1,4 +1,6 @@
-class GroupAssignment < ActiveRecord::Base
+# frozen_string_literal: true
+class GroupAssignment < ApplicationRecord
+  include Flippable
   include GitHubPlan
   include Sluggable
 
@@ -13,6 +15,7 @@ class GroupAssignment < ActiveRecord::Base
   belongs_to :creator, class_name: User
   belongs_to :grouping
   belongs_to :organization
+  belongs_to :student_identifier_type
 
   validates :creator, presence: true
 
@@ -40,6 +43,11 @@ class GroupAssignment < ActiveRecord::Base
 
   def starter_code?
     starter_code_repo_id.present?
+  end
+
+  def starter_code_repository
+    return unless starter_code?
+    @starter_code_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id)
   end
 
   private

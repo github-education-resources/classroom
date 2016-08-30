@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe OrganizationsController, type: :controller do
@@ -5,6 +6,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
   let(:organization)  { GitHubFactory.create_owner_classroom_org }
   let(:user)          { organization.users.first                 }
+  let(:student)       { GitHubFactory.create_classroom_student   }
 
   before do
     sign_in(user)
@@ -34,10 +36,34 @@ RSpec.describe OrganizationsController, type: :controller do
       end
     end
 
+    context 'user with admin privilege on the organization but not part of the classroom' do
+      before(:each) do
+        organization.users = []
+      end
+
+      it 'adds the user to the classroom' do
+        get :index
+
+        expect(user.organizations).to include(organization)
+      end
+    end
+
+    context 'user without admin privilege on the organization' do
+      before(:each) do
+        sign_in(student)
+      end
+
+      it 'does not add the user to the classroom' do
+        get :index
+
+        expect(student.organizations).to be_empty
+      end
+    end
+
     context 'authenticated user with an invalid token' do
       before do
-        user.token = '12345'
-        user.save!
+        allow(user).to receive(:ensure_no_token_scope_loss).and_return(true)
+        user.update_attributes(token: '1234')
       end
 
       it 'redirects to login_path' do
@@ -118,6 +144,40 @@ RSpec.describe OrganizationsController, type: :controller do
 
       expect(response).to have_http_status(:success)
       expect(assigns(:organization)).to_not be_nil
+    end
+  end
+
+  describe 'GET #invitation', :vcr do
+    it 'returns success and sets the organization' do
+      get :invitation, id: organization.slug
+
+      expect(response).to have_http_status(:success)
+      expect(assigns(:organization)).to_not be_nil
+    end
+  end
+
+  describe 'GET #show_groupings', :vcr do
+    context 'flipper is enabled' do
+      before do
+        GitHubClassroom.flipper[:team_management].enable
+      end
+
+      it 'returns success and sets the organization' do
+        get :show_groupings, id: organization.slug
+
+        expect(response).to have_http_status(:success)
+        expect(assigns(:organization)).to_not be_nil
+      end
+
+      after do
+        GitHubClassroom.flipper[:team_management].disable
+      end
+    end
+
+    context 'flipper is not enabled' do
+      it 'returns success and sets the organization' do
+        expect { get :show_groupings, id: organization.slug }.to raise_error(ActionController::RoutingError)
+      end
     end
   end
 

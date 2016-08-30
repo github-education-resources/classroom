@@ -1,20 +1,22 @@
-<% if resources.total_count > 0 %>
-  <% resource_groups = resources.group_by {|r| r._data['_type']}  %>
+<% unless resources.nil? %>
+  <% if resources.total_count > 0 %>
+    <% resource_groups = resources.group_by {|r| r._data['_type']}  %>
 
-  <% resource_groups.each do |name, resources| %>
-    <h4><%= name.capitalize.humanize.pluralize %></h4>
+    <% resource_groups.each do |name, resources| %>
+      <h4><%= name.capitalize.humanize.pluralize %></h4>
 
-    <ul class="classroom-resources">
-      <% resources.each do |resource| %>
-        <%= render_stafftools_resource(resource) %>
-      <% end %>
-    </ul>
+      <ul class="classroom-resources">
+        <% resources.each do |resource| %>
+          <%= render_stafftools_resource(resource) %>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <%= render partial: 'shared/pagination', locals: { collection: resources } %>
+  <% else %>
+    <div class="blankslate">
+      <%= octicon 'search', height: 22 %>
+      <h3>We couldn't find any matching resources</h3>
+    </div>
   <% end %>
-
-  <%= render partial: 'shared/pagination', locals: { collection: resources } %>
-<% else %>
-  <div class="blankslate">
-    <%= mega_octicon('search') %>
-    <h3>We couldn't find any matching resources</h3>
-  </div>
 <% end %>

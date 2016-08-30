@@ -1,7 +1,7 @@
 <div class="site-content">
   <div class="stafftools-page-header clearfix">
     <span class="assignment-icon assignment-icon-group left">
-      <%= octicon('organization') %>
+      <%= octicon 'organization', height: 22 %>
     </span>
 
     <h2 class="stafftools-heading">
@@ -15,9 +15,13 @@
     <h3>Grouping information</h3>
 
     <div class="boxed-group-inner">
-      <% organization = @grouping.organization.decorate %>
+      <% organization = @grouping.organization %>
 
       <table>
+        <tr>
+          <td class="text-emphasized">ID</td>
+          <td><%= @grouping.id %></td>
+        </tr>
         <tr>
           <td class="text-emphasized">Owned by</td>
           <td><%= link_to organization.title, stafftools_organization_path(organization.id) %></td>

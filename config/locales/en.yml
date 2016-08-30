@@ -24,6 +24,10 @@ en:
     attributes:
       grouping:
         title: 'Your set of teams'
+        slug:  'Your set of teams'
+      group:
+        title: 'Your team'
+        slug:  'Your team'
       group_assignment:
         title: 'Your assignment title'
         slug:  'Your assignment title'

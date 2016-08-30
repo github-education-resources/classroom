@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -6,7 +7,7 @@ class ApplicationController < ActionController::Base
   class NotAuthorized < StandardError
   end
 
-  helper_method :current_user, :decorated_current_user, :decorated_true_user, :logged_in?, :staff?, :true_user
+  helper_method :current_user, :logged_in?, :staff?, :true_user, :student_identifier_enabled?, :team_management_enabled?
 
   before_action :authenticate_user!
 
@@ -21,13 +22,21 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def ensure_team_management_flipper_is_enabled
+    not_found unless team_management_enabled?
+  end
+
+  def ensure_student_identifier_flipper_is_enabled
+    not_found unless student_identifier_enabled?
+  end
+
   def current_scopes
     return [] unless logged_in?
     session[:current_scopes] ||= current_user.github_client_scopes
   end
 
   def required_scopes
-    %w(user:email repo delete_repo admin:org)
+    GitHubClassroom::Scopes::TEACHER
   end
 
   def adequate_scopes?
@@ -35,7 +44,8 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_user!
-    auth_redirect unless logged_in? && adequate_scopes?
+    return become_active if logged_in? && adequate_scopes?
+    auth_redirect
   end
 
   def auth_redirect
@@ -44,12 +54,8 @@ class ApplicationController < ActionController::Base
     redirect_to login_path
   end
 
-  def decorated_current_user
-    @decorated_current_user ||= current_user.decorate
-  end
-
-  def decorated_true_user
-    @decorated_true_user ||= true_user.decorate
+  def become_active
+    current_user.become_active
   end
 
   def current_user
@@ -70,7 +76,7 @@ class ApplicationController < ActionController::Base
       when NotAuthorized
         flash[:error] = 'You are not authorized to perform this action'
       when GitHub::Error, GitHub::Forbidden, GitHub::NotFound
-        flash[:error] = 'Uh oh, an error has occured.'
+        flash[:error] = 'Uh oh, an error has occurred.'
       end
     end
 
@@ -81,8 +87,16 @@ class ApplicationController < ActionController::Base
     !current_user.nil?
   end
 
+  def student_identifier_enabled?
+    GitHubClassroom.flipper[:student_identifier].enabled?(current_user)
+  end
+
+  def team_management_enabled?
+    GitHubClassroom.flipper[:team_management].enabled?(current_user)
+  end
+
   def not_found
-    fail ActionController::RoutingError, 'Not Found'
+    raise ActionController::RoutingError, 'Not Found'
   end
 
   def redirect_to_root

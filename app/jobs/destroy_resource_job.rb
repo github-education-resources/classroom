@@ -1,4 +1,5 @@
-class DestroyResourceJob < ActiveJob::Base
+# frozen_string_literal: true
+class DestroyResourceJob < ApplicationJob
   queue_as :trash_can
 
   def perform(resource)

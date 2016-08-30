@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe GroupAssignmentsController, type: :controller do
@@ -9,6 +10,8 @@ RSpec.describe GroupAssignmentsController, type: :controller do
   let(:group_assignment) do
     GroupAssignment.create(attributes_for(:group_assignment).merge(organization: organization, creator: user))
   end
+
+  let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
 
   before do
     sign_in(user)
@@ -47,6 +50,29 @@ RSpec.describe GroupAssignmentsController, type: :controller do
                       group_assignment: { title: 'Learn Ruby', grouping_id: other_group_assignment.grouping_id }
       end.not_to change { GroupAssignment.count }
     end
+
+    context 'flipper is enabled for the user' do
+      before do
+        GitHubClassroom.flipper[:student_identifier].enable
+        post :create,
+             organization_id:         organization.slug,
+             group_assignment:        { title: 'Learn JavaScript' },
+             grouping:                { title: 'Grouping 1'       },
+             student_identifier_type: { id: student_identifier_type.id }
+      end
+
+      it 'creates a new Assignment' do
+        expect(GroupAssignment.count).to eql(1)
+      end
+
+      it 'sets correct student identifier type for the new Assignment' do
+        expect(GroupAssignment.first.student_identifier_type.id).to eql(student_identifier_type.id)
+      end
+
+      after do
+        GitHubClassroom.flipper[:student_identifier].disable
+      end
+    end
   end
 
   describe 'GET #show', :vcr do
@@ -72,6 +98,26 @@ RSpec.describe GroupAssignmentsController, type: :controller do
 
       expect(response).to redirect_to(organization_group_assignment_path(organization,
                                                                          GroupAssignment.find(group_assignment.id)))
+    end
+
+    context 'flipper is enabled for the user' do
+      before do
+        GitHubClassroom.flipper[:student_identifier].enable
+        options = { title: 'JavaScript Calculator' }
+        patch :update,
+              id:                      group_assignment.slug,
+              organization_id:         organization.slug,
+              group_assignment:        options,
+              student_identifier_type: { id: student_identifier_type.id }
+      end
+
+      it 'correctly updates the assignment' do
+        expect(GroupAssignment.first.student_identifier_type.id).to eql(student_identifier_type.id)
+      end
+
+      after do
+        GitHubClassroom.flipper[:student_identifier].disable
+      end
     end
   end
 

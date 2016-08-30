@@ -1,7 +1,6 @@
 //= require peek
 //= require peek/views/performance_bar
 
-@import "octicons/octicons/sprockets-octicons";
 @import "primer-css/scss/primer";
 
 @import "primer-markdown/components/markdown";
@@ -14,3 +13,5 @@
 @import "stafftools";
 
 @import "remodal/dist/remodal";
+
+@import "dragula/dist/dragula";

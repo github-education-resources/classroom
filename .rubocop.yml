@@ -1,5 +1,5 @@
 AllCops:
-  RunRailsCops: true
+  TargetRubyVersion: 2.3
   Include:
     - '**/Rakefile'
     - '**/config.ru'
@@ -9,7 +9,12 @@ AllCops:
     - 'config/**/*'
     - 'script/**/*'
     - 'vendor/**/*'
-    - !ruby/regexp /old_and_unused\.rb$/
+
+Rails:
+  Enabled: true
+
+TrailingBlankLines:
+  Enabled: true
 
 Documentation:
   Enabled: false

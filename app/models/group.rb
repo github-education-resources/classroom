@@ -1,5 +1,7 @@
-class Group < ActiveRecord::Base
+# frozen_string_literal: true
+class Group < ApplicationRecord
   include GitHubTeamable
+  include Sluggable
 
   update_index('stafftools#group') { self }
 
@@ -18,29 +20,25 @@ class Group < ActiveRecord::Base
   validates :title, presence: true
   validates :title, length: { maximum: 39 }
 
+  validates :slug, uniqueness: { scope: :grouping }
+
   before_validation(on: :create) do
     create_github_team if organization
   end
 
   before_destroy :silently_destroy_github_team
 
-  private
-
-  # Internal
-  #
-  def add_member_to_github_team(repo_access)
-    github_team = GitHubTeam.new(organization.github_client, github_team_id)
-    github_user = GitHubUser.new(repo_access.user.github_client)
-
-    github_team.add_team_membership(github_user.login)
+  def github_team
+    @github_team ||= GitHubTeam.new(organization.github_client, github_team_id)
   end
 
-  # Internal
-  #
-  def remove_from_github_team(repo_access)
-    github_team = GitHubTeam.new(organization.github_client, github_team_id)
-    github_user = GitHubUser.new(repo_access.user.github_client)
+  private
 
-    github_team.remove_team_membership(github_user.login)
+  def add_member_to_github_team(repo_access)
+    github_team.add_team_membership(repo_access.user.github_user.login)
+  end
+
+  def remove_from_github_team(repo_access)
+    github_team.remove_team_membership(repo_access.user.github_user.login)
   end
 end

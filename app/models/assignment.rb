@@ -1,4 +1,6 @@
-class Assignment < ActiveRecord::Base
+# frozen_string_literal: true
+class Assignment < ApplicationRecord
+  include Flippable
   include GitHubPlan
   include Sluggable
 
@@ -9,11 +11,12 @@ class Assignment < ActiveRecord::Base
   has_one :assignment_invitation, dependent: :destroy, autosave: true
 
   has_many :assignment_repos, dependent: :destroy
-  has_many :repo_accesses,    through:   :assignment_repos
-  has_many :users,            through:   :repo_accesses
+  has_many :users,            through:   :assignment_repos
 
   belongs_to :creator, class_name: User
   belongs_to :organization
+
+  belongs_to :student_identifier_type
 
   validates :creator, presence: true
 
@@ -39,6 +42,11 @@ class Assignment < ActiveRecord::Base
 
   def starter_code?
     starter_code_repo_id.present?
+  end
+
+  def starter_code_repository
+    return unless starter_code?
+    @starter_code_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id)
   end
 
   private

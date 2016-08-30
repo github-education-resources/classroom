@@ -4,7 +4,7 @@
   <div class="site-content-cap">
     <h2 class="site-content-heading">
       <span class="assignment-icon assignment-icon-individual">
-        <%= octicon('person') %>
+        <%= octicon 'person', height: 22 %>
       </span>
       Accepted the <strong><%= assignment.title %></strong> assignment
     </h2>
@@ -14,7 +14,7 @@
 <div class="site-content-body">
   <div class="markdown-body">
     <h2>You are ready to go!</h2>
-    <p>You may receive an invitation to join <%= link_to "@#{decorated_organization.login}", decorated_organization.github_url %> via email invitation on your behalf. No further action is necessary.</p>
-    <p>Your assignment has been created here: <%= link_to decorated_assignment_repo.github_url, decorated_assignment_repo.github_url %></p>
+    <p>You may receive an invitation to join <%= link_to "@#{organization.github_organization.login}", organization.github_organization.html_url %> via email invitation on your behalf. No further action is necessary.</p>
+    <p>Your assignment has been created here: <%= link_to assignment_repo.github_repository.html_url, assignment_repo.github_repository.html_url %></p>
   </div>
 </div>

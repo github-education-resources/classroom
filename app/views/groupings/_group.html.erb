@@ -1,0 +1,24 @@
+<div class="team-panel">
+  <div class="boxed-group">
+    <a class="btn btn-sm boxed-group-action" href="#">
+      Manage
+    </a>
+    <h3><%= group.title %>
+      <span class="team-description" group-description-id="<%= group.slug %>" itemprop="description"><%= pluralize(group.repo_accesses.count, 'student') %></span>
+    </h3>
+    <div class="boxed-group-inner clearfix">
+      <div class="team-members">
+        <ul class="member-list member-list-draggable" group-id="<%= group.slug %>">
+          <% group.repo_accesses.each do |repo_access| %>
+              <% student = repo_access.user %>
+              <li class="member member-draggable">
+                <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s", 'aria-label' => student.github_user.login, 'user-id' => student.id do %>
+                    <%= image_tag student.github_user.github_avatar_url(60), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.github_user.login}" %>
+                <% end %>
+              </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

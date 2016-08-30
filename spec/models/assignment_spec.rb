@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe Assignment, type: :model do
@@ -11,15 +12,6 @@ RSpec.describe Assignment, type: :model do
       new_assignment = build(:assignment, organization: organization, title: 'assignment 1')
 
       expect { new_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid)
-    end
-  end
-
-  describe 'when the title is updated' do
-    subject { create(:assignment) }
-
-    it 'updates the slug' do
-      subject.update_attributes(title: 'New Title')
-      expect(subject.slug).to eql('new-title')
     end
   end
 
@@ -57,17 +49,32 @@ RSpec.describe Assignment, type: :model do
     end
   end
 
-  describe '#public?' do
-    it 'returns true if Assignments public_repo column is true' do
-      assignment = create(:assignment)
-      expect(assignment.public?).to be(true)
-    end
-  end
+  context 'with assignment' do
+    subject { create(:assignment) }
 
-  describe '#private?' do
-    it 'returns false if Assignments public_repo column is true' do
-      assignment = create(:assignment)
-      expect(assignment.private?).to be(false)
+    describe 'when the title is updated' do
+      it 'updates the slug' do
+        subject.update_attributes(title: 'New Title')
+        expect(subject.slug).to eql('new-title')
+      end
+    end
+
+    describe '#flipper_id' do
+      it 'should return an id' do
+        expect(subject.flipper_id).to eq("Assignment:#{subject.id}")
+      end
+    end
+
+    describe '#public?' do
+      it 'returns true if Assignments public_repo column is true' do
+        expect(subject.public?).to be(true)
+      end
+    end
+
+    describe '#private?' do
+      it 'returns false if Assignments public_repo column is true' do
+        expect(subject.private?).to be(false)
+      end
     end
   end
 end

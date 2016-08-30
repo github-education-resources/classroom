@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class GroupAssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
@@ -6,9 +7,6 @@ class GroupAssignmentsController < ApplicationController
   before_action :set_groupings,        except: [:show]
 
   before_action :authorize_grouping_access, only: [:create, :update]
-
-  decorates_assigned :organization
-  decorates_assigned :group_assignment
 
   def new
     @group_assignment = GroupAssignment.new
@@ -26,7 +24,10 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def show
-    @group_assignment_repos = @group_assignment.group_assignment_repos.page(params[:page])
+    @group_assignment_repos = GroupAssignmentRepo.includes(:organization,
+                                                           group: [:organization, repo_accesses: [:user]])
+                                                 .where(group_assignment: @group_assignment)
+                                                 .page(params[:page])
   end
 
   def edit
@@ -54,13 +55,20 @@ class GroupAssignmentsController < ApplicationController
 
   private
 
+  def student_identifier_types
+    @student_identifier_types ||= @organization.student_identifier_types.select(:name, :id).map do |student_identifier|
+      [student_identifier.name, student_identifier.id]
+    end
+  end
+  helper_method :student_identifier_types
+
   def authorize_grouping_access
     grouping_id = new_group_assignment_params[:grouping_id]
 
     return unless grouping_id.present?
     return if @organization.groupings.find_by(id: grouping_id)
 
-    fail NotAuthorized, 'You are not permitted to select this group of teams'
+    raise NotAuthorized, 'You are not permitted to select this set of teams'
   end
 
   def build_group_assignment
@@ -70,10 +78,11 @@ class GroupAssignmentsController < ApplicationController
   def new_group_assignment_params
     params
       .require(:group_assignment)
-      .permit(:title, :public_repo, :grouping_id)
+      .permit(:title, :public_repo, :grouping_id, :max_members, :students_are_repo_admins)
       .merge(creator: current_user,
              organization: @organization,
-             starter_code_repo_id: starter_code_repository_id(params[:repo_name]))
+             starter_code_repo_id: starter_code_repo_id_param,
+             student_identifier_type: student_identifier_type_param)
   end
 
   def new_grouping_params
@@ -88,13 +97,35 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def set_group_assignment
-    @group_assignment = GroupAssignment.find_by!(slug: params[:id])
+    @group_assignment = @organization
+                        .group_assignments
+                        .includes(:group_assignment_invitation)
+                        .find_by!(slug: params[:id])
+  end
+
+  def starter_code_repo_id_param
+    if params[:repo_id].present?
+      validate_starter_code_repository_id(params[:repo_id])
+    else
+      starter_code_repository_id(params[:repo_name])
+    end
+  end
+
+  def student_identifier_type_param
+    return unless params.key?(:student_identifier_type)
+    StudentIdentifierType.find_by(id: student_identifier_type_params[:id], organization: @organization)
   end
 
   def update_group_assignment_params
     params
       .require(:group_assignment)
-      .permit(:title, :public_repo)
-      .merge(starter_code_repo_id: starter_code_repository_id(params[:repo_name]))
+      .permit(:title, :public_repo, :max_members)
+      .merge(starter_code_repo_id: starter_code_repo_id_param, student_identifier_type: student_identifier_type_param)
+  end
+
+  def student_identifier_type_params
+    params
+      .require(:student_identifier_type)
+      .permit(:id)
   end
 end

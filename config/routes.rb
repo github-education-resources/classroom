@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   match '/auth/:provider/callback', to: 'sessions#create',  via: [:get, :post]
   match '/auth/failure',            to: 'sessions#failure', via: [:get, :post]
 
+  get '/autocomplete/github_repos', to: 'autocomplete#github_repos'
+
   resources :assignment_invitations, path: 'assignment-invitations', only: [:show] do
     member do
       patch :accept_invitation
@@ -35,17 +37,31 @@ Rails.application.routes.draw do
         get   :new_assignment, path: 'new-assignment'
         get   :setup
         patch :setup_organization
+        get   'settings/invitations', to: 'organizations#invitation'
+        get   'settings/teams',       to: 'organizations#show_groupings'
       end
 
+      resources :groupings, only: [:show, :edit, :update] do
+        resources :groups, only: [:show] do
+          member do
+            patch '/memberships/:user_id', to: 'groups#add_membership', as: 'add_membership'
+            delete '/memberships/:user_id', to: 'groups#remove_membership', as: 'remove_membership'
+          end
+        end
+      end
       resources :assignments
       resources :group_assignments, path: 'group-assignments'
+      resources :student_identifier_types, path: 'identifiers', except: [:show]
     end
   end
 
   namespace :stafftools do
-    mount Sidekiq::Web  => '/sidekiq', constraints: StaffConstraint.new
+    constraints StaffConstraint.new do
+      mount Sidekiq::Web => '/sidekiq'
+      mount Flipper::UI.app(GitHubClassroom.flipper) => '/flipper', as: 'flipper'
+    end
 
-    root to: 'resources#index'
+    root 'resources#index', as: :root
     get '/resource_search', to: 'resources#search'
 
     resources :users, only: [:show] do

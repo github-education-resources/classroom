@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe RepoAccess, type: :model do
@@ -26,6 +27,7 @@ RSpec.describe RepoAccess, type: :model do
       describe '#accept_membership_to_github_organization' do
         it 'accepts the users membership to the Organization' do
           expect(WebMock).to have_requested(:patch, github_url("/user/memberships/orgs/#{organization.title}"))
+            .with(headers: { 'Authorization' => "token #{student.token}" })
         end
       end
     end

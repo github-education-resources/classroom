@@ -55,13 +55,26 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
 
   # Use a different cache store in production.
-  config.cache_store = :mem_cache_store, ENV["MEMCACHEDCLOUD_SERVERS"].split(','), { username: ENV["MEMCACHEDCLOUD_USERNAME"],
-                                                                                     password: ENV["MEMCACHEDCLOUD_PASSWORD"],
-                                                                                     namespace: 'CLASSROOM',
-                                                                                     expires_in: (ENV["REQUEST_CACHE_TIMEOUT"] || 30).to_i.minutes,
-                                                                                     compress: true,
-                                                                                     pool_size: 5 }
+  memcachedcloud_servers = ENV['MEMCACHEDCLOUD_SERVERS'].split(',')
 
+  dalli_store_name_and_password = {
+    username: ENV['MEMCACHEDCLOUD_USERNAME'],
+    password: ENV['MEMCACHEDCLOUD_PASSWORD']
+  }
+
+  dalli_store_config = {
+    namespace:  'CLASSROOM',
+    expires_in: (ENV['REQUEST_CACHE_TIMEOUT'] || 30).to_i.minutes,
+    pool_size:  5
+  }
+
+  config.cache_store = :dalli_store,
+                       memcachedcloud_servers,
+                       dalli_store_name_and_password.merge(dalli_store_config)
+
+  config.peek.adapter = :memcache, {
+    client: Dalli::Client.new(memcachedcloud_servers, dalli_store_name_and_password)
+  }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = 'http://assets.example.com'
@@ -83,16 +96,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  # Dalli configuration for Peek
-  config.peek.adapter = :memcache, {
-    client: Dalli::Client.new(ENV['MEMCACHEDCLOUD_SERVERS'].split(','),
-                              { username: ENV['MEMCACHEDCLOUD_USERNAME'],
-                                password: ENV['MEMCACHEDCLOUD_PASSWORD'] }),
-  }
-
-  config.action_mailer.default_url_options = { host: 'classroom-staging.herokuapp.com' }
-
   config.middleware.use(Rack::Tracker) do
-    handler :google_analytics, { tracker: ENV['GOOGLE_ANALYTICS_TRACKING_ID'] }
+    handler :google_analytics, tracker: ENV['GOOGLE_ANALYTICS_TRACKING_ID']
   end
 end

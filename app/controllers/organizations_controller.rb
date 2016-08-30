@@ -1,16 +1,18 @@
+# frozen_string_literal: true
 class OrganizationsController < ApplicationController
   include OrganizationAuthorization
 
+  before_action :ensure_team_management_flipper_is_enabled, only: [:show_groupings]
+
   before_action :authorize_organization_addition,     only: [:create]
-  before_action :set_users_github_organizations,      only: [:new, :create]
+  before_action :set_users_github_organizations,      only: [:index, :new, :create]
+  before_action :add_current_user_to_organizations,   only: [:index]
   before_action :paginate_users_github_organizations, only: [:new, :create]
 
   skip_before_action :set_organization, :authorize_organization_access, only: [:index, :new, :create]
 
-  decorates_assigned :organization
-
   def index
-    @organizations = current_user.organizations.page(params[:page])
+    @organizations = current_user.organizations.includes(:users).page(params[:page])
   end
 
   def new
@@ -28,10 +30,20 @@ class OrganizationsController < ApplicationController
   end
 
   def show
-    @assignments = Kaminari.paginate_array(@organization.all_assignments.sort_by(&:updated_at)).page(params[:page])
+    @assignments = Kaminari
+                   .paginate_array(@organization.all_assignments(with_invitations: true)
+                   .sort_by(&:updated_at))
+                   .page(params[:page])
   end
 
   def edit
+  end
+
+  def invitation
+  end
+
+  def show_groupings
+    @groupings = @organization.groupings
   end
 
   def update
@@ -47,7 +59,7 @@ class OrganizationsController < ApplicationController
     if @organization.update_attributes(deleted_at: Time.zone.now)
       DestroyResourceJob.perform_later(@organization)
 
-      flash[:success] = "Your organization, @#{organization.login} is being reset"
+      flash[:success] = "Your organization, @#{@organization.github_organization.login} is being reset"
       redirect_to organizations_path
     else
       render :edit
@@ -73,21 +85,11 @@ class OrganizationsController < ApplicationController
 
   private
 
-  def authorize_organization_access
-    return if @organization.users.include?(current_user) || current_user.staff?
-
-    begin
-      github_organization.admin?(decorated_current_user.login) ? @organization.users << current_user : not_found
-    rescue
-      not_found
-    end
-  end
-
   def authorize_organization_addition
     new_github_organization = github_organization_from_params
 
-    return if new_github_organization.admin?(decorated_current_user.login)
-    fail NotAuthorized, 'You are not permitted to add this organization as a classroom'
+    return if new_github_organization.admin?(current_user.github_user.login)
+    raise NotAuthorized, 'You are not permitted to add this organization as a classroom'
   end
 
   def github_organization_from_params
@@ -96,7 +98,7 @@ class OrganizationsController < ApplicationController
   end
 
   def new_organization_params
-    github_org = github_organization_from_params.organization
+    github_org = github_organization_from_params
     title      = github_org.name.present? ? github_org.name : github_org.login
 
     params
@@ -111,16 +113,31 @@ class OrganizationsController < ApplicationController
   end
 
   def set_users_github_organizations
-    github_user = GitHubUser.new(current_user.github_client)
-
-    @users_github_organizations = github_user.organization_memberships.map do |membership|
+    @users_github_organizations = current_user.github_user.organization_memberships.map do |membership|
       {
-        classroom: Organization.unscoped.find_by(github_id: membership.organization.id),
+        classroom: Organization.unscoped.includes(:users).find_by(github_id: membership.organization.id),
         github_id: membership.organization.id,
         login:     membership.organization.login,
         role:      membership.role
       }
     end
+  end
+
+  # Check if the current user has any organizations with admin privilege,
+  # if so add the user to the corresponding classroom automatically.
+  def add_current_user_to_organizations
+    @users_github_organizations.each do |organization|
+      classroom = organization[:classroom]
+      if classroom.present? && !classroom.users.include?(current_user)
+        create_user_organization_access(classroom)
+      end
+    end
+  end
+
+  def create_user_organization_access(organization)
+    github_org = GitHubOrganization.new(current_user.github_client, organization.github_id)
+    return unless github_org.admin?(current_user.github_user.login)
+    organization.users << current_user
   end
 
   def paginate_users_github_organizations

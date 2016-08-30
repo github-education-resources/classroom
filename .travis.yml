@@ -3,7 +3,7 @@ language: ruby
 sudo: false
 
 rvm:
-  - 2.3.0
+  - 2.3.1
 
 env:
   - DB=postgresql
@@ -16,8 +16,10 @@ script:
 
 bundler_args: --without development production --deployment --jobs=3 --retry=3
 
+cache: bundler
+
 notifications:
   email: false
 
 env:
-  - GITHUB_CLIENT_ID=client_id
+  - GITHUB_CLIENT_ID=client_id GITHUB_CLIENT_SECRET=client_secret

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Stafftools
   class ResourcesController < StafftoolsController
     before_action :set_resources
@@ -14,8 +15,12 @@ module Stafftools
     private
 
     def set_resources
-      resource_query = params[:query].present? ? match_phrase_prefix(params[:query]) : {}
-      @resources     = StafftoolsIndex.query(resource_query).order(_type: :asc).page(params[:page]).per(20)
+      return @resources = nil unless params[:query].present?
+      @resources = StafftoolsIndex
+                   .query(match_phrase_prefix(params[:query]))
+                   .order(_type: :asc)
+                   .page(params[:page])
+                   .per(20)
     end
 
     def match_phrase_prefix(query)
