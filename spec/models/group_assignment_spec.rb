@@ -24,10 +24,10 @@ RSpec.describe GroupAssignment, type: :model do
     let(:assignment) { create(:assignment, organization: organization) }
     let(:group_assignment) { create(:group_assignment, organization: organization) }
 
-    it 'validates that an Assignment in the same organization does not have the same title' do
+    it 'validates that an Assignment in the same organization does not have the same slug' do
       group_assignment.title = assignment.title
 
-      validation_message = 'Validation failed: Your assignment title must be unique'
+      validation_message = 'Validation failed: Your assignment slug must be unique'
       expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, validation_message)
     end
   end
