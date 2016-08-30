@@ -52,13 +52,6 @@ RSpec.describe Assignment, type: :model do
   context 'with assignment' do
     subject { create(:assignment) }
 
-    describe 'when the title is updated' do
-      it 'updates the slug' do
-        subject.update_attributes(title: 'New Title')
-        expect(subject.slug).to eql('new-title')
-      end
-    end
-
     describe '#flipper_id' do
       it 'should return an id' do
         expect(subject.flipper_id).to eq("Assignment:#{subject.id}")
