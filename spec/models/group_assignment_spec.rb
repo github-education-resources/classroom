@@ -25,7 +25,7 @@ RSpec.describe GroupAssignment, type: :model do
     let(:group_assignment) { create(:group_assignment, organization: organization) }
 
     it 'validates that an Assignment in the same organization does not have the same slug' do
-      group_assignment.title = assignment.title
+      group_assignment.slug = assignment.slug
 
       validation_message = 'Validation failed: Your assignment slug must be unique'
       expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, validation_message)
@@ -47,13 +47,6 @@ RSpec.describe GroupAssignment, type: :model do
 
   context 'with group_assignment' do
     subject { create(:group_assignment) }
-
-    describe 'when the title is updated' do
-      it 'updates the slug' do
-        subject.update_attributes(title: 'New Title')
-        expect(subject.slug).to eql('new-title')
-      end
-    end
 
     describe '#flipper_id' do
       it 'should return an id' do
