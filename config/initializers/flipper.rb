@@ -1,4 +1,4 @@
-module Classroom
+module GitHubClassroom
   def self.flipper
     @flipper ||= self.flipper!
   end
@@ -8,7 +8,7 @@ module Classroom
                 require 'flipper/adapters/memory'
                 Flipper::Adapters::Memory.new
               else
-                namespaced_client = Redis::Namespace.new(:flipper, :redis => Classroom.redis)
+                namespaced_client = Redis::Namespace.new(:flipper, :redis => GitHubClassroom.redis)
                 Flipper::Adapters::Redis.new(namespaced_client)
               end
 

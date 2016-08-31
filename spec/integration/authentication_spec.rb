@@ -45,6 +45,14 @@ RSpec.describe 'OAuth scope requirements', type: :request do
     end
   end
 
+  describe 'sessions#failure' do
+    it 'redirects to the homepage with an error' do
+      get '/auth/failure'
+      expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eql('There was a problem authenticating with GitHub, please try again.')
+    end
+  end
+
   describe 'OAuth dance', :vcr do
     before(:each) do
       get url_for(organization)
