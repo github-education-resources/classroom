@@ -52,10 +52,6 @@ class Assignment < ApplicationRecord
     @starter_code_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id)
   end
 
-  def to_param
-    slug
-  end
-
   private
 
   def uniqueness_of_slug_across_organization
