@@ -1,0 +1,43 @@
+{
+  "name": "transliteration",
+  "version": "1.1.7",
+  "homepage": "https://github.com/andyhu/node-transliteration",
+  "authors": [
+    "Andy Hu"
+  ],
+  "description": "Unicode to ACSII transliteration / slugify module. Works in node.js, web browser and command line.",
+  "main": [
+    "lib/browser/transliteration.js",
+    "lib/browser/transliteration.min.js"
+  ],
+  "keywords": [
+    "transliterate",
+    "transliteration",
+    "utf8",
+    "slug",
+    "slugify",
+    "romanization",
+    "unicode",
+    "unidecode"
+  ],
+  "license": "MIT",
+  "ignore": [
+    ".*",
+    "src",
+    "data",
+    "lib/node",
+    "lib/bin",
+    "package.json",
+    "test",
+    "gulpfile.babel.js"
+  ],
+  "_release": "1.1.7",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.1.7",
+    "commit": "57f3e00bd3016a805d630cb163381239b3df272b"
+  },
+  "_source": "https://github.com/andyhu/node-transliteration.git",
+  "_target": "~1.1.7",
+  "_originalSource": "transliteration"
+}
