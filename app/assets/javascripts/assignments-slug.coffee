@@ -355,4 +355,3 @@ $('.group_assignments').ready( ->
     $('#group_assignment_slug').val(urlify($('#group_assignment_title').val()))
   )
 )
-
