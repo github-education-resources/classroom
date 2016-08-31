@@ -53,8 +53,6 @@ gem 'turbolinks', '~> 2.5.3'
 
 gem 'uglifier', '>= 1.3.0'
 
-gem 'stringex'
-
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
