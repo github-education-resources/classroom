@@ -336,23 +336,23 @@ charMap =
   '>': 'greater'
 
 urlify = (string, replacement) ->
-    string.split('').reduce(((result, ch) ->
-      if charMap[ch]
-        ch = charMap[ch]
-      ch = ch.toLowerCase().replace(/[^a-z0-9]+/g,'-')
-      result += ch
-      result
-    ), '').replace(/^\s+|\s+$/g, '').replace(/[-\s]+/g, replacement or '-').replace '#{replacement}$', ''
+  string.split('').reduce(((result, ch) ->
+    if charMap[ch]
+      ch = charMap[ch]
+    ch = ch.toLowerCase().replace(/[^a-z0-9]+/g,'-')
+    result += ch
+    result
+  ), '').replace(/^\s+|\s+$/g, '').replace(/[-\s]+/g, replacement or '-').replace '#{replacement}$', ''
 
 $('.assignments').ready( ->
   $('#assignment_title').on('change paste keyup click', ->
-    $('#assignment_slug').val(urlify($('#assignment_title').val()));
+    $('#assignment_slug').val(urlify($('#assignment_title').val()))
   )
 )
 
 $('.group_assignments').ready( ->
   $('#group_assignment_title').on('change paste keyup click', ->
-    $('#group_assignment_slug').val(urlify($('#group_assignment_title').val()));
+    $('#group_assignment_slug').val(urlify($('#group_assignment_title').val()))
   )
 )
 
