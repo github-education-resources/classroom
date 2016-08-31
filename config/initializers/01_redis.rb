@@ -1,4 +1,4 @@
-module Classroom
+module GitHubClassroom
   REDIS_URL = ENV['REDIS_URL'] || 'redis://localhost:6379/0'
 
   def self.redis

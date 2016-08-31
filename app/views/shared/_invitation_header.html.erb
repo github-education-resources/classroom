@@ -9,7 +9,13 @@
         </li>
 
         <li>
-          <%= link_to 'https://github.com/education/classroom/issues/new', class: 'tooltipped tooltipped-s', 'aria-label' => 'Report an issue' do %>
+          <%= link_to 'https://education.github.com/forum', class: 'tooltipped tooltipped-s', 'aria-label' => 'Community discussion' do %>
+            <%= octicon 'comment-discussion' %>
+          <% end %>
+        </li>
+
+        <li>
+          <%= link_to 'https://github.com/education/classroom/issues/new', class: 'tooltipped tooltipped-s', 'aria-label' => 'Report a bug' do %>
             <%= octicon 'bug' %>
           <% end %>
         </li>

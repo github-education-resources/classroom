@@ -14,7 +14,7 @@ RSpec.describe GroupingsController, type: :controller do
 
   context 'flipper is enabled for the user' do
     before do
-      Classroom.flipper[:team_management].enable
+      GitHubClassroom.flipper[:team_management].enable
     end
 
     describe 'GET #show', :vcr do
@@ -54,7 +54,7 @@ RSpec.describe GroupingsController, type: :controller do
     end
 
     after do
-      Classroom.flipper[:team_management].disable
+      GitHubClassroom.flipper[:team_management].disable
     end
   end
 
