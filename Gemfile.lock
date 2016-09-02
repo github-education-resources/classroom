@@ -442,7 +442,7 @@ DEPENDENCIES
   pinglish
   pry-byebug
   pry-rails
-  puma
+  puma (~> 3.0)
   puma_worker_killer
   quiet_assets
   rack-canonical-host
