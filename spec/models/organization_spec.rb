@@ -25,10 +25,11 @@ RSpec.describe Organization, type: :model do
       before do
         grouping = Grouping.new(title: 'Grouping', organization: subject)
 
-        Assignment.create(creator: creator, title: 'Assignment', organization: subject)
+        Assignment.create(creator: creator, title: 'Assignment', slug: 'assignment', organization: subject)
         GroupAssignment.create(creator: creator,
                                grouping: grouping,
                                organization: subject,
+                               slug: 'group-assignment',
                                title: 'Group Assignment')
       end
 

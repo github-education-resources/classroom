@@ -8,8 +8,11 @@ RSpec.describe GroupAssignment, type: :model do
     let(:organization) { create(:organization) }
 
     it 'verifes that the slug is unique even if the titles are unique' do
-      create(:group_assignment, organization: organization, title: 'group-assignment-1')
-      new_group_assignment = build(:group_assignment, organization: organization, title: 'group assignment 1')
+      create(:group_assignment, organization: organization, title: 'group-assignment-1', slug: 'group-assignment-1')
+      new_group_assignment = build(:group_assignment,
+                                   organization: organization,
+                                   title: 'group assignment 1',
+                                   slug: 'group-assignment-1')
 
       expect { new_group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
@@ -38,7 +41,10 @@ RSpec.describe GroupAssignment, type: :model do
 
     it 'allows two organizations to have the same GroupAssignment title and slug' do
       group_assignment_1 = create(:assignment, organization: organization_1)
-      group_assignment_2 = create(:group_assignment, organization: organization_2, title: group_assignment_1.title)
+      group_assignment_2 = create(:group_assignment,
+                                  organization: organization_2,
+                                  title: group_assignment_1.title,
+                                  slug: group_assignment_1.slug)
 
       expect(group_assignment_2.title).to eql(group_assignment_1.title)
       expect(group_assignment_2.slug).to eql(group_assignment_1.slug)

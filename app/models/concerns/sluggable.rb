@@ -9,7 +9,6 @@ module Sluggable
   end
 
   def slugify
-    return if slug.present?
     self.slug = title.parameterize
   end
 
