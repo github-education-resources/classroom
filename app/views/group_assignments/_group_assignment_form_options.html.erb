@@ -4,9 +4,9 @@
 </dl>
 
 <dl class="form">
-  <dt><%= f.label :slug %></dt>
+  <dt><%= f.label 'Assignment repository prefix' %></dt>
   <dd><%= f.text_field :slug, class: 'textfield' %></dd>
-  <span class="note">Slug is the user friendly and URL valid name of an assignment. It will also be used as the name prefix of assignment repositories.</span>
+  <span class="note">Repository prefix may only contain alphanumeric characters, underscores or hyphens. It will also be used as the user friendly and URL valid name of an assignment.</span>
 </dl>
 
 <dl class="form">
