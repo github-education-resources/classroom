@@ -23,6 +23,7 @@ class Assignment < ApplicationRecord
 
   validates :title, presence: true
   validates :title, length: { maximum: 60 }
+  validates :title, uniqueness: { scope: :organization_id }
 
   validates :slug, uniqueness: { scope: :organization_id }
   validates :slug, presence: true
