@@ -2,7 +2,6 @@
 class GroupAssignment < ApplicationRecord
   include Flippable
   include GitHubPlan
-  include Sluggable
 
   update_index('stafftools#group_assignment') { self }
 
@@ -51,6 +50,10 @@ class GroupAssignment < ApplicationRecord
   def starter_code_repository
     return unless starter_code?
     @starter_code_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id)
+  end
+
+  def to_param
+    slug
   end
 
   private
