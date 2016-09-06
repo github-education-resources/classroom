@@ -12,6 +12,7 @@ RSpec.describe CollabMigration do
     creator = organization.users.first
     Assignment.create(organization: organization,
                       title: 'gitignore',
+                      slug: 'gitignore',
                       creator: creator,
                       public_repo: false)
   end

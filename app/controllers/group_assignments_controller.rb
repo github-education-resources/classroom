@@ -78,7 +78,7 @@ class GroupAssignmentsController < ApplicationController
   def new_group_assignment_params
     params
       .require(:group_assignment)
-      .permit(:title, :public_repo, :grouping_id, :max_members, :students_are_repo_admins)
+      .permit(:title, :slug, :public_repo, :grouping_id, :max_members, :students_are_repo_admins)
       .merge(creator: current_user,
              organization: @organization,
              starter_code_repo_id: starter_code_repo_id_param,
@@ -119,7 +119,7 @@ class GroupAssignmentsController < ApplicationController
   def update_group_assignment_params
     params
       .require(:group_assignment)
-      .permit(:title, :public_repo, :max_members)
+      .permit(:title, :slug, :public_repo, :max_members)
       .merge(starter_code_repo_id: starter_code_repo_id_param, student_identifier_type: student_identifier_type_param)
   end
 

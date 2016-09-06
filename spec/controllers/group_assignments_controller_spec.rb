@@ -37,8 +37,8 @@ RSpec.describe GroupAssignmentsController, type: :controller do
     it 'creates a new GroupAssignment' do
       expect do
         post :create, organization_id: organization.slug,
-                      group_assignment: { title: 'Learn JavaScript' },
-                      grouping:         { title: 'Grouping 1'       }
+                      group_assignment: { title: 'Learn JavaScript', slug: 'learn-javascript' },
+                      grouping:         { title: 'Grouping 1' }
       end.to change { GroupAssignment.count }
     end
 
@@ -56,8 +56,8 @@ RSpec.describe GroupAssignmentsController, type: :controller do
         GitHubClassroom.flipper[:student_identifier].enable
         post :create,
              organization_id:         organization.slug,
-             group_assignment:        { title: 'Learn JavaScript' },
-             grouping:                { title: 'Grouping 1'       },
+             group_assignment:        { title: 'Learn JavaScript', slug: 'learn-javascript' },
+             grouping:                { title: 'Grouping 1' },
              student_identifier_type: { id: student_identifier_type.id }
       end
 
