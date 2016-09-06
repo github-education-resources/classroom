@@ -4,9 +4,9 @@
 </dl>
 
 <dl class="form">
-  <dt><%= f.label 'Assignment repository prefix' %></dt>
+  <dt><%= f.label :slug %></dt>
   <dd><%= f.text_field :slug, class: 'textfield' %></dd>
-  <span class="note">Repository prefix may only contain alphanumeric characters, underscores or hyphens. It will also be used as the user friendly and URL valid name of an assignment.</span>
+  <span class="note"><%= t('assignment_form.slug_note') %></span>
 </dl>
 
 <dl class="form">
