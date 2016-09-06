@@ -404,6 +404,7 @@ DEPENDENCIES
   airbrake
   autoprefixer-rails
   awesome_print
+  babosa
   better_errors
   binding_of_caller
   bullet

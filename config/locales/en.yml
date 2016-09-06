@@ -54,6 +54,7 @@ en:
             title:
               blank: 'must be present'
             slug:
+              blank: 'must be unique'
               taken: 'must be unique'
   views:
     pagination:

@@ -9,7 +9,7 @@ module Sluggable
   end
 
   def slugify
-    self.slug = title.parameterize
+    self.slug = title.to_slug.normalize.to_s
   end
 
   def to_param
