@@ -37,7 +37,7 @@ RSpec.describe Assignment, type: :model do
     end
 
     it 'validates that a GroupAssignment in the same organization does not have the same slug' do
-      validation_message = 'Validation failed: Your assignment slug must be unique'
+      validation_message = 'Validation failed: Your assignment repository prefix must be unique'
       expect { assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, validation_message)
     end
   end
