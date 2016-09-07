@@ -14,6 +14,7 @@ RSpec.describe GroupAssignmentRepo, type: :model do
       GroupAssignment.create(creator: organization.users.first,
                              grouping: grouping,
                              title: 'Learn JavaScript',
+                             slug: 'learn-javascript',
                              organization: organization,
                              public_repo: true,
                              starter_code_repo_id: 1_062_897)

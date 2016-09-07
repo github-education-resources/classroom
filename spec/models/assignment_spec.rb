@@ -8,8 +8,8 @@ RSpec.describe Assignment, type: :model do
     let(:organization) { create(:organization) }
 
     it 'verifes that the slug is unique even if the titles are unique' do
-      create(:assignment, organization: organization, title: 'assignment-1')
-      new_assignment = build(:assignment, organization: organization, title: 'assignment 1')
+      create(:assignment, organization: organization, title: 'assignment-1', slug: 'assignment-1')
+      new_assignment = build(:assignment, organization: organization, title: 'assignment 1', slug: 'assignment-1')
 
       expect { new_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
@@ -24,14 +24,20 @@ RSpec.describe Assignment, type: :model do
     let(:group_assignment) do
       GroupAssignment.create(creator: creator,
                              title: 'Ruby Project',
+                             slug: 'ruby-project',
                              organization: organization,
                              grouping: grouping)
     end
 
-    let(:assignment) { Assignment.new(creator: creator, title: group_assignment.title, organization: organization) }
+    let(:assignment) do
+      Assignment.new(creator: creator,
+                     title: group_assignment.title,
+                     slug: group_assignment.slug,
+                     organization: organization)
+    end
 
-    it 'validates that a GroupAssignment in the same organization does not have the same title' do
-      validation_message = 'Validation failed: Your assignment title must be unique'
+    it 'validates that a GroupAssignment in the same organization does not have the same slug' do
+      validation_message = 'Validation failed: Your assignment repository prefix must be unique'
       expect { assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, validation_message)
     end
   end
@@ -42,7 +48,10 @@ RSpec.describe Assignment, type: :model do
 
     it 'allows two organizations to have the same Assignment title and slug' do
       assignment_1 = create(:assignment, organization: organization_1)
-      assignment_2 = create(:assignment, organization: organization_2, title: assignment_1.title)
+      assignment_2 = create(:assignment,
+                            organization: organization_2,
+                            title: assignment_1.title,
+                            slug: assignment_1.slug)
 
       expect(assignment_2.title).to eql(assignment_1.title)
       expect(assignment_2.slug).to eql(assignment_1.slug)
@@ -51,13 +60,6 @@ RSpec.describe Assignment, type: :model do
 
   context 'with assignment' do
     subject { create(:assignment) }
-
-    describe 'when the title is updated' do
-      it 'updates the slug' do
-        subject.update_attributes(title: 'New Title')
-        expect(subject.slug).to eql('new-title')
-      end
-    end
 
     describe '#flipper_id' do
       it 'should return an id' do

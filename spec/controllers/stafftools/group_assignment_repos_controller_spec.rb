@@ -14,6 +14,7 @@ RSpec.describe Stafftools::GroupAssignmentReposController, type: :controller do
   let(:group_assignment) do
     GroupAssignment.create(creator: user,
                            title: 'Learn Ruby',
+                           slug: 'learn-ruby',
                            organization: organization,
                            grouping: grouping,
                            public_repo: false)
