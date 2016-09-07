@@ -11,6 +11,7 @@ RSpec.describe GroupAssignmentReposController, type: :controller do
   let(:group_assignment) do
     GroupAssignment.create(creator: organization.users.first,
                            title: 'HTML5',
+                           slug: 'html5',
                            starter_code_repo_id: '1062897',
                            grouping: grouping,
                            organization: organization,
