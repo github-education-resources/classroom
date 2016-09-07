@@ -15,6 +15,7 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
     let(:group_assignment) do
       GroupAssignment.create(creator: organization.users.first,
                              title: 'JavaScript',
+                             slug: 'javascript',
                              organization: organization,
                              public_repo: false,
                              grouping: grouping)

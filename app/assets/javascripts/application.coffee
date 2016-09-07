@@ -30,6 +30,8 @@
 #
 #= require clipboard/dist/clipboard
 #
+#= require transliteration/lib/browser/transliteration
+#
 #= require js-cookie/src/js.cookie
 #
 #= require_tree .
