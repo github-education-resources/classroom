@@ -1,6 +1,5 @@
 sign_in: 'Sign in'
 sign_out: 'Sign out'
-github_education: 'Github Education'
 stop_impersonating: 'Stop impersonating @%{user}'
 view_gh_profile: 'View GitHub profile'
 community_discussion: 'Community discussion'
