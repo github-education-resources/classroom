@@ -1,0 +1,15 @@
+en:
+  views:
+    shared:
+      sign_in: 'Sign in'
+      sign_out: 'Sign out'
+      stop_impersonating: 'Stop impersonating @%{user}'
+      view_gh_profile: 'View GitHub profile'
+      community_discussion: 'Community discussion'
+      report_bug: 'Report a bug'
+      use_student_identifier_type: 'Use a student identifier type'
+      student_identifiers_required: 'Students will be required to enter their identifiers before accepting the assignment.'
+      create_first_identifier: 'Create your first student identifier'
+      copy_to_clipboard: 'Copy to clipboard'
+      copy_invitation_link: 'Copy invitation link'
+      give_this_to_students: 'Give this to your students'
