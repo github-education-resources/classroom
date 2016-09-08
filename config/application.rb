@@ -43,6 +43,15 @@ module GitHubClassroom
     # Use SideKiq for background jobs
     config.active_job.queue_adapter = :sidekiq
 
+    # Available locales
+    I18n.available_locales = [:en]
+
+    # Default locale
+    config.i18n.default_locale = :en
+
+    # Load all locale files in config/locales
+    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
+
     # Health checks endpoint for monitoring
     if ENV['PINGLISH_ENABLED'] == 'true'
       config.middleware.use Pinglish do |ping|

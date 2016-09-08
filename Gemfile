@@ -53,6 +53,8 @@ gem 'turbolinks', '~> 2.5.3'
 
 gem 'uglifier', '>= 1.3.0'
 
+gem 'rails-i18n', '~> 4.0.0'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
