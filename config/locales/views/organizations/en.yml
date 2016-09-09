@@ -1,0 +1,8 @@
+en:
+  views:
+    organizations:
+      select_organization: 'Select an organization for your new classroom'
+      no_organizations: 'Oh, you don’t have any organizations on your GitHub account.'
+      please_create_new_organization: "Please <a href='https://github.com/organizations/new'>create an organization on GitHub.com</a> and then come back."
+      grant_organization_access: "<strong>ProTip!</strong> Don't see your organization? You need to %{href} first."
+      grant_organization_access_link: 'grant us access'
