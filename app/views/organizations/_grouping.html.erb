@@ -1,5 +1,5 @@
 <li class="clearfix">
-  <%= link_to 'Edit', edit_organization_grouping_path(@organization, grouping), class: 'btn btn-sm right' %>
+  <%= link_to t('views.organizations.edit'), edit_organization_grouping_path(@organization, grouping), class: 'btn btn-sm right' %>
   <%= octicon 'organization' %>
   <strong><%= link_to grouping.title, organization_grouping_path(@organization, grouping) %></strong>
 </li>

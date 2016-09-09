@@ -9,3 +9,4 @@ en:
       you_are_not_owner: 'You cannot add this organization to classroom because you are not an owner'
       already_added: '@%{owner} has already added this organization to GitHub Classroom'
       manage_classroom: 'Manage classroom'
+      edit: 'Edit'
