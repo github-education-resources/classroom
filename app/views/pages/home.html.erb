@@ -9,10 +9,10 @@
       <li><%= octicon 'comment-discussion', height: 38 %></li>
     </ul>
 
-    <h1 class="heading">Your course assignments on GitHub</h1>
-    <p class="subheading">GitHub Classroom automates repository creation and access control, making it easy to distribute starter code and collect assignments on GitHub.</p>
+    <h1 class="heading"><%= t('views.pages.banner_heading') %></h1>
+    <p class="subheading"><%= t('views.pages.banner_subheading') %></p>
 
-    <%= link_to 'Sign in with your GitHub account to get started', login_path, class: 'btn btn-big-mobile-friendly btn-blue' %>
+    <%= link_to t('views.pages.sign_in_to_start'), login_path, class: 'btn btn-big-mobile-friendly btn-blue' %>
   </div>
 </div>
 
@@ -20,23 +20,23 @@
   <div class="container">
     <div class="columns">
       <div class="one-third column">
-        <h2><%= octicon 'repo', height: 22 %> Create assignments</h2>
+        <h2><%= octicon 'repo', height: 22 %> <%= t('views.pages.create_assignments') %></h2>
         <p>
-          Distribute assignments with starter code. Students work on assignments individually or in groups using public or private GitHub repositories.
+          <%= t('views.pages.create_assignments_desc') %>
         </p>
       </div>
 
       <div class="one-third column">
-        <h2><%= octicon 'organization', height: 22 %> Invite students</h2>
+        <h2><%= octicon 'organization', height: 22 %> <%= t('views.pages.invite_students') %></h2>
         <p>
-          Students gain access to assignments using unique invitation URLs, eliminating the need to collect GitHub usernames in advance and manage access manually.
+          <%= t('views.pages.invite_students_desc') %>
         </p>
       </div>
 
       <div class="one-third column">
-        <h2><%= octicon 'graph', height: 22 %> Review progress</h2>
+        <h2><%= octicon 'graph', height: 22 %> <%= t('views.pages.review_progress') %></h2>
         <p>
-          Teachers and teaching assistants can browse submissions by assignment, making it easy to follow along with student progress.
+          <%= t('views.pages.review_progress_desc') %>
         </p>
       </div>
     </div>
