@@ -24,7 +24,7 @@ en:
       group_assignments: 'Group Assignments'
       are_you_sure: 'Are you ABSOLUTELY sure?'
       delete_warning: "Unexpected things will happen if you don't read this!"
-      delete_concequences: "This action <strong>CANNOT</strong> be undone.
+      delete_consequences: "This action <strong>CANNOT</strong> be undone.
       Please note that reseting and removing this classroom will delete all repositories and teams under the <strong>%{organization}</strong> account that were created by GitHub Classroom."
       delete_confirm: 'Please type the name of the organization to confirm'
       delete_submit: 'Reset and remove this classroom'
@@ -52,3 +52,6 @@ en:
       give_descriptive_name: 'Please give your classroom a more descriptive name'
       set_of_teams: 'Set of teams'
       no_teams: "This classroom doesn't have any sets of teams yet."
+      assignments: 'Assignments'
+      no_assignments: "This organization doesn't have any assignments yet."
+      create_first_assignment: 'Create your first assignment'
