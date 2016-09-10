@@ -48,3 +48,5 @@ en:
       group_assignment: 'Group assignment'
       group_assignment_desc: 'Participants form teams that work together on a shared repository.'
       create_group_assignment: 'Create a group assignment'
+      name_your_classroom: 'Name your classroom'
+      give_descriptive_name: 'Please give your classroom a more descriptive name'
