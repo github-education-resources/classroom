@@ -50,3 +50,5 @@ en:
       create_group_assignment: 'Create a group assignment'
       name_your_classroom: 'Name your classroom'
       give_descriptive_name: 'Please give your classroom a more descriptive name'
+      set_of_teams: 'Set of teams'
+      no_teams: "This classroom doesn't have any sets of teams yet."
