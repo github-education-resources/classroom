@@ -28,4 +28,8 @@ en:
       Please note that reseting and removing this classroom will delete all repositories and teams under the <strong>%{organization}</strong> account that were created by GitHub Classroom."
       delete_confirm: 'Please type the name of the organization to confirm'
       delete_submit: 'Reset and remove this classroom'
-
+      classroom_settings: 'Classroom settings'
+      classroom_profile: 'Classroom profile'
+      student_identifiers: 'Student identifiers'
+      team_management: 'Team management'
+      invite_other_admin: 'Invite other administrators'
