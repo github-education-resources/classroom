@@ -20,7 +20,7 @@ en:
       copied: 'Copied!'
       copy_classroom_link: 'Copy classroom link'
       continue: 'Continue'
-      individual_assignment: 'Individual Assignments'
+      individual_assignments: 'Individual Assignments'
       group_assignments: 'Group Assignments'
       are_you_sure: 'Are you ABSOLUTELY sure?'
       delete_warning: "Unexpected things will happen if you don't read this!"
@@ -41,3 +41,10 @@ en:
       no_classrooms: "You're not managing any classrooms yet."
       no_classrooms_desc: 'You can begin creating assignments once you have at least one classroom.'
       create_first_classroom: 'Create your first classroom.'
+      new_assignment: 'New Assignment'
+      individual_assignment: 'Individual Assignment'
+      individual_assignment_desc: 'Each participant works individually on their own repository.'
+      create_individual_assignment: 'Create an individual assignment'
+      group_assignment: 'Group assignment'
+      group_assignment_desc: 'Participants form teams that work together on a shared repository.'
+      create_group_assignment: 'Create a group assignment'
