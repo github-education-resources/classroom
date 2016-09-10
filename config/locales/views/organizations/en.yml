@@ -33,3 +33,7 @@ en:
       student_identifiers: 'Student identifiers'
       team_management: 'Team management'
       invite_other_admin: 'Invite other administrators'
+      profile_information: 'Profile information'
+      save_changes: 'Save changes'
+      theres_no_going_back: 'Once you reset this classroom, there is no going back. Please be certain.'
+
