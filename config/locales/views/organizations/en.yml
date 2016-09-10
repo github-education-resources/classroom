@@ -36,4 +36,8 @@ en:
       profile_information: 'Profile information'
       save_changes: 'Save changes'
       theres_no_going_back: 'Once you reset this classroom, there is no going back. Please be certain.'
-
+      new_classroom: 'New classroom'
+      classrooms: 'Classrooms'
+      no_classrooms: "You're not managing any classrooms yet."
+      no_classrooms_desc: 'You can begin creating assignments once you have at least one classroom.'
+      create_first_classroom: 'Create your first classroom.'
