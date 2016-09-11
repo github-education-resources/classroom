@@ -37,10 +37,11 @@ gem 'peek-sidekiq', github: 'Soliah/peek-sidekiq', ref: '261c857578ae6dc189506a3
 gem 'pg'
 gem 'pry-rails'
 gem 'pry-byebug'
-gem 'puma'
+gem 'puma', '~> 3.0'
 
 gem 'rack-canonical-host'
 gem 'rack-timeout', require: false
+gem 'rails-i18n', '~> 4.0.0'
 gem 'redis-namespace'
 
 gem 'sprockets'

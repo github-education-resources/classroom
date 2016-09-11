@@ -2,7 +2,6 @@
 class Assignment < ApplicationRecord
   include Flippable
   include GitHubPlan
-  include Sluggable
 
   update_index('stafftools#assignment') { self }
 
@@ -24,8 +23,13 @@ class Assignment < ApplicationRecord
 
   validates :title, presence: true
   validates :title, length: { maximum: 60 }
+  validates :title, uniqueness: { scope: :organization_id }
 
   validates :slug, uniqueness: { scope: :organization_id }
+  validates :slug, presence: true
+  validates :slug, length: { maximum: 60 }
+  validates :slug, format: { with: /\A[-a-zA-Z0-9_]+\z/,
+                             message: 'should only contain letters, numbers, dashes and underscores' }
 
   validate :uniqueness_of_slug_across_organization
 
@@ -46,6 +50,10 @@ class Assignment < ApplicationRecord
   def starter_code_repository
     return unless starter_code?
     @starter_code_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id)
+  end
+
+  def to_param
+    slug
   end
 
   private

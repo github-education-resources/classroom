@@ -2,8 +2,8 @@
 # This assumes the postgresql is already running
 
 web: bundle exec puma -C config/puma.rb
-rails: tail -f log/development.log
+rails: tail -n 0 -f log/development.log
 redis: redis-server
 memcached: memcached
-worker: bundle exec sidekiq -q chewy -q trash_can
+worker: bundle exec sidekiq -C config/sidekiq.yml
 elasticsearch: elasticsearch

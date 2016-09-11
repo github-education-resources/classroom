@@ -7,7 +7,9 @@ RSpec.describe AssignmentsController, type: :controller do
   let(:organization) { GitHubFactory.create_owner_classroom_org }
   let(:user)         { organization.users.first                 }
 
-  let(:assignment) { Assignment.create(title: 'Assignment', creator: user, organization: organization) }
+  let(:assignment) do
+    Assignment.create(title: 'Assignment', slug: 'assignment', creator: user, organization: organization)
+  end
 
   let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
 
