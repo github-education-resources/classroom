@@ -38,6 +38,7 @@ class GroupAssignmentsController < ApplicationController
       flash[:success] = "Assignment \"#{@group_assignment.title}\" updated"
       redirect_to organization_group_assignment_path(@organization, @group_assignment)
     else
+      @group_assignment.reload
       render :edit
     end
   end
