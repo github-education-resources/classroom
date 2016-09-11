@@ -41,6 +41,7 @@ gem 'puma', '~> 3.0'
 
 gem 'rack-canonical-host'
 gem 'rack-timeout', require: false
+gem 'rails-i18n', '~> 4.0.0'
 gem 'redis-namespace'
 
 gem 'sprockets'
