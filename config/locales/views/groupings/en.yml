@@ -1,0 +1,8 @@
+en:
+  views:
+    groupings:
+      manage: "Manage"
+      set_team_settings: "Set of teams settings"
+      drag_and_drop_student_avatars: "You can <b>drag and drop</b> the student avatars to move them from one team to another."
+      group_has_no_teams: "\"%{group_title}\" does not have any teams."
+      share_invitation_links: "Share group assignment invitation links with your students to get started."

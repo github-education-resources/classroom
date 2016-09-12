@@ -1,0 +1,5 @@
+en:
+  views:
+    groups:
+      public: "Public"
+      you_choose_who_can_commit: "Anyone can see this repository. You choose who can commit."
