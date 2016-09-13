@@ -35,7 +35,7 @@ class AssignmentsController < ApplicationController
       flash[:success] = "Assignment \"#{@assignment.title}\" updated"
       redirect_to organization_assignment_path(@organization, @assignment)
     else
-      @assignment.reload
+      @assignment.reload unless @assignment.slug.present?
       render :edit
     end
   end
