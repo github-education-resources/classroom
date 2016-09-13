@@ -33,7 +33,7 @@ class Organization < ApplicationRecord
       group_assignments.includes(:group_assignment_invitation)
   end
 
-  def has_private_repos?
+  def private_repos?
     assignments.where(public_repo: false).present? || group_assignments.where(public_repo: false).present?
   end
 
