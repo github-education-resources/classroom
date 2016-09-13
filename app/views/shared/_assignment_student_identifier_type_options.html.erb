@@ -1,20 +1,20 @@
 <% if student_identifier_enabled? %>
   <dl class="form">
-    <dt><label>Use a student identifier type</label></dt>
+    <dt><label><%= t('views.shared.use_student_identifier_type') %></label></dt>
 
     <% if student_identifier_types.present? %>
         <dl class="form">
           <%= select(:student_identifier_type, :id, options_for_select(student_identifier_types, selected = assignment.student_identifier_type.present? ? assignment.student_identifier_type.id : nil), include_blank: true ) %>
           <p class="note">
-            Students will be required to enter their identifiers before accepting the assignment.
+            <%= t('views.shared.student_identifiers_required') %>
           </p>
         </dl>
     <% else %>
         <%= link_to new_organization_student_identifier_type_path(@organization), class: 'btn btn-green js-navigation' do %>
-            Create your first student identifier
+            <%= t('views.shared.create_first_identifier')%>
         <% end %>
         <p class="note">
-          Students will be required to enter their identifiers before accepting the assignment.
+          <%= t('views.shared.student_identifiers_required') %>
         </p>
     <% end %>
   </dl>
