@@ -159,6 +159,15 @@ RSpec.describe AssignmentsController, type: :controller do
       expect(response).to redirect_to(organization_assignment_path(organization, Assignment.find(assignment.id)))
     end
 
+    context 'slug is empty' do
+      it 'correctly reloads the assignment' do
+        options = { slug: '' }
+        patch :update, id: assignment.slug, organization_id: organization.slug, assignment: options
+
+        expect(assigns(:assignment).slug).to_not be_nil
+      end
+    end
+
     context 'flipper is enabled for the user' do
       before do
         GitHubClassroom.flipper[:student_identifier].enable
