@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/Soliah/peek-sidekiq.git
+  remote: https://github.com/Soliah/peek-sidekiq.git
   revision: 261c857578ae6dc189506a35194785a4db51e54c
   ref: 261c857578ae6dc189506a35194785a4db51e54c
   specs:
@@ -8,7 +8,7 @@ GIT
       sidekiq
 
 GIT
-  remote: git://github.com/primer/octicons_helper.git
+  remote: https://github.com/primer/octicons_helper.git
   revision: fa28cb06c67ce0a1974a9e3238483d79157503c2
   ref: fa28cb06c67ce0a1974a9e3238483d79157503c2
   specs:

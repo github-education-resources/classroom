@@ -89,7 +89,7 @@ class AssignmentsController < ApplicationController
   def update_assignment_params
     params
       .require(:assignment)
-      .permit(:title, :slug, :public_repo)
+      .permit(:title, :slug, :public_repo, :students_are_repo_admins)
       .merge(starter_code_repo_id: starter_code_repo_id_param, student_identifier_type: student_identifier_type_param)
   end
 
