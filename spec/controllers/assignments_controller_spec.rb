@@ -7,7 +7,9 @@ RSpec.describe AssignmentsController, type: :controller do
   let(:organization) { GitHubFactory.create_owner_classroom_org }
   let(:user)         { organization.users.first                 }
 
-  let(:assignment) { Assignment.create(title: 'Assignment', creator: user, organization: organization) }
+  let(:assignment) do
+    Assignment.create(title: 'Assignment', slug: 'assignment', creator: user, organization: organization)
+  end
 
   let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
 
@@ -155,6 +157,15 @@ RSpec.describe AssignmentsController, type: :controller do
       patch :update, id: assignment.slug, organization_id: organization.slug, assignment: options
 
       expect(response).to redirect_to(organization_assignment_path(organization, Assignment.find(assignment.id)))
+    end
+
+    context 'slug is empty' do
+      it 'correctly reloads the assignment' do
+        options = { slug: '' }
+        patch :update, id: assignment.slug, organization_id: organization.slug, assignment: options
+
+        expect(assigns(:assignment).slug).to_not be_nil
+      end
     end
 
     context 'flipper is enabled for the user' do

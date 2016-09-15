@@ -5,4 +5,4 @@ set -e
 cd "$(dirname "$0")/.."
 
 # Run the sidekiq background job
-bundle exec sidekiq -q trash_can
+bundle exec sidekiq -C config/sidekiq.yml
