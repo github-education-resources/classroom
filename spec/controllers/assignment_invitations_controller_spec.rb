@@ -95,6 +95,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     let(:assignment) do
       Assignment.create(creator: organization.users.first,
                         title: 'ruby-project',
+                        slug: 'ruby-project',
                         starter_code_repo_id: '1062897',
                         organization: organization,
                         public_repo: false)
@@ -174,6 +175,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     let(:assignment) do
       Assignment.create(creator: organization.users.first,
                         title: 'ruby-project',
+                        slug: 'ruby-project',
                         starter_code_repo_id: '1062897',
                         organization: organization,
                         public_repo: false)

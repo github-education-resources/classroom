@@ -84,6 +84,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     let(:group_assignment) do
       GroupAssignment.create(creator: organization.users.first,
                              title: 'HTML5',
+                             slug: 'html5',
                              grouping: grouping,
                              organization: organization,
                              public_repo: true)
@@ -120,6 +121,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     let(:group_assignment) do
       GroupAssignment.create(creator: organization.users.first,
                              title: 'HTML5',
+                             slug: 'html5',
                              grouping: grouping,
                              organization: organization,
                              public_repo: true)
@@ -233,6 +235,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     let(:group_assignment) do
       GroupAssignment.create(creator: organization.users.first,
                              title: 'HTML5',
+                             slug: 'html5',
                              grouping: grouping,
                              organization: organization,
                              public_repo: true)
