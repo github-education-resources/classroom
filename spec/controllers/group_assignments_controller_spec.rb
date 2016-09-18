@@ -100,6 +100,15 @@ RSpec.describe GroupAssignmentsController, type: :controller do
                                                                          GroupAssignment.find(group_assignment.id)))
     end
 
+    context 'slug is empty' do
+      it 'correctly reloads the assignment' do
+        options = { slug: '' }
+        patch :update, id: group_assignment.slug, organization_id: organization.slug, group_assignment: options
+
+        expect(assigns(:group_assignment).slug).to_not be_nil
+      end
+    end
+
     context 'flipper is enabled for the user' do
       before do
         GitHubClassroom.flipper[:student_identifier].enable
