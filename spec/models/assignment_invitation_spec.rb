@@ -16,6 +16,7 @@ RSpec.describe AssignmentInvitation, type: :model do
     let(:assignment) do
       Assignment.create(creator: organization.users.first,
                         title: 'Ruby',
+                        slug: 'ruby',
                         organization: organization,
                         public_repo: false)
     end

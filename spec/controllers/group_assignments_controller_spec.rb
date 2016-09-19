@@ -37,8 +37,8 @@ RSpec.describe GroupAssignmentsController, type: :controller do
     it 'creates a new GroupAssignment' do
       expect do
         post :create, organization_id: organization.slug,
-                      group_assignment: { title: 'Learn JavaScript' },
-                      grouping:         { title: 'Grouping 1'       }
+                      group_assignment: { title: 'Learn JavaScript', slug: 'learn-javascript' },
+                      grouping:         { title: 'Grouping 1' }
       end.to change { GroupAssignment.count }
     end
 
@@ -56,8 +56,8 @@ RSpec.describe GroupAssignmentsController, type: :controller do
         GitHubClassroom.flipper[:student_identifier].enable
         post :create,
              organization_id:         organization.slug,
-             group_assignment:        { title: 'Learn JavaScript' },
-             grouping:                { title: 'Grouping 1'       },
+             group_assignment:        { title: 'Learn JavaScript', slug: 'learn-javascript' },
+             grouping:                { title: 'Grouping 1' },
              student_identifier_type: { id: student_identifier_type.id }
       end
 
@@ -98,6 +98,15 @@ RSpec.describe GroupAssignmentsController, type: :controller do
 
       expect(response).to redirect_to(organization_group_assignment_path(organization,
                                                                          GroupAssignment.find(group_assignment.id)))
+    end
+
+    context 'slug is empty' do
+      it 'correctly reloads the assignment' do
+        options = { slug: '' }
+        patch :update, id: group_assignment.slug, organization_id: organization.slug, group_assignment: options
+
+        expect(assigns(:group_assignment).slug).to_not be_nil
+      end
     end
 
     context 'flipper is enabled for the user' do

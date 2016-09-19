@@ -1,0 +1,19 @@
+<%= render 'organizations/organization_invitation_banner' %>
+
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">
+      <span class="assignment-icon assignment-icon-individual">
+        <%= octicon('person') %>
+      </span>
+      Accept the <strong><%= group_assignment.title %></strong> assignment
+    </h2>
+  </div>
+</div>
+
+<div class="site-content-body">
+  <%= form_for [@organization, @student_identifier], :url => submit_identifier_group_assignment_invitation_path do |f| %>
+      <%= render 'shared/error_messages', object: f.object %>
+      <%= render partial: 'shared/identifier_form', locals: { f: f, student_identifier_type: group_assignment.student_identifier_type } %>
+  <% end %>
+</div>

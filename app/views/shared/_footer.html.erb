@@ -1,8 +1,10 @@
 <footer class="site-footer text-center">
   <div class="container">
     <div class="made-with-heart">
-      <%= octicon 'mortar-board' %> with <%= octicon 'heart' %> by <%= link_to octicon('logo-github'), 'https://education.github.com' %>
+      <%= raw I18n.t("views.shared.with_love_by_github", octicon_mortar_board: octicon('mortar-board'),
+      octicon_heart: octicon('heart'), href: link_to(octicon('logo-github'), 'https://education.github.com')) %>
     </div>
   </div>
-  GitHub Classroom is <%= link_to 'open source', 'https://github.com/education/classroom' %>.
+  <%= raw t("views.shared.classroom_is_open_source",
+  href: link_to(t("views.shared.open_source_href"), 'https://github.com/education/classroom')) %>
 </footer>

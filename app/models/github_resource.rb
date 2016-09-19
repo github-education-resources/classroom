@@ -32,6 +32,7 @@ class GitHubResource
   private
 
   # rubocop:disable MethodLength
+  # rubocop:disable Metrics/AbcSize
   # Internal: create instance methods for a given list of attributes
   #
   # client - the Octokit::Client that will be used
@@ -51,26 +52,36 @@ class GitHubResource
   #   github_user.login(headers: GitHub::APIHeaders.no_cache_no_store)
   #   #=> "tarebyte"
   #
-  # Without having to create each method
+  # Without having to create each method.
+  #
+  # NOTE: This will memoize the resource after it's called for the first time.
   #
   # Returns nil.
   def create_attribute_methods(client, id, attributes)
+    attributes.each { |attribute| instance_variable_set("@#{attribute}", nil) }
+
     attributes.each do |attribute|
       define_singleton_method(attribute) do |options = {}|
-        begin
-          GitHub::Errors.with_error_handling { client.send(github_type, *[id, options])[attribute] }
-        rescue GitHub::Error
-          begin
-            GitHub::Errors.with_error_handling do
-              GitHubClassroom.github_client.send(github_type, *[id, options])[attribute]
-            end
-          rescue GitHub::Error
-            null_github_object.send(attribute)
-          end
-        end
+        return instance_variable_get('@' + attribute) if instance_variable_get('@' + attribute).present?
+
+        value = begin
+                  GitHub::Errors.with_error_handling { client.send(github_type, *[id, options])[attribute] }
+                rescue GitHub::Error
+                  begin
+                    GitHub::Errors.with_error_handling do
+                      GitHubClassroom.github_client.send(github_type, *[id, options])[attribute]
+                    end
+                  rescue GitHub::Error
+                    null_github_object.send(attribute)
+                  end
+                end
+
+        instance_variable_set('@' + attribute, value)
+        value
       end
     end
   end
+  # rubocop:enable Metrics/AbcSize
   # rubocop:enable MethodLength
 
   # Internal
