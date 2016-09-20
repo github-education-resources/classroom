@@ -1,7 +1,9 @@
 # frozen_string_literal: true
+# rubocop:disable ClassLength
 class GroupAssignmentInvitationsController < ApplicationController
   layout 'layouts/invitations'
 
+  before_action :check_user_identified, only: [:show]
   before_action :check_group_not_previous_acceptee, only: [:show]
   before_action :check_user_not_group_member,       only: [:show]
 
@@ -11,6 +13,20 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   def show
     @groups = invitation.groups.map { |group| [group.title, group.id] }
+  end
+
+  def identifier
+    not_found if student_identifier || group_assignment.student_identifier_type.nil?
+    @student_identifier = StudentIdentifier.new
+  end
+
+  def submit_identifier
+    @student_identifier = StudentIdentifier.new(new_student_identifier_params)
+    if @student_identifier.save
+      redirect_to group_assignment_invitation_path
+    else
+      render :identifier
+    end
   end
 
   def accept
@@ -91,6 +107,15 @@ class GroupAssignmentInvitationsController < ApplicationController
       .permit(:id, :title)
   end
 
+  def new_student_identifier_params
+    params
+      .require(:student_identifier)
+      .permit(:value)
+      .merge(user: current_user,
+             organization: organization,
+             student_identifier_type: group_assignment.student_identifier_type)
+  end
+
   def invitation
     @invitation ||= GroupAssignmentInvitation
                     .includes(group_assignment: :group_assignment_repos)
@@ -102,6 +127,18 @@ class GroupAssignmentInvitationsController < ApplicationController
     @organization ||= group_assignment.organization
   end
   helper_method :organization
+
+  def student_identifier
+    @student_identifier ||= StudentIdentifier.find_by(user: current_user,
+                                                      student_identifier_type: group_assignment.student_identifier_type)
+  end
+  helper_method :student_identifier
+
+  def check_user_identified
+    return unless group_assignment.student_identifier_type.present?
+    return if student_identifier.present?
+    redirect_to identifier_group_assignment_invitation_path
+  end
 
   def check_group_not_previous_acceptee
     return unless group.present? && group_assignment_repo.present?

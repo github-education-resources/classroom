@@ -1,0 +1,17 @@
+<div class="markdown-body">
+  <p>
+    You are required to provide your <b><%= student_identifier_type.name %></b> (<%= student_identifier_type.description %>) before accepting the assignment:
+  </p>
+</div>
+<hr/>
+<dl class="form">
+  <dt>Please do not input any confidential information (e.g. SSN or bank account number) in the following form.</dt>
+  <dd>
+    <% case student_identifier_type.content_type
+         when 'text' %> <%= f.text_field :value, placeholder: student_identifier_type.name, class: 'textfield' %>
+    <% when 'number' %> <%= f.number_field :value, placeholder: student_identifier_type.name, class: 'textfield' %>
+    <% when 'email' %> <%= f.email_field :value, placeholder: student_identifier_type.name, class: 'textfield' %>
+    <% end %>
+  </dd>
+</dl>
+<%= submit_tag 'Continue', class: 'btn btn-green js-navigation js-form-submit', disabled: true %>
