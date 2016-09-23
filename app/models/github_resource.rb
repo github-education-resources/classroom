@@ -15,15 +15,17 @@ class GitHubResource
 
   def on_github?(options = {}) # rubocop:disable Metrics/MethodLength
     resource = begin
-                 GitHub::Errors.with_error_handling { @client.send(github_type, [@id, options]) }
+                 # rubocop:disable Lint/UnneededSplatExpansion
+                 GitHub::Errors.with_error_handling { @client.send(github_type, *[@id, options]) }
                rescue GitHub::Error
                  begin
                    GitHub::Errors.with_error_handling do
-                     GitHubClassroom.github_client.send(github_type, [@id, options])
+                     GitHubClassroom.github_client.send(github_type, *[@id, options])
                    end
                  rescue GitHub::Error
                    nil
                  end
+                 # rubocop:enable Lint/UnneededSplatExpansion
                end
 
     resource.present?
@@ -65,15 +67,17 @@ class GitHubResource
         return instance_variable_get('@' + attribute) if instance_variable_get('@' + attribute).present?
 
         value = begin
-                  GitHub::Errors.with_error_handling { client.send(github_type, [id, options])[attribute] }
+                  # rubocop:disable Lint/UnneededSplatExpansion
+                  GitHub::Errors.with_error_handling { client.send(github_type, *[id, options])[attribute] }
                 rescue GitHub::Error
                   begin
                     GitHub::Errors.with_error_handling do
-                      GitHubClassroom.github_client.send(github_type, [id, options])[attribute]
+                      GitHubClassroom.github_client.send(github_type, *[id, options])[attribute]
                     end
                   rescue GitHub::Error
                     null_github_object.send(attribute)
                   end
+                  # rubocop:enable Lint/UnneededSplatExpansion
                 end
 
         instance_variable_set('@' + attribute, value)
