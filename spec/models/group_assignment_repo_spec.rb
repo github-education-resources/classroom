@@ -28,7 +28,7 @@ RSpec.describe GroupAssignmentRepo, type: :model do
     after(:each) do
       group.destroy
       repo_access.destroy
-      @group_assignment_repo.destroy if @group_assignment_repo
+      @group_assignment_repo.destroy if @group_assignment_repo.present?
     end
 
     describe 'callbacks', :vcr do
