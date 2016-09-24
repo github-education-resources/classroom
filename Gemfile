@@ -23,7 +23,7 @@ gem 'kaminari'
 
 gem 'local_time'
 
-gem 'octicons_helper', git: 'https://github.com/primer/octicons_helper.git', ref: 'fa28cb06c67ce0a1974a9e3238483d79157503c2'
+gem 'octicons_helper', '~> 2.1'
 gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'
