@@ -19,7 +19,7 @@ RSpec.describe GroupingsController, type: :controller do
 
     describe 'GET #show', :vcr do
       it 'returns success status' do
-        get :show, organization_id: organization.slug, id: grouping.slug
+        get :show, params: { organization_id: organization.slug, id: grouping.slug }
 
         expect(response.status).to eq(200)
         expect(assigns(:grouping)).to_not be_nil
@@ -28,7 +28,7 @@ RSpec.describe GroupingsController, type: :controller do
 
     describe 'GET #edit', :vcr do
       it 'returns success status' do
-        get :edit, organization_id: organization.slug, id: grouping.slug
+        get :edit, params: { organization_id: organization.slug, id: grouping.slug }
 
         expect(response.status).to eq(200)
         expect(assigns(:grouping)).to_not be_nil
@@ -41,7 +41,7 @@ RSpec.describe GroupingsController, type: :controller do
       end
 
       before do
-        patch :update, organization_id: organization.slug, id: grouping.slug, grouping: update_options
+        patch :update, params: { organization_id: organization.slug, id: grouping.slug, grouping: update_options }
       end
 
       it 'correctly updates the grouping' do
@@ -62,9 +62,10 @@ RSpec.describe GroupingsController, type: :controller do
     describe 'GET #show', :vcr do
       it 'returns a 404' do
         expect do
-          get :show,
-              organization_id: organization.slug,
-              id: grouping.slug
+          get :show, params: {
+            organization_id: organization.slug,
+            id: grouping.slug
+          }
         end.to raise_error(ActionController::RoutingError)
       end
     end
@@ -72,9 +73,10 @@ RSpec.describe GroupingsController, type: :controller do
     describe 'GET #edit', :vcr do
       it 'returns success status' do
         expect do
-          get :edit,
-              organization_id: organization.slug,
-              id: grouping.slug
+          get :edit, params: {
+            organization_id: organization.slug,
+            id: grouping.slug
+          }
         end.to raise_error(ActionController::RoutingError)
       end
     end
@@ -83,7 +85,7 @@ RSpec.describe GroupingsController, type: :controller do
       it 'correctly updates the grouping' do
         update_options = { title: 'Fall 2015' }
         expect do
-          patch :update, organization_id: organization.slug, id: grouping.slug, grouping: update_options
+          patch :update, params: { organization_id: organization.slug, id: grouping.slug, grouping: update_options }
         end.to raise_error(ActionController::RoutingError)
       end
     end
