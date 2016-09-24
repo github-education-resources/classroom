@@ -68,7 +68,7 @@ class ApplicationController < ActionController::Base
                     end
   end
 
-  def flash_and_redirect_back_with_message(exception)
+  def flash_and_redirect_back_with_message(exception) # rubocop:disable Metrics/MethodLength
     flash[:error] = exception.message
 
     unless flash[:error].present?
@@ -80,7 +80,11 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    redirect_to :back
+    begin
+      redirect_to :back
+    rescue ActionController::RedirectBackError
+      redirect_to root_path
+    end
   end
 
   def logged_in?
