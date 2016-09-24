@@ -37,7 +37,7 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
 
       context 'with URL parameters' do
         before(:each) do
-          get :index, query: '1'
+          get :index, params: { query: '1' }
         end
 
         it 'returns a success status' do
@@ -80,7 +80,7 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
 
       context 'with URL parameters' do
         before(:each) do
-          get :search, query: '1'
+          get :search, params: { query: '1' }
         end
 
         it 'returns a succcess status' do
