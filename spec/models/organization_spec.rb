@@ -71,6 +71,20 @@ RSpec.describe Organization, type: :model do
       end
     end
 
+    describe '#ping_organization_webhook' do
+      before(:each) do
+        subject.create_organization_webhook('http://localhost')
+      end
+
+      it 'sends a ping request to GitHub API' do
+        org_id = subject.github_id
+
+        subject.ping_organization_webhook
+        expect(WebMock).to have_requested(:post,
+                                          github_url("/organizations/#{org_id}/hooks/#{subject.webhook_id}/pings"))
+      end
+    end
+
     describe 'callbacks' do
       describe 'before_destroy' do
         describe '#silently_remove_organization_webhook' do

@@ -53,9 +53,14 @@ Rails.application.routes.draw do
           end
         end
       end
+
       resources :assignments
       resources :group_assignments, path: 'group-assignments'
       resources :student_identifier_types, path: 'identifiers', except: [:show]
+
+      constraints user_agent: %r{\AGitHub-Hookshot\/}, format: 'json' do
+        resources :webhook_events, path: 'events', only: [:create]
+      end
     end
   end
 

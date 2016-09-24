@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class OrganizationsController < ApplicationController
   include OrganizationAuthorization
+  include OrganizationWebhook
 
   before_action :ensure_team_management_flipper_is_enabled, only: [:show_groupings]
 
@@ -21,9 +22,8 @@ class OrganizationsController < ApplicationController
 
   def create
     @organization = Organization.new(new_organization_params)
-
     if @organization.save
-      redirect_to setup_organization_path(@organization)
+      create_organization_webhook { redirect_to setup_organization_path(@organization) }
     else
       render :new
     end

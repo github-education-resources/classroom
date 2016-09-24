@@ -46,9 +46,17 @@ class Organization < ApplicationRecord
     self.slug = "#{github_id} #{title}".parameterize
   end
 
-  def create_organization_webhook(webhook_url)
-    webhook = github_organization.create_organization_webhook(config: { url: webhook_url })
+  def create_organization_webhook(webhook_url, client = nil)
+    webhook = GitHubOrganization.new(client || github_client, github_id)
+                                .create_organization_webhook(config: { url: webhook_url })
     update_attributes(webhook_id: webhook.id)
+  end
+
+  def ping_organization_webhook(client = nil)
+    return unless webhook_id.present?
+
+    GitHubOrganization.new(client || github_client, github_id)
+                      .ping_organization_webhook(webhook_id)
   end
 
   def silently_remove_organization_webhook

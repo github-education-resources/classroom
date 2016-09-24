@@ -36,7 +36,11 @@ class ApplicationController < ActionController::Base
   end
 
   def required_scopes
-    GitHubClassroom::Scopes::TEACHER
+    if explicit_assignment_submission_enabled?
+      GitHubClassroom::Scopes::ExplicitAssignmentSubmission::TEACHER
+    else
+      GitHubClassroom::Scopes::TEACHER
+    end
   end
 
   def adequate_scopes?
@@ -85,6 +89,10 @@ class ApplicationController < ActionController::Base
 
   def logged_in?
     !current_user.nil?
+  end
+
+  def explicit_assignment_submission_enabled?
+    GitHubClassroom.flipper[:explicit_assignment_submission].enabled?(current_user)
   end
 
   def student_identifier_enabled?
