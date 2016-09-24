@@ -32,7 +32,7 @@ module GitHubClassroom
     end
 
     # Append directories to autoload paths
-    config.autoload_paths += Dir["#{Rails.root}/lib"]
+    config.autoload_paths << "#{Rails.root}/lib"
 
     # Configure the generators
     config.generators do |g|
