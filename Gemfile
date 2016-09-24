@@ -23,6 +23,7 @@ gem 'kaminari'
 
 gem 'local_time'
 
+gem 'octicons_helper', git: 'https://github.com/primer/octicons_helper.git', ref: 'fa28cb06c67ce0a1974a9e3238483d79157503c2'
 gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'
@@ -47,7 +48,6 @@ gem 'redis-namespace'
 gem 'sprockets'
 gem 'sass-rails', '~> 5.0', '>= 5.0.6'
 gem 'sidekiq', git: 'https://github.com/mperham/sidekiq.git', ref: 'c187be65214728e212b23e2d49ad6da563a00559'
-gem 'octicons_helper', git: 'https://github.com/primer/octicons_helper.git', ref: 'fa28cb06c67ce0a1974a9e3238483d79157503c2'
 
 gem 'turbolinks', '~> 2.5.3'
 
