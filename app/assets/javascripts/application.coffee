@@ -15,7 +15,9 @@
 #= require jquery-ujs/src/rails
 #
 #= require turbolinks
-#
+
+Turbolinks.ProgressBar.enable()
+
 #= require local_time
 #
 #= require jquery-readyselector/jquery.readyselector
