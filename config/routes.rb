@@ -14,6 +14,12 @@ Rails.application.routes.draw do
 
   get '/autocomplete/github_repos', to: 'autocomplete#github_repos'
 
+  scope 'github', as: 'github' do
+    constraints user_agent: %r{\AGitHub-Hookshot/\w+\z}, format: 'json' do
+      post :hooks, to: 'hooks#receive'
+    end
+  end
+
   resources :assignment_invitations, path: 'assignment-invitations', only: [:show] do
     member do
       get   :identifier
