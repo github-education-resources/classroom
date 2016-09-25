@@ -27,7 +27,7 @@ module GitHub
       def webhook_secret
         @webhook_secret ||= Rails.application.secrets.webhook_secret
         return @webhook_secret if @webhook_secret.present?
-        raise 'GITHUB_WEBHOOK_SECRET is not set, please check you .env file'
+        raise 'WEBHOOK_SECRET is not set, please check you .env file'
       end
     end
   end
