@@ -1,3 +1,7 @@
+---
+:concurrency: <%= Integer(ENV['SIDEKIQ_CONCURRENCY'] || 5) %>
+:verbose: false
 :queues:
-  - chewy
-  - trash_can
+  - [chewy, 1]
+  - [trash_can, 1]
+  - [ping_event, 2]
