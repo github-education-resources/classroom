@@ -1,4 +1,4 @@
-<%= button_tag type: 'submit', name: "organization[github_id]", class: 'organization-select-target js-navigation', value: org[:github_id] do %>
+<%= button_tag type: 'submit', name: "organization[github_id]", class: 'organization-select-target', value: org[:github_id] do %>
   <%= image_tag "https://avatars.githubusercontent.com/u/#{org[:github_id]}?v=3&size=200", class: 'avatar organization-select-avatar', width: 100, height: 100, alt: "@#{org[:login]}" %>
   <span class="organization css-truncate css-truncate-target" title=<%= "@#{org[:login]}" %>><%= "@#{org[:login]}" %></span>
 <% end %>
