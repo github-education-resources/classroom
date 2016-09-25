@@ -45,7 +45,7 @@ RSpec.describe Stafftools::UsersController, type: :controller do
       end
 
       before(:each) do
-        post :impersonate, id: student.id
+        post :impersonate, params: { id: student.id }
       end
 
       it 'sets the :impersonated_user_id on the session' do
