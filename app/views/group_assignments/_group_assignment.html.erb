@@ -4,7 +4,7 @@
       <%= octicon 'organization', height: 22 %>
     </span>
     <h3 class="assignment-name-link">
-      <%= link_to group_assignment.title, organization_group_assignment_path(@organization, group_assignment), class: 'js-navigation' %>
+      <%= link_to group_assignment.title, organization_group_assignment_path(@organization, group_assignment) %>
     </h3>
     <p class="assignment-type text-muted">Group assignment for <strong><%= group_assignment.grouping.title %></strong></p>
   </div>
