@@ -1,8 +1,8 @@
 {
   "name": "classroom",
   "dependencies": {
-    "jquery": "~2.1.4",
-    "jquery-ujs": " ~1.0.4",
+    "jquery": "~2.2.4",
+    "jquery-ujs": " ~1.2.2",
     "primer-css": " ~2.7.0",
     "jquery-readyselector": "Verba/jquery-readyselector",
     "jquery.turbolinks": "kossnocorp/jquery.turbolinks#~2.1.0",
