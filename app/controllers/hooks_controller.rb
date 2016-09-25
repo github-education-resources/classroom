@@ -28,8 +28,10 @@ class HooksController < ApplicationController
     expected_signature = "sha1=#{GitHub::WebHook.generate_hmac(payload_body)}"
     received_signature = request.env['HTTP_X_HUB_SIGNATURE']
 
+    # rubocop:disable GuardClause
     unless received_signature && Rack::Utils.secure_compare(received_signature, expected_signature)
       return render json: { message: 'Invalid payload signature' }, status: :forbidden
     end
+    # rubocop:enable GuardClause
   end
 end
