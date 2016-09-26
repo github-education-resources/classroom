@@ -36,9 +36,11 @@ RSpec.describe AssignmentReposController, type: :controller do
       end
 
       it 'redirects to the login page' do
-        get :latest_release, organization_id: organization.slug,
-                             assignment_id: assignment.slug,
-                             id: @assignment_repo.id
+        get :latest_release, params: {
+          organization_id: organization.slug,
+          assignment_id: assignment.slug,
+          id: @assignment_repo.id
+        }
         expect(response).to redirect_to(login_path)
       end
     end
@@ -50,9 +52,11 @@ RSpec.describe AssignmentReposController, type: :controller do
 
       context 'valid parameters' do
         before(:each) do
-          get :latest_release, organization_id: organization.slug,
-                               assignment_id: assignment.slug,
-                               id: @assignment_repo.id
+          get :latest_release, params: {
+            organization_id: organization.slug,
+            assignment_id: assignment.slug,
+            id: @assignment_repo.id
+          }
         end
 
         it 'returns success' do
@@ -67,9 +71,11 @@ RSpec.describe AssignmentReposController, type: :controller do
       context 'invalid parameters' do
         it 'returns a 404' do
           expect do
-            get :latest_release, organization_id: organization.slug,
-                                 assignment_id: assignment.slug,
-                                 id: @assignment_repo.id + 1
+            get :latest_release, params: {
+              organization_id: organization.slug,
+              assignment_id: assignment.slug,
+              id: @assignment_repo.id + 1
+            }
           end.to raise_error(ActionController::RoutingError)
         end
       end
