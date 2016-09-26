@@ -12,7 +12,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
     context 'unauthenticated request' do
       it 'redirects the new user to sign in with GitHub' do
-        get :show, id: invitation.key
+        get :show, params: { id: invitation.key }
         expect(response).to redirect_to(login_path)
       end
     end
@@ -25,7 +25,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it 'will bring you to the page' do
-        get :show, id: invitation.key
+        get :show, params: { id: invitation.key }
         expect(response).to have_http_status(:success)
       end
     end
@@ -38,7 +38,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it 'redirects to the identifier page' do
-        get :show, id: invitation.key
+        get :show, params: { id: invitation.key }
         expect(response).to redirect_to(identifier_assignment_invitation_path)
       end
 
@@ -51,7 +51,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         end
 
         it 'will bring user to the page' do
-          get :show, id: invitation.key
+          get :show, params: { id: invitation.key }
           expect(response).to have_http_status(:success)
         end
       end
@@ -73,17 +73,17 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
 
     it 'creates the students identifier' do
-      patch :submit_identifier, id: invitation.key, student_identifier: options
+      patch :submit_identifier, params: { id: invitation.key, student_identifier: options }
       expect(StudentIdentifier.count).to eql(1)
     end
 
     it 'has correct identifier value' do
-      patch :submit_identifier, id: invitation.key, student_identifier: options
+      patch :submit_identifier, params: { id: invitation.key, student_identifier: options }
       expect(StudentIdentifier.first.value).to eql('test value')
     end
 
     it 'redirects to the accepting page' do
-      patch :submit_identifier, id: invitation.key, student_identifier: options
+      patch :submit_identifier, params: { id: invitation.key, student_identifier: options }
       expect(response).to redirect_to(assignment_invitation_path)
     end
   end
@@ -113,7 +113,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
 
     it 'redeems the users invitation' do
-      patch :accept_invitation, id: invitation.key
+      patch :accept_invitation, params: { id: invitation.key }
       expect(user.assignment_repos.count).to eql(1)
     end
 
@@ -125,7 +125,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it 'does not create a an assignment repo record' do
-        patch :accept_invitation, id: invitation.key
+        patch :accept_invitation, params: { id: invitation.key }
 
         expect(assignment.assignment_repos.count).to eq(0)
       end
@@ -136,7 +136,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         assignment_repo = AssignmentRepo.create!(assignment: assignment, user: user)
         @original_repository = organization.github_client.repository(assignment_repo.github_repo_id)
         assignment_repo.delete
-        patch :accept_invitation, id: invitation.key
+        patch :accept_invitation, params: { id: invitation.key }
       end
 
       it 'creates a new assignment repo' do
@@ -162,7 +162,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it 'removes the repository on GitHub' do
-        patch :accept_invitation, id: invitation.key
+        patch :accept_invitation, params: { id: invitation.key }
         expect(WebMock).to have_requested(:delete, %r{\A#{github_url('/repositories')}/\d+\z})
       end
     end
@@ -195,7 +195,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     context 'delete github repository after accepting a invitation successfully', :vcr do
       before do
         organization.github_client.delete_repository(@assignment_repo.github_repo_id)
-        get :successful_invitation, id: invitation.key
+        get :successful_invitation, params: { id: invitation.key }
       end
 
       it 'deletes the old assignment repo' do

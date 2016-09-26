@@ -8,8 +8,13 @@ class GitHubRepository < GitHubResource
 
   def get_starter_code_from(source)
     GitHub::Errors.with_error_handling do
-      credentials = { vcs_username: @client.login, vcs_password: @client.access_token }
-      @client.start_source_import(@id, 'git', "https://github.com/#{source.full_name}", credentials)
+      options = {
+        accept:       Octokit::Preview::PREVIEW_TYPES[:source_imports],
+        vcs_username: @client.login,
+        vcs_password: @client.access_token
+      }
+
+      @client.start_source_import(@id, 'git', "https://github.com/#{source.full_name}", options)
     end
   end
 

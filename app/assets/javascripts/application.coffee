@@ -35,3 +35,5 @@
 #= require js-cookie/src/js.cookie
 #
 #= require_tree .
+
+Turbolinks.enableProgressBar()

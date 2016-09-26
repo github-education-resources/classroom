@@ -26,11 +26,12 @@ RSpec.describe GroupsController, type: :controller do
       it 'correctly adds the user' do
         expect(group.repo_accesses.count).to eql(0)
 
-        patch :add_membership,
-              organization_id: organization.slug,
-              grouping_id: grouping.slug,
-              id: group.slug,
-              user_id: user.id
+        patch :add_membership, params: {
+          organization_id: organization.slug,
+          grouping_id: grouping.slug,
+          id: group.slug,
+          user_id: user.id
+        }
 
         expect(group.repo_accesses.count).to eql(1)
       end
@@ -45,11 +46,12 @@ RSpec.describe GroupsController, type: :controller do
       it 'correctly removes the user' do
         expect(group.repo_accesses.count).to eql(1)
 
-        delete :remove_membership,
-               organization_id: organization.slug,
-               grouping_id: grouping.slug,
-               id: group.slug,
-               user_id: user.id
+        delete :remove_membership, params: {
+          organization_id: organization.slug,
+          grouping_id: grouping.slug,
+          id: group.slug,
+          user_id: user.id
+        }
 
         expect(group.repo_accesses.count).to eql(0)
       end
@@ -69,11 +71,12 @@ RSpec.describe GroupsController, type: :controller do
     describe 'PATCH #remove_membership', :vcr do
       it 'returns a 404' do
         expect do
-          patch :add_membership,
-                organization_id: organization.slug,
-                grouping_id: grouping.slug,
-                id: group.slug,
-                user_id: user.id
+          patch :add_membership, params: {
+            organization_id: organization.slug,
+            grouping_id: grouping.slug,
+            id: group.slug,
+            user_id: user.id
+          }
         end.to raise_error(ActionController::RoutingError)
       end
     end
@@ -81,11 +84,12 @@ RSpec.describe GroupsController, type: :controller do
     describe 'DELETE #remove_membership', :vcr do
       it 'returns a 404' do
         expect do
-          delete :remove_membership,
-                 organization_id: organization.slug,
-                 grouping_id: grouping.slug,
-                 id: group.slug,
-                 user_id: user.id
+          delete :remove_membership, params: {
+            organization_id: organization.slug,
+            grouping_id: grouping.slug,
+            id: group.slug,
+            user_id: user.id
+          }
         end.to raise_error(ActionController::RoutingError)
       end
     end
