@@ -35,6 +35,7 @@ class AssignmentsController < ApplicationController
       flash[:success] = "Assignment \"#{@assignment.title}\" updated"
       redirect_to organization_assignment_path(@organization, @assignment)
     else
+      @assignment.reload unless @assignment.slug.present?
       render :edit
     end
   end
@@ -61,7 +62,7 @@ class AssignmentsController < ApplicationController
   def new_assignment_params
     params
       .require(:assignment)
-      .permit(:title, :public_repo, :students_are_repo_admins)
+      .permit(:title, :slug, :public_repo, :students_are_repo_admins)
       .merge(creator: current_user,
              organization: @organization,
              starter_code_repo_id: starter_code_repo_id_param,
@@ -88,7 +89,7 @@ class AssignmentsController < ApplicationController
   def update_assignment_params
     params
       .require(:assignment)
-      .permit(:title, :public_repo)
+      .permit(:title, :slug, :public_repo, :students_are_repo_admins)
       .merge(starter_code_repo_id: starter_code_repo_id_param, student_identifier_type: student_identifier_type_param)
   end
 

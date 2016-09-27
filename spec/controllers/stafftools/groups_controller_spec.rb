@@ -19,14 +19,14 @@ RSpec.describe Stafftools::GroupsController, type: :controller do
   describe 'GET #show', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { get :show, id: group.id }.to raise_error(ActionController::RoutingError)
+        expect { get :show, params: { id: group.id } }.to raise_error(ActionController::RoutingError)
       end
     end
 
     context 'as an authorized user' do
       before do
         user.update_attributes(site_admin: true)
-        get :show, id: group.id
+        get :show, params: { id: group.id }
       end
 
       it 'succeeds' do

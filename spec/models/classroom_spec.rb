@@ -25,10 +25,11 @@ RSpec.describe Classroom, type: :model do
       before do
         grouping = Grouping.new(title: 'Grouping', classroom: subject)
 
-        Assignment.create(creator: creator, title: 'Assignment', classroom: subject)
+        Assignment.create(creator: creator, title: 'Assignment', slug: 'assignment', classroom: subject)
         GroupAssignment.create(creator: creator,
                                grouping: grouping,
-                               classroom: subject,
+                               organization: subject,
+                               slug: 'group-assignment',
                                title: 'Group Assignment')
       end
 

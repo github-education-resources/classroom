@@ -1,13 +1,12 @@
 source 'https://rubygems.org'
 
 ruby '2.3.1'
-gem 'rails', '4.2.7.1'
+gem 'rails', '~> 5.0', '>= 5.0.0.1'
 
 gem 'airbrake'
 gem 'autoprefixer-rails'
 
 gem 'chewy'
-gem 'coffee-rails', '~> 4.1.0'
 
 gem 'faraday-http-cache'
 gem 'flipper'
@@ -23,6 +22,7 @@ gem 'kaminari'
 
 gem 'local_time'
 
+gem 'octicons_helper', '~> 2.1'
 gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'
@@ -33,21 +33,20 @@ gem 'peek-gc'
 gem 'peek-git'
 gem 'peek-performance_bar'
 gem 'peek-pg'
-gem 'peek-sidekiq', github: 'Soliah/peek-sidekiq', ref: '261c857578ae6dc189506a35194785a4db51e54c'
+gem 'peek-sidekiq', git: 'https://github.com/Soliah/peek-sidekiq.git', ref: '261c857578ae6dc189506a35194785a4db51e54c'
 gem 'pg'
 gem 'pry-rails'
 gem 'pry-byebug'
-gem 'puma'
+gem 'puma', '~> 3.0'
 
 gem 'rack-canonical-host'
 gem 'rack-timeout', require: false
+gem 'rails-i18n', '~> 5.0', '>= 5.0.1'
 gem 'redis-namespace'
 
 gem 'sprockets'
-gem 'sass-rails', '~> 5.0'
-gem 'sidekiq', '~> 4.1.0'
-gem 'sinatra'
-gem 'octicons_helper', github: 'primer/octicons_helper', ref: 'fa28cb06c67ce0a1974a9e3238483d79157503c2'
+gem 'sass-rails', '~> 5.0', '>= 5.0.6'
+gem 'sidekiq', git: 'https://github.com/mperham/sidekiq.git', ref: 'c187be65214728e212b23e2d49ad6da563a00559'
 
 gem 'turbolinks', '~> 2.5.3'
 
@@ -57,7 +56,6 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'foreman'
-  gem 'quiet_assets'
 end
 
 group :development, :test do
@@ -66,9 +64,9 @@ group :development, :test do
   gem 'dotenv-rails'
   gem 'guard-rspec', require: false
   gem 'rspec-rails'
+  gem 'rails-controller-testing'
   gem 'rubocop',   require: false
   gem 'scss_lint', require: false
-  gem 'coffeelint', require: false
   gem 'spring'
   gem 'terminal-notifier-guard'
 end

@@ -17,6 +17,7 @@ RSpec.describe AssignmentInvitation, type: :model do
       Assignment.create(creator: classroom.users.first,
                         title: 'Ruby',
                         classroom: classroom,
+                        slug: 'ruby',
                         public_repo: false)
     end
 

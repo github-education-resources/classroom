@@ -10,6 +10,7 @@ RSpec.describe AssignmentRepo, type: :model do
       Assignment.create(creator: classroom.users.first,
                         title: 'Learn Ruby',
                         classroom: classroom,
+                        slug: 'learn-ruby',
                         public_repo: true,
                         starter_code_repo_id: 1_062_897)
     end
