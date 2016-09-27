@@ -1,4 +1,4 @@
-class AddSlugs < ActiveRecord::Migration
+class AddSlugs < ActiveRecord::Migration[4.2]
   def change
     add_column :organizations, :slug, :string, null: false
     add_index  :organizations, :slug

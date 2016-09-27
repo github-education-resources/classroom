@@ -1,4 +1,4 @@
-class RepoAccessesAndGroups < ActiveRecord::Migration
+class RepoAccessesAndGroups < ActiveRecord::Migration[4.2]
   def change
     create_table :groups_repo_accesses, id: false do |t|
       t.belongs_to :group,       index: true

@@ -1,4 +1,4 @@
-class CreateGroupsAndGroupings < ActiveRecord::Migration
+class CreateGroupsAndGroupings < ActiveRecord::Migration[4.2]
   def change
     create_table :groups do |t|
       t.integer :github_team_id, null: false
