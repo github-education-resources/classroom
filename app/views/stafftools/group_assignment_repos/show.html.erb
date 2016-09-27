@@ -12,7 +12,7 @@
   </div>
 
   <div class="boxed-group">
-    <h3>Group assignment repository information</h3>
+    <h3>General information</h3>
 
     <div class="boxed-group-inner">
       <table>
@@ -33,16 +33,28 @@
           <td><%= link_to @group_assignment_repo.group_assignment.title, stafftools_group_assignment_path(@group_assignment_repo.group_assignment.id) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Source code</td>
-          <td><%= link_to @group_assignment_repo.github_repository.html_url, @group_assignment_repo.github_repository.html_url %></td>
-        </tr>
-        <tr>
           <td class="text-emphasized">Group</td>
           <td><%= link_to @group_assignment_repo.group.title, stafftools_group_path(@group_assignment_repo.group) %></td>
         </tr>
         <tr>
           <td class="text-emphasized">Created on</td>
           <td><%= local_time(@group_assignment_repo.created_at) %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="boxed-group">
+    <h3>GitHub repository</h3>
+    <div class="boxed-group-inner">
+      <table>
+        <tr>
+          <td class="text-emphasized">Repository ID</td>
+          <td><%= @group_assignment_repo.github_repo_id %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Source code</td>
+          <td><%= link_to @group_assignment_repo.github_repository.html_url, @group_assignment_repo.github_repository.html_url %></td>
         </tr>
       </table>
     </div>
