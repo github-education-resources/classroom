@@ -1,4 +1,4 @@
-class ModifyRepoAccessForCollabs < ActiveRecord::Migration
+class ModifyRepoAccessForCollabs < ActiveRecord::Migration[4.2]
   def change
     add_column :assignment_repos, :user_id, :integer
     add_index :assignment_repos, :user_id
