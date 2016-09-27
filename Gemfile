@@ -7,7 +7,6 @@ gem 'airbrake'
 gem 'autoprefixer-rails'
 
 gem 'chewy'
-gem 'coffee-rails', '~> 4.2', '>= 4.2.1'
 
 gem 'faraday-http-cache'
 gem 'flipper'
@@ -68,7 +67,6 @@ group :development, :test do
   gem 'rails-controller-testing'
   gem 'rubocop',   require: false
   gem 'scss_lint', require: false
-  gem 'coffeelint', require: false
   gem 'spring'
   gem 'terminal-notifier-guard'
 end
