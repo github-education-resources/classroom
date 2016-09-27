@@ -1,4 +1,4 @@
-class CreateRepoAccesses < ActiveRecord::Migration
+class CreateRepoAccesses < ActiveRecord::Migration[4.2]
   def change
     create_table :repo_accesses do |t|
       t.integer :github_team_id,  null: false

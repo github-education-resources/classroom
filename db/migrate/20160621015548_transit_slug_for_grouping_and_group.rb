@@ -1,4 +1,4 @@
-class TransitSlugForGroupingAndGroup < ActiveRecord::Migration
+class TransitSlugForGroupingAndGroup < ActiveRecord::Migration[4.2]
   def up
     slugify_all_groupings
     slugify_all_groups
