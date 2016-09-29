@@ -1,4 +1,4 @@
-class CreateInvitations < ActiveRecord::Migration
+class CreateInvitations < ActiveRecord::Migration[4.2]
   def change
     create_table :assignment_invitations do |t|
       t.string :key,            null: false

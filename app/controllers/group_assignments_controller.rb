@@ -24,7 +24,10 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def show
-    @group_assignment_repos = @group_assignment.group_assignment_repos.page(params[:page])
+    @group_assignment_repos = GroupAssignmentRepo.includes(:organization,
+                                                           group: [:organization, repo_accesses: [:user]])
+                                                 .where(group_assignment: @group_assignment)
+                                                 .page(params[:page])
   end
 
   def edit
@@ -35,6 +38,7 @@ class GroupAssignmentsController < ApplicationController
       flash[:success] = "Assignment \"#{@group_assignment.title}\" updated"
       redirect_to organization_group_assignment_path(@organization, @group_assignment)
     else
+      @group_assignment.reload unless @group_assignment.slug.present?
       render :edit
     end
   end
@@ -75,7 +79,7 @@ class GroupAssignmentsController < ApplicationController
   def new_group_assignment_params
     params
       .require(:group_assignment)
-      .permit(:title, :public_repo, :grouping_id, :max_members, :students_are_repo_admins)
+      .permit(:title, :slug, :public_repo, :grouping_id, :max_members, :students_are_repo_admins)
       .merge(creator: current_user,
              organization: @organization,
              starter_code_repo_id: starter_code_repo_id_param,
@@ -116,7 +120,7 @@ class GroupAssignmentsController < ApplicationController
   def update_group_assignment_params
     params
       .require(:group_assignment)
-      .permit(:title, :public_repo, :max_members)
+      .permit(:title, :slug, :public_repo, :max_members, :students_are_repo_admins)
       .merge(starter_code_repo_id: starter_code_repo_id_param, student_identifier_type: student_identifier_type_param)
   end
 

@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
   end
 
   def default_required_scopes
-    Classroom::Scopes::TEACHER.join(',')
+    GitHubClassroom::Scopes::TEACHER.join(',')
   end
 
   def create
@@ -33,6 +33,6 @@ class SessionsController < ApplicationController
   end
 
   def failure
-    redirect_to root_path, alert: params[:message]
+    redirect_to root_path, alert: 'There was a problem authenticating with GitHub, please try again.'
   end
 end

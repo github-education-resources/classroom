@@ -10,7 +10,7 @@ class GroupsController < ApplicationController
 
     if repo_access.present?
       group.repo_accesses << repo_access
-      render nothing: true, status: 204
+      head :no_content
     else
       render json: {
         message: "User isn't a member of this classroom."
@@ -23,7 +23,7 @@ class GroupsController < ApplicationController
 
     if repo_access.present?
       group.repo_accesses.delete(repo_access)
-      render nothing: true, status: 204
+      head :no_content
     else
       render json: {
         message: "User isn't a member of this classroom."

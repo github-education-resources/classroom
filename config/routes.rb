@@ -14,8 +14,16 @@ Rails.application.routes.draw do
 
   get '/autocomplete/github_repos', to: 'autocomplete#github_repos'
 
+  scope 'github', as: 'github' do
+    constraints user_agent: %r{\AGitHub-Hookshot/\w+\z}, format: 'json' do
+      post :hooks, to: 'hooks#receive'
+    end
+  end
+
   resources :assignment_invitations, path: 'assignment-invitations', only: [:show] do
     member do
+      get   :identifier
+      post  :submit_identifier
       patch :accept_invitation
       get   :successful_invitation, path: :success
     end
@@ -23,6 +31,8 @@ Rails.application.routes.draw do
 
   resources :group_assignment_invitations, path: 'group-assignment-invitations', only: [:show] do
     member do
+      get   :identifier
+      post  :submit_identifier
       get   :accept
       patch :accept_assignment
       patch :accept_invitation
@@ -58,7 +68,7 @@ Rails.application.routes.draw do
   namespace :stafftools do
     constraints StaffConstraint.new do
       mount Sidekiq::Web => '/sidekiq'
-      mount Flipper::UI.app(Classroom.flipper) => '/flipper', as: 'flipper'
+      mount Flipper::UI.app(GitHubClassroom.flipper) => '/flipper', as: 'flipper'
     end
 
     root 'resources#index', as: :root

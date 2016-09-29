@@ -1,21 +1,24 @@
 <div class="team-panel">
-  <div class="team-info">
-    <a class="right btn btn-sm" href="#">
+  <div class="boxed-group">
+    <a class="btn btn-sm boxed-group-action" href="#">
       Manage
     </a>
-    <strong class="team-name" itemprop="name"><%= group.title %></strong>
-    <span class="team-description" group-description-id="<%= group.slug %>" itemprop="description"><%= pluralize(group.repo_accesses.count, 'student') %></span>
-  </div>
-  <div class="team-members">
-    <ul class="member-list-draggable" group-id="<%= group.slug %>">
-      <% group.repo_accesses.each do |repo_access| %>
-        <% student = repo_access.user %>
-        <div class="member-draggable">
-          <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s", 'aria-label' => student.github_user.login, 'user-id' => student.id do %>
-            <%= image_tag student.github_user.github_avatar_url(60), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.github_user.login}" %>
+    <h3><%= group.title %>
+      <span class="team-description" group-description-id="<%= group.slug %>" itemprop="description"><%= pluralize(group.repo_accesses.count, 'student') %></span>
+    </h3>
+    <div class="boxed-group-inner clearfix">
+      <div class="team-members">
+        <ul class="member-list member-list-draggable" group-id="<%= group.slug %>">
+          <% group.repo_accesses.each do |repo_access| %>
+              <% student = repo_access.user %>
+              <li class="member member-draggable">
+                <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s", 'aria-label' => student.github_user.login, 'user-id' => student.id do %>
+                    <%= image_tag student.github_user.github_avatar_url(60), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.github_user.login}" %>
+                <% end %>
+              </li>
           <% end %>
-        </div>
-      <% end %>
-    </ul>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>

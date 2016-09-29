@@ -1,4 +1,4 @@
-class CreateAssignments < ActiveRecord::Migration
+class CreateAssignments < ActiveRecord::Migration[4.2]
   def change
     create_table :assignments do |t|
       t.boolean    :public_repo,  default: true

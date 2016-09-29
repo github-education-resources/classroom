@@ -14,7 +14,7 @@ RSpec.describe Group, type: :model do
     end
 
     after(:each) do
-      @group.destroy if @group
+      @group.destroy if @group.present?
     end
 
     describe 'before_validation' do
@@ -34,7 +34,7 @@ RSpec.describe Group, type: :model do
       end
 
       after(:each) do
-        @repo_access.destroy if @repo_access
+        @repo_access.destroy if @repo_access.present?
       end
 
       describe 'before_add' do

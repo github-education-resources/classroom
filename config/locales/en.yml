@@ -20,6 +20,8 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  assignment_form:
+    slug_note: 'This will prefix each GitHub repository that is created for this assignment. May only contain alphanumeric characters, underscores or hyphens.'
   activerecord:
     attributes:
       grouping:
@@ -30,10 +32,10 @@ en:
         slug:  'Your team'
       group_assignment:
         title: 'Your assignment title'
-        slug:  'Your assignment title'
+        slug:  'Your assignment repository prefix'
       assignment:
         title: 'Your assignment title'
-        slug:  'Your assignment title'
+        slug:  'Your assignment repository prefix'
     errors:
       models:
         grouping:
