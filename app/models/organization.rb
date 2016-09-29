@@ -14,6 +14,7 @@ class Organization < ApplicationRecord
   has_many :student_identifier_types, dependent: :destroy
 
   has_and_belongs_to_many :users
+  has_many :students, through: :repo_accesses, source: :user
 
   validates :github_id, presence: true, uniqueness: true
 

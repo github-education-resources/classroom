@@ -6,6 +6,7 @@ class GroupingsController < ApplicationController
   before_action :set_grouping
 
   def show
+    @no_group_students = User.find(@organization.student_ids - @grouping.user_ids)
   end
 
   def edit
