@@ -82,10 +82,10 @@ GEM
     airbrake (5.5.0)
       airbrake-ruby (~> 1.5)
     airbrake-ruby (1.5.0)
-    arel (7.1.2)
+    arel (7.1.4)
     ast (2.3.0)
     atomic (1.1.99)
-    autoprefixer-rails (6.5.0)
+    autoprefixer-rails (6.5.1)
       execjs
     awesome_print (1.7.0)
     better_errors (2.1.1)
@@ -98,7 +98,7 @@ GEM
     bullet (5.4.2)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.10.0)
-    byebug (9.0.5)
+    byebug (9.0.6)
     coderay (1.1.1)
     coffee-rails (4.2.1)
       coffee-script (>= 2.2.0)
@@ -211,11 +211,10 @@ GEM
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     nenv (0.3.0)
-    newrelic_rpm (3.16.2.321)
+    newrelic_rpm (3.16.3.323)
     nio4r (1.2.1)
-    nokogiri (1.6.8)
+    nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
-      pkg-config (~> 1.1.7)
     notiffany (0.1.1)
       nenv (~> 0.1)
       shellany (~> 0.0)
@@ -261,7 +260,6 @@ GEM
     pg (0.19.0)
     pinglish (0.2.1)
       rack
-    pkg-config (1.1.7)
     powerpack (0.1.1)
     pry (0.10.4)
       coderay (~> 1.1.0)
@@ -273,7 +271,7 @@ GEM
     pry-rails (0.3.4)
       pry (>= 0.9.10)
     puma (3.6.0)
-    puma_worker_killer (0.0.6)
+    puma_worker_killer (0.0.7)
       get_process_mem (~> 0.2)
       puma (>= 2.7, < 4)
     rack (2.0.1)
@@ -329,6 +327,7 @@ GEM
     rb-fsevent (0.9.7)
     rb-inotify (0.9.7)
       ffi (>= 0.5.0)
+    rb-readline (0.5.3)
     redis (3.3.1)
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
@@ -336,7 +335,7 @@ GEM
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
       rspec-mocks (~> 3.5.0)
-    rspec-core (3.5.3)
+    rspec-core (3.5.4)
       rspec-support (~> 3.5.0)
     rspec-expectations (3.5.0)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -353,14 +352,14 @@ GEM
       rspec-mocks (~> 3.5.0)
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
-    rubocop (0.43.0)
+    rubocop (0.44.1)
       parser (>= 2.3.1.1, < 3.0)
       powerpack (~> 0.1)
       rainbow (>= 1.99.1, < 3.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-progressbar (1.8.1)
-    ruby_dep (1.4.0)
+    ruby_dep (1.5.0)
     safe_yaml (1.0.4)
     sass (3.4.22)
     sass-rails (5.0.6)
@@ -382,7 +381,8 @@ GEM
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.0)
     slop (3.6.0)
-    spring (1.7.2)
+    spring (2.0.0)
+      activesupport (>= 4.2)
     sprockets (3.7.0)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
@@ -463,6 +463,7 @@ DEPENDENCIES
   rails-controller-testing
   rails-i18n (~> 5.0, >= 5.0.1)
   rails_12factor
+  rb-readline
   redis-namespace
   rspec-rails
   rubocop
@@ -482,4 +483,4 @@ RUBY VERSION
    ruby 2.3.1p112
 
 BUNDLED WITH
-   1.13.0
+   1.13.2
