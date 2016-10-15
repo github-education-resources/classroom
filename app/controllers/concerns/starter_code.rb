@@ -11,7 +11,9 @@ module StarterCode
     raise GitHub::Error, WRONG_FORMAT unless repo_name =~ %r{^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$}
 
     begin
+      # rubocop:disable Rails/DynamicFindBy
       GitHubRepository.find_by_name_with_owner!(current_user.github_client, repo_name).id
+      # rubocop:enable Rails/DynamicFindBy
     rescue GitHub::Error
       raise GitHub::Error, INVALID_SELECTION
     end

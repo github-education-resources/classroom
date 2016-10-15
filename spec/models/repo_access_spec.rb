@@ -11,7 +11,7 @@ RSpec.describe RepoAccess, type: :model do
     end
 
     after(:each) do
-      @repo_access.destroy if @repo_access
+      @repo_access.destroy if @repo_access.present?
     end
 
     describe 'before_validation' do

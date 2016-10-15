@@ -36,18 +36,18 @@ RSpec.describe GroupAssignment, type: :model do
   end
 
   describe 'uniqueness of title across application' do
-    let(:organization_1) { create(:organization) }
-    let(:organization_2) { create(:organization) }
+    let(:organization1) { create(:organization) }
+    let(:organization2) { create(:organization) }
 
     it 'allows two organizations to have the same GroupAssignment title and slug' do
-      group_assignment_1 = create(:assignment, organization: organization_1)
-      group_assignment_2 = create(:group_assignment,
-                                  organization: organization_2,
-                                  title: group_assignment_1.title,
-                                  slug: group_assignment_1.slug)
+      groupassignment1 = create(:assignment, organization: organization1)
+      groupassignment2 = create(:group_assignment,
+                                organization: organization2,
+                                title: groupassignment1.title,
+                                slug: groupassignment1.slug)
 
-      expect(group_assignment_2.title).to eql(group_assignment_1.title)
-      expect(group_assignment_2.slug).to eql(group_assignment_1.slug)
+      expect(groupassignment2.title).to eql(groupassignment1.title)
+      expect(groupassignment2.slug).to eql(groupassignment1.slug)
     end
   end
 

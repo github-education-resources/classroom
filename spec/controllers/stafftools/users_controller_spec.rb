@@ -12,14 +12,14 @@ RSpec.describe Stafftools::UsersController, type: :controller do
   describe 'GET #show', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { get :show, id: user.id }.to raise_error(ActionController::RoutingError)
+        expect { get :show, params: { id: user.id } }.to raise_error(ActionController::RoutingError)
       end
     end
 
     context 'as an authorized user' do
       before do
         user.update_attributes(site_admin: true)
-        get :show, id: user.id
+        get :show, params: { id: user.id }
       end
 
       it 'succeeds' do
@@ -35,7 +35,7 @@ RSpec.describe Stafftools::UsersController, type: :controller do
   describe 'POST #impersonate', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { post :impersonate, id: student.id }.to raise_error(ActionController::RoutingError)
+        expect { post :impersonate, params: { id: student.id } }.to raise_error(ActionController::RoutingError)
       end
     end
 
@@ -45,7 +45,7 @@ RSpec.describe Stafftools::UsersController, type: :controller do
       end
 
       before(:each) do
-        post :impersonate, id: student.id
+        post :impersonate, params: { id: student.id }
       end
 
       it 'sets the :impersonated_user_id on the session' do
@@ -61,7 +61,7 @@ RSpec.describe Stafftools::UsersController, type: :controller do
   describe 'DELETE #stop_impersonating', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { delete :stop_impersonating, id: student.id }.to raise_error(ActionController::RoutingError)
+        expect { delete :stop_impersonating, params: { id: student.id } }.to raise_error(ActionController::RoutingError)
       end
     end
 
@@ -71,8 +71,8 @@ RSpec.describe Stafftools::UsersController, type: :controller do
       end
 
       before(:each) do
-        post :impersonate, id: student.id
-        delete :stop_impersonating, id: student.id
+        post :impersonate,          params: { id: student.id }
+        delete :stop_impersonating, params: { id: student.id }
       end
 
       it 'removes the `:impersonated_user_id` from the session' do

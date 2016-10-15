@@ -21,7 +21,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
 
     describe 'GET #index', :vcr do
       it 'returns success status' do
-        get :index, organization_id: organization.slug
+        get :index, params: { organization_id: organization.slug }
 
         expect(response).to have_http_status(:success)
       end
@@ -29,7 +29,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
 
     describe 'GET #new', :vcr do
       it 'returns success status' do
-        get :new, organization_id: organization.slug
+        get :new, params: { organization_id: organization.slug }
 
         expect(response).to have_http_status(:success)
       end
@@ -42,7 +42,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
         end
 
         it 'sets the session correctly' do
-          get :new, organization_id: organization.slug
+          get :new, params: { organization_id: organization.slug }
           expect(session['return_to']).to equal(referer)
         end
       end
@@ -51,9 +51,10 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
     describe 'POST #create', :vcr do
       it 'creates a new StudentIdentifierType' do
         expect do
-          post :create,
-               organization_id: organization.slug,
-               student_identifier_type: { name: 'Test', description: 'Test', content_type: 'text' }
+          post :create, params: {
+            organization_id: organization.slug,
+            student_identifier_type: { name: 'Test', description: 'Test', content_type: 'text' }
+          }
         end.to change { StudentIdentifierType.count }
       end
     end
@@ -61,7 +62,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
     describe 'GET #edit', :vcr do
       it 'returns success status' do
         student_identifier_type
-        get :edit, organization_id: organization.slug, id: student_identifier_type.id
+        get :edit, params: { organization_id: organization.slug, id: student_identifier_type.id }
 
         expect(response).to have_http_status(:success)
       end
@@ -70,10 +71,11 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
     describe 'PATCH #update', :vcr do
       before(:each) do
         options = { name: 'Test2', description: 'Test2', content_type: 'email' }
-        patch :update,
-              organization_id: organization.slug,
-              id: student_identifier_type.id,
-              student_identifier_type: options
+        patch :update, params: {
+          organization_id: organization.slug,
+          id: student_identifier_type.id,
+          student_identifier_type: options
+        }
       end
 
       it 'correctly updates the student identifier type' do
@@ -89,13 +91,13 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
       it 'sets the `deleted_at` column' do
         student_identifier_type
         expect do
-          delete :destroy, id: student_identifier_type.id, organization_id: organization
+          delete :destroy, params: { id: student_identifier_type.id, organization_id: organization }
         end.to change { StudentIdentifierType.all.count }
         expect(StudentIdentifierType.unscoped.find(student_identifier_type.id).deleted_at).not_to be_nil
       end
 
       it 'calls the DestroyResource background job' do
-        delete :destroy, id: student_identifier_type.id, organization_id: organization
+        delete :destroy, params: { id: student_identifier_type.id, organization_id: organization }
 
         assert_enqueued_jobs 1 do
           DestroyResourceJob.perform_later(student_identifier_type)
@@ -103,7 +105,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
       end
 
       it 'redirects back to the student identifier type index' do
-        delete :destroy, id: student_identifier_type.id, organization_id: organization
+        delete :destroy, params: { id: student_identifier_type.id, organization_id: organization }
         expect(response).to redirect_to(organization_student_identifier_types_path(organization))
       end
     end
@@ -116,22 +118,27 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
   context 'flipper is not enabled for the user' do
     describe 'GET #index', :vcr do
       it 'returns a 404' do
-        expect { get :index, organization_id: organization.slug }.to raise_error(ActionController::RoutingError)
+        expect do
+          get :index, params: { organization_id: organization.slug }
+        end.to raise_error(ActionController::RoutingError)
       end
     end
 
     describe 'GET #new', :vcr do
       it 'returns a 404' do
-        expect { get :new, organization_id: organization.slug }.to raise_error(ActionController::RoutingError)
+        expect do
+          get :new, params: { organization_id: organization.slug }
+        end.to raise_error(ActionController::RoutingError)
       end
     end
 
     describe 'POST #create', :vcr do
       it 'returns a 404' do
         expect do
-          post :create,
-               organization_id: organization.slug,
-               student_identifier_type: { name: 'Test', description: 'Test', content_type: 'text' }
+          post :create, params: {
+            organization_id: organization.slug,
+            student_identifier_type: { name: 'Test', description: 'Test', content_type: 'text' }
+          }
         end.to raise_error(ActionController::RoutingError)
       end
     end
@@ -140,7 +147,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
       it 'returns a 404' do
         student_identifier_type
         expect do
-          get :edit, organization_id: organization.slug, id: student_identifier_type.id
+          get :edit, params: { organization_id: organization.slug, id: student_identifier_type.id }
         end.to raise_error(ActionController::RoutingError)
       end
     end
@@ -149,10 +156,11 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
       it 'returns a 404' do
         options = { name: 'Test2', description: 'Test2', content_type: 'email' }
         expect do
-          patch :update,
-                organization_id: organization.slug,
-                id: student_identifier_type.id,
-                student_identifier_type: options
+          patch :update, params: {
+            organization_id: organization.slug,
+            id: student_identifier_type.id,
+            student_identifier_type: options
+          }
         end.to raise_error(ActionController::RoutingError)
       end
     end
@@ -161,7 +169,9 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
       it 'returns a 404' do
         student_identifier_type
         expect do
-          delete :destroy, id: student_identifier_type.id, organization_id: organization
+          delete :destroy, params: {
+            id: student_identifier_type.id, organization_id: organization
+          }
         end.to raise_error(ActionController::RoutingError)
       end
     end

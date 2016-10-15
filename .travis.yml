@@ -22,4 +22,4 @@ notifications:
   email: false
 
 env:
-  - GITHUB_CLIENT_ID=client_id GITHUB_CLIENT_SECRET=client_secret
+  - GITHUB_CLIENT_ID=client_id GITHUB_CLIENT_SECRET=client_secret WEBHOOK_SECRET=abcdefg

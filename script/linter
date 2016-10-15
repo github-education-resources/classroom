@@ -11,6 +11,3 @@ bundle exec rubocop
 
 echo "==> Running scss-lint..."
 bundle exec scss-lint
-
-echo "==> Running coffeelint..."
-bundle exec coffeelint.rb -f config/coffeelint.json -r app/assets
