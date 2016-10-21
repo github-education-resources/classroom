@@ -1,0 +1,30 @@
+version: '2'
+services:
+  postgres:
+    image: postgres:9.3
+    environment:
+      - POSTGRES_USER=$USER
+    network_mode: host
+  
+  redis:
+    image: redis
+    network_mode: host
+  
+  memcached:
+    image: memcached
+    network_mode: host
+  
+  elasticsearch:
+    image: elasticsearch
+    network_mode: host
+
+  app:
+    build:
+      context: .
+      args:
+        - DEV_USER=$USER
+        - DEV_USER_ID=$UID
+    image: classroom:dev
+    network_mode: host
+    volumes:
+      - .:/usr/src/app

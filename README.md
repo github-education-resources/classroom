@@ -132,6 +132,26 @@ script/server
 
 And that's it! You should have a working instance of GitHub Classroom located [here](http://localhost:5000)
 
+
+### Docker Development Workflow
+
+Docker Development Workflow allows you not to worry about project dependecies. You don't need to have
+Ruby, Rails, Node, PostgreSQL, etc. to work on this project. All you need is Docker and Docker Compose.
+
+First, install Docker and Docker Compose on your macihine. Follow instructions [here](https://docs.docker.com/).
+
+Next, you need to build your development environment. You will do this only once. To do that
+run `./dev build`. This will build new image called `classroom:dev`.
+
+After that you are ready to open your **development shell**. Development shell is bash
+shell inside Docker container. In this shell you have Ruby installed and you can run all the commands
+specified in this guide. Every time you need new development shell you will run `./dev shell`.
+
+Now you can run `script/setup`, fill out `.env` file and run application with `script/server`.
+
+When you are done with working you can stop your containers with `./dev stop`. And when you want to set your
+development environment to initial first unused state, you run `./dev rm`.
+
 ## Deployment
 
 We strongly encourage you to use [https://classroom.github.com](https://classroom.github.com), but if you would like your own version GitHub Classroom can be easily deployed to Heroku.
