@@ -34,6 +34,8 @@
 //
 //= require js-cookie/src/js.cookie
 //
+//= require include-fragment-element/include-fragment-element
+//
 //= require_tree .
 
 Turbolinks.enableProgressBar();
