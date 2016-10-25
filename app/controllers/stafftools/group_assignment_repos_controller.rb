@@ -6,6 +6,10 @@ module Stafftools
     def show
     end
 
+    def list_item
+      respond_to { |format| format.html { render layout: false } }
+    end
+
     private
 
     def set_group_assignment_repo

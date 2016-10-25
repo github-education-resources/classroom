@@ -1,4 +1,3 @@
-<li class="clearfix">
-  <%= octicon 'repo' %>
-  <strong><%= link_to group_assignment_repo.github_repository.full_name, stafftools_group_assignment_repo_path(group_assignment_repo.id) %></strong>
-</li>
+<%= content_tag "include-fragment", src: list_item_stafftools_group_assignment_repo_path(group_assignment_repo), timeout: "100" do %>
+  <li class="clearfix"><strong>Loading repository...</strong></li>
+<% end %>

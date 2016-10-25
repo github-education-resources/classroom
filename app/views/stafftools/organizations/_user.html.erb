@@ -1,5 +1,3 @@
-<li class="clearfix">
-  <%= image_tag user.github_user.github_avatar_url(40), height: 20, width: 20, alt: "@#{user.github_user.login}" %>
-  <strong><%= link_to user.github_user.login, stafftools_user_path(user.id) %></strong>
-</li>
-
+<%= content_tag "include-fragment", src: list_item_stafftools_user_path(user), timeout: "100" do %>
+  <li class="clearfix"><strong>Loading organization owner...</strong></li>
+<% end %>

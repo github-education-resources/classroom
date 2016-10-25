@@ -28,6 +28,14 @@
           <td class="text-emphasized">Created by</td>
           <td><%= link_to @assignment.creator.github_user.login, stafftools_user_path(@assignment.creator) %></td>
         </tr>
+        <tr>
+          <td class="text-emphasized">Private</td>
+          <td><%= @assignment.private?.to_s %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Student admins enabled</td>
+          <td><%= @assignment.students_are_repo_admins?.to_s %></td>
+        </tr>
         <% if @assignment.starter_code? %>
         <tr>
           <td class="text-emphasized">Starter code</td>
