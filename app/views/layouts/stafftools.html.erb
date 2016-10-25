@@ -8,10 +8,7 @@
     <title>GitHub Classroom</title>
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
     <%= csrf_meta_tags %>
-
-    <%= render 'shared/open_graph' %>
   </head>
   <body class="site stafftools <%= controller_name %> <%= action_name %>">
     <div class="loading-indicator" style="display: none;"></div>
@@ -35,5 +32,8 @@
     </main>
 
     <%= render 'shared/footer' %>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/polymer/0.3.4/platform.js"></script>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   </body>
 </html>

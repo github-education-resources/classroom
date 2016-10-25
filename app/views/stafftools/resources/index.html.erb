@@ -5,7 +5,12 @@
 
   <div class="site-content-body">
     <%= form_tag stafftools_resource_search_path, id: 'js-search-form', method: :get, remote: true do %>
-      <%= text_field_tag :query, params[:query], class: 'input-block', placeholder: 'Search Classroom...', autofocus: true %>
+      <div class="input-group">
+        <%= text_field_tag :query, params[:query], class: 'input-block', placeholder: 'Search Classroom...', autofocus: true %>
+        <span class="input-group-button">
+          <%= button_tag 'Search', class: 'btn' %>
+        </span>
+      </div>
     <% end %>
 
     <div class="search-results" id="js-search-results">
