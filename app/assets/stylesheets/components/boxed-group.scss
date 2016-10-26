@@ -81,12 +81,22 @@
     border-top: 0;
   }
 
+  > include-fragment,
   > li {
     display: block;
     padding: 5px 10px;
     margin-right: -10px;
     margin-left: -10px;
     line-height: 23px;
+  }
+
+  > include-fragment {
+    &:not(:first-child) {
+      border-top: 1px solid #ddd;
+    }
+  }
+
+  > li {
     border-bottom: 1px solid #e5e5e5;
 
     &:first-child {
