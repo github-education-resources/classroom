@@ -11,6 +11,7 @@
     "js-cookie": "~2.0.4",
     "dragula": "3.7.1",
     "transliteration": "~1.1.7",
-    "include-fragment-element": "^2.0.1"
+    "include-fragment-element": "^2.0.1",
+    "webcomponentsjs": "^0.7.22"
   }
 }
