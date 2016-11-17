@@ -54,7 +54,7 @@ describe GitHubRepository do
     describe '::find_by_name_with_owner!', :vcr do
       it 'raises a GitHubError if it cannot find the repo' do
         expect do
-          GitHubRepository.find_by_name_with_owner!(@client, 'foobar/jim')
+          GitHubRepository.find_by_name_with_owner!(@client, 'foobar/jim') # rubocop:disable Rails/DynamicFindBy
         end.to raise_error(GitHub::Error)
       end
     end

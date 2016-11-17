@@ -21,7 +21,7 @@ RSpec.describe User, type: :model do
   describe '#find_by_auth_hash' do
     it 'finds the correct user' do
       User.create_from_auth_hash(github_omniauth_hash)
-      located_user = User.find_by_auth_hash(github_omniauth_hash)
+      located_user = User.find_by_auth_hash(github_omniauth_hash) # rubocop:disable Rails/DynamicFindBy
 
       expect(located_user).to eq(User.last)
     end
