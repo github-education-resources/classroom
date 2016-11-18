@@ -12,16 +12,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#become_active' do
-    it 'updates the last_active_at attribute' do
-      expect { user.become_active }.to change { user.last_active_at }
-    end
-
-    it 'does not change the updated_at column' do
-      expect { user.become_active }.to_not change { user.updated_at }
-    end
-  end
-
   describe '#create_from_auth_hash' do
     it 'creates a valid user' do
       expect { User.create_from_auth_hash(github_omniauth_hash) }.to change { User.count }

@@ -55,7 +55,7 @@ class ApplicationController < ActionController::Base
   end
 
   def become_active
-    current_user.become_active
+    LastActiveJob.perform_later(current_user, Time.current.to_i)
   end
 
   def current_user
