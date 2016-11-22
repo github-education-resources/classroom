@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class OrganizationsController < ApplicationController
+class ClassroomsController < ApplicationController
   include OrganizationAuthorization
 
   before_action :ensure_team_management_flipper_is_enabled, only: [:show_groupings]
@@ -12,18 +12,18 @@ class OrganizationsController < ApplicationController
   skip_before_action :set_organization, :authorize_organization_access, only: [:index, :new, :create]
 
   def index
-    @organizations = current_user.organizations.includes(:users).page(params[:page])
+    @classrooms = current_user.classrooms.includes(:users).page(params[:page])
   end
 
   def new
-    @organization = Organization.new
+    @classroom = Classroom.new
   end
 
   def create
-    @organization = Organization.new(new_organization_params)
+    @classroom = Classroom.new(new_classroom_params)
 
-    if @organization.save
-      redirect_to setup_organization_path(@organization)
+    if @classroom.save
+      redirect_to setup_classroom_path(@classroom)
     else
       render :new
     end
@@ -31,7 +31,7 @@ class OrganizationsController < ApplicationController
 
   def show
     @assignments = Kaminari
-                   .paginate_array(@organization.all_assignments(with_invitations: true)
+                   .paginate_array(@classroom.all_assignments(with_invitations: true)
                    .sort_by(&:updated_at))
                    .page(params[:page])
   end
@@ -43,24 +43,24 @@ class OrganizationsController < ApplicationController
   end
 
   def show_groupings
-    @groupings = @organization.groupings
+    @groupings = @classroom.groupings
   end
 
   def update
-    if @organization.update_attributes(update_organization_params)
-      flash[:success] = "Organization \"#{@organization.title}\" updated"
-      redirect_to @organization
+    if @classroom.update_attributes(update_classroom_params)
+      flash[:success] = "Classroom \"#{@classroom.title}\" updated"
+      redirect_to @classroom
     else
       render :edit
     end
   end
 
   def destroy
-    if @organization.update_attributes(deleted_at: Time.zone.now)
-      DestroyResourceJob.perform_later(@organization)
+    if @classroom.update_attributes(deleted_at: Time.zone.now)
+      DestroyResourceJob.perform_later(@classroom)
 
-      flash[:success] = "Your organization, @#{@organization.github_organization.login} is being reset"
-      redirect_to organizations_path
+      flash[:success] = "Your classroom, #{@classroom.title} is being reset"
+      redirect_to classrooms_path
     else
       render :edit
     end
@@ -75,9 +75,9 @@ class OrganizationsController < ApplicationController
   def setup
   end
 
-  def setup_organization
-    if @organization.update_attributes(update_organization_params)
-      redirect_to invite_organization_path(@organization)
+  def setup_classroom
+    if @classroom.update_attributes(update_classroom_params)
+      redirect_to invite_classroom_path(@classroom)
     else
       render :setup
     end
@@ -108,14 +108,14 @@ class OrganizationsController < ApplicationController
       .merge(title: title)
   end
 
-  def set_organization
-    @organization = Organization.find_by!(slug: params[:id])
+  def set_classroom
+    @classroom = Classroom.find_by!(slug: params[:id])
   end
 
   def set_users_github_organizations
     @users_github_organizations = current_user.github_user.organization_memberships.map do |membership|
       {
-        classroom: Organization.unscoped.includes(:users).find_by(github_id: membership.organization.id),
+        classroom: Classroom.unscoped.includes(:users).find_by(github_organization_id: membership.organization.id),
         github_id: membership.organization.id,
         login:     membership.organization.login,
         role:      membership.role
@@ -134,8 +134,8 @@ class OrganizationsController < ApplicationController
     end
   end
 
-  def create_user_organization_access(organization)
-    github_org = GitHubOrganization.new(current_user.github_client, organization.github_id)
+  def create_user_organization_access(classroom)
+    github_org = GitHubOrganization.new(current_user.github_client, classroom.github_organization_id)
     return unless github_org.admin?(current_user.github_user.login)
     organization.users << current_user
   end
@@ -144,9 +144,9 @@ class OrganizationsController < ApplicationController
     @users_github_organizations = Kaminari.paginate_array(@users_github_organizations).page(params[:page]).per(24)
   end
 
-  def update_organization_params
+  def update_classroom_params
     params
-      .require(:organization)
+      .require(:classroom)
       .permit(:title)
   end
 end

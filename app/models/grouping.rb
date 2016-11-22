@@ -7,12 +7,12 @@ class Grouping < ApplicationRecord
   has_many :groups, dependent: :destroy
   has_many :users, through: :groups, source: :repo_accesses
 
-  belongs_to :organization
+  belongs_to :classroom
 
-  validates :organization, presence: true
+  validates :classroom, presence: true
 
   validates :title, presence: true
-  validates :title, uniqueness: { scope: :organization }
+  validates :title, uniqueness: { scope: :classroom }
 
-  validates :slug, uniqueness: { scope: :organization }
+  validates :slug, uniqueness: { scope: :classroom }
 end

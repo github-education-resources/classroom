@@ -3,18 +3,18 @@ class StudentIdentifier < ApplicationRecord
   default_scope { where(deleted_at: nil) }
 
   belongs_to :user
-  belongs_to :organization, -> { unscope(where: :deleted_at) }
+  belongs_to :classroom, -> { unscope(where: :deleted_at) }
 
   belongs_to :student_identifier_type
 
-  validates :organization, presence: true
-  validates :organization, uniqueness: { scope: [:user, :student_identifier_type] }
+  validates :classroom, presence: true
+  validates :classroom, uniqueness: { scope: [:user, :student_identifier_type] }
 
   validates :user, presence: true
-  validates :user, uniqueness: { scope: [:organization, :student_identifier_type] }
+  validates :user, uniqueness: { scope: [:classroom, :student_identifier_type] }
 
   validates :student_identifier_type, presence: true
-  validates :student_identifier_type, uniqueness: { scope: [:user, :organization] }
+  validates :student_identifier_type, uniqueness: { scope: [:user, :classroom] }
 
   validates :value, presence: true
 end

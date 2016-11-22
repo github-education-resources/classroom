@@ -5,27 +5,27 @@ RSpec.describe Assignment, type: :model do
   it_behaves_like 'a default scope where deleted_at is not present'
 
   describe 'slug uniqueness' do
-    let(:organization) { create(:organization) }
+    let(:classroom) { create(:classroom) }
 
     it 'verifes that the slug is unique even if the titles are unique' do
-      create(:assignment, organization: organization, title: 'assignment-1', slug: 'assignment-1')
-      new_assignment = build(:assignment, organization: organization, title: 'assignment 1', slug: 'assignment-1')
+      create(:assignment, classroom: classroom, title: 'assignment-1', slug: 'assignment-1')
+      new_assignment = build(:assignment, classroom: classroom, title: 'assignment 1', slug: 'assignment-1')
 
       expect { new_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
   end
 
-  describe 'uniqueness of title across organization' do
-    let(:organization) { create(:organization)    }
-    let(:creator)      { organization.users.first }
+  describe 'uniqueness of title across classroom' do
+    let(:classroom) { create(:classroom)    }
+    let(:creator)   { classroom.users.first }
 
-    let(:grouping)     { Grouping.create(title: 'Grouping', organization: organization) }
+    let(:grouping) { Grouping.create(title: 'Grouping', classroom: classroom) }
 
     let(:group_assignment) do
       GroupAssignment.create(creator: creator,
                              title: 'Ruby Project',
                              slug: 'ruby-project',
-                             organization: organization,
+                             organization: classroom,
                              grouping: grouping)
     end
 
@@ -33,7 +33,7 @@ RSpec.describe Assignment, type: :model do
       Assignment.new(creator: creator,
                      title: group_assignment.title,
                      slug: group_assignment.slug,
-                     organization: organization)
+                     organization: classroom)
     end
 
     it 'validates that a GroupAssignment in the same organization does not have the same slug' do
@@ -43,13 +43,13 @@ RSpec.describe Assignment, type: :model do
   end
 
   describe 'uniqueness of title across application' do
-    let(:organization1) { create(:organization) }
-    let(:organization2) { create(:organization) }
+    let(:classroom1) { create(:classroom) }
+    let(:classroom2) { create(:classroom) }
 
-    it 'allows two organizations to have the same Assignment title and slug' do
-      assignment1 = create(:assignment, organization: organization1)
+    it 'allows two classrooms to have the same Assignment title and slug' do
+      assignment1 = create(:assignment, classroom: classroom1)
       assignment2 = create(:assignment,
-                           organization: organization2,
+                           classroom: classroom2,
                            title: assignment1.title,
                            slug: assignment1.slug)
 

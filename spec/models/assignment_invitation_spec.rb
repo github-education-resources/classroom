@@ -10,14 +10,14 @@ RSpec.describe AssignmentInvitation, type: :model do
   end
 
   describe '#redeem_for', :vcr do
-    let(:invitee)       { GitHubFactory.create_classroom_student }
-    let(:organization)  { GitHubFactory.create_owner_classroom_org }
+    let(:invitee)    { GitHubFactory.create_classroom_student }
+    let(:classroom)  { GitHubFactory.create_owner_classroom_org }
 
     let(:assignment) do
-      Assignment.create(creator: organization.users.first,
+      Assignment.create(creator: classroom.users.first,
                         title: 'Ruby',
+                        classroom: classroom,
                         slug: 'ruby',
-                        organization: organization,
                         public_repo: false)
     end
 

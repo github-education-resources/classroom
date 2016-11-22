@@ -6,7 +6,7 @@ module Nameable
     @suffix_number = 0
 
     loop do
-      break unless GitHubRepository.present?(organization.github_client, full_name)
+      break unless GitHubRepository.present?(classroom.github_client, full_name)
       @suffix_number += 1
     end
 
@@ -31,7 +31,7 @@ module Nameable
   end
 
   def organization_login
-    @organization_login ||= organization.github_organization.login(
+    @organization_login ||= classroom.github_organization.login(
       headers: GitHub::APIHeaders.no_cache_no_store
     )
   end

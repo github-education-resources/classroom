@@ -1,9 +1,9 @@
 # frozen_string_literal: true
-class Organization < ApplicationRecord
+class Classroom < ApplicationRecord
   include Flippable
   include Sluggable
 
-  update_index('stafftools#organization') { self }
+  update_index('stafftools#classroom') { self }
 
   default_scope { where(deleted_at: nil) }
 
@@ -15,7 +15,7 @@ class Organization < ApplicationRecord
 
   has_and_belongs_to_many :users
 
-  validates :github_id, presence: true, uniqueness: true
+  validates :github_organization_id, presence: true, uniqueness: true
 
   validates :title, presence: true
   validates :title, length: { maximum: 60 }
@@ -43,7 +43,7 @@ class Organization < ApplicationRecord
   end
 
   def slugify
-    self.slug = "#{github_id} #{title}".parameterize
+    self.slug = "#{github_organization_id} #{title}".parameterize
   end
 
   def create_organization_webhook(webhook_url)
