@@ -798,3 +798,17 @@ hr {
     vertical-align: top;
   }
 }
+
+.github-repo-latest-release {
+  padding-top: 4px;
+  color: $brand-gray;
+  cursor: default;
+
+  .github-link {
+    color: $brand-gray;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
