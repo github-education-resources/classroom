@@ -114,8 +114,12 @@ class GitHubOrganization < GitHubResource
 
   private
 
-  def attributes
-    %w(login avatar_url html_url name)
+  def github_attributes
+    %w(avatar_url html_url name) + github_no_cache_attributes
+  end
+
+  def github_no_cache_attributes
+    %w(login)
   end
 
   def github_repo_default_options
