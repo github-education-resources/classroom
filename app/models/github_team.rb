@@ -36,7 +36,7 @@ class GitHubTeam < GitHubResource
 
   private
 
-  def attributes
-    %w(name slug organization)
+  def github_attributes
+    %w(slug name organization)
   end
 end

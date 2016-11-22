@@ -114,7 +114,7 @@ class GitHubOrganization < GitHubResource
 
   private
 
-  def attributes
+  def github_attributes
     %w(login avatar_url html_url name)
   end
 

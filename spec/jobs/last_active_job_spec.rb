@@ -21,14 +21,12 @@ RSpec.describe LastActiveJob, type: :job do
 
   it 'updates the last_active_at attribute' do
     LastActiveJob.perform_now(user.id, @time)
-    user.reload
-    expect(user.last_active_at).to eql(Time.zone.at(@time))
+    expect(user.reload.last_active_at).to eql(Time.zone.at(@time))
   end
 
   it 'does not change the updated_at column' do
     LastActiveJob.perform_now(user.id, @time)
-    user.reload
-    expect(user.last_active_at).to_not eql(user.updated_at)
+    expect(user.reload.last_active_at).to_not eql(user.updated_at)
   end
 
   it 'does not raise an error if the user is not longer present' do

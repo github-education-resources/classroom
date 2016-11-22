@@ -9,6 +9,7 @@ class LastActiveJob < ApplicationJob
   #
   # returns nothing.
   def perform(user_id, time_last_active)
+    # Do another lookup to make sure the User is still around
     return true unless (user = User.find_by(id: user_id))
 
     time_last_active = Time.zone.at(time_last_active)
