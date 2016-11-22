@@ -29,7 +29,8 @@ class AssignmentsController < ApplicationController
 
   def update
     if @assignment.update_attributes(update_assignment_params)
-      flash[:success] = "Assignment \"#{@assignment.title}\" updated"
+      AssignmentVisibilityJob.perform_later(@assignment)
+      flash[:success] = "Assignment \"#{@assignment.title}\" is being updated"
       redirect_to organization_assignment_path(@organization, @assignment)
     else
       @assignment.reload unless @assignment.slug.present?

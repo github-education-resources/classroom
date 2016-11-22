@@ -31,7 +31,8 @@ class GroupAssignmentsController < ApplicationController
 
   def update
     if @group_assignment.update_attributes(update_group_assignment_params)
-      flash[:success] = "Assignment \"#{@group_assignment.title}\" updated"
+      AssignmentVisibilityJob.perform_later(@group_assignment)
+      flash[:success] = "Assignment \"#{@group_assignment.title}\" is being updated"
       redirect_to organization_group_assignment_path(@organization, @group_assignment)
     else
       @group_assignment.reload unless @group_assignment.slug.present?
