@@ -42,7 +42,6 @@ gem 'puma', '~> 3.0'
 gem 'rack-canonical-host'
 gem 'rack-timeout', require: false
 gem 'rails-i18n', '~> 5.0', '>= 5.0.1'
-gem 'rb-readline'
 gem 'redis-namespace'
 
 gem 'sprockets'
