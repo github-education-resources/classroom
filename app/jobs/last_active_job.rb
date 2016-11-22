@@ -4,11 +4,13 @@ class LastActiveJob < ApplicationJob
 
   # Public: Update the last time the User was active.
   #
-  # user             - The User that was active.
+  # user_id          - The Integer id of the User that was active.
   # time_last_active - The Integer representing the time the User was current.
   #
   # returns nothing.
-  def perform(user, time_last_active)
+  def perform(user_id, time_last_active)
+    return true unless user = User.find_by(id: user_id)
+
     time_last_active = Time.zone.at(time_last_active)
     user.update_columns(last_active_at: time_last_active)
     User.update_index('stafftools#user') { user }

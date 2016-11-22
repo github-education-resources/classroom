@@ -60,7 +60,7 @@ RSpec.describe User, type: :model do
   describe '#github_client_scopes', :vcr do
     it 'returns an Array of scopes' do
       user.assign_from_auth_hash(github_omniauth_hash)
-      expect(user.github_client_scopes).to eq(%w(admin:org delete_repo repo user:email))
+      expect(user.github_client_scopes).to eq(%w(admin:org admin:org_hook delete_repo repo user:email))
     end
   end
 

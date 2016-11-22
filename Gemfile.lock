@@ -393,6 +393,7 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (2.0.5)
+    timecop (0.8.1)
     turbolinks (2.5.3)
       coffee-rails
     tzinfo (1.2.2)
@@ -472,6 +473,7 @@ DEPENDENCIES
   spring
   sprockets
   terminal-notifier-guard
+  timecop
   turbolinks (~> 2.5.3)
   uglifier (>= 1.3.0)
   vcr

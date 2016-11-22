@@ -68,6 +68,7 @@ group :development, :test do
   gem 'rubocop',   require: false
   gem 'scss_lint', require: false
   gem 'spring'
+  gem 'timecop', require: false
   gem 'terminal-notifier-guard'
 end
 
