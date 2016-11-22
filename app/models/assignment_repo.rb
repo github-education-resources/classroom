@@ -75,6 +75,6 @@ class AssignmentRepo < ApplicationRecord
     return @name if defined?(@name)
 
     github_user = GitHubUser.new(user.github_client, user.uid)
-    @name = github_user.login(headers: GitHub::APIHeaders.no_cache_no_store)
+    @name = github_user.login_no_cache
   end
 end
