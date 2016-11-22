@@ -23,6 +23,13 @@ describe GitHubOrganization do
     expect(WebMock).to have_requested(:get, github_url("/organizations/#{organization.github_id}")).twice
   end
 
+  it 'responds to all *_no_cache methods', :vcr do
+    @github_organization.attributes.each do |attribute, _|
+      next if attribute == :id || attribute == :client || attribute == :access_token
+      expect(@github_organization).to respond_to("#{attribute}_no_cache")
+    end
+  end
+
   describe '#admin?', :vcr do
     it 'verifies if the user is an admin of the organization' do
       user         = organization.users.first

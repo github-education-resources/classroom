@@ -30,6 +30,13 @@ describe GitHubRepository do
     expect(WebMock).to have_requested(:get, github_url("/repositories/#{@github_repository.id}")).twice
   end
 
+  it 'responds to all *_no_cache methods', :vcr do
+    @github_repository.attributes.each do |attribute, _|
+      next if attribute == :id || attribute == :client || attribute == :access_token
+      expect(@github_repository).to respond_to("#{attribute}_no_cache")
+    end
+  end
+
   describe 'class methods' do
     describe '::present?', :vcr do
       context 'without options' do

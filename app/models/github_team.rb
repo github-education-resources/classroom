@@ -37,10 +37,6 @@ class GitHubTeam < GitHubResource
   private
 
   def github_attributes
-    %w(name organization) + github_no_cache_attributes
-  end
-
-  def github_no_cache_attributes
-    %w(slug)
+    %w(slug name organization)
   end
 end

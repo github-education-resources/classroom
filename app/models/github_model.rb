@@ -87,7 +87,7 @@ class GitHubModel
   #
   # Returns an Sawyer::Resource or a Null:GitHubObject
   def set_github_no_cache_methods(client, id)
-    github_no_cache_attributes.each do |gh_no_cache_attr|
+    github_attributes.each do |gh_no_cache_attr|
       define_singleton_method("#{gh_no_cache_attr}_no_cache") do
         response = github_client_request(client, id, headers: GitHub::APIHeaders.no_cache_no_store)
         response ||= github_classroom_request(id, headers: GitHub::APIHeaders.no_cache_no_store)

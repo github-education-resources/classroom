@@ -23,6 +23,13 @@ describe GitHubUser do
     expect(WebMock).to have_requested(:get, github_url("/user/#{gh_user.id}")).twice
   end
 
+  it 'responds to all *_no_cache methods', :vcr do
+    github_user.attributes.each do |attribute, _|
+      next if attribute == :id || attribute == :client || attribute == :access_token
+      expect(github_user).to respond_to("#{attribute}_no_cache")
+    end
+  end
+
   describe '#github_avatar_url', :vcr do
     it 'returns the correct url with a default size of 40' do
       expected_url = "https://avatars.githubusercontent.com/u/#{github_user.id}?v=3&size=40"

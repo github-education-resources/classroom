@@ -31,6 +31,13 @@ describe GitHubTeam do
     expect(WebMock).to have_requested(:get, github_url("/teams/#{@github_team.id}")).times(3)
   end
 
+  it 'responds to all *_no_cache methods', :vcr do
+    @github_team.attributes.each do |attribute, _|
+      next if attribute == :id || attribute == :client || attribute == :access_token || attribute == :organization
+      expect(@github_team).to respond_to("#{attribute}_no_cache")
+    end
+  end
+
   describe '#add_team_membership', :vcr do
     it 'adds a user to the given GitHubTeam' do
       login = @client.user.login
