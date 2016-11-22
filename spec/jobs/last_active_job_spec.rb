@@ -28,4 +28,11 @@ RSpec.describe LastActiveJob, type: :job do
     LastActiveJob.perform_now(user.id, @time)
     expect(user.reload.last_active_at).to_not eql(user.updated_at)
   end
+
+  it 'does not raise an error if the user is not longer present' do
+    user_id = user.id
+    user.destroy
+
+    LastActiveJob.perform_now(user_id, @time)
+  end
 end
