@@ -2,9 +2,9 @@
 require 'rails_helper'
 
 RSpec.describe DestroyResourceJob, type: :job do
-  let(:organization) { create(:organization) }
+  let(:organization) { GitHubFactory.create_owner_classroom_org }
 
-  it 'destroys the resource' do
+  it 'destroys the resource', :vcr do
     assert_performed_with(job: DestroyResourceJob, args: [organization], queue: 'trash_can') do
       DestroyResourceJob.perform_later(organization)
     end

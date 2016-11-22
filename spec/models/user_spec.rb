@@ -39,7 +39,9 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#github_user' do
+  describe '#github_user', :vcr do
+    let(:user) { GitHubFactory.create_classroom_student }
+
     it 'sets or creates a new GitHubUser with the users uid' do
       expect(user.github_user.class).to eql(GitHubUser)
       expect(user.github_user.id).to eql(user.uid)
@@ -60,7 +62,11 @@ RSpec.describe User, type: :model do
   describe '#github_client_scopes', :vcr do
     it 'returns an Array of scopes' do
       user.assign_from_auth_hash(github_omniauth_hash)
-      expect(user.github_client_scopes).to eq(%w(admin:org delete_repo repo user:email))
+      scopes = user.github_client_scopes
+
+      %w(admin:org delete_repo repo user:email).each do |scopet|
+        expect(scopes).to include(scopet)
+      end
     end
   end
 

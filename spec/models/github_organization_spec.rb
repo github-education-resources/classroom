@@ -11,6 +11,18 @@ describe GitHubOrganization do
     @github_organization = GitHubOrganization.new(@client, organization.github_id)
   end
 
+  it 'responds to all (GitHub) attributes', :vcr do
+    gh_organization = @client.organization(organization.github_id)
+
+    @github_organization.attributes.each do |attribute, value|
+      next if attribute == :client || attribute == :access_token
+      expect(@github_organization).to respond_to(attribute)
+      expect(value).to eql(gh_organization.send(attribute))
+    end
+
+    expect(WebMock).to have_requested(:get, github_url("/organizations/#{organization.github_id}")).twice
+  end
+
   describe '#admin?', :vcr do
     it 'verifies if the user is an admin of the organization' do
       user         = organization.users.first
@@ -86,17 +98,6 @@ describe GitHubOrganization do
     it 'points to the people url' do
       url = "https://github.com/orgs/#{@github_organization.login}/people"
       expect(@github_organization.team_invitations_url).to eql(url)
-    end
-  end
-
-  GitHubOrganization.new(@client, 123).send(:attributes).each do |attribute|
-    describe "##{attribute}", :vcr do
-      it "gets the #{attribute} of the organization" do
-        gh_organization = @client.organization(organization.github_id)
-
-        expect(@github_organization.send(attribute)).to eql(gh_organization.send(attribute))
-        expect(WebMock).to have_requested(:get, github_url("/organizations/#{organization.github_id}")).twice
-      end
     end
   end
 end
