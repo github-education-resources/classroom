@@ -36,7 +36,7 @@ class Assignment < ApplicationRecord
   after_update { AssignmentVisibilityJob.perform_later(self) }
 
   alias_attribute :invitation, :assignment_invitation
-  alias_attribute :repos, :group_assignment_repos
+  alias_attribute :repos, :assignment_repos
 
   def private?
     !public_repo
