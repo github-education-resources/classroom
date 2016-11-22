@@ -105,6 +105,19 @@ RSpec.describe GroupAssignmentsController, type: :controller do
       )
     end
 
+    it 'calls the AssignmentVisibility background job' do
+      options = { title: 'JavaScript Calculator' }
+      patch :update, params: {
+        id:               group_assignment.slug,
+        organization_id:  organization.slug,
+        group_assignment: options
+      }
+
+      assert_enqueued_jobs 1 do
+        AssignmentVisibilityJob.perform_later(group_assignment)
+      end
+    end
+
     context 'slug is empty' do
       it 'correctly reloads the assignment' do
         patch :update, params: {

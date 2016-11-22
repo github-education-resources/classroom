@@ -159,6 +159,15 @@ RSpec.describe AssignmentsController, type: :controller do
       expect(response).to redirect_to(organization_assignment_path(organization, Assignment.find(assignment.id)))
     end
 
+    it 'calls the AssignmentVisibility background job' do
+      options = { title: 'Ruby on Rails' }
+      patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
+
+      assert_enqueued_jobs 1 do
+        AssignmentVisibilityJob.perform_later(assignment)
+      end
+    end
+
     context 'slug is empty' do
       it 'correctly reloads the assignment' do
         options = { slug: '' }
