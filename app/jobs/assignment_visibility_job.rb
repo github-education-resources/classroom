@@ -4,7 +4,7 @@ class AssignmentVisibilityJob < ApplicationJob
 
   def perform(assignment)
     assignment.repos.each do |repo|
-      repo.github_repository.private = assignment.private?
+      repo.github_repository.update_visibility(is_private: assignment.private?)
     end
   end
 end
