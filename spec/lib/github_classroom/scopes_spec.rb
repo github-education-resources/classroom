@@ -5,7 +5,7 @@ describe GitHubClassroom::Scopes do
   subject { described_class }
 
   it 'has the correct scopes for a teacher' do
-    expect(subject::TEACHER).to eql(%w(user:email repo delete_repo admin:org))
+    expect(subject::TEACHER).to eql(%w(user:email repo delete_repo admin:org admin:org_hook))
   end
 
   it 'has the correct scopes for a student accepting a group assignment' do
