@@ -36,6 +36,12 @@ class GitHubRepository < GitHubResource
     self.class.present?(@client, @id, options)
   end
 
+  def private=(is_private)
+    GitHub::Errors.with_error_handling do
+      @client.update(full_name, private: is_private)
+    end
+  end
+
   def self.present?(client, full_name, **options)
     GitHub::Errors.with_error_handling do
       client.repository?(full_name, options)
