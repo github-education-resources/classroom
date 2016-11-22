@@ -70,6 +70,7 @@ group :development, :test do
   gem 'scss_lint', require: false
   gem 'spring'
   gem 'terminal-notifier-guard'
+  gem 'timecop'
 end
 
 group :production do

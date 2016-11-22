@@ -9,6 +9,9 @@ class LastActiveJob < ApplicationJob
   #
   # returns nothing.
   def perform(user, time_last_active)
+    # Do another lookup to make sure the User is still around
+    return true unless (user = User.find_by(id: user.id))
+
     time_last_active = Time.zone.at(time_last_active)
     user.update_columns(last_active_at: time_last_active)
     User.update_index('stafftools#user') { user }
