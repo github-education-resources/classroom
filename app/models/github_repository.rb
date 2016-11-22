@@ -35,7 +35,7 @@ class GitHubRepository < GitHubResource
 
   private
 
-  def attributes
+  def github_attributes
     %w(name full_name html_url)
   end
 end

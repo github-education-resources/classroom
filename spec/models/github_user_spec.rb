@@ -11,6 +11,25 @@ describe GitHubUser do
   let(:other_user)        { GitHubFactory.create_classroom_student   }
   let(:other_github_user) { GitHubUser.new(@client, other_user.uid)  }
 
+  it 'responds to all (GitHub) attributes', :vcr do
+    gh_user = github_user.client.user(github_user.id)
+
+    github_user.attributes.each do |attribute, value|
+      next if attribute == :client || attribute == :access_token
+      expect(gh_user).to respond_to(attribute)
+      expect(value).to eql(gh_user.send(attribute))
+    end
+
+    expect(WebMock).to have_requested(:get, github_url("/user/#{gh_user.id}")).twice
+  end
+
+  it 'responds to all *_no_cache methods', :vcr do
+    github_user.attributes.each do |attribute, _|
+      next if attribute == :id || attribute == :client || attribute == :access_token
+      expect(github_user).to respond_to("#{attribute}_no_cache")
+    end
+  end
+
   describe '#github_avatar_url', :vcr do
     it 'returns the correct url with a default size of 40' do
       expected_url = "https://avatars.githubusercontent.com/u/#{github_user.id}?v=3&size=40"
@@ -22,17 +41,6 @@ describe GitHubUser do
       expected_url = "https://avatars.githubusercontent.com/u/#{github_user.id}?v=3&size=#{size}"
 
       expect(github_user.github_avatar_url(size)).to eql(expected_url)
-    end
-  end
-
-  GitHubUser.new(@client, 123).send(:attributes).each do |attribute|
-    describe "##{attribute}", :vcr do
-      it "gets the #{attribute} of the user" do
-        user = @client.user
-
-        expect(github_user.send(attribute)).to eql(user.send(attribute))
-        expect(WebMock).to have_requested(:get, github_url("/user/#{user.id}"))
-      end
     end
   end
 
