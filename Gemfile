@@ -70,7 +70,6 @@ group :development, :test do
   gem 'spring'
   gem 'timecop', require: false
   gem 'terminal-notifier-guard'
-  gem 'timecop'
 end
 
 group :production do
