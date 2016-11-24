@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'sidekiq/web'
 require 'staff_constraint'
 
@@ -59,8 +60,15 @@ Rails.application.routes.draw do
           end
         end
       end
-      resources :assignments
-      resources :group_assignments, path: 'group-assignments'
+
+      resources :assignments do
+        resources :assignment_repos, only: [:show]
+      end
+
+      resources :group_assignments, path: 'group-assignments' do
+        resources :group_assignment_repos, only: [:show]
+      end
+
       resources :student_identifier_types, path: 'identifiers', except: [:show]
     end
   end
