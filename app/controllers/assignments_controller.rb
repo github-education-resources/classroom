@@ -22,9 +22,7 @@ class AssignmentsController < ApplicationController
   end
 
   def show
-    @assignment_repos = AssignmentRepo.includes(:organization, :user)
-                                      .where(assignment: @assignment)
-                                      .page(params[:page])
+    @assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
   end
 
   def edit

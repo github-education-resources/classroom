@@ -24,10 +24,7 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def show
-    @group_assignment_repos = GroupAssignmentRepo.includes(:organization,
-                                                           group: [:organization, repo_accesses: [:user]])
-                                                 .where(group_assignment: @group_assignment)
-                                                 .page(params[:page])
+    @group_assignment_repos = GroupAssignmentRepo.where(group_assignment: @group_assignment).page(params[:page])
   end
 
   def edit
