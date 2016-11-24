@@ -1,0 +1,32 @@
+{
+  "name": "include-fragment-element",
+  "main": "include-fragment-element.js",
+  "devDependencies": {
+    "classlist": "2014.7.23",
+    "CustomElements": "0.2.4",
+    "es5-basic-shim": "1.0.6",
+    "es6-promise": "1.0.0",
+    "MutationObserver": "0.2.0",
+    "qunit": "1.14.0",
+    "WeakMap": "0.2.1"
+  },
+  "ignore": [
+    ".*",
+    "*.md",
+    "examples/",
+    "Makefile",
+    "package.json",
+    "test/"
+  ],
+  "homepage": "https://github.com/github/include-fragment-element",
+  "version": "3.0.0",
+  "_release": "3.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v3.0.0",
+    "commit": "ba7970a0ef1dd088eac1903a2a07658c906c64a5"
+  },
+  "_source": "https://github.com/github/include-fragment-element.git",
+  "_target": "~3.0.0",
+  "_originalSource": "include-fragment-element"
+}
