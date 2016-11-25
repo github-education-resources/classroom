@@ -16,6 +16,9 @@
 //
 //= require turbolinks
 //
+//= require webcomponentsjs/CustomElements
+//= require include-fragment-element/include-fragment-element
+//
 //= require local_time
 //
 //= require jquery-readyselector/jquery.readyselector
