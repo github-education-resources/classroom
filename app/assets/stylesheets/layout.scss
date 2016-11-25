@@ -322,6 +322,10 @@ hr {
 .assignment-repo-list-item {
   font-size: 14px;
 
+  .octicon-alert {
+    display: none;
+  }
+
   &.disabled {
     a {
       color: $brand-gray;
@@ -329,6 +333,23 @@ hr {
 
     .avatar {
       filter: grayscale(1);
+    }
+  }
+
+  &.is-error {
+    height: 48px;
+    background-color: rgba($brand-red, 0.9);
+    border-radius: 3px;
+
+    &.assignment-repo-list-item {
+      .octicon-alert {
+        display: unset;
+        fill: #fff;
+      }
+
+      .spinner {
+        display: none;
+      }
     }
   }
 
@@ -366,6 +387,10 @@ hr {
 .group-assignment-repo-list-item {
   font-size: 14px;
 
+  .octicon-alert {
+    display: none;
+  }
+
   &.disabled {
     a {
       color: $brand-gray;
@@ -373,6 +398,23 @@ hr {
 
     .avatar {
       filter: grayscale(1);
+    }
+  }
+
+  &.is-error {
+    height: 48px;
+    background-color: rgba($brand-red, 0.9);
+    border-radius: 3px;
+
+    &.assignment-repo-list-item {
+      .octicon-alert {
+        display: unset;
+        fill: #fff;
+      }
+
+      .spinner {
+        display: none;
+      }
     }
   }
 
