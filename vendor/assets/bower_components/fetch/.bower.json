@@ -1,0 +1,25 @@
+{
+  "name": "fetch",
+  "main": "fetch.js",
+  "ignore": [
+    ".*",
+    "*.md",
+    "examples/",
+    "Makefile",
+    "package.json",
+    "script/",
+    "test/"
+  ],
+  "homepage": "https://github.com/github/fetch",
+  "version": "2.0.1",
+  "_release": "2.0.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v2.0.1",
+    "commit": "b54dbacecabeaf0eb4ee6a7cd6fb5daf54e00d8c"
+  },
+  "_source": "https://github.com/github/fetch.git",
+  "_target": "^2.0.1",
+  "_originalSource": "fetch",
+  "_direct": true
+}
