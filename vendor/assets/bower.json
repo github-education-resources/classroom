@@ -12,6 +12,7 @@
     "dragula": "3.7.1",
     "transliteration": "~1.1.7",
     "include-fragment-element": "~3.0.0",
-    "webcomponentsjs": "^0.7.22"
+    "webcomponentsjs": "^0.7.22",
+    "fetch": "^2.0.1"
   }
 }
