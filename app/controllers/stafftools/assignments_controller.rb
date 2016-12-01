@@ -3,8 +3,7 @@ module Stafftools
   class AssignmentsController < StafftoolsController
     before_action :set_assignment
 
-    def show
-    end
+    def show; end
 
     private
 

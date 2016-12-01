@@ -3,8 +3,7 @@ module Stafftools
   class GroupAssignmentsController < StafftoolsController
     before_action :set_group_assignment
 
-    def show
-    end
+    def show; end
 
     private
 

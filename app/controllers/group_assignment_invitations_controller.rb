@@ -29,8 +29,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     end
   end
 
-  def accept
-  end
+  def accept; end
 
   def accept_assignment
     create_group_assignment_repo { redirect_to successful_invitation_group_assignment_invitation_path }
@@ -46,8 +45,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     end
   end
 
-  def successful_invitation
-  end
+  def successful_invitation; end
 
   private
 

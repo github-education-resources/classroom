@@ -3,8 +3,7 @@ module Stafftools
   class ResourcesController < StafftoolsController
     before_action :set_resources
 
-    def index
-    end
+    def index; end
 
     def search
       respond_to do |format|

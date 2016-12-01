@@ -27,8 +27,7 @@ class GroupAssignmentsController < ApplicationController
     @group_assignment_repos = GroupAssignmentRepo.where(group_assignment: @group_assignment).page(params[:page])
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @group_assignment.update_attributes(update_group_assignment_params)

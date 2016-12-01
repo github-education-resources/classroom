@@ -3,8 +3,7 @@ module Stafftools
   class AssignmentReposController < StafftoolsController
     before_action :set_assignment_repo
 
-    def show
-    end
+    def show; end
 
     private
 

@@ -10,8 +10,7 @@ class AssignmentInvitationsController < ApplicationController
     create_assignment_repo { redirect_to successful_invitation_assignment_invitation_path }
   end
 
-  def show
-  end
+  def show; end
 
   def identifier
     not_found if student_identifier || assignment.student_identifier_type.nil?
@@ -27,8 +26,7 @@ class AssignmentInvitationsController < ApplicationController
     end
   end
 
-  def successful_invitation
-  end
+  def successful_invitation; end
 
   private
 
