@@ -100,9 +100,15 @@ class GitHubOrganization < GitHubResource
 
   def create_organization_webhook(config: {}, options: {})
     GitHub::Errors.with_error_handling do
-      hook_config = github_org_hook_default_config.merge(config)
-                                                  .tap { |hash| hash[:secret] = webhook_secret }
-      hook_options = github_org_hook_default_options.merge(options)
+      hook_config = { content_type: 'json', secret: webhook_secret }.merge(config)
+
+      hook_options = {
+        # Send the [wildcard](https://developer.github.com/webhooks/#wildcard-event)
+        # so that we don't have to upgrade the webhooks everytime we need something new.
+        events: ['*'],
+        active: true
+      }.merge(options)
+
       @client.create_org_hook(@id, hook_config, hook_options)
     end
   end
@@ -124,17 +130,6 @@ class GitHubOrganization < GitHubResource
       has_wiki:      true,
       has_downloads: true,
       organization:  @id
-    }
-  end
-
-  def github_org_hook_default_config
-    { content_type: 'json' }
-  end
-
-  def github_org_hook_default_options
-    {
-      events: %w(push release),
-      active: true
     }
   end
 
