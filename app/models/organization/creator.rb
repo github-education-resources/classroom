@@ -55,6 +55,7 @@ class Organization
     # Internal: Create create a Classroom from an Organization.
     #
     # rubocop:disable MethodLength
+    # rubocop:disable AbcSize
     def perform
       organization = Organization.new
 
@@ -71,7 +72,7 @@ class Organization
         raise Result::Error, err.message
       end
 
-      set_default_repository_permission_to_none!(organization)
+      update_default_repository_permission_to_none!(organization)
 
       Result.success(organization)
     rescue Result::Error => err
@@ -80,6 +81,7 @@ class Organization
 
       Result.failed(err.message)
     end
+    # rubocop:enable AbcSize
     # rubocop:enable MethodLength
 
     private
@@ -118,8 +120,8 @@ class Organization
     # don't accidently see other repos.
     #
     # Returns nil or raises a Result::Error
-    def set_default_repository_permission_to_none!(organization)
-      organization.github_organization.set_default_repository_permission_to!('none')
+    def update_default_repository_permission_to_none!(organization)
+      organization.github_organization.update_default_repository_permission!('none')
     rescue GitHub::Error => err
       raise Result::Error, err.message
     end
