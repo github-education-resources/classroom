@@ -14,8 +14,7 @@ class StudentIdentifierTypesController < ApplicationController
     @student_identifier_type = StudentIdentifierType.new
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @student_identifier_type = StudentIdentifierType.new(student_identifier_type_params)

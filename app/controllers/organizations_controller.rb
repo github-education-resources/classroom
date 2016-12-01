@@ -36,11 +36,9 @@ class OrganizationsController < ApplicationController
                    .page(params[:page])
   end
 
-  def edit
-  end
+  def edit; end
 
-  def invitation
-  end
+  def invitation; end
 
   def show_groupings
     @groupings = @organization.groupings
@@ -66,14 +64,11 @@ class OrganizationsController < ApplicationController
     end
   end
 
-  def new_assignment
-  end
+  def new_assignment; end
 
-  def invite
-  end
+  def invite; end
 
-  def setup
-  end
+  def setup; end
 
   def setup_organization
     if @organization.update_attributes(update_organization_params)

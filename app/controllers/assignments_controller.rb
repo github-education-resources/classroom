@@ -25,8 +25,7 @@ class AssignmentsController < ApplicationController
     @assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @assignment.update_attributes(update_assignment_params)

@@ -3,8 +3,7 @@ module Stafftools
   class RepoAccessesController < StafftoolsController
     before_action :set_repo_access
 
-    def show
-    end
+    def show; end
 
     private
 
