@@ -19,15 +19,22 @@ class OrganizationsController < ApplicationController
     @organization = Organization.new
   end
 
+  # rubocop:disable MethodLength
   def create
-    @organization = Organization.new(new_organization_params)
+    result = Organization::Creator.perform(
+      github_id: new_organization_params[:github_id],
+      users: new_organization_params[:users]
+    )
 
-    if @organization.save
+    if result.success?
+      @organization = result.organization
       redirect_to setup_organization_path(@organization)
     else
-      render :new
+      flash[:error] = result.error
+      redirect_to :new
     end
   end
+  # rubocop:enable MethodLength
 
   def show
     @assignments = Kaminari
@@ -93,14 +100,7 @@ class OrganizationsController < ApplicationController
   end
 
   def new_organization_params
-    github_org = github_organization_from_params
-    title      = github_org.name.present? ? github_org.name : github_org.login
-
-    params
-      .require(:organization)
-      .permit(:github_id)
-      .merge(users: [current_user])
-      .merge(title: title)
+    params.require(:organization).permit(:github_id).merge(users: [current_user])
   end
 
   def set_organization
