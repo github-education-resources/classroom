@@ -118,6 +118,16 @@ class GitHubOrganization < GitHubResource
     @client.remove_org_hook(@id, webhook_id)
   end
 
+  def set_default_repository_permission_to!(default_repository_permission)
+    GitHub::Errors.with_error_handling do
+      @client.update_organization(
+        @id,
+        { default_repository_permission: default_repository_permission },
+        accept: 'application/vnd.github.korra-preview+json'
+      )
+    end
+  end
+
   private
 
   def github_attributes

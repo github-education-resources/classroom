@@ -71,9 +71,13 @@ class Organization
         raise Result::Error, err.message
       end
 
+      set_default_repository_permission_to_none!(organization)
+
       Result.success(organization)
     rescue Result::Error => err
       silently_destroy_organization_webhook(organization)
+      destroy_organziation(organization)
+
       Result.failed(err.message)
     end
     # rubocop:enable MethodLength
@@ -108,6 +112,25 @@ class Organization
         next if GitHubOrganization.new(user.github_client, github_id).admin?(login)
         raise Result::Error, "@#{login} is not a GitHub admin for this Organization."
       end
+    end
+
+    # Internal: Set the default repository permission so that students
+    # don't accidently see other repos.
+    #
+    # Returns nil or raises a Result::Error
+    def set_default_repository_permission_to_none!(organization)
+      organization.github_organization.set_default_repository_permission_to!('none')
+    rescue GitHub::Error => err
+      raise Result::Error, err.message
+    end
+
+    # Internal: Remove the Organization from the database.
+    #
+    # Returns true.
+    def destroy_organziation(organization)
+      organization.destroy!
+    rescue ActiveRecord::RecordNotDestroyed => err
+      raise Result::Error, err.message
     end
 
     # Internal: Remove the Organization WebHook is possible.
