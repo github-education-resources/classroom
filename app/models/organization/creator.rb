@@ -138,7 +138,7 @@ class Organization
     # Internal: Remove the Organization WebHook is possible.
     #
     # Returns true.
-    def silently_remove_organization_webhook(organization)
+    def silently_destroy_organization_webhook(organization)
       return true if organization.webhook_id.nil?
       return true unless (user = user_with_admin_org_hook_scope)
 

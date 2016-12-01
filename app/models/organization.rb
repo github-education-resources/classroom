@@ -47,7 +47,12 @@ class Organization < ApplicationRecord
   end
 
   def silently_remove_organization_webhook
-    github_organization.remove_organization_webhook(webhook_id)
+    begin
+      github_organization.remove_organization_webhook(webhook_id)
+    rescue GitHub::Error => err
+      logger.info err.message
+    end
+
     true
   end
 end

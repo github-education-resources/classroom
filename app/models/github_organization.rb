@@ -115,7 +115,9 @@ class GitHubOrganization < GitHubResource
 
   def remove_organization_webhook(webhook_id)
     return unless webhook_id.present?
-    @client.remove_org_hook(@id, webhook_id)
+    GitHub::Errors.with_error_handling do
+      @client.remove_org_hook(@id, webhook_id)
+    end
   end
 
   def update_default_repository_permission!(default_repository_permission)

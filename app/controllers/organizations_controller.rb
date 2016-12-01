@@ -31,7 +31,7 @@ class OrganizationsController < ApplicationController
       redirect_to setup_organization_path(@organization)
     else
       flash[:error] = result.error
-      redirect_to :new
+      redirect_to new_organization_path
     end
   end
   # rubocop:enable MethodLength
