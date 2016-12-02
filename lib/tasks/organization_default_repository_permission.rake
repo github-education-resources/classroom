@@ -13,7 +13,7 @@ namespace :organization_default_repository_permission do
       output: Rails.env.test? ? StringIO.new : STDERR
     )
 
-    Organization.includes(:users).find_in_batches(batch_size: 100) do |orgs|
+    Organization.includes(:users).find_in_batches(batch_size: 500) do |orgs|
       orgs.each do |org|
         result = OrganizationDefaultRepositoryPermissionMigrator.perform(organization: org)
         puts result.error if result.failed?
