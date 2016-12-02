@@ -21,6 +21,8 @@ class GitHubOrganization < GitHubResource
       membership = @client.organization_membership(login, user: user_github_login)
       membership.role == 'admin' && membership.state == 'active'
     end
+  rescue GitHub::Error
+    false
   end
 
   def create_repository(repo_name, users_repo_options = {})
@@ -83,11 +85,7 @@ class GitHubOrganization < GitHubResource
   def remove_organization_member(github_user_id)
     github_user_login = GitHubUser.new(@client, github_user_id).login
 
-    begin
-      return if admin?(github_user_login)
-    rescue GitHub::NotFound
-      return
-    end
+    return if admin?(github_user_login)
 
     GitHub::Errors.with_error_handling do
       @client.remove_organization_member(@id, github_user_login)
@@ -100,16 +98,34 @@ class GitHubOrganization < GitHubResource
 
   def create_organization_webhook(config: {}, options: {})
     GitHub::Errors.with_error_handling do
-      hook_config = github_org_hook_default_config.merge(config)
-                                                  .tap { |hash| hash[:secret] = webhook_secret }
-      hook_options = github_org_hook_default_options.merge(options)
+      hook_config = { content_type: 'json', secret: webhook_secret }.merge(config)
+
+      hook_options = {
+        # Send the [wildcard](https://developer.github.com/webhooks/#wildcard-event)
+        # so that we don't have to upgrade the webhooks everytime we need something new.
+        events: ['*'],
+        active: true
+      }.merge(options)
+
       @client.create_org_hook(@id, hook_config, hook_options)
     end
   end
 
   def remove_organization_webhook(webhook_id)
     return unless webhook_id.present?
-    @client.remove_org_hook(@id, webhook_id)
+    GitHub::Errors.with_error_handling do
+      @client.remove_org_hook(@id, webhook_id)
+    end
+  end
+
+  def update_default_repository_permission!(default_repository_permission)
+    GitHub::Errors.with_error_handling do
+      @client.update_organization(
+        @id,
+        { default_repository_permission: default_repository_permission },
+        accept: 'application/vnd.github.korra-preview+json'
+      )
+    end
   end
 
   private
@@ -124,17 +140,6 @@ class GitHubOrganization < GitHubResource
       has_wiki:      true,
       has_downloads: true,
       organization:  @id
-    }
-  end
-
-  def github_org_hook_default_config
-    { content_type: 'json' }
-  end
-
-  def github_org_hook_default_options
-    {
-      events: %w(push release),
-      active: true
     }
   end
 

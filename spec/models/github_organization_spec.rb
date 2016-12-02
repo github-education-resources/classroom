@@ -36,6 +36,12 @@ describe GitHubOrganization do
       github_admin = GitHubUser.new(user.github_client, user.uid)
       expect(@github_organization.admin?(github_admin.login)).to eql(true)
     end
+
+    it 'returns false otherwise' do
+      user = create(:user, uid: 67)
+      github_admin = GitHubUser.new(user.github_client, user.uid)
+      expect(@github_organization.admin?(github_admin.login)).to be_falsey
+    end
   end
 
   describe '#create_repository', :vcr do

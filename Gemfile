@@ -23,7 +23,7 @@ gem 'kaminari'
 gem 'local_time'
 
 gem 'octicons_helper', '~> 2.1'
-gem 'octokit'
+gem 'octokit', git: 'https://github.com/octokit/octokit.rb.git', ref: '7c2d36f52ffea5b4f52e25bfa27d7b6c8e514975'
 gem 'omniauth'
 gem 'omniauth-github'
 
