@@ -40,10 +40,20 @@ class OrganizationDefaultRepositoryPermissionMigrator
   # Examples
   #
   #   org = Organization.first
-  #   OrganizationDefaultRepositoryPermissionMigrator.perform(organization: org)
-  #   # => true
   #
-  # Returns true if successful, otherwise nil.
+  #   # Succeeded
+  #   OrganizationDefaultRepositoryPermissionMigrator.perform(organization: org)
+  #   # => #<OrganizationDefaultRepositoryPermissionMigrator::Result:0x007f8a2b769a28
+  #      @error=nil,
+  #      @status=:success>
+  #
+  #   # Failed
+  #   OrganizationDefaultRepositoryPermissionMigrator.perform(organization: org)
+  #   # => #<OrganizationDefaultRepositoryPermissionMigrator::Result:0x007f8a2b708188
+  #     @error="Organization: 1 doesn't have any users",
+  #     @status=:failed>
+  #
+  # Returns a OrganizationDefaultRepositoryPermissionMigrator::Result.
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
   def perform
