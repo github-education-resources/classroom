@@ -21,6 +21,8 @@ class GitHubOrganization < GitHubResource
       membership = @client.organization_membership(login, user: user_github_login)
       membership.role == 'admin' && membership.state == 'active'
     end
+  rescue GitHub::Error
+    false
   end
 
   def create_repository(repo_name, users_repo_options = {})
@@ -83,11 +85,7 @@ class GitHubOrganization < GitHubResource
   def remove_organization_member(github_user_id)
     github_user_login = GitHubUser.new(@client, github_user_id).login
 
-    begin
-      return if admin?(github_user_login)
-    rescue GitHub::NotFound
-      return
-    end
+    return if admin?(github_user_login)
 
     GitHub::Errors.with_error_handling do
       @client.remove_organization_member(@id, github_user_login)

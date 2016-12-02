@@ -153,10 +153,12 @@ class Organization
     # Example
     #
     #  title
-    #  # => 'tatooine-moisture-farmers
+    #  # => 'tatooine-moisture-farmers'
     #
     # Returns the String title.
     def title
+      return '' if users.empty?
+
       github_client = users.sample.github_client
       github_org = GitHubOrganization.new(github_client, github_id)
       github_org.name.present? ? github_org.name : github_org.login
