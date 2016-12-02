@@ -143,7 +143,7 @@ class Organization
       return true unless (user = user_with_admin_org_hook_scope)
 
       github_organization = GitHubOrganization.new(user.github_client, github_id)
-      github_organization.remove_organization_webhook(webhook_id)
+      github_organization.remove_organization_webhook(organization.webhook_id)
 
       true
     end
