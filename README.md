@@ -24,8 +24,8 @@ First things first, you'll need to install Ruby 2.3.1. We recommend using the ex
 and [ruby-build](https://github.com/sstephenson/ruby-build)
 
 ```bash
-rbenv install 2.3.1
-rbenv global 2.3.1
+rbenv install 2.3.3
+rbenv global 2.3.3
 ```
 
 Next, you'll need to make sure that you have Nodejs, PostgreSQL, Redis, Memcached, and Elasticsearch installed. This can be done easily :
@@ -69,6 +69,7 @@ These values must be present in your `.env` file (created by `script/setup`).
 
 ENV Variable | Description |
 :-------------------|:-----------------|
+`CLASSROOM_WEBHOOK_URL_PREFIX` | Ngrok url to receive webhooks (run `./script/ngrok`).
 `GITHUB_CLIENT_ID`| the GitHub Application Client ID.
 `GITHUB_CLIENT_SECRET`| the GitHub Application Client Secret.
 `NON_STAFF_GITHUB_ADMIN_IDS` | GitHub `user_ids` of users to be granted staff level access.
@@ -130,7 +131,13 @@ After that, you may start the rails server in a separate terminal with:
 script/server
 ```
 
-And that's it! You should have a working instance of GitHub Classroom located [here](http://localhost:5000)
+And another terminal with:
+
+```bash
+script/ngrok
+```
+
+That's it! You should have a working instance of GitHub Classroom located [here](http://localhost:5000)
 
 ## Deployment
 
