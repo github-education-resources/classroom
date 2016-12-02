@@ -7,7 +7,7 @@ class GitHubUser < GitHubResource
         headers: GitHub::APIHeaders.no_cache_no_store
       ).present?
     end
-  rescue GitHub::NotFound
+  rescue GitHub::Error
     false
   end
 
