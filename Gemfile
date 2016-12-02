@@ -43,6 +43,7 @@ gem 'rack-canonical-host'
 gem 'rack-timeout', require: false
 gem 'rails-i18n', '~> 5.0', '>= 5.0.1'
 gem 'redis-namespace'
+gem 'ruby-progressbar', '~> 1.8', '>= 1.8.1'
 
 gem 'sprockets'
 gem 'sass-rails', '~> 5.0', '>= 5.0.6'
