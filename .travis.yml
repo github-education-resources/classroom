@@ -25,4 +25,4 @@ notifications:
   email: false
 
 env:
-  - GITHUB_CLIENT_ID=client_id GITHUB_CLIENT_SECRET=client_secret WEBHOOK_SECRET=abcdefg
+  - GITHUB_CLIENT_ID=client_id GITHUB_CLIENT_SECRET=client_secret WEBHOOK_SECRET=abcdefg CLASSROOM_WEBHOOK_URL_PREFIX="https://example.com/github/hooks"
