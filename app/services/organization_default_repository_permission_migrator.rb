@@ -62,13 +62,13 @@ class OrganizationDefaultRepositoryPermissionMigrator
     users = organization.users.to_a
     return Result.failed(base_message) if users.empty?
 
-    authenticated_users = users.keep_if { |user| valid_user?(user) }
-    return Result.failed("#{base_message} with valid tokens") if authenticated_users.empty?
+    org_admin_users = users.keep_if { |user| organization_admin_user?(user) }
+    return Result.failed("#{base_message} that are org admins") if org_admin_users.empty?
 
-    authenticated_user = authenticated_users.sample
+    org_admin = org_admin_users.sample
 
     begin
-      github_organization = GitHubOrganization.new(authenticated_user.github_client, organization.github_id)
+      github_organization = GitHubOrganization.new(org_admin.github_client, organization.github_id)
       github_organization.update_default_repository_permission!('none')
     rescue GitHub::Error => err
       return Result.failed("For Organization #{organization.id}: #{err.message}")
@@ -81,11 +81,8 @@ class OrganizationDefaultRepositoryPermissionMigrator
 
   private
 
-  def valid_user?(user)
-    github_user = user.github_user
-    return false unless github_user.authorized_access_token?
-
+  def organization_admin_user?(user)
     github_organization = GitHubOrganization.new(user.github_client, organization.github_id)
-    github_organization.admin?(github_user.login_no_cache)
+    github_organization.admin?(user.github_user.login_no_cache)
   end
 end

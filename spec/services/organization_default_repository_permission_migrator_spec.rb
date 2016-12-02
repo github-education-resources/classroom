@@ -34,7 +34,7 @@ describe OrganizationDefaultRepositoryPermissionMigrator do
         result = OrganizationDefaultRepositoryPermissionMigrator.perform(organization: org)
 
         expect(result.failed?).to be_truthy
-        expect(result.error).to eql("Organization: #{org.id} doesn't have any users with valid tokens")
+        expect(result.error).to eql("Organization: #{org.id} doesn't have any users that are org admins")
       end
     end
   end
