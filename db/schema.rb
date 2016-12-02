@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160621020153) do
+ActiveRecord::Schema.define(version: 20161130020119) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -130,7 +130,7 @@ ActiveRecord::Schema.define(version: 20160621020153) do
     t.datetime "updated_at",                        null: false
     t.datetime "deleted_at"
     t.string   "slug",                              null: false
-    t.string   "webhook_id"
+    t.integer  "webhook_id"
     t.boolean  "is_webhook_active", default: false
     t.index ["deleted_at"], name: "index_organizations_on_deleted_at", using: :btree
     t.index ["github_id"], name: "index_organizations_on_github_id", unique: true, using: :btree
