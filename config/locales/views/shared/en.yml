@@ -6,6 +6,7 @@ en:
       stop_impersonating: 'Stop impersonating @%{user}'
       view_gh_profile: 'View GitHub profile'
       community_discussion: 'Community discussion'
+      video_tutorials: 'Video tutorials'
       report_bug: 'Report a bug'
       use_student_identifier_type: 'Use a student identifier type'
       student_identifiers_required: 'Students will be required to enter their identifiers before accepting the assignment.'
