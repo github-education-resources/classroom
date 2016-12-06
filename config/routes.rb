@@ -73,6 +73,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :videos, only: [:index]
+
   namespace :stafftools do
     constraints StaffConstraint.new do
       mount Sidekiq::Web => '/sidekiq'

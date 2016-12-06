@@ -16,6 +16,12 @@
           </li>
 
           <li>
+            <%= link_to videos_path, class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.video_tutorials') do %>
+              <%= octicon 'device-camera-video' %>
+            <% end %>
+          </li>
+
+          <li>
             <%= link_to 'https://github.com/education/classroom/issues/new?labels[]=report', class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.report_bug') do %>
               <%= octicon 'bug' %>
             <% end %>
