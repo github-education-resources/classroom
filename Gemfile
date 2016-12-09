@@ -47,7 +47,7 @@ gem 'ruby-progressbar', '~> 1.8', '>= 1.8.1'
 
 gem 'sprockets'
 gem 'sass-rails', '~> 5.0', '>= 5.0.6'
-gem 'sidekiq', git: 'https://github.com/mperham/sidekiq.git', ref: 'c187be65214728e212b23e2d49ad6da563a00559'
+gem 'sidekiq', '~> 4.2', '>= 4.2.7'
 
 gem 'turbolinks', '~> 2.5.3'
 
