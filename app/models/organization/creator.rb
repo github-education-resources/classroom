@@ -128,11 +128,9 @@ class Organization
 
     # Internal: Remove the Organization from the database.
     #
-    # Returns true.
+    # Returns true or raises an ActiveRecord::Error.
     def destroy_organziation(organization)
       organization.destroy!
-    rescue ActiveRecord::RecordNotDestroyed => err
-      raise Result::Error, err.message
     end
 
     # Internal: Remove the Organization WebHook is possible.

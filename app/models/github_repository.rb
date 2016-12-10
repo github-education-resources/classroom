@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class GitHubRepository < GitHubResource
+  # NOTE: LEGACY, DO NOT REMOVE.
+  # This is needed for the lib/collab_migration.rb
   def add_collaborator(collaborator, options = {})
     GitHub::Errors.with_error_handling do
       @client.add_collaborator(@id, collaborator, options)
@@ -15,6 +17,17 @@ class GitHubRepository < GitHubResource
       }
 
       @client.start_source_import(@id, 'git', "https://github.com/#{source.full_name}", options)
+    end
+  end
+
+  # Public: Invite a user to a GitHub repository.
+  #
+  # user - The String GitHub login for the user.
+  #
+  # Returns an Integer Invitation id, or raises a GitHub::Error.
+  def invite(user, **options)
+    GitHub::Errors.with_error_handling do
+      @client.invite_user_to_repository(@id, user, options).id
     end
   end
 

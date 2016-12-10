@@ -15,13 +15,20 @@ class AssignmentInvitation < ApplicationRecord
 
   after_initialize :assign_key
 
+  # Public: Redeem an AssignmentInvtiation for a User invitee.
+  #
+  # Returns an AssignmentRepo or nil.
   def redeem_for(invitee)
     if (repo_access = RepoAccess.find_by(user: invitee, organization: organization))
       assignment_repo = AssignmentRepo.find_by(assignment: assignment, repo_access: repo_access)
       return assignment_repo if assignment_repo.present?
     end
 
-    AssignmentRepo.find_or_create_by!(assignment: assignment, user: invitee)
+    assignment_repo = AssignmentRepo.find_by(assignment: assignment, user: invitee)
+    return assignment_repo if assignment_repo.present?
+
+    result = AssignmentRepo::Creator.perform(assignment: assignment, invitee: invitee)
+    result.success? ? result.assignment_repo : nil
   end
 
   def title
