@@ -36,7 +36,9 @@ class GitHubOrganization < GitHubResource
   end
 
   def delete_repository(repo_id)
-    @client.delete_repository(repo_id)
+    GitHub::Errors.with_error_handling do
+      @client.delete_repository(repo_id)
+    end
   end
 
   def create_team(team_name)
