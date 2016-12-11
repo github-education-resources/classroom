@@ -27,7 +27,8 @@ class GitHubRepository < GitHubResource
   # Returns an Integer Invitation id, or raises a GitHub::Error.
   def invite(user, **options)
     GitHub::Errors.with_error_handling do
-      @client.invite_user_to_repository(@id, user, options).id
+      options[:accept] = Octokit::Preview::PREVIEW_TYPES[:repository_invitations]
+      @client.invite_user_to_repository(@id, user, options)
     end
   end
 

@@ -5,6 +5,7 @@ class GitHubUser < GitHubResource
   # Returns True or False.
   def accept_repository_invitation(invitation_id, **options)
     GitHub::Errors.with_error_handling do
+      options[:accept] = Octokit::Preview::PREVIEW_TYPES[:repository_invitations]
       @client.accept_repository_invitation(invitation_id, options)
     end
   rescue GitHub::Error
