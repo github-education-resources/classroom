@@ -3,9 +3,9 @@ class AssignmentRepo
   class Creator
     DEFAULT_ERROR_MESSAGE = 'Assignment could not be created, please try again'
 
-    class Result
-      attr_reader :assignment, :invitee, :organization
+    attr_reader :assignment, :invitee, :organization
 
+    class Result
       class Error < StandardError; end
 
       def self.success(assignment_repo)
@@ -70,6 +70,8 @@ class AssignmentRepo
       rescue ActiveRecord::RecordInvalid
         raise Result::Error, DEFAULT_ERROR_MESSAGE
       end
+
+      Result.success(assignment_repo)
     rescue Result::Error => err
       delete_github_repository(assignment_repo.github_repo_id)
       Result.failed(err.message)
@@ -87,16 +89,18 @@ class AssignmentRepo
     # own token.
     #
     # Returns true if successful, otherwise raises a Result::Error
+    # rubocop:disable AbcSize
     def add_invitee_to_repository!(github_repository_id)
-      options = {}.tap { |opt| opt[:permissions] = 'admin' if assignment.students_are_repo_admins? }
+      options = {}.tap { |opt| opt[:permission] = 'admin' if assignment.students_are_repo_admins? }
 
       github_repository = GitHubRepository.new(organization.github_client, github_repository_id)
-      invitation_id = github_repository.invite(invitee.github_user.login_no_cache, options)
+      invitation_id = github_repository.invite(invitee.github_user.login_no_cache, options).id
 
       invitee.github_user.accept_repository_invitation(invitation_id)
     rescue GitHub::Error
       raise Result::Error, DEFAULT_ERROR_MESSAGE
     end
+    # rubocop:enable AbcSize
 
     # Internal: Create the GitHub repository for the AssignmentRepo.
     #
@@ -109,7 +113,7 @@ class AssignmentRepo
         description: "#{repository_name} created by GitHub Classroom"
       }
 
-      github_organization.create_repository(repository_name, options).id
+      organization.github_organization.create_repository(repository_name, options).id
     rescue GitHub::Error
       raise Result::Error, 'GitHub repository could not be created, please try again'
     end
@@ -166,7 +170,7 @@ class AssignmentRepo
       suffix_count = 0
 
       owner           = organization.github_organization.login_no_cache
-      repository_name = "#{assignemnt.slug}-#{invitee.github_user.login_no_cache}"
+      repository_name = "#{assignment.slug}-#{invitee.github_user.login_no_cache}"
 
       loop do
         name = "#{owner}/#{suffixed_repo_name(repository_name, suffix_count)}"
