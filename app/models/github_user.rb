@@ -8,8 +8,6 @@ class GitHubUser < GitHubResource
       options[:accept] = Octokit::Preview::PREVIEW_TYPES[:repository_invitations]
       @client.accept_repository_invitation(invitation_id, options)
     end
-  rescue GitHub::Error
-    false
   end
 
   def authorized_access_token?
