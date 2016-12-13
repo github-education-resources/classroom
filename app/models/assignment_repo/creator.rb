@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 class AssignmentRepo
   class Creator
-    DEFAULT_ERROR_MESSAGE = 'Assignment could not be created, please try again'
+    DEFAULT_ERROR_MESSAGE                   = 'Assignment could not be created, please try again'
+    REPOSITORY_CREATION_FAILED              = 'GitHub repository could not be created, please try again'
+    REPOSITORY_STARTER_CODE_IMPORT_FAILED   = 'We were not able to import you the starter code to your assignment, please try again.' # rubocop:disable LineLength
+    REPOSITORY_COLLABORATOR_ADDITION_FAILED = 'We were not able to add you to the Assignment as a collaborator, please try again.' # rubocop:disable LineLength
 
     attr_reader :assignment, :user, :organization
 
@@ -98,7 +101,7 @@ class AssignmentRepo
 
       user.github_user.accept_repository_invitation(invitation_id)
     rescue GitHub::Error
-      raise Result::Error, 'We were not able to add you to the Assignment as a collaborator, please try again.'
+      raise Result::Error, REPOSITORY_COLLABORATOR_ADDITION_FAILED
     end
     # rubocop:enable AbcSize
 
@@ -115,7 +118,7 @@ class AssignmentRepo
 
       organization.github_organization.create_repository(repository_name, options).id
     rescue GitHub::Error
-      raise Result::Error, 'GitHub repository could not be created, please try again'
+      raise Result::Error, REPOSITORY_CREATION_FAILED
     end
 
     def delete_github_repository(github_repo_id)
@@ -140,7 +143,7 @@ class AssignmentRepo
 
       assignment_repository.get_starter_code_from(starter_code_repository)
     rescue GitHub::Error
-      raise Result::Error, 'We were not able to import you the starter code to your assignment, please try again.'
+      raise Result::Error, REPOSITORY_STARTER_CODE_IMPORT_FAILED
     end
 
     # Internal: Ensure that we can make a private repository on GitHub.

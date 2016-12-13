@@ -58,7 +58,9 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
           .to_return(body: '{}', status: 401)
 
         result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
+
         expect(result.failed?).to be_truthy
+        expect(result.error).to eql(AssignmentRepo::Creator::REPOSITORY_CREATION_FAILED)
       end
 
       context 'with a successful repository creation' do
@@ -75,8 +77,9 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
           stub_request(:put, import_regex).to_return(body: '{}', status: 401)
 
           result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
-          expect(result.failed?).to be_truthy
 
+          expect(result.failed?).to be_truthy
+          expect(result.error).to eql(AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
           expect(WebMock).to have_requested(:put, import_regex)
         end
 
@@ -86,8 +89,9 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
           stub_request(:put, repo_invitation_regex).to_return(body: '{}', status: 401)
 
           result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
-          expect(result.failed?).to be_truthy
 
+          expect(result.failed?).to be_truthy
+          expect(result.error).to eql(AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED)
           expect(WebMock).to have_requested(:put, repo_invitation_regex)
         end
 
@@ -95,7 +99,9 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
           allow_any_instance_of(AssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
 
           result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
+
           expect(result.failed?).to be_truthy
+          expect(result.error).to eql(AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE)
         end
       end
     end
