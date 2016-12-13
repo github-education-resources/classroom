@@ -1,5 +1,15 @@
 # frozen_string_literal: true
 class GitHubUser < GitHubResource
+  # Public: Accept a Repository Invitation on GitHub.
+  #
+  # Returns True or False.
+  def accept_repository_invitation(invitation_id, **options)
+    GitHub::Errors.with_error_handling do
+      options[:accept] = Octokit::Preview::PREVIEW_TYPES[:repository_invitations]
+      @client.accept_repository_invitation(invitation_id, options)
+    end
+  end
+
   def authorized_access_token?
     GitHub::Errors.with_error_handling do
       GitHubClassroom.github_client.check_application_authorization(

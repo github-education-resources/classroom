@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class GitHubRepository < GitHubResource
+  # NOTE: LEGACY, DO NOT REMOVE.
+  # This is needed for the lib/collab_migration.rb
   def add_collaborator(collaborator, options = {})
     GitHub::Errors.with_error_handling do
       @client.add_collaborator(@id, collaborator, options)
@@ -18,12 +20,28 @@ class GitHubRepository < GitHubResource
     end
   end
 
+  # Public: Invite a user to a GitHub repository.
+  #
+  # user - The String GitHub login for the user.
+  #
+  # Returns an Integer Invitation id, or raises a GitHub::Error.
+  def invite(user, **options)
+    GitHub::Errors.with_error_handling do
+      options[:accept] = Octokit::Preview::PREVIEW_TYPES[:repository_invitations]
+      @client.invite_user_to_repository(@id, user, options)
+    end
+  end
+
   def present?(**options)
     self.class.present?(@client, @id, options)
   end
 
   def self.present?(client, full_name, **options)
-    client.repository?(full_name, options)
+    GitHub::Errors.with_error_handling do
+      client.repository?(full_name, options)
+    end
+  rescue GitHub::Error
+    false
   end
 
   def self.find_by_name_with_owner!(client, full_name)

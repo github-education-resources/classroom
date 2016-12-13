@@ -13,23 +13,17 @@ RSpec.describe AssignmentInvitation, type: :model do
     let(:invitee)       { GitHubFactory.create_classroom_student }
     let(:organization)  { GitHubFactory.create_owner_classroom_org }
 
-    let(:assignment) do
-      Assignment.create(creator: organization.users.first,
-                        title: 'Ruby',
-                        slug: 'ruby',
-                        organization: organization,
-                        public_repo: false)
-    end
-
-    let(:assignment_invitation) { AssignmentInvitation.create(assignment: assignment) }
+    let(:assignment)            { create(:assignment, title: 'Ruby', organization: organization) }
+    let(:assignment_invitation) { create(:assignment_invitation, assignment: assignment)         }
 
     after(:each) do
       AssignmentRepo.destroy_all
     end
 
-    it 'returns the AssignmentRepo' do
-      assignment_repo = assignment_invitation.redeem_for(invitee)
-      expect(assignment_repo).to eql(AssignmentRepo.last)
+    it 'returns a AssignmentRepo::Creator::Result with the assignment repo' do
+      result = assignment_invitation.redeem_for(invitee)
+      expect(result.success?).to be_truthy
+      expect(result.assignment_repo).to eql(AssignmentRepo.last)
     end
   end
 
