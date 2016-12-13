@@ -55,12 +55,12 @@ class AssignmentInvitationsController < ApplicationController
   helper_method :organization
 
   def create_assignment_repo
-    users_assignment_repo = invitation.redeem_for(current_user)
+    result = invitation.redeem_for(current_user)
 
-    if users_assignment_repo.present?
+    if result.success?
       yield if block_given?
     else
-      flash[:error] = 'An error has occurred, please refresh the page and try again.'
+      flash[:error] = result.error
       redirect_to assignment_invitation_path(invitation)
     end
   end

@@ -20,9 +20,10 @@ RSpec.describe AssignmentInvitation, type: :model do
       AssignmentRepo.destroy_all
     end
 
-    it 'returns the AssignmentRepo' do
-      assignment_repo = assignment_invitation.redeem_for(invitee)
-      expect(assignment_repo).to eql(AssignmentRepo.last)
+    it 'returns a AssignmentRepo::Creator::Result with the assignment repo' do
+      result = assignment_invitation.redeem_for(invitee)
+      expect(result.success?).to be_truthy
+      expect(result.assignment_repo).to eql(AssignmentRepo.last)
     end
   end
 

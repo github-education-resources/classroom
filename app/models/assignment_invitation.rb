@@ -17,18 +17,17 @@ class AssignmentInvitation < ApplicationRecord
 
   # Public: Redeem an AssignmentInvtiation for a User invitee.
   #
-  # Returns an AssignmentRepo or nil.
+  # Returns a AssignmentRepo::Creator::Result.
   def redeem_for(invitee)
     if (repo_access = RepoAccess.find_by(user: invitee, organization: organization))
       assignment_repo = AssignmentRepo.find_by(assignment: assignment, repo_access: repo_access)
-      return assignment_repo if assignment_repo.present?
+      return AssignmentRepo::Creator::Result.success(assignment_repo) if assignment_repo.present?
     end
 
     assignment_repo = AssignmentRepo.find_by(assignment: assignment, user: invitee)
-    return assignment_repo if assignment_repo.present?
+    return AssignmentRepo::Creator::Result.success(assignment_repo) if assignment_repo.present?
 
-    result = AssignmentRepo::Creator.perform(assignment: assignment, user: invitee)
-    result.success? ? result.assignment_repo : nil
+    AssignmentRepo::Creator.perform(assignment: assignment, user: invitee)
   end
 
   def title

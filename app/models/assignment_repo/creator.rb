@@ -98,7 +98,7 @@ class AssignmentRepo
 
       user.github_user.accept_repository_invitation(invitation_id)
     rescue GitHub::Error
-      raise Result::Error, DEFAULT_ERROR_MESSAGE
+      raise Result::Error, 'We were not able to add you to the Assignment as a collaborator, please try again.'
     end
     # rubocop:enable AbcSize
 
@@ -140,7 +140,7 @@ class AssignmentRepo
 
       assignment_repository.get_starter_code_from(starter_code_repository)
     rescue GitHub::Error
-      raise Result::Error, DEFAULT_ERROR_MESSAGE
+      raise Result::Error, 'We were not able to import you the starter code to your assignment, please try again.'
     end
 
     # Internal: Ensure that we can make a private repository on GitHub.
