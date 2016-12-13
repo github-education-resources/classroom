@@ -37,7 +37,11 @@ class GitHubRepository < GitHubResource
   end
 
   def self.present?(client, full_name, **options)
-    client.repository?(full_name, options)
+    GitHub::Errors.with_error_handling do
+      client.repository?(full_name, options)
+    end
+  rescue GitHub::Error
+    false
   end
 
   def self.find_by_name_with_owner!(client, full_name)
