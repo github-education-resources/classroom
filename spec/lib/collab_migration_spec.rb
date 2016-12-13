@@ -14,7 +14,7 @@ RSpec.describe CollabMigration do
 
   describe 'repo_access with an assignment_repo', :vcr do
     before(:each) do
-      @assignment_repo = AssignmentRepo::Creator.perform(assignment: assignment, invitee: student).assignment_repo
+      @assignment_repo = AssignmentRepo::Creator.perform(assignment: assignment, user: student).assignment_repo
       @assignment_repo.update_attributes(user: nil, repo_access: repo_access)
       @assignment_repo.save
     end

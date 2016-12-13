@@ -23,7 +23,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
       end
 
       it 'creates an AssignmentRepo' do
-        result = AssignmentRepo::Creator.perform(assignment: assignment, invitee: student)
+        result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
 
         expect(result.success?).to be_truthy
         expect(result.assignment_repo.assignment).to eql(assignment)
@@ -32,7 +32,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
 
       context 'github repository with the same name already exists' do
         before do
-          result = AssignmentRepo::Creator.perform(assignment: assignment, invitee: student)
+          result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
           assignment_repo = result.assignment_repo
 
           @original_repository = organization.github_client.repository(assignment_repo.github_repo_id)
@@ -45,7 +45,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
         end
 
         it 'new repository name has expected suffix' do
-          AssignmentRepo::Creator.perform(assignment: assignment, invitee: student)
+          AssignmentRepo::Creator.perform(assignment: assignment, user: student)
           expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
             .with(body: /^.*#{@original_repository.name}-1.*$/)
         end
@@ -57,7 +57,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
         stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
           .to_return(body: '{}', status: 401)
 
-        result = AssignmentRepo::Creator.perform(assignment: assignment, invitee: student)
+        result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
         expect(result.failed?).to be_truthy
       end
 
@@ -74,7 +74,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
           import_regex = %r{#{github_url("/repositories/")}\d+/import$}
           stub_request(:put, import_regex).to_return(body: '{}', status: 401)
 
-          result = AssignmentRepo::Creator.perform(assignment: assignment, invitee: student)
+          result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
           expect(result.failed?).to be_truthy
 
           expect(WebMock).to have_requested(:put, import_regex)
@@ -85,7 +85,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
           repo_invitation_regex = %r{#{github_url("/repositories/")}\d+/collaborators/.+$}
           stub_request(:put, repo_invitation_regex).to_return(body: '{}', status: 401)
 
-          result = AssignmentRepo::Creator.perform(assignment: assignment, invitee: student)
+          result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
           expect(result.failed?).to be_truthy
 
           expect(WebMock).to have_requested(:put, repo_invitation_regex)
@@ -94,7 +94,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
         it 'fails when the AssignmentRepo object could not be created' do
           allow_any_instance_of(AssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
 
-          result = AssignmentRepo::Creator.perform(assignment: assignment, invitee: student)
+          result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
           expect(result.failed?).to be_truthy
         end
       end

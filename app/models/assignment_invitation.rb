@@ -27,7 +27,7 @@ class AssignmentInvitation < ApplicationRecord
     assignment_repo = AssignmentRepo.find_by(assignment: assignment, user: invitee)
     return assignment_repo if assignment_repo.present?
 
-    result = AssignmentRepo::Creator.perform(assignment: assignment, invitee: invitee)
+    result = AssignmentRepo::Creator.perform(assignment: assignment, user: invitee)
     result.success? ? result.assignment_repo : nil
   end
 

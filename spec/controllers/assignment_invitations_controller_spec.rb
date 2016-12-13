@@ -125,7 +125,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
     before(:each) do
       sign_in(user)
-      result = AssignmentRepo::Creator.perform(assignment: assignment, invitee: user)
+      result = AssignmentRepo::Creator.perform(assignment: assignment, user: user)
       @assignment_repo = result.assignment_repo
     end
 

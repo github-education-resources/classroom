@@ -3,7 +3,7 @@ class AssignmentRepo
   class Creator
     DEFAULT_ERROR_MESSAGE = 'Assignment could not be created, please try again'
 
-    attr_reader :assignment, :invitee, :organization
+    attr_reader :assignment, :user, :organization
 
     class Result
       class Error < StandardError; end
@@ -36,16 +36,16 @@ class AssignmentRepo
     # Public: Create an AssignmentRepo.
     #
     # assignment - The Assignment that will own the AssignmentRepo.
-    # invitee    - The User that the AssignmentRepo will belong to.
+    # user       - The User that the AssignmentRepo will belong to.
     #
     # Returns a AssignmentRepo::Creator::Result.
-    def self.perform(assignment:, invitee:)
-      new(assignment: assignment, invitee: invitee).perform
+    def self.perform(assignment:, user:)
+      new(assignment: assignment, user: user).perform
     end
 
-    def initialize(assignment:, invitee:)
+    def initialize(assignment:, user:)
       @assignment   = assignment
-      @invitee      = invitee
+      @user         = user
       @organization = assignment.organization
     end
 
@@ -56,10 +56,10 @@ class AssignmentRepo
 
       assignment_repo = assignment.assignment_repos.build(
         github_repo_id: create_github_repository!,
-        user: invitee
+        user: user
       )
 
-      add_invitee_to_repository!(assignment_repo.github_repo_id)
+      add_user_to_repository!(assignment_repo.github_repo_id)
 
       if assignment.starter_code?
         push_starter_code!(assignment_repo.github_repo_id)
@@ -81,7 +81,7 @@ class AssignmentRepo
 
     private
 
-    # Internal: Add the invitee User to the GitHub repository
+    # Internal: Add the User to the GitHub repository
     # as a collaborator.
     #
     # NOTE: Because of the API changes https://developer.github.com/changes/2016-06-14-repository-invitations
@@ -90,13 +90,13 @@ class AssignmentRepo
     #
     # Returns true if successful, otherwise raises a Result::Error
     # rubocop:disable AbcSize
-    def add_invitee_to_repository!(github_repository_id)
+    def add_user_to_repository!(github_repository_id)
       options = {}.tap { |opt| opt[:permission] = 'admin' if assignment.students_are_repo_admins? }
 
       github_repository = GitHubRepository.new(organization.github_client, github_repository_id)
-      invitation_id = github_repository.invite(invitee.github_user.login_no_cache, options).id
+      invitation_id = github_repository.invite(user.github_user.login_no_cache, options).id
 
-      invitee.github_user.accept_repository_invitation(invitation_id)
+      user.github_user.accept_repository_invitation(invitation_id)
     rescue GitHub::Error
       raise Result::Error, DEFAULT_ERROR_MESSAGE
     end
@@ -172,7 +172,7 @@ class AssignmentRepo
       suffix_count = 0
 
       owner           = organization.github_organization.login_no_cache
-      repository_name = "#{assignment.slug}-#{invitee.github_user.login_no_cache}"
+      repository_name = "#{assignment.slug}-#{user.github_user.login_no_cache}"
 
       loop do
         name = "#{owner}/#{suffixed_repo_name(repository_name, suffix_count)}"
