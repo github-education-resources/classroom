@@ -4,29 +4,12 @@ require 'rails_helper'
 RSpec.describe AssignmentReposController, type: :controller do
   let(:organization) { GitHubFactory.create_owner_classroom_org }
   let(:user)         { organization.users.first }
-  let(:student)      { GitHubFactory.create_classroom_student }
 
-  let(:assignment) do
-    Assignment.create(title: 'Assignment', slug: 'assignment', creator: user, organization: organization)
-  end
-
-  let(:assignment) do
-    create(:assignment,
-           title: 'HTML5',
-           slug: 'html5',
-           creator: user,
-           organization: user.organizations.first,
-           public_repo: false)
-  end
-
-  let(:assignment_repo) { AssignmentRepo.create(assignment: assignment, user: student) }
+  let(:assignment)      { create(:assignment, organization: organization) }
+  let(:assignment_repo) { create(:assignment_repo, github_repo_id: 42, assignment: assignment) }
 
   before(:each) do
     sign_in(user)
-  end
-
-  after do
-    AssignmentRepo.destroy_all
   end
 
   describe 'GET #show', :vcr do

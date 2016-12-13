@@ -13,15 +13,8 @@ RSpec.describe AssignmentInvitation, type: :model do
     let(:invitee)       { GitHubFactory.create_classroom_student }
     let(:organization)  { GitHubFactory.create_owner_classroom_org }
 
-    let(:assignment) do
-      Assignment.create(creator: organization.users.first,
-                        title: 'Ruby',
-                        slug: 'ruby',
-                        organization: organization,
-                        public_repo: false)
-    end
-
-    let(:assignment_invitation) { AssignmentInvitation.create(assignment: assignment) }
+    let(:assignment)            { create(:assignment, title: 'Ruby', organization: organization) }
+    let(:assignment_invitation) { create(:assignment_invitation, assignment: assignment)         }
 
     after(:each) do
       AssignmentRepo.destroy_all

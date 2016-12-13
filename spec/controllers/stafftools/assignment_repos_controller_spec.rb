@@ -2,32 +2,24 @@
 require 'rails_helper'
 
 RSpec.describe Stafftools::AssignmentReposController, type: :controller do
-  let(:user)    { GitHubFactory.create_owner_classroom_org.users.first }
-  let(:student) { GitHubFactory.create_classroom_student               }
+  let(:organization) { GitHubFactory.create_owner_classroom_org }
+  let(:user)         { organization.users.first }
 
-  let(:assignment) do
-    create(:assignment,
-           title: 'HTML5',
-           slug: 'html5',
-           creator: user,
-           organization: user.organizations.first,
-           public_repo: false)
+  let(:assignment_repo) do
+    assignment = create(:assignment, organization: organization)
+    create(:assignment_repo, github_repo_id: 42, assignment: assignment)
   end
-
-  let(:assignment_repo) { AssignmentRepo.create(assignment: assignment, user: student) }
 
   before(:each) do
     sign_in(user)
   end
 
-  after do
-    AssignmentRepo.destroy_all
-  end
-
   describe 'GET #show', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { get :show, params: { id: assignment_repo.id } }.to raise_error(ActionController::RoutingError)
+        expect do
+          get :show, params: { id: assignment_repo.id }
+        end.to raise_error(ActionController::RoutingError)
       end
     end
 

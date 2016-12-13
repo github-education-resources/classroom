@@ -61,7 +61,7 @@ class AssignmentInvitationsController < ApplicationController
       yield if block_given?
     else
       flash[:error] = 'An error has occurred, please refresh the page and try again.'
-      redirect_to :show
+      redirect_to assignment_invitation_path(invitation)
     end
   end
 
