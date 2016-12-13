@@ -73,7 +73,7 @@ class AssignmentRepo
 
       Result.success(assignment_repo)
     rescue Result::Error => err
-      delete_github_repository(assignment_repo.github_repo_id)
+      delete_github_repository(assignment_repo.try(:github_repo_id))
       Result.failed(err.message)
     end
     # rubocop:enable AbcSize
@@ -120,7 +120,7 @@ class AssignmentRepo
 
     def delete_github_repository(github_repo_id)
       return true if github_repo_id.nil?
-      organization.github_organization.delete_github_repository(github_repo_id)
+      organization.github_organization.delete_repository(github_repo_id)
     rescue GitHub::Error
       true
     end
@@ -139,6 +139,8 @@ class AssignmentRepo
       starter_code_repository = GitHubRepository.new(client, starter_code_repo_id)
 
       assignment_repository.get_starter_code_from(starter_code_repository)
+    rescue GitHub::Error
+      raise Result::Error, DEFAULT_ERROR_MESSAGE
     end
 
     # Internal: Ensure that we can make a private repository on GitHub.
