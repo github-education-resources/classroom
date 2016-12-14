@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module GitHub
   class WebHook
-    ACCEPTED_EVENTS = %w(ping).freeze
+    ACCEPTED_EVENTS = %w(ping repository).freeze
 
     class << self
       # Public: Generate the [HMAC](https://tools.ietf.org/html/rfc2104)
