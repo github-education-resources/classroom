@@ -150,6 +150,8 @@ class AssignmentRepo
     #
     # Returns True or raises a Result::Error with a helpful message.
     def verify_organization_has_private_repos_available!
+      return true if assignment.public?
+
       github_organization_plan = GitHubOrganization.new(organization.github_client, organization.github_id).plan
 
       owned_private_repos = github_organization_plan[:owned_private_repos]
