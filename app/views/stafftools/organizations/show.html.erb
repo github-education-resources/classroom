@@ -12,7 +12,7 @@
   </div>
 
   <div class="boxed-group">
-    <h3>Classroom information</h3>
+    <h3>Classroom</h3>
 
     <div class="boxed-group-inner">
       <table>
@@ -21,16 +21,8 @@
           <td><%= @organization.id %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">GitHub ID</td>
-          <td><%= @organization.github_id %></td>
-        </tr>
-        <tr>
           <td class="text-emphasized">Classroom</td>
           <td><%= link_to organization_url(@organization), organization_url(@organization) %></td>
-        </tr>
-        <tr>
-          <td class="text-emphasized">GitHub</td>
-          <td><%= link_to @organization.github_organization.html_url, @organization.github_organization.html_url %></td>
         </tr>
         <tr>
           <td class="text-emphasized">Joined on</td>
@@ -40,6 +32,34 @@
           <td class="text-emphasized">Last updated</td>
           <td><%= local_time(@organization.updated_at) %></td>
         </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="boxed-group">
+    <h3>GitHub organization</h3>
+
+    <div class="boxed-group-inner">
+      <table>
+        <tr>
+          <td class="text-emphasized">ID</td>
+          <td><%= @organization.github_id %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Homepage</td>
+          <td><%= link_to @organization.github_organization.html_url, @organization.github_organization.html_url %></td>
+        </tr>
+        <% if @organization.webhook_id.present? %>
+          <tr>
+            <td class="text-emphasized">WebHook URL</td>
+            <% url = "https://github.com/organizations/#{@organization.github_organization.login}/settings/hooks/#{@organization.webhook_id}" %>
+            <td><%= link_to url, url %></td>
+          </tr>
+          <tr>
+            <td class="text-emphasized">WebHook Enabled?</td>
+            <td><%= @organization.is_webhook_active? %></td>
+          </tr>
+        <% end %>
       </table>
     </div>
   </div>
