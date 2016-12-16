@@ -55,4 +55,29 @@ RSpec.describe Stafftools::GroupAssignmentReposController, type: :controller do
       end
     end
   end
+
+  describe 'DELETE #destroy', :vcr do
+    context 'as an unauthorized user' do
+      it 'returns a 404' do
+        expect do
+          delete :destroy, params: { id: group_assignment_repo.id }
+        end.to raise_error(ActionController::RoutingError)
+      end
+    end
+
+    context 'as an authorized user' do
+      before do
+        user.update_attributes(site_admin: true)
+        delete :destroy, params: { id: group_assignment_repo.id }
+      end
+
+      it 'deletes the assignment repo' do
+        expect { group_assignment_repo.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it 'redirects to the assignment show page' do
+        expect(response).to redirect_to(stafftools_group_assignment_path(group_assignment.id))
+      end
+    end
+  end
 end
