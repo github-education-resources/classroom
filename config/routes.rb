@@ -96,11 +96,11 @@ Rails.application.routes.draw do
     resources :repo_accesses, only: [:show]
 
     resources :assignment_invitations, only: [:show]
-    resources :assignment_repos,       only: [:show]
+    resources :assignment_repos,       only: [:show, :destroy]
     resources :assignments,            only: [:show]
 
     resources :group_assignment_invitations, path: 'group-assignment-invitations', only: [:show]
-    resources :group_assignment_repos,       path: 'group-assignment-repos',       only: [:show]
+    resources :group_assignment_repos,       path: 'group-assignment-repos',       only: [:show, :destroy]
     resources :group_assignments,            path: 'group-assignments',            only: [:show]
 
     resources :groupings, only: [:show]
