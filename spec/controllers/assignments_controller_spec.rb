@@ -159,12 +159,23 @@ RSpec.describe AssignmentsController, type: :controller do
       expect(response).to redirect_to(organization_assignment_path(organization, Assignment.find(assignment.id)))
     end
 
-    it 'calls the AssignmentVisibility background job' do
-      options = { title: 'Ruby on Rails' }
-      patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
+    context 'public_repo is changed' do
+      it 'calls the AssignmentVisibility background job' do
+        options = { title: 'Ruby on Rails', public_repo: !assignment.public? }
+        patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
 
-      assert_enqueued_jobs 1 do
-        AssignmentVisibilityJob.perform_later(assignment)
+        assert_enqueued_jobs 1 do
+          AssignmentVisibilityJob.perform_later(assignment)
+        end
+      end
+    end
+
+    context 'public_repo is not changed' do
+      it 'will not kick off an AssignmentVisibility job' do
+        options = { title: 'Ruby on Rails' }
+        patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
+
+        assert_no_enqueued_jobs(only: AssignmentVisibilityJob)
       end
     end
 
