@@ -29,7 +29,7 @@ class AssignmentsController < ApplicationController
 
   def update
     if @assignment.update_attributes(update_assignment_params)
-      AssignmentVisibilityJob.perform_later(@assignment)
+      AssignmentVisibilityJob.perform_later(@assignment) if @assignment.previous_changes['public_repo']
       flash[:success] = "Assignment \"#{@assignment.title}\" is being updated"
       redirect_to organization_assignment_path(@organization, @assignment)
     else

@@ -31,7 +31,7 @@ class GroupAssignmentsController < ApplicationController
 
   def update
     if @group_assignment.update_attributes(update_group_assignment_params)
-      AssignmentVisibilityJob.perform_later(@group_assignment)
+      AssignmentVisibilityJob.perform_later(@group_assignment) if @group_assignment.previous_changes['public_repo']
       flash[:success] = "Assignment \"#{@group_assignment.title}\" is being updated"
       redirect_to organization_group_assignment_path(@organization, @group_assignment)
     else
