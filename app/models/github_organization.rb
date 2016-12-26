@@ -84,10 +84,10 @@ class GitHubOrganization < GitHubResource
     end
   end
 
-  def remove_organization_member(github_user_id)
+  def remove_organization_member(github_user_id, options = {})
     github_user_login = GitHubUser.new(@client, github_user_id).login
 
-    return if admin?(github_user_login)
+    return if !options[:remove_admin] && admin?(github_user_login)
 
     GitHub::Errors.with_error_handling do
       @client.remove_organization_member(@id, github_user_login)
