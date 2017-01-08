@@ -98,13 +98,6 @@ RSpec.configure do |config|
 =end
   # rubocop:enable Style/BlockComments
 
-  def sign_in(user)
-    session[:user_id] = user.id
-  end
-
-  def sign_out
-    session.delete(:user_id)
-  end
 
   def json_payload(file_path)
     JSON.parse(file_fixture(file_path).read)
