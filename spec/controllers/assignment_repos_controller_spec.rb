@@ -2,8 +2,8 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentReposController, type: :controller do
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
-  let(:user)         { organization.users.first }
+  let(:organization) { classroom_org     }
+  let(:user)         { classroom_teacher }
 
   let(:assignment)      { create(:assignment, organization: organization) }
   let(:assignment_repo) { create(:assignment_repo, github_repo_id: 42, assignment: assignment) }

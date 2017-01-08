@@ -20,17 +20,9 @@ RSpec.describe Organization, type: :model do
     end
 
     context 'with Assignments and GroupAssignments' do
-      let(:creator) { subject.users.first }
-
       before do
-        grouping = Grouping.new(title: 'Grouping', organization: subject)
-
-        Assignment.create(creator: creator, title: 'Assignment', slug: 'assignment', organization: subject)
-        GroupAssignment.create(creator: creator,
-                               grouping: grouping,
-                               organization: subject,
-                               slug: 'group-assignment',
-                               title: 'Group Assignment')
+        create(:assignment, organization: subject)
+        create(:group_assignment, organization: subject)
       end
 
       it 'should return an array of Assignments and GroupAssignments' do

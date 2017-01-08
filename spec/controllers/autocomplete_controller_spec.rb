@@ -3,8 +3,8 @@ require 'rails_helper'
 require 'set'
 
 RSpec.describe AutocompleteController, type: :controller do
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
-  let(:user)         { organization.users.first                 }
+  let(:organization) { classroom_org     }
+  let(:user)         { classroom_teacher }
 
   before do
     sign_in(user)

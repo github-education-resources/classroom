@@ -4,7 +4,7 @@ require 'rails_helper'
 describe OrganizationDefaultRepositoryPermissionMigrator do
   describe '::perform', :vcr do
     describe 'successful migration' do
-      let(:org) { GitHubFactory.create_owner_classroom_org }
+      let(:org) { classroom_org }
 
       it 'returns a success Result' do
         result = OrganizationDefaultRepositoryPermissionMigrator.perform(organization: org)

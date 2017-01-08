@@ -2,8 +2,8 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentInvitationsController, type: :controller do
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
-  let(:user)         { GitHubFactory.create_classroom_student   }
+  let(:organization) { classroom_org     }
+  let(:user)         { classroom_student }
 
   let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
 
@@ -18,7 +18,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
 
     context 'authenticated request' do
-      let(:user) { GitHubFactory.create_classroom_student }
+      let(:user) { classroom_student }
 
       before(:each) do
         sign_in(user)
@@ -89,8 +89,8 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
   end
 
   describe 'PATCH #accept_invitation', :vcr do
-    let(:organization) { GitHubFactory.create_owner_classroom_org }
-    let(:user)         { GitHubFactory.create_classroom_student   }
+    let(:organization) { classroom_org     }
+    let(:user)         { classroom_student }
 
     let(:assignment) do
       create(:assignment, title: 'Learn you Node', starter_code_repo_id: 1_062_897, organization: organization)
@@ -114,8 +114,8 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
   end
 
   describe 'GET #successful_invitation' do
-    let(:organization) { GitHubFactory.create_owner_classroom_org }
-    let(:user)         { GitHubFactory.create_classroom_student   }
+    let(:organization) { classroom_org     }
+    let(:user)         { classroom_student }
 
     let(:assignment) do
       create(:assignment, title: 'Learn Clojure', starter_code_repo_id: 1_062_897, organization: organization)

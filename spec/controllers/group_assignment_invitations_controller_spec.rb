@@ -2,8 +2,8 @@
 require 'rails_helper'
 
 RSpec.describe GroupAssignmentInvitationsController, type: :controller do
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
-  let(:user)         { GitHubFactory.create_classroom_student   }
+  let(:organization) { classroom_org     }
+  let(:user)         { classroom_student }
 
   let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
 
@@ -78,10 +78,11 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
   end
 
   describe 'GET #accept', :vcr do
-    let(:organization)  { GitHubFactory.create_owner_classroom_org                         }
+    let(:organization)  { classroom_org     }
+    let(:student)       { classroom_student }
+
     let(:grouping)      { Grouping.create(title: 'Grouping 1', organization: organization) }
     let(:group)         { Group.create(title: 'The Group', grouping: grouping)             }
-    let(:student)       { GitHubFactory.create_classroom_student                           }
 
     let(:group_assignment) do
       GroupAssignment.create(creator: organization.users.first,
@@ -116,8 +117,9 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
   end
 
   describe 'PATCH #accept_invitation', :vcr do
-    let(:organization)  { GitHubFactory.create_owner_classroom_org }
-    let(:user)          { GitHubFactory.create_classroom_student   }
+    let(:organization)  { classroom_org     }
+    let(:user)          { classroom_student }
+
     let(:grouping)      { Grouping.create(title: 'Grouping 1', organization: organization) }
 
     let(:group_assignment) do
@@ -165,7 +167,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
       context 'group has reached maximum number of members' do
         let(:group)   { Group.create(title: 'The Group', grouping: grouping) }
-        let(:student) { GitHubFactory.create_classroom_student }
+        let(:student) { classroom_student }
 
         before(:each) do
           allow_any_instance_of(RepoAccess).to receive(:silently_remove_organization_member).and_return(true)
@@ -229,8 +231,9 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
   end
 
   describe 'GET #successful_invitation' do
-    let(:organization)  { GitHubFactory.create_owner_classroom_org }
-    let(:user)          { GitHubFactory.create_classroom_student   }
+    let(:organization)  { classroom_org     }
+    let(:user)          { classroom_student }
+
     let(:grouping)      { Grouping.create(title: 'Grouping 1', organization: organization) }
     let(:group)         { Group.create(title: 'The Group', grouping: grouping)             }
 

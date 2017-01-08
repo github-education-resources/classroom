@@ -3,7 +3,7 @@ require 'rails_helper'
 
 RSpec.describe Organization::Creator, type: :model do
   let(:github_organization_id) { classroom_owner_organization_github_id.to_i }
-  let(:user) { create(:user, uid: classroom_owner_github_id, token: classroom_owner_github_token) }
+  let(:user)                   { classroom_teacher                           }
 
   after(:each) do
     @organization.try(:destroy)
@@ -16,8 +16,6 @@ RSpec.describe Organization::Creator, type: :model do
 
         expect(result.success?).to be_truthy
         expect(result.organization.github_id).to eql(github_organization_id)
-
-        @organization = result.organization
       end
     end
 

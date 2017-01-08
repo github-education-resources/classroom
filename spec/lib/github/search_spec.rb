@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 describe GitHub::Search do
-  let(:user) { GitHubFactory.create_classroom_student }
+  let(:user) { classroom_student }
 
   subject { described_class.new(user.token) }
 

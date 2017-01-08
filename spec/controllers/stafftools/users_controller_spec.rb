@@ -2,8 +2,8 @@
 require 'rails_helper'
 
 RSpec.describe Stafftools::UsersController, type: :controller do
-  let(:user)    { GitHubFactory.create_owner_classroom_org.users.first }
-  let(:student) { GitHubFactory.create_classroom_student               }
+  let(:user)    { classroom_teacher }
+  let(:student) { classroom_student }
 
   before(:each) do
     sign_in(user)

@@ -2,8 +2,7 @@
 require 'rails_helper'
 
 RSpec.describe 'OAuth scope requirements', type: :request do
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
-  let(:user)         { organization.users.first                 }
+  let(:organization) { classroom_org }
 
   describe 'organizations#show', :vcr do
     context 'unauthenticated request' do

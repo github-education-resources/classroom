@@ -2,10 +2,8 @@
 require 'rails_helper'
 
 RSpec.describe GroupAssignmentsController, type: :controller do
-  include ActiveJob::TestHelper
-
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
-  let(:user)         { organization.users.first                 }
+  let(:user)         { classroom_teacher }
+  let(:organization) { classroom_org     }
 
   let(:group_assignment) do
     GroupAssignment.create(attributes_for(:group_assignment).merge(organization: organization, creator: user))
