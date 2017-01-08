@@ -2,8 +2,8 @@
 require 'rails_helper'
 
 RSpec.describe Stafftools::GroupingsController, type: :controller do
-  let(:user)         { GitHubFactory.create_owner_classroom_org.users.first }
-  let(:organization) { user.organizations.first                             }
+  let(:user)         { classroom_teacher }
+  let(:organization) { classroom_org     }
 
   let(:grouping) { Grouping.create(organization: organization, title: 'Grouping 1') }
 

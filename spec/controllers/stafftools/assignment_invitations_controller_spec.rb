@@ -2,10 +2,11 @@
 require 'rails_helper'
 
 RSpec.describe Stafftools::AssignmentInvitationsController, type: :controller do
-  let(:user) { GitHubFactory.create_owner_classroom_org.users.first }
+  let(:organization) { classroom_org     }
+  let(:user)         { classroom_teacher }
 
   before do
-    assignment = build(:assignment, creator: user, organization: user.organizations.first)
+    assignment = build(:assignment, creator: user, organization: organization)
     @assignment_invitation = assignment.build_assignment_invitation
     assignment.save!
   end

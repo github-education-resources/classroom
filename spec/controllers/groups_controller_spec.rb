@@ -2,10 +2,9 @@
 require 'rails_helper'
 
 RSpec.describe GroupsController, type: :controller do
-  include ActiveJob::TestHelper
+  let(:organization)  { classroom_org     }
+  let(:user)          { classroom_teacher }
 
-  let(:organization)  { GitHubFactory.create_owner_classroom_org }
-  let(:user)          { organization.users.first                 }
   let(:grouping)      { Grouping.create(title: 'Grouping HTML5', organization: organization)  }
   let(:group)         { Group.create(title: 'The Group', grouping: grouping)                  }
 

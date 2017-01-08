@@ -4,7 +4,7 @@ require 'rails_helper'
 describe GitHub::Token do
   subject { described_class }
 
-  let(:student) { GitHubFactory.create_classroom_student }
+  let(:student) { classroom_student }
 
   describe '#scopes', :vcr do
     it 'returns the scopes of the token in an array' do

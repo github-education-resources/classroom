@@ -2,10 +2,10 @@
 require 'rails_helper'
 
 RSpec.describe Stafftools::RepoAccessesController, type: :controller do
-  let(:user)         { GitHubFactory.create_owner_classroom_org.users.first }
-  let(:organization) { user.organizations.first                             }
+  let(:user)         { classroom_teacher }
+  let(:organization) { classroom_org     }
+  let(:student)      { classroom_student }
 
-  let(:student)     { GitHubFactory.create_classroom_student                       }
   let(:repo_access) { RepoAccess.create(user: student, organization: organization) }
 
   before(:each) do

@@ -2,16 +2,16 @@
 require 'rails_helper'
 
 RSpec.describe RepoAccess, type: :model do
-  describe 'callbacks', :vcr do
-    let(:organization) { GitHubFactory.create_owner_classroom_org }
-    let(:student)      { GitHubFactory.create_classroom_student   }
+  let(:organization) { classroom_org     }
+  let(:student)      { classroom_student }
 
+  describe 'callbacks', :vcr do
     before(:each) do
-      @repo_access = RepoAccess.create(user: student, organization: organization)
+      RepoAccess.create(user: student, organization: organization)
     end
 
     after(:each) do
-      @repo_access.destroy if @repo_access.present?
+      RepoAccess.destroy_all
     end
 
     describe 'before_validation' do
@@ -36,7 +36,7 @@ RSpec.describe RepoAccess, type: :model do
       describe '#silently_remove_organization_member' do
         context 'user is a member of the organization' do
           it 'removes the user' do
-            @repo_access.destroy
+            RepoAccess.destroy_all
 
             student_github_login = GitHubUser.new(student.github_client, student.uid).login
             delete_request_url   = "/organizations/#{organization.github_id}/members/#{student_github_login}"

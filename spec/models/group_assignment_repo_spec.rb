@@ -3,21 +3,20 @@ require 'rails_helper'
 
 RSpec.describe GroupAssignmentRepo, type: :model do
   context 'with created objects', :vcr do
-    let(:organization) { GitHubFactory.create_owner_classroom_org }
-    let(:student)      { GitHubFactory.create_classroom_student   }
+    let(:organization) { classroom_org }
+    let(:student)      { classroom_student }
     let(:repo_access)  { RepoAccess.create(user: student, organization: organization) }
 
-    let(:grouping)     { Grouping.create(organization: organization, title: 'Grouping 1') }
+    let(:grouping)     { create(:grouping, organization: organization) }
     let(:group)        { Group.create(title: 'Group 1', grouping: grouping) }
 
     let(:group_assignment) do
-      GroupAssignment.create(creator: organization.users.first,
-                             grouping: grouping,
-                             title: 'Learn JavaScript',
-                             slug: 'learn-javascript',
-                             organization: organization,
-                             public_repo: true,
-                             starter_code_repo_id: 1_062_897)
+      create(:group_assignment,
+             grouping: grouping,
+             title: 'Learn JavaScript',
+             organization: organization,
+             public_repo: true,
+             starter_code_repo_id: 1_062_897)
     end
 
     before(:each) do

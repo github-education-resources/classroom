@@ -2,8 +2,8 @@
 require 'rails_helper'
 
 RSpec.describe Stafftools::AssignmentsController, type: :controller do
-  let(:user)       { GitHubFactory.create_owner_classroom_org.users.first }
-  let(:assignment) { create(:assignment, creator: user, organization: user.organizations.first) }
+  let(:user)       { classroom_teacher }
+  let(:assignment) { create(:assignment) }
 
   before(:each) do
     sign_in(user)
