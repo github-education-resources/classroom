@@ -9,7 +9,7 @@ RSpec.describe PagesController, type: :controller do
     end
 
     it 'redirects to the dashboard if the user is already logged in' do
-      sign_in(create(:user))
+      sign_in_as(create(:user))
 
       get :home
       expect(response).to redirect_to(organizations_path)

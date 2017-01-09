@@ -9,7 +9,7 @@ RSpec.describe Stafftools::AssignmentReposController, type: :controller do
   let(:assignment_repo) { create(:assignment_repo, github_repo_id: 42, assignment: assignment) }
 
   before(:each) do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   describe 'GET #show', :vcr do

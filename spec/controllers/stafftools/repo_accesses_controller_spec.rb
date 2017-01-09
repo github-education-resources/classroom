@@ -9,7 +9,7 @@ RSpec.describe Stafftools::RepoAccessesController, type: :controller do
   let(:repo_access) { RepoAccess.create(user: student, organization: organization) }
 
   before(:each) do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   after do
