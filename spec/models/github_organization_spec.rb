@@ -113,26 +113,4 @@ describe GitHubOrganization do
       expect(@github_organization.team_invitations_url).to eql(url)
     end
   end
-
-  describe '#remove_organization_member', :vcr do
-    before do
-      @user = organization.users.first
-      @user_login = GitHubUser.new(@user.github_client, @user.uid).login
-    end
-
-    context 'trying to remove admin without remove_admin option' do
-      it 'returns false' do
-        expect(@github_organization.remove_organization_member(@user_login)).to be_falsey
-      end
-    end
-
-    context 'trying to remove admin with remove_admin option' do
-      it 'sends correct request' do
-        @github_organization.remove_organization_member(@user_login, remove_admin: true)
-
-        request_url = "https://api.github.com/organizations/#{organization.github_id}/members/#{@user_login}"
-        expect(WebMock).to have_requested(:delete, github_url(request_url))
-      end
-    end
-  end
 end
