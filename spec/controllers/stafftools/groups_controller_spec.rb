@@ -9,7 +9,7 @@ RSpec.describe Stafftools::GroupsController, type: :controller do
   let(:group)    { Group.create(grouping: grouping, title: 'The B Team')            }
 
   before(:each) do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   after do

@@ -21,7 +21,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       let(:user) { classroom_student }
 
       before(:each) do
-        sign_in(user)
+        sign_in_as(user)
       end
 
       it 'will bring you to the page' do
@@ -34,7 +34,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       before(:each) do
         invitation.assignment.student_identifier_type = student_identifier_type
         invitation.assignment.save
-        sign_in(user)
+        sign_in_as(user)
       end
 
       it 'redirects to the identifier page' do
@@ -65,8 +65,8 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     before(:each) do
       invitation.assignment.student_identifier_type = student_identifier_type
       invitation.assignment.save
-      sign_in(user)
     end
+      sign_in_as(user)
 
     after(:each) do
       StudentIdentifier.destroy_all
@@ -100,11 +100,11 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
     before(:each) do
       request.env['HTTP_REFERER'] = "http://classroomtest.com/group-assignment-invitations/#{invitation.key}"
-      sign_in(user)
     end
 
     after(:each) do
       AssignmentRepo.destroy_all
+      sign_in_as(user)
     end
 
     it 'redeems the users invitation' do
@@ -124,7 +124,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     let(:invitation) { create(:assignment_invitation, assignment: assignment) }
 
     before(:each) do
-      sign_in(user)
+      sign_in_as(user)
       result = AssignmentRepo::Creator.perform(assignment: assignment, user: user)
       @assignment_repo = result.assignment_repo
     end

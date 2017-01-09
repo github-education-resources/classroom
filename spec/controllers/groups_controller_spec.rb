@@ -9,7 +9,7 @@ RSpec.describe GroupsController, type: :controller do
   let(:group)         { Group.create(title: 'The Group', grouping: grouping)                  }
 
   before do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   context 'flipper is enabled for the user' do

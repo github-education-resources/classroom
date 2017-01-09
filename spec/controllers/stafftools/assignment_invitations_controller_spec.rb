@@ -12,7 +12,7 @@ RSpec.describe Stafftools::AssignmentInvitationsController, type: :controller do
   end
 
   before(:each) do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   describe 'GET #show', :vcr do

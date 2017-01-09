@@ -7,7 +7,7 @@ RSpec.describe OrganizationsController, type: :controller do
   let(:student)       { classroom_student }
 
   before do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   describe 'GET #index', :vcr do
@@ -50,7 +50,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
     context 'user without admin privilege on the organization' do
       before(:each) do
-        sign_in(student)
+        sign_in_as(student)
       end
 
       it 'does not add the user to the classroom' do

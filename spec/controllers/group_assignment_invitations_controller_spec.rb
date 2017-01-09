@@ -21,7 +21,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       before(:each) do
         invitation.group_assignment.student_identifier_type = student_identifier_type
         invitation.group_assignment.save
-        sign_in(user)
+        sign_in_as(student)
       end
 
       it 'redirects to the identifier page' do
@@ -52,7 +52,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       invitation.group_assignment.student_identifier_type = student_identifier_type
       invitation.group_assignment.save
 
-      sign_in(user)
+      sign_in_as(student)
 
       patch :submit_identifier, params: {
         id: invitation.key,
@@ -99,7 +99,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       render_views
 
       before do
-        sign_in(student)
+        sign_in_as(student)
         group.repo_accesses << RepoAccess.create(user: student, organization: organization)
       end
 
@@ -135,8 +135,8 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
     context 'authenticated request' do
       before(:each) do
-        sign_in(user)
         request.env['HTTP_REFERER'] = "http://classroomtest.com/group-assignment-invitations/#{invitation.key}"
+        sign_in_as(student)
       end
 
       after(:each) do
@@ -249,8 +249,8 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     let(:invitation) { GroupAssignmentInvitation.create(group_assignment: group_assignment) }
 
     before(:each) do
-      sign_in(user)
       group.repo_accesses << RepoAccess.create!(user: user, organization: organization)
+      sign_in_as(student)
       @group_assignment_repo = GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
     end
 

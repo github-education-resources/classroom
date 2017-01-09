@@ -8,7 +8,7 @@ RSpec.describe Stafftools::GroupingsController, type: :controller do
   let(:grouping) { Grouping.create(organization: organization, title: 'Grouping 1') }
 
   before(:each) do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   describe 'GET #show', :vcr do

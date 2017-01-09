@@ -9,7 +9,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
   let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
 
   before do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   context 'flipper is enabled for the user' do

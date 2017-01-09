@@ -6,7 +6,7 @@ RSpec.describe Stafftools::AssignmentsController, type: :controller do
   let(:assignment) { create(:assignment) }
 
   before(:each) do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   describe 'GET #show', :vcr do

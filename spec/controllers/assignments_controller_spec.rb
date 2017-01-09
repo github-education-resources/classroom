@@ -12,7 +12,7 @@ RSpec.describe AssignmentsController, type: :controller do
   let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
 
   before do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   describe 'GET #new', :vcr do

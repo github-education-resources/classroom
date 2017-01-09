@@ -16,7 +16,7 @@ VCR.use_cassette 'auth_user' do
 end
 
 module AuthenticationHelper
-  def sign_in(user)
+  def sign_in_as(user)
     session[:user_id] = user.id
   end
 

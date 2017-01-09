@@ -6,7 +6,7 @@ RSpec.describe Stafftools::UsersController, type: :controller do
   let(:student) { classroom_student }
 
   before(:each) do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   describe 'GET #show', :vcr do

@@ -7,7 +7,7 @@ RSpec.describe AutocompleteController, type: :controller do
   let(:user)         { classroom_teacher }
 
   before do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   describe 'GET #github_repos', :vcr do
