@@ -8,17 +8,11 @@ RSpec.describe Stafftools::GroupAssignmentReposController, type: :controller do
 
   let(:repo_access)  { RepoAccess.create(user: student, organization: organization) }
 
-  let(:grouping) { Grouping.create(organization: organization, title: 'Grouping 1') }
-  let(:group)    { Group.create(title: Time.zone.now, grouping: grouping)           }
-
   let(:group_assignment) do
-    GroupAssignment.create(creator: user,
-                           title: 'Learn Ruby',
-                           slug: 'learn-ruby',
-                           organization: organization,
-                           grouping: grouping,
-                           public_repo: false)
+    create(:group_assignment, title: 'Learn Ruby', organization: organization, public_repo: false)
   end
+
+  let(:group) { Group.create(title: Time.zone.now, grouping: group_assignment.grouping) }
 
   let(:group_assignment_repo) do
     GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)

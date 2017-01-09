@@ -5,10 +5,7 @@ RSpec.describe AssignmentsController, type: :controller do
   let(:organization) { classroom_org     }
   let(:user)         { classroom_teacher }
 
-  let(:assignment) do
-    Assignment.create(title: 'Assignment', slug: 'assignment', creator: user, organization: organization)
-  end
-
+  let(:assignment)              { create(:assignment, organization: organization)              }
   let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
 
   before do

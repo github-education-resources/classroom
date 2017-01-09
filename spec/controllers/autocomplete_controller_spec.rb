@@ -3,8 +3,7 @@ require 'rails_helper'
 require 'set'
 
 RSpec.describe AutocompleteController, type: :controller do
-  let(:organization) { classroom_org     }
-  let(:user)         { classroom_teacher }
+  let(:user) { classroom_teacher }
 
   before do
     sign_in_as(user)

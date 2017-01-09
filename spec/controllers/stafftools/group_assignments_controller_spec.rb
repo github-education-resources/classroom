@@ -2,19 +2,8 @@
 require 'rails_helper'
 
 RSpec.describe Stafftools::GroupAssignmentsController, type: :controller do
-  let(:user)         { classroom_teacher }
-  let(:organization) { classroom_org     }
-
-  let(:grouping) { Grouping.create(organization: organization, title: 'Grouping 1') }
-
-  let(:group_assignment) do
-    GroupAssignment.create(creator: user,
-                           title: 'Learn Ruby',
-                           slug: 'learn-ruby',
-                           organization: organization,
-                           grouping: grouping,
-                           public_repo: false)
-  end
+  let(:user)             { classroom_teacher         }
+  let(:group_assignment) { create(:group_assignment) }
 
   before(:each) do
     sign_in_as(user)

@@ -2,10 +2,9 @@
 require 'rails_helper'
 
 RSpec.describe GroupingsController, type: :controller do
-  let(:organization)  { classroom_org     }
-  let(:user)          { classroom_teacher }
-
-  let(:grouping)      { Grouping.create(title: 'Grouping 1', organization: organization) }
+  let(:organization)  { classroom_org                                 }
+  let(:user)          { classroom_teacher                             }
+  let(:grouping)      { create(:grouping, organization: organization) }
 
   before do
     sign_in_as(user)
