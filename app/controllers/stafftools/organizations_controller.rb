@@ -9,7 +9,13 @@ module Stafftools
       not_found unless true_user.try(:staff?)
 
       user = User.find(params[:user_id])
-      @organization.users.delete(user)
+
+      if Assignment.find_by(creator: user)
+        flash[:error] = 'This user owns at least one assignment and cannot be deleted'
+      else
+        @organization.users.delete(user)
+        flash[:success] = 'The user has been removed from the classroom'
+      end
 
       redirect_to stafftools_organization_path(@organization.id)
     end
