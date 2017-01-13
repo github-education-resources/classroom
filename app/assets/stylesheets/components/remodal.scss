@@ -20,20 +20,9 @@
 }
 
 .remodal {
-  width: 455px;
   box-sizing: border-box;
-  padding: 15px;
-  margin-bottom: 25em;
-  color: inherit;
-  background: #fff;
-  border-radius: 5px;
   box-shadow: 0 0 18px rgba(0, 0, 0, 0.4);
-
   transform: translate3d(0, 0, 0);
-
-  .form {
-    margin-bottom: 0.8rem;
-  }
 
   &.remodal-is-opening,
   &.remodal-is-closing {
@@ -46,6 +35,27 @@
 
   &.remodal-is-closing {
     animation: remodal-closing-keyframes 0.3s;
+  }
+}
+
+.remodal.video {
+  width: 75%;
+  height: 75%;
+  & > iframe {
+    display: block;
+  }
+}
+
+.remodal:not(.video) {
+  width: 455px;
+  padding: 15px;
+  margin-bottom: 25em;
+  border-radius: 5px;
+  background: #fff;
+  color: inherit;
+
+  .form {
+    margin-bottom: 0.8rem;
   }
 }
 
