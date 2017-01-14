@@ -50,26 +50,27 @@
 
 .btn-purple {
   color: #fff;
-  background-color: #B2309C;
-  background-image: linear-gradient(#CC57B8, #B2309C);
-  border-color: #A0298C;
+  background-color: #b2309c;
+  background-image: linear-gradient(#cc57b8, #b2309c);
+  border-color: #a0298c;
+
   &:hover {
     color: #fff;
-    background-color: darken(#B2309C, 5%);
-    background-image: linear-gradient(darken(#CC57B8, 5%), darken(#B2309C, 5%));
-    border-color: #A0298C;
+    background-color: darken(#b2309c, 5%);
+    background-image: linear-gradient(darken(#cc57b8, 5%), darken(#b2309c, 5%));
+    border-color: #a0298c;
   }
 
   &:active,
   &.selected {
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
-    background-color: darken(#B2309C, 5%);
+    background-color: darken(#b2309c, 5%);
     background-image: none;
-    border-color: darken(#A0298C, 5%);
+    border-color: darken(#a0298c, 5%);
   }
 
   &.selected:hover {
-    background-color: darken(#B2309C, 10%);
+    background-color: darken(#b2309c, 10%);
   }
 }
 

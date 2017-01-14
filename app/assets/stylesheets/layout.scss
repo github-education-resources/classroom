@@ -35,13 +35,14 @@ main {
 }
 
 .site-header {
-  color: #ccc;
   padding-top: 1rem;
   padding-bottom: 1rem;
+  color: #ccc;
   background-color: #2f3232;
-  & > .container {
+
+  .container {
     @media screen and (min-width: 40em) {
-      padding: 0px 20px;
+      padding: 0 20px;
     }
   }
 }
@@ -548,22 +549,24 @@ hr {
 }
 
 .signin-section {
-  color: #fff;
-  margin-bottom: 1.5em;
-  background-color: #5fb27b;
   padding: 6.154em 20px;
+  margin-bottom: 1.5em;
+  color: #fff;
+  background-color: #5fb27b;
+
   .heading {
-    margin-top: 0px;
+    margin-top: 0;
     font-size: 48px;
     font-weight: normal;
+
     @media screen and (max-width: 40em) {
       font-size: 8vw;
     }
   }
 
   .subheading {
-    font-size: 21px;
     margin-bottom: 1.5rem;
+    font-size: 21px;
 
     @media screen and (max-width: 32em) {
       font-size: 4vw;
@@ -572,19 +575,24 @@ hr {
 
   a {
     font-weight: normal;
+
     @media screen and (min-width: 40em) {
       &:nth-child(2n-2) {
         margin-right: 3px;
       }
+
       &:nth-child(2n-1) {
         margin-left: 3px;
       }
     }
+
     @media screen and (max-width: 40em) {
       width: 100%;
+
       &:nth-child(2n-2) {
         margin-bottom: 3px;
       }
+
       &:nth-child(2n-1) {
         margin-top: 3px;
       }
@@ -623,12 +631,12 @@ hr {
   }
 
   .octicon {
-    font-size: 21px;
     margin-right: 5px;
+    font-size: 21px;
   }
 
   .column {
-    padding: 0px 20px;
+    padding: 0 20px;
   }
 }
 
