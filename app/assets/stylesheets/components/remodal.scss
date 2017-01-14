@@ -42,6 +42,15 @@
   width: 80%;
   height: auto;
   max-width: 960px;
+  .remodal-close {
+    z-index: 1;
+    right: 12px;
+    color: white;
+    @media screen and (max-width: 40em) {
+      top: 2px;
+      right: 8px;
+    }
+  }
   #video-wrapper {
     height: 0;
     width: 100%;
