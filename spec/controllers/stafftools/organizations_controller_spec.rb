@@ -65,11 +65,7 @@ RSpec.describe Stafftools::OrganizationsController, type: :controller do
 
       context 'when user owns at least one assignment' do
         before do
-          Assignment.create(creator: user,
-                            organization: organization,
-                            title: 'Title',
-                            slug: 'ABCDE')
-
+          create(:assignment, creator: user, organization: organization, title: 'Title')
           delete :remove_user, params: { id: organization.id, user_id: user.id }
         end
 

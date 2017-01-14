@@ -93,7 +93,7 @@ Rails.application.routes.draw do
 
     resources :organizations, path: 'classrooms', only: [:show] do
       member do
-        delete '/remove_user/:user_id', to: 'organizations#remove_user', as: 'remove_user'
+        delete '/users/:user_id', to: 'organizations#remove_user', as: 'remove_user'
       end
     end
 

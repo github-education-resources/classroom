@@ -6,11 +6,9 @@ module Stafftools
     def show; end
 
     def remove_user
-      not_found unless true_user.try(:staff?)
-
       user = User.find(params[:user_id])
 
-      if Assignment.find_by(creator: user)
+      if Assignment.find_by(creator: user).present?
         flash[:error] = 'This user owns at least one assignment and cannot be deleted'
       else
         @organization.users.delete(user)
