@@ -9,15 +9,18 @@ VCR.use_cassette 'auth_user' do
     'provider' => 'github',
     'uid'      => user.id.to_s,
 
-    'info' =>
-    {
-      'nickname' => user.login,
-      'email'    => user.email,
-      'name'     => user.name
-    },
-
     'extra' => { 'raw_info' => { 'site_admin' => false } },
 
     'credentials' => { 'token' => token }
   )
+end
+
+module AuthenticationHelper
+  def sign_in_as(user)
+    session[:user_id] = user.id
+  end
+
+  def sign_out
+    session[:user_id] = nil
+  end
 end

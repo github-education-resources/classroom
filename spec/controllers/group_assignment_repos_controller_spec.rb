@@ -2,30 +2,24 @@
 require 'rails_helper'
 
 RSpec.describe GroupAssignmentReposController, type: :controller do
-  let(:user)         { GitHubFactory.create_owner_classroom_org.users.first }
-  let(:organization) { user.organizations.first                             }
+  let(:user)         { classroom_teacher }
+  let(:organization) { classroom_org     }
+  let(:student)      { classroom_student }
 
-  let(:student)      { GitHubFactory.create_classroom_student                       }
   let(:repo_access)  { RepoAccess.create(user: student, organization: organization) }
 
-  let(:grouping) { Grouping.create(organization: organization, title: 'Grouping 1') }
-  let(:group)    { Group.create(title: Time.zone.now, grouping: grouping)           }
-
   let(:group_assignment) do
-    GroupAssignment.create(creator: user,
-                           title: 'Learn Ruby',
-                           slug: 'learn-ruby',
-                           organization: organization,
-                           grouping: grouping,
-                           public_repo: false)
+    create(:group_assignment, title: 'Learn Ruby', organization: organization, public_repo: false)
   end
+
+  let(:group) { Group.create(title: Time.zone.now, grouping: group_assignment.grouping) }
 
   let(:group_assignment_repo) do
     GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
   end
 
   before(:each) do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   after do

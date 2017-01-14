@@ -2,14 +2,12 @@
 require 'rails_helper'
 
 RSpec.describe OrganizationsController, type: :controller do
-  include ActiveJob::TestHelper
-
-  let(:organization)  { GitHubFactory.create_owner_classroom_org }
-  let(:user)          { organization.users.first                 }
-  let(:student)       { GitHubFactory.create_classroom_student   }
+  let(:organization)  { classroom_org     }
+  let(:user)          { classroom_teacher }
+  let(:student)       { classroom_student }
 
   before do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   describe 'GET #index', :vcr do
@@ -31,6 +29,8 @@ RSpec.describe OrganizationsController, type: :controller do
       end
 
       it 'sets the users organization' do
+        organization # call the record so that it is created
+
         get :index
         expect(assigns(:organizations).first.id).to eq(organization.id)
       end
@@ -50,7 +50,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
     context 'user without admin privilege on the organization' do
       before(:each) do
-        sign_in(student)
+        sign_in_as(student)
       end
 
       it 'does not add the user to the classroom' do
@@ -200,6 +200,8 @@ RSpec.describe OrganizationsController, type: :controller do
 
   describe 'DELETE #destroy', :vcr do
     it 'sets the `deleted_at` column for the organization' do
+      organization # call the record so that it is created
+
       expect { delete :destroy, params: { id: organization.slug } }.to change { Organization.all.count }
       expect(Organization.unscoped.find(organization.id).deleted_at).not_to be_nil
     end

@@ -36,3 +36,6 @@ config/projections.json
 
 # byebug
 .byebug_history
+
+# RSpec
+spec/examples.txt

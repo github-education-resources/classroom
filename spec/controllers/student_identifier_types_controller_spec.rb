@@ -2,16 +2,14 @@
 require 'rails_helper'
 
 RSpec.describe StudentIdentifierTypesController, type: :controller do
-  include ActiveJob::TestHelper
-
-  let(:organization)  { GitHubFactory.create_owner_classroom_org }
-  let(:user)          { organization.users.first                 }
-  let(:student)       { GitHubFactory.create_classroom_student   }
+  let(:organization)  { classroom_org       }
+  let(:user)          { classroom_teacher   }
+  let(:student)       { classroom_student   }
 
   let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
 
   before do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   context 'flipper is enabled for the user' do

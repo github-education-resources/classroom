@@ -2,15 +2,19 @@
 require 'rails_helper'
 
 RSpec.describe GroupsController, type: :controller do
-  include ActiveJob::TestHelper
+  let(:organization)  { classroom_org     }
+  let(:user)          { classroom_teacher }
 
-  let(:organization)  { GitHubFactory.create_owner_classroom_org }
-  let(:user)          { organization.users.first                 }
-  let(:grouping)      { Grouping.create(title: 'Grouping HTML5', organization: organization)  }
-  let(:group)         { Group.create(title: 'The Group', grouping: grouping)                  }
+  let(:grouping) { create(:grouping, organization: organization)         }
+  let(:group)    { Group.create(title: 'The Group', grouping: grouping)  }
 
   before do
-    sign_in(user)
+    sign_in_as(user)
+  end
+
+  after(:each) do
+    RepoAccess.destroy_all
+    Group.destroy_all
   end
 
   context 'flipper is enabled for the user' do
@@ -93,10 +97,5 @@ RSpec.describe GroupsController, type: :controller do
         end.to raise_error(ActionController::RoutingError)
       end
     end
-  end
-
-  after(:each) do
-    RepoAccess.destroy_all
-    Group.destroy_all
   end
 end

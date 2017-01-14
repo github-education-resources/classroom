@@ -3,25 +3,22 @@ require 'rails_helper'
 
 RSpec.describe GroupAssignmentInvitation, type: :model do
   it 'should have a key after initialization' do
-    group_assignment_invitation = GroupAssignmentInvitation.new
+    group_assignment_invitation = build(:group_assignment_invitation)
     expect(group_assignment_invitation.key).to_not be_nil
   end
 
   describe '#redeem_for', :vcr do
-    let(:invitee)       { GitHubFactory.create_classroom_student   }
-    let(:organization)  { GitHubFactory.create_owner_classroom_org }
-    let(:grouping)      { Grouping.create(title: 'Grouping', organization: organization) }
+    let(:student)       { classroom_student }
+    let(:organization)  { classroom_org     }
 
     let(:group_assignment) do
-      GroupAssignment.create(creator: organization.users.first,
-                             title: 'JavaScript',
-                             slug: 'javascript',
-                             organization: organization,
-                             public_repo: false,
-                             grouping: grouping)
+      create(:group_assignment,
+             title: 'JavaScript',
+             organization: organization,
+             public_repo: false)
     end
 
-    let(:group_assignment_invitation) { GroupAssignmentInvitation.create(group_assignment: group_assignment) }
+    subject { create(:group_assignment_invitation, group_assignment: group_assignment) }
 
     after(:each) do
       RepoAccess.destroy_all
@@ -30,25 +27,25 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
     end
 
     it 'returns the GroupAssignmentRepo' do
-      group_assignment_repo = group_assignment_invitation.redeem_for(invitee, nil, 'Code Squad')
+      group_assignment_repo = subject.redeem_for(student, nil, 'Code Squad')
       expect(group_assignment_repo).to eql(GroupAssignmentRepo.last)
     end
   end
 
-  describe '#title' do
-    let(:group_assignment_invitation) { create(:group_assignment_invitation) }
+  context 'with invitation' do
+    subject { create(:group_assignment_invitation) }
 
-    it 'returns the group assignments title' do
-      group_assignment_title = group_assignment_invitation.group_assignment.title
-      expect(group_assignment_invitation.title).to eql(group_assignment_title)
+    describe '#title' do
+      it 'returns the group assignments title' do
+        group_assignment_title = subject.group_assignment.title
+        expect(subject.title).to eql(group_assignment_title)
+      end
     end
-  end
 
-  describe '#to_param' do
-    let(:group_assignment_invitation) { create(:group_assignment_invitation) }
-
-    it 'should return the key' do
-      expect(group_assignment_invitation.to_param).to eql(group_assignment_invitation.key)
+    describe '#to_param' do
+      it 'should return the key' do
+        expect(subject.to_param).to eql(subject.key)
+      end
     end
   end
 end

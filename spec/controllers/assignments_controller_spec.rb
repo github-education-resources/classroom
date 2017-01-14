@@ -2,19 +2,14 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentsController, type: :controller do
-  include ActiveJob::TestHelper
+  let(:organization) { classroom_org     }
+  let(:user)         { classroom_teacher }
 
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
-  let(:user)         { organization.users.first                 }
-
-  let(:assignment) do
-    Assignment.create(title: 'Assignment', slug: 'assignment', creator: user, organization: organization)
-  end
-
+  let(:assignment)              { create(:assignment, organization: organization)              }
   let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
 
   before do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   describe 'GET #new', :vcr do

@@ -2,8 +2,6 @@
 require 'rails_helper'
 
 RSpec.describe HooksController, type: :controller do
-  include ActiveJob::TestHelper
-
   before do
     set_http_header('HTTP_X_HUB_SIGNATURE', "sha1=#{GitHub::WebHook.generate_hmac('{"foo":"bar"}')}")
   end

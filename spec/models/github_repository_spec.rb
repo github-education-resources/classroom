@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 describe GitHubRepository do
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
+  let(:organization) { classroom_org }
 
   before do
     Octokit.reset!

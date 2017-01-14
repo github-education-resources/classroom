@@ -2,19 +2,16 @@
 require 'rails_helper'
 
 RSpec.describe Group, type: :model do
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
-  let(:grouping)     { Grouping.create(title: 'Grouping 1', organization: organization) }
+  let(:organization) { classroom_org }
+  let(:grouping)     { create(:grouping, organization: organization) }
 
   describe 'callbacks', :vcr do
-    let(:organization) { GitHubFactory.create_owner_classroom_org }
-    let(:grouping)     { Grouping.create(title: 'Grouping 1', organization: organization) }
-
     before(:each) do
       @group = Group.create(grouping: grouping, title: 'Toon Town')
     end
 
     after(:each) do
-      @group.destroy if @group.present?
+      @group.try(:destroy)
     end
 
     describe 'before_validation' do
@@ -26,7 +23,7 @@ RSpec.describe Group, type: :model do
     end
 
     describe 'assocation callbacks' do
-      let(:user) { GitHubFactory.create_classroom_student }
+      let(:user) { classroom_student }
 
       before(:each) do
         @repo_access = RepoAccess.create(user: user, organization: organization)
@@ -34,7 +31,7 @@ RSpec.describe Group, type: :model do
       end
 
       after(:each) do
-        @repo_access.destroy if @repo_access.present?
+        RepoAccess.destroy_all
       end
 
       describe 'before_add' do
