@@ -43,3 +43,13 @@
   margin-bottom: 0;
   font-weight: bold;
 }
+
+.stafftools-small-button {
+  float: right;
+  padding: 3px 6px;
+}
+
+.boxed-group-list > li.stafftools-button-li {
+  overflow: hidden;
+  line-height: 27px;
+}
