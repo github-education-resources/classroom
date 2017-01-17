@@ -549,13 +549,20 @@ hr {
 }
 
 .signin-section {
-  padding: 6.154em 20px;
+  padding: 6.154em 20px 4.103em;
   margin-bottom: 1.5em;
   color: #fff;
   background-color: #5fb27b;
 
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .heading {
     margin-top: 0;
+    margin-bottom: 0;
     font-size: 48px;
     font-weight: normal;
 
@@ -565,36 +572,52 @@ hr {
   }
 
   .subheading {
-    margin-bottom: 1.5rem;
+    margin-top: 0.5em;
     font-size: 21px;
 
     @media screen and (max-width: 32em) {
+      margin-bottom: 2em;
       font-size: 4vw;
     }
   }
 
   a {
+    overflow: hidden;
     font-weight: normal;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
-    @media screen and (min-width: 40em) {
-      &:nth-child(2n-2) {
-        margin-right: 3px;
+    &.open-video {
+      padding: 7.5px 15px;
+      margin-bottom: 35px;
+      font-size: 0.9rem;
+      color: #5fb27b;
+      cursor: pointer;
+      background-color: #f4f5f5;
+      border-radius: 50px;
+
+      img {
+        height: 24px;
+        margin-right: 8px;
+        vertical-align: middle;
       }
 
-      &:nth-child(2n-1) {
-        margin-left: 3px;
-      }
-    }
-
-    @media screen and (max-width: 40em) {
-      width: 100%;
-
-      &:nth-child(2n-2) {
-        margin-bottom: 3px;
+      &:hover {
+        color: #5fb27b;
+        background-color: darken(#f4f5f5, 5%);
       }
 
-      &:nth-child(2n-1) {
-        margin-top: 3px;
+      &:active,
+      &.selected {
+        background-color: darken(#dfdddd, 5%);
+      }
+
+      &.selected:hover {
+        background-color: darken(#dfdddd, 10%);
+      }
+
+      @media screen and (max-width: 40em) {
+        margin-bottom: 20px;
       }
     }
   }
