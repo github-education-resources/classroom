@@ -43,6 +43,14 @@
   max-width: 960px;
   height: auto;
 
+  &.remodal-is-opening {
+    animation: remodal-opening-keyframes 0.5s;
+  }
+
+  &.remodal-is-closing {
+    animation: remodal-closing-keyframes 0.5s;
+  }
+
   .remodal-close {
     right: 12px;
     z-index: 1;
