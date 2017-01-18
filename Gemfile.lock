@@ -221,7 +221,7 @@ GEM
     octicons_helper (2.1.0)
       octicons (~> 2.0)
       rails
-    omniauth (1.3.1)
+    omniauth (1.3.2)
       hashie (>= 1.2, < 4)
       rack (>= 1.0, < 3)
     omniauth-github (1.1.2)
