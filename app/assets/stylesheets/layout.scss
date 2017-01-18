@@ -39,12 +39,6 @@ main {
   padding-bottom: 1rem;
   color: #ccc;
   background-color: #2f3232;
-
-  .container {
-    @media screen and (min-width: 40em) {
-      padding: 0 20px;
-    }
-  }
 }
 
 .site-logo {

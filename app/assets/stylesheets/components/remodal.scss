@@ -1,4 +1,4 @@
-.remodal-overlay {
+:not(.home) .remodal-overlay {
   background: rgba(0, 0, 0, 0.4);
 
   &.remodal-is-opening,
@@ -12,6 +12,16 @@
 
   &.remodal-is-closing {
     animation: remodal-overlay-closing-keyframes 0.3s;
+  }
+}
+
+.home .remodal-overlay {
+  &.remodal-is-opening {
+    animation: remodal-overlay-opening-keyframes 0.5s;
+  }
+
+  &.remodal-is-closing {
+    animation: remodal-overlay-closing-keyframes 0.5s;
   }
 }
 
