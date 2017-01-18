@@ -47,7 +47,9 @@
       <div class="boxed-group-inner">
         <ul class="boxed-group-list standalone">
           <% @group.repo_accesses.each do |repo_access| %>
-            <%= render partial: 'stafftools/organizations/user', locals: { user: repo_access.user } %>
+            <li class="clearfix">
+              <%= render partial: 'stafftools/organizations/user', locals: { user: repo_access.user } %>
+            </li>
           <% end %>
         </ul>
       </div>
