@@ -3,7 +3,7 @@ language: ruby
 sudo: false
 
 rvm:
-  - 2.3.3
+  - 2.4.0
 
 env:
   - DB=postgresql
