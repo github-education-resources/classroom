@@ -8,7 +8,7 @@ module StarterCode
   def starter_code_repository_id(repo_name)
     return unless repo_name.present?
 
-    raise GitHub::Error, WRONG_FORMAT unless repo_name =~ %r{^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$}
+    raise GitHub::Error, WRONG_FORMAT unless repo_name.match?(%r{^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$})
 
     begin
       # rubocop:disable Rails/DynamicFindBy

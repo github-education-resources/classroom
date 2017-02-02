@@ -31,7 +31,7 @@ RSpec.describe CollabMigration do
     context 'with a `github_team_id`' do
       before(:each) do
         @github_team = github_organization.create_team('Test Team')
-        repo_access.update_attribute(:github_team_id, @github_team.id)
+        repo_access.update_attribute(:github_team_id, @github_team.id) # rubocop:disable Rails/SkipsModelValidations
       end
 
       after(:each) do
