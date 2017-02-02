@@ -35,21 +35,21 @@ gem 'peek-performance_bar'
 gem 'peek-pg', git: 'https://github.com/mkcode/peek-pg.git', ref: '9bbe212ed1b6b4a4ad56ded1ef4cf9179cdac0cd'
 gem 'peek-sidekiq', git: 'https://github.com/Soliah/peek-sidekiq.git', ref: '261c857578ae6dc189506a35194785a4db51e54c'
 gem 'pg'
-gem 'pry-rails'
 gem 'pry-byebug'
+gem 'pry-rails'
 gem 'puma', '~> 3.0'
 
 gem 'rack-canonical-host'
 gem 'rack-timeout', require: false
 gem 'rails-i18n', '~> 5.0', '>= 5.0.1'
 gem 'redis-namespace'
-gem 'ruby-progressbar', '~> 1.8', '>= 1.8.1'
+gem 'ruby-progressbar', '~> 1.8', '>= 1.8.1', require: false
 
-gem 'sprockets'
 gem 'sass-rails', '~> 5.0', '>= 5.0.6'
-gem 'sidekiq', '~> 4.2', '>= 4.2.8'
+gem 'sidekiq', '~> 4.2', '>= 4.2.9'
+gem 'sprockets'
 
-gem 'turbolinks', '~> 2.5.3'
+gem 'turbolinks', '~> 2.5', '>= 2.5.3'
 
 gem 'uglifier', '>= 1.3.0'
 
