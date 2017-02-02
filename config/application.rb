@@ -1,6 +1,22 @@
+# frozen_string_literal: true
+
 require File.expand_path('../boot', __FILE__)
 
-require 'rails/all'
+# From https://github.com/rails/rails/blob/master/railties/lib/rails/all.rb
+require 'rails'
+
+%w(
+  active_record/railtie
+  action_controller/railtie
+  action_view/railtie
+  active_job/railtie
+  sprockets/railtie
+).each do |railtie|
+  begin
+    require railtie
+  rescue LoadError # rubocop:disable Lint/HandleExceptions
+  end
+end
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
