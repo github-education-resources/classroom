@@ -18,12 +18,8 @@
         <%= render 'shared/error_messages', object: f.object %>
         <%= render partial: 'assignments/assignment_form_options', locals: { f: f } %>
       </div>
-      <% if !@organization.private_repos? %>
-        <div class="one-third column dangerzone-container">
-          <p class="text-emphasized">Unlimited Free Private Repositories</p>
-          <p class="text-muted"> If you have not already, you may apply for unlimited free private repositories for this classroom organization <a href="https://education.github.com/discount_requests/new">here</a>.</p>
-        </div>
-      <% end %>
+
+      <%= render partial: 'shared/unlimited_free_private_repositories_banner' %>
     </div>
 
     <div class="form-actions">
