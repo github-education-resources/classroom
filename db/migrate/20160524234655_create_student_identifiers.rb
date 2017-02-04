@@ -1,4 +1,4 @@
-class CreateStudentIdentifiers < ActiveRecord::Migration
+class CreateStudentIdentifiers < ActiveRecord::Migration[4.2]
   def change
     create_table :student_identifier_types do |t|
       t.belongs_to :organization, index: true

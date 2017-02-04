@@ -2,11 +2,11 @@
 require 'rails_helper'
 
 RSpec.describe Stafftools::ResourcesController, type: :controller do
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
-  let(:user)         { organization.users.first                 }
+  let(:organization) { classroom_org     }
+  let(:user)         { classroom_teacher }
 
   before(:each) do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   describe 'GET #index', :vcr do
@@ -37,7 +37,7 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
 
       context 'with URL parameters' do
         before(:each) do
-          get :index, query: '1'
+          get :index, params: { query: '1' }
         end
 
         it 'returns a success status' do
@@ -80,7 +80,7 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
 
       context 'with URL parameters' do
         before(:each) do
-          get :search, query: '1'
+          get :search, params: { query: '1' }
         end
 
         it 'returns a succcess status' do

@@ -8,12 +8,7 @@ module OrganizationAuthorization
 
   def authorize_organization_access
     return if @organization.users.include?(current_user)
-
-    begin
-      github_organization.admin?(current_user.github_user.login) ? @organization.users << current_user : not_found
-    rescue
-      not_found
-    end
+    github_organization.admin?(current_user.github_user.login) ? @organization.users << current_user : not_found
   end
 
   private

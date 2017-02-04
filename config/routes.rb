@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'sidekiq/web'
 require 'staff_constraint'
 
@@ -14,8 +15,16 @@ Rails.application.routes.draw do
 
   get '/autocomplete/github_repos', to: 'autocomplete#github_repos'
 
+  scope 'github', as: 'github' do
+    constraints user_agent: %r{\AGitHub-Hookshot/\w+\z}, format: 'json' do
+      post :hooks, to: 'hooks#receive'
+    end
+  end
+
   resources :assignment_invitations, path: 'assignment-invitations', only: [:show] do
     member do
+      get   :identifier
+      post  :submit_identifier
       patch :accept_invitation
       get   :successful_invitation, path: :success
     end
@@ -23,6 +32,8 @@ Rails.application.routes.draw do
 
   resources :group_assignment_invitations, path: 'group-assignment-invitations', only: [:show] do
     member do
+      get   :identifier
+      post  :submit_identifier
       get   :accept
       patch :accept_assignment
       patch :accept_invitation
@@ -49,11 +60,20 @@ Rails.application.routes.draw do
           end
         end
       end
-      resources :assignments
-      resources :group_assignments, path: 'group-assignments'
+
+      resources :assignments do
+        resources :assignment_repos, only: [:show]
+      end
+
+      resources :group_assignments, path: 'group-assignments' do
+        resources :group_assignment_repos, only: [:show]
+      end
+
       resources :student_identifier_types, path: 'identifiers', except: [:show]
     end
   end
+
+  resources :videos, only: [:index]
 
   namespace :stafftools do
     constraints StaffConstraint.new do
@@ -71,16 +91,20 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :organizations, path: 'classrooms', only: [:show]
+    resources :organizations, path: 'classrooms', only: [:show] do
+      member do
+        delete '/users/:user_id', to: 'organizations#remove_user', as: 'remove_user'
+      end
+    end
 
     resources :repo_accesses, only: [:show]
 
     resources :assignment_invitations, only: [:show]
-    resources :assignment_repos,       only: [:show]
+    resources :assignment_repos,       only: [:show, :destroy]
     resources :assignments,            only: [:show]
 
     resources :group_assignment_invitations, path: 'group-assignment-invitations', only: [:show]
-    resources :group_assignment_repos,       path: 'group-assignment-repos',       only: [:show]
+    resources :group_assignment_repos,       path: 'group-assignment-repos',       only: [:show, :destroy]
     resources :group_assignments,            path: 'group-assignments',            only: [:show]
 
     resources :groupings, only: [:show]

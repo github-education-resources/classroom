@@ -55,7 +55,7 @@ class ApplicationController < ActionController::Base
   end
 
   def become_active
-    current_user.become_active
+    LastActiveJob.perform_later(current_user.id, Time.zone.now.to_i)
   end
 
   def current_user
@@ -80,7 +80,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   def logged_in?

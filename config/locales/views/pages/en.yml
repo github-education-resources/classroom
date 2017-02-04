@@ -1,0 +1,13 @@
+en:
+  views:
+    pages:
+      banner_heading: 'Your course assignments on GitHub'
+      banner_subheading: 'GitHub Classroom automates repository creation and access control, making it easy to distribute starter code and collect assignments on GitHub.'
+      see_how_it_works: 'See how it works'
+      sign_in_to_start: 'Sign in with your GitHub account to get started'
+      create_assignments: 'Create assignments'
+      create_assignments_desc: 'Distribute assignments with starter code. Students work on assignments individually or in groups using public or private GitHub repositories.'
+      invite_students: 'Invite students'
+      invite_students_desc: 'Students gain access to assignments using unique invitation URLs, eliminating the need to collect GitHub usernames in advance and manage access manually.'
+      review_progress: 'Review progress'
+      review_progress_desc: 'Teachers and teaching assistants can browse submissions by assignment, making it easy to follow along with student progress.'

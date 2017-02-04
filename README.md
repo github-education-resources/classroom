@@ -1,5 +1,5 @@
 # GitHub Classroom
-[![Build Status](https://travis-ci.org/education/classroom.svg?branch=master)](https://travis-ci.org/education/classroom)
+[![Build Status](https://travis-ci.org/education/classroom.svg?branch=master)](https://travis-ci.org/education/classroom) [![Code Climate](https://codeclimate.com/github/education/classroom/badges/gpa.svg)](https://codeclimate.com/github/education/classroom)
 
 GitHub Classroom is a [Ruby on Rails](http://rubyonrails.org/) application designed to automate repository creation and access control, making it easy for teachers to distribute starter code and collect assignments on GitHub
 
@@ -20,17 +20,17 @@ New to Ruby? No worries! You can follow these instructions to install a local se
 
 #### Installing a Local Server
 
-First things first, you'll need to install Ruby 2.3.1. We recommend using the excellent [rbenv](https://github.com/sstephenson/rbenv),
+First things first, you'll need to install Ruby 2.3.3. We recommend using the excellent [rbenv](https://github.com/sstephenson/rbenv),
 and [ruby-build](https://github.com/sstephenson/ruby-build)
 
 ```bash
-rbenv install 2.3.1
-rbenv global 2.3.1
+rbenv install 2.3.3
+rbenv global 2.3.3
 ```
 
 Next, you'll need to make sure that you have Nodejs, PostgreSQL, Redis, Memcached, and Elasticsearch installed. This can be done easily :
 * For OSX using [Homebrew](http://brew.sh) : You don't have to do anything! When you run `script/setup` later on this will be taken care of for you.
-* For Linux : `apt-get install nodejs postgresql redis-server memcached`. For Elasticsearch, follow the instructions on [their website](https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-repositories.html).
+* For Linux : `apt-get install nodejs postgresql redis-server memcached`. For Elasticsearch, follow the instructions on [their website](https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html).
 
 You will want to set PostgreSQL to autostart at login via launchctl, if not already. See `brew info postgresql`. Redis and memcached may be setup similarly via launchctl or setup project wide by using foreman, described below.
 
@@ -69,6 +69,7 @@ These values must be present in your `.env` file (created by `script/setup`).
 
 ENV Variable | Description |
 :-------------------|:-----------------|
+`CLASSROOM_WEBHOOK_URL_PREFIX` | Ngrok url to receive webhooks (run `./script/ngrok`).
 `GITHUB_CLIENT_ID`| the GitHub Application Client ID.
 `GITHUB_CLIENT_SECRET`| the GitHub Application Client Secret.
 `NON_STAFF_GITHUB_ADMIN_IDS` | GitHub `user_ids` of users to be granted staff level access.
@@ -130,7 +131,13 @@ After that, you may start the rails server in a separate terminal with:
 script/server
 ```
 
-And that's it! You should have a working instance of GitHub Classroom located [here](http://localhost:5000)
+And another terminal with:
+
+```bash
+script/ngrok
+```
+
+That's it! You should have a working instance of GitHub Classroom located [here](http://localhost:5000)
 
 ## Deployment
 

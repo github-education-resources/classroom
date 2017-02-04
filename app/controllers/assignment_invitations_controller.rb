@@ -2,6 +2,7 @@
 class AssignmentInvitationsController < ApplicationController
   layout 'layouts/invitations'
 
+  before_action :check_user_has_identifier, only: [:show]
   before_action :check_user_not_previous_acceptee, only: [:show]
   before_action :ensure_github_repo_exists, only: [:successful_invitation]
 
@@ -9,11 +10,23 @@ class AssignmentInvitationsController < ApplicationController
     create_assignment_repo { redirect_to successful_invitation_assignment_invitation_path }
   end
 
-  def show
+  def show; end
+
+  def identifier
+    not_found if student_identifier || assignment.student_identifier_type.nil?
+    @student_identifier = StudentIdentifier.new
   end
 
-  def successful_invitation
+  def submit_identifier
+    @student_identifier = StudentIdentifier.new(new_student_identifier_params)
+    if @student_identifier.save
+      redirect_to assignment_invitation_path
+    else
+      render :identifier
+    end
   end
+
+  def successful_invitation; end
 
   private
 
@@ -42,14 +55,35 @@ class AssignmentInvitationsController < ApplicationController
   helper_method :organization
 
   def create_assignment_repo
-    users_assignment_repo = invitation.redeem_for(current_user)
+    result = invitation.redeem_for(current_user)
 
-    if users_assignment_repo.present?
+    if result.success?
       yield if block_given?
     else
-      flash[:error] = 'An error has occurred, please refresh the page and try again.'
-      redirect_to :show
+      flash[:error] = result.error
+      redirect_to assignment_invitation_path(invitation)
     end
+  end
+
+  def student_identifier
+    @student_identifier ||= StudentIdentifier.find_by(user: current_user,
+                                                      student_identifier_type: assignment.student_identifier_type)
+  end
+  helper_method :student_identifier
+
+  def new_student_identifier_params
+    params
+      .require(:student_identifier)
+      .permit(:value)
+      .merge(user: current_user,
+             organization: organization,
+             student_identifier_type: assignment.student_identifier_type)
+  end
+
+  def check_user_has_identifier
+    return unless assignment.student_identifier_type.present?
+    return if student_identifier.present?
+    redirect_to identifier_assignment_invitation_path
   end
 
   def check_user_not_previous_acceptee

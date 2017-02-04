@@ -1,0 +1,35 @@
+<% GitHubClassroom.videos.each do |video_id, video_info| %>
+  <% view = \
+    Video::ShowView.new(
+      id: video_id,
+      title: video_info['title'],
+      provider: video_info['provider'],
+      description: video_info['description']
+    )
+  %>
+
+  <div class="site-content">
+    <div class="site-content-cap">
+      <div class="flex-table">
+        <div class="flex-table-item">
+          <span class="group-assignment-icon assignment-icon-group left">
+            <%= octicon 'device-camera-video', height: 22 %>
+          </span>
+
+          <h2 class="site-content-heading text-float-left">
+            <%= view.title %>
+          </h2>
+
+          <p class="assignment-type text-muted">Tutorial</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-content-body">
+      <div class="content text-center">
+        <iframe src="<%= view.url %>" frameborder="0" width="450" height="300" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+      </div>
+      <p class="lead"><%= view.description %></p>
+    </div>
+  </div>
+<% end %>

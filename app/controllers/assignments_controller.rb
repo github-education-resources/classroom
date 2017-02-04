@@ -22,19 +22,17 @@ class AssignmentsController < ApplicationController
   end
 
   def show
-    @assignment_repos = AssignmentRepo.includes(:organization, :user)
-                                      .where(assignment: @assignment)
-                                      .page(params[:page])
+    @assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @assignment.update_attributes(update_assignment_params)
       flash[:success] = "Assignment \"#{@assignment.title}\" updated"
       redirect_to organization_assignment_path(@organization, @assignment)
     else
+      @assignment.reload unless @assignment.slug.present?
       render :edit
     end
   end
@@ -88,7 +86,7 @@ class AssignmentsController < ApplicationController
   def update_assignment_params
     params
       .require(:assignment)
-      .permit(:title, :slug, :public_repo)
+      .permit(:title, :slug, :public_repo, :students_are_repo_admins)
       .merge(starter_code_repo_id: starter_code_repo_id_param, student_identifier_type: student_identifier_type_param)
   end
 

@@ -60,6 +60,6 @@ class GroupAssignmentRepo < ApplicationRecord
   delegate :slug, to: :group_assignment
 
   def name
-    @name ||= group.github_team.slug(headers: GitHub::APIHeaders.no_cache_no_store)
+    @name ||= group.github_team.slug_no_cache
   end
 end

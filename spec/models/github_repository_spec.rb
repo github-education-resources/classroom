@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 describe GitHubRepository do
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
+  let(:organization) { classroom_org }
 
   before do
     Octokit.reset!
@@ -16,6 +16,25 @@ describe GitHubRepository do
 
   after(:each) do
     @client.delete_repository(@github_repository.id)
+  end
+
+  it 'responds to all (GitHub) attributes', :vcr do
+    gh_repo = @client.repository(@github_repository.id)
+
+    @github_repository.attributes.each do |attribute, value|
+      next if attribute == :client || attribute == :access_token
+      expect(@github_repository).to respond_to(attribute)
+      expect(value).to eql(gh_repo.send(attribute))
+    end
+
+    expect(WebMock).to have_requested(:get, github_url("/repositories/#{@github_repository.id}")).twice
+  end
+
+  it 'responds to all *_no_cache methods', :vcr do
+    @github_repository.attributes.each do |attribute, _|
+      next if attribute == :id || attribute == :client || attribute == :access_token
+      expect(@github_repository).to respond_to("#{attribute}_no_cache")
+    end
   end
 
   describe 'class methods' do
@@ -54,7 +73,7 @@ describe GitHubRepository do
     describe '::find_by_name_with_owner!', :vcr do
       it 'raises a GitHubError if it cannot find the repo' do
         expect do
-          GitHubRepository.find_by_name_with_owner!(@client, 'foobar/jim')
+          GitHubRepository.find_by_name_with_owner!(@client, 'foobar/jim') # rubocop:disable Rails/DynamicFindBy
         end.to raise_error(GitHub::Error)
       end
     end
@@ -97,17 +116,6 @@ describe GitHubRepository do
           github_repository.present?(@custom_options)
 
           expect(WebMock).to have_requested(:get, github_url('/repositories/8514')).with(@custom_options)
-        end
-      end
-    end
-
-    GitHubRepository.new(@client, 123).send(:attributes).each do |attribute|
-      describe "##{attribute}", :vcr do
-        it "gets the #{attribute} of the repository " do
-          repository = @client.repository(@github_repository.id)
-
-          expect(@github_repository.send(attribute)).to eql(repository.send(attribute))
-          expect(WebMock).to have_requested(:get, github_url("/repositories/#{repository.id}")).twice
         end
       end
     end

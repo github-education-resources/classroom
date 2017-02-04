@@ -2,7 +2,7 @@
 require 'rails_helper'
 
 RSpec.describe Organization, type: :model do
-  subject { create(:organization) }
+  subject { create(:organization, github_id: 12_345) }
 
   describe 'when title is changed' do
     it 'updates the slug' do
@@ -20,17 +20,9 @@ RSpec.describe Organization, type: :model do
     end
 
     context 'with Assignments and GroupAssignments' do
-      let(:creator) { subject.users.first }
-
       before do
-        grouping = Grouping.new(title: 'Grouping', organization: subject)
-
-        Assignment.create(creator: creator, title: 'Assignment', slug: 'assignment', organization: subject)
-        GroupAssignment.create(creator: creator,
-                               grouping: grouping,
-                               organization: subject,
-                               slug: 'group-assignment',
-                               title: 'Group Assignment')
+        create(:assignment, organization: subject)
+        create(:group_assignment, organization: subject)
       end
 
       it 'should return an array of Assignments and GroupAssignments' do
@@ -52,39 +44,18 @@ RSpec.describe Organization, type: :model do
     end
   end
 
-  context 'with valid organization', :vcr do
-    let(:subject) { GitHubFactory.create_owner_classroom_org }
+  describe 'callbacks' do
+    describe 'before_destroy' do
+      describe '#silently_remove_organization_webhook', :vcr do
+        it 'deletes the webhook from GitHub' do
+          subject.update_attributes(webhook_id: 9_999_999, is_webhook_active: true)
 
-    after(:each) do
-      subject.destroy
-    end
+          org_id     = subject.github_id
+          webhook_id = subject.webhook_id
 
-    describe '#create_organization_webhook' do
-      it 'sets webhook_id' do
-        expect { subject.create_organization_webhook('http://localhost') }.to change { subject.webhook_id }
-      end
+          subject.destroy
 
-      it 'creates a webhook on GitHub' do
-        org_id = subject.github_id
-        subject.create_organization_webhook('http://localhost')
-        expect(WebMock).to have_requested(:post, github_url("/organizations/#{org_id}/hooks"))
-      end
-    end
-
-    describe 'callbacks' do
-      describe 'before_destroy' do
-        describe '#silently_remove_organization_webhook' do
-          before do
-            subject.create_organization_webhook('http://localhost')
-          end
-
-          it 'deletes the webhook from GitHub' do
-            org_id = subject.github_id
-            webhook_id = subject.webhook_id
-            subject.destroy
-
-            expect(WebMock).to have_requested(:delete, github_url("/organizations/#{org_id}/hooks/#{webhook_id}"))
-          end
+          expect(WebMock).to have_requested(:delete, github_url("/organizations/#{org_id}/hooks/#{webhook_id}"))
         end
       end
     end

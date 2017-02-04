@@ -16,7 +16,7 @@
   <%= form_for [@organization, @student_identifier_type] do |f| %>
       <%= render partial: 'student_identifier_types/form_options', locals: { f: f } %>
       <div class="form-actions">
-        <%= f.submit 'Create Identifier', class: 'btn btn-green js-navigation' %>
+        <%= f.submit 'Create Identifier', class: 'btn btn-green' %>
         <%= link_to 'Cancel', session[:return_to], class: 'btn', role: 'button'%>
       </div>
   <% end %>

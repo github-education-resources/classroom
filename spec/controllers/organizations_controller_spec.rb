@@ -2,14 +2,12 @@
 require 'rails_helper'
 
 RSpec.describe OrganizationsController, type: :controller do
-  include ActiveJob::TestHelper
-
-  let(:organization)  { GitHubFactory.create_owner_classroom_org }
-  let(:user)          { organization.users.first                 }
-  let(:student)       { GitHubFactory.create_classroom_student   }
+  let(:organization)  { classroom_org     }
+  let(:user)          { classroom_teacher }
+  let(:student)       { classroom_student }
 
   before do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   describe 'GET #index', :vcr do
@@ -31,6 +29,8 @@ RSpec.describe OrganizationsController, type: :controller do
       end
 
       it 'sets the users organization' do
+        organization # call the record so that it is created
+
         get :index
         expect(assigns(:organizations).first.id).to eq(organization.id)
       end
@@ -50,7 +50,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
     context 'user without admin privilege on the organization' do
       before(:each) do
-        sign_in(student)
+        sign_in_as(student)
       end
 
       it 'does not add the user to the classroom' do
@@ -100,30 +100,38 @@ RSpec.describe OrganizationsController, type: :controller do
       request.env['HTTP_REFERER'] = 'http://classroomtest.com/orgs/new'
     end
 
+    after(:each) do
+      organization.destroy!
+    end
+
     it 'will fail to add an organization the user is not an admin of' do
       new_organization = build(:organization, github_id: 90)
-      new_organization_options = { title: new_organization.title, github_id: new_organization.github_id }
+      new_organization_options = { github_id: new_organization.github_id }
 
-      expect { post :create, organization: new_organization_options }.not_to change { Organization.count }
+      expect do
+        post :create, params: { organization: new_organization_options }
+      end.not_to change { Organization.count }
     end
 
     it 'will not add an organization that already exists' do
-      existing_organization_options = { title: organization.title, github_id: organization.github_id }
-      expect { post :create, organization: existing_organization_options }.to_not change { Organization.count }
+      existing_organization_options = { github_id: organization.github_id }
+      expect do
+        post :create, params: { organization: existing_organization_options }
+      end.to_not change { Organization.count }
     end
 
     it 'will add an organization that the user is admin of on GitHub' do
-      organization_params = { title: organization.title, github_id: organization.github_id, users: organization.users }
+      organization_params = { github_id: organization.github_id, users: organization.users }
       organization.destroy!
 
-      expect { post :create, organization: organization_params }.to change { Organization.count }
+      expect { post :create, params: { organization: organization_params } }.to change { Organization.count }
     end
 
     it 'will redirect the user to the setup page' do
-      organization_params = { title: organization.title, github_id: organization.github_id, users: organization.users }
+      organization_params = { github_id: organization.github_id, users: organization.users }
       organization.destroy!
 
-      post :create, organization: organization_params
+      post :create, params: { organization: organization_params }
 
       expect(response).to redirect_to(setup_organization_path(Organization.last))
     end
@@ -131,7 +139,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
   describe 'GET #show', :vcr do
     it 'returns success and sets the organization' do
-      get :show, id: organization.slug
+      get :show, params: { id: organization.slug }
 
       expect(response.status).to eq(200)
       expect(assigns(:organization)).to_not be_nil
@@ -140,7 +148,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
   describe 'GET #edit', :vcr do
     it 'returns success and sets the organization' do
-      get :edit, id: organization.slug
+      get :edit, params: { id: organization.slug }
 
       expect(response).to have_http_status(:success)
       expect(assigns(:organization)).to_not be_nil
@@ -149,7 +157,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
   describe 'GET #invitation', :vcr do
     it 'returns success and sets the organization' do
-      get :invitation, id: organization.slug
+      get :invitation, params: { id: organization.slug }
 
       expect(response).to have_http_status(:success)
       expect(assigns(:organization)).to_not be_nil
@@ -163,7 +171,7 @@ RSpec.describe OrganizationsController, type: :controller do
       end
 
       it 'returns success and sets the organization' do
-        get :show_groupings, id: organization.slug
+        get :show_groupings, params: { id: organization.slug }
 
         expect(response).to have_http_status(:success)
         expect(assigns(:organization)).to_not be_nil
@@ -176,7 +184,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
     context 'flipper is not enabled' do
       it 'returns success and sets the organization' do
-        expect { get :show_groupings, id: organization.slug }.to raise_error(ActionController::RoutingError)
+        expect { get :show_groupings, params: { id: organization.slug } }.to raise_error(ActionController::RoutingError)
       end
     end
   end
@@ -184,7 +192,7 @@ RSpec.describe OrganizationsController, type: :controller do
   describe 'PATCH #update', :vcr do
     it 'correctly updates the organization' do
       options = { title: 'New Title' }
-      patch :update, id: organization.slug, organization: options
+      patch :update, params: { id: organization.slug, organization: options }
 
       expect(response).to redirect_to(organization_path(Organization.find(organization.id)))
     end
@@ -192,12 +200,14 @@ RSpec.describe OrganizationsController, type: :controller do
 
   describe 'DELETE #destroy', :vcr do
     it 'sets the `deleted_at` column for the organization' do
-      expect { delete :destroy, id: organization.slug }.to change { Organization.all.count }
+      organization # call the record so that it is created
+
+      expect { delete :destroy, params: { id: organization.slug } }.to change { Organization.all.count }
       expect(Organization.unscoped.find(organization.id).deleted_at).not_to be_nil
     end
 
     it 'calls the DestroyResource background job' do
-      delete :destroy, id: organization.slug
+      delete :destroy, params: { id: organization.slug }
 
       assert_enqueued_jobs 1 do
         DestroyResourceJob.perform_later(organization)
@@ -205,14 +215,14 @@ RSpec.describe OrganizationsController, type: :controller do
     end
 
     it 'redirects back to the index page' do
-      delete :destroy, id: organization.slug
+      delete :destroy, params: { id: organization.slug }
       expect(response).to redirect_to(organizations_path)
     end
   end
 
   describe 'GET #invite', :vcr do
     it 'returns success and sets the organization' do
-      get :invite, id: organization.slug
+      get :invite, params: { id: organization.slug }
 
       expect(response.status).to eq(200)
       expect(assigns(:organization)).to_not be_nil
@@ -221,7 +231,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
   describe 'GET #setup', :vcr do
     it 'returns success and sets the organization' do
-      get :setup, id: organization.slug
+      get :setup, params: { id: organization.slug }
 
       expect(response.status).to eq(200)
       expect(assigns(:organization)).to_not be_nil
@@ -231,7 +241,7 @@ RSpec.describe OrganizationsController, type: :controller do
   describe 'PATCH #setup_organization', :vcr do
     before(:each) do
       options = { title: 'New Title' }
-      patch :update, id: organization.slug, organization: options
+      patch :update, params: { id: organization.slug, organization: options }
     end
 
     it 'correctly updates the organization' do

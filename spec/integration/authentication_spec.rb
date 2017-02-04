@@ -2,8 +2,7 @@
 require 'rails_helper'
 
 RSpec.describe 'OAuth scope requirements', type: :request do
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
-  let(:user)         { organization.users.first                 }
+  let(:organization) { classroom_org }
 
   describe 'organizations#show', :vcr do
     context 'unauthenticated request' do
@@ -14,7 +13,7 @@ RSpec.describe 'OAuth scope requirements', type: :request do
 
       it 'sets required scopes in session' do
         get url_for(organization)
-        expect(session[:required_scopes]).to eq('user:email,repo,delete_repo,admin:org')
+        expect(session[:required_scopes]).to eq('user:email,repo,delete_repo,admin:org,admin:org_hook')
       end
     end
 
@@ -22,7 +21,7 @@ RSpec.describe 'OAuth scope requirements', type: :request do
       before(:each) do
         get url_for(organization)
         get response.redirect_url # http://www.example.com/login
-        get response.redirect_url # http://www.example.com/auth/github?scope=user%3Aemail%2Crepo%2Cdelete_repo%2Cadmin%3Aorg
+        get response.redirect_url # http://www.example.com/auth/github?scope=user%3Aemail%2Crepo%2Cdelete_repo%2Cadmin%3Aorg%2Cadmin%3Aorg_hook
         get response.redirect_url # http://www.example.com/auth/github/callback
       end
 
@@ -41,7 +40,8 @@ RSpec.describe 'OAuth scope requirements', type: :request do
 
     it 'redirects to omniauth' do
       get response.redirect_url
-      expect(response).to redirect_to('/auth/github?scope=user%3Aemail%2Crepo%2Cdelete_repo%2Cadmin%3Aorg')
+      url = '/auth/github?scope=user%3Aemail%2Crepo%2Cdelete_repo%2Cadmin%3Aorg%2Cadmin%3Aorg_hook'
+      expect(response).to redirect_to(url)
     end
   end
 
@@ -57,7 +57,7 @@ RSpec.describe 'OAuth scope requirements', type: :request do
     before(:each) do
       get url_for(organization)
       get response.redirect_url # http://www.example.com/login
-      get response.redirect_url # http://www.example.com/auth/github?scope=user%3Aemail%2Crepo%2Cdelete_repo%2Cadmin%3Aorg
+      get response.redirect_url # http://www.example.com/auth/github?scope=user%3Aemail%2Crepo%2Cdelete_repo%2Cadmin%3Aorg%2Cadmin%3Aorg_hook
     end
 
     it 'redirects back to organizations#show' do

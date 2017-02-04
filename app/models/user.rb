@@ -58,13 +58,6 @@ class User < ApplicationRecord
     StudentIdentifier.find_by(user: self, student_identifier_type: type)
   end
 
-  # This updates the `last_active_at` column without
-  # updating the model, but keeps the index updated.
-  def become_active
-    update_columns(last_active_at: Time.zone.now)
-    self.class.update_index('stafftools#user') { self }
-  end
-
   private
 
   # Internal: We need to make sure that the user

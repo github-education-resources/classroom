@@ -2,14 +2,14 @@
 require 'rails_helper'
 
 RSpec.describe Stafftools::GroupsController, type: :controller do
-  let(:user)         { GitHubFactory.create_owner_classroom_org.users.first }
-  let(:organization) { user.organizations.first                             }
+  let(:user)         { classroom_teacher }
+  let(:organization) { classroom_org     }
 
-  let(:grouping) { Grouping.create(organization: organization, title: 'Grouping 1') }
-  let(:group)    { Group.create(grouping: grouping, title: 'The B Team')            }
+  let(:grouping) { create(:grouping, organization: organization)         }
+  let(:group)    { Group.create(grouping: grouping, title: 'The B Team') }
 
   before(:each) do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   after do
@@ -19,14 +19,14 @@ RSpec.describe Stafftools::GroupsController, type: :controller do
   describe 'GET #show', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { get :show, id: group.id }.to raise_error(ActionController::RoutingError)
+        expect { get :show, params: { id: group.id } }.to raise_error(ActionController::RoutingError)
       end
     end
 
     context 'as an authorized user' do
       before do
         user.update_attributes(site_admin: true)
-        get :show, id: group.id
+        get :show, params: { id: group.id }
       end
 
       it 'succeeds' do

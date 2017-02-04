@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class GitHubRepository < GitHubResource
+  # NOTE: LEGACY, DO NOT REMOVE.
+  # This is needed for the lib/collab_migration.rb
   def add_collaborator(collaborator, options = {})
     GitHub::Errors.with_error_handling do
       @client.add_collaborator(@id, collaborator, options)
@@ -8,8 +10,25 @@ class GitHubRepository < GitHubResource
 
   def get_starter_code_from(source)
     GitHub::Errors.with_error_handling do
-      credentials = { vcs_username: @client.login, vcs_password: @client.access_token }
-      @client.start_source_import(@id, 'git', "https://github.com/#{source.full_name}", credentials)
+      options = {
+        accept:       Octokit::Preview::PREVIEW_TYPES[:source_imports],
+        vcs_username: @client.login,
+        vcs_password: @client.access_token
+      }
+
+      @client.start_source_import(@id, 'git', "https://github.com/#{source.full_name}", options)
+    end
+  end
+
+  # Public: Invite a user to a GitHub repository.
+  #
+  # user - The String GitHub login for the user.
+  #
+  # Returns an Integer Invitation id, or raises a GitHub::Error.
+  def invite(user, **options)
+    GitHub::Errors.with_error_handling do
+      options[:accept] = Octokit::Preview::PREVIEW_TYPES[:repository_invitations]
+      @client.invite_user_to_repository(@id, user, options)
     end
   end
 
@@ -18,7 +37,11 @@ class GitHubRepository < GitHubResource
   end
 
   def self.present?(client, full_name, **options)
-    client.repository?(full_name, options)
+    GitHub::Errors.with_error_handling do
+      client.repository?(full_name, options)
+    end
+  rescue GitHub::Error
+    false
   end
 
   def self.find_by_name_with_owner!(client, full_name)
@@ -30,7 +53,7 @@ class GitHubRepository < GitHubResource
 
   private
 
-  def attributes
+  def github_attributes
     %w(name full_name html_url)
   end
 end

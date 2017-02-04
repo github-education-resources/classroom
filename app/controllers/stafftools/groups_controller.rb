@@ -3,8 +3,7 @@ module Stafftools
   class GroupsController < StafftoolsController
     before_action :set_group
 
-    def show
-    end
+    def show; end
 
     private
 

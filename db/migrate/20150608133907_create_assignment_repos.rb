@@ -1,4 +1,4 @@
-class CreateAssignmentRepos < ActiveRecord::Migration
+class CreateAssignmentRepos < ActiveRecord::Migration[4.2]
   def change
     create_table :assignment_repos do |t|
       t.integer :github_repo_id, null: false

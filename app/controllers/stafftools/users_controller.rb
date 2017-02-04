@@ -5,8 +5,7 @@ module Stafftools
 
     before_action :set_user, except: [:stop_impersonating]
 
-    def show
-    end
+    def show; end
 
     def impersonate
       session[:impersonated_user_id] = @user.id
