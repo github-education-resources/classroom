@@ -38,9 +38,6 @@ module GitHubClassroom
     # Available locales
     I18n.available_locales = [:en]
 
-    # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
-
     # Add bower assets to the path
     root.join('vendor', 'assets', 'bower_components').to_s.tap do |bower_path|
       config.sass.load_paths << bower_path
