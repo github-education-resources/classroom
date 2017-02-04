@@ -14,8 +14,14 @@
 
 <div class="site-content-body">
   <%= form_for [@organization, @group_assignment] do |f| %>
-    <%= render 'shared/error_messages', object: f.object %>
-    <%= render partial: 'group_assignments/group_assignment_form_options', locals: { f: f } %>
+    <div class="columns">
+      <div class="two-thirds column">
+        <%= render 'shared/error_messages', object: f.object %>
+        <%= render partial: 'group_assignments/group_assignment_form_options', locals: { f: f } %>
+      </div>
+
+      <%= render partial: 'shared/unlimited_free_private_repositories_banner' %>
+    </div>
 
     <div class="form-actions">
       <%= f.submit 'Create Assignment', class: 'btn btn-green', id: 'group_assignment_submit', disabled: true %>
