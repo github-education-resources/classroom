@@ -471,7 +471,6 @@ DEPENDENCIES
   rails-controller-testing
   rails-i18n (~> 5.0, >= 5.0.1)
   rails_12factor
-  rainbow (~> 2.1)
   redis-namespace
   rspec-rails
   rubocop

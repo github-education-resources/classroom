@@ -64,7 +64,6 @@ group :development, :test do
   gem 'dotenv-rails'
   gem 'guard-rspec', require: false
   gem 'rails-controller-testing'
-  gem 'rainbow', '~> 2.1', require: false
   gem 'rspec-rails'
   gem 'rubocop', require: false
   gem 'scss_lint', require: false
