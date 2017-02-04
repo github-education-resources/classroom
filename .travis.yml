@@ -1,12 +1,12 @@
 language: ruby
 
+rvm:
+  - 2.4.0
+
 sudo: false
 
-rvm:
-  - 2.3.3
-
-env:
-  - DB=postgresql
+before_install:
+  - gem update --system
 
 before_script:
   - psql -c 'create database classroom_test;' -U postgres
@@ -19,10 +19,15 @@ bundler_args: --without development production --deployment --jobs=3 --retry=3
 cache: bundler
 
 services:
+  - postgresql
   - redis-server
+
+env:
+  global:
+    - GITHUB_CLIENT_ID=client_id
+    - GITHUB_CLIENT_SECRET=client_secret
+    - WEBHOOK_SECRET=abcdefg
+    - CLASSROOM_WEBHOOK_URL_PREFIX="https://example.com/github/hooks"
 
 notifications:
   email: false
-
-env:
-  - GITHUB_CLIENT_ID=client_id GITHUB_CLIENT_SECRET=client_secret WEBHOOK_SECRET=abcdefg CLASSROOM_WEBHOOK_URL_PREFIX="https://example.com/github/hooks"

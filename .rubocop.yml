@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.4
   Include:
     - '**/Rakefile'
     - '**/config.ru'
@@ -24,6 +24,10 @@ Metrics/ClassLength:
 
 Metrics/LineLength:
   Max: 120
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
 
 Rails/Delegate:
   Enabled: false
