@@ -1,9 +1,9 @@
 language: ruby
 
-sudo: false
-
 rvm:
   - 2.4.0
+
+sudo: false
 
 before_install:
   - gem update --system
@@ -22,8 +22,12 @@ services:
   - postgresql
   - redis-server
 
+env:
+  global:
+    - GITHUB_CLIENT_ID=client_id
+    - GITHUB_CLIENT_SECRET=client_secret
+    - WEBHOOK_SECRET=abcdefg
+    - CLASSROOM_WEBHOOK_URL_PREFIX="https://example.com/github/hooks"
+
 notifications:
   email: false
-
-env:
-  - GITHUB_CLIENT_ID=client_id GITHUB_CLIENT_SECRET=client_secret WEBHOOK_SECRET=abcdefg CLASSROOM_WEBHOOK_URL_PREFIX="https://example.com/github/hooks"
