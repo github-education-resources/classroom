@@ -79,7 +79,7 @@ GEM
       public_suffix (~> 2.0, >= 2.0.2)
     airbrake (5.7.0)
       airbrake-ruby (~> 1.7)
-    airbrake-ruby (1.7.0)
+    airbrake-ruby (1.7.1)
     arel (7.1.4)
     ast (2.3.0)
     atomic (1.1.99)
@@ -471,6 +471,7 @@ DEPENDENCIES
   rails-controller-testing
   rails-i18n (~> 5.0, >= 5.0.1)
   rails_12factor
+  rainbow (~> 2.1)
   redis-namespace
   rspec-rails
   rubocop

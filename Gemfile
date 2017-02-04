@@ -46,7 +46,7 @@ gem 'redis-namespace'
 gem 'ruby-progressbar', '~> 1.8', '>= 1.8.1', require: false
 
 gem 'sass-rails', '~> 5.0', '>= 5.0.6'
-gem 'sidekiq', '~> 4.2', '>= 4.2.9'
+gem 'sidekiq',    '~> 4.2', '>= 4.2.9'
 gem 'sprockets'
 
 gem 'turbolinks', '~> 2.5', '>= 2.5.3'
@@ -63,13 +63,14 @@ group :development, :test do
   gem 'bullet'
   gem 'dotenv-rails'
   gem 'guard-rspec', require: false
-  gem 'rspec-rails'
   gem 'rails-controller-testing'
-  gem 'rubocop',   require: false
+  gem 'rainbow', '~> 2.1', require: false
+  gem 'rspec-rails'
+  gem 'rubocop', require: false
   gem 'scss_lint', require: false
   gem 'spring'
-  gem 'timecop', require: false
   gem 'terminal-notifier-guard'
+  gem 'timecop', require: false
 end
 
 group :production do
