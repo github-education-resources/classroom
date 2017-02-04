@@ -33,6 +33,10 @@ class Organization < ApplicationRecord
       group_assignments.includes(:group_assignment_invitation)
   end
 
+  def private_repos?
+    assignments.where(public_repo: false).present? || group_assignments.where(public_repo: false).present?
+  end
+
   def github_client
     token = users.limit(1).order('RANDOM()').pluck(:token)[0]
     Octokit::Client.new(access_token: token)
