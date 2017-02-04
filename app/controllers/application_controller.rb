@@ -62,7 +62,7 @@ class ApplicationController < ActionController::Base
     return @current_user if defined?(@current_user)
 
     @current_user = if true_user.try(:staff?) && session[:impersonated_user_id]
-                      User.find session[:impersonated_user_id]
+                      User.find_by(id: session[:impersonated_user_id])
                     else
                       true_user
                     end
@@ -108,6 +108,6 @@ class ApplicationController < ActionController::Base
   end
 
   def true_user
-    @true_user ||= User.find(session[:user_id]) if session[:user_id]
+    @true_user ||= User.find_by(id: session[:user_id])
   end
 end
