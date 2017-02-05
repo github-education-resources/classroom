@@ -38,4 +38,31 @@ RSpec.describe Stafftools::GroupsController, type: :controller do
       end
     end
   end
+
+  describe 'DELETE #destroy', :vcr do
+    context 'as an unauthorized user' do
+      it' returns a 404' do
+        expect { delete :destroy, params: { id: group.id } }.to raise_error(ActionController::RoutingError)
+      end
+    end
+
+    context 'as an authorized user' do
+      before do
+        user.update_attributes(site_admin: true)
+        delete :destroy, params: { id: group.id }
+      end
+
+      it 'deletes the group' do
+        expect(Group.find_by(id: group.id)).to be_nil
+      end
+
+      it 'shows an informative message' do
+        expect(flash[:success]).to eq('Group was destroyed')
+      end
+
+      it 'redirects to grouping page' do
+        expect(response).to redirect_to(stafftools_grouping_path(group.grouping.id))
+      end
+    end
+  end
 end

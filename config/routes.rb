@@ -108,6 +108,6 @@ Rails.application.routes.draw do
     resources :group_assignments,            path: 'group-assignments',            only: [:show]
 
     resources :groupings, only: [:show]
-    resources :groups,    only: [:show]
+    resources :groups,    only: [:show, :destroy]
   end
 end

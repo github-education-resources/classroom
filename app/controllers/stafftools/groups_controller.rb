@@ -5,6 +5,15 @@ module Stafftools
 
     def show; end
 
+    def destroy
+      grouping = @group.grouping
+
+      @group.destroy
+
+      flash[:success] = 'Group was destroyed'
+      redirect_to stafftools_grouping_path(grouping.id)
+    end
+
     private
 
     def set_group
