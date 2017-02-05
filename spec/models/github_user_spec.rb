@@ -8,7 +8,7 @@ describe GitHubUser do
   end
 
   let(:github_user)       { GitHubUser.new(@client, @client.user.id) }
-  let(:other_user)        { GitHubFactory.create_classroom_student   }
+  let(:other_user)        { classroom_student                        }
   let(:other_github_user) { GitHubUser.new(@client, other_user.uid)  }
 
   it 'responds to all (GitHub) attributes', :vcr do

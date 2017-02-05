@@ -2,16 +2,26 @@
 require 'rails_helper'
 
 RSpec.describe GroupAssignmentInvitationsController, type: :controller do
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
-  let(:user)         { GitHubFactory.create_classroom_student   }
+  let(:organization) { classroom_org     }
+  let(:student)      { classroom_student }
 
-  let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
+  let(:group_assignment) do
+    options = {
+      title: 'HTML5',
+      slug: 'html5',
+      organization: organization
+    }
+
+    create(:group_assignment, options)
+  end
+
+  let(:grouping)                { group_assignment.grouping                                                }
+  let(:student_identifier_type) { create(:student_identifier_type, organization: organization)             }
+  let(:invitation)              { create(:group_assignment_invitation, group_assignment: group_assignment) }
 
   describe 'GET #show', :vcr do
-    let(:invitation) { create(:group_assignment_invitation) }
-
     context 'unauthenticated request' do
-      it 'redirects the new user to sign in with GitHub' do
+      it 'redirects the new student to sign in with GitHub' do
         get :show, params: { id: invitation.key }
         expect(response).to redirect_to(login_path)
       end
@@ -19,9 +29,8 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
     context 'student identifier required' do
       before(:each) do
-        invitation.group_assignment.student_identifier_type = student_identifier_type
-        invitation.group_assignment.save
-        sign_in(user)
+        invitation.group_assignment.update_attributes(student_identifier_type: student_identifier_type)
+        sign_in_as(student)
       end
 
       it 'redirects to the identifier page' do
@@ -31,10 +40,10 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
       context 'user already has an identifier value' do
         before do
-          StudentIdentifier.create(organization: organization,
-                                   user: user,
-                                   student_identifier_type: student_identifier_type,
-                                   value: 'test value')
+          create(:student_identifier,
+                 organization: organization,
+                 user: student,
+                 student_identifier_type: student_identifier_type)
         end
 
         it 'will bring user to the page' do
@@ -46,22 +55,15 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
   end
 
   describe 'PATCH #submit_identifier', :vcr do
-    let(:invitation) { create(:group_assignment_invitation) }
-
     before(:each) do
-      invitation.group_assignment.student_identifier_type = student_identifier_type
-      invitation.group_assignment.save
+      invitation.group_assignment.update_attributes(student_identifier_type: student_identifier_type)
 
-      sign_in(user)
+      sign_in_as(student)
 
       patch :submit_identifier, params: {
         id: invitation.key,
         student_identifier: { value: 'test value' }
       }
-    end
-
-    after(:each) do
-      StudentIdentifier.destroy_all
     end
 
     it 'creates the students identifier' do
@@ -78,63 +80,34 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
   end
 
   describe 'GET #accept', :vcr do
-    let(:organization)  { GitHubFactory.create_owner_classroom_org                         }
-    let(:grouping)      { Grouping.create(title: 'Grouping 1', organization: organization) }
-    let(:group)         { Group.create(title: 'The Group', grouping: grouping)             }
-    let(:student)       { GitHubFactory.create_classroom_student                           }
-
-    let(:group_assignment) do
-      GroupAssignment.create(creator: organization.users.first,
-                             title: 'HTML5',
-                             slug: 'html5',
-                             grouping: grouping,
-                             organization: organization,
-                             public_repo: true)
-    end
-
-    let(:invitation) { GroupAssignmentInvitation.create(group_assignment: group_assignment) }
+    let(:group) { Group.create(title: 'The Group', grouping: group_assignment.grouping) }
 
     context 'user is already a member of a group in the grouping' do
       render_views
 
       before do
-        sign_in(student)
+        sign_in_as(student)
         group.repo_accesses << RepoAccess.create(user: student, organization: organization)
+      end
+
+      after do
+        RepoAccess.destroy_all
+        Group.destroy_all
+        GroupAssignmentRepo.destroy_all
       end
 
       it 'returns success status' do
         get :accept, params: { id: invitation.key }
         expect(response).to have_http_status(:success)
       end
-
-      after(:each) do
-        RepoAccess.destroy_all
-        Group.destroy_all
-        GroupAssignmentRepo.destroy_all
-      end
     end
   end
 
   describe 'PATCH #accept_invitation', :vcr do
-    let(:organization)  { GitHubFactory.create_owner_classroom_org }
-    let(:user)          { GitHubFactory.create_classroom_student   }
-    let(:grouping)      { Grouping.create(title: 'Grouping 1', organization: organization) }
-
-    let(:group_assignment) do
-      GroupAssignment.create(creator: organization.users.first,
-                             title: 'HTML5',
-                             slug: 'html5',
-                             grouping: grouping,
-                             organization: organization,
-                             public_repo: true)
-    end
-
-    let(:invitation) { GroupAssignmentInvitation.create(group_assignment: group_assignment) }
-
     context 'authenticated request' do
       before(:each) do
-        sign_in(user)
         request.env['HTTP_REFERER'] = "http://classroomtest.com/group-assignment-invitations/#{invitation.key}"
+        sign_in_as(student)
       end
 
       after(:each) do
@@ -150,22 +123,21 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
 
         expect(group_assignment.group_assignment_repos.count).to eql(1)
-        expect(user.repo_accesses.count).to eql(1)
+        expect(student.repo_accesses.count).to eql(1)
       end
 
       it 'does not allow users to join a group that is not apart of the grouping' do
-        other_grouping = Grouping.create(title: 'Other Grouping', organization: organization)
+        other_grouping = create(:grouping, organization: organization)
         other_group    = Group.create(title: 'The Group', grouping: other_grouping)
 
         patch :accept_invitation, params: { id: invitation.key, group: { id: other_group.id } }
 
         expect(group_assignment.group_assignment_repos.count).to eql(0)
-        expect(user.repo_accesses.count).to eql(0)
+        expect(student.repo_accesses.count).to eql(0)
       end
 
       context 'group has reached maximum number of members' do
-        let(:group)   { Group.create(title: 'The Group', grouping: grouping) }
-        let(:student) { GitHubFactory.create_classroom_student }
+        let(:group) { Group.create(title: 'The Group', grouping: grouping) }
 
         before(:each) do
           allow_any_instance_of(RepoAccess).to receive(:silently_remove_organization_member).and_return(true)
@@ -180,7 +152,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       end
 
       context 'group has not reached maximum number of members' do
-        let(:group)   { Group.create(title: 'The Group', grouping: grouping) }
+        let(:group) { Group.create(title: 'The Group', grouping: grouping) }
 
         before(:each) do
           group_assignment.update(max_members: 1)
@@ -197,7 +169,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         it 'allows user to join' do
           patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
           expect(group_assignment.group_assignment_repos.count).to eql(1)
-          expect(user.repo_accesses.count).to eql(1)
+          expect(student.repo_accesses.count).to eql(1)
         end
       end
 
@@ -229,25 +201,11 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
   end
 
   describe 'GET #successful_invitation' do
-    let(:organization)  { GitHubFactory.create_owner_classroom_org }
-    let(:user)          { GitHubFactory.create_classroom_student   }
-    let(:grouping)      { Grouping.create(title: 'Grouping 1', organization: organization) }
-    let(:group)         { Group.create(title: 'The Group', grouping: grouping)             }
-
-    let(:group_assignment) do
-      GroupAssignment.create(creator: organization.users.first,
-                             title: 'HTML5',
-                             slug: 'html5',
-                             grouping: grouping,
-                             organization: organization,
-                             public_repo: true)
-    end
-
-    let(:invitation) { GroupAssignmentInvitation.create(group_assignment: group_assignment) }
+    let(:group) { Group.create(title: 'The Group', grouping: grouping) }
 
     before(:each) do
-      sign_in(user)
-      group.repo_accesses << RepoAccess.create!(user: user, organization: organization)
+      sign_in_as(student)
+      group.repo_accesses << RepoAccess.create!(user: student, organization: organization)
       @group_assignment_repo = GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
     end
 

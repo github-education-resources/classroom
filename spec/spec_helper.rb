@@ -58,10 +58,6 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   Kernel.srand config.seed
 
-# The settings below are suggested to provide a good initial experience
-# with RSpec, but feel free to customize to your heart's content.
-# rubocop:disable Style/BlockComments
-=begin
   # These two settings work together to allow you to limit a spec run
   # to individual examples or groups you care about by tagging them with
   # `:focus` metadata. When nothing is tagged with `:focus`, all examples
@@ -72,14 +68,7 @@ RSpec.configure do |config|
   # Allows RSpec to persist some state between runs in order to support
   # the `--only-failures` and `--next-failure` CLI options. We recommend
   # you configure your source control system to ignore this file.
-  config.example_status_persistence_file_path = "spec/examples.txt"
-
-  # Limits the available syntax to the non-monkey patched syntax that is
-  # recommended. For more details, see:
-  #   - http://myronmars.to/n/dev-blog/2012/06/rspecs-new-expectation-syntax
-  #   - http://www.teaisaweso.me/blog/2013/05/27/rspecs-new-message-expectation-syntax/
-  #   - http://myronmars.to/n/dev-blog/2014/05/notable-changes-in-rspec-3#new__config_option_to_disable_rspeccore_monkey_patching
-  config.disable_monkey_patching!
+  config.example_status_persistence_file_path = 'spec/examples.txt'
 
   # Many RSpec users commonly either run the entire suite or an individual
   # file, and it's useful to allow more verbose output when running an
@@ -95,16 +84,6 @@ RSpec.configure do |config|
   # end of the spec run, to help surface which specs are running
   # particularly slow.
   config.profile_examples = 10
-=end
-  # rubocop:enable Style/BlockComments
-
-  def sign_in(user)
-    session[:user_id] = user.id
-  end
-
-  def sign_out
-    session.delete(:user_id)
-  end
 
   def json_payload(file_path)
     JSON.parse(file_fixture(file_path).read)

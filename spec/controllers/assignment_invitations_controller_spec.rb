@@ -2,14 +2,13 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentInvitationsController, type: :controller do
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
-  let(:user)         { GitHubFactory.create_classroom_student   }
+  let(:organization) { classroom_org     }
+  let(:user)         { classroom_student }
 
+  let(:invitation)              { create(:assignment_invitation, organization: organization)   }
   let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
 
   describe 'GET #show', :vcr do
-    let(:invitation) { create(:assignment_invitation) }
-
     context 'unauthenticated request' do
       it 'redirects the new user to sign in with GitHub' do
         get :show, params: { id: invitation.key }
@@ -18,10 +17,8 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
 
     context 'authenticated request' do
-      let(:user) { GitHubFactory.create_classroom_student }
-
       before(:each) do
-        sign_in(user)
+        sign_in_as(user)
       end
 
       it 'will bring you to the page' do
@@ -32,9 +29,8 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
     context 'student identifier required' do
       before(:each) do
-        invitation.assignment.student_identifier_type = student_identifier_type
-        invitation.assignment.save
-        sign_in(user)
+        invitation.assignment.update_attributes(student_identifier_type: student_identifier_type)
+        sign_in_as(user)
       end
 
       it 'redirects to the identifier page' do
@@ -44,10 +40,10 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
       context 'user already has an identifier value' do
         before do
-          StudentIdentifier.create(organization: organization,
-                                   user: user,
-                                   student_identifier_type: student_identifier_type,
-                                   value: 'test value')
+          create(:student_identifier,
+                 user: user,
+                 organization: organization,
+                 student_identifier_type: student_identifier_type)
         end
 
         it 'will bring user to the page' do
@@ -59,64 +55,48 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
   end
 
   describe 'PATCH #submit_identifier', :vcr do
-    let(:invitation) { create(:assignment_invitation) }
-    let(:options)    { { value: 'test value' }        }
+    let(:options) { { value: 'test value' } }
 
-    before(:each) do
-      invitation.assignment.student_identifier_type = student_identifier_type
-      invitation.assignment.save
-      sign_in(user)
-    end
+    before do
+      invitation.assignment.update_attributes(student_identifier_type: student_identifier_type)
+      sign_in_as(user)
 
-    after(:each) do
-      StudentIdentifier.destroy_all
+      patch :submit_identifier, params: { id: invitation.key, student_identifier: options }
     end
 
     it 'creates the students identifier' do
-      patch :submit_identifier, params: { id: invitation.key, student_identifier: options }
       expect(StudentIdentifier.count).to eql(1)
     end
 
     it 'has correct identifier value' do
-      patch :submit_identifier, params: { id: invitation.key, student_identifier: options }
-      expect(StudentIdentifier.first.value).to eql('test value')
+      expect(StudentIdentifier.first.value).to eql(options[:value])
     end
 
     it 'redirects to the accepting page' do
-      patch :submit_identifier, params: { id: invitation.key, student_identifier: options }
       expect(response).to redirect_to(assignment_invitation_path)
     end
   end
 
   describe 'PATCH #accept_invitation', :vcr do
-    let(:organization) { GitHubFactory.create_owner_classroom_org }
-    let(:user)         { GitHubFactory.create_classroom_student   }
-
-    let(:assignment) do
-      create(:assignment, title: 'Learn you Node', starter_code_repo_id: 1_062_897, organization: organization)
+    let(:result) do
+      assignment_repo = create(:assignment_repo, assignment: invitation.assignment, user: user)
+      AssignmentRepo::Creator::Result.success(assignment_repo)
     end
 
-    let(:invitation) { create(:assignment_invitation, assignment: assignment) }
-
-    before(:each) do
-      request.env['HTTP_REFERER'] = "http://classroomtest.com/group-assignment-invitations/#{invitation.key}"
-      sign_in(user)
-    end
-
-    after(:each) do
-      AssignmentRepo.destroy_all
+    before do
+      request.env['HTTP_REFERER'] = "http://classroomtest.com/assignment-invitations/#{invitation.key}"
+      sign_in_as(user)
     end
 
     it 'redeems the users invitation' do
+      allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result)
+
       patch :accept_invitation, params: { id: invitation.key }
       expect(user.assignment_repos.count).to eql(1)
     end
   end
 
   describe 'GET #successful_invitation' do
-    let(:organization) { GitHubFactory.create_owner_classroom_org }
-    let(:user)         { GitHubFactory.create_classroom_student   }
-
     let(:assignment) do
       create(:assignment, title: 'Learn Clojure', starter_code_repo_id: 1_062_897, organization: organization)
     end
@@ -124,7 +104,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     let(:invitation) { create(:assignment_invitation, assignment: assignment) }
 
     before(:each) do
-      sign_in(user)
+      sign_in_as(user)
       result = AssignmentRepo::Creator.perform(assignment: assignment, user: user)
       @assignment_repo = result.assignment_repo
     end

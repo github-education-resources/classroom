@@ -1,44 +1,49 @@
-<div class="signin-section">
-  <div class="container text-center">
-    <ul>
-      <li><%= octicon 'book', height: 38 %></li>
-      <li><%= octicon 'pencil', height: 38 %></li>
-      <li><%= octicon 'mortar-board', height: 38 %></li>
-      <li><%= octicon 'organization', height: 38 %></li>
-      <li><%= octicon 'calendar', height: 38 %></li>
-      <li><%= octicon 'comment-discussion', height: 38 %></li>
-    </ul>
+<div class="remodal-bg">
+  <div class="signin-section">
+    <div class="container text-center">
+      <ul>
+        <li><%= octicon 'book', height: 38 %></li>
+        <li><%= octicon 'pencil', height: 38 %></li>
+        <li><%= octicon 'mortar-board', height: 38 %></li>
+        <li><%= octicon 'organization', height: 38 %></li>
+        <li><%= octicon 'calendar', height: 38 %></li>
+        <li><%= octicon 'comment-discussion', height: 38 %></li>
+      </ul>
 
-    <h1 class="heading"><%= t('views.pages.banner_heading') %></h1>
-    <p class="subheading"><%= t('views.pages.banner_subheading') %></p>
+      <h1 class="heading"><%= t('views.pages.banner_heading') %></h1>
+      <p class="subheading"><%= t('views.pages.banner_subheading') %></p>
 
-    <%= link_to t('views.pages.sign_in_to_start'), login_path, class: 'btn btn-big-mobile-friendly btn-blue' %>
+      <a class="open-video" data-remodal-target="getting-started-video"><%= image_tag('play@2x.png', class: 'play-icon', alt: 'Play') %><%= t('views.pages.see_how_it_works') %></a>
+      <%= link_to t('views.pages.sign_in_to_start'), login_path, class: 'btn btn-big-mobile-friendly btn-blue' %>
+    </div>
   </div>
-</div>
 
-<div class="information-section">
-  <div class="container">
-    <div class="columns">
-      <div class="one-third column">
-        <h2><%= octicon 'repo', height: 22 %> <%= t('views.pages.create_assignments') %></h2>
-        <p>
-          <%= t('views.pages.create_assignments_desc') %>
-        </p>
-      </div>
+  <div class="information-section">
+    <div class="container">
+      <div class="columns">
+        <div class="one-third column">
+          <h2><%= octicon 'repo', height: 22 %> <%= t('views.pages.create_assignments') %></h2>
+          <p>
+            <%= t('views.pages.create_assignments_desc') %>
+          </p>
+        </div>
 
-      <div class="one-third column">
-        <h2><%= octicon 'organization', height: 22 %> <%= t('views.pages.invite_students') %></h2>
-        <p>
-          <%= t('views.pages.invite_students_desc') %>
-        </p>
-      </div>
+        <div class="one-third column">
+          <h2><%= octicon 'organization', height: 22 %> <%= t('views.pages.invite_students') %></h2>
+          <p>
+            <%= t('views.pages.invite_students_desc') %>
+          </p>
+        </div>
 
-      <div class="one-third column">
-        <h2><%= octicon 'graph', height: 22 %> <%= t('views.pages.review_progress') %></h2>
-        <p>
-          <%= t('views.pages.review_progress_desc') %>
-        </p>
+        <div class="one-third column">
+          <h2><%= octicon 'graph', height: 22 %> <%= t('views.pages.review_progress') %></h2>
+          <p>
+            <%= t('views.pages.review_progress_desc') %>
+          </p>
+        </div>
       </div>
     </div>
   </div>
+
+  <%= render partial: 'pages/getting_started_video_modal' %>
 </div>

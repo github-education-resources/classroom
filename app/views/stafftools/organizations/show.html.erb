@@ -69,10 +69,19 @@
 
     <div class="boxed-group-inner">
       <ul class="boxed-group-list standalone">
-        <%= render partial: 'stafftools/organizations/user', collection: @organization.users %>
+        <% @organization.users.each do |user| %>
+          <li class="stafftools-button-li clearfix">
+            <%= render partial: 'stafftools/organizations/user', locals: { user: user } %>
+            <a data-remodal-target="remove-user-from-organization-<%= user.id %>" class="btn btn-danger stafftools-small-button<%= ' disabled' if @organization.users.count < 2 %>">Remove</a>
+          </li>
+        <% end %>
       </ul>
     </div>
   </div>
+
+  <% @organization.users.each do |user| %>
+    <%= render partial: 'stafftools/organizations/remove_user_from_organization_modal', locals: { user: user } %>
+  <% end %>
 
   <% if @organization.all_assignments.present? %>
     <div class="boxed-group">

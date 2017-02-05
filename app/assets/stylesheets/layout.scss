@@ -46,7 +46,7 @@ main {
   height: 20px;
   margin-top: 0.3rem;
 
-  @media (max-width: 34em) {
+  @media screen and (max-width: 40em) {
     display: block;
     float: none;
     margin-right: auto;
@@ -70,7 +70,7 @@ main {
       float: left;
       margin-left: 2rem;
 
-      @media (max-width: 34em) {
+      @media screen and (max-width: 40em) {
         margin-left: 0;
       }
 
@@ -87,7 +87,7 @@ main {
     padding-bottom: 4px;
     color: rgba(255, 255, 255, 0.5);
 
-    @media (max-width: 34em) {
+    @media screen and (max-width: 40em) {
       margin-right: 1rem;
       margin-left: 1rem;
     }
@@ -97,7 +97,7 @@ main {
     color: rgba(255, 255, 255, 1);
   }
 
-  @media (max-width: 34em) {
+  @media screen and (max-width: 40em) {
     width: 100%;
     padding-top: 1rem;
     margin-bottom: 0.8rem;
@@ -117,7 +117,7 @@ main {
     margin-top: 1.7rem;
   }
 
-  @media (max-width: 34em) {
+  @media screen and (max-width: 40em) {
     padding-right: 1rem;
     padding-left: 1rem;
 
@@ -137,7 +137,7 @@ main {
     color: inherit;
   }
 
-  @media (max-width: 34em) {
+  @media screen and (max-width: 40em) {
     font-size: 1.5rem;
   }
 }
@@ -169,7 +169,7 @@ main {
     margin-top: -5px;
   }
 
-  @media (max-width: 34em) {
+  @media screen and (max-width: 40em) {
     padding: 1.5rem 1rem;
   }
 }
@@ -240,7 +240,7 @@ main {
     margin-top: 1rem;
     border-top: 1px solid #e3e3e3;
 
-    @media (max-width: 34em) {
+    @media screen and (max-width: 40em) {
       padding-top: 1rem;
       margin-top: 0.5rem;
     }
@@ -261,7 +261,7 @@ main {
   margin-top: 0;
   margin-bottom: 0;
 
-  @media (max-width: 34em) {
+  @media screen and (max-width: 40em) {
     display: inline-block;
     max-width: 125px;
     overflow: hidden;
@@ -301,7 +301,7 @@ hr {
   margin-bottom: 2rem;
   border-bottom: 1px solid #e3e3e3;
 
-  @media (max-width: 34em) {
+  @media screen and (max-width: 40em) {
     padding-bottom: 1rem;
     margin-bottom: 1rem;
   }
@@ -313,7 +313,7 @@ hr {
     margin-top: 1rem;
     border-top: 1px solid #e3e3e3;
 
-    @media (max-width: 34em) {
+    @media screen and (max-width: 40em) {
       margin-bottom: 0;
     }
   }
@@ -356,7 +356,7 @@ hr {
   .avatar {
     margin-right: 10px;
 
-    @media (max-width: 34em) {
+    @media screen and (max-width: 40em) {
       margin-right: 0;
     }
   }
@@ -421,7 +421,7 @@ hr {
   .css-truncate-target {
     max-width: 20rem;
 
-    @media (max-width: 34em) {
+    @media screen and (max-width: 40em) {
       max-width: 10rem;
     }
   }
@@ -441,7 +441,7 @@ hr {
     li {
       display: inline-block;
 
-      @media (max-width: 34em) {
+      @media screen and (max-width: 40em) {
         margin-left: 0;
       }
     }
@@ -454,7 +454,7 @@ hr {
     margin-top: 2rem;
     border-top: 1px solid #e3e3e3;
 
-    @media (max-width: 34em) {
+    @media screen and (max-width: 40em) {
       padding-top: 1rem;
       margin-top: 1rem;
     }
@@ -492,7 +492,7 @@ hr {
       }
     }
 
-    @media (max-width: 34em) {
+    @media screen and (max-width: 40em) {
       display: none;
     }
   }
@@ -523,7 +523,7 @@ hr {
 .student-information,
 .clipboard-form,
 .classroom-user-name {
-  @media (max-width: 34em) {
+  @media screen and (max-width: 40em) {
     display: none;
   }
 }
@@ -531,44 +531,89 @@ hr {
 .mobile-invitation-content {
   display: none;
 
-  @media (max-width: 34em) {
+  @media screen and (max-width: 40em) {
     display: block;
   }
 }
 
 .blankslate.spacious {
-  @media (max-width: 34em) {
+  @media screen and (max-width: 40em) {
     padding: 1rem 0;
   }
 }
 
 .signin-section {
-  padding-top: 6.154em;
-  padding-bottom: 6.154em;
-  margin-bottom: 3em;
+  padding: 6.154em 20px 4.103em;
+  margin-bottom: 1.5em;
   color: #fff;
   background-color: #5fb27b;
 
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .heading {
+    margin-top: 0;
+    margin-bottom: 0;
     font-size: 48px;
     font-weight: normal;
 
-    @media (max-width: 34em) {
-      font-size: 38px;
+    @media screen and (max-width: 40em) {
+      font-size: 8vw;
     }
   }
 
   .subheading {
-    margin-bottom: 2rem;
+    margin-top: 0.5em;
     font-size: 21px;
 
-    @media (max-width: 34em) {
-      font-size: 18px;
+    @media screen and (max-width: 32em) {
+      margin-bottom: 2em;
+      font-size: 4vw;
     }
   }
 
   a {
+    overflow: hidden;
     font-weight: normal;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &.open-video {
+      padding: 7.5px 15px;
+      margin-bottom: 35px;
+      font-size: 0.9rem;
+      color: #5fb27b;
+      cursor: pointer;
+      background-color: #f4f5f5;
+      border-radius: 50px;
+
+      img {
+        height: 24px;
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+
+      &:hover {
+        color: #5fb27b;
+        background-color: darken(#f4f5f5, 5%);
+      }
+
+      &:active,
+      &.selected {
+        background-color: darken(#dfdddd, 5%);
+      }
+
+      &.selected:hover {
+        background-color: darken(#dfdddd, 10%);
+      }
+
+      @media screen and (max-width: 40em) {
+        margin-bottom: 20px;
+      }
+    }
   }
 
   .octicon {
@@ -576,6 +621,7 @@ hr {
   }
 
   ul {
+    margin-bottom: 15px;
     list-style-type: none;
 
     li {
@@ -583,7 +629,7 @@ hr {
       margin-left: 2rem;
       opacity: 0.4;
 
-      @media (max-width: 34em) {
+      @media screen and (max-width: 40em) {
         display: none;
       }
     }
@@ -602,7 +648,12 @@ hr {
   }
 
   .octicon {
+    margin-right: 5px;
     font-size: 21px;
+  }
+
+  .column {
+    padding: 0 20px;
   }
 }
 
@@ -806,7 +857,7 @@ hr {
     margin-top: 1rem;
     border-top: 1px solid #e3e3e3;
 
-    @media (max-width: 34em) {
+    @media screen and (max-width: 40em) {
       padding-top: 1rem;
       margin-top: 0.5rem;
     }
@@ -832,7 +883,7 @@ hr {
   margin-bottom: 0;
   font-style: italic;
 
-  @media (max-width: 34em) {
+  @media screen and (max-width: 40em) {
     max-width: 125px;
     overflow: hidden;
     text-overflow: ellipsis;

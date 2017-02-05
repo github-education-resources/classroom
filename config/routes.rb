@@ -91,7 +91,11 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :organizations, path: 'classrooms', only: [:show]
+    resources :organizations, path: 'classrooms', only: [:show] do
+      member do
+        delete '/users/:user_id', to: 'organizations#remove_user', as: 'remove_user'
+      end
+    end
 
     resources :repo_accesses, only: [:show]
 

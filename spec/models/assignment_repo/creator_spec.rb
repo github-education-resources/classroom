@@ -2,8 +2,8 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentRepo::Creator, type: :model do
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
-  let(:student)      { GitHubFactory.create_classroom_student }
+  let(:organization) { classroom_org }
+  let(:student)      { classroom_student }
 
   let(:assignment) do
     options = {

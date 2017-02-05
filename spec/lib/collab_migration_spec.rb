@@ -2,11 +2,11 @@
 require 'rails_helper'
 
 RSpec.describe CollabMigration do
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
-  let(:student)      { GitHubFactory.create_classroom_student   }
+  let(:organization) { classroom_org }
+  let(:student)      { classroom_student }
   let(:repo_access)  { RepoAccess.create(user: student, organization: organization) }
 
-  let(:github_organization) { GitHubOrganization.new(organization.github_client, organization.github_id) }
+  let(:github_organization) { organization.github_organization }
 
   let(:assignment) do
     create(:assignment, title: 'gitignore', organization: organization)
@@ -16,7 +16,6 @@ RSpec.describe CollabMigration do
     before(:each) do
       @assignment_repo = AssignmentRepo::Creator.perform(assignment: assignment, user: student).assignment_repo
       @assignment_repo.update_attributes(user: nil, repo_access: repo_access)
-      @assignment_repo.save
     end
 
     after(:each) do
@@ -31,10 +30,8 @@ RSpec.describe CollabMigration do
 
     context 'with a `github_team_id`' do
       before(:each) do
-        github_organization = GitHubOrganization.new(organization.github_client, organization.github_id)
-        @github_team        = github_organization.create_team('Test Team')
-
-        repo_access.update_attribute(:github_team_id, @github_team.id)
+        @github_team = github_organization.create_team('Test Team')
+        repo_access.update_attribute(:github_team_id, @github_team.id) # rubocop:disable Rails/SkipsModelValidations
       end
 
       after(:each) do

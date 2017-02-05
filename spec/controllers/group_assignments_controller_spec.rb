@@ -2,19 +2,14 @@
 require 'rails_helper'
 
 RSpec.describe GroupAssignmentsController, type: :controller do
-  include ActiveJob::TestHelper
+  let(:user)         { classroom_teacher }
+  let(:organization) { classroom_org     }
 
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
-  let(:user)         { organization.users.first                 }
-
-  let(:group_assignment) do
-    GroupAssignment.create(attributes_for(:group_assignment).merge(organization: organization, creator: user))
-  end
-
+  let(:group_assignment)        { create(:group_assignment, organization: organization)        }
   let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
 
   before do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   describe 'GET #new', :vcr do
@@ -105,17 +100,17 @@ RSpec.describe GroupAssignmentsController, type: :controller do
         group_assignment: options
       }
 
-      expect(response).to redirect_to(organization_group_assignment_path(organization,
-                                                                         GroupAssignment.find(group_assignment.id)))
+      expect(response).to redirect_to(
+        organization_group_assignment_path(organization, GroupAssignment.find(group_assignment.id))
+      )
     end
 
     context 'slug is empty' do
       it 'correctly reloads the assignment' do
-        options = { slug: '' }
         patch :update, params: {
           id:               group_assignment.slug,
           organization_id:  organization.slug,
-          group_assignment: options
+          group_assignment: { slug: '' }
         }
 
         expect(assigns(:group_assignment).slug).to_not be_nil
@@ -125,11 +120,11 @@ RSpec.describe GroupAssignmentsController, type: :controller do
     context 'flipper is enabled for the user' do
       before do
         GitHubClassroom.flipper[:student_identifier].enable
-        options = { title: 'JavaScript Calculator' }
+
         patch :update, params: {
           id:                      group_assignment.slug,
           organization_id:         organization.slug,
-          group_assignment:        options,
+          group_assignment:        { title: 'JavaScript Calculator' },
           student_identifier_type: { id: student_identifier_type.id }
         }
       end

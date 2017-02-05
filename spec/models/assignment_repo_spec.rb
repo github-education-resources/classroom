@@ -2,9 +2,9 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentRepo, type: :model do
-  let(:organization) { GitHubFactory.create_owner_classroom_org  }
-  let(:student)      { GitHubFactory.create_classroom_student    }
-  let(:assignment)   { create(:assignment, organization: organization, creator: organization.users.first) }
+  let(:organization) { classroom_org     }
+  let(:student)      { classroom_student }
+  let(:assignment)   { create(:assignment, organization: organization) }
 
   subject { create(:assignment_repo, assignment: assignment, github_repo_id: 42) }
 
@@ -31,15 +31,13 @@ RSpec.describe AssignmentRepo, type: :model do
     end
 
     context 'assignment_repo has a user through a repo_access', :vcr do
-      before do
-        @repo_access = RepoAccess.create(user: student, organization: organization)
-      end
+      let(:repo_access) { RepoAccess.create(user: student, organization: organization) }
 
-      after do
+      subject { create(:assignment_repo, repo_access: repo_access, user: nil) }
+
+      after(:each) do
         RepoAccess.destroy_all
       end
-
-      subject { create(:assignment_repo, repo_access: @repo_access, user: nil) }
 
       it 'returns the user' do
         expect(subject.user).to eql(student)
