@@ -74,6 +74,7 @@ end
 
 group :production do
   gem 'dalli'
+  gem 'lograge', '~> 0.4.1'
   gem 'newrelic_rpm'
   gem 'pinglish'
   gem 'puma_worker_killer'
