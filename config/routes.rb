@@ -107,7 +107,7 @@ Rails.application.routes.draw do
     resources :group_assignment_repos,       path: 'group-assignment-repos',       only: [:show, :destroy]
     resources :group_assignments,            path: 'group-assignments',            only: [:show]
 
-    resources :groupings, only: [:show]
+    resources :groupings, only: [:show, :destroy]
     resources :groups,    only: [:show, :destroy]
   end
 end

@@ -45,4 +45,39 @@
       </div>
     </div>
   <% end %>
+
+  <div class="boxed-group dangerzone">
+    <h3>Dangerzone</h3>
+
+    <div class="boxed-group-inner">
+      <p>
+        <a data-remodal-target="delete-grouping" class="btn btn-danger">Delete this grouping</a>
+      </p>
+
+      <div class="remodal text-left" data-remodal-id="delete-grouping">
+        <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
+        <h2 class="remodal-header">Are you ABSOLUTELY sure?</h2>
+
+        <div class="remodal-warning">
+          Unexpected things will happen if you don't read this!
+        </div>
+
+        <div class="remodal-description">
+          <p>
+            This action <strong>CANNOT</strong> be undone.<br>
+            Please note this will delete the grouping as well as all groups and group-assignments belonging to the grouping.
+          </p>
+        </div>
+
+        <%= form_for @grouping, url: stafftools_grouping_path(@grouping.id), html: { "data-name" => @grouping.id, method: 'delete' } do |f| %>
+          <dl class="form js-normalize-submit">
+            <dt>Please type the ID (<%= @grouping.id %>) of the grouping to confirm</dt>
+            <dd><input type="text" class="js-input-block" autofocus></dd>
+          </dl>
+
+          <%= f.submit 'Delete this Grouping', class: 'btn btn-danger btn-block js-submit', disabled: true %>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>
