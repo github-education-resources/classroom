@@ -50,6 +50,7 @@ gem 'sidekiq',    '~> 4.2', '>= 4.2.9'
 gem 'sprockets'
 
 gem 'turbolinks', '~> 2.5', '>= 2.5.3'
+gem 'typhoeus',   '~> 1.1', '>= 1.1.2'
 
 gem 'uglifier', '>= 1.3.0'
 
