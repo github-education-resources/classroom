@@ -95,6 +95,12 @@ Rails.application.configure do
     handler :google_analytics, tracker: ENV['GOOGLE_ANALYTICS_TRACKING_ID']
   end
 
+  # Suppress logger output for asset requests.
+  config.assets.quiet = true
+
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Enable lograge https://github.com/roidrage/lograge
+  config.lograge.enabled = true
 end
