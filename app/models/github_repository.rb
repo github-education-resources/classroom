@@ -36,9 +36,9 @@ class GitHubRepository < GitHubResource
     self.class.present?(@client, @id, options)
   end
 
-  def private=(is_private)
+  def public=(is_public)
     GitHub::Errors.with_error_handling do
-      @client.update(full_name, private: is_private)
+      @client.update(full_name, private: !is_public)
     end
   end
 
