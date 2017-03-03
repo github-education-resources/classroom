@@ -162,10 +162,9 @@ RSpec.describe AssignmentsController, type: :controller do
     context 'public_repo is changed' do
       it 'calls the AssignmentVisibility background job' do
         options = { title: 'Ruby on Rails', public_repo: !assignment.public? }
-        patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
 
-        assert_enqueued_jobs 1 do
-          Assignment::RepositoryAdministrationJob.perform_later(assignment)
+        assert_enqueued_jobs 1, only: Assignment::RepositoryVisibilityJob do
+          patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
         end
       end
     end
@@ -173,9 +172,10 @@ RSpec.describe AssignmentsController, type: :controller do
     context 'public_repo is not changed' do
       it 'will not kick off an AssignmentVisibility job' do
         options = { title: 'Ruby on Rails' }
-        patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
 
-        assert_no_enqueued_jobs(only: Assignment::RepositoryAdministrationJob)
+        assert_no_enqueued_jobs only: Assignment::RepositoryVisibilityJob do
+          patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
+        end
       end
     end
 

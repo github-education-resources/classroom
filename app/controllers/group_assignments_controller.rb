@@ -30,11 +30,12 @@ class GroupAssignmentsController < ApplicationController
   def edit; end
 
   def update
-    if @group_assignment.update_attributes(update_group_assignment_params)
-      AssignmentVisibilityJob.perform_later(@group_assignment) if @group_assignment.previous_changes['public_repo']
+    result = Assignment::Editor.perform(assignment: @group_assignment, options: update_group_assignment_params.to_h)
+    if result.success?
       flash[:success] = "Assignment \"#{@group_assignment.title}\" is being updated"
       redirect_to organization_group_assignment_path(@organization, @group_assignment)
     else
+      flash[:error] = result.error
       @group_assignment.reload unless @group_assignment.slug.present?
       render :edit
     end

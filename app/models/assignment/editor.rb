@@ -48,7 +48,7 @@ class Assignment
 
     def perform
       @assignment.update_attributes(@options)
-      raise Result::Error @assignment.errors unless @assignment.valid?
+      raise Result::Error, @assignment.errors.full_messages.join("\n") unless @assignment.valid?
 
       time = Time.zone.now.to_i
       @assignment.previous_changes.each do |attribute, change|
