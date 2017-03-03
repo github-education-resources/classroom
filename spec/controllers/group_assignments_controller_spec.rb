@@ -115,7 +115,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
         }
 
         assert_enqueued_jobs 1 do
-          AssignmentVisibilityJob.perform_later(group_assignment)
+          Assignment::RepositoryAdministrationJob.perform_later(group_assignment)
         end
       end
     end
@@ -130,7 +130,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
           group_assignment: options
         }
 
-        assert_no_enqueued_jobs(only: AssignmentVisibilityJob)
+        assert_no_enqueued_jobs(only: Assignment::RepositoryAdministrationJob)
       end
     end
 

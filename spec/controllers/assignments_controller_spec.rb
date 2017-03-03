@@ -165,7 +165,7 @@ RSpec.describe AssignmentsController, type: :controller do
         patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
 
         assert_enqueued_jobs 1 do
-          AssignmentVisibilityJob.perform_later(assignment)
+          Assignment::RepositoryAdministrationJob.perform_later(assignment)
         end
       end
     end
@@ -175,7 +175,7 @@ RSpec.describe AssignmentsController, type: :controller do
         options = { title: 'Ruby on Rails' }
         patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
 
-        assert_no_enqueued_jobs(only: AssignmentVisibilityJob)
+        assert_no_enqueued_jobs(only: Assignment::RepositoryAdministrationJob)
       end
     end
 
