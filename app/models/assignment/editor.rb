@@ -50,9 +50,8 @@ class Assignment
       @assignment.update_attributes(@options)
       raise Result::Error, @assignment.errors.full_messages.join("\n") unless @assignment.valid?
 
-      time = Time.zone.now.to_i
       @assignment.previous_changes.each do |attribute, change|
-        update_attribute_for_all_assignment_repos(time: time, attribute: attribute, change: change)
+        update_attribute_for_all_assignment_repos(attribute: attribute, change: change)
       end
       Result.success(@assignment)
     rescue Result::Error => err
@@ -61,10 +60,10 @@ class Assignment
 
     private
 
-    def update_attribute_for_all_assignment_repos(time:, attribute:, change:)
+    def update_attribute_for_all_assignment_repos(attribute:, change:)
       case attribute
       when 'public_repo'
-        Assignment::RepositoryVisibilityJob.perform_later(@assignment, time: time, change: change)
+        Assignment::RepositoryVisibilityJob.perform_later(@assignment, change: change)
       end
     end
   end
