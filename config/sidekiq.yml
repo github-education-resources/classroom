@@ -2,7 +2,8 @@
 :concurrency: <%= Integer(ENV['SIDEKIQ_CONCURRENCY'] || 5) %>
 :verbose: false
 :queues: # https://github.com/mperham/sidekiq/wiki/Advanced-Options#queues
-  - [chewy,         1]
-  - [last_active,   1]
-  - [github_event,  3]
-  - [trash_can,     2]
+  - [assignment,   1]
+  - [chewy,        1]
+  - [last_active,  1]
+  - [github_event, 3]
+  - [trash_can,    2]

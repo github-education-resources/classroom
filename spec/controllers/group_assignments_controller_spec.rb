@@ -105,6 +105,34 @@ RSpec.describe GroupAssignmentsController, type: :controller do
       )
     end
 
+    context 'public_repo attribute is changed' do
+      it 'calls the AssignmentVisibility background job' do
+        options = { title: 'JavaScript Calculator', public_repo: !group_assignment.public? }
+
+        assert_enqueued_jobs 1, only: Assignment::RepositoryVisibilityJob do
+          patch :update, params: {
+            id:               group_assignment.slug,
+            organization_id:  organization.slug,
+            group_assignment: options
+          }
+        end
+      end
+    end
+
+    context 'public_repo attribute is not changed' do
+      it 'will not kick off an AssignmentVisibility background job' do
+        options = { title: 'JavaScript Calculator' }
+
+        assert_no_enqueued_jobs only: Assignment::RepositoryVisibilityJob do
+          patch :update, params: {
+            id:               group_assignment.slug,
+            organization_id:  organization.slug,
+            group_assignment: options
+          }
+        end
+      end
+    end
+
     context 'slug is empty' do
       it 'correctly reloads the assignment' do
         patch :update, params: {

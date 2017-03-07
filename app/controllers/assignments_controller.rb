@@ -28,10 +28,12 @@ class AssignmentsController < ApplicationController
   def edit; end
 
   def update
-    if @assignment.update_attributes(update_assignment_params)
-      flash[:success] = "Assignment \"#{@assignment.title}\" updated"
+    result = Assignment::Editor.perform(assignment: @assignment, options: update_assignment_params.to_h)
+    if result.success?
+      flash[:success] = "Assignment \"#{@assignment.title}\" is being updated"
       redirect_to organization_assignment_path(@organization, @assignment)
     else
+      flash[:error] = result.error
       @assignment.reload unless @assignment.slug.present?
       render :edit
     end

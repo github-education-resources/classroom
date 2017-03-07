@@ -35,6 +35,7 @@ class GroupAssignment < ApplicationRecord
   validate :uniqueness_of_slug_across_organization
 
   alias_attribute :invitation, :group_assignment_invitation
+  alias_attribute :repos, :group_assignment_repos
 
   def private?
     !public_repo

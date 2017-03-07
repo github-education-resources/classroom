@@ -1,9 +1,8 @@
 source 'https://rubygems.org'
 
 ruby '2.4.0'
-gem 'rails', '~> 5.0', '>= 5.0.1'
+gem 'rails', '~> 5.0', '>= 5.0.2'
 
-gem 'airbrake'
 gem 'autoprefixer-rails'
 
 gem 'chewy', git: 'https://github.com/toptal/chewy.git', ref: '4ae2065e9204d39f8ab16df9e6b6b6b187220f87'
@@ -74,6 +73,7 @@ group :development, :test do
 end
 
 group :production do
+  gem 'airbrake'
   gem 'dalli'
   gem 'lograge', '~> 0.4.1'
   gem 'newrelic_rpm'
