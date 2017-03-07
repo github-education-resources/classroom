@@ -119,5 +119,24 @@ describe GitHubRepository do
         end
       end
     end
+
+    describe '#public=', :vcr do
+      it 'updates the github repository to public' do
+        @github_repository.public = true
+
+        expect(WebMock).to have_requested(
+          :patch,
+          github_url("/repos/#{@github_repository.full_name}")
+        ).with(body: { private: false, name: @github_repository.name })
+      end
+
+      it 'updates the github repository to private' do
+        @github_repository.public = false
+        expect(WebMock).to have_requested(
+          :patch,
+          github_url("/repos/#{@github_repository.full_name}")
+        ).with(body: { private: true, name: @github_repository.name })
+      end
+    end
   end
 end
