@@ -37,5 +37,3 @@
 //= require transliteration/lib/browser/transliteration
 //
 //= require_tree .
-
-Turbolinks.enableProgressBar();
