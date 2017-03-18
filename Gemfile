@@ -1,11 +1,18 @@
 source 'https://rubygems.org'
 
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
+  "https://github.com/#{repo_name}.git"
+end
+
 ruby '2.4.0'
 gem 'rails', '~> 5.0', '>= 5.0.2'
 
 gem 'autoprefixer-rails'
 
-gem 'chewy', git: 'https://github.com/toptal/chewy.git', ref: '4ae2065e9204d39f8ab16df9e6b6b6b187220f87'
+gem 'chewy', '~> 0.9.0'
+
+gem 'dalli'
 
 gem 'faraday-http-cache'
 gem 'flipper'
@@ -22,7 +29,7 @@ gem 'kaminari'
 gem 'local_time'
 
 gem 'octicons_helper', '~> 2.1'
-gem 'octokit', git: 'https://github.com/octokit/octokit.rb.git', ref: '7c2d36f52ffea5b4f52e25bfa27d7b6c8e514975'
+gem 'octokit', github: 'octokit/octokit.rb', ref: '207fb98100cf65d486e41156630ffa9288f297b3'
 gem 'omniauth'
 gem 'omniauth-github'
 
@@ -31,12 +38,12 @@ gem 'peek-dalli'
 gem 'peek-gc'
 gem 'peek-git'
 gem 'peek-performance_bar'
-gem 'peek-pg', git: 'https://github.com/mkcode/peek-pg.git', ref: '9bbe212ed1b6b4a4ad56ded1ef4cf9179cdac0cd'
-gem 'peek-sidekiq', git: 'https://github.com/Soliah/peek-sidekiq.git', ref: '261c857578ae6dc189506a35194785a4db51e54c'
+gem 'peek-pg',      github: 'mkcode/peek-pg',      ref: '9bbe212ed1b6b4a4ad56ded1ef4cf9179cdac0cd'
+gem 'peek-sidekiq', github: 'Soliah/peek-sidekiq', ref: '261c857578ae6dc189506a35194785a4db51e54c'
 gem 'pg'
 gem 'pry-byebug'
 gem 'pry-rails'
-gem 'puma', '~> 3.0'
+gem 'puma', '~> 3.8', '>= 3.8.2'
 
 gem 'rack-canonical-host'
 gem 'rack-timeout', require: false
@@ -45,10 +52,10 @@ gem 'redis-namespace'
 gem 'ruby-progressbar', '~> 1.8', '>= 1.8.1', require: false
 
 gem 'sass-rails', '~> 5.0', '>= 5.0.6'
-gem 'sidekiq',    '~> 4.2', '>= 4.2.9'
+gem 'sidekiq',    '~> 4.2', '>= 4.2.10'
 gem 'sprockets'
 
-gem 'turbolinks', '~> 2.5', '>= 2.5.3'
+gem 'turbolinks', github: 'turbolinks/turbolinks-classic', ref: '37a7c296232d20a61bd1946f600da7f2009189db'
 gem 'typhoeus',   '~> 1.1', '>= 1.1.2'
 
 gem 'uglifier', '>= 1.3.0'
@@ -74,7 +81,6 @@ end
 
 group :production do
   gem 'airbrake'
-  gem 'dalli'
   gem 'lograge', '~> 0.4.1'
   gem 'newrelic_rpm'
   gem 'pinglish'

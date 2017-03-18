@@ -21,6 +21,10 @@ Rails.application.configure do
     config.public_file_server.headers = {
       'Cache-Control' => 'public, max-age=172800'
     }
+
+    config.peek.adapter = :memcache, {
+      client: Dalli::Client.new('localhost:11211')
+    }
   else
     config.action_controller.perform_caching = false
 
