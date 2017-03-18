@@ -20,20 +20,19 @@ GIT
 
 GIT
   remote: https://github.com/octokit/octokit.rb.git
-  revision: 7c2d36f52ffea5b4f52e25bfa27d7b6c8e514975
-  ref: 7c2d36f52ffea5b4f52e25bfa27d7b6c8e514975
+  revision: 207fb98100cf65d486e41156630ffa9288f297b3
+  ref: 207fb98100cf65d486e41156630ffa9288f297b3
   specs:
     octokit (4.6.2)
       sawyer (~> 0.8.0, >= 0.5.3)
 
 GIT
-  remote: https://github.com/toptal/chewy.git
-  revision: 4ae2065e9204d39f8ab16df9e6b6b6b187220f87
-  ref: 4ae2065e9204d39f8ab16df9e6b6b6b187220f87
+  remote: https://github.com/turbolinks/turbolinks-classic.git
+  revision: 37a7c296232d20a61bd1946f600da7f2009189db
+  ref: 37a7c296232d20a61bd1946f600da7f2009189db
   specs:
-    chewy (0.8.4)
-      activesupport (>= 3.2)
-      elasticsearch (>= 1.0.0)
+    turbolinks (3.0.0)
+      coffee-rails
 
 GEM
   remote: https://rubygems.org/
@@ -77,20 +76,23 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.5.0)
       public_suffix (~> 2.0, >= 2.0.2)
-    airbrake (5.7.1)
-      airbrake-ruby (~> 1.7)
+    airbrake (5.8.1)
+      airbrake-ruby (~> 1.8)
     airbrake-ruby (1.8.0)
     arel (7.1.4)
     ast (2.3.0)
     atomic (1.1.99)
-    autoprefixer-rails (6.7.5)
+    autoprefixer-rails (6.7.7)
       execjs
     awesome_print (1.7.0)
     builder (3.2.3)
-    bullet (5.5.0)
+    bullet (5.5.1)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.10.0)
     byebug (9.0.6)
+    chewy (0.9.0)
+      activesupport (>= 3.2)
+      elasticsearch (>= 1.0.0)
     coderay (1.1.1)
     coffee-rails (4.2.1)
       coffee-script (>= 2.2.0)
@@ -100,9 +102,9 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     color (1.8)
-    concurrent-ruby (1.0.4)
-    concurrent-ruby-ext (1.0.4)
-      concurrent-ruby (= 1.0.4)
+    concurrent-ruby (1.0.5)
+    concurrent-ruby-ext (1.0.5)
+      concurrent-ruby (= 1.0.5)
     connection_pool (2.2.1)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
@@ -134,11 +136,11 @@ GEM
       railties (>= 3.0.0)
     faker (1.7.3)
       i18n (~> 0.5)
-    faraday (0.10.1)
+    faraday (0.11.0)
       multipart-post (>= 1.2, < 3)
     faraday-http-cache (2.0.0)
       faraday (~> 0.8)
-    ffi (1.9.17)
+    ffi (1.9.18)
     flipper (0.10.2)
     flipper-redis (0.10.2)
       flipper (~> 0.10.2)
@@ -218,15 +220,15 @@ GEM
     multi_xml (0.6.0)
     multipart-post (2.0.0)
     nenv (0.3.0)
-    newrelic_rpm (3.18.1.330)
+    newrelic_rpm (4.0.0.332)
     nio4r (2.0.0)
     nokogiri (1.7.0.1)
       mini_portile2 (~> 2.1.0)
     notiffany (0.1.1)
       nenv (~> 0.1)
       shellany (~> 0.0)
-    oauth2 (1.3.0)
-      faraday (>= 0.8, < 0.11)
+    oauth2 (1.3.1)
+      faraday (>= 0.8, < 0.12)
       jwt (~> 1.0)
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
@@ -262,7 +264,7 @@ GEM
       peek
     peek-performance_bar (1.2.1)
       peek (>= 0.1.0)
-    pg (0.19.0)
+    pg (0.20.0)
     pinglish (0.2.1)
       rack
     powerpack (0.1.1)
@@ -276,7 +278,7 @@ GEM
     pry-rails (0.3.5)
       pry (>= 0.9.10)
     public_suffix (2.0.5)
-    puma (3.7.1)
+    puma (3.8.2)
     puma_worker_killer (0.0.7)
       get_process_mem (~> 0.2)
       puma (>= 2.7, < 4)
@@ -380,12 +382,12 @@ GEM
       rake (>= 0.9, < 13)
       sass (~> 3.4.20)
     shellany (0.0.1)
-    sidekiq (4.2.9)
+    sidekiq (4.2.10)
       concurrent-ruby (~> 1.0)
       connection_pool (~> 2.2, >= 2.2.0)
       rack-protection (>= 1.5.0)
       redis (~> 3.2, >= 3.2.1)
-    simplecov (0.13.0)
+    simplecov (0.14.0)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
@@ -405,13 +407,11 @@ GEM
     thread_safe (0.3.6)
     tilt (2.0.6)
     timecop (0.8.1)
-    turbolinks (2.5.3)
-      coffee-rails
     typhoeus (1.1.2)
       ethon (>= 0.9.0)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    uglifier (3.0.4)
+    uglifier (3.1.8)
       execjs (>= 0.3.0, < 3)
     unicode-display_width (1.1.3)
     uniform_notifier (1.10.0)
@@ -437,7 +437,7 @@ DEPENDENCIES
   autoprefixer-rails
   awesome_print
   bullet
-  chewy!
+  chewy (~> 0.9.0)
   dalli
   database_cleaner
   dotenv-rails
@@ -471,7 +471,7 @@ DEPENDENCIES
   pinglish
   pry-byebug
   pry-rails
-  puma (~> 3.0)
+  puma (~> 3.8, >= 3.8.2)
   puma_worker_killer
   rack-canonical-host
   rack-timeout
@@ -486,13 +486,13 @@ DEPENDENCIES
   ruby-progressbar (~> 1.8, >= 1.8.1)
   sass-rails (~> 5.0, >= 5.0.6)
   scss_lint
-  sidekiq (~> 4.2, >= 4.2.9)
+  sidekiq (~> 4.2, >= 4.2.10)
   simplecov
   spring
   sprockets
   terminal-notifier-guard
   timecop
-  turbolinks (~> 2.5, >= 2.5.3)
+  turbolinks!
   typhoeus (~> 1.1, >= 1.1.2)
   uglifier (>= 1.3.0)
   vcr
@@ -503,4 +503,4 @@ RUBY VERSION
    ruby 2.4.0p0
 
 BUNDLED WITH
-   1.14.4
+   1.14.6
