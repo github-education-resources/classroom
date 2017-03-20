@@ -63,7 +63,6 @@ class User < ApplicationRecord
     identifiers.find_by(organization: organization, type: type)
   end
 
-
   def staff?
     site_admin
   end
