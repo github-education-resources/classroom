@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161130020119) do
+ActiveRecord::Schema.define(version: 20170319181810) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -159,7 +159,6 @@ ActiveRecord::Schema.define(version: 20161130020119) do
     t.integer  "organization_id"
     t.string   "name",            null: false
     t.string   "description",     null: false
-    t.integer  "content_type",    null: false
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.datetime "deleted_at"
@@ -174,6 +173,7 @@ ActiveRecord::Schema.define(version: 20161130020119) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
     t.datetime "deleted_at"
+    t.index ["organization_id", "user_id", "student_identifier_type_id"], name: "index_student_identifiers_on_org_and_user_and_type", unique: true, using: :btree
     t.index ["organization_id"], name: "index_student_identifiers_on_organization_id", using: :btree
     t.index ["student_identifier_type_id"], name: "index_student_identifiers_on_student_identifier_type_id", using: :btree
     t.index ["user_id"], name: "index_student_identifiers_on_user_id", using: :btree
