@@ -22,7 +22,7 @@ RSpec.describe User, type: :model do
   describe '#find_by_auth_hash' do
     it 'finds the correct user' do
       build(:user).assign_from_auth_hash(github_omniauth_hash)
-      located_user = User.find_by_auth_hash(github_omniauth_hash) # rubocop:disable Rails/DynamicFindBy
+      located_user = User.find_by_auth_hash(github_omniauth_hash)
 
       expect(located_user).to eq(User.last)
     end
@@ -46,6 +46,15 @@ RSpec.describe User, type: :model do
     it 'sets or creates a new GitHubUser with the users uid' do
       expect(subject.github_user.class).to eql(GitHubUser)
       expect(subject.github_user.id).to eql(subject.uid)
+    end
+  end
+
+  describe '#identifier_for' do
+    it 'returns the proper identifier' do
+      identifier = create(:student_identifier, user: subject)
+      options    = { organization: identifier.organization, type: identifier.type }
+
+      expect(subject.identifier_for(options)).to eql(identifier)
     end
   end
 

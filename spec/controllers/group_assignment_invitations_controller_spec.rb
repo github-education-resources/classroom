@@ -15,9 +15,8 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     create(:group_assignment, options)
   end
 
-  let(:grouping)                { group_assignment.grouping                                                }
-  let(:student_identifier_type) { create(:student_identifier_type, organization: organization)             }
-  let(:invitation)              { create(:group_assignment_invitation, group_assignment: group_assignment) }
+  let(:grouping)   { group_assignment.grouping                                                }
+  let(:invitation) { create(:group_assignment_invitation, group_assignment: group_assignment) }
 
   describe 'GET #show', :vcr do
     context 'unauthenticated request' do
@@ -25,57 +24,6 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         get :show, params: { id: invitation.key }
         expect(response).to redirect_to(login_path)
       end
-    end
-
-    context 'student identifier required' do
-      before(:each) do
-        invitation.group_assignment.update_attributes(student_identifier_type: student_identifier_type)
-        sign_in_as(student)
-      end
-
-      it 'redirects to the identifier page' do
-        get :show, params: { id: invitation.key }
-        expect(response).to redirect_to(identifier_group_assignment_invitation_path)
-      end
-
-      context 'user already has an identifier value' do
-        before do
-          create(:student_identifier,
-                 organization: organization,
-                 user: student,
-                 student_identifier_type: student_identifier_type)
-        end
-
-        it 'will bring user to the page' do
-          get :show, params: { id: invitation.key }
-          expect(response).to have_http_status(:success)
-        end
-      end
-    end
-  end
-
-  describe 'PATCH #submit_identifier', :vcr do
-    before(:each) do
-      invitation.group_assignment.update_attributes(student_identifier_type: student_identifier_type)
-
-      sign_in_as(student)
-
-      patch :submit_identifier, params: {
-        id: invitation.key,
-        student_identifier: { value: 'test value' }
-      }
-    end
-
-    it 'creates the students identifier' do
-      expect(StudentIdentifier.count).to eql(1)
-    end
-
-    it 'has correct identifier value' do
-      expect(StudentIdentifier.first.value).to eql('test value')
-    end
-
-    it 'redirects to the accepting page' do
-      expect(response).to redirect_to(group_assignment_invitation_path)
     end
   end
 

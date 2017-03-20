@@ -51,7 +51,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
         expect do
           post :create, params: {
             organization_id: organization.slug,
-            student_identifier_type: { name: 'Test', description: 'Test', content_type: 'text' }
+            student_identifier_type: { name: 'Test', description: 'Test' }
           }
         end.to change { StudentIdentifierType.count }
       end
@@ -68,7 +68,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
 
     describe 'PATCH #update', :vcr do
       before(:each) do
-        options = { name: 'Test2', description: 'Test2', content_type: 'email' }
+        options = { name: 'Test2', description: 'Test2' }
         patch :update, params: {
           organization_id: organization.slug,
           id: student_identifier_type.id,
@@ -135,7 +135,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
         expect do
           post :create, params: {
             organization_id: organization.slug,
-            student_identifier_type: { name: 'Test', description: 'Test', content_type: 'text' }
+            student_identifier_type: { name: 'Test', description: 'Test' }
           }
         end.to raise_error(ActionController::RoutingError)
       end
@@ -152,7 +152,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
 
     describe 'PATCH #update', :vcr do
       it 'returns a 404' do
-        options = { name: 'Test2', description: 'Test2', content_type: 'email' }
+        options = { name: 'Test2', description: 'Test2' }
         expect do
           patch :update, params: {
             organization_id: organization.slug,
