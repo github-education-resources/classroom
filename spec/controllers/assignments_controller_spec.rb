@@ -27,7 +27,10 @@ RSpec.describe AssignmentsController, type: :controller do
   describe 'POST #create', :vcr do
     it 'creates a new Assignment' do
       expect do
-        post :create, params: { organization_id: organization.slug, assignment: attributes_for(:assignment) }
+        post :create, params: {
+          assignment: attributes_for(:assignment, organization: organization),
+          organization_id: organization.slug
+        }
       end.to change { Assignment.count }
     end
 
@@ -35,7 +38,7 @@ RSpec.describe AssignmentsController, type: :controller do
       before do
         post :create, params: {
           organization_id: organization.slug,
-          assignment:      attributes_for(:assignment),
+          assignment:      attributes_for(:assignment, organization: organization),
           repo_name:       'rails/rails'
         }
       end
@@ -51,7 +54,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
         post :create, params: {
           organization_id: organization.slug,
-          assignment:      attributes_for(:assignment),
+          assignment:      attributes_for(:assignment, organization: organization),
           repo_name:       'https://github.com/rails/rails'
         }
       end
@@ -73,7 +76,7 @@ RSpec.describe AssignmentsController, type: :controller do
       before do
         post :create, params: {
           organization_id: organization.slug,
-          assignment:      attributes_for(:assignment),
+          assignment:      attributes_for(:assignment, organization: organization),
           repo_id:         8514 # 'rails/rails'
         }
       end
@@ -93,7 +96,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
         post :create, params: {
           organization_id: organization.slug,
-          assignment:      attributes_for(:assignment),
+          assignment:      attributes_for(:assignment, organization: organization),
           repo_id:         'invalid_id' # id must be an integer
         }
       end
@@ -116,7 +119,7 @@ RSpec.describe AssignmentsController, type: :controller do
         GitHubClassroom.flipper[:student_identifier].enable
         post :create, params: {
           organization_id:         organization.slug,
-          assignment:              attributes_for(:assignment),
+          assignment:              attributes_for(:assignment, organization: organization),
           student_identifier_type: { id: student_identifier_type.id }
         }
       end
@@ -194,7 +197,7 @@ RSpec.describe AssignmentsController, type: :controller do
         patch :update, params: {
           id:                      assignment.slug,
           organization_id:         organization.slug,
-          assignment:              attributes_for(:assignment),
+          assignment:              attributes_for(:assignment, organization: organization),
           student_identifier_type: { id: student_identifier_type.id }
         }
       end

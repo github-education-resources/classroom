@@ -7,21 +7,21 @@
     <div class="three-fourths column">
       <div class="boxed-group">
         <% if @student_identifier_types.present? %>
-            <%= link_to 'New identifier type', new_organization_student_identifier_type_path(@organization), class: 'btn btn-sm boxed-group-action', role: 'button'%>
+          <%= link_to 'New identifier', new_organization_student_identifier_type_path(@organization), class: 'btn btn-sm boxed-group-action', role: 'button'%>
         <% end %>
-        <h3>Student identifier types</h3>
+        <h3>Student identifiers</h3>
         <div class="boxed-group-inner clearfix">
           <% if @student_identifier_types.present? %>
-              <div class="identifier-type-list-items">
-                <%= render @student_identifier_types %>
-              </div>
+            <div class="identifier-type-list-items">
+              <%= render @student_identifier_types %>
+            </div>
           <% else %>
-              <div class="blankslate large-format spacious clean-background">
-                <h3>This organization doesn't have any student identifier types yet.</h3>
-                <%= link_to new_organization_student_identifier_type_path(@organization), class: 'btn btn-green btn-big', role: 'button' do %>
-                    Create your first student identifier type
-                <% end %>
-              </div>
+            <div class="blankslate large-format spacious clean-background">
+              <h3>This organization doesn't have any student identifier types yet.</h3>
+              <%= link_to new_organization_student_identifier_type_path(@organization), class: 'btn btn-green btn-big', role: 'button' do %>
+                Create your first student identifier
+              <% end %>
+            </div>
           <% end %>
         </div>
       </div>
