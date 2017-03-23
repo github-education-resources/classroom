@@ -19,7 +19,9 @@
         <%= render partial: 'assignments/assignment_form_options', locals: { f: f } %>
       </div>
 
+      <% if ENV['GITHUB_ENTERPRISE'] == false %>
       <%= render partial: 'shared/unlimited_free_private_repositories_banner' %>
+      <% end %>
     </div>
 
     <div class="form-actions">
