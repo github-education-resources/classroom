@@ -6,6 +6,16 @@ module GitHubClassroom
       auto_paginate: true
     }.merge!(options)
 
+    if is_ghe
+      client_options.merge!({
+        api_endpoint: "https://%{hostname}/api/v3/" % [hostname: Rails.application.secrets.github_enterprise_hostname]
+      })
+    end
+
     Octokit::Client.new(client_options)
+  end
+
+  def self.is_ghe()
+    !!(Rails.application.secrets.github_enterprise_enabled == true)
   end
 end
