@@ -84,7 +84,7 @@ def classroom_student_github_token
 end
 
 def oauth_client
-  Octokit::Client.new(access_token: classroom_owner_github_token)
+  GitHubClassroom.github_client(access_token: classroom_owner_github_token)
 end
 
 def use_vcr_placeholder_for(text, replacement)

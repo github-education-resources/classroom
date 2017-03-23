@@ -35,7 +35,7 @@ class Organization < ApplicationRecord
 
   def github_client
     token = users.limit(1).order('RANDOM()').pluck(:token)[0]
-    Octokit::Client.new(access_token: token)
+    GitHubClassroom.github_client(access_token: token)
   end
 
   def github_organization

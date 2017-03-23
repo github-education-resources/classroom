@@ -2,9 +2,13 @@ module GitHubClassroom
   def self.github_client(options = {})
     client_options = {
       client_id:     Rails.application.secrets.github_client_id,
-      client_secret: Rails.application.secrets.github_client_secret,
-      auto_paginate: true
+      client_secret: Rails.application.secrets.github_client_secret
     }.merge!(options)
+
+    if client_options.has_key?(:access_token)
+      client_options.delete(:client_id)
+      client_options.delete(:client_secret)
+    end
 
     if is_ghe
       client_options.merge!({
