@@ -249,7 +249,7 @@ GEM
       omniauth (~> 1.2)
     parser (2.4.0.0)
       ast (~> 2.2)
-    peek (1.0.0)
+    peek (1.0.1)
       concurrent-ruby (>= 0.9.0)
       concurrent-ruby-ext (>= 0.9.0)
       railties (>= 4.0.0)
@@ -459,7 +459,7 @@ DEPENDENCIES
   octokit!
   omniauth
   omniauth-github
-  peek (~> 1.0)
+  peek (~> 1.0, >= 1.0.1)
   peek-dalli
   peek-gc
   peek-git

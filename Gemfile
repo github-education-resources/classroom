@@ -33,7 +33,7 @@ gem 'octokit', github: 'octokit/octokit.rb', ref: '207fb98100cf65d486e41156630ff
 gem 'omniauth'
 gem 'omniauth-github'
 
-gem 'peek', '~> 1.0'
+gem 'peek', '~> 1.0', '>= 1.0.1'
 gem 'peek-dalli'
 gem 'peek-gc'
 gem 'peek-git'
