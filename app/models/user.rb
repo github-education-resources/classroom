@@ -40,7 +40,7 @@ class User < ApplicationRecord
   end
 
   def github_client
-    @github_client ||= Octokit::Client.new(access_token: token, auto_paginate: true)
+    @github_client ||= GitHubClassroom.github_client(access_token: token, auto_paginate: true)
   end
 
   def github_user

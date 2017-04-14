@@ -6,7 +6,7 @@ module GitHub
     def initialize(access_token, options = { auto_paginate: false })
       options[:access_token] = access_token
 
-      @search_client = Octokit::Client.new(options)
+      @search_client = GitHubClassroom.github_client(options)
     end
 
     def search_github_repositories(query, options = { sort: 'updated', per_page: 10, page: 1 })
