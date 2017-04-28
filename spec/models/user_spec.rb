@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
@@ -15,7 +16,7 @@ RSpec.describe User, type: :model do
 
   describe '#create_from_auth_hash' do
     it 'creates a valid user' do
-      expect { User.create_from_auth_hash(github_omniauth_hash) }.to change { User.count }
+      expect { User.create_from_auth_hash(github_omniauth_hash) }.to change(User, :count)
     end
   end
 
@@ -71,7 +72,7 @@ RSpec.describe User, type: :model do
       subject.assign_from_auth_hash(github_omniauth_hash)
       scopes = subject.github_client_scopes
 
-      %w(admin:org admin:org_hook delete_repo repo user:email).each do |scopet|
+      %w[admin:org admin:org_hook delete_repo repo user:email].each do |scopet|
         expect(scopes).to include(scopet)
       end
     end

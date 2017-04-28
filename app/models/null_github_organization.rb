@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class NullGitHubOrganization < NullGitHubResource
   def id
     10_137

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class LastActiveJob < ApplicationJob
   queue_as :last_active
 

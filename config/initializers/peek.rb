@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 unless Rails.env.test?
   Peek.into Peek::Views::Git, nwo: 'education/classroom'
   Peek.into Peek::Views::PerformanceBar

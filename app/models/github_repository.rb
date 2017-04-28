@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class GitHubRepository < GitHubResource
   # NOTE: LEGACY, DO NOT REMOVE.
   # This is needed for the lib/collab_migration.rb
@@ -60,6 +61,6 @@ class GitHubRepository < GitHubResource
   private
 
   def github_attributes
-    %w(name full_name html_url)
+    %w[name full_name html_url]
   end
 end

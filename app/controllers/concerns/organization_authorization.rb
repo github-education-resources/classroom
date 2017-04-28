@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module OrganizationAuthorization
   extend ActiveSupport::Concern
 

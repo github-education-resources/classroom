@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.configure do
   config.after_initialize do
     if defined? Bullet
@@ -11,9 +13,7 @@ Rails.application.configure do
         Bullet.add_footer = true
       end
 
-      if Rails.env.test?
-        Bullet.raise = true
-      end
+      Bullet.raise = true if Rails.env.test?
     end
   end
 end

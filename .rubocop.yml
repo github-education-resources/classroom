@@ -6,7 +6,6 @@ AllCops:
   Exclude:
     - 'bin/**/*'
     - 'db/**/*'
-    - 'config/**/*'
     - 'script/**/*'
     - 'vendor/**/*'
 
@@ -28,6 +27,8 @@ Metrics/LineLength:
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
+    - 'config/routes.rb'
+    - 'config/environments/*.rb'
 
 Rails/Delegate:
   Enabled: false
@@ -38,3 +39,9 @@ Rails/HasAndBelongsToMany:
 Rails/DynamicFindBy:
   Whitelist:
     - find_by_auth_hash
+
+Style/FileName:
+  Exclude:
+    - 'Gemfile'
+    - 'Guardfile'
+    - 'Brewfile'

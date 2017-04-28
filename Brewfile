@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Helpers
 tap 'caskroom/cask'
 tap 'homebrew/versions'

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 if defined?(Bullet) && Bullet.enable?
   RSpec.configure do |config|
     config.before(:each) do

@@ -5,13 +5,13 @@ require File.expand_path('../boot', __FILE__)
 # From https://github.com/rails/rails/blob/master/railties/lib/rails/all.rb
 require 'rails'
 
-%w(
+%w[
   active_record/railtie
   action_controller/railtie
   action_view/railtie
   active_job/railtie
   sprockets/railtie
-).each do |railtie|
+].each do |railtie|
   begin
     require railtie
   rescue LoadError # rubocop:disable Lint/HandleExceptions
@@ -81,7 +81,7 @@ module GitHubClassroom
         ping.check :elasticsearch do
           status = Chewy.client.cluster.health['status'] || 'unavailable'
 
-          if status == 'green'
+          if status == 'green' # rubocop:disable Style/GuardClause
             'ok'
           else
             raise "Elasticsearch status is #{status}"

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class GroupAssignment < ApplicationRecord
   include Flippable
   include GitHubPlan
@@ -61,7 +62,7 @@ class GroupAssignment < ApplicationRecord
   private
 
   def uniqueness_of_slug_across_organization
-    return unless Assignment.where(slug: slug, organization: organization).present?
+    return if Assignment.where(slug: slug, organization: organization).blank?
     errors.add(:slug, :taken)
   end
 end

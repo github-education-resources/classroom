@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -71,7 +72,7 @@ class ApplicationController < ActionController::Base
   def flash_and_redirect_back_with_message(exception)
     flash[:error] = exception.message
 
-    unless flash[:error].present?
+    if flash[:error].blank?
       case exception
       when NotAuthorized
         flash[:error] = 'You are not authorized to perform this action'

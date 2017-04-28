@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe StudentIdentifierTypesController, type: :controller do
@@ -53,7 +54,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
             organization_id: organization.slug,
             student_identifier_type: { name: 'Test', description: 'Test' }
           }
-        end.to change { StudentIdentifierType.count }
+        end.to change(StudentIdentifierType, :count)
       end
     end
 
@@ -90,7 +91,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
         student_identifier_type
         expect do
           delete :destroy, params: { id: student_identifier_type.id, organization_id: organization }
-        end.to change { StudentIdentifierType.all.count }
+        end.to change(StudentIdentifierType, :count)
         expect(StudentIdentifierType.unscoped.find(student_identifier_type.id).deleted_at).not_to be_nil
       end
 

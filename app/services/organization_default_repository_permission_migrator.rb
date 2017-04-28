@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class OrganizationDefaultRepositoryPermissionMigrator
   attr_reader :organization
 

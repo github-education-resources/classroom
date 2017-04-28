@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class AssignmentRepo
   class Creator
     DEFAULT_ERROR_MESSAGE                   = 'Assignment could not be created, please try again'
