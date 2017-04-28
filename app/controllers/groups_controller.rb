@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 class GroupsController < ApplicationController
   include OrganizationAuthorization
 
   before_action :ensure_team_management_flipper_is_enabled
-  before_action :set_member, only: [:add_membership, :remove_membership]
+  before_action :set_member, only: %i[add_membership remove_membership]
 
   def add_membership
     repo_access = RepoAccess.find_by(user: @user, organization: @organization)

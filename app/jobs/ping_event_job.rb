@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Documentation: https://developer.github.com/webhooks/#ping-event
 class PingEventJob < ApplicationJob
   queue_as :github_event

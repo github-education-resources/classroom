@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Nameable
   extend ActiveSupport::Concern
 

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class AssignmentRepo < ApplicationRecord
   update_index('stafftools#assignment_repo') { self }
 
@@ -58,7 +59,7 @@ class AssignmentRepo < ApplicationRecord
   #
   # Returns true.
   def silently_destroy_github_repository
-    return true unless organization.present?
+    return true if organization.blank?
 
     organization.github_organization.delete_repository(github_repo_id)
     true

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Organization
   class Creator
     include Rails.application.routes.url_helpers

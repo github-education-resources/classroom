@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe GroupAssignmentsController, type: :controller do
@@ -36,7 +37,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
           group_assignment: { title: 'Learn JavaScript', slug: 'learn-javascript' },
           grouping:         { title: 'Grouping 1' }
         }
-      end.to change { GroupAssignment.count }
+      end.to change(GroupAssignment, :count)
     end
 
     it 'does not allow groupings to be added that do not belong to the organization' do
@@ -47,7 +48,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
           organization_id: organization.slug,
           group_assignment: { title: 'Learn Ruby', grouping_id: other_group_assignment.grouping_id }
         }
-      end.not_to change { GroupAssignment.count }
+      end.not_to change(GroupAssignment, :count)
     end
 
     context 'flipper is enabled for the user' do
@@ -173,7 +174,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
 
       expect do
         delete :destroy, params: { id: group_assignment.slug, organization_id: organization }
-      end.to change { GroupAssignment.all.count }
+      end.to change(GroupAssignment, :count)
 
       expect(GroupAssignment.unscoped.find(group_assignment.id).deleted_at).not_to be_nil
     end

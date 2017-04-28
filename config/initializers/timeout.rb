@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # The rack-timeout gem inserts itself into the Rails middleware automatically
 # upon requiring. We wait to require it until here so that we may skip using it
 # in the development and test environments.

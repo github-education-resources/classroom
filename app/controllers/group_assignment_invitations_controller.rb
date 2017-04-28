@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class GroupAssignmentInvitationsController < ApplicationController
   layout 'layouts/invitations'
 
@@ -40,7 +41,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   def authorize_group_access
     group_id = group_params[:id]
 
-    return unless group_id.present?
+    return if group_id.blank?
     group = Group.find(group_id)
     validate_max_members_not_exceeded!(group)
     return if group_assignment.grouping.groups.find_by(id: group_id)
@@ -116,7 +117,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
 
   def check_user_not_group_member
-    return unless group.present?
+    return if group.blank?
     redirect_to accept_group_assignment_invitation_path
   end
 

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Assignment
   class Editor
     attr_reader :assignment, :options

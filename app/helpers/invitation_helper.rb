@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module InvitationHelper
   # Public: Return the attributes needed
   # to render the invitation copy url parial

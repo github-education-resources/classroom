@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 class StudentIdentifierTypesController < ApplicationController
   include OrganizationAuthorization
 
   before_action :ensure_student_identifier_flipper_is_enabled
-  before_action :set_student_identifier_type, only: [:edit, :update]
+  before_action :set_student_identifier_type, only: %i[edit update]
   before_action :save_referer,                only: [:new]
 
   def index
