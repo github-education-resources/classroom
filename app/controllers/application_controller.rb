@@ -19,6 +19,7 @@ class ApplicationController < ActionController::Base
               GitHub::Forbidden,
               GitHub::NotFound,
               NotAuthorized, with: :flash_and_redirect_back_with_message
+  rescue_from ActionController::RoutingError, ActiveRecord::RecordNotFound, with: :render_404
 
   def peek_enabled?
     logged_in? && current_user.staff?
@@ -32,5 +33,14 @@ class ApplicationController < ActionController::Base
 
   def redirect_to_root
     redirect_to root_path
+  end
+
+  def render_404(exception)
+    case exception
+    when ActionController::RoutingError
+      render file: Rails.root.join('public', '404.html'), layout: false, status: :not_found
+    when ActiveRecord::RecordNotFound
+      render file: Rails.root.join('public', 'invalid_link_error.html'), layout: false, status: :not_found
+    end
   end
 end

@@ -13,7 +13,8 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
   describe 'GET #index', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { get :index }.to raise_error(ActionController::RoutingError)
+        get :index
+        expect(response.status).to eq(404)
       end
     end
 
@@ -56,7 +57,8 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
   describe 'GET #search', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { get :search }.to raise_error(ActionController::RoutingError)
+        get :search
+        expect(response.status).to eq(404)
       end
     end
 

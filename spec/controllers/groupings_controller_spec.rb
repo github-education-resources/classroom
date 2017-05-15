@@ -60,32 +60,23 @@ RSpec.describe GroupingsController, type: :controller do
   context 'flipper is not enabled for the user' do
     describe 'GET #show', :vcr do
       it 'returns a 404' do
-        expect do
-          get :show, params: {
-            organization_id: organization.slug,
-            id: grouping.slug
-          }
-        end.to raise_error(ActionController::RoutingError)
+        get :show, params: { organization_id: organization.slug, id: grouping.slug }
+        expect(response.status).to eq(404)
       end
     end
 
     describe 'GET #edit', :vcr do
       it 'returns success status' do
-        expect do
-          get :edit, params: {
-            organization_id: organization.slug,
-            id: grouping.slug
-          }
-        end.to raise_error(ActionController::RoutingError)
+        get :edit, params: { organization_id: organization.slug, id: grouping.slug }
+        expect(response.status).to eq(404)
       end
     end
 
     describe 'PATCH #update', :vcr do
       it 'correctly updates the grouping' do
         update_options = { title: 'Fall 2015' }
-        expect do
-          patch :update, params: { organization_id: organization.slug, id: grouping.slug, grouping: update_options }
-        end.to raise_error(ActionController::RoutingError)
+        patch :update, params: { organization_id: organization.slug, id: grouping.slug, grouping: update_options }
+        expect(response.status).to eq(404)
       end
     end
   end
