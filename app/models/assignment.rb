@@ -25,7 +25,7 @@ class Assignment < ApplicationRecord
   validates :title, presence: true
   validates :title, length: { maximum: 60 }
   validates :title, uniqueness: { scope: :organization_id }
-  validates :title, exclusion: { :in => ['new', 'edit'] }
+  validates :title, exclusion: { in: %w[new edit] }
 
   validates :slug, uniqueness: { scope: :organization_id }
   validates :slug, presence: true
