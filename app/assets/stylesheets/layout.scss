@@ -891,3 +891,7 @@ hr {
     vertical-align: top;
   }
 }
+
+.flash.flash-error p:first-of-type {
+  margin-top: 0;
+}
