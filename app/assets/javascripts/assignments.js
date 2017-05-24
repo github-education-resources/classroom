@@ -1,16 +1,17 @@
 (function() {
-  var $form_values_present, $title_blacklisted, $present;
+  var $title_present, $title_blacklisted, $present;
 
   var $title_blacklist = [
     'new',
     'edit'
   ]
 
-  $('.group_assignments').ready(function() {
+  $('.assignments').ready(function() {
     return $('form').on('change keyup', function() {
       var $submit_button;
-      $submit_button = $('#group_assignment_submit');
-      if ($form_values_present() && !$title_blacklisted()) {
+      $submit_button = $('#assignment_submit');
+
+      if ($title_present() && !$title_blacklisted()) {
         return $submit_button.prop('disabled', false);
       } else {
         return $submit_button.prop('disabled', true);
@@ -18,12 +19,13 @@
     });
   });
 
-  $form_values_present = function() {
-    return $present('group_assignment_title') && ($present('grouping_title') || $present('group_assignment_grouping_id'));
+  $title_present = function() {
+    return $present('assignment_title');
   };
 
   $title_blacklisted = function() {
-    var $title = $('#group_assignment_title').val();
+    var $title = $('#assignment_title').val();
+    console.log($title);
 
     return ($.inArray($title, $title_blacklist) !== -1)
   };
