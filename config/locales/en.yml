@@ -31,8 +31,9 @@ en:
         title: 'Your team'
         slug:  'Your team'
       group_assignment:
-        title: 'Your assignment title'
-        slug:  'Your assignment repository prefix'
+        title:    'Your assignment title'
+        slug:     'Your assignment repository prefix'
+        grouping: 'Your set of teams'
       assignment:
         title: 'Your assignment title'
         slug:  'Your assignment repository prefix'
