@@ -14,6 +14,9 @@ Rails.application.routes.draw do
   match '/auth/:provider/callback', to: 'sessions#create',  via: %i[get post]
   match '/auth/failure',            to: 'sessions#failure', via: %i[get post]
 
+  get '/a/:short_key', to: 'short_url#accept_assignment',       as: 'assignment_invitation_short'
+  get '/g/:short_key', to: 'short_url#accept_group_assignment', as: 'group_assignment_invitation_short'
+
   get '/autocomplete/github_repos', to: 'autocomplete#github_repos'
 
   scope 'github', as: 'github' do

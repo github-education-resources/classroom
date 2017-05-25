@@ -18,11 +18,14 @@ module InvitationHelper
   # Returns a Hash of attributes
   def self.attributes(invitation, base_url)
     type = invitation.class.to_s.underscore
+    url_helpers = Rails.application.routes.url_helpers
 
     {
       type: type,
       key: invitation.key,
-      url: Rails.application.routes.url_helpers.send("#{type}_url".to_sym, id: invitation.key, host: base_url)
+      short_key: invitation.short_key,
+      url: url_helpers.send("#{type}_url".to_sym, id: invitation.key, host: base_url),
+      short_url: url_helpers.send("#{type}_short_url".to_sym, short_key: invitation.short_key, host: base_url)
     }
   end
 end

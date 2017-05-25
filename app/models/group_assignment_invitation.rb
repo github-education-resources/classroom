@@ -17,7 +17,10 @@ class GroupAssignmentInvitation < ApplicationRecord
   validates :key, presence:   true
   validates :key, uniqueness: true
 
-  after_initialize :assign_key
+  validates :short_key, presence:   true
+  validates :short_key, uniqueness: true
+
+  after_initialize :assign_key, :assign_short_key
 
   delegate :title, to: :group_assignment
 
@@ -38,6 +41,10 @@ class GroupAssignmentInvitation < ApplicationRecord
 
   def assign_key
     self.key ||= SecureRandom.hex(16)
+  end
+
+  def assign_short_key
+    self.short_key ||= SecureRandom.urlsafe_base64(6)
   end
 
   private

@@ -1,4 +1,11 @@
 <dt class="desktop-invitation-content"><label><%= t('views.shared.give_this_to_students') %></label></dt>
 <div class="desktop-invitation-content input-group input-block">
-  <%= render partial: "shared/invitations/clipboard_form", locals: local_assigns %>
+  <%= render partial: "shared/invitations/clipboard_form", locals: {type: type, key: key, url: url} %>
+</div>
+
+</br>
+
+<dt class="desktop-invitation-content"><label><%= t('views.shared.give_this_to_students_short') %></label></dt>
+<div class="desktop-invitation-content input-group input-block">
+  <%= render partial: "shared/invitations/clipboard_form", locals: {type: type, key: short_key, url: short_url} %>
 </div>
