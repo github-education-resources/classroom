@@ -8,4 +8,4 @@ development:
   host: 'localhost:9200'
 
 production:
-  host: <%= ENV['BONSAI_URL'] %>
+  host: <%= ENV['FOUNDELASTICSEARCH_URL'] %>
