@@ -1,8 +1,9 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe GitHubRepository do
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
+  let(:organization) { classroom_org }
 
   before do
     Octokit.reset!
@@ -16,6 +17,25 @@ describe GitHubRepository do
 
   after(:each) do
     @client.delete_repository(@github_repository.id)
+  end
+
+  it 'responds to all (GitHub) attributes', :vcr do
+    gh_repo = @client.repository(@github_repository.id)
+
+    @github_repository.attributes.each do |attribute, value|
+      next if attribute == :client || attribute == :access_token
+      expect(@github_repository).to respond_to(attribute)
+      expect(value).to eql(gh_repo.send(attribute))
+    end
+
+    expect(WebMock).to have_requested(:get, github_url("/repositories/#{@github_repository.id}")).twice
+  end
+
+  it 'responds to all *_no_cache methods', :vcr do
+    @github_repository.attributes.each do |attribute, _|
+      next if attribute == :id || attribute == :client || attribute == :access_token
+      expect(@github_repository).to respond_to("#{attribute}_no_cache")
+    end
   end
 
   describe 'class methods' do
@@ -101,14 +121,22 @@ describe GitHubRepository do
       end
     end
 
-    GitHubRepository.new(@client, 123).send(:attributes).each do |attribute|
-      describe "##{attribute}", :vcr do
-        it "gets the #{attribute} of the repository " do
-          repository = @client.repository(@github_repository.id)
+    describe '#public=', :vcr do
+      it 'updates the github repository to public' do
+        @github_repository.public = true
 
-          expect(@github_repository.send(attribute)).to eql(repository.send(attribute))
-          expect(WebMock).to have_requested(:get, github_url("/repositories/#{repository.id}")).twice
-        end
+        expect(WebMock).to have_requested(
+          :patch,
+          github_url("/repos/#{@github_repository.full_name}")
+        ).with(body: { private: false, name: @github_repository.name })
+      end
+
+      it 'updates the github repository to private' do
+        @github_repository.public = false
+        expect(WebMock).to have_requested(
+          :patch,
+          github_url("/repos/#{@github_repository.full_name}")
+        ).with(body: { private: true, name: @github_repository.name })
       end
     end
   end

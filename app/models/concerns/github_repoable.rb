@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module GitHubRepoable
   extend ActiveSupport::Concern
 
@@ -9,13 +10,6 @@ module GitHubRepoable
     github_team       = GitHubTeam.new(organization.github_client, github_team_id)
 
     github_team.add_team_repository(github_repository.full_name, repository_permissions)
-  end
-
-  def add_user_as_collaborator
-    github_user = GitHubUser.new(user.github_client, user.uid)
-    repository  = GitHubRepository.new(organization.github_client, github_repo_id)
-
-    delete_github_repository_on_failure { repository.add_collaborator(github_user.login, repository_permissions) }
   end
 
   # Public

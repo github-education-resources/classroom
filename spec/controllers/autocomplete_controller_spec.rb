@@ -1,13 +1,13 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 require 'set'
 
 RSpec.describe AutocompleteController, type: :controller do
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
-  let(:user)         { organization.users.first                 }
+  let(:user) { classroom_teacher }
 
   before do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   describe 'GET #github_repos', :vcr do

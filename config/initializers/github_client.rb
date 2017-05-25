@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GitHubClassroom
   def self.github_client(options = {})
     client_options = {

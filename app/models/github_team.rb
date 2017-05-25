@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class GitHubTeam < GitHubResource
   def add_team_membership(new_user_github_login)
     GitHub::Errors.with_error_handling do
@@ -36,7 +37,7 @@ class GitHubTeam < GitHubResource
 
   private
 
-  def attributes
-    %w(name slug organization)
+  def github_attributes
+    %w[slug name organization]
   end
 end

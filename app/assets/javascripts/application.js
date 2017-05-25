@@ -16,6 +16,10 @@
 //
 //= require turbolinks
 //
+//= require webcomponentsjs/CustomElements
+//= require fetch/fetch
+//= require include-fragment-element/include-fragment-element
+//
 //= require local_time
 //
 //= require jquery-readyselector/jquery.readyselector
@@ -32,8 +36,4 @@
 //
 //= require transliteration/lib/browser/transliteration
 //
-//= require js-cookie/src/js.cookie
-//
 //= require_tree .
-
-Turbolinks.enableProgressBar();

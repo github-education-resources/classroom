@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../collab_migration'
 
 task collab_migration: :environment do

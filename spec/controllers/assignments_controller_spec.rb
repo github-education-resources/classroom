@@ -1,20 +1,16 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe AssignmentsController, type: :controller do
-  include ActiveJob::TestHelper
+  let(:organization) { classroom_org     }
+  let(:user)         { classroom_teacher }
 
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
-  let(:user)         { organization.users.first                 }
-
-  let(:assignment) do
-    Assignment.create(title: 'Assignment', slug: 'assignment', creator: user, organization: organization)
-  end
-
+  let(:assignment)              { create(:assignment, organization: organization)              }
   let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
 
   before do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   describe 'GET #new', :vcr do
@@ -32,15 +28,18 @@ RSpec.describe AssignmentsController, type: :controller do
   describe 'POST #create', :vcr do
     it 'creates a new Assignment' do
       expect do
-        post :create, params: { organization_id: organization.slug, assignment: attributes_for(:assignment) }
-      end.to change { Assignment.count }
+        post :create, params: {
+          assignment: attributes_for(:assignment, organization: organization),
+          organization_id: organization.slug
+        }
+      end.to change(Assignment, :count)
     end
 
     context 'valid starter_code repo_name input' do
       before do
         post :create, params: {
           organization_id: organization.slug,
-          assignment:      attributes_for(:assignment),
+          assignment:      attributes_for(:assignment, organization: organization),
           repo_name:       'rails/rails'
         }
       end
@@ -56,7 +55,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
         post :create, params: {
           organization_id: organization.slug,
-          assignment:      attributes_for(:assignment),
+          assignment:      attributes_for(:assignment, organization: organization),
           repo_name:       'https://github.com/rails/rails'
         }
       end
@@ -78,7 +77,7 @@ RSpec.describe AssignmentsController, type: :controller do
       before do
         post :create, params: {
           organization_id: organization.slug,
-          assignment:      attributes_for(:assignment),
+          assignment:      attributes_for(:assignment, organization: organization),
           repo_id:         8514 # 'rails/rails'
         }
       end
@@ -98,7 +97,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
         post :create, params: {
           organization_id: organization.slug,
-          assignment:      attributes_for(:assignment),
+          assignment:      attributes_for(:assignment, organization: organization),
           repo_id:         'invalid_id' # id must be an integer
         }
       end
@@ -121,7 +120,7 @@ RSpec.describe AssignmentsController, type: :controller do
         GitHubClassroom.flipper[:student_identifier].enable
         post :create, params: {
           organization_id:         organization.slug,
-          assignment:              attributes_for(:assignment),
+          assignment:              attributes_for(:assignment, organization: organization),
           student_identifier_type: { id: student_identifier_type.id }
         }
       end
@@ -164,6 +163,26 @@ RSpec.describe AssignmentsController, type: :controller do
       expect(response).to redirect_to(organization_assignment_path(organization, Assignment.find(assignment.id)))
     end
 
+    context 'public_repo is changed' do
+      it 'calls the AssignmentVisibility background job' do
+        options = { title: 'Ruby on Rails', public_repo: !assignment.public? }
+
+        assert_enqueued_jobs 1, only: Assignment::RepositoryVisibilityJob do
+          patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
+        end
+      end
+    end
+
+    context 'public_repo is not changed' do
+      it 'will not kick off an AssignmentVisibility job' do
+        options = { title: 'Ruby on Rails' }
+
+        assert_no_enqueued_jobs only: Assignment::RepositoryVisibilityJob do
+          patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
+        end
+      end
+    end
+
     context 'slug is empty' do
       it 'correctly reloads the assignment' do
         options = { slug: '' }
@@ -179,7 +198,7 @@ RSpec.describe AssignmentsController, type: :controller do
         patch :update, params: {
           id:                      assignment.slug,
           organization_id:         organization.slug,
-          assignment:              attributes_for(:assignment),
+          assignment:              attributes_for(:assignment, organization: organization),
           student_identifier_type: { id: student_identifier_type.id }
         }
       end
@@ -200,7 +219,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
       expect do
         delete :destroy, params: { id: assignment.slug, organization_id: organization }
-      end.to change { Assignment.all.count }
+      end.to change(Assignment, :count)
 
       expect(Assignment.unscoped.find(assignment.id).deleted_at).not_to be_nil
     end

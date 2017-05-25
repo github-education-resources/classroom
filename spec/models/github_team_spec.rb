@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe GitHubTeam do
@@ -16,6 +17,26 @@ describe GitHubTeam do
 
   after(:each) do
     @client.delete_team(@github_team.id)
+  end
+
+  it 'responds to all (GitHub) attributes', :vcr do
+    gh_team = @client.team(@github_team.id)
+
+    @github_team.attributes.each do |attribute, value|
+      next if attribute == :client || attribute == :access_token || attribute == :organization
+      expect(@github_team).to respond_to(attribute)
+      expect(value).to eql(gh_team.send(attribute))
+    end
+
+    expect(WebMock).to have_requested(:get, github_url("/orgs/#{@github_organization_login}"))
+    expect(WebMock).to have_requested(:get, github_url("/teams/#{@github_team.id}")).times(3)
+  end
+
+  it 'responds to all *_no_cache methods', :vcr do
+    @github_team.attributes.each do |attribute, _|
+      next if attribute == :id || attribute == :client || attribute == :access_token || attribute == :organization
+      expect(@github_team).to respond_to("#{attribute}_no_cache")
+    end
   end
 
   describe '#add_team_membership', :vcr do
@@ -40,22 +61,6 @@ describe GitHubTeam do
     it 'returns the GitHub URL for the team' do
       expected_url = "https://github.com/orgs/#{@github_organization.login}/teams/#{@github_team.slug}"
       expect(@github_team.html_url).to eql(expected_url)
-    end
-  end
-
-  GitHubTeam.new(@client, 123).send(:attributes).each do |attribute|
-    describe "##{attribute}", :vcr do
-      it "gets the #{attribute} of the team" do
-        gh_team = @client.team(@github_team.id)
-
-        if attribute == 'organization'
-          expect(@github_team.send(attribute).id).to eql(gh_team.send(attribute).id)
-        else
-          expect(@github_team.send(attribute)).to eql(gh_team.send(attribute))
-        end
-
-        expect(WebMock).to have_requested(:get, github_url("/teams/#{gh_team.id}")).twice
-      end
     end
   end
 end

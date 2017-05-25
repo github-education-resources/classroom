@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class NullGitHubRepository < NullGitHubResource
   def name
     'Deleted repository'

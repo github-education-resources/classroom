@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -55,14 +56,14 @@ class ApplicationController < ActionController::Base
   end
 
   def become_active
-    current_user.become_active
+    LastActiveJob.perform_later(current_user.id, Time.zone.now.to_i)
   end
 
   def current_user
     return @current_user if defined?(@current_user)
 
     @current_user = if true_user.try(:staff?) && session[:impersonated_user_id]
-                      User.find session[:impersonated_user_id]
+                      User.find_by(id: session[:impersonated_user_id])
                     else
                       true_user
                     end
@@ -71,7 +72,7 @@ class ApplicationController < ActionController::Base
   def flash_and_redirect_back_with_message(exception)
     flash[:error] = exception.message
 
-    unless flash[:error].present?
+    if flash[:error].blank?
       case exception
       when NotAuthorized
         flash[:error] = 'You are not authorized to perform this action'
@@ -108,6 +109,6 @@ class ApplicationController < ActionController::Base
   end
 
   def true_user
-    @true_user ||= User.find(session[:user_id]) if session[:user_id]
+    @true_user ||= User.find_by(id: session[:user_id])
   end
 end

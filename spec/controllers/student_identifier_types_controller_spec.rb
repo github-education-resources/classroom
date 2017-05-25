@@ -1,17 +1,16 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe StudentIdentifierTypesController, type: :controller do
-  include ActiveJob::TestHelper
-
-  let(:organization)  { GitHubFactory.create_owner_classroom_org }
-  let(:user)          { organization.users.first                 }
-  let(:student)       { GitHubFactory.create_classroom_student   }
+  let(:organization)  { classroom_org       }
+  let(:user)          { classroom_teacher   }
+  let(:student)       { classroom_student   }
 
   let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
 
   before do
-    sign_in(user)
+    sign_in_as(user)
   end
 
   context 'flipper is enabled for the user' do
@@ -53,9 +52,9 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
         expect do
           post :create, params: {
             organization_id: organization.slug,
-            student_identifier_type: { name: 'Test', description: 'Test', content_type: 'text' }
+            student_identifier_type: { name: 'Test', description: 'Test' }
           }
-        end.to change { StudentIdentifierType.count }
+        end.to change(StudentIdentifierType, :count)
       end
     end
 
@@ -70,7 +69,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
 
     describe 'PATCH #update', :vcr do
       before(:each) do
-        options = { name: 'Test2', description: 'Test2', content_type: 'email' }
+        options = { name: 'Test2', description: 'Test2' }
         patch :update, params: {
           organization_id: organization.slug,
           id: student_identifier_type.id,
@@ -92,7 +91,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
         student_identifier_type
         expect do
           delete :destroy, params: { id: student_identifier_type.id, organization_id: organization }
-        end.to change { StudentIdentifierType.all.count }
+        end.to change(StudentIdentifierType, :count)
         expect(StudentIdentifierType.unscoped.find(student_identifier_type.id).deleted_at).not_to be_nil
       end
 
@@ -137,7 +136,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
         expect do
           post :create, params: {
             organization_id: organization.slug,
-            student_identifier_type: { name: 'Test', description: 'Test', content_type: 'text' }
+            student_identifier_type: { name: 'Test', description: 'Test' }
           }
         end.to raise_error(ActionController::RoutingError)
       end
@@ -154,7 +153,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
 
     describe 'PATCH #update', :vcr do
       it 'returns a 404' do
-        options = { name: 'Test2', description: 'Test2', content_type: 'email' }
+        options = { name: 'Test2', description: 'Test2' }
         expect do
           patch :update, params: {
             organization_id: organization.slug,

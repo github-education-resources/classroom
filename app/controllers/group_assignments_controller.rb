@@ -1,12 +1,13 @@
 # frozen_string_literal: true
+
 class GroupAssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
 
-  before_action :set_group_assignment, except: [:new, :create]
+  before_action :set_group_assignment, except: %i[new create]
   before_action :set_groupings,        except: [:show]
 
-  before_action :authorize_grouping_access, only: [:create, :update]
+  before_action :authorize_grouping_access, only: %i[create update]
 
   def new
     @group_assignment = GroupAssignment.new
@@ -24,21 +25,19 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def show
-    @group_assignment_repos = GroupAssignmentRepo.includes(:organization,
-                                                           group: [:organization, repo_accesses: [:user]])
-                                                 .where(group_assignment: @group_assignment)
-                                                 .page(params[:page])
+    @group_assignment_repos = GroupAssignmentRepo.where(group_assignment: @group_assignment).page(params[:page])
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
-    if @group_assignment.update_attributes(update_group_assignment_params)
-      flash[:success] = "Assignment \"#{@group_assignment.title}\" updated"
+    result = Assignment::Editor.perform(assignment: @group_assignment, options: update_group_assignment_params.to_h)
+    if result.success?
+      flash[:success] = "Assignment \"#{@group_assignment.title}\" is being updated"
       redirect_to organization_group_assignment_path(@organization, @group_assignment)
     else
-      @group_assignment.reload unless @group_assignment.slug.present?
+      flash[:error] = result.error
+      @group_assignment.reload if @group_assignment.slug.blank?
       render :edit
     end
   end
@@ -66,7 +65,7 @@ class GroupAssignmentsController < ApplicationController
   def authorize_grouping_access
     grouping_id = new_group_assignment_params[:grouping_id]
 
-    return unless grouping_id.present?
+    return if grouping_id.blank?
     return if @organization.groupings.find_by(id: grouping_id)
 
     raise NotAuthorized, 'You are not permitted to select this set of teams'

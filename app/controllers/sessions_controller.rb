@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class SessionsController < ApplicationController
   skip_before_action :authenticate_user!
 
@@ -14,7 +15,7 @@ class SessionsController < ApplicationController
 
   def create
     auth_hash = request.env['omniauth.auth']
-    user      = User.find_by_auth_hash(auth_hash) || User.new # rubocop:disable Rails/DynamicFindBy
+    user      = User.find_by_auth_hash(auth_hash) || User.new
 
     user.assign_from_auth_hash(auth_hash)
 

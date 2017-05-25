@@ -1,12 +1,12 @@
 # frozen_string_literal: true
+
 module Stafftools
   class UsersController < StafftoolsController
     skip_before_action :authorize_access, only: [:stop_impersonating]
 
     before_action :set_user, except: [:stop_impersonating]
 
-    def show
-    end
+    def show; end
 
     def impersonate
       session[:impersonated_user_id] = @user.id

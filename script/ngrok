@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# script/ngrok: Run ngrok to get webhooks.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+ngrok http 5000

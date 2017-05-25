@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class GroupAssignmentInvitation < ApplicationRecord
   default_scope { where(deleted_at: nil) }
 

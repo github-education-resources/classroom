@@ -14,26 +14,25 @@
       "description": "the ID for the application in airbrake.io, if set Airbrake will be enabled",
       "required": false
     },
-
     "AIRBRAKE_PROJECT_KEY": {
       "description": "the PROJECT_KEY for the application in airbrake.io, if set Airbrake will be enabled",
       "required": false
     },
-
+    "CLASSROOM_WEBHOOK_PREFIX_URL": {
+      "description": "The URL for your application to recieve webhooks ex https://classroom.github.com",
+      "required": true
+    },
     "GITHUB_CLIENT_ID": {
       "description": "The GitHub Application Client ID.",
       "required": true
     },
-
     "GITHUB_CLIENT_SECRET": {
       "description": "The GitHub Application Client Secret.",
       "required": true
     },
-
     "REDIS_PROVIDER": {
       "value": "REDIS_URL"
     },
-
     "NON_STAFF_GITHUB_ADMIN_IDS": {
       "description": "GitHub IDs of non GitHub staff members that have staff access.",
       "required": false

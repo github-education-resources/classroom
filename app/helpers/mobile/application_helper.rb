@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Mobile
   module ApplicationHelper
     # Public: Is the request coming from a mobile device?
