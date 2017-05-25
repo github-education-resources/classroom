@@ -1,18 +1,12 @@
 # frozen_string_literal: true
-class AssignmentReposController < GitHubRepositoriesController
+
+class AssignmentReposController < ApplicationController
   include OrganizationAuthorization
+  include GitHubRepoStatus
 
-  before_action :set_assignment_repo
+  layout false
 
-  private
-
-  def set_assignment_repo
-    assignment = @organization.assignments.find_by(slug: params[:assignment_id])
-    @assignment_repo = AssignmentRepo.find_by(assignment: assignment, id: params[:id])
-    not_found unless @assignment_repo.present?
-  end
-
-  def github_repo
-    @github_repo ||= @assignment_repo.github_repository
+  def show
+    @assignment_repo = AssignmentRepo.includes(:user).find_by!(id: params[:id])
   end
 end

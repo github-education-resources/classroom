@@ -1,0 +1,21 @@
+{
+  "name": "include-fragment-element",
+  "main": "include-fragment-element.js",
+  "devDependencies": {
+    "classlist": "2014.7.23",
+    "CustomElements": "0.2.4",
+    "es5-basic-shim": "1.0.6",
+    "es6-promise": "1.0.0",
+    "MutationObserver": "0.2.0",
+    "qunit": "1.14.0",
+    "WeakMap": "0.2.1"
+  },
+  "ignore": [
+    ".*",
+    "*.md",
+    "examples/",
+    "Makefile",
+    "package.json",
+    "test/"
+  ]
+}

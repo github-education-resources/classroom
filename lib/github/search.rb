@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module GitHub
   class Search
     attr_accessor :search_client
@@ -10,7 +11,7 @@ module GitHub
     end
 
     def search_github_repositories(query, options = { sort: 'updated', per_page: 10, page: 1 })
-      return [], '' unless query.present?
+      return [], '' if query.blank?
 
       return GitHub::Errors.with_error_handling do
         search_query = build_github_repositories_query(query)

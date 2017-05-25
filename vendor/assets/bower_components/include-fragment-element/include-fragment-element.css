@@ -1,0 +1,4 @@
+include-fragment {
+  /* Normalize as a block element across all browsers */
+  display: block;
+}

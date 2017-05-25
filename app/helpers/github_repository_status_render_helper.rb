@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module GitHubRepositoryStatusRenderHelper
   def tooltip_text_for_build_status(status)
     case status

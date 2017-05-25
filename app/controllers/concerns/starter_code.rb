@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module StarterCode
   extend ActiveSupport::Concern
 
@@ -6,9 +7,9 @@ module StarterCode
   WRONG_FORMAT      = 'Invalid repository name, use the format owner/name.'
 
   def starter_code_repository_id(repo_name)
-    return unless repo_name.present?
+    return if repo_name.blank?
 
-    raise GitHub::Error, WRONG_FORMAT unless repo_name =~ %r{^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$}
+    raise GitHub::Error, WRONG_FORMAT unless repo_name.match?(%r{^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$})
 
     begin
       # rubocop:disable Rails/DynamicFindBy

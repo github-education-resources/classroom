@@ -6,7 +6,3 @@
   <dt><%= f.label :description %></dt>
   <dd><%= f.text_field :description, class: 'textfield' %></dd>
 </dl>
-<dl class="form">
-  <dt><%= f.label :content_type %></dt>
-  <dd><%= f.select :content_type, StudentIdentifierType.content_types.map { |key, value| [key.humanize, key] } %></dd>
-</dl>

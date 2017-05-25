@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe AuthHash do
@@ -23,7 +24,7 @@ describe AuthHash do
 
     it 'returns multiple ids' do
       ENV['NON_STAFF_GITHUB_ADMIN_IDS'] = '1,2,3'
-      expect(auth_hash.instance_eval { non_staff_github_admins_ids }).to eql(%w(1 2 3))
+      expect(auth_hash.instance_eval { non_staff_github_admins_ids }).to eql(%w[1 2 3])
     end
   end
 end

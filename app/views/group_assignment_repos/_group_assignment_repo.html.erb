@@ -1,39 +1,6 @@
-<div class="flex-table group-assignment-repo-list-item<%= ' disabled' if group_assignment_repo.disabled? %>">
-  <div class="flex-table-item">
-    <%= link_to group_assignment_repo.github_team.html_url, class: "team-name #{'disabled' if group_assignment_repo.disabled?}" do %>
-      <strong class="css-truncate css-truncate-target"><%= group_assignment_repo.github_team.name %></strong>
-    <% end %>
-
-    <ul>
-      <% group_assignment_repo.group.repo_accesses.limit(4).each do |repo_access| %>
-        <% student = repo_access.user %>
-
-        <li>
-          <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s #{'disabled' if group_assignment_repo.disabled?}", 'aria-label' => student.github_user.login do %>
-            <%= image_tag student.github_user.github_avatar_url(60), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.github_user.login}" %>
-          <% end %>
-        </li>
-      <% end %>
-
-      <% if group_assignment_repo.group.repo_accesses.count > 4 %>
-        <li>
-          <%= link_to group_assignment_repo.github_team.html_url, class: "#{'disabled' if group_assignment_repo.disabled?}" do %>
-            <%= image_tag 'student-ellipse@2x.png', class: 'avatar avatar-small', height: 30, width: 30, alt: 'student ellipse' %>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
+<include-fragment src="<%= url %>", class="flex-table group-assignment-repo-list-item">
+  <div class="flex-table-item text-center">
+    <%= image_tag 'octocat-spinner-128.gif', width: 43, height: 43, class: 'spinner' %>
+    <%= octicon 'alert', height: 43, class: 'octicon-alert' %>
   </div>
-
-  <div class="flex-table-item text-right">
-    <strong class="css-truncate css-truncate-target">
-      <%= link_to group_assignment_repo.github_repository.full_name, group_assignment_repo.github_repository.html_url, class: "assignment-repo-github-url #{'disabled' if group_assignment_repo.disabled?}" %>
-    </strong>
-    <% if teacher_dashboard_enabled? && !group_assignment_repo.disabled? %>
-      <%= render partial: 'shared/github_repository/status_container',
-                 locals: {
-                   status_url: repo_status_organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo)
-                 } %>
-    <% end %>
-  </div>
-</div>
+</include-fragment>

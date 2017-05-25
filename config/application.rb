@@ -1,6 +1,22 @@
+# frozen_string_literal: true
+
 require File.expand_path('../boot', __FILE__)
 
-require 'rails/all'
+# From https://github.com/rails/rails/blob/master/railties/lib/rails/all.rb
+require 'rails'
+
+%w[
+  active_record/railtie
+  action_controller/railtie
+  action_view/railtie
+  active_job/railtie
+  sprockets/railtie
+].each do |railtie|
+  begin
+    require railtie
+  rescue LoadError # rubocop:disable Lint/HandleExceptions
+  end
+end
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -21,9 +37,6 @@ module GitHubClassroom
 
     # Available locales
     I18n.available_locales = [:en]
-
-    # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
 
     # Add bower assets to the path
     root.join('vendor', 'assets', 'bower_components').to_s.tap do |bower_path|
@@ -68,7 +81,7 @@ module GitHubClassroom
         ping.check :elasticsearch do
           status = Chewy.client.cluster.health['status'] || 'unavailable'
 
-          if status == 'green'
+          if status == 'green' # rubocop:disable Style/GuardClause
             'ok'
           else
             raise "Elasticsearch status is #{status}"

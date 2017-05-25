@@ -1,6 +1,21 @@
-stack = Faraday::RackBuilder.new do |builder|
-  builder.use Faraday::HttpCache, store: Rails.cache, logger: Rails.logger, shared_cache: false, serializer: Marshal
+# frozen_string_literal: true
+
+require 'typhoeus/adapters/faraday'
+
+Octokit.middleware = Faraday::RackBuilder.new do |builder|
+  options = {}.tap do |opts|
+    opts[:store]        = Rails.cache
+    opts[:shared_cache] = false
+    opts[:serializer]   = Marshal
+
+    opts[:logger] = Rails.logger unless Rails.env.production?
+  end
+
+  builder.use :http_cache, options
+
+  builder.use Octokit::Middleware::FollowRedirects
   builder.use Octokit::Response::RaiseError
-  builder.adapter Faraday.default_adapter
+
+  builder.request :retry
+  builder.adapter :typhoeus
 end
-Octokit.middleware = stack

@@ -1,12 +1,11 @@
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.4
   Include:
     - '**/Rakefile'
     - '**/config.ru'
   Exclude:
     - 'bin/**/*'
     - 'db/**/*'
-    - 'config/**/*'
     - 'script/**/*'
     - 'vendor/**/*'
 
@@ -25,8 +24,24 @@ Metrics/ClassLength:
 Metrics/LineLength:
   Max: 120
 
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - 'config/routes.rb'
+    - 'config/environments/*.rb'
+
 Rails/Delegate:
   Enabled: false
 
 Rails/HasAndBelongsToMany:
   Enabled: false
+
+Rails/DynamicFindBy:
+  Whitelist:
+    - find_by_auth_hash
+
+Style/FileName:
+  Exclude:
+    - 'Gemfile'
+    - 'Guardfile'
+    - 'Brewfile'

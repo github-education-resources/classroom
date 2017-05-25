@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GitHubClassroom
   REDIS_URL = ENV['REDIS_URL'] || 'redis://localhost:6379/0'
 

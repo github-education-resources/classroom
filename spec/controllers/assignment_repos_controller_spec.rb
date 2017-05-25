@@ -1,33 +1,59 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe AssignmentReposController, type: :controller do
-  include ActiveJob::TestHelper
+  let(:organization) { classroom_org     }
+  let(:user)         { classroom_teacher }
 
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
-  let(:user)         { organization.users.first                 }
+  let(:assignment)      { create(:assignment, organization: organization) }
+  let(:assignment_repo) { create(:assignment_repo, github_repo_id: 42, assignment: assignment) }
 
-  let(:assignment) do
-    Assignment.create(creator: organization.users.first,
-                      title: 'ruby-project',
-                      slug: 'ruby-project',
-                      starter_code_repo_id: '1062897',
-                      organization: organization,
-                      public_repo: false)
+  before(:each) do
+    p "before sign in: #{organization.users.count}"
+    sign_in_as(user)
+    p "after sign in: #{organization.users.count}"
   end
 
-  before do
-    GitHubClassroom.flipper[:teacher_dashboard].enable
-    sign_in(user)
-  end
+  # after do
+  #   AssignmentRepo.destroy_all
+  #   Assignment.destroy_all
+  # end
 
-  after do
-    GitHubClassroom.flipper[:teacher_dashboard].disable
+  describe 'GET #show', :vcr do
+    context 'unauthenticated user' do
+      before do
+        sign_out
+      end
+
+      it 'redirect to login path' do
+        get :show, params: { organization_id: organization.slug, assignment_id: assignment.id, id: assignment_repo.id }
+        expect(response).to redirect_to(login_path)
+      end
+    end
+
+    context 'authenticated user' do
+      before do
+        get :show, params: { organization_id: organization.slug, assignment_id: assignment.id, id: assignment_repo.id }
+      end
+
+      it 'returns success status' do
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'sets the AssignmentRepo' do
+        expect(assigns[:assignment_repo].id).to eql(assignment_repo.id)
+      end
+    end
   end
 
   describe 'GET #status', :vcr do
-    before(:each) do
-      @assignment_repo = AssignmentRepo.create!(assignment: assignment, user: user)
+    before do
+      GitHubClassroom.flipper[:teacher_dashboard].enable
+    end
+
+    after do
+      GitHubClassroom.flipper[:teacher_dashboard].disable
     end
 
     context 'unauthenticated request' do
@@ -38,24 +64,21 @@ RSpec.describe AssignmentReposController, type: :controller do
       it 'redirects to the login page' do
         get :repo_status, params: {
           organization_id: organization.slug,
-          assignment_id: assignment.slug,
-          id: @assignment_repo.id
+          assignment_id: assignment.id,
+          id: assignment_repo.id
         }
         expect(response).to redirect_to(login_path)
       end
     end
 
     context 'user with admin privilege on the organization' do
-      before do
-        sign_in(user)
-      end
-
       context 'valid parameters' do
-        before(:each) do
+        before do
+          puts "before get status: #{organization.users.count}"
           get :repo_status, params: {
             organization_id: organization.slug,
-            assignment_id: assignment.slug,
-            id: @assignment_repo.id
+            assignment_id: assignment.id,
+            id: assignment_repo.id
           }
         end
 
@@ -69,20 +92,16 @@ RSpec.describe AssignmentReposController, type: :controller do
       end
 
       context 'invalid parameters' do
-        it 'returns a 404' do
+        it 'raises ActiveRecord::RecordNotFound' do
           expect do
             get :repo_status, params: {
               organization_id: organization.slug,
-              assignment_id: assignment.slug,
-              id: @assignment_repo.id + 1
+              assignment_id: assignment.id,
+              id: assignment_repo.id + 1
             }
-          end.to raise_error(ActionController::RoutingError)
+          end.to raise_error(ActiveRecord::RecordNotFound)
         end
       end
-    end
-
-    after(:each) do
-      AssignmentRepo.destroy_all
     end
   end
 end

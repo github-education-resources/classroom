@@ -1,10 +1,10 @@
 # frozen_string_literal: true
+
 module Stafftools
   class GroupingsController < StafftoolsController
     before_action :set_grouping
 
-    def show
-    end
+    def show; end
 
     private
 

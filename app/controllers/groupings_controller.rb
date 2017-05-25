@@ -1,15 +1,14 @@
 # frozen_string_literal: true
+
 class GroupingsController < ApplicationController
   include OrganizationAuthorization
 
   before_action :ensure_team_management_flipper_is_enabled
   before_action :set_grouping
 
-  def show
-  end
+  def show; end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @grouping.update_attributes(update_grouping_params)

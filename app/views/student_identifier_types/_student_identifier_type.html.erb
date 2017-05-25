@@ -9,8 +9,7 @@
     <%= link_to 'Delete', '#', class: 'btn btn-danger', 'data-remodal-target': "delete-identifier-type-#{student_identifier_type.id}" %>
   </div>
 
-  <small class="meta-data right"><%= pluralize(student_identifier_type.student_identifiers.count , 'student') %></small>
-
+  <small class="meta-data right"><%= pluralize(student_identifier_type.student_identifiers.count, 'student') %></small>
 </div>
 
 <div class="remodal text-left" data-remodal-id="<%= "delete-identifier-type-#{student_identifier_type.id}" %>">

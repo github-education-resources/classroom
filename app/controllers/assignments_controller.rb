@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 class AssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
 
-  before_action :set_assignment, except: [:new, :create]
+  before_action :set_assignment, except: %i[new create]
 
   def new
     @assignment = Assignment.new
@@ -22,20 +23,19 @@ class AssignmentsController < ApplicationController
   end
 
   def show
-    @assignment_repos = AssignmentRepo.includes(:organization, :user)
-                                      .where(assignment: @assignment)
-                                      .page(params[:page])
+    @assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
-    if @assignment.update_attributes(update_assignment_params)
-      flash[:success] = "Assignment \"#{@assignment.title}\" updated"
+    result = Assignment::Editor.perform(assignment: @assignment, options: update_assignment_params.to_h)
+    if result.success?
+      flash[:success] = "Assignment \"#{@assignment.title}\" is being updated"
       redirect_to organization_assignment_path(@organization, @assignment)
     else
-      @assignment.reload unless @assignment.slug.present?
+      flash[:error] = result.error
+      @assignment.reload if @assignment.slug.blank?
       render :edit
     end
   end

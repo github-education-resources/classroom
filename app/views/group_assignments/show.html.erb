@@ -1,5 +1,4 @@
 <%= render 'organizations/organization_banner' %>
-<%= render partial: 'permission_info_box' %>
 
 <div class="site-content">
   <div class="site-content-cap">
@@ -30,7 +29,10 @@
 
     <% if @group_assignment_repos.present? %>
       <div class="group-assignment-repo-list">
-        <%= render @group_assignment_repos %>
+        <% @group_assignment_repos.each do |group_assignment_repo| %>
+          <%= render partial: 'group_assignment_repos/group_assignment_repo', \
+            locals: { url: organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo) } %>
+        <% end %>
       </div>
 
       <%= render partial: 'shared/pagination', locals: { collection: @group_assignment_repos } %>

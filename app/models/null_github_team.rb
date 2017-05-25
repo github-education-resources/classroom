@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class NullGitHubTeam < NullGitHubResource
   def name
     'Deleted team'

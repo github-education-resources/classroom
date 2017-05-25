@@ -1,0 +1,12 @@
+<div class="remodal text-left" data-remodal-id="remove-user-from-organization-<%= user.id %>">
+  <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
+  <h2 class="remodal-header">Are you sure you want to remove this owner?</h2>
+
+  <div class="remodal-description">
+    <p>
+      Please note this will not remove the user from the organization.
+    </p>
+  </div>
+
+  <%= button_to "Remove user", remove_user_stafftools_organization_path(@organization.id, user.id), method: :delete, class: 'btn btn-danger btn-block js-submit' %>
+</div>

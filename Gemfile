@@ -1,12 +1,20 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
-ruby '2.3.1'
-gem 'rails', '~> 5.0', '>= 5.0.0.1'
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
+  "https://github.com/#{repo_name}.git"
+end
 
-gem 'airbrake'
+ruby '2.4.1'
+gem 'rails', '~> 5.0', '>= 5.0.2'
+
 gem 'autoprefixer-rails'
 
-gem 'chewy', git: 'https://github.com/toptal/chewy.git', ref: '4ae2065e9204d39f8ab16df9e6b6b6b187220f87'
+gem 'chewy', '~> 0.9.0'
+
+gem 'dalli'
 
 gem 'faraday-http-cache'
 gem 'flipper'
@@ -23,40 +31,40 @@ gem 'kaminari'
 gem 'local_time'
 
 gem 'octicons_helper', '~> 2.1'
-gem 'octokit'
+gem 'octokit', github: 'octokit/octokit.rb', ref: '207fb98100cf65d486e41156630ffa9288f297b3'
 gem 'omniauth'
 gem 'omniauth-github'
 
-gem 'peek'
+gem 'peek', '~> 1.0', '>= 1.0.1'
 gem 'peek-dalli'
 gem 'peek-gc'
 gem 'peek-git'
 gem 'peek-performance_bar'
-gem 'peek-pg', git: 'https://github.com/mkcode/peek-pg.git', ref: '9bbe212ed1b6b4a4ad56ded1ef4cf9179cdac0cd'
-gem 'peek-sidekiq', git: 'https://github.com/Soliah/peek-sidekiq.git', ref: '261c857578ae6dc189506a35194785a4db51e54c'
+gem 'peek-pg',      github: 'mkcode/peek-pg',      ref: '9bbe212ed1b6b4a4ad56ded1ef4cf9179cdac0cd'
+gem 'peek-sidekiq', github: 'Soliah/peek-sidekiq', ref: '261c857578ae6dc189506a35194785a4db51e54c'
 gem 'pg'
-gem 'pry-rails'
 gem 'pry-byebug'
-gem 'puma', '~> 3.0'
+gem 'pry-rails'
+gem 'puma', '~> 3.8', '>= 3.8.2'
 
 gem 'rack-canonical-host'
 gem 'rack-timeout', require: false
 gem 'rails-i18n', '~> 5.0', '>= 5.0.1'
-gem 'rb-readline'
 gem 'redis-namespace'
+gem 'ruby-progressbar', '~> 1.8', '>= 1.8.1', require: false
 
-gem 'sprockets'
 gem 'sass-rails', '~> 5.0', '>= 5.0.6'
-gem 'sidekiq', git: 'https://github.com/mperham/sidekiq.git', ref: 'c187be65214728e212b23e2d49ad6da563a00559'
+gem 'sidekiq',    '~> 4.2', '>= 4.2.10'
+gem 'sprockets'
 
-gem 'turbolinks', '~> 2.5.3'
+gem 'turbolinks', github: 'turbolinks/turbolinks-classic', ref: '37a7c296232d20a61bd1946f600da7f2009189db'
+gem 'typhoeus',   '~> 1.1', '>= 1.1.2'
 
 gem 'uglifier', '>= 1.3.0'
 
 group :development do
-  gem 'better_errors'
-  gem 'binding_of_caller'
   gem 'foreman'
+  gem 'web-console'
 end
 
 group :development, :test do
@@ -64,16 +72,18 @@ group :development, :test do
   gem 'bullet'
   gem 'dotenv-rails'
   gem 'guard-rspec', require: false
-  gem 'rspec-rails'
   gem 'rails-controller-testing'
-  gem 'rubocop',   require: false
+  gem 'rspec-rails'
+  gem 'rubocop', require: false
   gem 'scss_lint', require: false
   gem 'spring'
   gem 'terminal-notifier-guard'
+  gem 'timecop', require: false
 end
 
 group :production do
-  gem 'dalli'
+  gem 'airbrake'
+  gem 'lograge', '~> 0.4.1'
   gem 'newrelic_rpm'
   gem 'pinglish'
   gem 'puma_worker_killer'

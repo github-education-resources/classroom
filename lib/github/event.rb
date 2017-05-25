@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module GitHub
   class Event
     attr_accessor :event_client

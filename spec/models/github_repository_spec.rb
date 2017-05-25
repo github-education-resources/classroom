@@ -1,8 +1,9 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe GitHubRepository do
-  let(:organization) { GitHubFactory.create_owner_classroom_org }
+  let(:organization) { classroom_org }
 
   before do
     Octokit.reset!
@@ -16,6 +17,25 @@ describe GitHubRepository do
 
   after(:each) do
     @client.delete_repository(@github_repository.id)
+  end
+
+  it 'responds to all (GitHub) attributes', :vcr do
+    gh_repo = @client.repository(@github_repository.id)
+
+    @github_repository.attributes.each do |attribute, value|
+      next if attribute == :client || attribute == :access_token
+      expect(@github_repository).to respond_to(attribute)
+      expect(value).to eql(gh_repo.send(attribute))
+    end
+
+    expect(WebMock).to have_requested(:get, github_url("/repositories/#{@github_repository.id}")).twice
+  end
+
+  it 'responds to all *_no_cache methods', :vcr do
+    @github_repository.attributes.each do |attribute, _|
+      next if attribute == :id || attribute == :client || attribute == :access_token
+      expect(@github_repository).to respond_to("#{attribute}_no_cache")
+    end
   end
 
   describe 'class methods' do
@@ -103,27 +123,25 @@ describe GitHubRepository do
 
     describe '#latest_push_event', :vcr do
       it 'queries GitHub events API' do
-        repo_id = 8514 # 8514 is rails/rails
-        github_repository = GitHubRepository.new(@client, repo_id)
-        github_repository.latest_push_event
+        @github_repository.latest_push_event
 
-        expect(WebMock).to have_requested(:get, github_url("/repositories/#{repo_id}/events?page=1&per_page=100"))
+        expect(WebMock).to have_requested(:get, github_url("/repositories/#{@github_repository.id}/events"))
+          .with(query: { page: 1, per_page: 100 })
       end
     end
 
     describe '#commit_status', :vcr do
       before(:each) do
-        @repo_id = 8514 # 8514 is rails/rails
         @ref = 'refs/heads/master'
       end
 
       context 'without options' do
         it 'queries GitHub commit status API' do
-          github_repository = GitHubRepository.new(@client, @repo_id)
+          github_repository = GitHubRepository.new(@client, 8514)
           github_repository.commit_status(@ref)
 
           expect(WebMock).to have_requested(:get,
-                                            github_url("/repositories/#{@repo_id}/commits/#{@ref}/status"))
+                                            github_url("/repositories/#{github_repository.id}/commits/#{@ref}/status"))
         end
       end
 
@@ -133,11 +151,11 @@ describe GitHubRepository do
         end
 
         it 'uses custom options when requesting GitHub API' do
-          github_repository = GitHubRepository.new(@client, @repo_id)
+          github_repository = GitHubRepository.new(@client, 8514)
           github_repository.commit_status(@ref, @custom_options)
 
           expect(WebMock).to have_requested(:get,
-                                            github_url("/repositories/#{@repo_id}/commits/#{@ref}/status"))
+                                            github_url("/repositories/#{github_repository.id}/commits/#{@ref}/status"))
             .with(@custom_options)
         end
       end
@@ -145,20 +163,27 @@ describe GitHubRepository do
 
     describe '#html_url_to(:ref)', :vcr do
       it 'returns the html url to specific ref' do
-        github_repository = GitHubRepository.new(@client, 8514) # 8514 is rails/rails
-        expected_html_url_to_master = 'https://github.com/rails/rails/tree/refs/heads/master'
-        expect(github_repository.html_url_to(ref: 'refs/heads/master')).to eql(expected_html_url_to_master)
+        expected_html_url_to_master = "#{@github_repository.html_url}/tree/refs/heads/master"
+        expect(@github_repository.html_url_to(ref: 'refs/heads/master')).to eql(expected_html_url_to_master)
       end
     end
 
-    GitHubRepository.new(@client, 123).send(:attributes).each do |attribute|
-      describe "##{attribute}", :vcr do
-        it "gets the #{attribute} of the repository " do
-          repository = @client.repository(@github_repository.id)
+    describe '#public=', :vcr do
+      it 'updates the github repository to public' do
+        @github_repository.public = true
 
-          expect(@github_repository.send(attribute)).to eql(repository.send(attribute))
-          expect(WebMock).to have_requested(:get, github_url("/repositories/#{repository.id}")).twice
-        end
+        expect(WebMock).to have_requested(
+          :patch,
+          github_url("/repos/#{@github_repository.full_name}")
+        ).with(body: { private: false, name: @github_repository.name })
+      end
+
+      it 'updates the github repository to private' do
+        @github_repository.public = false
+        expect(WebMock).to have_requested(
+          :patch,
+          github_url("/repos/#{@github_repository.full_name}")
+        ).with(body: { private: true, name: @github_repository.name })
       end
     end
   end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Assignment < ApplicationRecord
   include Flippable
   include GitHubPlan
@@ -34,6 +35,7 @@ class Assignment < ApplicationRecord
   validate :uniqueness_of_slug_across_organization
 
   alias_attribute :invitation, :assignment_invitation
+  alias_attribute :repos, :assignment_repos
 
   def private?
     !public_repo
@@ -59,7 +61,7 @@ class Assignment < ApplicationRecord
   private
 
   def uniqueness_of_slug_across_organization
-    return unless GroupAssignment.where(slug: slug, organization: organization).present?
+    return if GroupAssignment.where(slug: slug, organization: organization).blank?
     errors.add(:slug, :taken)
   end
 end

@@ -1,15 +1,16 @@
 # frozen_string_literal: true
+
 class OrganizationsController < ApplicationController
   include OrganizationAuthorization
 
   before_action :ensure_team_management_flipper_is_enabled, only: [:show_groupings]
 
   before_action :authorize_organization_addition,     only: [:create]
-  before_action :set_users_github_organizations,      only: [:index, :new, :create]
+  before_action :set_users_github_organizations,      only: %i[index new create]
   before_action :add_current_user_to_organizations,   only: [:index]
-  before_action :paginate_users_github_organizations, only: [:new, :create]
+  before_action :paginate_users_github_organizations, only: %i[new create]
 
-  skip_before_action :set_organization, :authorize_organization_access, only: [:index, :new, :create]
+  skip_before_action :set_organization, :authorize_organization_access, only: %i[index new create]
 
   def index
     @organizations = current_user.organizations.includes(:users).page(params[:page])
@@ -19,15 +20,22 @@ class OrganizationsController < ApplicationController
     @organization = Organization.new
   end
 
+  # rubocop:disable MethodLength
   def create
-    @organization = Organization.new(new_organization_params)
+    result = Organization::Creator.perform(
+      github_id: new_organization_params[:github_id],
+      users: new_organization_params[:users]
+    )
 
-    if @organization.save
+    if result.success?
+      @organization = result.organization
       redirect_to setup_organization_path(@organization)
     else
-      render :new
+      flash[:error] = result.error
+      redirect_to new_organization_path
     end
   end
+  # rubocop:enable MethodLength
 
   def show
     @assignments = Kaminari
@@ -36,11 +44,9 @@ class OrganizationsController < ApplicationController
                    .page(params[:page])
   end
 
-  def edit
-  end
+  def edit; end
 
-  def invitation
-  end
+  def invitation; end
 
   def show_groupings
     @groupings = @organization.groupings
@@ -66,14 +72,11 @@ class OrganizationsController < ApplicationController
     end
   end
 
-  def new_assignment
-  end
+  def new_assignment; end
 
-  def invite
-  end
+  def invite; end
 
-  def setup
-  end
+  def setup; end
 
   def setup_organization
     if @organization.update_attributes(update_organization_params)
@@ -98,14 +101,7 @@ class OrganizationsController < ApplicationController
   end
 
   def new_organization_params
-    github_org = github_organization_from_params
-    title      = github_org.name.present? ? github_org.name : github_org.login
-
-    params
-      .require(:organization)
-      .permit(:github_id)
-      .merge(users: [current_user])
-      .merge(title: title)
+    params.require(:organization).permit(:github_id).merge(users: [current_user])
   end
 
   def set_organization

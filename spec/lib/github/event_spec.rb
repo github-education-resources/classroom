@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe GitHub::Event do
-  let(:organization)  { GitHubFactory.create_owner_classroom_org }
-  let(:user)          { organization.users.first                 }
+  let(:organization)  { classroom_org     }
+  let(:user)          { classroom_teacher }
 
   subject { described_class.new(user.token) }
 
