@@ -10,7 +10,15 @@
         <h2 class="site-content-heading group-assignment-title">
           <%= @group_assignment.title %>
         </h2>
-        <p class="assignment-type text-muted">Group assignment for <strong><%= @group_assignment.grouping.title %></strong></p>
+        <p class="assignment-type text-muted">Group assignment for <strong><%= @group_assignment.grouping.title %></strong>
+          <% if @group_assignment.deadline %>
+            <% if @group_assignment.deadline.passed? %>
+              - Deadline Passed
+            <% else %>
+              <%= "- Deadline in #{distance_of_time_in_words(Time.zone.now, @group_assignment.deadline.deadline_at)}" %>
+            <% end %>
+          <% end %>
+        </p>
       </div>
 
       <div class="flex-table-item settings">

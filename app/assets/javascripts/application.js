@@ -36,4 +36,6 @@
 //
 //= require transliteration/lib/browser/transliteration
 //
+//= require jquery.datetimepicker
+//
 //= require_tree .

@@ -1,0 +1,10 @@
+<% view = SubmissionView.new(repo: repo) %>
+<% if view.submission_failed? %>
+  <span class="submission-icon-container tooltipped tooltipped-n" aria-label="No Submission" href="#">
+    <%= octicon 'stop', height: 20, class: 'failed' %>
+  </span>
+<% elsif view.submission_succeeded? %>
+  <a class="submission-icon-container tooltipped tooltipped-n" aria-label="View Submission" href="<%= view.submission_url %>" target='_blank' >
+    <%= octicon 'checklist', height: 20, class: 'success' %>
+  </a>
+<% end %>
