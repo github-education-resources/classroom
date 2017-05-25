@@ -10,15 +10,8 @@ RSpec.describe AssignmentReposController, type: :controller do
   let(:assignment_repo) { create(:assignment_repo, github_repo_id: 42, assignment: assignment) }
 
   before(:each) do
-    p "before sign in: #{organization.users.count}"
     sign_in_as(user)
-    p "after sign in: #{organization.users.count}"
   end
-
-  # after do
-  #   AssignmentRepo.destroy_all
-  #   Assignment.destroy_all
-  # end
 
   describe 'GET #show', :vcr do
     context 'unauthenticated user' do
