@@ -4,17 +4,12 @@
   </div>
 
   <div class="site-content-body">
-    <% if @users_github_organizations.empty? %>
-      <div class="blankslate large-format spacious clean-background">
-        <h3>Oh, you don’t have any organizations on your GitHub account.</h3>
 
-        <p>Please <a href="https://github.com/organizations/new">create an organization on GitHub.com</a> and then come back.</p>
-      </div>
-    <% else %>
-      <%= form_for @organization do |f| %>
-        <%= render 'shared/error_messages', object: f.object %>
+    <%= form_for @organization do |f| %>
+      <%= render 'shared/error_messages', object: f.object %>
 
-        <div class="org-select-grid">
+      <div class="org-select-grid">
+        <% if @users_github_organizations %>
           <% @users_github_organizations.each do |org| %>
             <% if org[:role] == 'admin' && !org[:classroom].present? %>
               <%= render partial: 'organization_select', locals: { org: org } %>
@@ -22,9 +17,17 @@
               <%= render partial: 'disabled_organization_select', locals: { org: org } %>
             <% end %>
           <% end %>
-          <div style="clear:both"></div>
-        </div>
-      <% end %>
+        <% end %>
+
+        <a class="organization-select-target" href="https://github.com/organizations/new" target="_blank">
+          <div class="avatar organization-select-avatar-mega-octicon">
+            <div class="mega-octicon octicon-organization"></div>
+          </div>
+          <div class="organization-new">Create new organization</div>
+        </a>
+
+        <div style="clear:both"></div>
+      </div>
     <% end %>
 
     <%= render partial: 'shared/pagination', locals: { collection: @users_github_organizations } %>

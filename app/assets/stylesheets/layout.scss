@@ -696,6 +696,24 @@ hr {
   margin-bottom: 9px;
 }
 
+.organization-select-avatar-mega-octicon {
+  display: block;
+  padding: 15px 18px;
+  color: $brand-gray;
+
+  .mega-octicon {
+    font-size: 64px;
+  }
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+.organization-new {
+  width: 100px;
+}
+
 .search-results {
   margin-top: 2em;
 }
