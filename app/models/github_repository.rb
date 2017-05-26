@@ -37,6 +37,19 @@ class GitHubRepository < GitHubResource
     self.class.present?(@client, @id, options)
   end
 
+  def latest_push_event
+    github_event.latest_push_event(@id)
+  end
+
+  def commit_status(ref, **options)
+    return nil if ref.blank?
+    @client.combined_status(@id, ref, options)
+  end
+
+  def html_url_to(ref:)
+    "#{html_url}/tree/#{ref}"
+  end
+
   def public=(is_public)
     GitHub::Errors.with_error_handling do
       @client.update(full_name, private: !is_public)
@@ -62,5 +75,9 @@ class GitHubRepository < GitHubResource
 
   def github_attributes
     %w[name full_name html_url]
+  end
+
+  def github_event
+    @github_event ||= GitHub::Event.new(@client.access_token)
   end
 end

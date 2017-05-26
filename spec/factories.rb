@@ -52,7 +52,9 @@ FactoryGirl.define do
     end
 
     after(:build) do |organization, evaluator|
-      create_list(:user, evaluator.users_count, organizations: [organization])
+      if evaluator.users.count < evaluator.users_count
+        create_list(:user, evaluator.users_count, organizations: [organization])
+      end
     end
   end
 

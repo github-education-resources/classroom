@@ -121,6 +121,53 @@ describe GitHubRepository do
       end
     end
 
+    describe '#latest_push_event', :vcr do
+      it 'queries GitHub events API' do
+        @github_repository.latest_push_event
+
+        expect(WebMock).to have_requested(:get, github_url("/repositories/#{@github_repository.id}/events"))
+          .with(query: { page: 1, per_page: 100 })
+      end
+    end
+
+    describe '#commit_status', :vcr do
+      before(:each) do
+        @ref = 'refs/heads/master'
+      end
+
+      context 'without options' do
+        it 'queries GitHub commit status API' do
+          github_repository = GitHubRepository.new(@client, 8514)
+          github_repository.commit_status(@ref)
+
+          expect(WebMock).to have_requested(:get,
+                                            github_url("/repositories/#{github_repository.id}/commits/#{@ref}/status"))
+        end
+      end
+
+      context 'with options' do
+        before do
+          @custom_options = { headers: GitHub::APIHeaders.no_cache_no_store }
+        end
+
+        it 'uses custom options when requesting GitHub API' do
+          github_repository = GitHubRepository.new(@client, 8514)
+          github_repository.commit_status(@ref, @custom_options)
+
+          expect(WebMock).to have_requested(:get,
+                                            github_url("/repositories/#{github_repository.id}/commits/#{@ref}/status"))
+            .with(@custom_options)
+        end
+      end
+    end
+
+    describe '#html_url_to(:ref)', :vcr do
+      it 'returns the html url to specific ref' do
+        expected_html_url_to_master = "#{@github_repository.html_url}/tree/refs/heads/master"
+        expect(@github_repository.html_url_to(ref: 'refs/heads/master')).to eql(expected_html_url_to_master)
+      end
+    end
+
     describe '#public=', :vcr do
       it 'updates the github repository to public' do
         @github_repository.public = true

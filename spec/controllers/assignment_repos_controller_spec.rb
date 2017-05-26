@@ -39,4 +39,62 @@ RSpec.describe AssignmentReposController, type: :controller do
       end
     end
   end
+
+  describe 'GET #status', :vcr do
+    before do
+      GitHubClassroom.flipper[:teacher_dashboard].enable
+    end
+
+    after do
+      GitHubClassroom.flipper[:teacher_dashboard].disable
+    end
+
+    context 'unauthenticated request' do
+      before do
+        sign_out
+      end
+
+      it 'redirects to the login page' do
+        get :repo_status, params: {
+          organization_id: organization.slug,
+          assignment_id: assignment.id,
+          id: assignment_repo.id
+        }
+        expect(response).to redirect_to(login_path)
+      end
+    end
+
+    context 'user with admin privilege on the organization' do
+      context 'valid parameters' do
+        before do
+          puts "before get status: #{organization.users.count}"
+          get :repo_status, params: {
+            organization_id: organization.slug,
+            assignment_id: assignment.id,
+            id: assignment_repo.id
+          }
+        end
+
+        it 'returns success' do
+          expect(response).to have_http_status(:success)
+        end
+
+        it 'renders correct template' do
+          expect(response).to render_template(partial: 'shared/github_repository/_status')
+        end
+      end
+
+      context 'invalid parameters' do
+        it 'raises ActiveRecord::RecordNotFound' do
+          expect do
+            get :repo_status, params: {
+              organization_id: organization.slug,
+              assignment_id: assignment.id,
+              id: assignment_repo.id + 1
+            }
+          end.to raise_error(ActiveRecord::RecordNotFound)
+        end
+      end
+    end
+  end
 end

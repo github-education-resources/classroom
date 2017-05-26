@@ -891,3 +891,33 @@ hr {
     vertical-align: top;
   }
 }
+
+.github-repo-status {
+  padding-top: 4px;
+  color: $brand-gray;
+
+  .github-tree-link {
+    color: $brand-gray;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .github-build-status {
+    margin-left: 4px;
+    cursor: pointer;
+  }
+
+  .github-build-success {
+    color: $status-open;
+  }
+
+  .github-build-failure {
+    color: $status-closed;
+  }
+
+  .github-build-pending {
+    color: $status-pending;
+  }
+}

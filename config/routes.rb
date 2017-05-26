@@ -63,11 +63,19 @@ Rails.application.routes.draw do
       end
 
       resources :assignments do
-        resources :assignment_repos, only: [:show]
+        resources :assignment_repos, only: [:show] do
+          member do
+            get :repo_status, path: 'status'
+          end
+        end
       end
 
       resources :group_assignments, path: 'group-assignments' do
-        resources :group_assignment_repos, only: [:show]
+        resources :group_assignment_repos, only: [:show] do
+          member do
+            get :repo_status, path: 'status'
+          end
+        end
       end
 
       resources :student_identifier_types, path: 'identifiers', except: [:show]

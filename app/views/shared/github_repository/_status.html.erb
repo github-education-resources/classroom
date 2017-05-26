@@ -1,0 +1,11 @@
+<div class="github-repo-status">
+  <%= octicon('repo-push') %>
+  <% if push_event.present? %>
+    <%= link_to ref_html_url, class: 'github-tree-link' do %>
+      <%= local_time_ago(push_event.created_at) %>
+    <% end %>
+    <%= render partial: 'shared/github_repository/build_status', locals: { build_status: build_status } %>
+  <% else %>
+    <i>No push yet</i>
+  <% end %>
+</div>
