@@ -23,7 +23,7 @@ describe GitHubTeam do
     gh_team = @client.team(@github_team.id)
 
     @github_team.attributes.each do |attribute, value|
-      next if attribute == :client || attribute == :access_token || attribute == :organization
+      next if %i[client access_token organization].include?(attribute)
       expect(@github_team).to respond_to(attribute)
       expect(value).to eql(gh_team.send(attribute))
     end
@@ -34,7 +34,7 @@ describe GitHubTeam do
 
   it 'responds to all *_no_cache methods', :vcr do
     @github_team.attributes.each do |attribute, _|
-      next if attribute == :id || attribute == :client || attribute == :access_token || attribute == :organization
+      next if %i[id client access_token organization].include?(attribute)
       expect(@github_team).to respond_to("#{attribute}_no_cache")
     end
   end
