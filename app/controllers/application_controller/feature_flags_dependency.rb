@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ApplicationController
-  helper_method :student_identifier_enabled?, :team_management_enabled?
-
   def ensure_team_management_flipper_is_enabled
     not_found unless team_management_enabled?
   end

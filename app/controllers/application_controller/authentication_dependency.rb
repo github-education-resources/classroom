@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class ApplicationController
-  before_action :authenticate_user!
-
-  helper_method :current_user, :logged_in?, :true_user
-
   private
 
   def current_scopes

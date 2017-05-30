@@ -3,11 +3,6 @@
 class ApplicationController
   class NotAuthorized < StandardError; end
 
-  rescue_from GitHub::Error,     with: :flash_and_redirect_back_with_message
-  rescue_from GitHub::Forbidden, with: :flash_and_redirect_back_with_message
-  rescue_from GitHub::NotFound,  with: :flash_and_redirect_back_with_message
-  rescue_from NotAuthorized,     with: :flash_and_redirect_back_with_message
-
   def flash_and_redirect_back_with_message(exception)
     flash[:error] = exception.message
 
