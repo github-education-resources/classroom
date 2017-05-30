@@ -36,7 +36,7 @@ gem 'omniauth'
 gem 'omniauth-github'
 
 gem 'peek', '~> 1.0', '>= 1.0.1'
-gem 'peek-dalli'
+gem 'peek-dalli', github: 'peek/peek-dalli', ref: '0a68e1fc73095a421dc2cae3d23937bb1cbb027c'
 gem 'peek-gc'
 gem 'peek-git'
 gem 'peek-performance_bar'
