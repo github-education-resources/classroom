@@ -31,7 +31,7 @@ gem 'kaminari'
 gem 'local_time'
 
 gem 'octicons_helper', '~> 2.1'
-gem 'octokit', github: 'octokit/octokit.rb', ref: '207fb98100cf65d486e41156630ffa9288f297b3'
+gem 'octokit'
 gem 'omniauth'
 gem 'omniauth-github'
 
