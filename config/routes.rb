@@ -111,4 +111,8 @@ Rails.application.routes.draw do
     resources :groupings, only: [:show]
     resources :groups,    only: [:show]
   end
+
+  namespace :api, :defaults => {:format => :json} do
+    resources :signin
+  end
 end
