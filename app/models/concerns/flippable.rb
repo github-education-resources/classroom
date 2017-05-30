@@ -6,7 +6,7 @@ module Flippable
   # Public: Check if an feature has been enabled for an
   # actor.
   #
-  # flippable_feature - The Symbol name of the feature
+  # flippable_feature - The Symbol name of the feature.
   #
   # Example:
   #
