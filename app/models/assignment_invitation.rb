@@ -16,6 +16,8 @@ class AssignmentInvitation < ApplicationRecord
 
   after_initialize :assign_key
 
+  delegate :title, to: :assignment
+
   # Public: Redeem an AssignmentInvtiation for a User invitee.
   #
   # Returns a AssignmentRepo::Creator::Result.
@@ -29,10 +31,6 @@ class AssignmentInvitation < ApplicationRecord
     return AssignmentRepo::Creator::Result.success(assignment_repo) if assignment_repo.present?
 
     AssignmentRepo::Creator.perform(assignment: assignment, user: invitee)
-  end
-
-  def title
-    assignment.title
   end
 
   def to_param
