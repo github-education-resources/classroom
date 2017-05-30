@@ -19,6 +19,17 @@ GIT
       pg
 
 GIT
+  remote: https://github.com/peek/peek-dalli.git
+  revision: 0a68e1fc73095a421dc2cae3d23937bb1cbb027c
+  ref: 0a68e1fc73095a421dc2cae3d23937bb1cbb027c
+  specs:
+    peek-dalli (1.1.3)
+      concurrent-ruby
+      concurrent-ruby-ext
+      dalli
+      peek
+
+GIT
   remote: https://github.com/turbolinks/turbolinks-classic.git
   revision: 37a7c296232d20a61bd1946f600da7f2009189db
   ref: 37a7c296232d20a61bd1946f600da7f2009189db
@@ -73,7 +84,6 @@ GEM
     airbrake-ruby (2.2.5)
     arel (7.1.4)
     ast (2.3.0)
-    atomic (1.1.99)
     autoprefixer-rails (7.1.1)
       execjs
     awesome_print (1.7.0)
@@ -248,10 +258,6 @@ GEM
       concurrent-ruby (>= 0.9.0)
       concurrent-ruby-ext (>= 0.9.0)
       railties (>= 4.0.0)
-    peek-dalli (1.1.3)
-      atomic (>= 1.0.0)
-      dalli
-      peek
     peek-gc (0.0.2)
       peek
     peek-git (1.0.2)
@@ -457,7 +463,7 @@ DEPENDENCIES
   omniauth
   omniauth-github
   peek (~> 1.0, >= 1.0.1)
-  peek-dalli
+  peek-dalli!
   peek-gc
   peek-git
   peek-performance_bar
