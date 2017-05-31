@@ -32,7 +32,7 @@ class AssignmentInvitationsController < ApplicationController
 
   def check_user_not_previous_acceptee
     return if current_submission.nil?
-    redirect_to success_invitation_assignment_invitation_path
+    redirect_to success_assignment_invitation_path
   end
 
   def create_submission
