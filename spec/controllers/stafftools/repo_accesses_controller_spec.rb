@@ -20,7 +20,8 @@ RSpec.describe Stafftools::RepoAccessesController, type: :controller do
   describe 'GET #show', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { get :show, params: { id: repo_access.id } }.to raise_error(ActionController::RoutingError)
+        get :show, params: { id: repo_access.id }
+        expect(response.status).to eq(404)
       end
     end
 
