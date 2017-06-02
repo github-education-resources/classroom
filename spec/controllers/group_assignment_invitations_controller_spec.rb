@@ -149,7 +149,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     end
   end
 
-  describe 'GET #successful_invitation' do
+  describe 'GET #success' do
     let(:group) { Group.create(title: 'The Group', grouping: grouping) }
 
     before(:each) do
@@ -167,7 +167,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     context 'delete github repository after accepting a invitation successfully', :vcr do
       before do
         organization.github_client.delete_repository(@group_assignment_repo.github_repo_id)
-        get :successful_invitation, params: { id: invitation.key }
+        get :success, params: { id: invitation.key }
       end
 
       it 'deletes the old group assignment repo' do
