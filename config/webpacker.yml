@@ -18,7 +18,7 @@ development:
   <<: *default
 
   dev_server:
-    host: 0.0.0.0
+    host: localhost
     port: 6060
     https: false
 
