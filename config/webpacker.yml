@@ -26,7 +26,7 @@ development:
 
   dev_server:
     host: 0.0.0.0
-    port: 8080
+    port: 6060
     https: false
 
 test:
