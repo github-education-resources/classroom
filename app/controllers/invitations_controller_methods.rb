@@ -31,7 +31,7 @@ module InvitationsControllerMethods
   # Private: Returns the Assignment or
   # GroupAssignment for the current_invitation.
   #
-  # Returns and Assignment or GroupAssignment.
+  # Returns an Assignment or GroupAssignment.
   def current_assignment
     return @current_assignment if defined?(@current_assignment)
 
