@@ -8,7 +8,7 @@ git_source(:github) do |repo_name|
 end
 
 ruby '2.4.1'
-gem 'rails', '~> 5.0', '>= 5.0.2'
+gem 'rails', '~> 5.0', '>= 5.0.3'
 
 gem 'autoprefixer-rails'
 
@@ -54,11 +54,11 @@ gem 'redis-namespace'
 gem 'ruby-progressbar', '~> 1.8', '>= 1.8.1', require: false
 
 gem 'sass-rails', '~> 5.0', '>= 5.0.6'
-gem 'sidekiq',    '~> 4.2', '>= 4.2.10'
+gem 'sidekiq',    '~> 5.0'
 gem 'sprockets'
 
 gem 'turbolinks', github: 'turbolinks/turbolinks-classic', ref: '37a7c296232d20a61bd1946f600da7f2009189db'
-gem 'typhoeus',   '~> 1.1', '>= 1.1.2'
+gem 'typhoeus', '~> 1.1', '>= 1.1.2'
 
 gem 'uglifier', '>= 1.3.0'
 
