@@ -23,7 +23,8 @@ module InvitationsControllerMethods
   end
 
   def success
-    raise NotImplementedError
+    @view = Invitation::SuccessView.new(current_submission: current_submission)
+    render 'invitations/success'
   end
 
   private

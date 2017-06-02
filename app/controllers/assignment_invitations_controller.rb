@@ -13,8 +13,6 @@ class AssignmentInvitationsController < ApplicationController
 
   def show; end
 
-  def success; end
-
   private
 
   def ensure_submission_repository_exists
