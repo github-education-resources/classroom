@@ -11,18 +11,11 @@
 // about supported directives.
 //
 //= require jquery/dist/jquery
-//= require jquery.turbolinks
 //= require jquery-ujs/src/rails
-//
-//= require turbolinks
 //
 //= require webcomponentsjs/CustomElements
 //= require fetch/fetch
 //= require include-fragment-element/include-fragment-element
-//
-//= require local_time
-//
-//= require jquery-readyselector/jquery.readyselector
 //
 //= require remodal/dist/remodal
 //
