@@ -8,7 +8,7 @@ git_source(:github) do |repo_name|
 end
 
 ruby '2.4.1'
-gem 'rails', '~> 5.0', '>= 5.0.3'
+gem 'rails', '~> 5.1', '>= 5.1.1'
 
 gem 'autoprefixer-rails'
 
@@ -22,9 +22,6 @@ gem 'flipper-redis'
 gem 'flipper-ui'
 
 gem 'geo_pattern'
-
-gem 'jbuilder'
-gem 'jquery-turbolinks'
 
 gem 'kaminari'
 
@@ -45,7 +42,7 @@ gem 'peek-sidekiq', github: 'Soliah/peek-sidekiq', ref: '261c857578ae6dc189506a3
 gem 'pg'
 gem 'pry-byebug'
 gem 'pry-rails'
-gem 'puma', '~> 3.8', '>= 3.8.2'
+gem 'puma', '~> 3.9'
 
 gem 'rack-canonical-host'
 gem 'rack-timeout', require: false
@@ -55,12 +52,12 @@ gem 'ruby-progressbar', '~> 1.8', '>= 1.8.1', require: false
 
 gem 'sass-rails', '~> 5.0', '>= 5.0.6'
 gem 'sidekiq',    '~> 5.0'
-gem 'sprockets'
 
-gem 'turbolinks', github: 'turbolinks/turbolinks-classic', ref: '37a7c296232d20a61bd1946f600da7f2009189db'
 gem 'typhoeus', '~> 1.1', '>= 1.1.2'
 
 gem 'uglifier', '>= 1.3.0'
+
+gem 'webpacker'
 
 group :development do
   gem 'foreman'
@@ -83,7 +80,7 @@ end
 
 group :production do
   gem 'airbrake'
-  gem 'lograge', '~> 0.4.1'
+  gem 'lograge', '~> 0.5.1'
   gem 'newrelic_rpm'
   gem 'pinglish'
   gem 'puma_worker_killer'
