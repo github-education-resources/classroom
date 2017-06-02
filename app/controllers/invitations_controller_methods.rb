@@ -23,7 +23,7 @@ module InvitationsControllerMethods
   end
 
   def success
-    @view = Invitation::SuccessView.new(current_submission: current_submission)
+    @view = Invitation::SuccessView.new(submission: current_submission)
     render 'invitations/success'
   end
 

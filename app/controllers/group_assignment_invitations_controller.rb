@@ -9,7 +9,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   before_action :authorize_group_access, only: [:accept_invitation]
 
   def show
-    @groups = invitation.groups.map { |group| [group.title, group.id] }
+    @groups = current_invitation.groups.map { |group| [group.title, group.id] }
   end
 
   def accept; end
@@ -48,7 +48,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
 
   def check_group_not_previous_acceptee
-    return unless group.present? && group_assignment_repo.present?
+    return unless group.present? && current_submission.present?
     redirect_to success_group_assignment_invitation_path
   end
 

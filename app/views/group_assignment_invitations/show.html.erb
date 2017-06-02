@@ -6,7 +6,7 @@
       <span class="assignment-icon assignment-icon-group">
         <%= octicon 'organization', height: 22 %>
       </span>
-      Accept the <strong><%= group_assignment.title %></strong> assignment
+      Accept the <strong><%= current_assignment.title %></strong> assignment
     </h2>
   </div>
 </div>
@@ -26,7 +26,7 @@
     <div class="team-grid">
       <div class="columns">
         <div class="one-half team-left">
-          <% @group_assignment.group_assignment_repos.each do |group_assignment_repo| %>
+          <% current_assignment.group_assignment_repos.each do |group_assignment_repo| %>
               <% if cycle('odd', 'even') == 'odd' %>
                 <%= render partial: 'group_assignment_team', locals: { group_assignment_repo: group_assignment_repo } %>
               <% end %>
@@ -34,7 +34,7 @@
         </div>
         <% reset_cycle %>
         <div class="one-half team-right">
-          <% @group_assignment.group_assignment_repos.each do |group_assignment_repo| %>
+          <% current_assignment.group_assignment_repos.each do |group_assignment_repo| %>
               <% if cycle('odd', 'even') == 'even' %>
                 <%= render partial: 'group_assignment_team', locals: { group_assignment_repo: group_assignment_repo } %>
               <% end %>
