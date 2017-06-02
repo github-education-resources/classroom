@@ -6,6 +6,8 @@ module InvitationsControllerMethods
   included do
     layout 'layouts/invitations'
 
+    before_action :ensure_submission_repository_exists, only: [:success]
+
     helper_method :current_assignment,
                   :current_invitation,
                   :current_submission,
@@ -50,7 +52,13 @@ module InvitationsControllerMethods
     raise NotImplementedError
   end
 
-  # Prviate: Memoize the organization from the current_assignment.
+  # Private: Make sure the submission repository
+  # still exists on GitHub.
+  def ensure_submission_repository_exists
+    raise NotImplementedError
+  end
+
+  # Private: Memoize the organization from the current_assignment.
   #
   # Returns an Organization.
   def organization

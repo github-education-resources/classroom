@@ -4,7 +4,6 @@ class AssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
 
   before_action :check_user_not_previous_acceptee, only: [:show]
-  before_action :ensure_submission_repository_exists, only: [:success]
 
   def accept
     create_submission do
