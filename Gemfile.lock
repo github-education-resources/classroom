@@ -477,7 +477,7 @@ DEPENDENCIES
   pinglish
   pry-byebug
   pry-rails
-  puma (~> 3.8, >= 3.8.2)
+  puma (~> 3.9, >= 3.9.1)
   puma_worker_killer
   rack-canonical-host
   rack-timeout
