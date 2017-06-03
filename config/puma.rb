@@ -51,6 +51,7 @@ end
 #
 on_worker_boot do
   ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
+  GitHubClassroom.redis.client.reconnect
 end
 
 # Allow puma to be restarted by `rails restart` command.
