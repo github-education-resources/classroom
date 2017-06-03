@@ -22,7 +22,14 @@ Rails.application.configure do
       'Cache-Control' => 'public, max-age=172800'
     }
 
-    config.cache_store = :dalli_store, 'localhost:11211'
+    dalli_store_config = {
+      namespace:  'CLASSROOM_DEVELOPMENT',
+      expires_in: (ENV.fetch('REQUEST_CACHE_TIMEOUT') { 30 }).to_i.minutes,
+      pool_size:  (ENV.fetch('RAILS_MAX_THREADS') { 5 })
+    }
+
+    config.cache_store = :dalli_store, 'localhost:11211', dalli_store_config
+
     config.peek.adapter = :memcache, {
       client: Dalli::Client.new('localhost:11211')
     }

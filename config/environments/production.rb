@@ -66,8 +66,8 @@ Rails.application.configure do
 
   dalli_store_config = {
     namespace:  'CLASSROOM',
-    expires_in: (ENV['REQUEST_CACHE_TIMEOUT'] || 30).to_i.minutes,
-    pool_size:  5
+    expires_in: (ENV.fetch('REQUEST_CACHE_TIMEOUT') { 30 }).to_i.minutes,
+    pool_size:  (ENV.fetch('RAILS_MAX_THREADS') { 5 })
   }
 
   config.cache_store = :dalli_store,

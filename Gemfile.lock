@@ -439,6 +439,7 @@ DEPENDENCIES
   awesome_print
   bullet
   chewy (~> 0.9.0)
+  connection_pool
   dalli
   database_cleaner
   dotenv-rails

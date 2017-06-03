@@ -13,6 +13,7 @@ gem 'rails', '~> 5.1', '>= 5.1.1'
 gem 'autoprefixer-rails'
 
 gem 'chewy', '~> 0.9.0'
+gem 'connection_pool'
 
 gem 'dalli'
 
