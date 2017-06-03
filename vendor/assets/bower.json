@@ -1,7 +1,0 @@
-{
-  "name": "classroom",
-  "dependencies": {
-    "primer-css": " ~2.7.0",
-    "dragula": "3.7.1"
-  }
-}
