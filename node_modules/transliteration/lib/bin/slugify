@@ -1,0 +1,84 @@
+#!/usr/bin/env node
+'use strict';
+
+var _yargs = require('yargs');
+
+var _yargs2 = _interopRequireDefault(_yargs);
+
+var _utils = require('../../lib/node/utils');
+
+var _slugify = require('../../lib/node/slugify');
+
+var _slugify2 = _interopRequireDefault(_slugify);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// eslint-disable-line import/no-unresolved
+
+const STDIN_ENCODING = 'utf-8'; // eslint-disable-line import/no-unresolved
+
+const options = {
+  lowercase: true,
+  separator: '-',
+  replace: [],
+  ignore: []
+};
+
+const argv = _yargs2.default.version().usage('Usage: $0 <unicode> [options]').option('l', {
+  alias: 'lowercase',
+  default: options.lowercase,
+  describe: 'Use lowercase',
+  type: 'boolean'
+}).options('s', {
+  alias: 'separator',
+  default: '-',
+  describe: 'Separator of the slug',
+  type: 'string'
+}).option('r', {
+  alias: 'replace',
+  default: options.replace,
+  describe: 'Custom string replacement',
+  type: 'array'
+}).option('i', {
+  alias: 'ignore',
+  default: options.ignore,
+  describe: 'String list to ignore',
+  type: 'array'
+}).option('S', {
+  alias: 'stdin',
+  default: false,
+  describe: 'Use stdin as input',
+  type: 'boolean'
+}).help('h').option('h', {
+  alias: 'help'
+}).example('$0 "你好, world!" -r 好=good -r "world=Shi Jie"', 'Replace `,` into `!` and `world` into `shijie`.\nResult: ni-good-shi-jie').example('$0 "你好，世界!" -i 你好 -i ，', 'Ignore `你好` and `，`.\nResult: 你好，shi-jie').wrap(100).argv;
+
+options.lowercase = !!argv.l;
+options.separator = argv.separator;
+if (argv.replace.length) {
+  for (const repl of argv.replace) {
+    const tmp = (0, _utils.parseCmdEqualOption)(repl);
+    if (tmp === false) {
+      console.error(`Bad argument -r or --replace. Please type '${argv.$0} --help' for help.`);
+      process.exit(1);
+    }
+    options.replace.push(tmp);
+  }
+}
+options.ignore = argv.ignore;
+
+if (argv.stdin) {
+  process.stdin.setEncoding(STDIN_ENCODING);
+  process.stdin.on('readable', () => {
+    const chunk = process.stdin.read();
+    if (chunk !== null) {
+      process.stdout.write((0, _slugify2.default)(chunk, options));
+    }
+  });
+  process.stdin.on('end', () => console.log(''));
+} else {
+  if (argv._.length !== 1) {
+    console.error(`Invalid argument. Please type '${argv.$0} --help' for help.`);
+  }
+  console.log((0, _slugify2.default)(argv._[0], options));
+}

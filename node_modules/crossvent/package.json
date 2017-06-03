@@ -1,0 +1,37 @@
+{
+  "name": "crossvent",
+  "description": "Cross-platform browser event handling",
+  "version": "1.5.4",
+  "homepage": "https://github.com/bevacqua/crossvent",
+  "author": {
+    "email": "hello@bevacqua.io",
+    "name": "Nicolas Bevacqua",
+    "url": "http://bevacqua.io"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bevacqua/crossvent.git"
+  },
+  "main": "src/crossvent.js",
+  "devDependencies": {
+    "browserify": "^4.1.3",
+    "contra": "^1.6.10",
+    "gulp": "^3.6.2",
+    "gulp-bump": "~0.1.0",
+    "gulp-clean": "~0.2.3",
+    "gulp-git": "~0.2.0",
+    "gulp-header": "^1.0.2",
+    "gulp-rename": "~0.2.2",
+    "gulp-size": "~0.1.1",
+    "gulp-streamify": "0.0.5",
+    "gulp-uglify": "~0.1.0",
+    "gzip-size": "^1.0.0",
+    "jquery": "^1.11.1",
+    "pretty-bytes": "^1.0.1",
+    "vinyl-source-stream": "^0.1.1"
+  },
+  "dependencies": {
+    "custom-event": "1.0.0"
+  }
+}

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="https://unpkg.com/transliteration/lib/browser/transliteration.min.js"></script>
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <style>
+    body { margin: 10px 50px; font-family: Arial }
+    body .el-form-item { margin-bottom: 10px }
+    body .el-form-item.no-margin { margin-bottom: 0 }
+    fieldset { border: 1px solid #eaeefb; border-radius: 4px; transition: .2s; margin-bottom: 15px }
+    fieldset:hover { box-shadow: 0 0 8px 0 rgba(232,237,250,.6),0 2px 4px 0 rgba(232,237,250,.5) }
+    fieldset legend { font-weight: bold; padding: 0 5px }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>Transliteration Demo <a class="github-button" href="https://github.com/andyhu/node-transliteration" data-icon="octicon-star" data-style="mega" data-count-href="/andyhu/node-transliteration/stargazers" data-count-api="/repos/andyhu/node-transliteration#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star andyhu/node-transliteration on GitHub">Star</a></h1>
+    </header>
+    <div class="main">
+      <el-row :gutter="5">
+        <el-col :xs="24" :sm="12" :lg="8">
+          <el-form>
+            <fieldset>
+              <legend>Input</legend>
+              <el-form-item label="Source String">
+                <el-input v-model="source" placeholder="Any unicode characters" type="textarea" :autosize="{ minRows: 1, maxRows: 5}"></el-input>
+              </el-form-item>
+
+              <el-form-item label="Transliteration Result">
+                <el-input :value="transl(source, JSON.parse(JSON.stringify(translOpt)))" type="textarea" :autosize="{ minRows: 1, maxRows: 5}" :disabled="true"></el-input>
+              </el-form-item>
+
+              <el-form-item label="Slugify Result">
+                <el-input :value="slugify(source, JSON.parse(JSON.stringify(slugifyOpt)))" type="textarea" :autosize="{ minRows: 1, maxRows: 5}" :disabled="true"></el-input>
+              </el-form-item>
+            </fieldset>
+          </el-form>
+        </el-col>
+        <el-col :xs="24" :sm="12" :lg="8">
+          <el-form label-position="left">
+            <fieldset>
+              <legend>Transliteration Options</legend>
+              <el-form-item label="Placeholder" title="Unknown characters placeholder" label-width="90px">
+                <el-input v-model="translOpt.unknown" placeholder="Placeholder"></el-input>
+              </el-form-item>
+
+              <el-form-item label="Replace" title="Replace before transliteration" :inline="true" class="no-margin"></el-form-item>
+              <el-table :data="translOpt.replace.map(function(item) { return { from: item[0], to: item[1] } })" v-if="translOpt.replace.length > 0" style="margin-bottom: 10px">
+                <el-table-column prop="from" label="From"></el-table-column>
+                <el-table-column prop="to" label="To"></el-table-column>
+                <el-table-column inline-template label="Operations"><el-button type="danger" size="small" @click="translOpt.replace.splice(row - 1, 1)">Remove</el-button></el-table-column>
+              </el-table>
+              <el-row>
+                <el-col :span="10" style="padding-right: 10px">
+                  <el-form-item>
+                    <el-input v-model="translReplace.from"><template slot="prepend">From</template></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="10" style="padding-right: 10px">
+                  <el-form-item>
+                    <el-input v-model="translReplace.to"><template slot="prepend">To</template></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="2">
+                  <el-form-item>
+                    <el-button type="primary" :disabled="translReplace.from === ''" @click="addTranslReplace">Add</el-button>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-form-item label="Ignore" title="Strings in the ignore list will be bypassed from transliteration" :inline="true" class="no-margin"></el-form-item>
+              <el-table :data="translOpt.ignore.map(function(item) { return { ignore: item } })" v-if="translOpt.ignore.length > 0" style="margin-bottom: 10px">
+                <el-table-column prop="ignore" label="Ignore"></el-table-column>
+                <el-table-column inline-template label="Operations"><el-button type="danger" size="small" @click="translOpt.ignore.splice(row - 1, 1)">Remove</el-button></el-table-column>
+              </el-table>
+              <el-row>
+                <el-col :span="10" style="padding-right: 10px">
+                  <el-form-item>
+                    <el-input v-model="translIgnore"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="2">
+                  <el-form-item>
+                    <el-button type="primary" :disabled="translIgnore === ''" @click="addTranslIgnore">Add</el-button>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </fieldset>
+          </el-form>
+        </el-col>
+        <el-col :xs="24" :sm="12" :lg="8">
+          <el-form label-position="left">
+            <fieldset>
+              <legend>Slugify Options</legend>
+              <el-form-item label="Lowercase" label-width="90px">
+                <el-switch on-text="" off-text="" v-model="slugifyOpt.lowercase"></el-switch>
+              </el-form-item>
+
+              <el-form-item label="Separator" title="Separator of the slug" label-width="90px">
+                <el-input v-model="slugifyOpt.separator" placeholder="Separator"></el-input>
+              </el-form-item>
+
+              <el-form-item label="Replace" title="Replace before slugify" :inline="true" class="no-margin"></el-form-item>
+              <el-table :data="slugifyOpt.replace.map(function(item) { return { from: item[0], to: item[1] } })" v-if="slugifyOpt.replace.length > 0" style="margin-bottom: 10px">
+                <el-table-column prop="from" label="From"></el-table-column>
+                <el-table-column prop="to" label="To"></el-table-column>
+                <el-table-column inline-template label="Operations"><el-button type="danger" size="small" @click="slugifyOpt.replace.splice(row - 1, 1)">Remove</el-button></el-table-column>
+              </el-table>
+              <el-row>
+                <el-col :span="10" style="padding-right: 10px">
+                  <el-form-item>
+                    <el-input v-model="slugifyReplace.from"><template slot="prepend">From</template></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="10" style="padding-right: 10px">
+                  <el-form-item>
+                    <el-input v-model="slugifyReplace.to"><template slot="prepend">To</template></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="2">
+                  <el-form-item>
+                    <el-button type="primary" :disabled="slugifyReplace.from === ''" @click="addSlugifyReplace">Add</el-button>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-form-item label="Ignore" title="Strings in the ignore list will be bypassed from transliteration" :inline="true" class="no-margin"></el-form-item>
+              <el-table :data="slugifyOpt.ignore.map(function(item) { return { ignore: item } })" v-if="slugifyOpt.ignore.length > 0" style="margin-bottom: 10px">
+                <el-table-column prop="ignore" label="Ignore"></el-table-column>
+                <el-table-column inline-template label="Operations"><el-button type="danger" size="small" @click="slugifyOpt.ignore.splice(row - 1, 1)">Remove</el-button></el-table-column>
+              </el-table>
+              <el-row>
+                <el-col :span="10" style="padding-right: 10px">
+                  <el-form-item>
+                    <el-input v-model="slugifyIgnore"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="2">
+                  <el-form-item>
+                    <el-button type="primary" :disabled="slugifyIgnore === ''" @click="addSlugifyIgnore">Add</el-button>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </fieldset>
+          </el-form>
+        </el-col>
+      </el-row>
+    </div>
+  </div>
+  <script>
+    var vm = new Vue({
+      el: '#app',
+      data: function() {
+        return {
+          source: '',
+          translReplace: {
+            from: '',
+            to: ''
+          },
+          translIgnore: '',
+          translOpt: {
+            /* Unicode characters that are not in the database will be replaced with `unknown` */
+            unknown: '[?]',
+            /* Custom replacement of the strings before transliteration */
+            replace: [],
+            /* Strings in the ignore list will be bypassed from transliteration */
+            ignore: []
+          },
+          slugifyReplace: {
+            from: '',
+            to: ''
+          },
+          slugifyIgnore: '',
+          slugifyOpt: {
+            /* Whether to force slags to be lowercased */
+            lowercase: true,
+            /* Separator of the slug */
+            separator: '-',
+            /* Custom replacement of the strings before transliteration */
+            replace: [],
+            /* Strings in the ignore list will be bypassed from transliteration */
+            ignore: []
+          }
+        }
+      },
+      computed: {
+        transled: function() {
+        },
+        slugified: function() {
+        }
+      },
+      methods: {
+        transl: window.transl,
+        slugify: window.slugify,
+        addTranslReplace: function() {
+          this.translOpt.replace.push([this.translReplace.from, this.translReplace.to]);
+          this.translReplace.from = '';
+          this.translReplace.to = '';
+        },
+        addTranslIgnore: function() {
+          this.translOpt.ignore.push(this.translIgnore);
+          this.translIgnore='';
+        },
+        addSlugifyReplace: function() {
+          this.slugifyOpt.replace.push([this.slugifyReplace.from, this.slugifyReplace.to]);
+          this.slugifyReplace.from = '';
+          this.slugifyReplace.to = '';
+        },
+        addSlugifyIgnore: function() {
+          this.slugifyOpt.ignore.push(this.slugifyIgnore);
+          this.slugifyIgnore = '';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

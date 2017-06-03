@@ -1,0 +1,20 @@
+{
+  "name": "ticky",
+  "version": "1.0.1",
+  "description": "Run a callback as soon as possible",
+  "main": "ticky.js",
+  "browser": "ticky-browser.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bevacqua/ticky.git"
+  },
+  "author": "Nicolas Bevacqua <nicolasbevacqua@gmail.com> (http://bevacqua.io/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bevacqua/ticky/issues"
+  },
+  "homepage": "https://github.com/bevacqua/ticky#readme"
+}

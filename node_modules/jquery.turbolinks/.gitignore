@@ -1,0 +1,4 @@
+node_modules
+*.gem
+Gemfile.lock
+.ruby-version
