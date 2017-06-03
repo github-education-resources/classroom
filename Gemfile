@@ -10,8 +10,6 @@ end
 ruby '2.4.1'
 gem 'rails', '~> 5.1', '>= 5.1.1'
 
-gem 'autoprefixer-rails'
-
 gem 'chewy', '~> 0.9.0'
 
 gem 'dalli'
@@ -24,8 +22,6 @@ gem 'flipper-ui'
 gem 'geo_pattern'
 
 gem 'kaminari'
-
-gem 'local_time'
 
 gem 'octicons_helper', '~> 2.1'
 gem 'octokit'
@@ -50,12 +46,9 @@ gem 'rails-i18n', '~> 5.0', '>= 5.0.1'
 gem 'redis-namespace'
 gem 'ruby-progressbar', '~> 1.8', '>= 1.8.1', require: false
 
-gem 'sass-rails', '~> 5.0', '>= 5.0.6'
-gem 'sidekiq',    '~> 5.0'
+gem 'sidekiq', '~> 5.0'
 
 gem 'typhoeus', '~> 1.1', '>= 1.1.2'
-
-gem 'uglifier', '>= 1.3.0'
 
 gem 'webpacker'
 
@@ -74,6 +67,7 @@ group :development, :test do
   gem 'rubocop', require: false
   gem 'scss_lint', require: false
   gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'terminal-notifier-guard'
   gem 'timecop', require: false
 end

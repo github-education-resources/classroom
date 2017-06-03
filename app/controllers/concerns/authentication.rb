@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class ApplicationController
+module Authentication
+  extend ActiveSupport::Concern
+
   private
 
   def current_scopes

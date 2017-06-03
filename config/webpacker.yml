@@ -1,13 +1,15 @@
 # Note: You must restart bin/webpack-dev-server for changes to take effect
 
 default: &default
-  source_path: app/javascript
+  source_path: app/assets
   source_entry_path: packs
   public_output_path: packs
 
   extensions:
     - .erb
     - .js
+    - .scss
+    - .css
     - .png
     - .svg
     - .gif

@@ -1,19 +1,11 @@
-//= require peek
-//= require peek/views/performance_bar
+@import "~primer-css/scss/primer";
+@import "~primer-markdown/dist/user-content.min";
 
-@import "primer-css/scss/primer";
+@import "~include-fragment-element/include-fragment-element";
 
-@import "primer-markdown/components/markdown";
+@import "./components";
+@import "./grid-system";
+@import "./layout";
 
-@import "include-fragment-element/include-fragment-element";
-
-@import "components/*";
-
-@import "grid-system";
-
-@import "layout";
-@import "stafftools";
-
-@import "remodal/dist/remodal";
-
-@import "dragula/dist/dragula";
+@import "~remodal/dist/remodal";
+@import "~dragula/dist/dragula";
