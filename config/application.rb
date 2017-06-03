@@ -23,16 +23,8 @@ module GitHubClassroom
     # Available locales
     I18n.available_locales = [:en]
 
-    # Add bower assets to the path
-    root.join('vendor', 'assets', 'bower_components').to_s.tap do |bower_path|
-      config.sass.load_paths << bower_path
-      config.assets.paths << bower_path
-    end
-
     # Append directories to autoload paths
-    config.eager_load_paths += [
-      'lib'
-    ].map { |path| Rails.root.join(path).to_s }
+    config.eager_load_paths += %w[lib].map { |path| Rails.root.join(path).to_s }
 
     # Configure the generators
     config.generators do |g|

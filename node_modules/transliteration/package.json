@@ -1,0 +1,77 @@
+{
+  "name": "transliteration",
+  "version": "1.6.2",
+  "description": "Unicode to ACSII transliteration / slugify module for node.js, browser, Web Worker, ReactNative and CLI.",
+  "main": "lib/node/index.js",
+  "scripts": {
+    "lint": "eslint src/**/*.js test/**/*.js gulpfile.babel.js",
+    "pretest": "npm run lint",
+    "test": "npm run test:node",
+    "test:node": "tape -r babel-core/register test/node/*.js | tap-spec",
+    "pretest:browser": "npm run build",
+    "test:browser": "zuul --no-coverage -- test/browser/*.js",
+    "prebuild": "npm run test",
+    "build": "gulp",
+    "coverage": "nyc npm test",
+    "postcoverage": "rimraf .nyc_output",
+    "coveralls": "nyc npm test && nyc report -r=text-lcov | coveralls",
+    "postcoveralls": "rimraf .nyc_output",
+    "prepublish": "npm run build"
+  },
+  "bin": {
+    "transliterate": "lib/bin/transliterate",
+    "slugify": "lib/bin/slugify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andyhu/transliteration.git"
+  },
+  "keywords": [
+    "transliterate",
+    "transliteration",
+    "utf8",
+    "slug",
+    "slugify",
+    "romanization",
+    "unicode",
+    "unidecode"
+  ],
+  "author": "Andy Hu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andyhu/transliteration/issues"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
+    "babel-preset-es2015-ie": "^6.7.0",
+    "babelify": "^7.3.0",
+    "browserify": "^14.3.0",
+    "coveralls": "^2.13.1",
+    "es5-shim": "^4.5.9",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.1.3",
+    "eslint-plugin-import": "^2.2.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-es3ify": "^0.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^2.6.0",
+    "gulp-uglify": "^2.1.2",
+    "gulp-util": "^3.0.8",
+    "nyc": "^10.3.2",
+    "rimraf": "^2.6.1",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.6.3",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "zuul": "^3.11.1"
+  },
+  "dependencies": {
+    "yargs": "^8.0.1"
+  }
+}

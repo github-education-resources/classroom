@@ -1,0 +1,26 @@
+{
+  "name": "crossvent",
+  "description": "Cross-platform browser event handling",
+  "version": "1.5.4",
+  "homepage": "https://github.com/bevacqua/crossvent",
+  "author": {
+    "name": "Nicolas Bevacqua",
+    "email": "hello@bevacqua.io",
+    "url": "http://bevacqua.io"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bevacqua/crossvent.git"
+  },
+  "main": "dist/crossvent.js",
+  "ignore": [
+    ".*",
+    "package.json",
+    "node_modules",
+    "src",
+    "test",
+    "gulpfile.js"
+  ],
+  "dependencies": {}
+}

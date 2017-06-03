@@ -1,0 +1,8 @@
+sudo: false
+language: node_js
+node_js:
+  - "6"
+  - "7"
+after_script:
+  - npm run coveralls
+  # - npm run test:browser

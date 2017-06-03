@@ -8,6 +8,7 @@ AllCops:
     - 'db/**/*'
     - 'script/**/*'
     - 'vendor/**/*'
+    - 'node_modules/**/*'
 
 Rails:
   Enabled: true
