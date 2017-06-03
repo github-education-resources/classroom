@@ -89,7 +89,6 @@ group :production do
   gem 'pinglish'
   gem 'puma_worker_killer'
   gem 'rack-tracker'
-  gem 'rails_12factor'
 end
 
 group :test do
