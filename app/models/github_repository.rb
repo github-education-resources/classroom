@@ -12,12 +12,13 @@ class GitHubRepository < GitHubResource
   def get_starter_code_from(source)
     GitHub::Errors.with_error_handling do
       options = {
+        vcs:          'git',
         accept:       Octokit::Preview::PREVIEW_TYPES[:source_imports],
         vcs_username: @client.login,
         vcs_password: @client.access_token
       }
 
-      @client.start_source_import(@id, 'git', "https://github.com/#{source.full_name}", options)
+      @client.start_source_import(@id, "https://github.com/#{source.full_name}", options)
     end
   end
 

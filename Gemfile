@@ -8,11 +8,12 @@ git_source(:github) do |repo_name|
 end
 
 ruby '2.4.1'
-gem 'rails', '~> 5.0', '>= 5.0.3'
+gem 'rails', '~> 5.1', '>= 5.1.1'
 
 gem 'autoprefixer-rails'
 
 gem 'chewy', '~> 0.9.0'
+gem 'connection_pool'
 
 gem 'dalli'
 
@@ -45,7 +46,7 @@ gem 'peek-sidekiq', github: 'Soliah/peek-sidekiq', ref: '261c857578ae6dc189506a3
 gem 'pg'
 gem 'pry-byebug'
 gem 'pry-rails'
-gem 'puma', '~> 3.8', '>= 3.8.2'
+gem 'puma', '~> 3.9', '>= 3.9.1'
 
 gem 'rack-canonical-host'
 gem 'rack-timeout', require: false
@@ -77,18 +78,18 @@ group :development, :test do
   gem 'rubocop', require: false
   gem 'scss_lint', require: false
   gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0', '>= 2.0.1'
   gem 'terminal-notifier-guard'
   gem 'timecop', require: false
 end
 
 group :production do
   gem 'airbrake'
-  gem 'lograge', '~> 0.4.1'
+  gem 'lograge', '~> 0.5.1'
   gem 'newrelic_rpm'
   gem 'pinglish'
   gem 'puma_worker_killer'
   gem 'rack-tracker'
-  gem 'rails_12factor'
 end
 
 group :test do

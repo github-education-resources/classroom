@@ -12,7 +12,7 @@ class GroupAssignment < ApplicationRecord
 
   has_many :group_assignment_repos, dependent: :destroy
 
-  belongs_to :creator, class_name: User
+  belongs_to :creator, class_name: 'User'
   belongs_to :grouping
   belongs_to :organization
   belongs_to :student_identifier_type
