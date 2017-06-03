@@ -4,7 +4,7 @@
   "dependencies": {
     "clipboard": "^1.7.1",
     "dragula": "3.7.1",
-    "include-fragment-element": "git+https://git@github.com/github/include-fragment-element#v3.0.0",
+    "include-fragment-element": "^3.0.0",
     "jquery": "^3.2.1",
     "jquery-readyselector": "git+https://git@github.com/Verba/jquery-readyselector.git",
     "jquery-ujs": " ~1.2.2",

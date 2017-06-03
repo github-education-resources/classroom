@@ -126,9 +126,9 @@ hosted-git-info@^2.1.4:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.4.2.tgz#0076b9f46a270506ddbaaea56496897460612a67"
 
-"include-fragment-element@git+https://git@github.com/github/include-fragment-element#v3.0.0":
+include-fragment-element@^3.0.0:
   version "3.0.0"
-  resolved "git+https://git@github.com/github/include-fragment-element#ba7970a0ef1dd088eac1903a2a07658c906c64a5"
+  resolved "https://registry.yarnpkg.com/include-fragment-element/-/include-fragment-element-3.0.0.tgz#0e9fcd616f4020a0e4e3c1b58674811f73ce40c6"
 
 invert-kv@^1.0.0:
   version "1.0.0"
