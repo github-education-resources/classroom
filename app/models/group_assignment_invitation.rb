@@ -5,12 +5,12 @@ class GroupAssignmentInvitation < ApplicationRecord
 
   update_index('stafftools#group_assignment_invitation') { self }
 
+  belongs_to :group_assignment
+
   has_one :grouping,     through: :group_assignment
   has_one :organization, through: :group_assignment
 
   has_many :groups, through: :grouping
-
-  belongs_to :group_assignment
 
   validates :group_assignment, presence: true
 

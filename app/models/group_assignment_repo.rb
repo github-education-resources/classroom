@@ -7,12 +7,12 @@ class GroupAssignmentRepo < ApplicationRecord
 
   update_index('stafftools#group_assignment_repo') { self }
 
+  belongs_to :group
+  belongs_to :group_assignment
+
   has_one :organization, -> { unscope(where: :deleted_at) }, through: :group_assignment
 
   has_many :repo_accesses, through: :group
-
-  belongs_to :group
-  belongs_to :group_assignment
 
   validates :github_repo_id, presence:   true
   validates :github_repo_id, uniqueness: true
