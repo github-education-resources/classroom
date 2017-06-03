@@ -16,8 +16,8 @@
 //
 //= require turbolinks
 //
-//= require webcomponentsjs/CustomElements
-//= require fetch/fetch
+//= require webcomponents.js/CustomElements
+//= require whatwg-fetch/fetch
 //= require include-fragment-element/include-fragment-element
 //
 //= require local_time

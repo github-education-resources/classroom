@@ -1,0 +1,21 @@
+{
+  "name": "classroom",
+  "private": true,
+  "dependencies": {
+    "clipboard": "^1.7.1",
+    "dragula": "3.7.1",
+    "include-fragment-element": "^3.0.0",
+    "jquery": "^3.2.1",
+    "jquery-readyselector": "git+https://git@github.com/Verba/jquery-readyselector.git",
+    "jquery-ujs": " ~1.2.2",
+    "jquery.turbolinks": "git+https://git@github.com/kossnocorp/jquery.turbolinks#2.1.0",
+    "primer-css": "git+https://git@github.com/primer/primer-css.git#v2.7.0",
+    "primer-markdown": "git+https://git@github.com/primer/primer-markdown.git#v2.1.8",
+    "rails-ujs": "^5.1.1",
+    "remodal": "^1.1.1",
+    "transliteration": "^1.6.2",
+    "webcomponents.js": "^0.7.24",
+    "whatwg-fetch": "^2.0.3"
+  },
+  "devDependencies": {}
+}
