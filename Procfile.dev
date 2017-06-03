@@ -1,9 +1,9 @@
 # Start development mode executables.
 # This assumes the postgresql is already running
-
-puma: bundle exec puma -C config/puma.rb
-rails: tail -n 0 -f log/development.log
-redis: redis-server
-memcached: memcached
-sidekiq: bundle exec sidekiq -C config/sidekiq.yml
 elasticsearch: elasticsearch
+memcached: memcached
+redis: redis-server
+
+web: ./bin/rails server
+webpack: ./bin/webpack-dev-server
+worker: ./bin/sidekiq -C config/sidekiq.yml

@@ -1,6 +1,8 @@
 <header class="site-header">
   <div class="container">
-    <%= link_to(image_tag('logo@2x.png', class: 'site-logo', alt: 'GitHub for Classrooms'), (logged_in? ? organizations_path : root_path)) %>
+    <%= link_to (logged_in? ? organizations_path : root_path) do %>
+      <img src="<%= asset_pack_path 'logo@2x.png' %>" class="site-logo" alt="GitHub Classroom" >
+    <% end %>
 
     <nav class="site-nav">
       <ul>

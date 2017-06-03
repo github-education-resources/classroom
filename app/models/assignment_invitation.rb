@@ -5,9 +5,8 @@ class AssignmentInvitation < ApplicationRecord
 
   update_index('stafftools#assignment_invitation') { self }
 
-  has_one :organization, through: :assignment
-
   belongs_to :assignment
+  has_one :organization, through: :assignment
 
   validates :assignment, presence: true
 

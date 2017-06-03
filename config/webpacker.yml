@@ -1,0 +1,33 @@
+# Note: You must restart bin/webpack-dev-server for changes to take effect
+
+default: &default
+  source_path: app/assets
+  source_entry_path: packs
+  public_output_path: packs
+
+  extensions:
+    - .erb
+    - .js
+    - .scss
+    - .css
+    - .png
+    - .svg
+    - .gif
+    - .jpeg
+    - .jpg
+
+development:
+  <<: *default
+
+  dev_server:
+    host: localhost
+    port: 6060
+    https: false
+
+test:
+  <<: *default
+
+  public_output_path: packs-test
+
+production:
+  <<: *default

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -15,6 +13,11 @@ Rails.application.configure do
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
+
+  # Attempt to read encrypted secrets from `config/secrets.yml.enc`.
+  # Requires an encryption key in `ENV["RAILS_MASTER_KEY"]` or
+  # `config/secrets.yml.key`.
+  config.read_encrypted_secrets = true
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
@@ -42,36 +45,26 @@ Rails.application.configure do
   # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = true
+  # config.force_ssl = true
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
   config.log_level = :debug
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [:request_id]
+  config.log_tags = [ :request_id ]
 
   # Use a different cache store in production.
-  memcachedcloud_servers = ENV['MEMCACHEDCLOUD_SERVERS'].split(',')
+  # config.cache_store = :mem_cache_store
 
-  dalli_store_name_and_password = {
-    username: ENV['MEMCACHEDCLOUD_USERNAME'],
-    password: ENV['MEMCACHEDCLOUD_PASSWORD']
-  }
+  # Use a real queuing backend for Active Job (and separate queues per environment)
+  # config.active_job.queue_adapter     = :resque
+  # config.active_job.queue_name_prefix = "git_hub_classroom_#{Rails.env}"
+  config.action_mailer.perform_caching = false
 
-  dalli_store_config = {
-    namespace:  'CLASSROOM',
-    expires_in: (ENV['REQUEST_CACHE_TIMEOUT'] || 30).to_i.minutes,
-    pool_size:  5
-  }
-
-  config.cache_store = :dalli_store,
-                       memcachedcloud_servers,
-                       dalli_store_name_and_password.merge(dalli_store_config)
-
-  config.peek.adapter = :memcache, {
-    client: Dalli::Client.new(memcachedcloud_servers, dalli_store_name_and_password)
-  }
+  # Ignore bad email addresses and do not raise email delivery errors.
+  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
+  # config.action_mailer.raise_delivery_errors = false
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
@@ -87,22 +80,12 @@ Rails.application.configure do
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
-  if ENV['RAILS_LOG_TO_STDOUT'].present?
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
-    config.logger = ActiveSupport::TaggedLogging.new(logger)
+    config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
-
-  config.middleware.use(Rack::Tracker) do
-    handler :google_analytics, tracker: ENV['GOOGLE_ANALYTICS_TRACKING_ID']
-  end
-
-  # Suppress logger output for asset requests.
-  config.assets.quiet = true
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
-
-  # Enable lograge https://github.com/roidrage/lograge
-  config.lograge.enabled = true
 end

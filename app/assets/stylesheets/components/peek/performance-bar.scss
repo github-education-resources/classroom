@@ -1,0 +1,28 @@
+// https://github.com/peek/peek-performance_bar/blob/9f3096d91cd676efd7f27864dcd079c1148534b8/app/assets/stylesheets/peek/views/performance_bar.scss
+.performance-bar {
+  position: relative;
+  top: 2px;
+  display: inline-block;
+  width: 75px;
+  height: 10px;
+  margin: 0 0 0 5px;
+  list-style: none;
+  background-color: rgba(0, 0, 0, .5);
+  border: 1px solid rgba(0, 0, 0, .7);
+  border-radius: 2px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .15);
+
+  li {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    overflow: hidden;
+    opacity: .8;
+    color: transparent;
+
+    &:hover {
+      opacity: 1;
+      cursor: default;
+    }
+  }
+}

@@ -39,3 +39,5 @@ config/projections.json
 
 # RSpec
 spec/examples.txt
+/public/packs
+/node_modules

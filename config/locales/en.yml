@@ -16,47 +16,18 @@
 #
 # This would use the information in config/locales/es.yml.
 #
+# The following keys must be escaped otherwise they will not be retrieved by
+# the default I18n backend:
+#
+# true, false, on, off, yes, no
+#
+# Instead, surround them with single quotes.
+#
+# en:
+#   'true': 'foo'
+#
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  assignment_form:
-    slug_note: 'This will prefix each GitHub repository that is created for this assignment. May only contain alphanumeric characters, underscores or hyphens.'
-  activerecord:
-    attributes:
-      grouping:
-        title: 'Your set of teams'
-        slug:  'Your set of teams'
-      group:
-        title: 'Your team'
-        slug:  'Your team'
-      group_assignment:
-        title: 'Your assignment title'
-        slug:  'Your assignment repository prefix'
-      assignment:
-        title: 'Your assignment title'
-        slug:  'Your assignment repository prefix'
-    errors:
-      models:
-        grouping:
-          attributes:
-            title:
-              blank: 'must be present'
-              taken: 'is already in use for your organization'
-        group_assignment:
-          attributes:
-            title:
-              blank: 'must be present'
-            slug:
-              taken: 'must be unique'
-        assignment:
-          attributes:
-            title:
-              blank: 'must be present'
-            slug:
-              taken: 'must be unique'
-  views:
-    pagination:
-      previous: 'Previous'
-      next: 'Next'
-      truncate: '...'
+  hello: "Hello world"
