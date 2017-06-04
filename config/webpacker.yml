@@ -24,8 +24,8 @@ development:
   <<: *default
 
   dev_server:
-    host: 0.0.0.0
-    port: 8080
+    host: localhost
+    port: 7623
     https: false
 
 test:
