@@ -45,12 +45,12 @@
     "memcachedcloud",
     "newrelic"
   ],
-  "buildpacks": {
+  "buildpacks": [
     {
       "url": "heroku/ruby"
     },
     {
       "url": "heroku/nodejs"
     }
-  }
+  ]
 }
