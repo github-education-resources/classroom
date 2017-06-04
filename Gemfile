@@ -63,6 +63,8 @@ gem 'typhoeus', '~> 1.1', '>= 1.1.2'
 
 gem 'uglifier', '>= 1.3.0'
 
+gem 'webpacker'
+
 group :development do
   gem 'foreman'
   gem 'web-console'

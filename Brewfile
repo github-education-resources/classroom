@@ -10,6 +10,7 @@ cask 'ngrok'
 
 brew 'nodejs'
 brew 'terminal-notifier'
+brew 'yarn'
 
 brew 'elasticsearch@1.7', restart_service: :changed
 brew 'memcached',         restart_service: :changed

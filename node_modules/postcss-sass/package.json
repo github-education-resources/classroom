@@ -1,0 +1,52 @@
+{
+  "name": "postcss-sass",
+  "version": "0.1.0",
+  "description": "A Sass parser for PostCSS, using gonzales-pe.",
+  "keywords": [
+    "postcss",
+    "css",
+    "postcss-plugin",
+    "postcss-sass",
+    "sass"
+  ],
+  "author": "Oleh Aloshkin <olegaleshkin@gmail.com>",
+  "license": "MIT",
+  "repository": "AleshaOleg/postcss-sass",
+  "bugs": {
+    "url": "https://github.com/AleshaOleg/postcss-sass/issues"
+  },
+  "homepage": "https://github.com/AleshaOleg/postcss-sass",
+  "dependencies": {
+    "gonzales-pe": "^4.0.3",
+    "mathjs": "^3.11.5",
+    "postcss": "^5.2.6"
+  },
+  "devDependencies": {
+    "eslint": "^3.12.2",
+    "eslint-config-postcss": "^2.0.2",
+    "jest": "^18.0.0",
+    "lint-staged": "^3.3.1",
+    "postcss-parser-tests": "^5.0.11",
+    "pre-commit": "^1.2.2"
+  },
+  "scripts": {
+    "test": "jest && eslint *.js",
+    "lint-staged": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": "eslint"
+  },
+  "eslintConfig": {
+    "extends": "eslint-config-postcss/es5",
+    "env": {
+      "jest": true
+    },
+    "rules": {
+      "complexity": "off"
+    }
+  },
+  "pre-commit": [
+    "test",
+    "lint-staged"
+  ]
+}

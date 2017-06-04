@@ -1,0 +1,43 @@
+{
+  "name": "path-complete-extname",
+  "version": "0.1.0",
+  "main": "index.js",
+  "description": "path.extname implementation adapted to also include multiple dots extensions.",
+  "homepage": "https://github.com/ruyadorno/path-complete-extname",
+  "bugs": "https://github.com/ruyadorno/path-complete-extname/issues",
+  "author": {
+    "name": "Ruy Adorno",
+    "url": "http://ruyadorno.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ruyadorno/path-complete-extname.git"
+  },
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ],
+  "keywords":[
+    "path",
+    "extname",
+    "extension",
+    "file",
+    "fs"
+  ],
+  "devDependencies": {
+    "grunt": "~0.4.x",
+    "grunt-contrib-jshint": "~0.7.x",
+    "grunt-sg-release": "~0.2.x",
+    "grunt-mocha-test": "~0.11.x",
+    "load-grunt-tasks": "~0.2.x",
+    "time-grunt": "~0.2.x",
+    "jshint-stylish": "~0.1.x",
+    "mocha": "~1.21.x"
+  },
+  "dependencies": {},
+  "scripts": {
+    "test": "grunt"
+  }
+}
+

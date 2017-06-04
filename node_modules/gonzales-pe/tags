@@ -1,0 +1,19 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ISTANBUL	node_modules/Base64/Makefile	/^ISTANBUL = node_modules\/.bin\/istanbul$/;"	m
+UGLIFYJS	node_modules/Base64/Makefile	/^UGLIFYJS = node_modules\/.bin\/uglifyjs$/;"	m
+XYZ	node_modules/Base64/Makefile	/^XYZ = node_modules\/.bin\/xyz --message X.Y.Z --tag X.Y.Z$/;"	m
+SRC	node_modules/Base64/Makefile	/^SRC = base64.js$/;"	m
+MIN	node_modules/Base64/Makefile	/^MIN = $(patsubst %.js,%.min.js,$(SRC))$/;"	m
+cliWidth	node_modules/cli-width/coverage/lcov-report/cli-width/index.js.html	/^function cliWidth() {$/;"	f
+require	node_modules/clone/test.html	/^      function require(moduleName) {$/;"	f
+log	node_modules/clone/test.html	/^      function log(str) {$/;"	f
+isUndefinedOrNull	node_modules/clone/test.html	/^      function isUndefinedOrNull(value) {$/;"	f
+isArguments	node_modules/clone/test.html	/^      function isArguments(object) {$/;"	f
+objEquiv	node_modules/clone/test.html	/^      function objEquiv(a, b) {$/;"	f
+_deepEqual	node_modules/clone/test.html	/^      function _deepEqual(actual, expected) {$/;"	f
+incFinished	node_modules/clone/test.html	/^            function incFinished() {$/;"	f

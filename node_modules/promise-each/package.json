@@ -1,0 +1,32 @@
+{
+  "name": "promise-each",
+  "version": "2.2.0",
+  "description": "Call a function for each value in an array and return a Promise",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard && NODE_ENV=test tape test.js",
+    "test-cov": "NODE_ENV=test istanbul cover test.js"
+  },
+  "repository": "yoshuawuyts/promise-each",
+  "keywords": [
+    "bluebird",
+    "each",
+    "native",
+    "promise"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "any-promise": "^0.1.0"
+  },
+  "devDependencies": {
+    "bluebird": "^2.8.2",
+    "istanbul": "^0.3.5",
+    "standard": "^4.5.2",
+    "tape": "^3.4.0"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "index.js"
+  ]
+}

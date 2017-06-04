@@ -39,3 +39,6 @@ config/projections.json
 
 # RSpec
 spec/examples.txt
+
+# Webpacker
+/public/packs
