@@ -35,10 +35,12 @@ services:
 
 env:
   global:
+    - CLASSROOM_WEBHOOK_URL_PREFIX="https://example.com/github/hooks"
     - GITHUB_CLIENT_ID=client_id
     - GITHUB_CLIENT_SECRET=client_secret
+    - RAILS_ENV=test
+    - RACK_ENV=test
     - WEBHOOK_SECRET=abcdefg
-    - CLASSROOM_WEBHOOK_URL_PREFIX="https://example.com/github/hooks"
 
 notifications:
   email: false
