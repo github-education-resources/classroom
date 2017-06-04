@@ -42,3 +42,4 @@ spec/examples.txt
 
 # Webpacker
 /public/packs
+/node_modules
