@@ -39,3 +39,6 @@ config/projections.json
 
 # RSpec
 spec/examples.txt
+
+# yarn
+/node_modules

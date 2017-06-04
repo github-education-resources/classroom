@@ -7,12 +7,13 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-# run tests
-echo "Running tests ..."
-date "+%H:%M:%S"
+# Set the RAILS_ENV only when we're not using travis
+if ! [ -z "$TRAVIS" ]; then
+  export RAILS_ENV="test" RACK_ENV="test"
+fi
 
-# run tests.
-script/test
+# run tests
+bin/rspec
 
 # run linters
 script/linter
