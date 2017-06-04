@@ -10,8 +10,6 @@
     "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.5.1",
     "clipboard": "^1.7.1",
-    "coffee-loader": "^0.7.3",
-    "coffee-script": "^1.12.6",
     "compression-webpack-plugin": "^0.4.0",
     "css-loader": "^0.28.4",
     "dragula": "3.7.1",
