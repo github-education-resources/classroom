@@ -6,3 +6,4 @@ redis:         redis-server
 
 web: ./bin/rails server
 worker: ./bin/sidekiq -C config/sidekiq.yml
+webpack: ./bin/webpack-dev-server
