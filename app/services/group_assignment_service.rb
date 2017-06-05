@@ -19,6 +19,6 @@ class GroupAssignmentService
   end
 
   def grouping_info_valid?
-    (@grouping_id != '') || (@new_grouping_params[:title] != '')
+    @grouping_id.present? || @new_grouping_params[:title].present?
   end
 end
