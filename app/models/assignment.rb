@@ -14,7 +14,7 @@ class Assignment < ApplicationRecord
   has_many :assignment_repos, dependent: :destroy
   has_many :users,            through:   :assignment_repos
 
-  belongs_to :creator, class_name: User
+  belongs_to :creator, class_name: 'User'
   belongs_to :organization
 
   belongs_to :student_identifier_type

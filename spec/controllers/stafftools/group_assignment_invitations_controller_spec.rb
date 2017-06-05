@@ -15,9 +15,8 @@ RSpec.describe Stafftools::GroupAssignmentInvitationsController, type: :controll
   describe 'GET #show', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect do
-          get :show, params: { id: group_assignment_invitation.id }
-        end.to raise_error(ActionController::RoutingError)
+        get :show, params: { id: group_assignment_invitation.id }
+        expect(response.status).to eq(404)
       end
     end
 

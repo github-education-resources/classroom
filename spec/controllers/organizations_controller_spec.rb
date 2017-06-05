@@ -185,7 +185,8 @@ RSpec.describe OrganizationsController, type: :controller do
 
     context 'flipper is not enabled' do
       it 'returns success and sets the organization' do
-        expect { get :show_groupings, params: { id: organization.slug } }.to raise_error(ActionController::RoutingError)
+        get :show_groupings, params: { id: organization.slug }
+        expect(response.status).to eq(404)
       end
     end
   end

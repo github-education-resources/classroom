@@ -75,27 +75,24 @@ RSpec.describe GroupsController, type: :controller do
   context 'flipper is not enabled for the user' do
     describe 'PATCH #remove_membership', :vcr do
       it 'returns a 404' do
-        expect do
-          patch :add_membership, params: {
-            organization_id: organization.slug,
-            grouping_id: grouping.slug,
-            id: group.slug,
-            user_id: user.id
-          }
-        end.to raise_error(ActionController::RoutingError)
+        patch :add_membership, params: {
+          organization_id: organization.slug,
+          grouping_id: grouping.slug,
+          id: group.slug, user_id: user.id
+        }
+        expect(response.status).to eq(404)
       end
     end
 
     describe 'DELETE #remove_membership', :vcr do
       it 'returns a 404' do
-        expect do
-          delete :remove_membership, params: {
-            organization_id: organization.slug,
-            grouping_id: grouping.slug,
-            id: group.slug,
-            user_id: user.id
-          }
-        end.to raise_error(ActionController::RoutingError)
+        delete :remove_membership, params: {
+          organization_id: organization.slug,
+          grouping_id: grouping.slug,
+          id: group.slug,
+          user_id: user.id
+        }
+        expect(response.status).to eq(404)
       end
     end
   end

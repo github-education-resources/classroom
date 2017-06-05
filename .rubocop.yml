@@ -8,6 +8,7 @@ AllCops:
     - 'db/**/*'
     - 'script/**/*'
     - 'vendor/**/*'
+    - 'node_modules/**/*'
 
 Rails:
   Enabled: true
@@ -29,9 +30,6 @@ Metrics/BlockLength:
     - 'spec/**/*'
     - 'config/routes.rb'
     - 'config/environments/*.rb'
-
-Rails/Delegate:
-  Enabled: false
 
 Rails/HasAndBelongsToMany:
   Enabled: false

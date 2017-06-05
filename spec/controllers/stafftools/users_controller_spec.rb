@@ -13,7 +13,8 @@ RSpec.describe Stafftools::UsersController, type: :controller do
   describe 'GET #show', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { get :show, params: { id: user.id } }.to raise_error(ActionController::RoutingError)
+        get :show, params: { id: user.id }
+        expect(response.status).to eq(404)
       end
     end
 
@@ -36,7 +37,8 @@ RSpec.describe Stafftools::UsersController, type: :controller do
   describe 'POST #impersonate', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { post :impersonate, params: { id: student.id } }.to raise_error(ActionController::RoutingError)
+        post :impersonate, params: { id: student.id }
+        expect(response.status).to eq(404)
       end
     end
 
@@ -62,7 +64,8 @@ RSpec.describe Stafftools::UsersController, type: :controller do
   describe 'DELETE #stop_impersonating', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { delete :stop_impersonating, params: { id: student.id } }.to raise_error(ActionController::RoutingError)
+        delete :stop_impersonating, params: { id: student.id }
+        expect(response.status).to eq(404)
       end
     end
 

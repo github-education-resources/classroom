@@ -1,0 +1,20 @@
+<%= render 'organizations/organization_invitation_banner' %>
+
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">
+      <span class="assignment-icon assignment-icon-individual">
+        <%= octicon 'person', height: 22 %>
+      </span>
+      Accepted the <strong><%= current_assignment.title %></strong> assignment
+    </h2>
+  </div>
+</div>
+
+<div class="site-content-body">
+  <div class="markdown-body">
+    <h2>You are ready to go!</h2>
+    <p>You may receive an invitation to join <%= link_to "@#{organization.github_organization.login}", organization.github_organization.html_url %> via email invitation on your behalf. No further action is necessary.</p>
+    <p>Your assignment has been created here: <%= link_to current_submission.github_repository.html_url, current_submission.github_repository.html_url %></p>
+  </div>
+</div>

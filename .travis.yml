@@ -3,20 +3,31 @@ language: ruby
 rvm:
   - 2.4.1
 
+node_js:
+  - 7.7.1
+
 sudo: false
 
 before_install:
   - gem update --system
+  - nvm install 7.7.1
+  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.24.6
+  - export PATH=$HOME/.yarn/bin:$PATH
 
 before_script:
   - psql -c 'create database classroom_test;' -U postgres
+  - bundle exec rake db:schema:load
 
 script:
   - ./script/cibuild
 
-bundler_args: --without development production --deployment --jobs=3 --retry=3
+cache:
+  bundler: true
+  yarn: true
 
-cache: bundler
+install:
+  - bundle install --without development production --deployment --jobs=3 --retry=3
+  - yarn install
 
 services:
   - postgresql
@@ -24,10 +35,12 @@ services:
 
 env:
   global:
+    - CLASSROOM_WEBHOOK_URL_PREFIX="https://example.com/github/hooks"
     - GITHUB_CLIENT_ID=client_id
     - GITHUB_CLIENT_SECRET=client_secret
+    - RAILS_ENV=test
+    - RACK_ENV=test
     - WEBHOOK_SECRET=abcdefg
-    - CLASSROOM_WEBHOOK_URL_PREFIX="https://example.com/github/hooks"
 
 notifications:
   email: false

@@ -6,16 +6,16 @@
       <span class="assignment-icon assignment-icon-individual">
         <%= octicon 'person', height: 22 %>
       </span>
-      Accept the <strong><%= assignment.title %></strong> assignment
+      Accept the <strong><%= current_assignment.title %></strong> assignment
     </h2>
   </div>
 </div>
 
 <div class="site-content-body">
-  <%= form_tag({ controller: :assignment_invitations, action: :accept_invitation}, method: :patch) do %>
+  <%= form_tag({ controller: :assignment_invitations, action: :accept }, method: :patch) do %>
     <div class="markdown-body">
       <p>
-        Accepting this assignment will give you access to the <strong><%= "#{assignment.slug}-#{current_user.github_user.login}" %></strong>
+        Accepting this assignment will give you access to the <strong><%= "#{current_assignment.slug}-#{current_user.github_user.login}" %></strong>
         repository in the <%= link_to "@#{organization.github_organization.login}", organization.github_organization.html_url %> organization on GitHub.
       </p>
     </div>

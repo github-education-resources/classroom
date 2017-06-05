@@ -16,9 +16,8 @@ RSpec.describe Stafftools::AssignmentReposController, type: :controller do
   describe 'GET #show', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect do
-          get :show, params: { id: assignment_repo.id }
-        end.to raise_error(ActionController::RoutingError)
+        get :show, params: { id: assignment_repo.id }
+        expect(response.status).to eq(404)
       end
     end
 
@@ -41,9 +40,8 @@ RSpec.describe Stafftools::AssignmentReposController, type: :controller do
   describe 'DELETE #destroy', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect do
-          delete :destroy, params: { id: assignment_repo.id }
-        end.to raise_error(ActionController::RoutingError)
+        delete :destroy, params: { id: assignment_repo.id }
+        expect(response.status).to eq(404)
       end
     end
 

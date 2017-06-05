@@ -22,13 +22,11 @@ class User < ApplicationRecord
 
   before_validation(on: :create) { ensure_last_active_at_presence }
 
+  delegate :authorized_access_token?, to: :github_user
+
   def assign_from_auth_hash(hash)
     user_attributes = AuthHash.new(hash).user_info
     update_attributes(user_attributes)
-  end
-
-  def authorized_access_token?
-    github_user.authorized_access_token?
   end
 
   def self.create_from_auth_hash(hash)

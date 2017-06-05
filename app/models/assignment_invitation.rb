@@ -5,9 +5,9 @@ class AssignmentInvitation < ApplicationRecord
 
   update_index('stafftools#assignment_invitation') { self }
 
-  has_one :organization, through: :assignment
-
   belongs_to :assignment
+
+  has_one :organization, through: :assignment
 
   validates :assignment, presence: true
 
@@ -15,6 +15,8 @@ class AssignmentInvitation < ApplicationRecord
   validates :key, uniqueness: true
 
   after_initialize :assign_key
+
+  delegate :title, to: :assignment
 
   # Public: Redeem an AssignmentInvtiation for a User invitee.
   #
@@ -29,10 +31,6 @@ class AssignmentInvitation < ApplicationRecord
     return AssignmentRepo::Creator::Result.success(assignment_repo) if assignment_repo.present?
 
     AssignmentRepo::Creator.perform(assignment: assignment, user: invitee)
-  end
-
-  def title
-    assignment.title
   end
 
   def to_param

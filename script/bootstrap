@@ -15,3 +15,6 @@ fi
 
 echo "==> Installing gem dependencies…"
 bundle install --without production
+
+echo "==> Installing javascript dependencies…"
+yarn install
