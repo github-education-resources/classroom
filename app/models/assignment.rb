@@ -3,6 +3,7 @@
 class Assignment < ApplicationRecord
   include Flippable
   include GitHubPlan
+  include ValidatesNotActionName
 
   update_index('stafftools#assignment') { self }
 
@@ -25,8 +26,7 @@ class Assignment < ApplicationRecord
   validates :title, presence: true
   validates :title, length: { maximum: 60 }
   validates :title, uniqueness: { scope: :organization_id }
-  validates :title, exclusion: { in: %w[new edit],
-                                 message: 'should not be a reserved word' }
+  validates_not_action_name :title
 
   validates :slug, uniqueness: { scope: :organization_id }
   validates :slug, presence: true
