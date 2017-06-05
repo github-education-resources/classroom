@@ -3,7 +3,7 @@
 class Assignment < ApplicationRecord
   include Flippable
   include GitHubPlan
-  include ValidatesNotActionName
+  include ValidatesNotReservedWord
 
   update_index('stafftools#assignment') { self }
 
@@ -26,7 +26,7 @@ class Assignment < ApplicationRecord
   validates :title, presence: true
   validates :title, length: { maximum: 60 }
   validates :title, uniqueness: { scope: :organization_id }
-  validates_not_action_name :title
+  validates_not_reserved_word :title
 
   validates :slug, uniqueness: { scope: :organization_id }
   validates :slug, presence: true
