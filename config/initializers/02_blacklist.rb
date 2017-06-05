@@ -2,7 +2,7 @@
 
 module GitHubClassroom
   module Blacklist
-    NAMES = %i[
+    NAMES = %w[
       new
       edit
     ].freeze
