@@ -1,11 +1,19 @@
-<dl class="form">
+<% title_errors = @assignment.errors.full_messages_for(:title).join(", ") %>
+<dl class="form <%= 'errored' if title_errors.present? %>">
   <dt><%= f.label :title %></dt>
   <dd><%= f.text_field :title, class: 'textfield' %></dd>
+  <% if title_errors.present? %>
+    <dd class="error"><%= title_errors %></dd>
+  <% end %>
 </dl>
 
-<dl class="form">
+<% slug_errors = @assignment.errors.full_messages_for(:slug).join(", ") %>
+<dl class="form <%= 'errored' if slug_errors.present? %>">
   <dt><%= f.label :slug %></dt>
   <dd><%= f.text_field :slug, class: 'textfield' %></dd>
+  <% if slug_errors.present? %>
+    <dd class="error"><%= slug_errors %></dd>
+  <% end %>
   <span class="note"><%= t('assignment_form.slug_note') %></span>
 </dl>
 
