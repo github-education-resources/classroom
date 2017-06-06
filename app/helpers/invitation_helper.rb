@@ -37,7 +37,8 @@ module InvitationHelper
         Rails.application.routes.url_helpers.send(
           "#{type}_short_url".to_sym,
           short_key: short_key,
-          host: base_url)
+          host: base_url
+        )
       else
         ''
       end
