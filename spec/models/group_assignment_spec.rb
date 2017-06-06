@@ -19,6 +19,16 @@ RSpec.describe GroupAssignment, type: :model do
     end
   end
 
+  describe 'title blacklist' do
+    it 'disallows blacklisted names' do
+      groupassignment1 = build(:group_assignment, organization: create(:organization), title: 'new')
+      groupassignment2 = build(:group_assignment, organization: create(:organization), title: 'edit')
+
+      expect { groupassignment1.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { groupassignment2.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+  end
+
   describe 'uniqueness of title across organization' do
     it 'validates that an Assignment in the same organization does not have the same slug' do
       options = {
