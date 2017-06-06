@@ -19,8 +19,11 @@ RSpec.describe Stafftools::GroupsController, type: :controller do
 
   describe 'GET #show', :vcr do
     context 'as an unauthorized user' do
-      it 'returns a 404' do
+      before do
         get :show, params: { id: group.id }
+      end
+
+      it 'returns a 404' do
         expect(response.status).to eq(404)
       end
     end
@@ -43,8 +46,12 @@ RSpec.describe Stafftools::GroupsController, type: :controller do
 
   describe 'DELETE #destroy', :vcr do
     context 'as an unauthorized user' do
+      before do
+        delete :destroy, params: { id: group.id }
+      end
+
       it' returns a 404' do
-        expect { delete :destroy, params: { id: group.id } }.to raise_error(ActionController::RoutingError)
+        expect(response.status).to eq(404)
       end
     end
 
