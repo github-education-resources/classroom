@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Stafftools::OrganizationsController, type: :controller do
@@ -12,7 +13,8 @@ RSpec.describe Stafftools::OrganizationsController, type: :controller do
   describe 'GET #show', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { get :show, params: { id: organization.id } }.to raise_error(ActionController::RoutingError)
+        get :show, params: { id: organization.id }
+        expect(response.status).to eq(404)
       end
     end
 
@@ -35,8 +37,8 @@ RSpec.describe Stafftools::OrganizationsController, type: :controller do
   describe 'DELETE #remove_user', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { delete :remove_user, params: { id: organization.id, user_id: user.id } }
-          .to raise_error(ActionController::RoutingError)
+        delete :remove_user, params: { id: organization.id, user_id: user.id }
+        expect(response.status).to eq(404)
       end
     end
 

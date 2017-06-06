@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module GitHubClassroom
   def self.flipper
-    @flipper ||= self.flipper!
+    @flipper ||= flipper!
   end
 
   def self.flipper!
@@ -8,7 +10,7 @@ module GitHubClassroom
                 require 'flipper/adapters/memory'
                 Flipper::Adapters::Memory.new
               else
-                namespaced_client = Redis::Namespace.new(:flipper, :redis => GitHubClassroom.redis)
+                namespaced_client = Redis::Namespace.new(:flipper, redis: GitHubClassroom.redis)
                 Flipper::Adapters::Redis.new(namespaced_client)
               end
 

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class GitHubUser < GitHubResource
   # Public: Accept a Repository Invitation on GitHub.
   #
@@ -34,6 +35,6 @@ class GitHubUser < GitHubResource
   private
 
   def github_attributes
-    %w(login avatar_url html_url name)
+    %w[login avatar_url html_url name]
   end
 end

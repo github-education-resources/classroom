@@ -1,13 +1,14 @@
 # frozen_string_literal: true
+
 class Group < ApplicationRecord
   include GitHubTeamable
   include Sluggable
 
   update_index('stafftools#group') { self }
 
-  has_one :organization, -> { unscope(where: :deleted_at) }, through: :grouping
-
   belongs_to :grouping
+
+  has_one :organization, -> { unscope(where: :deleted_at) }, through: :grouping
 
   has_and_belongs_to_many :repo_accesses, before_add:    :add_member_to_github_team, unless: :new_record?,
                                           before_remove: :remove_from_github_team

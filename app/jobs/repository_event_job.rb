@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Documentation: https://developer.github.com/v3/activity/events/types/#repositoryevent
 class RepositoryEventJob < ApplicationJob
   queue_as :github_event

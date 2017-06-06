@@ -1,7 +1,9 @@
 # frozen_string_literal: true
+
 class GroupAssignment < ApplicationRecord
   include Flippable
   include GitHubPlan
+  include ValidatesNotReservedWord
 
   update_index('stafftools#group_assignment') { self }
 
@@ -11,7 +13,7 @@ class GroupAssignment < ApplicationRecord
 
   has_many :group_assignment_repos, dependent: :destroy
 
-  belongs_to :creator, class_name: User
+  belongs_to :creator, class_name: 'User'
   belongs_to :grouping
   belongs_to :organization
   belongs_to :student_identifier_type
@@ -25,11 +27,12 @@ class GroupAssignment < ApplicationRecord
   validates :title, presence: true
   validates :title, length: { maximum: 60 }
   validates :title, uniqueness: { scope: :organization_id }
+  validates_not_reserved_word :title
 
   validates :slug, uniqueness: { scope: :organization_id }
   validates :slug, presence: true
   validates :slug, length: { maximum: 60 }
-  validates :slug, format: { with: /\A[-a-zA-Z0-9_]+\z/,
+  validates :slug, format: { with: /\A[-a-zA-Z0-9_]*\z/,
                              message: 'should only contain letters, numbers, dashes and underscores' }
 
   validate :uniqueness_of_slug_across_organization
@@ -61,7 +64,7 @@ class GroupAssignment < ApplicationRecord
   private
 
   def uniqueness_of_slug_across_organization
-    return unless Assignment.where(slug: slug, organization: organization).present?
+    return if Assignment.where(slug: slug, organization: organization).blank?
     errors.add(:slug, :taken)
   end
 end

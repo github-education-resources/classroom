@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe OrganizationsController, type: :controller do
@@ -110,21 +111,21 @@ RSpec.describe OrganizationsController, type: :controller do
 
       expect do
         post :create, params: { organization: new_organization_options }
-      end.not_to change { Organization.count }
+      end.to_not change(Organization, :count)
     end
 
     it 'will not add an organization that already exists' do
       existing_organization_options = { github_id: organization.github_id }
       expect do
         post :create, params: { organization: existing_organization_options }
-      end.to_not change { Organization.count }
+      end.to_not change(Organization, :count)
     end
 
     it 'will add an organization that the user is admin of on GitHub' do
       organization_params = { github_id: organization.github_id, users: organization.users }
       organization.destroy!
 
-      expect { post :create, params: { organization: organization_params } }.to change { Organization.count }
+      expect { post :create, params: { organization: organization_params } }.to change(Organization, :count)
     end
 
     it 'will redirect the user to the setup page' do
@@ -184,7 +185,8 @@ RSpec.describe OrganizationsController, type: :controller do
 
     context 'flipper is not enabled' do
       it 'returns success and sets the organization' do
-        expect { get :show_groupings, params: { id: organization.slug } }.to raise_error(ActionController::RoutingError)
+        get :show_groupings, params: { id: organization.slug }
+        expect(response.status).to eq(404)
       end
     end
   end
@@ -202,7 +204,7 @@ RSpec.describe OrganizationsController, type: :controller do
     it 'sets the `deleted_at` column for the organization' do
       organization # call the record so that it is created
 
-      expect { delete :destroy, params: { id: organization.slug } }.to change { Organization.all.count }
+      expect { delete :destroy, params: { id: organization.slug } }.to change(Organization, :count)
       expect(Organization.unscoped.find(organization.id).deleted_at).not_to be_nil
     end
 

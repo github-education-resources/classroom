@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'sidekiq/web'
 require 'staff_constraint'
 
@@ -10,8 +11,8 @@ Rails.application.routes.draw do
   get  '/login',  to: 'sessions#new',     as: 'login'
   post '/logout', to: 'sessions#destroy', as: 'logout'
 
-  match '/auth/:provider/callback', to: 'sessions#create',  via: [:get, :post]
-  match '/auth/failure',            to: 'sessions#failure', via: [:get, :post]
+  match '/auth/:provider/callback', to: 'sessions#create',  via: %i[get post]
+  match '/auth/failure',            to: 'sessions#failure', via: %i[get post]
 
   get '/autocomplete/github_repos', to: 'autocomplete#github_repos'
 
@@ -23,10 +24,8 @@ Rails.application.routes.draw do
 
   resources :assignment_invitations, path: 'assignment-invitations', only: [:show] do
     member do
-      get   :identifier
-      post  :submit_identifier
-      patch :accept_invitation
-      get   :successful_invitation, path: :success
+      patch :accept
+      get   :success
     end
   end
 
@@ -52,7 +51,7 @@ Rails.application.routes.draw do
         get   'settings/teams',       to: 'organizations#show_groupings'
       end
 
-      resources :groupings, only: [:show, :edit, :update] do
+      resources :groupings, only: %i[show edit update] do
         resources :groups, only: [:show] do
           member do
             patch '/memberships/:user_id', to: 'groups#add_membership', as: 'add_membership'
@@ -100,11 +99,11 @@ Rails.application.routes.draw do
     resources :repo_accesses, only: [:show]
 
     resources :assignment_invitations, only: [:show]
-    resources :assignment_repos,       only: [:show, :destroy]
+    resources :assignment_repos,       only: %i[show destroy]
     resources :assignments,            only: [:show]
 
     resources :group_assignment_invitations, path: 'group-assignment-invitations', only: [:show]
-    resources :group_assignment_repos,       path: 'group-assignment-repos',       only: [:show, :destroy]
+    resources :group_assignment_repos,       path: 'group-assignment-repos',       only: %i[show destroy]
     resources :group_assignments,            path: 'group-assignments',            only: [:show]
 
     resources :groupings, only: [:show, :destroy]

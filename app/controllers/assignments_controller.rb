@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 class AssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
 
-  before_action :set_assignment, except: [:new, :create]
+  before_action :set_assignment, except: %i[new create]
 
   def new
     @assignment = Assignment.new
@@ -34,7 +35,7 @@ class AssignmentsController < ApplicationController
       redirect_to organization_assignment_path(@organization, @assignment)
     else
       flash[:error] = result.error
-      @assignment.reload unless @assignment.slug.present?
+      @assignment.reload if @assignment.slug.blank?
       render :edit
     end
   end

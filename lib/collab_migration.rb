@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class CollabMigration
   attr_accessor :repo_access
 
@@ -9,7 +10,7 @@ class CollabMigration
   def migrate
     @repo_access.assignment_repos.each { |assignment_repo| add_user_as_collaborator(assignment_repo) }
 
-    return unless @repo_access.github_team_id.present?
+    return if @repo_access.github_team_id.blank?
 
     begin
       github_organization.delete_team(@repo_access.github_team_id)

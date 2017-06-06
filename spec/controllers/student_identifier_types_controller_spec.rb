@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe StudentIdentifierTypesController, type: :controller do
@@ -53,7 +54,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
             organization_id: organization.slug,
             student_identifier_type: { name: 'Test', description: 'Test' }
           }
-        end.to change { StudentIdentifierType.count }
+        end.to change(StudentIdentifierType, :count)
       end
     end
 
@@ -90,7 +91,7 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
         student_identifier_type
         expect do
           delete :destroy, params: { id: student_identifier_type.id, organization_id: organization }
-        end.to change { StudentIdentifierType.all.count }
+        end.to change(StudentIdentifierType, :count)
         expect(StudentIdentifierType.unscoped.find(student_identifier_type.id).deleted_at).not_to be_nil
       end
 
@@ -116,61 +117,55 @@ RSpec.describe StudentIdentifierTypesController, type: :controller do
   context 'flipper is not enabled for the user' do
     describe 'GET #index', :vcr do
       it 'returns a 404' do
-        expect do
-          get :index, params: { organization_id: organization.slug }
-        end.to raise_error(ActionController::RoutingError)
+        get :index, params: { organization_id: organization.slug }
+        expect(response.status).to eq(404)
       end
     end
 
     describe 'GET #new', :vcr do
       it 'returns a 404' do
-        expect do
-          get :new, params: { organization_id: organization.slug }
-        end.to raise_error(ActionController::RoutingError)
+        get :new, params: { organization_id: organization.slug }
+        expect(response.status).to eq(404)
       end
     end
 
     describe 'POST #create', :vcr do
       it 'returns a 404' do
-        expect do
-          post :create, params: {
-            organization_id: organization.slug,
-            student_identifier_type: { name: 'Test', description: 'Test' }
-          }
-        end.to raise_error(ActionController::RoutingError)
+        post :create, params: {
+          organization_id: organization.slug,
+          student_identifier_type: { name: 'Test', description: 'Test' }
+        }
+        expect(response.status).to eq(404)
       end
     end
 
     describe 'GET #edit', :vcr do
       it 'returns a 404' do
         student_identifier_type
-        expect do
-          get :edit, params: { organization_id: organization.slug, id: student_identifier_type.id }
-        end.to raise_error(ActionController::RoutingError)
+        get :edit, params: { organization_id: organization.slug, id: student_identifier_type.id }
+        expect(response.status).to eq(404)
       end
     end
 
     describe 'PATCH #update', :vcr do
       it 'returns a 404' do
         options = { name: 'Test2', description: 'Test2' }
-        expect do
-          patch :update, params: {
-            organization_id: organization.slug,
-            id: student_identifier_type.id,
-            student_identifier_type: options
-          }
-        end.to raise_error(ActionController::RoutingError)
+        patch :update, params: {
+          organization_id: organization.slug,
+          id: student_identifier_type.id,
+          student_identifier_type: options
+        }
+        expect(response.status).to eq(404)
       end
     end
 
     describe 'DELETE #destroy', :vcr do
       it 'returns a 404' do
         student_identifier_type
-        expect do
-          delete :destroy, params: {
-            id: student_identifier_type.id, organization_id: organization
-          }
-        end.to raise_error(ActionController::RoutingError)
+        delete :destroy, params: {
+          id: student_identifier_type.id, organization_id: organization
+        }
+        expect(response.status).to eq(404)
       end
     end
   end

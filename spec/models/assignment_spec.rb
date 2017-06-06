@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Assignment, type: :model do
@@ -15,6 +16,16 @@ RSpec.describe Assignment, type: :model do
       new_assignment = build(:assignment, { title: 'bar' }.merge(options))
 
       expect { new_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+  end
+
+  describe 'title blacklist' do
+    it 'disallows blacklisted names' do
+      assignment1 = build(:assignment, organization: create(:organization), title: 'new')
+      assignment2 = build(:assignment, organization: create(:organization), title: 'edit')
+
+      expect { assignment1.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { assignment2.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
   end
 

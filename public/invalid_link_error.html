@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Page not found | GitHub Classroom</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    html,body,div,h1,h3,a{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;}
+
+    a{
+      color: #4078c0;
+      text-decoration: none;
+    }
+
+    .clear{clear:both;}
+
+    body {
+      background-size: cover;
+      background: #f3f4f6;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 100%;
+    }
+
+    .not-found-container {
+      margin: 3em auto 0em;
+      padding: 5em 3em 5em 3em;
+      border-radius: 5px;
+      width: 55%;
+    }
+
+    .notfound-top h1 {
+      font-size: 9.5em;
+      color: lightgray;
+    }
+
+    .notfound-top {
+      float: left;
+      width: 35%;
+      text-align: right;
+      padding: 0em 4em 0em 0em;
+    }
+
+    .content {
+      float: right;
+      width:50%;
+      padding-left: 3em;
+      border-left: 2px solid lightgray;
+    }
+
+    .content h3 {
+      font-size: 2em;
+      font-weight: 500;
+      line-height: 1.8em;
+      color:#656262;
+      margin: 20px 0px;
+    }
+    .content h4{
+      color: #656262;
+    }
+    .site-footer{
+      text-align: center;
+      color: #777;
+    }
+    .site-footer .octicon{
+      position: inline-block;
+      vertical-align: middle;
+      fill: currentColor;
+    }
+    .site-footer a{
+      color:  #656262;
+    }
+    .site-footer p {
+      font-size: 12px;
+      line-height: 0em;
+    }
+    .site-footer p a{
+      font-weight: 400;
+      color: #4078c0;
+    }
+
+    @media(max-width:1440px){
+      .site-footer {
+        padding: 12.2em 5em 3em 0em;
+      }
+    }
+    @media(max-width:1366px){
+      .not-found-container {
+        width: 60%;
+      }
+    }
+
+    @media(max-width:1280px){
+      .not-found-container {
+        width: 62%;
+      }
+    }
+
+    @media(max-width:1024px){
+      .notfound-top {
+        padding: 0em 0em 0em 0em;
+      }
+      .content h3 {
+        margin: 10px 0px;
+      }
+      .site-footer {
+        padding: 3em 7em 3em 1em;
+      }
+      .notfound-top h1 {
+        font-size: 8em;
+        padding-top: 0.35em;
+      }
+    }
+
+    @media(max-width:768px){
+      .notfound-top h1 {
+        font-size: 7.5em;
+      }
+      .content {
+        width: 52%;
+        padding-left: 2em;
+      }
+      .not-found-container {
+        width: 78%;
+        padding: 5em 3em 5em 3em;
+        margin: 12em auto 0em;
+      }
+      .site-footer {
+        padding: 13em 0em 5em 0em;
+      }
+      .content h3 {
+        font-size: 13px;
+      }
+    }
+
+    @media(max-width:667px){
+      .notfound-top h1 {
+        font-size: 6.5em;
+        padding-top: 0.5em;
+      }
+    }
+
+    @media(max-width:640px){
+      .notfound-top {
+        float: none;
+        width: 34%;
+        margin: 0 auto;
+      }
+      .content {
+        width: 100%;
+        float: none;
+        margin: 0 auto;
+        padding-left: 0em;
+        text-align: center;
+        border-left: none;
+      }
+      .site-footer {
+        padding: 4em 0em 3em 0em;
+      }
+      .notfound-top h1 {
+        padding-top: 0em;
+      }
+      .not-found-container {
+        width: 78%;
+        padding: 3em 3em 3em 3em;
+        margin: 7em auto 0em;
+      }
+    }
+
+    @media(max-width:600px){
+      .notfound-top {
+        width: 39%;
+      }
+    }
+
+    @media(max-width:568px){
+      .notfound-top {
+        width: 42%;
+      }
+    }
+
+    @media(max-width:480px){
+      .not-found-container {
+        width: 70%;
+        margin: 6em auto 0em;
+      }
+      .notfound-top h1 {
+        font-size: 5em;
+      }
+      .content img {
+        width: 20%;
+      }
+      .notfound-top {
+        width: 41%;
+      }
+      .site-footer p {
+        font-size: 13px;
+      }
+      .site-footer {
+        padding:4em 0.4em 2em 0.4em;
+      }
+    }
+
+    @media(max-width:414px){
+      .notfound-top {
+        width: 50%;
+      }
+      .site-footer {
+        padding: 5.5em 0.4em 4em 0.4em;
+      }
+    }
+
+    @media(max-width:384px){
+      .notfound-top {
+        width: 53%;
+      }
+      .not-found-container {
+        padding: 2em 3em 2em 3em;
+      }
+      .site-footer {
+        padding: 3.5em 0.4em 3em 0.4em;
+      }
+    }
+
+    @media(max-width:320px){
+      .not-found-container {
+        width: 83%;
+        margin: 3em auto 0em;
+        padding: 1em 1em 1em 1em;
+      }
+      .notfound-top {
+        width: 44%;
+      }
+      .notfound-top h1 {
+        font-size: 4em;
+      }
+      .content h3 {
+        margin: 10px 0px;
+        font-size: 12px;
+      }
+      .site-footer p a {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="not-found-container">
+    <div class="notfound-top">
+        <h1>404</h1>
+    </div>
+    <div class="content">
+      <h3>Invalid invitation link</h3>
+      <h4>Recheck your invitation link or contact your organization.</h4>
+    </div>
+    <div class="clear"></div>
+  </div>
+  <div class="site-footer">
+    <svg class="octicon" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M7.83 9.19L4 8c-4-8 0 1.5 0 2.5S5.8 12 8 12s4-.5 4-1.5V8L8.17 9.19a.73.73 0 0 1-.36 0h.02zm.28-6.39a.34.34 0 0 0-.2 0L.27 5.18a.35.35 0 0 0 0 .67L2 6.4v1.77c-.3.17-.5.5-.5.86 0 .19.05.36.14.5-.08.14-.14.31-.14.5v2.58c0 .55 2 .55 2 0v-2.58c0-.19-.05-.36-.14-.5.08-.14.14-.31.14-.5 0-.38-.2-.69-.5-.86V6.72l4.89 1.53c.06.02.14.02.2 0l7.64-2.38a.35.35 0 0 0 0-.67L8.1 2.81l.01-.01zM8.02 6c-.55 0-1-.22-1-.5s.45-.5 1-.5 1 .22 1 .5-.45.5-1 .5z"></path></svg> with
+
+    <svg class="octicon" viewBox="0 0 12 16" version="1.1" width="12" height="16" aria-hidden="true"><path d="M11.2 3c-.52-.63-1.25-.95-2.2-1-.97 0-1.69.42-2.2 1-.51.58-.78.92-.8 1-.02-.08-.28-.42-.8-1-.52-.58-1.17-1-2.2-1-.95.05-1.69.38-2.2 1-.52.61-.78 1.28-.8 2 0 .52.09 1.52.67 2.67C1.25 8.82 3.01 10.61 6 13c2.98-2.39 4.77-4.17 5.34-5.33C11.91 6.51 12 5.5 12 5c-.02-.72-.28-1.39-.8-2.02V3z"></path></svg> by
+
+    <a href="https://education.github.com"><svg class="octicon" viewBox="0 0 45 16" version="1.1" width="45" height="16" aria-hidden="true"><path d="M18.53 12.03h-.02c.009 0 .015.01.024.011h.006l-.01-.01zm.004.011c-.093.001-.327.05-.574.05-.78 0-1.05-.36-1.05-.83V8.13h1.59c.09 0 .16-.08.16-.19v-1.7c0-.09-.08-.17-.16-.17h-1.59V3.96c0-.08-.05-.13-.14-.13h-2.16c-.09 0-.14.05-.14.13v2.17s-1.09.27-1.16.28c-.08.02-.13.09-.13.17v1.36c0 .11.08.19.17.19h1.11v3.28c0 2.44 1.7 2.69 2.86 2.69.53 0 1.17-.17 1.27-.22.06-.02.09-.09.09-.16v-1.5a.177.177 0 0 0-.146-.18zm23.696-2.2c0-1.81-.73-2.05-1.5-1.97-.6.04-1.08.34-1.08.34v3.52s.49.34 1.22.36c1.03.03 1.36-.34 1.36-2.25zm2.43-.16c0 3.43-1.11 4.41-3.05 4.41-1.64 0-2.52-.83-2.52-.83s-.04.46-.09.52c-.03.06-.08.08-.14.08h-1.48c-.1 0-.19-.08-.19-.17l.02-11.11c0-.09.08-.17.17-.17h2.13c.09 0 .17.08.17.17v3.77s.82-.53 2.02-.53l-.01-.02c1.2 0 2.97.45 2.97 3.88zm-8.72-3.61H33.84c-.11 0-.17.08-.17.19v5.44s-.55.39-1.3.39-.97-.34-.97-1.09V6.25c0-.09-.08-.17-.17-.17h-2.14c-.09 0-.17.08-.17.17v5.11c0 2.2 1.23 2.75 2.92 2.75 1.39 0 2.52-.77 2.52-.77s.05.39.08.45c.02.05.09.09.16.09h1.34c.11 0 .17-.08.17-.17l.02-7.47c0-.09-.08-.17-.19-.17zm-23.7-.01h-2.13c-.09 0-.17.09-.17.2v7.34c0 .2.13.27.3.27h1.92c.2 0 .25-.09.25-.27V6.23c0-.09-.08-.17-.17-.17zm-1.05-3.38c-.77 0-1.38.61-1.38 1.38 0 .77.61 1.38 1.38 1.38.75 0 1.36-.61 1.36-1.38 0-.77-.61-1.38-1.36-1.38zm16.49-.25h-2.11c-.09 0-.17.08-.17.17v4.09h-3.31V2.6c0-.09-.08-.17-.17-.17h-2.13c-.09 0-.17.08-.17.17v11.11c0 .09.09.17.17.17h2.13c.09 0 .17-.08.17-.17V8.96h3.31l-.02 4.75c0 .09.08.17.17.17h2.13c.09 0 .17-.08.17-.17V2.6c0-.09-.08-.17-.17-.17zM8.81 7.35v5.74c0 .04-.01.11-.06.13 0 0-1.25.89-3.31.89-2.49 0-5.44-.78-5.44-5.92S2.58 1.99 5.1 2c2.18 0 3.06.49 3.2.58.04.05.06.09.06.14L7.94 4.5c0 .09-.09.2-.2.17-.36-.11-.9-.33-2.17-.33-1.47 0-3.05.42-3.05 3.73s1.5 3.7 2.58 3.7c.92 0 1.25-.11 1.25-.11v-2.3H4.88c-.11 0-.19-.08-.19-.17V7.35c0-.09.08-.17.19-.17h3.74c.11 0 .19.08.19.17z"></path></svg></a>
+
+    <p>GitHub Classroom is <a href="https://github.com/education/classroom">open source</a>.</p>
+  </div>
+</body>
+</html>

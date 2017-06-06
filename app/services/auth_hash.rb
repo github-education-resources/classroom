@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class AuthHash
   def self.extract_user_info(hash)
     AuthHash.new(hash).user_info
@@ -34,7 +35,7 @@ class AuthHash
   end
 
   def non_staff_github_admins_ids
-    return [] unless ENV['NON_STAFF_GITHUB_ADMIN_IDS'].present?
+    return [] if ENV['NON_STAFF_GITHUB_ADMIN_IDS'].blank?
     ENV['NON_STAFF_GITHUB_ADMIN_IDS'].split(',').compact.delete_if(&:empty?)
   end
 

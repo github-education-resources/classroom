@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe AssignmentsController, type: :controller do
@@ -31,7 +32,7 @@ RSpec.describe AssignmentsController, type: :controller do
           assignment: attributes_for(:assignment, organization: organization),
           organization_id: organization.slug
         }
-      end.to change { Assignment.count }
+      end.to change(Assignment, :count)
     end
 
     context 'valid starter_code repo_name input' do
@@ -218,7 +219,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
       expect do
         delete :destroy, params: { id: assignment.slug, organization_id: organization }
-      end.to change { Assignment.all.count }
+      end.to change(Assignment, :count)
 
       expect(Assignment.unscoped.find(assignment.id).deleted_at).not_to be_nil
     end

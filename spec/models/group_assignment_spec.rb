@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe GroupAssignment, type: :model do
@@ -15,6 +16,16 @@ RSpec.describe GroupAssignment, type: :model do
       new_group_assignment = build(:group_assignment, { title: 'group assignment 1' }.merge(options))
 
       expect { new_group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+  end
+
+  describe 'title blacklist' do
+    it 'disallows blacklisted names' do
+      groupassignment1 = build(:group_assignment, organization: create(:organization), title: 'new')
+      groupassignment2 = build(:group_assignment, organization: create(:organization), title: 'edit')
+
+      expect { groupassignment1.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { groupassignment2.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
   end
 

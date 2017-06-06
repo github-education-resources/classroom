@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -13,6 +15,11 @@ Rails.application.configure do
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
+
+  # Attempt to read encrypted secrets from `config/secrets.yml.enc`.
+  # Requires an encryption key in `ENV["RAILS_MASTER_KEY"]` or
+  # `config/secrets.yml.key`.
+  config.read_encrypted_secrets = true
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
@@ -59,8 +66,8 @@ Rails.application.configure do
 
   dalli_store_config = {
     namespace:  'CLASSROOM',
-    expires_in: (ENV['REQUEST_CACHE_TIMEOUT'] || 30).to_i.minutes,
-    pool_size:  5
+    expires_in: (ENV.fetch('REQUEST_CACHE_TIMEOUT') { 30 }).to_i.minutes,
+    pool_size:  (ENV.fetch('RAILS_MAX_THREADS') { 5 })
   }
 
   config.cache_store = :dalli_store,
@@ -70,6 +77,15 @@ Rails.application.configure do
   config.peek.adapter = :memcache, {
     client: Dalli::Client.new(memcachedcloud_servers, dalli_store_name_and_password)
   }
+
+  # Use a real queuing backend for Active Job (and separate queues per environment)
+  # config.active_job.queue_adapter     = :resque
+  # config.active_job.queue_name_prefix = "git_hub_classroom_#{Rails.env}"
+  config.action_mailer.perform_caching = false
+
+  # Ignore bad email addresses and do not raise email delivery errors.
+  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
+  # config.action_mailer.raise_delivery_errors = false
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
@@ -88,19 +104,17 @@ Rails.application.configure do
   if ENV['RAILS_LOG_TO_STDOUT'].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
-    config.logger = ActiveSupport::TaggedLogging.new(logger)
+    config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
 
+  # Enable lograge https://github.com/roidrage/lograge
+  config.lograge.enabled = true
+
+  # Enable google analytics via Rack
   config.middleware.use(Rack::Tracker) do
     handler :google_analytics, tracker: ENV['GOOGLE_ANALYTICS_TRACKING_ID']
   end
 
-  # Suppress logger output for asset requests.
-  config.assets.quiet = true
-
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
-
-  # Enable lograge https://github.com/roidrage/lograge
-  config.lograge.enabled = true
 end

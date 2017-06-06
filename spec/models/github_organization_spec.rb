@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe GitHubOrganization do
@@ -15,7 +16,7 @@ describe GitHubOrganization do
     gh_organization = @client.organization(organization.github_id)
 
     @github_organization.attributes.each do |attribute, value|
-      next if attribute == :client || attribute == :access_token
+      next if %i[client access_token].include?(attribute)
       expect(@github_organization).to respond_to(attribute)
       expect(value).to eql(gh_organization.send(attribute))
     end
@@ -25,7 +26,7 @@ describe GitHubOrganization do
 
   it 'responds to all *_no_cache methods', :vcr do
     @github_organization.attributes.each do |attribute, _|
-      next if attribute == :id || attribute == :client || attribute == :access_token
+      next if %i[id client access_token].include?(attribute)
       expect(@github_organization).to respond_to("#{attribute}_no_cache")
     end
   end

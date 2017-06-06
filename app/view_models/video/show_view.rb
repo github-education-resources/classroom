@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Video
   class ShowView < ViewModel
     attr_reader :id, :title, :provider, :description

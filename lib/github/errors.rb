@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module GitHub
   module Errors
     class << self
@@ -29,7 +30,7 @@ module GitHub
 
       # rubocop:disable AbcSize
       def build_error_message(error)
-        return 'An error has occurred' unless error.errors.present?
+        return 'An error has occurred' if error.errors.blank?
 
         error.errors.map do |err|
           error_message = []

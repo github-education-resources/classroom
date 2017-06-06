@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class GitHubOrganization < GitHubResource
   def accept_membership(user_github_login)
     return if organization_member?(user_github_login)
@@ -114,7 +115,7 @@ class GitHubOrganization < GitHubResource
   end
 
   def remove_organization_webhook(webhook_id)
-    return unless webhook_id.present?
+    return if webhook_id.blank?
     GitHub::Errors.with_error_handling do
       @client.remove_org_hook(@id, webhook_id)
     end
@@ -133,7 +134,7 @@ class GitHubOrganization < GitHubResource
   private
 
   def github_attributes
-    %w(login avatar_url html_url name)
+    %w[login avatar_url html_url name]
   end
 
   def github_repo_default_options

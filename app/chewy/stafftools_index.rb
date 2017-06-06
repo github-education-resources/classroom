@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class StafftoolsIndex < Chewy::Index
   define_type Assignment.includes(:organization) do
     field :id

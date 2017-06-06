@@ -1,11 +1,12 @@
 # frozen_string_literal: true
+
 class RepoAccess < ApplicationRecord
   include GitHubTeamable
 
   update_index('stafftools#repo_access') { self }
 
   belongs_to :user
-  belongs_to :organization, -> { unscope(where: :deleted_at) }
+  belongs_to(:organization, -> { unscope(where: :deleted_at) })
 
   has_many :assignment_repos
 

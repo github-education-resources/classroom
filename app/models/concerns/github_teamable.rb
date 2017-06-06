@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module GitHubTeamable
   extend ActiveSupport::Concern
 
@@ -8,7 +9,7 @@ module GitHubTeamable
   end
 
   def destroy_github_team
-    return true unless github_team_id.present?
+    return true if github_team_id.blank?
     organization.github_organization.delete_team(github_team_id)
   end
 

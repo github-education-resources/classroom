@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe AssignmentInvitationsController, type: :controller do
@@ -27,7 +28,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
   end
 
-  describe 'PATCH #accept_invitation', :vcr do
+  describe 'PATCH #accept', :vcr do
     let(:result) do
       assignment_repo = create(:assignment_repo, assignment: invitation.assignment, user: user)
       AssignmentRepo::Creator::Result.success(assignment_repo)
@@ -41,12 +42,12 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     it 'redeems the users invitation' do
       allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result)
 
-      patch :accept_invitation, params: { id: invitation.key }
+      patch :accept, params: { id: invitation.key }
       expect(user.assignment_repos.count).to eql(1)
     end
   end
 
-  describe 'GET #successful_invitation' do
+  describe 'GET #success' do
     let(:assignment) do
       create(:assignment, title: 'Learn Clojure', starter_code_repo_id: 1_062_897, organization: organization)
     end
@@ -66,7 +67,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     context 'github repository deleted after accepting a invitation successfully', :vcr do
       before do
         organization.github_client.delete_repository(@assignment_repo.github_repo_id)
-        get :successful_invitation, params: { id: invitation.key }
+        get :success, params: { id: invitation.key }
       end
 
       it 'deletes the old assignment repo' do

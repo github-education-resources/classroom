@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Show red environment name in pry prompt for non development environments
 unless Rails.env.development?
   old_prompt = Pry.config.prompt

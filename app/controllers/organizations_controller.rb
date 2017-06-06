@@ -1,15 +1,16 @@
 # frozen_string_literal: true
+
 class OrganizationsController < ApplicationController
   include OrganizationAuthorization
 
   before_action :ensure_team_management_flipper_is_enabled, only: [:show_groupings]
 
   before_action :authorize_organization_addition,     only: [:create]
-  before_action :set_users_github_organizations,      only: [:index, :new, :create]
+  before_action :set_users_github_organizations,      only: %i[index new create]
   before_action :add_current_user_to_organizations,   only: [:index]
-  before_action :paginate_users_github_organizations, only: [:new, :create]
+  before_action :paginate_users_github_organizations, only: %i[new create]
 
-  skip_before_action :set_organization, :authorize_organization_access, only: [:index, :new, :create]
+  skip_before_action :set_organization, :authorize_organization_access, only: %i[index new create]
 
   def index
     @organizations = current_user.organizations.includes(:users).page(params[:page])
@@ -107,16 +108,19 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find_by!(slug: params[:id])
   end
 
+  # rubocop:disable AbcSize
   def set_users_github_organizations
     @users_github_organizations = current_user.github_user.organization_memberships.map do |membership|
       {
-        classroom: Organization.unscoped.includes(:users).find_by(github_id: membership.organization.id),
-        github_id: membership.organization.id,
-        login:     membership.organization.login,
-        role:      membership.role
+        classroom:   Organization.unscoped.includes(:users).find_by(github_id: membership.organization.id),
+        github_id:   membership.organization.id,
+        login:       membership.organization.login,
+        owner_login: membership.user.login,
+        role:        membership.role
       }
     end
   end
+  # rubocop:enable AbcSize
 
   # Check if the current user has any organizations with admin privilege,
   # if so add the user to the corresponding classroom automatically.

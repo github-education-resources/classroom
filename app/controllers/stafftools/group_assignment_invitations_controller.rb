@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Stafftools
   class GroupAssignmentInvitationsController < StafftoolsController
     before_action :set_group_assignment_invitation

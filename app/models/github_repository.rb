@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class GitHubRepository < GitHubResource
   # NOTE: LEGACY, DO NOT REMOVE.
   # This is needed for the lib/collab_migration.rb
@@ -11,12 +12,13 @@ class GitHubRepository < GitHubResource
   def get_starter_code_from(source)
     GitHub::Errors.with_error_handling do
       options = {
+        vcs:          'git',
         accept:       Octokit::Preview::PREVIEW_TYPES[:source_imports],
         vcs_username: @client.login,
         vcs_password: @client.access_token
       }
 
-      @client.start_source_import(@id, 'git', "https://github.com/#{source.full_name}", options)
+      @client.start_source_import(@id, "https://github.com/#{source.full_name}", options)
     end
   end
 
@@ -60,6 +62,6 @@ class GitHubRepository < GitHubResource
   private
 
   def github_attributes
-    %w(name full_name html_url)
+    %w[name full_name html_url]
   end
 end

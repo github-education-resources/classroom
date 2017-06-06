@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Stafftools::AssignmentInvitationsController, type: :controller do
@@ -14,7 +15,8 @@ RSpec.describe Stafftools::AssignmentInvitationsController, type: :controller do
   describe 'GET #show', :vcr do
     context 'as an unauthorized user' do
       it 'returns a 404' do
-        expect { get :show, params: { id: assignment_invitation.id } }.to raise_error(ActionController::RoutingError)
+        get :show, params: { id: assignment_invitation.id }
+        expect(response.status).to eq(404)
       end
     end
 
