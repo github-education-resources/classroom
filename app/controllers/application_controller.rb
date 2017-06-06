@@ -5,9 +5,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  require_dependency 'application_controller/authentication_dependency'
-  require_dependency 'application_controller/errors_dependency'
-  require_dependency 'application_controller/feature_flags_dependency'
+  depends_on :authentication, :errors, :feature_flags
 
   before_action :authenticate_user! # authentication_dependency
 
