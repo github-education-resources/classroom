@@ -22,20 +22,20 @@ RSpec.describe FormFieldWithErrors::EditView do
     end
   end
 
-  describe '#has_errors?' do
+  describe '#errors?' do
     context 'when there are errors' do
       before do
         assignment.errors.add(:title, 'is all wrong')
       end
 
       it 'returns true' do
-        expect(subject.has_errors?).to be_truthy
+        expect(subject.errors?).to be_truthy
       end
     end
 
     context 'when there are no errors' do
       it 'returns false' do
-        expect(subject.has_errors?).to be_falsey
+        expect(subject.errors?).to be_falsey
       end
     end
 
@@ -45,7 +45,7 @@ RSpec.describe FormFieldWithErrors::EditView do
       end
 
       it 'returns false' do
-        expect(subject.has_errors?).to be_falsey
+        expect(subject.errors?).to be_falsey
       end
     end
   end

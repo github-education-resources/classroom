@@ -4,12 +4,12 @@ module FormFieldWithErrors
   class EditView < ViewModel
     attr_reader :object, :field
 
-    def has_errors?
+    def errors?
       object.errors[field].present?
     end
 
     def form_class
-      "form#{has_errors? ? ' errored' : ''}"
+      "form#{errors? ? ' errored' : ''}"
     end
 
     def error_message
