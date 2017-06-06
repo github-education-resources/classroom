@@ -17,10 +17,10 @@ class GroupAssignmentInvitation < ApplicationRecord
   validates :key, presence:   true
   validates :key, uniqueness: true
 
-  validates :short_key, presence:   true
   validates :short_key, uniqueness: true
 
-  after_initialize :assign_key, :assign_short_key
+  after_initialize :assign_key
+  before_validation :assign_short_key, on: :create
 
   delegate :title, to: :group_assignment
 

@@ -14,10 +14,12 @@ RSpec.describe ShortUrlController, type: :controller do
       let(:invitation) { create(:assignment_invitation) }
 
       context 'key is invalid' do
+        before do
+          get :accept_assignment, params: { short_key: 'WRONG' }
+        end
+
         it 'responds with a 404' do
-          expect do
-            get :accept_assignment, params: { short_key: 'WRONG' }
-          end.to raise_error ActionController::RoutingError
+          expect(response.status).to eq(404)
         end
       end
 
@@ -42,10 +44,12 @@ RSpec.describe ShortUrlController, type: :controller do
       let(:invitation) { create(:group_assignment_invitation) }
 
       context 'key is invalid' do
+        before do
+          get :accept_group_assignment, params: { short_key: 'WRONG' }
+        end
+
         it 'responds with a 404' do
-          expect do
-            get :accept_group_assignment, params: { short_key: 'WRONG' }
-          end.to raise_error ActionController::RoutingError
+          expect(response.status).to eq(404)
         end
       end
 

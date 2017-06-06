@@ -2,25 +2,25 @@
 
 class ShortUrlController < ApplicationController
   def accept_assignment
-    assignment = AssignmentInvitation.find_by(short_key: key)
-    respond(assignment)
+    invitation = AssignmentInvitation.find_by(short_key: key)
+
+    not_found unless invitation
+
+    redirect_to invitation_url(invitation, :assignment_invitation)
   end
 
   def accept_group_assignment
-    assignment = GroupAssignmentInvitation.find_by(short_key: key)
-    respond(assignment)
+    invitation = GroupAssignmentInvitation.find_by(short_key: key)
+
+    not_found unless invitation
+
+    redirect_to invitation_url(invitation, :group_assignment_invitation)
   end
 
   private
 
-  def respond(assignment)
-    not_found unless assignment
-
-    redirect_to invitation_url(assignment)
-  end
-
-  def invitation_url(assignment)
-    Rails.application.url_helpers.send("#{type}_url".to_sym, id: assignment.invitation.key, host: base_url)
+  def invitation_url(invitation, type)
+    Rails.application.routes.url_helpers.send("#{type}_url".to_sym, id: invitation.key, host: request.base_url)
   end
 
   def key
