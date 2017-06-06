@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ShortUrlController < ApplicationController
-  def accept_assignment
+  def assignment_invitation
     invitation = AssignmentInvitation.find_by(short_key: key)
 
     not_found unless invitation
@@ -9,7 +9,7 @@ class ShortUrlController < ApplicationController
     redirect_to invitation_url(invitation, :assignment_invitation)
   end
 
-  def accept_group_assignment
+  def group_assignment_invitation
     invitation = GroupAssignmentInvitation.find_by(short_key: key)
 
     not_found unless invitation

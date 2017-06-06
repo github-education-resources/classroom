@@ -15,7 +15,7 @@ RSpec.describe ShortUrlController, type: :controller do
 
       context 'key is invalid' do
         before do
-          get :accept_assignment, params: { short_key: 'WRONG' }
+          get :assignment_invitation, params: { short_key: 'WRONG' }
         end
 
         it 'responds with a 404' do
@@ -27,7 +27,7 @@ RSpec.describe ShortUrlController, type: :controller do
         before do
           key = invitation.short_key
 
-          get :accept_assignment, params: { short_key: key }
+          get :assignment_invitation, params: { short_key: key }
         end
 
         it 'responds with a 302' do
@@ -45,7 +45,7 @@ RSpec.describe ShortUrlController, type: :controller do
 
       context 'key is invalid' do
         before do
-          get :accept_group_assignment, params: { short_key: 'WRONG' }
+          get :group_assignment_invitation, params: { short_key: 'WRONG' }
         end
 
         it 'responds with a 404' do
@@ -57,7 +57,7 @@ RSpec.describe ShortUrlController, type: :controller do
         before do
           key = invitation.short_key
 
-          get :accept_group_assignment, params: { short_key: key }
+          get :group_assignment_invitation, params: { short_key: key }
         end
 
         it 'responds with a 302' do

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class GroupAssignmentInvitation < ApplicationRecord
+  include ShortKey
+
   default_scope { where(deleted_at: nil) }
 
   update_index('stafftools#group_assignment_invitation') { self }
@@ -20,7 +22,6 @@ class GroupAssignmentInvitation < ApplicationRecord
   validates :short_key, uniqueness: true
 
   after_initialize :assign_key
-  before_validation :assign_short_key, on: :create
 
   delegate :title, to: :group_assignment
 
@@ -41,10 +42,6 @@ class GroupAssignmentInvitation < ApplicationRecord
 
   def assign_key
     self.key ||= SecureRandom.hex(16)
-  end
-
-  def assign_short_key
-    self.short_key ||= SecureRandom.urlsafe_base64(6)
   end
 
   private

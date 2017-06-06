@@ -13,7 +13,9 @@ module InvitationHelper
     # #=> {
     #      :type => "assignment_invitation",
     #      :key  => "7309ffd1f7b5e7af09dfcd11fab371d7",
-    #      :url  => "http://github.dev/assignment-invitations/7309ffd1f7b5e7af09dfcd11fab371d7"
+    #      :short_key => "aEE8Cq",
+    #      :url  => "http://github.dev/assignment-invitations/7309ffd1f7b5e7af09dfcd11fab371d7",
+    #      :short_url => "http://github.dev/a/aEE8Cq"
     #     }
     #
     # Returns a Hash of attributes
