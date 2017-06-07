@@ -69,6 +69,8 @@ class AssignmentRepo
         push_starter_code!(assignment_repo.github_repo_id)
       end
 
+      add_user_to_repo_watchlist(assignment_repo)
+
       begin
         assignment_repo.save!
       rescue ActiveRecord::RecordInvalid
@@ -85,10 +87,16 @@ class AssignmentRepo
 
     private
 
+    def add_user_to_repo_watchlist(repo)
+      options = { subscribed: true }
+      user.github_client.update_subscription(repo.github_repository.full_name, options)
+    end
+
     # Internal: Add the User to the GitHub repository
     # as a collaborator.
     #
     # Returns true if successful, otherwise raises a Result::Error
+
     def add_user_to_repository!(github_repository_id)
       options = {}.tap { |opt| opt[:permission] = 'admin' if assignment.students_are_repo_admins? }
 

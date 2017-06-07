@@ -67,6 +67,8 @@ class GroupAssignmentInvitationsController < ApplicationController
     users_group_assignment_repo = invitation.redeem_for(current_user, selected_group, new_group_title)
 
     if users_group_assignment_repo.present?
+      options = { subscribed: true }
+      current_user.github_client.update_subscription(users_group_assignment_repo.github_repository.full_name, options)
       yield if block_given?
     else
       flash[:error] = 'An error has occurred, please refresh the page and try again.'
