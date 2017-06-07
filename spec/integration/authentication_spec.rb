@@ -42,8 +42,8 @@ RSpec.describe 'OAuth scope requirements', type: :request do
 
     it 'redirects to omniauth' do
       get response.redirect_url
-      url = '/auth/github?scope=user%3Aemail%2Crepo%3Astatus%2Crepo_deployment%2C
-        public_repo%2Cdelete_repo%2Cwrite%3Aorg%2Cread%3Aorg%2Cadmin%3Aorg_hook'
+      url = '/auth/github?scope=user%3Aemail%2Crepo%3Astatus%2Crepo_deployment%2C' \
+        'public_repo%2Cdelete_repo%2Cwrite%3Aorg%2Cread%3Aorg%2Cadmin%3Aorg_hook'
       expect(response).to redirect_to(url)
     end
   end
