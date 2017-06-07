@@ -42,7 +42,7 @@ RSpec.describe FormView do
       end
 
       it 'returns "form errored"' do
-        expect(subject.form_class_for(:title)).to eq('form errored')
+        expect(subject.form_class_for(:title)).to eq('form errored primer-new')
       end
     end
 
