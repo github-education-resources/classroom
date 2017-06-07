@@ -2,40 +2,25 @@
 
 require 'rails_helper'
 
-RSpec.describe FormFieldWithErrors::EditView do
+RSpec.describe FormView do
   let(:assignment) { create(:assignment) }
 
-  subject do
-    FormFieldWithErrors::EditView.new(
-      object: assignment,
-      field: :title
-    )
-  end
+  subject { FormView.new(subject: assignment) }
 
-  describe 'attributes' do
-    it 'responds to object' do
-      expect(subject).to respond_to(:object)
-    end
-
-    it 'responds to field' do
-      expect(subject).to respond_to(:field)
-    end
-  end
-
-  describe '#errors?' do
+  describe '#errors_for?' do
     context 'when there are errors' do
       before do
         assignment.errors.add(:title, 'is all wrong')
       end
 
       it 'returns true' do
-        expect(subject.errors?).to be_truthy
+        expect(subject.errors_for?(:title)).to be_truthy
       end
     end
 
     context 'when there are no errors' do
       it 'returns false' do
-        expect(subject.errors?).to be_falsey
+        expect(subject.errors_for?(:title)).to be_falsey
       end
     end
 
@@ -45,25 +30,25 @@ RSpec.describe FormFieldWithErrors::EditView do
       end
 
       it 'returns false' do
-        expect(subject.errors?).to be_falsey
+        expect(subject.errors_for?(:title)).to be_falsey
       end
     end
   end
 
-  describe '#form_class' do
+  describe '#form_class_for' do
     context 'when there are errors' do
       before do
         assignment.errors.add(:title, 'is all wrong')
       end
 
       it 'returns "form errored"' do
-        expect(subject.form_class).to eq('form errored')
+        expect(subject.form_class_for(:title)).to eq('form errored')
       end
     end
 
     context 'when there are no errors' do
       it 'returns "form"' do
-        expect(subject.form_class).to eq('form')
+        expect(subject.form_class_for(:title)).to eq('form')
       end
     end
   end
@@ -71,7 +56,7 @@ RSpec.describe FormFieldWithErrors::EditView do
   describe '#error_message' do
     context 'when there are no errors' do
       it 'returns ""' do
-        expect(subject.error_message).to eq('')
+        expect(subject.error_message_for(:title)).to eq('')
       end
     end
 
@@ -81,7 +66,7 @@ RSpec.describe FormFieldWithErrors::EditView do
       end
 
       it 'returns correct error message' do
-        expect(subject.error_message).to eq(assignment.errors.full_messages_for(:title).join(', '))
+        expect(subject.error_message_for(:title)).to eq(assignment.errors.full_messages_for(:title).join(', '))
       end
     end
   end

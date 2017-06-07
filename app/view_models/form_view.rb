@@ -1,19 +1,17 @@
 # frozen_string_literal: true
 
-module FormFieldWithErrors
-  class EditView < ViewModel
-    attr_reader :object, :field
+class FormView < ViewModel
+  attr_reader :subject
 
-    def errors?
-      object.errors[field].present?
-    end
+  def errors_for?(field)
+    subject.errors[field].present?
+  end
 
-    def form_class
-      "form#{errors? ? ' errored' : ''}"
-    end
+  def error_message_for(field)
+    subject.errors.full_messages_for(field).join(', ')
+  end
 
-    def error_message
-      object.errors.full_messages_for(field).join(', ')
-    end
+  def form_class_for(field)
+    "form#{errors_for?(field) ? ' errored' : ''}"
   end
 end
