@@ -13,7 +13,7 @@ describe GitHub::Token do
     end
   end
 
-  describe '#expand', :vcr do
+  describe '#expand_scopes', :vcr do
     it 'converts scopes to their expanded form correctly' do
       scope_list = ['dont-modify-me!', 'user', 'repo', 'admin:org', 'admin:public_key', 'admin:repo_hook', 'admin:gpg_key']
       expected_expanded = ['dont-modify-me!',
@@ -24,7 +24,7 @@ describe GitHub::Token do
         'write:repo_hook', 'read:repo_hook',
         'write:gpg_key', 'read:gpg_key']
 
-        expect(described_class.expand(scope_list)).to eq(expected_expanded)
+        expect(described_class.expand_scopes(scope_list)).to eq(expected_expanded)
     end
   end
 end
