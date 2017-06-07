@@ -905,13 +905,40 @@ dl.form.errored.primer-new {
     color: #86181d;
     background-color:  #ffdce0;
     border-color: desaturate(#f97583, 60%);
+    position: absolute;
+    z-index: 10;
+    display: block; // Show up in errored/warn state
+    max-width: 450px; // Keep our long errors readable
+    padding: 5px 8px;
+    margin: 5px 0 0;
+    font-size: 13px;
+    font-weight: normal;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px;
+
+    &::after,
+    &::before {
+      position: absolute;
+      bottom: 100%;
+      left: 10px;
+      z-index: 15;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+      content: " ";
+      border: solid transparent;
+    }
 
     &::after {
       border-bottom-color: #ffdce0;
+      border-width: 5px;
     }
 
     &::before {
       border-bottom-color: desaturate(#f97583, 60%);
+      margin-left: -1px;
+      border-width: 6px;
     }
   }
 }
