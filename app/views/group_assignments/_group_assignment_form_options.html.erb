@@ -1,15 +1,15 @@
-<% title_view_model = FormFieldWithErrors::EditView.new(object: @group_assignment, field: :title) %>
-<dl class="<%= title_view_model.form_class %>">
+<% view = FormView.new(subject: @group_assignment) %>
+
+<dl class="<%= view.form_class_for(:title) %>">
   <dt><%= f.label :title %></dt>
   <dd><%= f.text_field :title, class: 'textfield' %></dd>
-  <%= render 'shared/form_error', errors: title_view_model.error_message if title_view_model.errors? %>
+  <%= render('shared/form_error', errors: view.error_message_for(:title)) if view.errors_for?(:title) %>
 </dl>
 
-<% slug_view_model = FormFieldWithErrors::EditView.new(object: @group_assignment, field: :slug) %>
-<dl class="<%= slug_view_model.form_class %>">
+<dl class="<%= view.form_class_for(:slug) %>">
   <dt><%= f.label :slug %></dt>
   <dd><%= f.text_field :slug, class: 'textfield' %></dd>
-  <%= render 'shared/form_error', errors: slug_view_model.error_message if slug_view_model.errors? %>
+  <%= render('shared/form_error', errors: view.error_message_for(:slug)) if view.errors_for?(:slug) %>
   <span class="note"><%= t('assignment_form.slug_note') %></span>
 </dl>
 
@@ -38,11 +38,10 @@
   <input class="js-autocomplete-resource-id" type="hidden" name="repo_id" />
 </dl>
 
-<% max_members_view_model = FormFieldWithErrors::EditView.new(object: @group_assignment, field: :max_members) %>
-<dl class="<%= max_members_view_model.form_class %>">
+<dl class="<%= view.form_class_for(:max_members) %>">
    <dt><%= f.label "Maximum number of members in each team (optional)" %></dt>
    <dd><%= f.number_field :max_members, class: 'textfield' %></dd>
-   <%= render 'shared/form_error', errors: max_members_view_model.error_message if max_members_view_model.errors? %>
+   <%= render 'shared/form_error', errors: view.error_message_for(:max_members) if view.errors_for?(:max_members) %>
 </dl>
 
 <%= render 'shared/assignment_student_identifier_type_options', assignment: @group_assignment, student_identifier_types: student_identifier_types %>
@@ -59,12 +58,11 @@
     </dl>
   <% end %>
 
-  <% grouping_view_model = FormFieldWithErrors::EditView.new(object: @group_assignment, field: :grouping) %>
-  <dl class="<%= grouping_view_model.form_class %>">
+  <dl class="<%= view.form_class_for(:grouping) %>">
     <dt><label><%= 'OR' if groupings_present %> Create a new set of teams</label></dt>
     <% time           = Time.zone.now %>
     <% suggested_name = Time.zone.now.strftime("Teams formed on %B #{time.day.ordinalize}, %Y") %>
     <dd><input class="textfield" type="text" value="<%= suggested_name unless groupings_present %>" placeholder="<%= suggested_name if groupings_present %>" name="grouping[title]" id="grouping_title"></dd>
-    <%= render 'shared/form_error', errors: grouping_view_model.error_message if grouping_view_model.errors? %>
+    <%= render 'shared/form_error', errors: view.error_message_for(:grouping) if view.errors_for?(:grouping) %>
   </dl>
 <% end %>
