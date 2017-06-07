@@ -1,15 +1,15 @@
-<% title_view_model = FormFieldWithErrors::EditView.new(object: @assignment, field: :title) %>
-<dl class="<%= title_view_model.form_class %>">
+<% view = FormView.new(subject: @assignment) %>
+
+<dl class="<%= view.form_class_for(:title) %>">
   <dt><%= f.label :title %></dt>
   <dd><%= f.text_field :title, class: 'textfield' %></dd>
-  <%= render 'shared/form_error', errors: title_view_model.error_message if title_view_model.errors? %>
+  <%= render('shared/form_error', errors: view.error_message_for(:title)) if view.errors_for?(:title) %>
 </dl>
 
-<% slug_view_model = FormFieldWithErrors::EditView.new(object: @assignment, field: :slug) %>
-<dl class="<%= slug_view_model.form_class %>">
+<dl class="<%= view.form_class_for(:slug) %>">
   <dt><%= f.label :slug %></dt>
   <dd><%= f.text_field :slug, class: 'textfield' %></dd>
-  <%= render 'shared/form_error', errors: slug_view_model.error_message if slug_view_model.errors? %>
+  <%= render('shared/form_error', errors: view.error_message_for(:slug)) if view.errors_for?(:slug) %>
   <span class="note"><%= t('assignment_form.slug_note') %></span>
 </dl>
 
