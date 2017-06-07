@@ -902,9 +902,6 @@ dl.form.errored.primer-new {
   }
 
   .error {
-    color: #86181d;
-    background-color:#ffdce0;
-    border-color: desaturate(#f97583, 60%);
     position: absolute;
     z-index: 10;
     display: block; // Show up in errored/warn state
@@ -913,6 +910,9 @@ dl.form.errored.primer-new {
     margin: 5px 0 0;
     font-size: 13px;
     font-weight: normal;
+    color: #86181d;
+    background-color: #ffdce0;
+    border-color: desaturate(#f97583, 60%);
     border-style: solid;
     border-width: 1px;
     border-radius: 3px;
@@ -931,14 +931,14 @@ dl.form.errored.primer-new {
     }
 
     &::after {
-      border-bottom-color: #ffdce0;
       border-width: 5px;
+      border-bottom-color: #ffdce0;
     }
 
     &::before {
-      border-bottom-color: desaturate(#f97583, 60%);
       margin-left: -1px;
       border-width: 6px;
+      border-bottom-color: desaturate(#f97583, 60%);
     }
   }
 }
