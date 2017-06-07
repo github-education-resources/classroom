@@ -2,6 +2,53 @@
 dl.form {
   margin-top: 0;
   margin-bottom: 2rem;
+
+  &.errored.primer-new {
+    label {
+      color: #cb2431;
+    }
+
+    .error {
+      position: absolute;
+      z-index: 10;
+      display: block; // Show up in errored/warn state
+      max-width: 450px; // Keep our long errors readable
+      padding: 5px 8px;
+      margin: 5px 0 0;
+      font-size: 13px;
+      font-weight: normal;
+      color: #86181d;
+      background-color: #ffdce0;
+      border-color: desaturate(#f97583, 60%);
+      border-style: solid;
+      border-width: 1px;
+      border-radius: 3px;
+
+      &::after,
+      &::before {
+        position: absolute;
+        bottom: 100%;
+        left: 10px;
+        z-index: 15;
+        width: 0;
+        height: 0;
+        pointer-events: none;
+        content: " ";
+        border: solid transparent;
+      }
+
+      &::after {
+        border-width: 5px;
+        border-bottom-color: #ffdce0;
+      }
+
+      &::before {
+        margin-left: -1px;
+        border-width: 6px;
+        border-bottom-color: desaturate(#f97583, 60%);
+      }
+    }
+  }
 }
 // scss-lint:enable QualifyingElement
 
@@ -13,52 +60,5 @@ dl.form {
 
   .btn {
     float: none;
-  }
-}
-
-dl.form.errored.primer-new {
-  label {
-    color: #cb2431;
-  }
-
-  .error {
-    position: absolute;
-    z-index: 10;
-    display: block; // Show up in errored/warn state
-    max-width: 450px; // Keep our long errors readable
-    padding: 5px 8px;
-    margin: 5px 0 0;
-    font-size: 13px;
-    font-weight: normal;
-    color: #86181d;
-    background-color: #ffdce0;
-    border-color: desaturate(#f97583, 60%);
-    border-style: solid;
-    border-width: 1px;
-    border-radius: 3px;
-
-    &::after,
-    &::before {
-      position: absolute;
-      bottom: 100%;
-      left: 10px;
-      z-index: 15;
-      width: 0;
-      height: 0;
-      pointer-events: none;
-      content: " ";
-      border: solid transparent;
-    }
-
-    &::after {
-      border-width: 5px;
-      border-bottom-color: #ffdce0;
-    }
-
-    &::before {
-      margin-left: -1px;
-      border-width: 6px;
-      border-bottom-color: desaturate(#f97583, 60%);
-    }
   }
 }
