@@ -21,7 +21,6 @@ ActiveRecord::Schema.define(version: 20170531001922) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
-    t.string "short_key"
     t.index ["assignment_id"], name: "index_assignment_invitations_on_assignment_id"
     t.index ["deleted_at"], name: "index_assignment_invitations_on_deleted_at"
     t.index ["key"], name: "index_assignment_invitations_on_key", unique: true
@@ -34,7 +33,6 @@ ActiveRecord::Schema.define(version: 20170531001922) do
     t.datetime "updated_at", null: false
     t.integer "assignment_id"
     t.integer "user_id"
-    t.string "submission_sha"
     t.index ["assignment_id"], name: "index_assignment_repos_on_assignment_id"
     t.index ["github_repo_id"], name: "index_assignment_repos_on_github_repo_id", unique: true
     t.index ["repo_access_id"], name: "index_assignment_repos_on_repo_access_id"
@@ -58,23 +56,12 @@ ActiveRecord::Schema.define(version: 20170531001922) do
     t.index ["slug"], name: "index_assignments_on_slug"
   end
 
-  create_table "deadlines", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.string "assignment_type"
-    t.integer "assignment_id"
-    t.datetime "deadline_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["assignment_type", "assignment_id"], name: "index_deadlines_on_assignment_type_and_assignment_id"
-  end
-
   create_table "group_assignment_invitations", id: :serial, force: :cascade do |t|
     t.string "key", null: false
     t.integer "group_assignment_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
-    t.string "short_key"
     t.index ["deleted_at"], name: "index_group_assignment_invitations_on_deleted_at"
     t.index ["group_assignment_id"], name: "index_group_assignment_invitations_on_group_assignment_id"
     t.index ["key"], name: "index_group_assignment_invitations_on_key", unique: true
@@ -86,7 +73,6 @@ ActiveRecord::Schema.define(version: 20170531001922) do
     t.datetime "updated_at", null: false
     t.integer "group_assignment_id"
     t.integer "group_id", null: false
-    t.string "submission_sha"
     t.index ["github_repo_id"], name: "index_group_assignment_repos_on_github_repo_id", unique: true
     t.index ["group_assignment_id"], name: "index_group_assignment_repos_on_group_assignment_id"
   end
