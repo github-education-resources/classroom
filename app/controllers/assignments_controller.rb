@@ -34,7 +34,6 @@ class AssignmentsController < ApplicationController
       flash[:success] = "Assignment \"#{@assignment.title}\" is being updated"
       redirect_to organization_assignment_path(@organization, @assignment)
     else
-      flash[:error] = result.error
       @assignment.reload if @assignment.slug.blank?
       render :edit
     end
