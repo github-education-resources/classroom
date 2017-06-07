@@ -895,3 +895,23 @@ hr {
 .flash.flash-error p:first-of-type {
   margin-top: 0;
 }
+
+dl.form.errored.primer-new {
+  label {
+    color: #cb2431;
+  }
+
+  .error {
+    color: #86181d;
+    background-color:  #ffdce0;
+    border-color: desaturate(#f97583, 60%);
+
+    &::after {
+      border-bottom-color: #ffdce0;
+    }
+
+    &::before {
+      border-bottom-color: desaturate(#f97583, 60%);
+    }
+  }
+}
