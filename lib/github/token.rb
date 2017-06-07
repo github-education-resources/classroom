@@ -26,7 +26,7 @@ module GitHub
       # This method expands these collection scopes to make checking which scopes we have more simple
       def expand_scopes(scopes)
         scopes
-          .map { |scope| expansions.key?(scope.to_sym) ? expansions[scope.to_sym] : scope }
+          .map { |scope| EXPANSIONS.key?(scope.to_sym) ? EXPANSIONS[scope.to_sym] : scope }
           .flatten
       end
     end
