@@ -12,8 +12,11 @@ class GitHubUser < GitHubResource
   end
 
   def watch_repository(repo)
-    options = { subscribed: true }
-    @client.update_subscription(repo.github_repository.full_name, options)
+    GitHub::Errors.with_error_handling do
+      @client.update_subscription(repo.github_repository.full_name, subscribed: true)
+    end
+  rescue GitHub::Error
+    false
   end
 
   def authorized_access_token?

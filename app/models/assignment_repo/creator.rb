@@ -91,7 +91,6 @@ class AssignmentRepo
     # as a collaborator.
     #
     # Returns true if successful, otherwise raises a Result::Error
-
     def add_user_to_repository!(github_repository_id)
       options = {}.tap { |opt| opt[:permission] = 'admin' if assignment.students_are_repo_admins? }
 
