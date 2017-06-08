@@ -36,7 +36,6 @@ class GroupAssignmentsController < ApplicationController
       flash[:success] = "Assignment \"#{@group_assignment.title}\" is being updated"
       redirect_to organization_group_assignment_path(@organization, @group_assignment)
     else
-      flash[:error] = result.error
       @group_assignment.reload if @group_assignment.slug.blank?
       render :edit
     end
