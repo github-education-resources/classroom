@@ -54,7 +54,6 @@ class GitHubRepository < GitHubResource
     html_url + '/tree/' + sha
   end
 
-
   def present?(**options)
     self.class.present?(@client, @id, options)
   end

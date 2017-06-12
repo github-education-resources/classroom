@@ -21,8 +21,11 @@ RSpec.describe AssignmentInvitation, type: :model do
 
   describe '#passed?' do
     it 'is correct' do
-      passed_deadline = create(:deadline)
-      passed_deadline.update_attribute(:deadline_at, Time.zone.yesterday)
+      passed_deadline = build(:deadline)
+      Timecop.freeze(Time.zone.yesterday) do
+        passed_deadline.deadline_at = Time.zone.now
+        passed_deadline.save
+      end
 
       not_passed_deadline = create(:deadline, deadline_at: Time.zone.tomorrow)
 
