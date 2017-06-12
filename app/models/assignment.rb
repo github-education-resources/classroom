@@ -10,6 +10,7 @@ class Assignment < ApplicationRecord
   default_scope { where(deleted_at: nil) }
 
   has_one :assignment_invitation, dependent: :destroy, autosave: true
+  has_one :deadline, dependent: :destroy, as: :assignment
 
   has_many :assignment_repos, dependent: :destroy
   has_many :users,            through:   :assignment_repos
