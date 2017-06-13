@@ -1,5 +1,6 @@
 # Start development mode executables.
 # This assumes the postgresql is already running
+elasticsearch: elasticsearch
 memcached:     memcached
 redis:         redis-server
 
