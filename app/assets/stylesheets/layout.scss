@@ -413,9 +413,9 @@ hr {
 .group-assignment-repo-list-item {
   display: flex;
   align-items: center;
-  font-size: 14px;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
+  font-size: 14px;
 
   &:last-child {
     padding-bottom: 0;
@@ -931,8 +931,8 @@ hr {
 }
 
 .assignment-repo-header {
-  margin: 7px 15px 7px 0;
   float: left;
+  margin: 7px 15px 7px 0;
 }
 
 .repo-detail-item {
@@ -940,6 +940,6 @@ hr {
 }
 
 .assignment-properties {
-  margin-top: 5px;
   display: flex;
+  margin-top: 5px;
 }

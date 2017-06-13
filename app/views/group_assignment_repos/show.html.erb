@@ -23,33 +23,11 @@
       <% end %>
     </ul>
   </div>
-
-<div class='assignment-properties'>
-  <div class='repo-detail-item'>
-    <a class="submission-icon-container tooltipped tooltipped-n" aria-label="View Submission" href="Spooky url" target='_blank' >
-      <%= octicon 'stop', height: 20, class: 'failed' %>
-    </a>
-    <span class='text-muted'>Not Submitted</span>
+  <div class='assignment-properties'>
+    <%= render 'shared/repo_detail', octicon_name: 'git-commit', octicon_class: 'neutral', text: pluralize(@group_assignment_repo.github_repository.commits('master').length, 'commit'), hover_text: 'I am being hovered' %>
+    <% number_of_people = @group_assignment_repo.group.repo_accesses.length %>
+    <%= render 'shared/repo_detail', octicon_name: 'person', octicon_class: 'neutral', text: pluralize(number_of_people, 'member'), hover_text: 'View team' %>
   </div>
-  <div class='repo-detail-item'>
-    <a class="submission-icon-container tooltipped tooltipped-n" aria-label="View Submission" href="Spooky url" target='_blank' >
-      <%= octicon 'checklist', height: 20, class: 'success' %>
-    </a>
-    <span class='text-muted'>Submitted</span>
-  </div>
-  <div class='repo-detail-item'>
-    <a class="submission-icon-container tooltipped tooltipped-n" aria-label="View Submission" href="Spooky url" target='_blank' >
-      <%= octicon 'git-commit', height: 20, class: 'neutral' %>
-    </a>
-    <span class='text-muted'>18 commits</span>
-  </div>
-  <div class='repo-detail-item'>
-    <a class="submission-icon-container tooltipped tooltipped-n" aria-label="View Submission" href="Spooky url" target='_blank' >
-      <%= octicon 'person', height: 20, class: 'neutral' %>
-    </a>
-    <span class='text-muted'>6 Members</span>
-  </div>
-</div>
 </div>
 <div>
   <%= link_to 'View Submission', new_assignment_organization_path(Organization.first), class: 'btn btn-green right', role: 'button'%>
