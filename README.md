@@ -18,7 +18,7 @@ Set due dates, track assignments in your teacher dashboard, or integrate other t
  
 With Classroom, you can spin up your course on GitHub and move on to the good stuff. 
  
-@johndbritton, @mozzadrella, @nwoodthorpe, @tarebyte, and @wilfriedE are all maintainers. 
+[@johndbritton](https://github.com/johndbritton), [@mozzadrella](https://github.com/mozzadrella), [@nwoodthorpe](https://github.com/nwoodthorpe), [@tarebyte](https://github.com/tarebyte), and [@wilfriedE](https://github.com/wilfriedE) are all maintainers. 
 
 ![GitHub Classroom screenshot](https://cloud.githubusercontent.com/assets/1311594/14748352/32f677b0-0887-11e6-9ac2-8aa06e4341fa.png)
 
@@ -38,7 +38,7 @@ With Classroom, you can spin up your course on GitHub and move on to the good st
  
 *You’re not alone.* The experts on the GitHub Education team are here to answer any of your questions, and we’ve got docs, best practices, and a strong community of educators to help you migrate to Classroom.
  
-*Are you super-advanced?* Do you want to build your own tools? We 💖 contributions. 
+*Are you super-advanced?* Do you want to build your own tools? We 💖 contributions. Please check out [contributing guidelines](CONTRIBUTING.md).
 
 ## Design principles
 
@@ -218,10 +218,8 @@ We strongly encourage you to use [https://classroom.github.com](https://classroo
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-## Contributing
+## Help wanted
 If you're interested in helping out with Classroom development and looking for a place to get started, check out the issues labeled [`help-wanted`](https://github.com/education/classroom/issues?q=is%3Aissue+is%3Aopen+label%3Ahelp-wanted) and feel free to ask any questions you have before diving into the code.
-
-We'd love to have you participate. Please check out [contributing guidelines](CONTRIBUTING.md).
 
 ## Contributors
 Classroom is developed by these [contributors](https://github.com/education/classroom/graphs/contributors).
