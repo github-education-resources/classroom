@@ -30,9 +30,9 @@ With Classroom, you can spin up your course on GitHub and move on to the good st
  
 *More insight into student work than ever before.* See when students accept the assignment, and access their work from the moment they start. With version control, catch when they get stuck and help them rewind. 
  
-*You are in control.* Students can work individually or in groups, in public or in private. Set permissions for teaching assistants or graders. 
+*You are in control.* Students can work individually or in groups, in public or in private. Invite teaching assistants or graders to view the assignments. 
  
-*Scales for large courses with ease.* If you have a small course, Classroom will make your life easier and save you time. f you have hundreds of students, we have your covered: as many repositories as you need, and webhooks to integrate automated testing tools. 
+*Scales for large courses with ease.* If you have a small course, Classroom will make your life easier and save you time. If you have hundreds of students, we have you covered: as many repositories as you need, and webhooks to integrate automated testing tools. 
  
 *Works with your Learning Management System (LMS).* Students submit a link to their assignment repository to your learning management system. Give feedback through comments in GitHub, but keep grades in your LMS.
  
@@ -42,7 +42,7 @@ With Classroom, you can spin up your course on GitHub and move on to the good st
 
 ## Design principles
 
-*Classroom is a teacher-facing tool to enable the educational use of GitHub.* Every student needs feedback and support as they learn to code, and using GitHub you can give them the right advice, in the right place, at the right time. This tool makes it easier for you to use the workflow you love, but with some organization, automation and ease with your students. 
+*Classroom is a teacher-facing tool to simplify the educational use of GitHub.* Every student needs feedback and support as they learn to code, and using GitHub you can give them the right advice, in the right place, at the right time. Classroom makes it easier to use the workflow you love, with some automation and ease for student use. 
  
 *Students use GitHub. They don’t use Classroom.* Experience with real-world tools gives students a leg-up once they move on from school. Invest time in the tools students can grow with, not another third-party tool with its own learning curve. 
  
@@ -53,7 +53,7 @@ With Classroom, you can spin up your course on GitHub and move on to the good st
 We welcome contributions aligned with the roadmap below and through answering these questions: 
  
 * Does it enable the real-life experience of using GitHub as a developer? 
-* Does it replicate functionality of apps, hardware or LMS? 
+* Does it replicate functionality that's best left to the expertise of content platforms, hardware or LMS? 
 * How many support tickets and questions will the feature address? 
  
 ### Who is Classroom for?
@@ -76,11 +76,11 @@ Teachers often use a learning management system in keeping with student privacy 
  
 *Notebooks* 
 Examples: BlueJ, Jupyter, RStudio
-Most notebooks have a Git integration that students can push to. Future iterations may pre-populate repos with directions on set up.
+Most notebooks have a Git integration that students can push to. Future iterations may pre-populate repos with robust directions on set up.
  
 *Hardware*
 Examples: Chromebooks, Raspberry Pi, Lego
-GitHub Classroom is hardware-agnostic. Shared machines or lab environments are encouraged to use cloud-based environments, like Cloud 9. Integration looks like Git and GitHub pre-loaded + embedded in hardware. 
+GitHub Classroom runs in Unix environments and Windows. Shared machines or lab environments are encouraged to use cloud-based environments, like Cloud 9. Integration looks like Git and GitHub pre-loaded + embedded in hardware. 
  
 *Assessment*
 Examples: Pearson, Travis CI, Circle CI
