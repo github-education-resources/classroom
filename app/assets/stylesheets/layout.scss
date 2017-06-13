@@ -22,6 +22,22 @@ a {
     pointer-events: none;
     cursor: default;
   }
+
+  &.submission-icon-container {
+    text-decoration: none;
+
+    .success {
+      fill: $brand-green;
+    }
+
+    .failed {
+      fill: $brand-red;
+    }
+
+    .neutral {
+      fill: $brand-gray;
+    }
+  }
 }
 
 .submission-icon-container {
@@ -311,7 +327,6 @@ hr {
 
 .invitation-content {
   padding-bottom: 2rem;
-  margin-bottom: 2rem;
   border-bottom: 1px solid #e3e3e3;
 
   @media screen and (max-width: 40em) {
@@ -391,14 +406,20 @@ hr {
 
 .group-assignment-repo-list {
   .group-assignment-repo-list-item:not(:first-child) {
-    padding-top: 1rem;
-    margin-top: 1rem;
     border-top: 1px solid #e3e3e3;
   }
 }
 
 .group-assignment-repo-list-item {
+  display: flex;
+  align-items: center;
   font-size: 14px;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+
+  &:last-child {
+    padding-bottom: 0;
+  }
 
   .octicon-alert {
     display: none;
@@ -907,4 +928,18 @@ hr {
 
 .flash.flash-error p:first-of-type {
   margin-top: 0;
+}
+
+.assignment-repo-header {
+  margin: 7px 15px 7px 0;
+  float: left;
+}
+
+.repo-detail-item {
+  margin-right: 15px;
+}
+
+.assignment-properties {
+  margin-top: 5px;
+  display: flex;
 }

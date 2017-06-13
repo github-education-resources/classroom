@@ -1,13 +1,12 @@
-<div class="d-flex flex-justify-between group-assignment-repo-list-item<%= ' disabled' if @group_assignment_repo.disabled? %>">
-  <div>
-    <%= link_to @group_assignment_repo.github_team.html_url, class: "team-name #{'disabled' if @group_assignment_repo.disabled?}" do %>
-      <strong class="css-truncate css-truncate-target"><%= @group_assignment_repo.github_team.name %></strong>
+<div class='group-assignment-repo-list-item'>
+<div class="<%= 'disabled' if @group_assignment_repo.disabled? %>">
+  <div class="flex-table-item">
+    <%= link_to @group_assignment_repo.github_repository.html_url, class: "assignment-repo-github-url #{'disabled' if @group_assignment_repo.disabled?}" do %>
+      <h3 class="css-truncate css-truncate-target assignment-repo-header"><%= @group_assignment_repo.github_team.name %></h3>
     <% end %>
-
     <ul>
       <% @group_assignment_repo.group.repo_accesses.limit(4).each do |repo_access| %>
         <% student = repo_access.user %>
-
         <li>
           <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s #{'disabled' if @group_assignment_repo.disabled?}", 'aria-label' => student.github_user.login do %>
             <%= image_tag student.github_user.github_avatar_url(60), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.github_user.login}" %>
@@ -25,10 +24,34 @@
     </ul>
   </div>
 
-  <div class="flex-self-center text-right">
-    <strong class="css-truncate css-truncate-target">
-      <%= link_to @group_assignment_repo.github_repository.full_name, @group_assignment_repo.github_repository.html_url, class: "assignment-repo-github-url #{'disabled' if @group_assignment_repo.disabled?}" %>
-    </strong>
-    <%= render 'shared/submission', repo: @group_assignment_repo %>
+<div class='assignment-properties'>
+  <div class='repo-detail-item'>
+    <a class="submission-icon-container tooltipped tooltipped-n" aria-label="View Submission" href="Spooky url" target='_blank' >
+      <%= octicon 'stop', height: 20, class: 'failed' %>
+    </a>
+    <span class='text-muted'>Not Submitted</span>
   </div>
+  <div class='repo-detail-item'>
+    <a class="submission-icon-container tooltipped tooltipped-n" aria-label="View Submission" href="Spooky url" target='_blank' >
+      <%= octicon 'checklist', height: 20, class: 'success' %>
+    </a>
+    <span class='text-muted'>Submitted</span>
+  </div>
+  <div class='repo-detail-item'>
+    <a class="submission-icon-container tooltipped tooltipped-n" aria-label="View Submission" href="Spooky url" target='_blank' >
+      <%= octicon 'git-commit', height: 20, class: 'neutral' %>
+    </a>
+    <span class='text-muted'>18 commits</span>
+  </div>
+  <div class='repo-detail-item'>
+    <a class="submission-icon-container tooltipped tooltipped-n" aria-label="View Submission" href="Spooky url" target='_blank' >
+      <%= octicon 'person', height: 20, class: 'neutral' %>
+    </a>
+    <span class='text-muted'>6 Members</span>
+  </div>
+</div>
+</div>
+<div>
+  <%= link_to 'View Submission', new_assignment_organization_path(Organization.first), class: 'btn btn-green right', role: 'button'%>
+</div>
 </div>
