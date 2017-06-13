@@ -1,0 +1,10 @@
+<% octicon_class ||= 'neutral' %>
+<% text ||= '' %>
+<% url ||= '' %>
+
+<%= render 'shared/repo_detail',
+  octicon_name: 'git-commit',
+  octicon_class: octicon_class,
+  text: text,
+  hover_text: 'View commits',
+  url: url %>

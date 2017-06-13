@@ -4,7 +4,7 @@
 <% hover_text    ||= '' %>
 
 <div class='repo-detail-item'>
-  <% if url.empty? %>
+  <% if url.present? %>
     <a class="submission-icon-container tooltipped tooltipped-n" aria-label="<%= hover_text %>" href="<%= url %>" target='_blank' >
       <%= octicon octicon_name, height: 20, class: octicon_class %>
     </a>

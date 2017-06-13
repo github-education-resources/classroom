@@ -1,22 +1,23 @@
+<% view = GroupAssignmentRepoView.new(assignment_repo: @group_assignment_repo) %>
+
 <div class='group-assignment-repo-list-item'>
-  <div class="<%= 'disabled' if @group_assignment_repo.disabled? %>">
+  <div class="<%= view.disabled_class %>">
     <div class="flex-table-item">
-      <%= link_to @group_assignment_repo.github_team.html_url, class: "assignment-repo-github-url #{'disabled' if @group_assignment_repo.disabled?}" do %>
-        <h3 class="css-truncate css-truncate-target assignment-repo-header"><%= @group_assignment_repo.github_team.name %></h3>
+      <%= link_to view.team_url, class: "assignment-repo-github-url #{view.disabled_class}", target: '_blank' do %>
+        <h3 class="css-truncate css-truncate-target assignment-repo-header"><%= view.team_name %></h3>
       <% end %>
       <ul>
-        <% @group_assignment_repo.group.repo_accesses.limit(4).each do |repo_access| %>
-          <% student = repo_access.user %>
+        <% view.team_members.first(4).each do |student| %>
           <li>
-            <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s #{'disabled' if @group_assignment_repo.disabled?}", 'aria-label' => student.github_user.login do %>
+            <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s #{view.disabled_class}", 'aria-label' => student.github_user.login do %>
               <%= image_tag student.github_user.github_avatar_url(60), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.github_user.login}" %>
             <% end %>
           </li>
         <% end %>
 
-        <% if @group_assignment_repo.group.repo_accesses.count > 4 %>
+        <% if view.team_members.length > 4 %>
           <li>
-            <%= link_to @group_assignment_repo.github_team.html_url, class: "#{'disabled' if @group_assignment_repo.disabled?}" do %>
+            <%= link_to view.team_url, class: "#{view.disabled_class}" do %>
               <%= image_tag 'student-ellipse@2x.png', class: 'avatar avatar-small', height: 30, width: 30, alt: 'student ellipse' %>
             <% end %>
           </li>
@@ -24,12 +25,11 @@
       </ul>
     </div>
     <div class='assignment-properties'>
-      <%= render 'shared/repo_detail', octicon_name: 'git-commit', octicon_class: 'neutral', text: pluralize(@group_assignment_repo.github_repository.commits('master').length, 'commit'), hover_text: 'This will link to commits for now, our commit/submission view later' %>
-      <% number_of_people = @group_assignment_repo.group.repo_accesses.length %>
-      <%= render 'shared/repo_detail', octicon_name: 'person', octicon_class: 'neutral', text: pluralize(number_of_people, 'member'), hover_text: 'View team', url: @group_assignment_repo.github_team.html_url %>
+      <%= render 'shared/commit_repo_detail', text: view.commit_text, url: 'Dummy URL' %>
+      <%= render 'shared/members_repo_detail', text: view.members_text, url: view.team_url %>
     </div>
   </div>
   <div>
-    <%= link_to 'View Repository', @group_assignment_repo.github_repository.html_url, class: 'btn btn-green right', role: 'button', target: '_blank' %>
+    <%= link_to 'View Repository', view.repo_url, class: 'btn btn-green right', role: 'button', target: '_blank', disabled: view.disabled_class %>
   </div>
 </div>

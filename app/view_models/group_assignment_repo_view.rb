@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class GroupAssignmentRepoView < ViewModel
+  include ActionView::Helpers::TextHelper
   attr_reader :assignment_repo
 
   def repo_url
@@ -28,11 +29,19 @@ class GroupAssignmentRepoView < ViewModel
   end
 
   def number_of_commits
-    branch = github_repo.default_branch
-    @number_of_commits ||= github_repo.commits(branch).length
+    @branch ||= github_repo.default_branch
+    @number_of_commits ||= github_repo.commits(@branch).length
   end
 
-  def disabled?
-    assignment_repo.disabled?
+  def commit_text
+    pluralize(number_of_commits, 'commit')
+  end
+
+  def members_text
+    pluralize(team_members.length, 'member')
+  end
+
+  def disabled_class
+    assignment_repo.disabled? ? 'disabled' : ''
   end
 end

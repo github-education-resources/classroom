@@ -1,0 +1,9 @@
+<% octicon_class ||= 'neutral' %>
+<% text ||= '' %>
+
+<%= render 'shared/repo_detail',
+  octicon_name: 'person',
+  octicon_class: octicon_class,
+  text: text,
+  hover_text: 'View members',
+  url: url %>

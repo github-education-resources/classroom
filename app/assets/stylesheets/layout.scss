@@ -22,7 +22,10 @@ a {
     pointer-events: none;
     cursor: default;
   }
+}
 
+a,
+span {
   &.submission-icon-container {
     text-decoration: none;
 
