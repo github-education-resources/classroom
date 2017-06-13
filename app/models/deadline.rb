@@ -16,6 +16,7 @@ class Deadline < ApplicationRecord
   private
 
   def deadline_in_future
-    errors.add(:deadline_at, 'must be in the future') if deadline_at && deadline_at < Time.zone.now
+    return unless deadline_at && deadline_at < Time.zone.now
+    errors.add(:deadline_at, 'must be in the future')
   end
 end
