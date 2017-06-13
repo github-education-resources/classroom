@@ -34,6 +34,26 @@ class GitHubRepository < GitHubResource
     end
   end
 
+  def default_branch
+    GitHub::Errors.with_error_handling do
+      repository = @client.repository(full_name)
+
+      repository[:default_branch]
+    end
+  end
+
+  def commits(branch)
+    GitHub::Errors.with_error_handling do
+      @client.commits(full_name, sha: branch)
+    end
+  rescue GitHub::Error
+    []
+  end
+
+  def tree_url_for_sha(sha)
+    html_url + '/tree/' + sha
+  end
+
   def present?(**options)
     self.class.present?(@client, @id, options)
   end
