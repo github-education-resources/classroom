@@ -39,9 +39,9 @@ RSpec.describe AssignmentInvitation, type: :model do
       deadline = create(:deadline)
       ActiveJob::Base.queue_adapter = :test
 
-      expect {
+      expect do
         deadline.create_job
-      }.to have_enqueued_job(DeadlineJob).with(deadline.id)
+      end.to have_enqueued_job(DeadlineJob).with(deadline.id)
     end
   end
 end
