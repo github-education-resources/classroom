@@ -1,8 +1,7 @@
 # Start development mode executables.
 # This assumes the postgresql is already running
-elasticsearch: elasticsearch
 memcached:     memcached
 redis:         redis-server
 
-web: ./bin/rails server
+web: ./bin/rails server -p 5000
 worker: ./bin/sidekiq -C config/sidekiq.yml
