@@ -67,23 +67,33 @@ Folks who might also find Classroom useful:
 In case you’re wondering “How does Classroom interact with my favorite app/my notebook/my LMS” here’s the tl;dr on how those pieces fit together: 
  
 *Apps and content platforms*
+
 Examples: Codecademy, Skillshare, Udemy, Udacity
+
 Apps offer premium content and interactive exercises. GitHub Classroom offers *real-world experience* with code. Classroom, as a teacher-facing application will eventually surface best-in-class content for top courses (notes / lectures / problem sets) but not produce original content. 
  
 *Learning Management system/LMS*
+
 Examples: Blackboard, Moodle, Canvas. Google Classroom
+
 Teachers often use a learning management system in keeping with student privacy regulations. Classroom has a lightweight integration with LMS ecosystem--students can submit a link to their repositories. LTI compliance and Google Classroom integration will make the app more extensible. 
  
 *Notebooks* 
+
 Examples: BlueJ, Jupyter, RStudio
+
 Most notebooks have a Git integration that students can push to. Future iterations may pre-populate repos with robust directions on set up.
  
 *Hardware*
+
 Examples: Chromebooks, Raspberry Pi, Lego
+
 GitHub Classroom runs in Unix environments and Windows. Shared machines or lab environments are encouraged to use cloud-based environments, like Cloud 9. Integration looks like Git and GitHub pre-loaded + embedded in hardware. 
  
 *Assessment*
+
 Examples: Pearson, Travis CI, Circle CI
+
 For GitHub Classroom, assessment is **directly related to the real-world experience of being a developer: your code passes tests**. Configuring folders in student repositories is a priority on the roadmap.
 
 ## The technical details
