@@ -1,35 +1,35 @@
 <div class='group-assignment-repo-list-item'>
-<div class="<%= 'disabled' if @group_assignment_repo.disabled? %>">
-  <div class="flex-table-item">
-    <%= link_to @group_assignment_repo.github_repository.html_url, class: "assignment-repo-github-url #{'disabled' if @group_assignment_repo.disabled?}" do %>
-      <h3 class="css-truncate css-truncate-target assignment-repo-header"><%= @group_assignment_repo.github_team.name %></h3>
-    <% end %>
-    <ul>
-      <% @group_assignment_repo.group.repo_accesses.limit(4).each do |repo_access| %>
-        <% student = repo_access.user %>
-        <li>
-          <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s #{'disabled' if @group_assignment_repo.disabled?}", 'aria-label' => student.github_user.login do %>
-            <%= image_tag student.github_user.github_avatar_url(60), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.github_user.login}" %>
-          <% end %>
-        </li>
+  <div class="<%= 'disabled' if @group_assignment_repo.disabled? %>">
+    <div class="flex-table-item">
+      <%= link_to @group_assignment_repo.github_team.html_url, class: "assignment-repo-github-url #{'disabled' if @group_assignment_repo.disabled?}" do %>
+        <h3 class="css-truncate css-truncate-target assignment-repo-header"><%= @group_assignment_repo.github_team.name %></h3>
       <% end %>
+      <ul>
+        <% @group_assignment_repo.group.repo_accesses.limit(4).each do |repo_access| %>
+          <% student = repo_access.user %>
+          <li>
+            <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s #{'disabled' if @group_assignment_repo.disabled?}", 'aria-label' => student.github_user.login do %>
+              <%= image_tag student.github_user.github_avatar_url(60), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.github_user.login}" %>
+            <% end %>
+          </li>
+        <% end %>
 
-      <% if @group_assignment_repo.group.repo_accesses.count > 4 %>
-        <li>
-          <%= link_to @group_assignment_repo.github_team.html_url, class: "#{'disabled' if @group_assignment_repo.disabled?}" do %>
-            <%= image_tag 'student-ellipse@2x.png', class: 'avatar avatar-small', height: 30, width: 30, alt: 'student ellipse' %>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
+        <% if @group_assignment_repo.group.repo_accesses.count > 4 %>
+          <li>
+            <%= link_to @group_assignment_repo.github_team.html_url, class: "#{'disabled' if @group_assignment_repo.disabled?}" do %>
+              <%= image_tag 'student-ellipse@2x.png', class: 'avatar avatar-small', height: 30, width: 30, alt: 'student ellipse' %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <div class='assignment-properties'>
+      <%= render 'shared/repo_detail', octicon_name: 'git-commit', octicon_class: 'neutral', text: pluralize(@group_assignment_repo.github_repository.commits('master').length, 'commit'), hover_text: 'This will link to commits for now, our commit/submission view later' %>
+      <% number_of_people = @group_assignment_repo.group.repo_accesses.length %>
+      <%= render 'shared/repo_detail', octicon_name: 'person', octicon_class: 'neutral', text: pluralize(number_of_people, 'member'), hover_text: 'View team', url: @group_assignment_repo.github_team.html_url %>
+    </div>
   </div>
-  <div class='assignment-properties'>
-    <%= render 'shared/repo_detail', octicon_name: 'git-commit', octicon_class: 'neutral', text: pluralize(@group_assignment_repo.github_repository.commits('master').length, 'commit'), hover_text: 'I am being hovered' %>
-    <% number_of_people = @group_assignment_repo.group.repo_accesses.length %>
-    <%= render 'shared/repo_detail', octicon_name: 'person', octicon_class: 'neutral', text: pluralize(number_of_people, 'member'), hover_text: 'View team' %>
+  <div>
+    <%= link_to 'View Repository', @group_assignment_repo.github_repository.html_url, class: 'btn btn-green right', role: 'button', target: '_blank' %>
   </div>
-</div>
-<div>
-  <%= link_to 'View Submission', new_assignment_organization_path(Organization.first), class: 'btn btn-green right', role: 'button'%>
-</div>
 </div>
