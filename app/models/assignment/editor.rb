@@ -77,6 +77,7 @@ class Assignment
 
       @assignment.deadline = new_deadline
       @assignment.deadline.create_job
+      @assignment.save
     end
 
     def update_attribute_for_all_assignment_repos(attribute:, change:)
