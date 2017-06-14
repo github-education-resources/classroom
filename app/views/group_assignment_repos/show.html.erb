@@ -6,6 +6,8 @@
       <%= link_to view.team_url, class: "assignment-repo-github-url #{view.disabled_class}", target: '_blank' do %>
         <h3 class="css-truncate css-truncate-target assignment-repo-header"><%= view.team_name %></h3>
       <% end %>
+    </div>
+    <div>
       <ul>
         <% view.team_members.first(4).each do |student| %>
           <li>
@@ -24,7 +26,7 @@
         <% end %>
       </ul>
     </div>
-    <div class='assignment-properties'>
+    <div class="assignment-properties">
       <%= render 'shared/commit_repo_detail', text: view.commit_text, url: 'Dummy URL' %>
       <%= render 'shared/members_repo_detail', text: view.members_text, url: view.team_url %>
     </div>
