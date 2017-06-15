@@ -3,14 +3,13 @@
 <div class='group-assignment-repo-list-item'>
   <div>
     <div style='display: flex;'>
-      <div>
+      <%= link_to "https://github.com/#{@assignment_repo.github_user.login}", class: "tooltipped tooltipped-n #{view.disabled_class}", target: '_blank', 'aria-label' => @assignment_repo.github_user.login do %>
         <%= image_tag @assignment_repo.github_user.github_avatar_url(96), height: 48, width: 48, class: 'avatar avatar-large', alt: "@#{@assignment_repo.github_user.login}" %>
-      </div>
-      <div>
-        <%= link_to "https://github.com/#{@assignment_repo.github_user.login}", class: "assignment-repo-github-url #{view.disabled_class}", target: '_blank' do %>
-          <h3 class="css-truncate css-truncate-target"><%= @assignment_repo.github_user.login %></h3>
-        <% end %>
-      </div>
+      <% end %>
+
+      <%= link_to "https://github.com/#{@assignment_repo.github_user.login}", class: "assignment-repo-github-url #{view.disabled_class}", target: '_blank' do %>
+        <h3 class="css-truncate css-truncate-target"><%= @assignment_repo.github_user.login %></h3>
+      <% end %>
     </div>
     <div class="assignment-properties">
       <%= render 'shared/commit_repo_detail', text: view.commit_text, url: 'Dummy URL' %>
