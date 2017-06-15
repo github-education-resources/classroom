@@ -9,19 +9,19 @@
   %>
 
   <div class="site-content">
-    <div class="site-content-cap">
-      <div class="flex-table">
-        <div class="flex-table-item">
-          <span class="group-assignment-icon assignment-icon-group left">
-            <%= octicon 'device-camera-video', height: 22 %>
-          </span>
+    <div class="d-flex flex-md-row flex-items-center site-content-cap">
+      <div class="col-1 d-flexp">
+        <span class="group-assignment-icon assignment-icon-group left">
+          <%= octicon 'device-camera-video', height: 22 %>
+        </span>
+      </div>
 
-          <h2 class="site-content-heading text-float-left">
-            <%= view.title %>
-          </h2>
+      <div class="col-10 col-md-10 d-flex flex-column">
+        <h2 class="site-content-heading text-float-left">
+          <%= view.title %>
+        </h2>
 
-          <p class="assignment-type text-gray">Tutorial</p>
-        </div>
+        <p class="assignment-type text-gray">Tutorial</p>
       </div>
     </div>
 
