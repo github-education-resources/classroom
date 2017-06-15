@@ -338,75 +338,6 @@ hr {
   }
 }
 
-.assignment-repo-list {
-  .assignment-repo-list-item:not(:first-child) {
-    padding-top: 1rem;
-    margin-top: 1rem;
-    border-top: 1px solid #e3e3e3;
-
-    @media screen and (max-width: 40em) {
-      margin-bottom: 0;
-    }
-  }
-}
-
-.assignment-repo-list-item {
-  font-size: 14px;
-
-  .octicon-alert {
-    display: none;
-  }
-
-  &.disabled {
-    a {
-      color: $gray;
-    }
-
-    .avatar {
-      filter: grayscale(1);
-    }
-  }
-
-  &.is-error {
-    height: 48px;
-    background-color: rgba($red, 0.9);
-    border-radius: 3px;
-
-    &.assignment-repo-list-item {
-      .octicon-alert {
-        display: unset;
-        fill: #fff;
-      }
-
-      .spinner {
-        display: none;
-      }
-    }
-  }
-
-  .avatar {
-    margin-right: 10px;
-
-    @media screen and (max-width: 40em) {
-      margin-right: 0;
-    }
-  }
-
-  .css-truncate-target {
-    max-width: 20rem;
-  }
-
-  .student-login {
-    display: block;
-    padding-top: 4px;
-    color: $gray-dark;
-
-    &:hover {
-      color: $blue;
-    }
-  }
-}
-
 .group-assignment-repo-list {
   .group-assignment-repo-list-item:not(:first-child) {
     border-top: 1px solid #e3e3e3;
@@ -415,6 +346,7 @@ hr {
 
 .group-assignment-repo-list-item {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
@@ -934,8 +866,7 @@ hr {
 }
 
 .assignment-repo-header {
-  float: left;
-  margin: 7px 15px 7px 0;
+  margin-left: 7px;
 }
 
 .repo-detail-item {

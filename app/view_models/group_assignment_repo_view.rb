@@ -1,17 +1,6 @@
 # frozen_string_literal: true
 
-class GroupAssignmentRepoView < ViewModel
-  include ActionView::Helpers::TextHelper
-  attr_reader :assignment_repo
-
-  def repo_url
-    @repo_url ||= github_repo.html_url
-  end
-
-  def github_repo
-    assignment_repo.github_repository
-  end
-
+class GroupAssignmentRepoView < AssignmentRepoView
   def team_members
     @team_members ||= assignment_repo.group.repo_accesses.map(&:user)
   end
@@ -28,20 +17,7 @@ class GroupAssignmentRepoView < ViewModel
     assignment_repo.github_team
   end
 
-  def number_of_commits
-    @branch ||= github_repo.default_branch
-    @number_of_commits ||= github_repo.commits(@branch).length
-  end
-
-  def commit_text
-    pluralize(number_of_commits, 'commit')
-  end
-
   def members_text
     pluralize(team_members.length, 'member')
-  end
-
-  def disabled_class
-    assignment_repo.disabled? ? 'disabled' : ''
   end
 end

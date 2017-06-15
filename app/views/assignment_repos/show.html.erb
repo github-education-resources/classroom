@@ -1,26 +1,22 @@
-<div class=" assignment-repo-list-item<%= ' disabled' if @assignment_repo.disabled? %> container-lg clearfix">
-    <div class="col-6 d-flex flex-items-center float-left">
-      <div class="d-table col-12">
-        <div class="col-1 d-table-cell v-align-middle">
-          <%= image_tag @assignment_repo.github_user.github_avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{@assignment_repo.github_user.login}" %>
-        </div>
+<% view = AssignmentRepoView.new(assignment_repo: @assignment_repo) %>
 
-        <div class="col-11 d-table-cell v-align-middle student-information">
-          <% css_class  = 'css-truncate css-truncate-target student-login' %>
-          <% css_class += ' disabled' if @assignment_repo.disabled? %>
-          <%= link_to "https://github.com/#{@assignment_repo.github_user.login}", class: css_class do %>
-            <strong class="css-truncate-target"><%= @assignment_repo.github_user.login %></strong>
-          <% end %>
-
-          <span class="text-gray css-truncate css-truncate-target"><%= @assignment_repo.github_user.name %></span>
-        </div>
+<div class='group-assignment-repo-list-item'>
+  <div>
+    <div style='display: flex;'>
+      <div>
+        <%= image_tag @assignment_repo.github_user.github_avatar_url(96), height: 48, width: 48, class: 'avatar avatar-small', alt: "@#{@assignment_repo.github_user.login}" %>
+      </div>
+      <div>
+        <%= link_to "https://github.com/#{@assignment_repo.github_user.login}", class: "assignment-repo-github-url #{view.disabled_class}", target: '_blank' do %>
+          <h3 class="css-truncate css-truncate-target assignment-repo-header"><%= @assignment_repo.github_user.login %></h3>
+        <% end %>
       </div>
     </div>
-
-    <div class="col-6 float-right text-right ">
-      <strong class="css-truncate css-truncate-target v-align-middle">
-        <%= link_to @assignment_repo.github_repository.full_name, @assignment_repo.github_repository.html_url, class: "#{'disabled' if @assignment_repo.disabled?}" %>
-      </strong>
-      <%= render 'shared/submission', repo: @assignment_repo %>
+    <div class="assignment-properties">
+      <%= render 'shared/commit_repo_detail', text: view.commit_text, url: 'Dummy URL' %>
     </div>
+  </div>
+  <div>
+    <%= link_to 'View Repository', view.repo_url, class: 'btn btn-green right', role: 'button', target: '_blank', disabled: view.disabled_class %>
+  </div>
 </div>
