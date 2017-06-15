@@ -4,11 +4,11 @@
   <div>
     <div style='display: flex;'>
       <div>
-        <%= image_tag @assignment_repo.github_user.github_avatar_url(96), height: 48, width: 48, class: 'avatar avatar-small', alt: "@#{@assignment_repo.github_user.login}" %>
+        <%= image_tag @assignment_repo.github_user.github_avatar_url(96), height: 48, width: 48, class: 'avatar avatar-large', alt: "@#{@assignment_repo.github_user.login}" %>
       </div>
       <div>
         <%= link_to "https://github.com/#{@assignment_repo.github_user.login}", class: "assignment-repo-github-url #{view.disabled_class}", target: '_blank' do %>
-          <h3 class="css-truncate css-truncate-target assignment-repo-header"><%= @assignment_repo.github_user.login %></h3>
+          <h3 class="css-truncate css-truncate-target"><%= @assignment_repo.github_user.login %></h3>
         <% end %>
       </div>
     </div>
