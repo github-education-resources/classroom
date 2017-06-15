@@ -11,8 +11,8 @@
       <ul>
         <% view.team_members.first(4).each do |student| %>
           <li>
-            <%= link_to student.github_user.html_url, class: "tooltipped tooltipped-s #{view.disabled_class}", 'aria-label' => student.github_user.login do %>
-              <%= image_tag view.avatar_url_for(student), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{student.github_user.login}" %>
+            <%= link_to view.avatar_url_for(student), class: "tooltipped tooltipped-s #{view.disabled_class}", 'aria-label' => student.github_user.login do %>
+              <%= image_tag view.avatar_url_for(student), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{view.login_for(student)}" %>
             <% end %>
           </li>
         <% end %>

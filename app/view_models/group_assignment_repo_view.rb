@@ -9,6 +9,10 @@ class GroupAssignmentRepoView < SharedAssignmentRepoView
     student.github_user.html_url
   end
 
+  def login_for(student)
+    student.github_user.login
+  end
+
   def team_members
     @team_members ||= assignment_repo.group.repo_accesses.map(&:user)
   end
