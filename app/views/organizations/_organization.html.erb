@@ -1,20 +1,21 @@
-<div class="flex-table organization-list-item">
-  <div class="flex-table-item">
+<div class="d-flex flex-column flex-md-row flex-items-center flex-md-items-center organization-list-item">
+  <div class="col-1 d-flex flex-items-center flex-items-center flex-md-items-start">
     <%= image_tag organization.github_organization.github_avatar_url(120), class: 'avatar left', height: 60, width: 60, alt: "@#{organization.github_organization.login}" %>
-
+  </div>
+  <div class="col-10 col-md-10 d-flex flex-column">
     <%= link_to organization, class: 'organization-title' do %>
       <strong class="css-truncate-target"><%= organization.title %></strong>
     <% end %>
 
-    <span class="text-muted css-truncate-target">@<%= organization.github_organization.login %></span>
+    <span class="text-gray css-truncate-target">@<%= organization.github_organization.login %></span>
   </div>
 
-  <div class="flex-table-item organization-stats text-right">
-    <span class="organization-stat-item text-muted tooltipped tooltipped-s" aria-label="Individual Assignments">
+  <div class="col-1 d-flex text-right">
+    <span class="p-1 organization-stat-item text-gray tooltipped tooltipped-s" aria-label="Individual Assignments">
       <%= octicon 'person' %><%= organization.assignments.count %>
     </span>
 
-    <span class="organization-stat-item text-muted tooltipped tooltipped-s" aria-label="Group Assignments">
+    <span class="p-1 organization-stat-item text-gray tooltipped tooltipped-s" aria-label="Group Assignments">
       <%= octicon 'organization' %><%= organization.group_assignments.count %>
     </span>
   </div>

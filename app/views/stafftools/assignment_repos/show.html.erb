@@ -8,7 +8,7 @@
       Assignment repository <%= @assignment_repo.id %>
     </h2>
 
-    <p class="assignment-type text-muted">assignment repository</p>
+    <p class="assignment-type text-gray">assignment repository</p>
   </div>
 
   <div class="boxed-group">
@@ -86,7 +86,7 @@
         <%= form_for @assignment_repo, url: stafftools_assignment_repo_path(@assignment_repo), html: { "data-name" => @assignment_repo.id, method: 'delete' } do |f| %>
           <dl class="form js-normalize-submit">
             <dt>Please type the ID (<%= @assignment_repo.id %>) of the assignment repository to confirm</dt>
-            <dd><input type="text" class="js-input-block" autofocus></dd>
+            <dd><input type="text" class="js-input-block form-control input-contrast input-block" autofocus></dd>
           </dl>
 
           <%= f.submit 'Delete this assignment repository', class: 'btn btn-danger btn-block js-submit', disabled: true %>
