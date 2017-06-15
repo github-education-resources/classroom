@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
-class GroupAssignmentRepoView < AssignmentRepoView
+class GroupAssignmentRepoView < SharedAssignmentRepoView
+  def avatar_url_for(student)
+    student.github_user.github_avatar_url(60)
+  end
+
+  def url_for(student)
+    student.github_user.html_url
+  end
+
   def team_members
     @team_members ||= assignment_repo.group.repo_accesses.map(&:user)
   end
