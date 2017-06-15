@@ -4,7 +4,7 @@
   <div class="<%= view.disabled_class %>">
     <div class="flex-table-item">
       <%= link_to view.team_url, class: "assignment-repo-github-url #{view.disabled_class}", target: '_blank' do %>
-        <h3 class="css-truncate css-truncate-target"><%= view.team_name %></h3>
+        <h3 class="css-truncate css-truncate-target"><%= view.team.name %></h3>
       <% end %>
     </div>
     <div>

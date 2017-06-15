@@ -4,17 +4,15 @@ class SharedAssignmentRepoView < ViewModel
   include ActionView::Helpers::TextHelper
   attr_reader :assignment_repo
 
-  def repo_url
-    github_repo.html_url
-  end
+  delegate :github_repository, to: :assignment_repo
 
-  def github_repo
-    assignment_repo.github_repository
+  def repo_url
+    github_repository.html_url
   end
 
   def number_of_commits
-    branch = github_repo.default_branch
-    github_repo.commits(branch).length
+    branch = github_repository.default_branch
+    github_repository.commits(branch).length
   end
 
   def commit_text

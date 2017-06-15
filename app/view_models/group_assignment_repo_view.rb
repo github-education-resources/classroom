@@ -13,10 +13,6 @@ class GroupAssignmentRepoView < SharedAssignmentRepoView
     team.html_url
   end
 
-  def team_name
-    team.name
-  end
-
   def team
     assignment_repo.github_team
   end

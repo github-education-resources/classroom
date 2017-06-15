@@ -4,6 +4,8 @@ class AssignmentRepoView < SharedAssignmentRepoView
   include ActionView::Helpers::TextHelper
   attr_reader :assignment_repo
 
+  delgate :github_user, to: :assignment_repo
+
   def avatar_url
     avatar_url_for(github_user, 96)
   end
@@ -14,9 +16,5 @@ class AssignmentRepoView < SharedAssignmentRepoView
 
   def user_url
     user_url_for(github_user)
-  end
-
-  def github_user
-    assignment_repo.github_user
   end
 end
