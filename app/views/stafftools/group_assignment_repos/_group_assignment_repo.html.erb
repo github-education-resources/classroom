@@ -1,11 +1,15 @@
-<div class="classroom-resource-item">
-  <span class="group-assignment-icon assignment-icon-group left">
-    <%= octicon 'repo' %>
-  </span>
+<div class="d-flex flex-md-row flex-items-center classroom-resource-item">
+  <div class="col-1 d-flexp">
+    <span class="group-assignment-icon assignment-icon-group left">
+      <%= octicon 'repo' %>
+    </span>
+  </div>
 
-  <%= link_to stafftools_group_assignment_repo_path(group_assignment_repo.id) do %>
-    <strong class="search-result-title"><%= "#{group_assignment_repo.group_title}'s group assignment repository for #{group_assignment_repo.group_assignment_title}" %></strong>
-  <% end %>
+  <div class="col-10 col-md-10 d-flex flex-column">
+    <%= link_to stafftools_group_assignment_repo_path(group_assignment_repo.id) do %>
+      <strong class="search-result-title"><%= "#{group_assignment_repo.group_title}'s group assignment repository for #{group_assignment_repo.group_assignment_title}" %></strong>
+    <% end %>
 
-  <span class="text-gray css-truncate css-truncate-target">Created <%= local_time_ago(group_assignment_repo.created_at) %></span>
+    <span class="text-gray css-truncate css-truncate-target">Created <%= local_time_ago(group_assignment_repo.created_at) %></span>
+  </div>
 </div>

@@ -1,16 +1,20 @@
 <div class="site-content">
-  <div class="stafftools-page-header clearfix">
-    <span class="assignment-icon assignment-icon-individual left">
-      <%= octicon 'repo', height: 22 %>
-    </span>
+  <div class="d-flex flex-md-row flex-items-center stafftools-page-header">
+    <div class="col-1">
+      <span class="assignment-icon assignment-icon-individual left">
+        <%= octicon 'repo', height: 22 %>
+      </span>
+    </div>
 
-    <h2 class="stafftools-heading">
-      Assignment repository <%= @assignment_repo.id %>
-    </h2>
+    <div class="col-10 col-md-10 d-flex flex-column">
+      <h2 class="stafftools-heading">
+        Assignment repository <%= @assignment_repo.id %>
+      </h2>
 
-    <p class="assignment-type text-gray">assignment repository</p>
+      <p class="assignment-type text-gray">assignment repository</p>
+    </div>
   </div>
-
+  
   <div class="boxed-group">
     <h3>General information</h3>
 

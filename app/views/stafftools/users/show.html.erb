@@ -1,16 +1,20 @@
 <div class="site-content">
-  <div class="stafftools-page-header clearfix">
-    <span class="assignment-icon assignment-icon-individual left">
-      <%= image_tag @user.github_user.github_avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{@user.github_user.login}" %>
-    </span>
+  <div class="d-flex flex-md-row flex-items-center stafftools-page-header">
+    <div class="col-1 d-flexp">
+      <span class="assignment-icon assignment-icon-individual left">
+        <%= image_tag @user.github_user.github_avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{@user.github_user.login}" %>
+      </span>
+    </div>
 
-    <h2 class="stafftools-heading">
-      <%= @user.github_user.login %>
-    </h2>
+    <div class="col-10 col-md-10 d-flex flex-column">
+      <h2 class="stafftools-heading">
+        <%= @user.github_user.login %>
+      </h2>
 
-    <p class="assignment-type text-gray">
-      <%= content_tag(:span, 'Staff', class: 'staff-badge') if @user.staff? %> User
-    </p>
+      <p class="assignment-type text-gray">
+        <%= content_tag(:span, 'Staff', class: 'staff-badge') if @user.staff? %> User
+      </p>
+    </div>
   </div>
 
   <div class="boxed-group">

@@ -1,11 +1,15 @@
-<div class="classroom-resource-item">
-  <span class="assignment-icon assignment-icon-individual left">
-    <%= octicon 'person', height: 22 %>
-  </span>
+<div class="d-flex flex-md-row flex-items-center classroom-resource-item">
+  <div class="col-1 d-flexp">
+    <span class="assignment-icon assignment-icon-individual left">
+      <%= octicon 'person', height: 22 %>
+    </span>
+  </div>
 
-  <%= link_to stafftools_repo_access_path(repo_access.id) do %>
-    <strong class="search-result-title">@<%= repo_access.user_login %>'s repository access for <%= repo_access.organization_login %></strong>
-  <% end %>
+  <div class="col-10 col-md-10 d-flex flex-column">
+    <%= link_to stafftools_repo_access_path(repo_access.id) do %>
+      <strong class="search-result-title">@<%= repo_access.user_login %>'s repository access for <%= repo_access.organization_login %></strong>
+    <% end %>
 
-  <span class="text-gray css-truncate css-truncate-target">Created <%= local_time_ago(repo_access.created_at) %></span>
+    <span class="text-gray css-truncate css-truncate-target">Created <%= local_time_ago(repo_access.created_at) %></span>
+  </div>
 </div>

@@ -1,16 +1,20 @@
 <div class="site-content">
-  <div class="stafftools-page-header clearfix">
-    <span class="assignment-icon assignment-icon-individual left">
-      <%= octicon 'link' %>
-    </span>
+  <div class="d-flex flex-md-row flex-items-center stafftools-page-header">
+    <div class="col-1">
+      <span class="assignment-icon assignment-icon-individual left">
+        <%= octicon 'link' %>
+      </span>
+    </div>
 
-    <h2 class="stafftools-heading">
-      <%= @assignment_invitation.key %>
-    </h2>
+    <div class="col-10 col-md-10 d-flex flex-column">
+      <h2 class="stafftools-heading">
+        <%= @assignment_invitation.key %>
+      </h2>
 
-    <p class="assignment-type text-gray">Individual assignment invitation</p>
+      <p class="assignment-type text-gray">Individual assignment invitation</p>
+    </div>
   </div>
-
+  
   <div class="boxed-group">
     <h3>Assignment invitation information</h3>
 
