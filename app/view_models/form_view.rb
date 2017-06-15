@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class FormView < ViewModel
-  attr_reader :subject
+  attr_reader :subject, :organization
+
+  delegate :has_private_repos_available?, to: :organization
 
   def errors_for?(field)
     subject.errors[field].present?
