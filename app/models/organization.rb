@@ -25,7 +25,7 @@ class Organization < ApplicationRecord
 
   validates :webhook_id, uniqueness: true, allow_nil: true
 
-  delegate :has_private_repos_available?, to: :github_organization
+  delegate :plan, to: :github_organization
 
   before_destroy :silently_remove_organization_webhook
 

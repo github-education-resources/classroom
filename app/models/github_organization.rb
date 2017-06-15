@@ -85,12 +85,6 @@ class GitHubOrganization < GitHubResource
     end
   end
 
-  def has_private_repos_available?
-    github_plan = plan
-
-    github_plan[:owned_private_repos] < github_plan[:private_repos]
-  end
-
   def remove_organization_member(github_user_id)
     github_user_login = GitHubUser.new(@client, github_user_id).login
 

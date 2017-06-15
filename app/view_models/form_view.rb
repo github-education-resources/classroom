@@ -3,8 +3,6 @@
 class FormView < ViewModel
   attr_reader :subject, :organization
 
-  delegate :has_private_repos_available?, to: :organization
-
   def errors_for?(field)
     subject.errors[field].present?
   end
@@ -15,5 +13,11 @@ class FormView < ViewModel
 
   def form_class_for(field)
     "form#{errors_for?(field) ? ' errored primer-new' : ''}"
+  end
+
+  def private_repos_available?
+    plan = organization.plan
+
+    plan[:owned_private_repos] < plan[:private_repos]
   end
 end
