@@ -5,7 +5,7 @@ class SharedAssignmentRepoView < ViewModel
   attr_reader :assignment_repo
 
   def repo_url
-    @repo_url ||= github_repo.html_url
+    github_repo.html_url
   end
 
   def github_repo
@@ -13,8 +13,8 @@ class SharedAssignmentRepoView < ViewModel
   end
 
   def number_of_commits
-    @branch ||= github_repo.default_branch
-    @number_of_commits ||= github_repo.commits(@branch).length
+    branch = github_repo.default_branch
+    github_repo.commits(branch).length
   end
 
   def commit_text
@@ -25,7 +25,15 @@ class SharedAssignmentRepoView < ViewModel
     assignment_repo.disabled? ? 'disabled' : ''
   end
 
-  def avatar_for(student, size)
-    student.github_avatar_url(size)
+  def avatar_url_for(github_user, size)
+    github_user.github_avatar_url(size)
+  end
+
+  def user_url_for(github_user)
+    github_user.html_url
+  end
+
+  def login_for(github_user)
+    github_user.login
   end
 end

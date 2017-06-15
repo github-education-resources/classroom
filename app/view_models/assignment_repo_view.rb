@@ -5,15 +5,15 @@ class AssignmentRepoView < SharedAssignmentRepoView
   attr_reader :assignment_repo
 
   def avatar_url
-    @avatar_url ||= github_user.github_avatar_url(96)
+    avatar_url_for(github_user, 96)
   end
 
   def user_login
-    @user_login ||= github_user.login
+    login_for(github_user)
   end
 
   def user_url
-    "https://github.com/#{user_login}"
+    user_url_for(github_user)
   end
 
   def github_user

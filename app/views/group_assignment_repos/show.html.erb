@@ -9,9 +9,9 @@
     </div>
     <div>
       <ul>
-        <% view.team_members.first(4).each do |student| %>
+        <% view.team_members.first(4).map(&:github_user).each do |student| %>
           <li>
-            <%= link_to view.avatar_url_for(student), class: "tooltipped tooltipped-s #{view.disabled_class}", 'aria-label' => student.github_user.login do %>
+            <%= link_to view.avatar_url_for(student), class: "tooltipped tooltipped-s #{view.disabled_class}", 'aria-label' => view.login_for(student) do %>
               <%= image_tag view.avatar_url_for(student), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{view.login_for(student)}" %>
             <% end %>
           </li>
