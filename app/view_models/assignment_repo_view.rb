@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class AssignmentRepoView < SharedAssignmentRepoView
-  include ActionView::Helpers::TextHelper
   attr_reader :assignment_repo
 
   delegate :github_user, to: :assignment_repo
