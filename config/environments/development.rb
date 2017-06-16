@@ -28,10 +28,10 @@ Rails.application.configure do
       pool_size:  (ENV.fetch('RAILS_MAX_THREADS') { 5 })
     }
 
-    config.cache_store = :dalli_store, 'localhost:11211', dalli_store_config
+    config.cache_store = :dalli_store, 'memcached:11211', dalli_store_config
 
     config.peek.adapter = :memcache, {
-      client: Dalli::Client.new('localhost:11211')
+      client: Dalli::Client.new('memcached:11211')
     }
   else
     config.action_controller.perform_caching = false
@@ -64,4 +64,7 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  # Whitelist the docker ip for the web console
+  config.web_console.whitelisted_ips = '192.168.0.1'
 end
