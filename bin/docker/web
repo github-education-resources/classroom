@@ -6,6 +6,9 @@ set -e
 
 cd "$(dirname "$0")/../.."
 
+# Wait for all of the different dependencies
+./bin/docker/wait-for-dependencies
+
 rm -f tmp/pids/server.pid
 
 ./bin/rails server -p 5000 -b '0.0.0.0'

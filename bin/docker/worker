@@ -6,5 +6,8 @@ set -e
 
 cd "$(dirname "$0")/../.."
 
+# Wait for all of the different dependencies
+./bin/docker/wait-for-dependencies
+
 # Start up Sidekiq
 ./bin/sidekiq -C config/sidekiq.yml
