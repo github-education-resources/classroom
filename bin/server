@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# script/server: Launch the application and any extra required processes
+# bin/server: Launch the application and any extra required processes
 #                locally.
 
 set -e
@@ -8,10 +8,11 @@ set -e
 cd "$(dirname "$0")/.."
 
 # ensure everything in the app is up to date.
-script/update
-
-test -z "$RACK_ENV" &&
-  RACK_ENV='development'
+./bin/update
 
 # boot the app and any other necessary processes.
-bundle exec foreman start -f Procfile.dev
+docker-compose down
+docker-compose up
+
+# Make sure docker has stopped
+trap "docker-compose down" EXIT

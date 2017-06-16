@@ -1,5 +1,5 @@
 #!/bin/sh
-# Usage: script/boostrap
+# Usage: bin/bootstrap
 # Ensures all dependencies are installed locally.
 
 set -e
@@ -10,11 +10,19 @@ if [ "$(uname -s)" = "Darwin" ]; then
   brew update >/dev/null
   brew bundle check &>/dev/null || brew bundle
 
+  if ! [ -f /usr/local/bin/docker-compose ]; then
+    echo "You must run Docker for Mac and let it install its tools."
+    # If the user customized their Docker appdir, `open` might not
+    # be able to find it.
+    open -a Docker 2>/dev/null || true
+    exit 1
+  fi
+
   brew setup-nginx-conf classroom . config/dev/nginx.conf.erb
 fi
 
-echo "==> Installing gem dependencies…"
-bundle install --without production
-
-echo "==> Installing javascript dependencies…"
-yarn install
+if [ ${1:-""} = "--pristine" ]; then
+  exec docker-compose build --no-cache
+else
+  exec docker-compose build
+fi
