@@ -1,16 +1,8 @@
-<div class="d-flex flex-column flex-md-row flex-items-center flex-md-items-center organization-list-item">
-  <div class="col-1 d-flex flex-items-center flex-items-center flex-md-items-start">
+<div class="clearfix">
+  <div class="float-left mr-2">
     <%= image_tag organization.github_organization.github_avatar_url(120), class: 'avatar left', height: 60, width: 60, alt: "@#{organization.github_organization.login}" %>
   </div>
-  <div class="col-10 col-md-10 d-flex flex-column">
-    <%= link_to organization, class: 'organization-title' do %>
-      <strong class="css-truncate-target"><%= organization.title %></strong>
-    <% end %>
-
-    <span class="text-gray css-truncate-target">@<%= organization.github_organization.login %></span>
-  </div>
-
-  <div class="col-1 d-flex text-right">
+  <div class="float-right pt-2">
     <span class="p-1 organization-stat-item text-gray tooltipped tooltipped-s" aria-label="Individual Assignments">
       <%= octicon 'person' %><%= organization.assignments.count %>
     </span>
@@ -18,5 +10,12 @@
     <span class="p-1 organization-stat-item text-gray tooltipped tooltipped-s" aria-label="Group Assignments">
       <%= octicon 'organization' %><%= organization.group_assignments.count %>
     </span>
+  </div>
+  <div class="overflow-hidden d-flex flex-column pt-2">
+    <%= link_to organization, class: 'organization-title' do %>
+      <strong class="f4 css-truncate-target"><%= organization.title %></strong>
+    <% end %>
+
+    <span class="f4 text-gray css-truncate-target">@<%= organization.github_organization.login %></span>
   </div>
 </div>
