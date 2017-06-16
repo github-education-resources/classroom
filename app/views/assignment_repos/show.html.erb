@@ -1,21 +1,24 @@
 <% view = AssignmentRepoView.new(assignment_repo: @assignment_repo) %>
 
-<div class='group-assignment-repo-list-item'>
-  <div>
-    <div style='display: flex;'>
+<div class='assignment-repo-list-item'>
+  <div class='assignment-repo-left-container'>
+    <div>
       <%= link_to view.user_url, class: "tooltipped tooltipped-n #{view.disabled_class}", target: '_blank', 'aria-label' => view.user_login do %>
         <%= image_tag view.avatar_url, height: 48, width: 48, class: 'avatar avatar-large', alt: "@#{view.user_login}" %>
       <% end %>
-
-      <%= link_to view.user_url, class: "assignment-repo-github-url #{view.disabled_class}", target: '_blank' do %>
-        <h3 class="css-truncate css-truncate-target"><%= view.user_login %></h3>
-      <% end %>
     </div>
-    <div class="assignment-properties">
-      <%= render 'shared/commit_repo_detail', text: view.commit_text, url: 'Dummy URL' %>
+    <div class='assignment-repo-info-container'>
+      <div>
+        <%= link_to view.user_url, class: "assignment-repo-github-url #{view.disabled_class}", target: '_blank' do %>
+          <h3 class="css-truncate css-truncate-target"><%= view.user_login %></h3>
+        <% end %>
+      </div>
+      <div class="assignment-properties">
+        <%= render 'shared/commit_repo_detail', text: view.commit_text, url: 'Dummy URL' %>
+      </div>
     </div>
   </div>
   <div>
-    <%= link_to 'View repository', view.repo_url, class: 'btn', role: 'button', target: '_blank', disabled: view.disabled_class %>
+    <%= link_to 'View repository', view.repo_url, class: 'btn btn-outline', role: 'button', target: '_blank', disabled: view.disabled_class %>
   </div>
 </div>

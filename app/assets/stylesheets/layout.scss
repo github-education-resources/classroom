@@ -338,13 +338,38 @@ hr {
   }
 }
 
+.assignment-repo-info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.assignment-repo-left-container {
+  display: flex;
+}
+
+.assignment-repo-github-url {
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+.user-list {
+  margin-top: 2px;
+}
+
 .group-assignment-repo-list {
-  .group-assignment-repo-list-item:not(:first-child) {
+  .assignment-repo-list-item:not(:first-child) {
     border-top: 1px solid #e3e3e3;
   }
 }
 
-.group-assignment-repo-list-item {
+.group-assignment-avatar-list {
+  display: flex;
+}
+
+.assignment-repo-list-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -417,6 +442,14 @@ hr {
   }
 }
 
+.avatar-large {
+  margin-right: 10px;
+}
+
+.assignment-repo-button {
+  margin-left: 80px;
+}
+
 .organization-list-items {
   .organization-list-item:not(:first-child) {
     padding-top: 2rem;
@@ -428,10 +461,6 @@ hr {
       margin-top: 1rem;
     }
   }
-}
-
-.avatar-large {
-  margin-right: 10px;
 }
 
 .organization-list-item {

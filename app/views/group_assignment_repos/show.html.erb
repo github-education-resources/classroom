@@ -1,37 +1,37 @@
 <% view = GroupAssignmentRepoView.new(assignment_repo: @group_assignment_repo) %>
 
-<div class='group-assignment-repo-list-item'>
-  <div class="<%= view.disabled_class %>">
-    <div class="flex-table-item">
+<div class='assignment-repo-list-item'>
+  <div class='assignment-repo-info-container'>
+    <div>
       <%= link_to view.team_url, class: "assignment-repo-github-url #{view.disabled_class}", target: '_blank' do %>
         <h3 class="css-truncate css-truncate-target"><%= view.team.name %></h3>
       <% end %>
-    </div>
-    <div>
-      <ul>
-        <% view.team_members.first(4).map(&:github_user).each do |student| %>
-          <li>
-            <%= link_to view.avatar_url_for(student), class: "tooltipped tooltipped-s #{view.disabled_class}", 'aria-label' => view.login_for(student) do %>
-              <%= image_tag view.avatar_url_for(student), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{view.login_for(student)}" %>
-            <% end %>
-          </li>
-        <% end %>
-
-        <% if view.team_members.length > 4 %>
-          <li>
-            <%= link_to view.team_url, class: "#{view.disabled_class}" do %>
-              <%= image_tag 'student-ellipse@2x.png', class: 'avatar avatar-small', height: 30, width: 30, alt: 'student ellipse' %>
-            <% end %>
-          </li>
-        <% end %>
-      </ul>
     </div>
     <div class="assignment-properties">
       <%= render 'shared/commit_repo_detail', text: view.commit_text, url: 'Dummy URL' %>
       <%= render 'shared/members_repo_detail', text: view.members_text, url: view.team_url %>
     </div>
   </div>
-  <div>
-    <%= link_to 'View repository', view.repo_url, class: 'btn', role: 'button', target: '_blank', disabled: view.disabled_class %>
+  <div class='group-assignment-avatar-list'>
+    <ul class='user-list'>
+      <% view.team_members.first(4).map(&:github_user).each do |student| %>
+        <li>
+          <%= link_to view.avatar_url_for(student), class: "tooltipped tooltipped-s #{view.disabled_class}", 'aria-label' => view.login_for(student) do %>
+            <%= image_tag view.avatar_url_for(student), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{view.login_for(student)}" %>
+          <% end %>
+        </li>
+      <% end %>
+
+      <% if view.team_members.length > 4 %>
+        <li>
+          <%= link_to view.team_url, class: "#{view.disabled_class}" do %>
+            <%= image_tag 'student-ellipse@2x.png', class: 'avatar avatar-small', height: 30, width: 30, alt: 'student ellipse' %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+    <div class='assignment-repo-button'>
+      <%= link_to 'View repository', view.repo_url, class: 'btn btn-outline', role: 'button', target: '_blank', disabled: view.disabled_class %>
+    </div>
   </div>
 </div>
