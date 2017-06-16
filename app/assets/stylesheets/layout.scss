@@ -448,6 +448,10 @@ hr {
 
 .assignment-repo-button {
   margin-left: 80px;
+
+  @media screen and (max-width: 40em) {
+    margin-left: 15px;
+  }
 }
 
 .organization-list-items {

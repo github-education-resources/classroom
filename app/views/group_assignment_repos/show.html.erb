@@ -14,7 +14,7 @@
   </div>
   <div class='group-assignment-avatar-list'>
     <ul class='user-list'>
-      <% view.team_members.first(4).map(&:github_user).each do |student| %>
+      <% view.team_members.first(3).map(&:github_user).each do |student| %>
         <li>
           <%= link_to view.avatar_url_for(student), class: "tooltipped tooltipped-s #{view.disabled_class}", 'aria-label' => view.login_for(student) do %>
             <%= image_tag view.avatar_url_for(student), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{view.login_for(student)}" %>
@@ -22,7 +22,7 @@
         </li>
       <% end %>
 
-      <% if view.team_members.length > 4 %>
+      <% if view.team_members.length > 3 %>
         <li>
           <%= link_to view.team_url, class: "#{view.disabled_class}" do %>
             <%= image_tag 'student-ellipse@2x.png', class: 'avatar avatar-small', height: 30, width: 30, alt: 'student ellipse' %>
