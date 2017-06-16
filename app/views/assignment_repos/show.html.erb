@@ -1,21 +1,25 @@
-<div class="flex-table assignment-repo-list-item<%= ' disabled' if @assignment_repo.disabled? %>">
-  <div class="flex-table-item">
-    <%= image_tag @assignment_repo.github_user.github_avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{@assignment_repo.github_user.login}" %>
+<div class=" assignment-repo-list-item<%= ' disabled' if @assignment_repo.disabled? %> container-lg clearfix">
+    <div class="col-6 d-flex flex-items-center float-left">
+      <div class="d-table col-12">
+        <div class="col-1 d-table-cell v-align-middle">
+          <%= image_tag @assignment_repo.github_user.github_avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{@assignment_repo.github_user.login}" %>
+        </div>
 
-    <div class="student-information">
-      <% css_class  = 'css-truncate css-truncate-target student-login' %>
-      <% css_class += ' disabled' if @assignment_repo.disabled? %>
-      <%= link_to "https://github.com/#{@assignment_repo.github_user.login}", class: css_class do %>
-        <strong class="css-truncate-target"><%= @assignment_repo.github_user.login %></strong>
-      <% end %>
+        <div class="col-11 d-table-cell v-align-middle student-information">
+          <% css_class  = 'css-truncate css-truncate-target student-login' %>
+          <% css_class += ' disabled' if @assignment_repo.disabled? %>
+          <%= link_to "https://github.com/#{@assignment_repo.github_user.login}", class: css_class do %>
+            <strong class="css-truncate-target"><%= @assignment_repo.github_user.login %></strong>
+          <% end %>
 
-      <span class="text-gray css-truncate css-truncate-target"><%= @assignment_repo.github_user.name %></span>
+          <span class="text-gray css-truncate css-truncate-target"><%= @assignment_repo.github_user.name %></span>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="flex-table-item text-right">
-    <strong class="css-truncate css-truncate-target">
-      <%= link_to @assignment_repo.github_repository.full_name, @assignment_repo.github_repository.html_url, class: "#{'disabled' if @assignment_repo.disabled?}" %>
-    </strong>
-  </div>
+    <div class="col-6 float-right text-right ">
+      <strong class="css-truncate css-truncate-target v-align-middle">
+        <%= link_to @assignment_repo.github_repository.full_name, @assignment_repo.github_repository.html_url, class: "#{'disabled' if @assignment_repo.disabled?}" %>
+      </strong>
+    </div>
 </div>
