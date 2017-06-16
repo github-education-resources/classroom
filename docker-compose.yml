@@ -27,7 +27,7 @@ services:
   web:
     container_name: "web"
     build: .
-    command: bash -c "rm -f tmp/pids/server.pid && ./bin/rails server -p 5000 -b '0.0.0.0'"
+    command: "./bin/docker/web"
     ports:
       - "5000:5000"
     depends_on:
@@ -44,7 +44,7 @@ services:
   worker:
     container_name: "worker"
     build: .
-    command: "./bin/sidekiq -C config/sidekiq.yml"
+    command: "./bin/docker/worker"
     depends_on:
       - "elasticsearch"
       - "postgres"

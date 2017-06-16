@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# bin/docker/web: Launch the web service inside the container.
+
+set -e
+
+cd "$(dirname "$0")/../.."
+
+rm -f tmp/pids/server.pid
+
+./bin/rails server -p 5000 -b '0.0.0.0'

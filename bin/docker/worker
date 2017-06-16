@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# bin/docker/worker: Launch the worker service inside the container
+
+set -e
+
+cd "$(dirname "$0")/../.."
+
+# Start up Sidekiq
+./bin/sidekiq -C config/sidekiq.yml
