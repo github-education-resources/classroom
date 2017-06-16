@@ -60,6 +60,7 @@ gem 'sprockets'
 
 gem 'turbolinks', github: 'turbolinks/turbolinks-classic', ref: '37a7c296232d20a61bd1946f600da7f2009189db'
 gem 'typhoeus', '~> 1.1', '>= 1.1.2'
+gem 'tzinfo-data'
 
 gem 'uglifier', '>= 1.3.0'
 
