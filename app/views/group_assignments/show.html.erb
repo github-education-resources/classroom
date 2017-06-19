@@ -1,8 +1,8 @@
 <%= render 'organizations/organization_banner' %>
 
 <div class="site-content">
-  <div class="site-content-cap container-lg clearfix">
-      <div class="col-6 float-left pr-2">
+  <div class="site-content-cap d-flex flex-justify-between">
+      <div class="pr-2">
         <div class="d-table col-12">
           <div class="col-1 d-table-cell v-align-middle">
             <span class="group-assignment-icon assignment-icon-group left">
@@ -19,7 +19,7 @@
         </div>
       </div>
 
-      <div class="col-6 float-right text-right pl-2 settings">
+      <div class="text-right pl-2 settings">
         <%= link_to edit_organization_group_assignment_path(@organization, @group_assignment), class: 'btn right' do %>
           <%= octicon 'gear' %>
           Group assignment settings

@@ -1,4 +1,4 @@
-<div class="clearfix">
+<div class="clearfix organization-list-item">
   <div class="float-left mr-2">
     <%= image_tag organization.github_organization.github_avatar_url(120), class: 'avatar left', height: 60, width: 60, alt: "@#{organization.github_organization.login}" %>
   </div>
@@ -11,7 +11,7 @@
       <%= octicon 'organization' %><%= organization.group_assignments.count %>
     </span>
   </div>
-  <div class="overflow-hidden d-flex flex-column pt-2">
+  <div class="overflow-hidden d-flex flex-column ">
     <%= link_to organization, class: 'organization-title' do %>
       <strong class="f4 css-truncate-target"><%= organization.title %></strong>
     <% end %>
