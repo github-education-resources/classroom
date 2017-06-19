@@ -6,12 +6,12 @@ set -e
 cd "$(dirname "$0")/.."
 
 if [ "$(uname -s)" = "Darwin" ]; then
-  echo "==> Bootstrapping Homebrew OSX environment"
+  echo "== Bootstrapping Homebrew OSX environment =="
   brew update >/dev/null
   brew bundle check &>/dev/null || brew bundle
 
-  if ! [ -f /usr/local/bin/docker-compose ]; then
-    echo "You must run Docker for Mac and let it install its tools."
+  if [ -f "$(which docker-compose)" ]; then
+    echo "== You must run Docker for Mac and let it install its tools. =="
     # If the user customized their Docker appdir, `open` might not
     # be able to find it.
     open -a Docker 2>/dev/null || true
