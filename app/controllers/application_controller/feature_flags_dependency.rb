@@ -18,4 +18,9 @@ class ApplicationController
     logged_in? && current_user.feature_enabled?(:team_management)
   end
   helper_method :team_management_enabled?
+
+  def graphql_enabled?
+    logged_in? && current_user.feature_enabled?(:graphql)
+  end
+  helper_method :graphql_enabled?
 end
