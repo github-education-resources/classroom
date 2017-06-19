@@ -1,0 +1,5 @@
+// Variables
+$text-blue: #4078c0 !important;
+
+// Buttons
+.btn-primary { @include btn-solid($text-white, #69c387, #519568); }
