@@ -45,4 +45,13 @@ RSpec.describe AssignmentRepo, type: :model do
       end
     end
   end
+
+  describe 'belongs_to repo_access' do
+    it 'is optional' do
+      repo = build(:assignment_repo, assignment: assignment, github_repo_id: 42)
+      repo.repo_access = nil
+
+      expect(repo.valid?).to be_truthy
+    end
+  end
 end
