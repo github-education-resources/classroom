@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 20170620200357) do
     t.string "global_relay_id"
     t.index ["assignment_id"], name: "index_assignment_repos_on_assignment_id"
     t.index ["github_repo_id"], name: "index_assignment_repos_on_github_repo_id", unique: true
+    t.index ["global_relay_id"], name: "index_assignment_repos_on_global_relay_id"
     t.index ["repo_access_id"], name: "index_assignment_repos_on_repo_access_id"
     t.index ["user_id"], name: "index_assignment_repos_on_user_id"
   end
