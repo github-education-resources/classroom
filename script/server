@@ -15,3 +15,6 @@ test -z "$RACK_ENV" &&
 
 # boot the app and any other necessary processes.
 bundle exec foreman start -f Procfile.dev
+
+# Kill rando fs_event pids from the listen gem
+trap script/kill-fsevent EXIT

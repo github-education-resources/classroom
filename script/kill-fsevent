@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Lol if you don't have 100's of processes of running
+# after you kill your server.
+#
+# But really https://github.com/rails/rails/issues/26158
+
+# https://github.com/rails/rails/issues/22312#issuecomment-280247054
+if [ `/usr/bin/pgrep fsevent_wat | wc -l` -ge 100 ] ; then
+  pkill -9 fsevent_wat*
+fi

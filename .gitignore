@@ -40,5 +40,6 @@ config/projections.json
 # RSpec
 spec/examples.txt
 
-# yarn
+# Webpacker
+/public/packs
 /node_modules
