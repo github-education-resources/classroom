@@ -18,4 +18,9 @@ class ApplicationController
     logged_in? && current_user.feature_enabled?(:team_management)
   end
   helper_method :team_management_enabled?
+
+  def deadlines_enabled?
+    logged_in? && current_user.feature_enabled?(:deadlines)
+  end
+  helper_method :deadlines_enabled?
 end
