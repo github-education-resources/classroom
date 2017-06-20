@@ -4,11 +4,11 @@
   </div>
   <div class="float-right pt-2">
     <span class="p-1 organization-stat-item text-gray tooltipped tooltipped-s" aria-label="Individual Assignments">
-      <%= octicon 'person' %><%= organization.assignments.count %>
+      <%= octicon 'person', :class => "mr-1" %><%= organization.assignments.count %>
     </span>
 
     <span class="p-1 organization-stat-item text-gray tooltipped tooltipped-s" aria-label="Group Assignments">
-      <%= octicon 'organization' %><%= organization.group_assignments.count %>
+      <%= octicon 'organization', :class => "mr-1" %><%= organization.group_assignments.count %>
     </span>
   </div>
   <div class="overflow-hidden d-flex flex-column ">

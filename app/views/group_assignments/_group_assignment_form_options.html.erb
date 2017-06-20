@@ -52,9 +52,7 @@
   <% if groupings_present %>
     <dt><label>Choose an existing set of teams</label></dt>
     <dl class="form">
-      <dd>
-        <%= select :group_assignment, :grouping_id, options_for_select(@groupings), include_blank: true %>
-      </dd>
+        <%= select :group_assignment, :grouping_id,  options_for_select(@groupings), { include_blank: true }, { class: 'form-select'} %>
     </dl>
   <% end %>
 
