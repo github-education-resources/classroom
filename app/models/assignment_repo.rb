@@ -4,7 +4,7 @@ class AssignmentRepo < ApplicationRecord
   update_index('stafftools#assignment_repo') { self }
 
   belongs_to :assignment
-  belongs_to :repo_access
+  belongs_to :repo_access, optional: true
   belongs_to :user
 
   has_one :organization, -> { unscope(where: :deleted_at) }, through: :assignment
