@@ -12,7 +12,15 @@
           <%= @assignment.title %>
         </h2>
 
-        <p class="assignment-type text-muted">Individual assignment</p>
+        <p class="assignment-type text-muted">Individual assigment
+          <% if @assignment.deadline %>
+            <% if @assignment.deadline.passed? %>
+              - Deadline Passed
+            <% else %>
+              <%= "- Deadline in #{distance_of_time_in_words(Time.zone.now, @assignment.deadline.deadline_at)}" %>
+            <% end %>
+          <% end %>
+        </p>
       </div>
 
       <div class="flex-table-item settings">

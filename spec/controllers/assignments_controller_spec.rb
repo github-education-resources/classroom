@@ -115,6 +115,124 @@ RSpec.describe AssignmentsController, type: :controller do
       end
     end
 
+    context 'deadline flipper is enabled for user' do
+      before do
+        GitHubClassroom.flipper[:deadlines].enable
+      end
+
+      context 'valid datetime for deadline is passed' do
+        before do
+          post :create, params: {
+            organization_id: organization.slug,
+            assignment:      attributes_for(:assignment, organization: organization)
+              .merge(deadline: '05/25/2018 13:17-0800')
+          }
+        end
+
+        it 'creates a new assignment' do
+          expect(Assignment.count).to eq(1)
+        end
+
+        it 'sets deadline' do
+          expect(Assignment.first.deadline).to be_truthy
+        end
+      end
+
+      context 'invalid datetime for deadline passed' do
+        before do
+          post :create, params: {
+            organization_id: organization.slug,
+            assignment:      attributes_for(:assignment, organization: organization)
+              .merge(deadline: 'I am not a datetime')
+          }
+        end
+
+        it 'creates a new assignment' do
+          expect(Assignment.count).to eq(1)
+        end
+
+        it 'sets deadline to nil' do
+          expect(Assignment.first.deadline).to be_nil
+        end
+      end
+
+      context 'no deadline passed' do
+        before do
+          post :create, params: {
+            organization_id: organization.slug,
+            assignment:      attributes_for(:assignment, organization: organization)
+          }
+        end
+
+        it 'creates a new assignment' do
+          expect(Assignment.count).to eq(1)
+        end
+
+        it 'sets deadline to nil' do
+          expect(Assignment.first.deadline).to be_nil
+        end
+      end
+
+      after do
+        GitHubClassroom.flipper[:deadlines].disable
+      end
+    end
+
+    context 'deadline flipper is disabled' do
+      context 'valid datetime for deadline is passed' do
+        before do
+          post :create, params: {
+            organization_id: organization.slug,
+            assignment:      attributes_for(:assignment, organization: organization)
+              .merge(deadline: '05/25/2018 13:17-0800')
+          }
+        end
+
+        it 'creates a new assignment' do
+          expect(Assignment.count).to eq(1)
+        end
+
+        it 'does not set deadline' do
+          expect(Assignment.first.deadline).to be_nil
+        end
+      end
+
+      context 'invalid datetime for deadline passed' do
+        before do
+          post :create, params: {
+            organization_id: organization.slug,
+            assignment:      attributes_for(:assignment, organization: organization)
+              .merge(deadline: 'I am not a datetime')
+          }
+        end
+
+        it 'creates a new assignment' do
+          expect(Assignment.count).to eq(1)
+        end
+
+        it 'sets deadline to nil' do
+          expect(Assignment.first.deadline).to be_nil
+        end
+      end
+
+      context 'no deadline passed' do
+        before do
+          post :create, params: {
+            organization_id: organization.slug,
+            assignment:      attributes_for(:assignment, organization: organization)
+          }
+        end
+
+        it 'creates a new assignment' do
+          expect(Assignment.count).to eq(1)
+        end
+
+        it 'sets deadline to nil' do
+          expect(Assignment.first.deadline).to be_nil
+        end
+      end
+    end
+
     context 'flipper is enabled for the user' do
       before do
         GitHubClassroom.flipper[:student_identifier].enable

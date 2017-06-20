@@ -19,6 +19,9 @@ class DeadlineJob < ApplicationJob
     return unless latest_commit
 
     repo.submission_sha = latest_commit[:sha]
-    repo.save
+    repo.save!
+  rescue ActiveRecord::ActiveRecordError => e
+    logger.error(repo)
+    logger.error(e)
   end
 end
