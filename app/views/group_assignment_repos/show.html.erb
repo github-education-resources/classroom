@@ -29,5 +29,6 @@
     <strong class="css-truncate css-truncate-target">
       <%= link_to @group_assignment_repo.github_repository.full_name, @group_assignment_repo.github_repository.html_url, class: "assignment-repo-github-url #{'disabled' if @group_assignment_repo.disabled?}" %>
     </strong>
+    <%= render 'shared/submission', repo: @group_assignment_repo %>
   </div>
 </div>

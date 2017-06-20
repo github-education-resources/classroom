@@ -24,6 +24,19 @@ a {
   }
 }
 
+.submission-icon-container {
+  text-decoration: none;
+  cursor: pointer;
+
+  .success {
+    fill: $green;
+  }
+
+  .failed {
+    fill: $red;
+  }
+}
+
 main {
   flex: 1;
 }

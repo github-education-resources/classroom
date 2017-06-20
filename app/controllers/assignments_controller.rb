@@ -12,9 +12,12 @@ class AssignmentsController < ApplicationController
 
   def create
     @assignment = Assignment.new(new_assignment_params)
+
     @assignment.build_assignment_invitation
 
     if @assignment.save
+      @assignment.deadline&.create_job
+
       flash[:success] = "\"#{@assignment.title}\" has been created!"
       redirect_to organization_assignment_path(@organization, @assignment)
     else
@@ -65,11 +68,18 @@ class AssignmentsController < ApplicationController
       .merge(creator: current_user,
              organization: @organization,
              starter_code_repo_id: starter_code_repo_id_param,
-             student_identifier_type: student_identifier_type_param)
+             student_identifier_type: student_identifier_type_param,
+             deadline: deadline_param)
   end
 
   def set_assignment
     @assignment = @organization.assignments.includes(:assignment_invitation).find_by!(slug: params[:id])
+  end
+
+  def deadline_param
+    return unless deadlines_enabled? && params[:assignment][:deadline].present?
+
+    Deadline::Factory.build_from_string(deadline_at: params[:assignment][:deadline]) if deadlines_enabled?
   end
 
   def starter_code_repo_id_param
@@ -88,7 +98,7 @@ class AssignmentsController < ApplicationController
   def update_assignment_params
     params
       .require(:assignment)
-      .permit(:title, :slug, :public_repo, :students_are_repo_admins)
+      .permit(:title, :slug, :public_repo, :students_are_repo_admins, :deadline)
       .merge(starter_code_repo_id: starter_code_repo_id_param, student_identifier_type: student_identifier_type_param)
   end
 

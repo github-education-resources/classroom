@@ -17,6 +17,8 @@ class GroupAssignmentsController < ApplicationController
     @group_assignment = build_group_assignment
 
     if @group_assignment.save
+      @group_assignment.deadline&.create_job
+
       flash[:success] = "\"#{@group_assignment.title}\" has been created!"
       redirect_to organization_group_assignment_path(@organization, @group_assignment)
     else
@@ -81,7 +83,8 @@ class GroupAssignmentsController < ApplicationController
       .merge(creator: current_user,
              organization: @organization,
              starter_code_repo_id: starter_code_repo_id_param,
-             student_identifier_type: student_identifier_type_param)
+             student_identifier_type: student_identifier_type_param,
+             deadline: deadline_param)
   end
 
   def new_grouping_params
@@ -102,6 +105,12 @@ class GroupAssignmentsController < ApplicationController
                         .find_by!(slug: params[:id])
   end
 
+  def deadline_param
+    return unless deadlines_enabled? && params[:group_assignment][:deadline].present?
+
+    Deadline::Factory.build_from_string(deadline_at: params[:group_assignment][:deadline])
+  end
+
   def starter_code_repo_id_param
     if params[:repo_id].present?
       validate_starter_code_repository_id(params[:repo_id])
@@ -118,7 +127,7 @@ class GroupAssignmentsController < ApplicationController
   def update_group_assignment_params
     params
       .require(:group_assignment)
-      .permit(:title, :slug, :public_repo, :max_members, :students_are_repo_admins)
+      .permit(:title, :slug, :public_repo, :max_members, :students_are_repo_admins, :deadline)
       .merge(starter_code_repo_id: starter_code_repo_id_param, student_identifier_type: student_identifier_type_param)
   end
 
