@@ -1,0 +1,54 @@
+version: '2.1'
+
+services:
+  # Dependencies
+  elasticsearch:
+    container_name: "elasticsearch"
+    image: "elasticsearch:1.7.5"
+
+  postgres:
+    container_name: "postgres"
+    restart: "always"
+    image: "postgres:9.4.10"
+    environment:
+      POSTGRES_USER: "postgres"
+    volumes:
+      - "~/.docker-volumes/githubclassroom/postgresql/data:/var/lib/postgresql/data"
+
+  memcached:
+    container_name: "memcached"
+    image: "memcached:1.4.26-alpine"
+
+  redis:
+    container_name: "redis"
+    image: "redis:3.2.4-alpine"
+
+  # The Application
+  web:
+    container_name: "web"
+    build: .
+    command: "./bin/docker/web"
+    ports:
+      - "5000:5000"
+    depends_on:
+      - "elasticsearch"
+      - "postgres"
+      - "memcached"
+      - "redis"
+    volumes:
+      - "${VOLUME:-.:/usr/src/app}"
+    env_file:
+      - .env
+
+  # Background jobs
+  worker:
+    container_name: "worker"
+    build: .
+    command: "./bin/docker/worker"
+    depends_on:
+      - "elasticsearch"
+      - "postgres"
+      - "memcached"
+      - "redis"
+    env_file:
+      - .env

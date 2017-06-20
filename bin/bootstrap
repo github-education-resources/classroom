@@ -1,0 +1,28 @@
+#!/bin/sh
+# Usage: bin/bootstrap
+# Ensures all dependencies are installed locally.
+
+set -e
+cd "$(dirname "$0")/.."
+
+if [ "$(uname -s)" = "Darwin" ]; then
+  echo "== Bootstrapping Homebrew OSX environment =="
+  brew update >/dev/null
+  brew bundle check &>/dev/null || brew bundle
+
+  if [ -f "$(which docker-compose)" ]; then
+    echo "== You must run Docker for Mac and let it install its tools. =="
+    # If the user customized their Docker appdir, `open` might not
+    # be able to find it.
+    open -a Docker 2>/dev/null || true
+    exit 1
+  fi
+
+  brew setup-nginx-conf classroom . config/dev/nginx.conf.erb
+fi
+
+if [ ${1:-""} = "--pristine" ]; then
+  exec docker-compose build --no-cache
+else
+  exec docker-compose build
+fi

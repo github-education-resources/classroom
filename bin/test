@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# bin/test: Run test suite for application. Optionallly pass in a path to an
+#              individual test file to run a single test.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+[ -z "$DEBUG" ] || set -x
+
+echo "===> Running tests..."
+
+if [ -n "$1" ]; then
+  # pass arguments to test call. This is useful for calling a single test.
+  docker-compose run web bin/rspec "$1"
+else
+  docker-compose run web bin/rspec
+fi

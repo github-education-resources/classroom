@@ -1,12 +1,43 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  pool: 5
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
   <<: *default
   database: classroom_development
 
+  # The specified database role being used to connect to postgres.
+  # To create additional roles in postgres see `$ createuser --help`.
+  # When left blank, postgres will use the default role. This is
+  # the same name as the operating system user that initialized the database.
+  username: postgres
+
+  # The password associated with the postgres role (username).
+  password: postgres
+
+  # Connect on a TCP socket. Omitted by default since the client uses a
+  # domain socket that doesn't need configuration. Windows does not have
+  # domain sockets, so uncomment these lines.
+  host: postgres
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
 test:
   <<: *default
   database: classroom_test
+
+  # The specified database role being used to connect to postgres.
+  # To create additional roles in postgres see `$ createuser --help`.
+  # When left blank, postgres will use the default role. This is
+  # the same name as the operating system user that initialized the database.
+  username: postgres
+
+  # The password associated with the postgres role (username).
+  password: postgres
+
+  # Connect on a TCP socket. Omitted by default since the client uses a
+  # domain socket that doesn't need configuration. Windows does not have
+  # domain sockets, so uncomment these lines.
+  host: <%= ENV.fetch("TRAVIS") { nil }.present? ? "localhost" : postgres %>

@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# bin/server: Launch the application and any extra required processes through
+# the docker container.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+# ensure everything in the app is up to date.
+./bin/update
+
+# boot the app and any other necessary processes.
+docker-compose down
+docker-compose up
+
+# Make sure docker has stopped
+trap "docker-compose down" EXIT
