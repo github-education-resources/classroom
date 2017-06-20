@@ -7,3 +7,12 @@
     border-color: #477958;
   };
 }
+
+.btn-blue {
+  @include btn-solid($text-white, #599bcd, #3072b3);
+  border-color: #2a65a0;
+}
+
+.btn-large {
+  border-radius: 3px;
+}
