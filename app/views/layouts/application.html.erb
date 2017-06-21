@@ -12,7 +12,7 @@
 
     <%= render 'shared/open_graph' %>
   </head>
-  <body class="site <%= controller_name %> <%= action_name %>">
+  <body class="site <%= controller_name %> <%= action_name %> d-block">
     <div class="loading-indicator" style="display: none;"></div>
 
     <%= render 'peek/bar' %>
@@ -27,7 +27,7 @@
       </div>
 
       <div class="site-content">
-        <div class="container">
+        <div class="container-lg">
           <%= yield %>
         </div>
       </div>
