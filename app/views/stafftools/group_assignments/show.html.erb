@@ -1,14 +1,19 @@
 <div class="site-content">
-  <div class="stafftools-page-header clearfix">
-    <span class="assignment-icon assignment-icon-group left">
-      <%= octicon 'organization', height: 22 %>
-    </span>
 
-    <h2 class="stafftools-heading">
-      <%= @group_assignment.title %>
-    </h2>
+  <div class="d-flex flex-md-row flex-items-center stafftools-page-header">
+    <div class="col-1 d-flexp">
+      <span class="assignment-icon assignment-icon-group">
+        <%= octicon 'organization', height: 22 %>
+      </span>
+    </div>
 
-    <p class="assignment-type text-muted">Group assignment</p>
+    <div class="col-10 col-md-10 d-flex flex-column">
+      <h2 class="stafftools-heading">
+        <%= @group_assignment.title %>
+      </h2>
+
+      <p class="assignment-type text-gray">Group assignment</p>
+    </div>
   </div>
 
   <div class="boxed-group">

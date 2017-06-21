@@ -16,7 +16,7 @@
   <%= form_tag impersonate_stafftools_user_path(user.id), 'data-name' => user.github_user.login do %>
     <dl class="form js-normalize-submit">
       <dt>Please type the user's GitHub login <strong>(<%= user.github_user.login %>)</strong> to confirm</dt>
-      <dd><input type="text" class="js-input-block"></dd>
+      <dd><input type="text" class="js-input-block form-control"></dd>
     </dl>
 
     <%= submit_tag "Impersonate @#{user.github_user.login}", class: 'btn btn-block btn-danger js-submit', disabled: true %>

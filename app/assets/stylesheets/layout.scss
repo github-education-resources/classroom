@@ -29,11 +29,11 @@ a {
   cursor: pointer;
 
   .success {
-    fill: $brand-green;
+    fill: $green;
   }
 
   .failed {
-    fill: $brand-red;
+    fill: $red;
   }
 }
 
@@ -341,7 +341,7 @@ hr {
 
   &.disabled {
     a {
-      color: $brand-gray;
+      color: $gray;
     }
 
     .avatar {
@@ -351,7 +351,7 @@ hr {
 
   &.is-error {
     height: 48px;
-    background-color: rgba($brand-red, 0.9);
+    background-color: rgba($red, 0.9);
     border-radius: 3px;
 
     &.assignment-repo-list-item {
@@ -381,10 +381,10 @@ hr {
   .student-login {
     display: block;
     padding-top: 4px;
-    color: $brand-gray-dark;
+    color: $gray-dark;
 
     &:hover {
-      color: $brand-blue;
+      color: $blue;
     }
   }
 }
@@ -406,7 +406,7 @@ hr {
 
   &.disabled {
     a {
-      color: $brand-gray;
+      color: $gray;
     }
 
     .avatar {
@@ -416,7 +416,7 @@ hr {
 
   &.is-error {
     height: 48px;
-    background-color: rgba($brand-red, 0.9);
+    background-color: rgba($red, 0.9);
     border-radius: 3px;
 
     &.assignment-repo-list-item {
@@ -441,10 +441,10 @@ hr {
 
   .team-name {
     display: block;
-    color: $brand-gray-dark;
+    color: $gray-dark;
 
     &:hover {
-      color: $brand-blue;
+      color: $blue;
     }
   }
 
@@ -486,7 +486,7 @@ hr {
     padding-top: 0.4em;
 
     &:hover {
-      color: $brand-blue;
+      color: $blue;
     }
   }
 
@@ -685,9 +685,9 @@ hr {
   &:active,
   &.selected {
     color: #fff;
-    background-color: $brand-blue;
+    background-color: $blue;
     background-image: none;
-    border-color: $brand-blue;
+    border-color: $blue;
   }
 
   &.disabled {
@@ -728,7 +728,7 @@ hr {
 
   &.disabled {
     a {
-      color: $brand-gray;
+      color: $gray;
     }
 
     .avatar {
@@ -751,10 +751,10 @@ hr {
   .search-result-title {
     display: block;
     padding-top: 4px;
-    color: $brand-gray-dark;
+    color: $gray-dark;
 
     &:hover {
-      color: $brand-blue;
+      color: $blue;
     }
   }
 }
