@@ -23,6 +23,7 @@ gem 'flipper-redis'
 gem 'flipper-ui'
 
 gem 'geo_pattern'
+gem 'graphql-client'
 
 gem 'jbuilder'
 gem 'jquery-datetimepicker-rails'

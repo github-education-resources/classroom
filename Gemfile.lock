@@ -161,6 +161,10 @@ GEM
     get_process_mem (0.2.1)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
+    graphql (1.6.4)
+    graphql-client (0.11.2)
+      activesupport (>= 3.0, < 6.0)
+      graphql (~> 1.5)
     guard (2.14.1)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
@@ -452,6 +456,7 @@ DEPENDENCIES
   flipper-ui
   foreman
   geo_pattern
+  graphql-client
   guard-rspec
   jbuilder
   jquery-datetimepicker-rails

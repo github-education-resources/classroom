@@ -42,6 +42,10 @@ class User < ApplicationRecord
     @github_client ||= Octokit::Client.new(access_token: token, auto_paginate: true)
   end
 
+  def github_graphql_client
+    @github_graphql_client ||= GitHub::GraphQL::Client.new(token: token)
+  end
+
   def github_user
     @github_user ||= GitHubUser.new(github_client, uid)
   end
