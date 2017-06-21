@@ -93,8 +93,8 @@ class AssignmentRepo
       client = @user.github_graphql_client
 
       response = client.query GitHub::GraphQL::Queries::ID_FOR_ASSIGNMENT_REPO,
-        name: name,
-        owner: @organization.title
+                              name: name,
+                              owner: @organization.title
 
       response.repository.id
     rescue GitHub::GraphQL::QueryError

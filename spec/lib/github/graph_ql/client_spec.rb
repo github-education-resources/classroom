@@ -20,9 +20,7 @@ describe GitHub::GraphQL::Client, :vcr do
       let(:client) { described_class.new(token: nil) }
 
       it 'returns QueryError' do
-        expect {
-          client.query(SIMPLE_DEF)
-        }.to raise_error GitHub::GraphQL::QueryError
+        expect { client.query(SIMPLE_DEF) }.to raise_error GitHub::GraphQL::QueryError
       end
     end
 
@@ -30,9 +28,7 @@ describe GitHub::GraphQL::Client, :vcr do
       let(:client) { described_class.new(token: 'spaghetti') }
 
       it 'returns QueryError' do
-        expect {
-          client.query(SIMPLE_DEF)
-        }.to raise_error GitHub::GraphQL::QueryError
+        expect { client.query(SIMPLE_DEF) }.to raise_error GitHub::GraphQL::QueryError
       end
     end
 

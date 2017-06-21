@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GitHub
   module GraphQL
     module Queries

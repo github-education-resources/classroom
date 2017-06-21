@@ -13,7 +13,7 @@ describe GitHub::GraphQL do
 
   describe '#parse', :vcr do
     context 'when the query is valid' do
-      let(:query){
+      let(:query) do
         <<-'GRAPHQL'
           query {
             rateLimit {
@@ -21,7 +21,7 @@ describe GitHub::GraphQL do
             }
           }
         GRAPHQL
-      }
+      end
 
       it 'returns a definition' do
         expect(subject.parse(query)).to be_kind_of(GraphQL::Client::OperationDefinition)
@@ -32,9 +32,7 @@ describe GitHub::GraphQL do
       let(:query) { 'I am not a query' }
 
       it 'raises ParseError' do
-        expect {
-          subject.parse(query)
-        }.to raise_error GitHub::GraphQL::ParseError
+        expect { subject.parse(query) }.to raise_error GitHub::GraphQL::ParseError
       end
     end
   end
