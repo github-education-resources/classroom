@@ -6,6 +6,7 @@ class AssignmentRepo
     REPOSITORY_CREATION_FAILED              = 'GitHub repository could not be created, please try again'
     REPOSITORY_STARTER_CODE_IMPORT_FAILED   = 'We were not able to import you the starter code to your assignment, please try again.' # rubocop:disable LineLength
     REPOSITORY_COLLABORATOR_ADDITION_FAILED = 'We were not able to add you to the Assignment as a collaborator, please try again.' # rubocop:disable LineLength
+    REPOSITORY_GLOBAL_RELAY_ID_NOT_FOUND    = 'We were not able to fetch the global relay id for the assignment'
 
     attr_reader :assignment, :user, :organization
 
@@ -58,9 +59,12 @@ class AssignmentRepo
     def perform
       verify_organization_has_private_repos_available!
 
+      repository_name = generate_github_repository_name
+
       assignment_repo = assignment.assignment_repos.build(
-        github_repo_id: create_github_repository!,
-        user: user
+        github_repo_id: create_github_repository!(repository_name),
+        user: user,
+        global_relay_id: global_relay_id(repository_name)
       )
 
       add_user_to_repository!(assignment_repo.github_repo_id)
@@ -85,6 +89,18 @@ class AssignmentRepo
 
     private
 
+    def global_relay_id(name)
+      client = @user.github_graphql_client
+
+      response = client.query GitHub::GraphQL::Queries::ID_FOR_ASSIGNMENT_REPO,
+        name: name,
+        owner: @organization.title
+
+      response.repository.id
+    rescue GitHub::GraphQL::QueryError
+      raise Result::Error, REPOSITORY_GLOBAL_RELAY_ID_NOT_FOUND
+    end
+
     # Internal: Add the User to the GitHub repository
     # as a collaborator.
     #
@@ -101,9 +117,7 @@ class AssignmentRepo
     # Internal: Create the GitHub repository for the AssignmentRepo.
     #
     # Returns an Integer ID or raises a Result::Error
-    def create_github_repository!
-      repository_name = generate_github_repository_name
-
+    def create_github_repository!(repository_name)
       options = {
         private: assignment.private?,
         description: "#{repository_name} created by GitHub Classroom"
