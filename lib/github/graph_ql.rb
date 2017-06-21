@@ -10,7 +10,7 @@ module GitHub
     SCHEMA_URI   = 'db/graphql_schema.json'
 
     def self.schema
-      @graphql_schema = ::GraphQL::Client.load_schema(SCHEMA_URI)
+      @graphql_schema ||= ::GraphQL::Client.load_schema(SCHEMA_URI)
     end
 
     # All query definitions must be parsed to a static constant before being excecuted
