@@ -96,7 +96,7 @@ class AssignmentRepo
                               name: name,
                               owner: @organization.title
 
-      response.repository.id
+      response&.repository&.id
     rescue GitHub::GraphQL::QueryError
       raise Result::Error, REPOSITORY_GLOBAL_RELAY_ID_NOT_FOUND
     end
