@@ -73,7 +73,10 @@ class Assignment
 
     def new_deadline(deadline)
       new_deadline = Deadline::Factory.build_from_string(deadline_at: deadline)
-      raise Result::Error, new_deadline.errors.full_messages.join("\n") unless new_deadline.valid?
+      unless new_deadline.valid?
+        @assignment.errors.add(:deadline, new_deadline.errors[:deadline_at].join("\n") )
+        raise Result::Error
+      end
 
       @assignment.deadline = new_deadline
       @assignment.deadline.create_job
