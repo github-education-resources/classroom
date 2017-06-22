@@ -1,14 +1,16 @@
 <div class="site-content">
-  <div class="stafftools-page-header clearfix">
-    <span class="assignment-icon assignment-icon-individual left">
+  <div class="d-flex flex-md-row flex-items-center stafftools-page-header">
+    <div class="col-1 assignment-icon assignment-icon-group">
       <%= image_tag @organization.github_organization.github_avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{@organization.github_organization.login}" %>
-    </span>
+    </div>
 
-    <h2 class="stafftools-heading">
-      <%= @organization.title %>
-    </h2>
+    <div class="col-10 col-md-10 d-flex flex-column">
+      <h2 class="stafftools-heading">
+        <%= @organization.title %>
+      </h2>
 
-    <p class="assignment-type text-muted">Classroom</p>
+      <p class="assignment-type text-gray">Classroom</p>
+    </div>
   </div>
 
   <div class="boxed-group">

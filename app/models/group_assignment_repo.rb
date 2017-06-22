@@ -9,6 +9,7 @@ class GroupAssignmentRepo < ApplicationRecord
 
   belongs_to :group
   belongs_to :group_assignment
+  alias assignment group_assignment
 
   has_one :organization, -> { unscope(where: :deleted_at) }, through: :group_assignment
 
@@ -34,6 +35,7 @@ class GroupAssignmentRepo < ApplicationRecord
 
   delegate :creator, :starter_code_repo_id, to: :group_assignment
   delegate :github_team_id,                 to: :group
+  delegate :default_branch, :commits,       to: :github_repository
 
   # TODO: Move to a view model
   def disabled?

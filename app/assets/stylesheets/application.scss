@@ -1,15 +1,12 @@
 //= require peek
 //= require peek/views/performance_bar
 
-@import "primer-css/scss/primer";
-
-@import "primer-markdown/components/markdown";
+@import "variables";
+@import "primer-css/index";
 
 @import "include-fragment-element/include-fragment-element";
-
 @import "components/*";
 
-@import "grid-system";
 
 @import "layout";
 @import "stafftools";
@@ -17,3 +14,5 @@
 @import "remodal/dist/remodal";
 
 @import "dragula/dist/dragula";
+
+@import "jquery.datetimepicker";

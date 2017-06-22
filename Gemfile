@@ -25,6 +25,7 @@ gem 'flipper-ui'
 gem 'geo_pattern'
 
 gem 'jbuilder'
+gem 'jquery-datetimepicker-rails'
 gem 'jquery-turbolinks'
 
 gem 'kaminari'

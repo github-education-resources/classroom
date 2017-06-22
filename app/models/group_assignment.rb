@@ -10,6 +10,7 @@ class GroupAssignment < ApplicationRecord
   default_scope { where(deleted_at: nil) }
 
   has_one :group_assignment_invitation, dependent: :destroy, autosave: true
+  has_one :deadline, dependent: :destroy, as: :assignment
 
   has_many :group_assignment_repos, dependent: :destroy
 

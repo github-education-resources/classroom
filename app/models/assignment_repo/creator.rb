@@ -56,7 +56,7 @@ class AssignmentRepo
     # rubocop:disable MethodLength
     # rubocop:disable AbcSize
     def perform
-      verify_organization_has_private_repos_available!
+      verify_organization_has_private_repos_available! if @assignment.private?
 
       assignment_repo = assignment.assignment_repos.build(
         github_repo_id: create_github_repository!,
@@ -143,9 +143,7 @@ class AssignmentRepo
     #
     # Returns True or raises a Result::Error with a helpful message.
     def verify_organization_has_private_repos_available!
-      return true if assignment.public?
-
-      github_organization_plan = GitHubOrganization.new(organization.github_client, organization.github_id).plan
+      github_organization_plan = organization.plan
 
       owned_private_repos = github_organization_plan[:owned_private_repos]
       private_repos       = github_organization_plan[:private_repos]

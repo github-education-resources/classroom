@@ -23,6 +23,11 @@ FactoryGirl.define do
     github_repo_id { rand(1..1_000_000) }
   end
 
+  factory :deadline do
+    assignment
+    deadline_at { Time.zone.tomorrow }
+  end
+
   factory :group_assignment do
     organization
 
