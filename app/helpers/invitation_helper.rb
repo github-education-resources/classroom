@@ -28,7 +28,6 @@ module InvitationHelper
         short_key: invitation.short_key,
         url: Rails.application.routes.url_helpers.send("#{type}_url".to_sym, id: invitation.key, host: base_url),
         short_url: short_url(invitation.short_key, type, base_url)
-
       }
     end
 
