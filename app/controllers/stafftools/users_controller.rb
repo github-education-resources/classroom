@@ -20,6 +20,26 @@ module Stafftools
       redirect_to stafftools_root_path
     end
 
+    def enable_feature_previewing
+      if @user.update_attributes(feature_previewer: true)
+        flash[:success] = "#{@user.github_user.login} can now see select preview features"
+      else
+        flash[:error] = "We weren't able to enable seeing preview features for #{@user.github_user.login}"
+      end
+
+      redirect_to stafftools_user_path(@user)
+    end
+
+    def disable_feature_previewing
+      if @user.update_attributes(feature_previewer: false)
+        flash[:success] = "#{@user.github_user.login} can no longer see select preview features"
+      else
+        flash[:error] = "We weren't able to remove #{@user.github_user.login} from seeing preview features"
+      end
+
+      redirect_to stafftools_user_path(@user)
+    end
+
     private
 
     def set_user
