@@ -14,10 +14,10 @@
             <%= render 'shared/error_messages', object: f.object %>
             <dl class="form">
               <dt><%= f.label :title %></dt>
-              <dd><%= f.text_field :title, class: 'textfield' %></dd>
+              <dd><%= f.text_field :title, class: 'textfield form-control input-contrast input-block' %></dd>
             </dl>
             <div class="form-actions">
-              <%= f.submit 'Save changes', class: 'btn btn-green' %>
+              <%= f.submit 'Save changes', class: 'btn btn-primary' %>
             </div>
           <% end %>
         </div>
@@ -25,7 +25,7 @@
 
       <div class="boxed-group dangerzone">
         <h3>Reset and remove this classroom</h3>
-        <div class="boxed-group-inner clearfix">
+        <div class="boxed-group-inner pt-2 clearfix">
           <p>Once you reset this classroom, there is no going back. Please be certain.</p>
           <p>
             <a data-remodal-target="reset-and-remove-organization" class="btn btn-danger">Reset and remove this classroom</a>

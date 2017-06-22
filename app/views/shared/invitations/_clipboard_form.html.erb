@@ -1,4 +1,4 @@
-<%= content_tag :input, '', type: 'text', id: "#{type}-#{key}", value: url, readonly: 'readonly' %>
+<%= content_tag :input, '', type: 'text', class: "form-control input-block",id: "#{type}-#{key}", value: url, readonly: 'readonly' %>
 <span class="input-group-button">
   <button aria-label="<%= t('views.shared.copy_to_clipboard') %>" data-clipboard-target=<%= "##{type}-#{key}" %> class="js-clipboard btn tooltipped tooltipped-s" type="button">
     <%= octicon 'clippy' %>

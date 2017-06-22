@@ -21,7 +21,7 @@
       <div id="flash-messages">
         <% flash.each do |type, message| %>
           <%= content_tag :div, class: "flash #{primer_class_for('alert')}" do %>
-            <div class="container text-center">
+            <div class="container-lg text-center">
               <strong><%= message %></strong>
             </div>
           <% end %>

@@ -4,7 +4,7 @@
       <span class="flash-close js-flash-close">
         <%= octicon('x') %>
       </span>
-      <%= message %>
+      <%= sanitize(message) %>
     <% end %>
   </div>
 <% end %>

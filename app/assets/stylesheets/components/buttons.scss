@@ -1,66 +1,18 @@
-// Custom button with Classroom green
-.btn-green {
-  color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: #5fb27b;
-  background-image: linear-gradient(#69c387, #519568);
+.btn-primary {
+  @include btn-solid($text-white, #69c387, #519568);
   border-color: #55926a;
 
   &:hover {
-    background-color: #64b680;
-    background-image: linear-gradient(#5da976, #468059);
+    @include btn-solid($text-white, #5da976, #468059);
     border-color: #477958;
-  }
-
-  &:disabled {
-    color: #fff;
-    background-color: #64b680;
-    background-image: none;
-    border-color: #55926a;
-    opacity: 0.5;
-  }
+  };
 }
 
 .btn-blue {
-  color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15);
-  background-color: #3072b3;
-  background-image: linear-gradient(#599bcd, #3072b3);
+  @include btn-solid($text-white, #599bcd, #3072b3);
   border-color: #2a65a0;
-
-  &:hover {
-    color: #fff;
-    background-color: darken(#3072b3, 5%);
-    background-image: linear-gradient(darken(#599bcd, 5%), darken(#3072b3, 5%));
-    border-color: #2a65a0;
-  }
-
-  &:active,
-  &.selected {
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
-    background-color: darken(#3072b3, 5%);
-    background-image: none;
-    border-color: darken(#2a65a0, 5%);
-  }
-
-  &.selected:hover {
-    background-color: darken(#3072b3, 10%);
-  }
 }
 
-.btn-big {
-  max-width: 100%;
-  padding: 1rem 2rem;
-  font-size: 1rem;
-}
-
-.btn-big-mobile-friendly {
-  max-width: 100%;
-  padding: 1rem 2rem;
-  font-size: 1rem;
-
-  @media (max-width: 34em) {
-    padding: 1rem;
-    font-size: 0.85rem;
-  }
+.btn-large {
+  border-radius: 3px;
 }
