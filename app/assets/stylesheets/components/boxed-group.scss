@@ -1,3 +1,15 @@
+.Box--dangerzone {
+  .Box-header {
+    background-color: #df3e3e;
+    border: 1px solid #a00;
+
+    .Box-title {
+      color: #fff;
+      text-shadow: 0 -1px 0 #900;
+    }
+  }
+}
+
 .boxed-group {
   position: relative;
   margin-top: 1rem;
