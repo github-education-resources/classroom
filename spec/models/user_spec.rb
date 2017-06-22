@@ -67,6 +67,14 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '#feature_previewer?' do
+    it 'returns if the User is can preview features' do
+      expect(subject.feature_previewer?).to be(false)
+      subject.update_attributes(feature_previewer: true)
+      expect(subject.feature_previewer?).to be(true)
+    end
+  end
+
   describe '#github_client_scopes', :vcr do
     it 'returns an Array of scopes' do
       subject.assign_from_auth_hash(github_omniauth_hash)
