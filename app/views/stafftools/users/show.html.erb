@@ -97,6 +97,28 @@
           <a data-remodal-target="impersonate-user" class="btn btn-danger">Impersonate</a>
         </div>
 
+        <div class="Box-row d-flex flex-items-center">
+          <% if @user.feature_previewer? %>
+            <div class="flex-auto">
+              <strong>Disable <%= "@#{@user.github_user.login}" %> from previewing features</strong>
+              <div class="text-small text-gray-light">
+                <strong><%= @user.github_user.login %></strong> will no longer be able to see any feature we have enabled for the features preview group.
+              </div>
+            </div>
+
+            <%= link_to 'Disable', disable_feature_previewing_stafftools_user_path(@user), class: 'btn btn-danger', method: :delete %>
+          <% else %>
+            <div class="flex-auto">
+              <strong>Enable <%= "@#{@user.github_user.login}" %> to preview features</strong>
+              <div class="text-small text-gray-light">
+                This will allow <strong><%= @user.github_user.login %></strong> to see any feature we have enabled for the features preview group.
+              </div>
+            </div>
+
+            <%= link_to 'Enable', enable_feature_previewing_stafftools_user_path(@user), class: 'btn btn-danger', method: :patch %>
+          <% end %>
+        </div>
+      </ul>
     </div>
   <% end %>
 </div>
