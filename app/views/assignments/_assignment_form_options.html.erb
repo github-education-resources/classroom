@@ -1,4 +1,4 @@
-<% view = FormView.new(subject: @assignment) %>
+<% view = FormView.new(subject: @assignment, organization: @organization) %>
 
 <dl class="<%= view.form_class_for(:title) %>">
   <dt><%= f.label :title %></dt>
@@ -15,13 +15,13 @@
 
 <dl class="form">
   <div class="form-checkbox">
-    <label><%= f.radio_button :public_repo, true %> Public</label>
+    <label><%= f.radio_button :public_repo, !view.private_repos_available? %> Public</label>
     <%= octicon 'repo', height: 32 %>
     <span class="note">Submit assignments using public repositories. All submissions will be visible to the world.</span>
   </div>
 
   <div class="form-checkbox">
-    <label><%= f.radio_button :public_repo, false %> Private</label>
+    <label><%= f.radio_button :public_repo, view.private_repos_available? %> Private</label>
     <%= octicon 'lock', height: 32 %>
     <span class="note">Submit assignments using private repositories. Submissions will only be visible to the submitter and organization owners.</span>
   </div>
