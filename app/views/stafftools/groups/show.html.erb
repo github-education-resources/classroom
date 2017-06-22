@@ -14,7 +14,7 @@
       <p class="assignment-type text-gray">Group</p>
     </div>
   </div>
-  
+
   <div class="boxed-group">
     <h3>Info</h3>
 
@@ -30,7 +30,7 @@
         </tr>
         <tr>
           <td>Grouping</td>
-          <td><%= link_to @group.grouping.title, stafftools_grouping_path(@group.grouping) %></td>
+          <td><%= link_to @group.grouping.title, stafftools_grouping_path(@group.grouping.id) %></td>
         </tr>
         <tr>
           <td>GitHub URL</td>
