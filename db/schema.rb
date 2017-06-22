@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 20170620200357) do
     t.index ["assignment_id"], name: "index_assignment_invitations_on_assignment_id"
     t.index ["deleted_at"], name: "index_assignment_invitations_on_deleted_at"
     t.index ["key"], name: "index_assignment_invitations_on_key", unique: true
+    t.index ["short_key"], name: "index_assignment_invitations_on_short_key"
   end
 
   create_table "assignment_repos", id: :serial, force: :cascade do |t|
@@ -79,6 +80,7 @@ ActiveRecord::Schema.define(version: 20170620200357) do
     t.index ["deleted_at"], name: "index_group_assignment_invitations_on_deleted_at"
     t.index ["group_assignment_id"], name: "index_group_assignment_invitations_on_group_assignment_id"
     t.index ["key"], name: "index_group_assignment_invitations_on_key", unique: true
+    t.index ["short_key"], name: "index_group_assignment_invitations_on_short_key"
   end
 
   create_table "group_assignment_repos", id: :serial, force: :cascade do |t|
