@@ -1,0 +1,7 @@
+en:
+  views:
+    stafftools:
+      site_admin: 'Site Admin'
+      developer_tools: 'Developer Tools'
+      search: 'Search'
+      features: 'Features'
