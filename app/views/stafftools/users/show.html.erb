@@ -12,42 +12,43 @@
       </h2>
 
       <p class="assignment-type text-gray">
-        <%= content_tag(:span, 'Staff', class: 'staff-badge') if @user.staff? %> User
+        <%= content_tag(:span, 'Staff', class: 'staff-badge') if @user.staff? %>
+        <%= t('views.stafftools.users.user') %>
       </p>
     </div>
   </div>
 
   <div class="boxed-group">
-    <h3>User information</h3>
+    <h3><%= t('views.stafftools.users.user_info') %></h3>
 
     <div class="boxed-group-inner">
       <table>
         <tr>
-          <td class="text-emphasized">ID</td>
+          <td class="text-emphasized"><%= t('views.stafftools.users.id') %></td>
           <td><%= @user.id %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">GitHub ID</td>
+          <td class="text-emphasized"><%= t('views.stafftools.users.github_id') %></td>
           <td><%= @user.uid %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">GitHub profile</td>
+          <td class="text-emphasized"><%= t('views.stafftools.users.github_profile') %></td>
           <td><%= link_to @user.github_user.html_url, @user.github_user.html_url %></td>
         </tr>
         <tr>
-         <td class="text-emphasized">Joined on</td>
+         <td class="text-emphasized"><%= t('views.stafftools.users.joined_on') %></td>
          <td><%= local_time(@user.created_at) %></td>
         </tr>
         <tr>
-         <td class="text-emphasized">Last active</td>
+         <td class="text-emphasized"><%= t('views.stafftools.users.last_active') %></td>
          <td><%= local_time(@user.last_active_at) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Access token</td>
+          <td class="text-emphasized"><%= t('views.stafftools.users.access_token') %></td>
           <td><%= @user.authorized_access_token? ? 'Authorized' : 'Rejected' %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Scopes</td>
+          <td class="text-emphasized"><%= t('views.stafftools.users.scopes') %></td>
           <td><%= @user.github_client_scopes.join(', ') %></td>
         </tr>
       </table>
@@ -56,7 +57,7 @@
 
   <% if @user.organizations.present? %>
     <div class="boxed-group">
-      <h3>Classrooms</h3>
+      <h3><%= t('views.stafftools.users.classrooms') %></h3>
 
       <div class="boxed-group-inner">
         <ul class="boxed-group-list standalone">
@@ -68,7 +69,7 @@
 
   <% if @user.repo_accesses.present? %>
     <div class="boxed-group">
-      <h3>Organization Memberships</h3>
+      <h3><%= t('views.stafftools.users.org_memberships') %></h3>
 
       <div class="boxed-group-inner">
         <ul class="boxed-group-list standalone">
@@ -82,12 +83,12 @@
 
   <% if @user.id != current_user.id %>
     <div class="boxed-group dangerzone">
-      <h3>Dangerzone</h3>
+      <h3><%= t('views.stafftools.users.dangerzone') %></h3>
 
       <div class="boxed-group-inner">
-        <h4>Impersonate <%= "@#{@user.github_user.login}" %></h4>
-        <a data-remodal-target="impersonate-user" class="btn btn-danger boxed-action">Impersonate <%= "@#{@user.github_user.login}" %></a>
-        <p>This will send you to <strong><%= @user.github_user.login %></strong>'s Classroom dashboard as <strong><%= @user.github_user.login %></strong>.</p>
+        <h4><%= t('views.stafftools.users.impersonate_user_title', user_login: @user.github_user.login) %></h4>
+        <a data-remodal-target="impersonate-user" class="btn btn-danger boxed-action"><%= t('views.stafftools.users.impersonate_user_title', user_login: @user.github_user.login) %></a>
+        <p><%= raw t('views.stafftools.users.impersonate_info', user_login: @user.github_user.login) %></p>
 
         <%= render partial: 'stafftools/users/impersonate_user_confirmation_modal', locals: { user: @user } %>
       </div>

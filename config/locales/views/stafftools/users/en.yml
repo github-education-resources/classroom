@@ -1,0 +1,24 @@
+en:
+  views:
+    stafftools:
+      users:
+        user: 'User'
+        user_info: 'User information'
+        id: 'ID'
+        github_id: 'GitHub ID'
+        github_profile: 'GitHub profile'
+        joined_on: 'Joined on'
+        last_active: 'Last active'
+        access_token: 'Access token'
+        scopes: 'Scopes'
+        classrooms: 'Classrooms'
+        org_memberships: 'Organization Memberships'
+        dangerzone: 'Dangerzone'
+        impersonate_user_title: 'Impersonate @%{user_login}'
+        impersonate_info: "This will send you to <strong>%{user_login}</strong>'s Classroom dashboard as <strong>%{user_login}."
+        impersonate_user_header: 'Are you ABSOLUTELY sure?'
+        impersonate_user_warning: 'Please make sure you really want to do this.'
+        impersonate_user_desc: 'All actions that you perform on behalf of the user will affect their experience.
+          <strong>Please use caution when impersonating another user.</strong>'
+        impersonate_user_confirmation: "Please type the user's GitHub login <strong>(%{user_login})</strong> to confirm"
+        impersonate_user_btn: 'Impersonate @%{user_login}'
