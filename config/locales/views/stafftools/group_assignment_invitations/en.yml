@@ -1,0 +1,13 @@
+en:
+  views:
+    stafftools:
+      group_assignment_invitations:
+        invitation_for: 'Group assignment invitation for'
+        created: 'Created'
+        assignment_type: 'Group assignment invitation'
+        invitation_header: 'Group assignment invitation information'
+        id: 'ID'
+        assignment: 'Assignment'
+        owned_by: 'Owned by'
+        invitation_url: 'Invitation URL'
+        created_on: 'Created on'

@@ -11,33 +11,33 @@
         <%= @group_assignment_invitation.key %>
       </h2>
 
-      <p class="assignment-type text-gray">Group assignment invitation</p>
+      <p class="assignment-type text-gray"><%= t('views.stafftools.group_assignment_invitations.assignment_type') %></p>
     </div>
   </div>
 
   <div class="boxed-group">
-    <h3>Group assignment invitation information</h3>
+    <h3><%= t('views.stafftools.group_assignment_invitations.invitation_header') %></h3>
 
     <div class="boxed-group-inner">
       <table>
         <tr>
-          <td class="text-emphasized">ID</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignment_invitations.id') %></td>
           <td><%= @group_assignment_invitation.id %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Assignment</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignment_invitations.assignment') %></td>
           <td><%= link_to @group_assignment_invitation.group_assignment.title, stafftools_group_assignment_path(@group_assignment_invitation.group_assignment.id) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Owned by</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignment_invitations.owned_by') %></td>
           <td><%= link_to @group_assignment_invitation.organization.title, stafftools_organization_path(@group_assignment_invitation.organization.id) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Invitation URL</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignment_invitations.invitation_url') %></td>
           <td><%= link_to group_assignment_invitation_url(@group_assignment_invitation), group_assignment_invitation_url(@group_assignment_invitation) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Created on</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignment_invitations.created_on') %></td>
           <td><%= local_time(@group_assignment_invitation.created_at) %></td>
         </tr>
       </table>
