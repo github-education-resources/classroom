@@ -9,29 +9,29 @@
         <%= @organization.title %>
       </h2>
 
-      <p class="assignment-type text-gray">Classroom</p>
+      <p class="assignment-type text-gray"><%= t('views.stafftools.organizations.classroom') %></p>
     </div>
   </div>
 
   <div class="boxed-group">
-    <h3>Classroom</h3>
+    <h3><%= t('views.stafftools.organizations.classroom') %></h3>
 
     <div class="boxed-group-inner">
       <table>
         <tr>
-          <td class="text-emphasized">ID</td>
+          <td class="text-emphasized"><%= t('views.stafftools.organizations.id') %></td>
           <td><%= @organization.id %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Classroom</td>
+          <td class="text-emphasized"><%= t('views.stafftools.organizations.classroom') %></td>
           <td><%= link_to organization_url(@organization), organization_url(@organization) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Joined on</td>
+          <td class="text-emphasized"><%= t('views.stafftools.organizations.joined_on') %></td>
           <td><%= local_time(@organization.created_at) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Last updated</td>
+          <td class="text-emphasized"><%= t('views.stafftools.organizations.last_updated') %></td>
           <td><%= local_time(@organization.updated_at) %></td>
         </tr>
       </table>
@@ -39,26 +39,26 @@
   </div>
 
   <div class="boxed-group">
-    <h3>GitHub organization</h3>
+    <h3><%= t('views.stafftools.organizations.github_organization') %></h3>
 
     <div class="boxed-group-inner">
       <table>
         <tr>
-          <td class="text-emphasized">ID</td>
+          <td class="text-emphasized"><%= t('views.stafftools.organizations.id') %></td>
           <td><%= @organization.github_id %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Homepage</td>
+          <td class="text-emphasized"><%= t('views.stafftools.organizations.homepage') %></td>
           <td><%= link_to @organization.github_organization.html_url, @organization.github_organization.html_url %></td>
         </tr>
         <% if @organization.webhook_id.present? %>
           <tr>
-            <td class="text-emphasized">WebHook URL</td>
+            <td class="text-emphasized"><%= t('views.stafftools.organizations.webhook_url') %></td>
             <% url = "https://github.com/organizations/#{@organization.github_organization.login}/settings/hooks/#{@organization.webhook_id}" %>
             <td><%= link_to url, url %></td>
           </tr>
           <tr>
-            <td class="text-emphasized">WebHook Enabled?</td>
+            <td class="text-emphasized"><%= t('views.stafftools.organizations.webhook_enabled_check') %></td>
             <td><%= @organization.is_webhook_active? %></td>
           </tr>
         <% end %>
@@ -67,7 +67,7 @@
   </div>
 
   <div class="boxed-group">
-    <h3>Owners</h3>
+    <h3><%= t('views.stafftools.organizations.owners') %></h3>
 
     <div class="boxed-group-inner">
       <ul class="boxed-group-list standalone">
@@ -87,7 +87,7 @@
 
   <% if @organization.all_assignments.present? %>
     <div class="boxed-group">
-      <h3>Assignments</h3>
+      <h3><%= t('views.stafftools.organizations.assignments') %></h3>
 
       <div class="boxed-group-inner">
         <ul class="boxed-group-list standalone">
@@ -102,7 +102,7 @@
 
   <% if @organization.groupings.present? %>
     <div class="boxed-group">
-      <h3>Groupings</h3>
+      <h3><%= t('views.stafftools.organizations.groupings') %></h3>
 
       <div class="boxed-group-inner">
         <ul class="boxed-group-list standalone">
