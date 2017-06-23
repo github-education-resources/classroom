@@ -11,27 +11,27 @@
         <%= @grouping.title %>
       </h2>
 
-      <p class="assignment-type text-gray">Grouping</p>
+      <p class="assignment-type text-gray"><%= t('views.stafftools.groupings.grouping') %></p>
     </div>
   </div>
 
   <div class="boxed-group">
-    <h3>Grouping information</h3>
+    <h3><%= t('views.stafftools.groupings.grouping_info') %></h3>
 
     <div class="boxed-group-inner">
       <% organization = @grouping.organization %>
 
       <table>
         <tr>
-          <td class="text-emphasized">ID</td>
+          <td class="text-emphasized"><%= t('views.stafftools.groupings.id') %></td>
           <td><%= @grouping.id %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Owned by</td>
+          <td class="text-emphasized"><%= t('views.stafftools.groupings.owned_by') %></td>
           <td><%= link_to organization.title, stafftools_organization_path(organization.id) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Created on</td>
+          <td class="text-emphasized"><%= t('views.stafftools.groupings.created_on') %></td>
           <td><%= local_time(@grouping.created_at) %></td>
         </tr>
       </table>
@@ -40,7 +40,7 @@
 
   <% if @grouping.groups.present? %>
     <div class="boxed-group">
-      <h3>Groups</h3>
+      <h3><%= t('views.stafftools.groupings.groups') %></h3>
 
       <div class="boxed-group-inner">
         <ul class="boxed-group-list standalone">

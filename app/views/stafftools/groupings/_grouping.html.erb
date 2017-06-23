@@ -10,6 +10,6 @@
       <strong class="search-result-title"><%= grouping.title %></strong>
     <% end %>
 
-    <span class="text-gray css-truncate css-truncate-target">Created <%= local_time_ago(grouping.created_at) %></span>
+    <span class="text-gray css-truncate css-truncate-target"><%= t('views.stafftools.groupings.created') %> <%= local_time_ago(grouping.created_at) %></span>
   </div>
 </div>

@@ -1,0 +1,11 @@
+en:
+  views:
+    stafftools:
+      groupings:
+        created: 'Created'
+        grouping: 'Grouping'
+        grouping_info: 'Grouping information'
+        id: 'ID'
+        owned_by: 'Owned by'
+        created_on: 'Created on'
+        groups: 'Groups'
