@@ -1,0 +1,13 @@
+en:
+  views:
+    assignment_invitations:
+      accept_invitation_header: 'Accept the <strong>%{assignment_title}</strong> assignment'
+      accept_invitation_info_slice_1: 'Accepting this assignment will give you access to the'
+      accept_invitation_info_slice_2: 'repository in the'
+      accept_invitation_info_slice_3: 'organization on GitHub.'
+      accept_invitation_btn_text: 'Accept this assignment'
+      invitation_accepted_header: 'Accepted the <strong>%{assignment_title}</strong> assignment'
+      ready_to_go: 'You are ready to go!'
+      org_invitation_slice_1: 'You may receive an invitation to join'
+      org_invitation_slice_2: 'via email invitation on your behalf. No further action is necessary.'
+      created_assignment_location: 'Your assignment has been created here:'
