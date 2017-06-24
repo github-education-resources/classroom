@@ -25,8 +25,6 @@ class Organization < ApplicationRecord
 
   validates :webhook_id, uniqueness: true, allow_nil: true
 
-  delegate :plan, to: :github_organization
-
   before_destroy :silently_remove_organization_webhook
 
   def all_assignments(with_invitations: false)
