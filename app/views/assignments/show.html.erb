@@ -14,10 +14,10 @@
             <h2 class="site-content-heading">
               <%= @assignment.title %>
             </h2>
-            <p class="assignment-type text-gray">Individual assigment
+            <p class="assignment-type text-gray"><%= t('views.assignments.assignment_type') %>
               <% if @assignment.deadline %>
                 <% if @assignment.deadline.passed? %>
-                  - Deadline Passed
+                  <%= t('views.assignments.deadline_passed') %>
                 <% else %>
                   <%= "- Deadline in #{distance_of_time_in_words(Time.zone.now, @assignment.deadline.deadline_at)}" %>
                 <% end %>
@@ -30,7 +30,7 @@
       <div class="text-right pl-2 settings">
         <%= link_to edit_organization_assignment_path(@organization, @assignment), class: 'btn right' do %>
           <%= octicon 'gear' %>
-          Assignment settings
+          <%= t('views.assignments.assignment_settings') %>
         <% end %>
       </div>
   </div>
@@ -50,8 +50,8 @@
       <%= render partial: 'shared/pagination', locals: { collection: @assignment_repos } %>
     <% else %>
       <div class="blankslate">
-        <h3>"<%= @assignment.title %>" does not have any repositories.</h3>
-        <p>Share the invitation link with your students to get started.</p>
+        <h3><%= t('views.assignments.have_no_repository', assignment_title: @assignment.title) %></h3>
+        <p><%= t('views.assignments.share_invitation_link') %></p>
       </div>
     <% end %>
   </div>

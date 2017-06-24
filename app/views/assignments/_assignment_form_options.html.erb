@@ -15,24 +15,24 @@
 
 <dl class="form">
   <div class="form-checkbox">
-    <label><%= f.radio_button :public_repo, true %> Public</label>
+    <label><%= f.radio_button :public_repo, true %> <%= raw t('views.assignments.public') %></label>
     <%= octicon 'repo', height: 32 %>
-    <span class="note">Submit assignments using public repositories. All submissions will be visible to the world.</span>
+    <span class="note"><%= raw t('views.assignments.public_submission_info') %></span>
   </div>
 
   <div class="form-checkbox">
-    <label><%= f.radio_button :public_repo, false %> Private</label>
+    <label><%= f.radio_button :public_repo, false %> <%= raw t('views.assignments.private') %></label>
     <%= octicon 'lock', height: 32 %>
-    <span class="note">Submit assignments using private repositories. Submissions will only be visible to the submitter and organization owners.</span>
+    <span class="note"><%= raw t('views.assignments.private_submission_info') %></span>
   </div>
 
   <div class="form-checkbox">
-    <label><%= f.check_box :students_are_repo_admins %> Give students Admin permissions on their repository</label>
+    <label><%= f.check_box :students_are_repo_admins %> <%= raw t('views.assignments.repo_permission_info') %></label>
   </div>
 </dl>
 
 <dl class="form">
-  <dt><label>Add your starter code from GitHub <small>(optional)</small> </label></dt>
+  <dt><%= raw t('views.assignments.starter_code_info') %></dt>
   <dd><input class="textfield js-autocomplete-textfield form-control input-contrast input-block" type="text" name="repo_name" value="<%= @assignment.starter_code_repository.try(:full_name) %>" placeholder="<%= @assignment.starter_code_repository.try(:full_name) || 'Search repositories'%>" autocomplete="off" data-autocomplete-search-endpoint="github_repos"></dd>
   <dd class="dd-autocomplete-suggestions"><%= render_autocomplete_suggestions_container %></dd>
   <input class="js-autocomplete-resource-id" type="hidden" name="repo_id" />
@@ -40,10 +40,10 @@
 
 <% if current_user.feature_enabled?(:deadlines) %>
   <dl class="<%= view.form_class_for(:deadline) %>">
-    <dt><label>Deadline <small>(optional)</small></label></dt>
+    <dt><%= raw t('views.assignments.deadline') %></dt>
     <dd><%= f.text_field :deadline, class: 'jquery-datetimepicker form-control input-contrast input-block', value: DeadlineFormatHelper.convert(f.object.deadline) %></dd>
     <%= render('shared/form_error', errors: view.error_message_for(:deadline)) if view.errors_for?(:deadline) %>
-    <span class="note">After the deadline, GitHub Classroom will save the latest commit from each repo as a submission. Submission commits are viewable on the assignment page.</span>
+    <span class="note"><%= raw t('views.assignments.deadline_info') %></span>
   </dl>
 <% end %>
 
