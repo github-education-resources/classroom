@@ -6,22 +6,22 @@
       <span class="assignment-icon assignment-icon-group">
         <%= octicon 'organization', height: 22 %>
       </span>
-      Accept the <strong><%= group_assignment.title %></strong> assignment
+      <%= raw t('views.group_assignment_invitations.accept_invitation_header', group_assignment_title: group_assignment.title) %>
     </h2>
   </div>
 </div>
 
 <div class="site-content-body">
   <div class="markdown-body">
-    <p>Accepting this assignment will give your team access to the assignment repository in the <%= link_to "@#{organization.github_organization.login}", organization.github_organization.html_url %> organization on GitHub.</p>
-    <p>Please be certain that the team you are selecting is the correct team as you cannot change this later</p>
+    <p><%= t('views.group_assignment_invitations.accept_invitation_details') %> <%= link_to "@#{organization.github_organization.login}", organization.github_organization.html_url %> <%= t('views.group_assignment_invitations.accept_invitation_info_slice_3') %></p>
+    <p><%= t('views.group_assignment_invitations.team_selection_warning') %></p>
   </div>
 
   <% if @groups.present? %>
     <hr>
 
     <div class="markdown-body">
-      <p><label>Join an existing team</label></p>
+      <p><label><%= t('views.group_assignment_invitations.join_existing_team_header') %></label></p>
     </div>
     <div class="team-grid">
       <div class="columns">
@@ -50,11 +50,11 @@
 
   <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, method: :patch) do %>
     <dl class="form">
-      <dt><label><%= 'OR' if @groups.present? %> Create a new team</label></dt>
+      <dt><label><%= 'OR' if @groups.present? %> <%= t('views.group_assignment_invitations.create_new_team_header') %></label></dt>
       <dd>
-        <%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'textfield' %>
+        <%= text_field_tag 'group[title]', nil, placeholder: t('views.group_assignment_invitations.create_new_team_header'), class: 'textfield' %>
         <%= button_tag(type: 'submit', class: 'btn btn-primary js-navigation js-form-submit') do %>
-          <%= octicon 'plus' %> Create team
+          <%= octicon 'plus' %> <%= t('views.group_assignment_invitations.create_team') %>
         <% end %>
       </dd>
     </dl>
