@@ -15,41 +15,41 @@
 
 <dl class="form">
   <div class="form-checkbox">
-    <label><%= f.radio_button :public_repo, true %> Public</label>
+    <label><%= f.radio_button :public_repo, true %> <%= t('views.group_assignments.public') %></label>
     <%= octicon 'repo', height: 32 %>
-    <span class="note">Submit assignments using public repositories. All submissions will be visible to the world.</span>
+    <span class="note"><%= t('views.group_assignments.public_submission_info') %></span>
   </div>
 
   <div class="form-checkbox">
-    <label><%= f.radio_button :public_repo, false %> Private</label>
+    <label><%= f.radio_button :public_repo, false %> <%= t('views.group_assignments.private') %></label>
     <%= octicon 'lock', height: 32 %>
-    <span class="note">Submit assignments using private repositories. Submissions will only be visible to the submitter and organization owners.</span>
+    <span class="note"><%= t('views.group_assignments.private_submission_info') %></span>
   </div>
 
   <div class="form-checkbox">
-    <label><%= f.check_box :students_are_repo_admins %> Give students Admin permissions on their repository</label>
+    <label><%= f.check_box :students_are_repo_admins %> <%= t('views.group_assignments.repo_permission_info') %></label>
   </div>
 </dl>
 
 <dl class="form">
-  <dt><label>Add your starter code from GitHub <small>(optional)</small> </label></dt>
+  <dt><%= raw t('views.group_assignments.starter_code_info') %></dt>
   <dd><input class="textfield js-autocomplete-textfield form-control input-contrast input-block" type="text" name="repo_name" value="<%= @group_assignment.starter_code_repository.try(:full_name) %>" placeholder="<%= @group_assignment.starter_code_repository.try(:full_name) || 'Search repositories'%>" autocomplete="off" data-autocomplete-search-endpoint="github_repos"></dd>
   <dd class="dd-autocomplete-suggestions"><%= render_autocomplete_suggestions_container %></dd>
   <input class="js-autocomplete-resource-id form-control input-contrast input-block" type="hidden" name="repo_id" />
 </dl>
 
 <dl class="<%= view.form_class_for(:max_members) %>">
-   <dt><%= f.label "Maximum number of members in each team (optional)" %></dt>
+   <dt><%= f.label t('views.group_assignments.max_members_info') %></dt>
    <dd><%= f.number_field :max_members, class: 'textfield form-control input-contrast input-block' %></dd>
    <%= render 'shared/form_error', errors: view.error_message_for(:max_members) if view.errors_for?(:max_members) %>
 </dl>
 
 <% if current_user.feature_enabled?(:deadlines) %>
   <dl class="<%= view.form_class_for(:deadline) %>">
-    <dt><label>Deadline <small>(optional)</small></label></dt>
+    <dt><%= raw t('views.group_assignments.deadline') %></dt>
     <dd><%= f.text_field :deadline, class: 'jquery-datetimepicker form-control input-contrast input-block', value: DeadlineFormatHelper.convert(f.object.deadline) %></dd>
     <%= render('shared/form_error', errors: view.error_message_for(:deadline)) if view.errors_for?(:deadline) %>
-    <span class="note">After the deadline, GitHub Classroom will save the latest commit from each repo as a submission. Submission commits are viewable on the assignment page.</span>
+    <span class="note"><%= t('views.group_assignments.deadline_info') %></span>
   </dl>
 <% end %>
 
@@ -59,14 +59,14 @@
   <% groupings_present = @organization.groupings.present? %>
 
   <% if groupings_present %>
-    <dt><label>Choose an existing set of teams</label></dt>
+    <dt><%= raw t('views.group_assignments.choose_existing_team') %></dt>
     <dl class="form">
         <%= select :group_assignment, :grouping_id,  options_for_select(@groupings), { include_blank: true }, { class: 'form-select'} %>
     </dl>
   <% end %>
 
   <dl class="<%= view.form_class_for(:grouping) %>">
-    <dt><label><%= 'OR' if groupings_present %> Create a new set of teams</label></dt>
+    <dt><label><%= 'OR' if groupings_present %> <%= t('views.group_assignments.create_new_set_of_teams') %></label></dt>
     <% time           = Time.zone.now %>
     <% suggested_name = Time.zone.now.strftime("Teams formed on %B #{time.day.ordinalize}, %Y") %>
     <dd><input class="textfield form-control input-contrast input-block" type="text" value="<%= suggested_name unless groupings_present %>" placeholder="<%= suggested_name if groupings_present %>" name="grouping[title]" id="grouping_title"></dd>

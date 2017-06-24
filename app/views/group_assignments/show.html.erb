@@ -14,12 +14,12 @@
             <h2 class="site-content-heading group-assignment-title">
               <%= @group_assignment.title %>
             </h2>
-            <p class="assignment-type text-gray">Group assignment for <strong><%= @group_assignment.grouping.title %></strong>
+            <p class="assignment-type text-gray"><%= t('views.group_assignments.assignment_for') %> <strong><%= @group_assignment.grouping.title %></strong>
               <% if @group_assignment.deadline %>
                 <% if @group_assignment.deadline.passed? %>
-                  - Deadline Passed
+                  <%= t('views.group_assignments.deadline_passed') %>
                 <% else %>
-                  <%= "- Deadline in #{distance_of_time_in_words(Time.zone.now, @group_assignment.deadline.deadline_at)}" %>
+                  <%= "#{t('views.group_assignments.deadline_in')} #{distance_of_time_in_words(Time.zone.now, @group_assignment.deadline.deadline_at)}" %>
                 <% end %>
               <% end %>
             </p>
@@ -30,7 +30,7 @@
       <div class="text-right pl-2 settings">
         <%= link_to edit_organization_group_assignment_path(@organization, @group_assignment), class: 'btn right' do %>
           <%= octicon 'gear' %>
-          Group assignment settings
+          <%= t('views.group_assignments.assignment_settings') %>
         <% end %>
       </div>
   </div>
@@ -52,8 +52,8 @@
       <%= render partial: 'shared/pagination', locals: { collection: @group_assignment_repos } %>
     <% else %>
       <div class="blankslate">
-        <h3>"<%= @group_assignment.title %>" does not have any repositories.</h3>
-        <p>Share the invitation link with your students to get started.</p>
+        <h3><%= t('views.group_assignments.have_no_repository', assignment_title: @group_assignment.title) %></h3>
+        <p><%= t('views.group_assignments.share_invitation_link') %></p>
       </div>
     <% end %>
   </div>

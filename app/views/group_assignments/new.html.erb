@@ -6,7 +6,7 @@
       <span class="assignment-icon assignment-icon-group">
         <%= octicon 'organization', height: 22 %>
       </span>
-      New group assignment
+      <%= t('views.group_assignments.new_assignment') %>
     </h2>
 
   </div>
@@ -23,8 +23,8 @@
     </div>
 
     <div class="form-actions">
-      <%= f.submit 'Create Assignment', class: 'btn btn-primary', id: 'group_assignment_submit'%>
-      <%= link_to 'Cancel', organization_path(@organization), class: 'btn', role: 'button' %>
+      <%= f.submit t('views.group_assignments.create_assignment_btn_text'), class: 'btn btn-primary', id: 'group_assignment_submit'%>
+      <%= link_to t('views.group_assignments.cancel'), organization_path(@organization), class: 'btn', role: 'button' %>
     </div>
   <% end %>
 </div>
