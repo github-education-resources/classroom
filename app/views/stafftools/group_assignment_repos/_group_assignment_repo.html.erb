@@ -7,9 +7,9 @@
 
   <div class="col-10 col-md-10 d-flex flex-column">
     <%= link_to stafftools_group_assignment_repo_path(group_assignment_repo.id) do %>
-      <strong class="search-result-title"><%= "#{group_assignment_repo.group_title}'s group assignment repository for #{group_assignment_repo.group_assignment_title}" %></strong>
+      <strong class="search-result-title"><%= t('views.stafftools.group_assignment_repos.title', group_title: group_assignment_repo.group_title, group_assignment_title: group_assignment_repo.group_assignment_title) %></strong>
     <% end %>
 
-    <span class="text-gray css-truncate css-truncate-target">Created <%= local_time_ago(group_assignment_repo.created_at) %></span>
+    <span class="text-gray css-truncate css-truncate-target"><%= t('views.stafftools.group_assignment_repos.created') %> <%= local_time_ago(group_assignment_repo.created_at) %></span>
   </div>
 </div>
