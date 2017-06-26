@@ -30,15 +30,15 @@ span {
     text-decoration: none;
 
     .success {
-      fill: $brand-green;
+      fill: #28a745;
     }
 
     .failed {
-      fill: $brand-red;
+      fill: #d73a49;
     }
 
     .neutral {
-      fill: $brand-gray;
+      fill: #6a737d;
     }
   }
 }
