@@ -34,4 +34,18 @@ class SharedAssignmentRepoView < ViewModel
   def login_for(github_user)
     github_user.login
   end
+
+  def submission_succeeded?
+    submission_passed? && assignment_repo.submission_sha.present?
+  end
+
+  def submission_passed?
+    assignment_repo.assignment.deadline&.passed?
+  end
+
+  def submission_url
+    return unless submission_succeeded?
+
+    assignment_repo.github_repository.tree_url_for_sha(assignment_repo.submission_sha)
+  end
 end
