@@ -1,0 +1,7 @@
+en:
+  views:
+    stafftools:
+      resources:
+        resource_not_found: "We couldn't find any matching resources"
+        search_classroom: 'Search Classroom...'
+        search: 'Search'
