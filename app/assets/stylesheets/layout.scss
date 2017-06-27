@@ -904,6 +904,11 @@ hr {
 
 .repo-detail-item {
   margin-right: 15px;
+  text-decoration: none;
+
+  &:not(:hover) {
+    color: black;
+  }
 }
 
 .assignment-properties {
