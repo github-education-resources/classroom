@@ -34,6 +34,10 @@ class GitHubRepository < GitHubResource
     end
   end
 
+  def blob(sha, **options)
+    @blob = GitHubBlob.new(self, sha, options)
+  end
+
   def default_branch
     GitHub::Errors.with_error_handling do
       repository = @client.repository(full_name)
