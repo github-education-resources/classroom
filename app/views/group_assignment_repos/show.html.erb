@@ -8,7 +8,7 @@
       <% end %>
     </div>
     <div class="assignment-properties">
-      <%= render 'shared/commit_repo_detail', text: view.commit_text, url: 'Dummy URL' %>
+      <%= render 'shared/commit_repo_detail', text: view.commit_text, url: view.commits_url %>
       <%= render 'shared/members_repo_detail', text: view.members_text, url: view.team_url %>
       <% if view.submission_passed? %>
         <% if view.submission_succeeded? %>

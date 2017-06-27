@@ -19,6 +19,11 @@ class SharedAssignmentRepoView < ViewModel
     pluralize(number_of_commits, 'commit')
   end
 
+  def commits_url
+    branch = github_repository.default_branch
+    github_repository.commits_url(branch)
+  end
+
   def disabled_class
     assignment_repo.disabled? ? 'disabled' : ''
   end
