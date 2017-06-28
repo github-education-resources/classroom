@@ -31,12 +31,10 @@ Rails.application.routes.draw do
 
   resources :group_assignment_invitations, path: 'group-assignment-invitations', only: [:show] do
     member do
-      get   :identifier
-      post  :submit_identifier
       get   :accept
       patch :accept_assignment
       patch :accept_invitation
-      get   :successful_invitation, path: :success
+      get   :success
     end
   end
 

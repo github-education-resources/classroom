@@ -6,6 +6,8 @@ module InvitationsControllerMethods
   included do
     layout 'layouts/invitations'
 
+    before_action :ensure_submission_repository_exists, only: [:success]
+
     helper_method :current_assignment,
                   :current_invitation,
                   :current_submission,
@@ -21,7 +23,8 @@ module InvitationsControllerMethods
   end
 
   def success
-    raise NotImplementedError
+    @view = Invitation::SuccessView.new(submission: current_submission)
+    render 'invitations/success'
   end
 
   private
@@ -29,7 +32,7 @@ module InvitationsControllerMethods
   # Private: Returns the Assignment or
   # GroupAssignment for the current_invitation.
   #
-  # Returns and Assignment or GroupAssignment.
+  # Returns an Assignment or GroupAssignment.
   def current_assignment
     return @current_assignment if defined?(@current_assignment)
 
@@ -50,7 +53,13 @@ module InvitationsControllerMethods
     raise NotImplementedError
   end
 
-  # Prviate: Memoize the organization from the current_assignment.
+  # Private: Make sure the submission repository
+  # still exists on GitHub.
+  def ensure_submission_repository_exists
+    raise NotImplementedError
+  end
+
+  # Private: Memoize the organization from the current_assignment.
   #
   # Returns an Organization.
   def organization

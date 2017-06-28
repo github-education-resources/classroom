@@ -3,7 +3,7 @@
       <% group = group_assignment_repo.group %>
       <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, :class => "team-actions-form", method: :patch) do %>
           <%= hidden_field_tag 'group[id]', group.id %>
-          <% if group_assignment.max_members.present? && group.repo_accesses.count >= group_assignment.max_members %>
+          <% if current_assignment.max_members.present? && group.repo_accesses.count >= current_assignment.max_members %>
               <%= submit_tag 'Full', class: 'btn btn-sm boxed-group-action', disabled: true %>
           <% else %>
               <%= submit_tag 'Join', class: 'btn btn-sm boxed-group-action' %>
