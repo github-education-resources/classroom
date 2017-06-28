@@ -1,13 +1,13 @@
 <% view = GroupAssignmentRepoView.new(assignment_repo: @group_assignment_repo) %>
 
-<div class='assignment-repo-list-item'>
-  <div class='assignment-repo-info-container'>
+<div class='d-flex flex-row flex-justify-between flex-items-center assignment-repo-list-item'>
+  <div class='d-flex flex-column flex-content-around'>
     <div>
       <%= link_to view.team_url, class: "assignment-repo-github-url #{view.disabled_class}", target: '_blank' do %>
         <h3 class="css-truncate css-truncate-target"><%= view.team.name %></h3>
       <% end %>
     </div>
-    <div class="assignment-properties">
+    <div class="d-flex assignment-properties">
       <%= render 'shared/commit_repo_detail', text: view.commit_text, url: view.commits_url %>
       <%= render 'shared/members_repo_detail', text: view.members_text, url: view.team_url %>
       <% if view.submission_passed? %>
@@ -19,7 +19,7 @@
       <% end %>
     </div>
   </div>
-  <div class='group-assignment-avatar-list'>
+  <div class='d-flex'>
     <ul class='user-list'>
       <% view.team_members.first(3).map(&:github_user).each do |student| %>
         <li>

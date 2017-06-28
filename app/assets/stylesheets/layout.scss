@@ -338,16 +338,6 @@ hr {
   }
 }
 
-.assignment-repo-info-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-}
-
-.assignment-repo-left-container {
-  display: flex;
-}
-
 .assignment-repo-github-url {
   h3 {
     margin-top: 0;
@@ -365,14 +355,7 @@ hr {
   }
 }
 
-.group-assignment-avatar-list {
-  display: flex;
-}
-
 .assignment-repo-list-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
   font-size: 14px;
@@ -912,6 +895,5 @@ hr {
 }
 
 .assignment-properties {
-  display: flex;
   margin-top: 5px;
 }
