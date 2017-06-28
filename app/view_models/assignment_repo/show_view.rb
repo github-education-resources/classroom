@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AssignmentRepoView < SharedAssignmentRepoView
+class AssignmentRepo::ShowView < SharedAssignmentRepoView
   attr_reader :assignment_repo
 
   delegate :github_user, to: :assignment_repo

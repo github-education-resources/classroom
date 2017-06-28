@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GroupAssignmentRepoView < SharedAssignmentRepoView
+class GroupAssignmentRepo::ShowView < SharedAssignmentRepoView
   def avatar_url_for(student)
     super(student, 60)
   end
