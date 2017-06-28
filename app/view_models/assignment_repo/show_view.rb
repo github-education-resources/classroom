@@ -5,15 +5,15 @@ class AssignmentRepo::ShowView < SharedAssignmentRepoView
 
   delegate :github_user, to: :assignment_repo
 
-  def avatar_url
-    avatar_url_for(github_user, 96)
+  def github_avatar_url
+    github_avatar_url_for(github_user, 96)
   end
 
-  def user_login
-    login_for(github_user)
+  def github_user_login
+    github_login_for(github_user)
   end
 
-  def user_url
-    user_url_for(github_user)
+  def github_user_url
+    github_user_url_for(github_user)
   end
 end
