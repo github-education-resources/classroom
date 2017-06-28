@@ -15,13 +15,17 @@ class GitHubBlob
     read_contents
   end
 
+  # Get the utf-8 formated content of the blob
+  #
+  # Returns a string
   def utf_content
-    # return utf-8 encoded version of blob binary
     decoded_content
   end
 
+  # Get the content of the blob
+  #
+  # Returns a base64 string
   def content
-    # return base64 content
     @blob.content
   end
 

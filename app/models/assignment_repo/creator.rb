@@ -63,11 +63,11 @@ class AssignmentRepo
         user: user
       )
 
-      add_user_to_repository!(assignment_repo.github_repo_id)
-
       if assignment.starter_code?
         push_starter_code!(assignment_repo.github_repo_id)
       end
+
+      add_user_to_repository!(assignment_repo.github_repo_id)
 
       begin
         assignment_repo.save!
@@ -205,6 +205,17 @@ class AssignmentRepo
       configs_repo.tree(configs_tree).tree.each do |conf|
         process_config(configs_repo, assignment_repo, conf)
       end
+
+      wait_import_completion assignment_repo
+
+      assignment_repo.remove_branch('github-classroom')
+    end
+
+    def wait_import_completion(github_repository)
+      loop do
+        break unless github_repository.import_progress[:status] != 'complete'
+        sleep 30 # NOTE rate limits
+      end
     end
 
     # Process the configurations separetly
@@ -217,7 +228,6 @@ class AssignmentRepo
     #
     # Returns nothing
     def process_config(configs_repo, assignment_repo, conf)
-      # Handle setup based on configuration type
       conf_type = conf.path
       case conf_type
       when 'issues'

@@ -22,6 +22,12 @@ class GitHubRepository < GitHubResource
     end
   end
 
+  def import_progress(**options)
+    GitHub::Errors.with_error_handling do
+      @client.source_import_progress(full_name, options)
+    end
+  end
+
   # Public: Invite a user to a GitHub repository.
   #
   # user - The String GitHub login for the user.
@@ -45,7 +51,7 @@ class GitHubRepository < GitHubResource
       @client.create_issue(full_name, title, body, options)
     end
   rescue GitHub::Error
-    {}
+    []
   end
 
   # Get a tree object from the GitHub repository.
@@ -58,7 +64,7 @@ class GitHubRepository < GitHubResource
       @client.tree(full_name, sha, options)
     end
   rescue GitHub::Error
-    {}
+    []
   end
 
   # Get a blob from the GitHub repository.
@@ -71,7 +77,7 @@ class GitHubRepository < GitHubResource
       @blob = GitHubBlob.new(self, sha, options)
     end
   rescue GitHub::Error
-    {}
+    []
   end
 
   def default_branch
@@ -87,7 +93,13 @@ class GitHubRepository < GitHubResource
       @client.branch(full_name, name, options)
     end
   rescue GitHub::Error
-    {}
+    []
+  end
+
+  def remove_branch(name, **options)
+    GitHub::Errors.with_error_handling do
+      @client.delete_branch(full_name, name, options)
+    end
   end
 
   def commits(branch)
