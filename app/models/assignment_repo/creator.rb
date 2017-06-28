@@ -135,6 +135,7 @@ class AssignmentRepo
       starter_code_repository = GitHubRepository.new(client, starter_code_repo_id)
 
       assignment_repository.get_starter_code_from(starter_code_repository)
+      setup_repository(starter_code_repository, assignment_repository)
     rescue GitHub::Error
       raise Result::Error, REPOSITORY_STARTER_CODE_IMPORT_FAILED
     end
@@ -188,6 +189,56 @@ class AssignmentRepo
 
       suffix = "-#{suffix_count}"
       repository_name.truncate(100 - suffix.length, omission: '') + suffix
+    end
+
+    # Handles assignment repository setup
+    #
+    # configs_repo    - GitHubRepository containing the configuration files
+    # assignment_repo - GitHubRepository for which to perform the configuration
+    #                   setups
+    #
+    # Returns nothing
+    def setup_repository(configs_repo, assignment_repo)
+      return unless configs_repo.classroom_configs?
+      priv_branch = configs_repo.branch('github-classroom')
+      configs_tree = priv_branch[:commit][:commit][:tree][:sha]
+      configs_repo.tree(configs_tree).tree.each do |conf|
+        process_config(configs_repo, assignment_repo, conf)
+      end
+    end
+
+    # Process the configurations separetly
+    #
+    # configs_repo    - GitHubRepository containing the configuration files
+    # assignment_repo - GitHubRepository for which to perform the configuration
+    #                   setups
+    # conf            - GitObjects from of the 'github-classroom' branch tree
+    #                   of the configs_repo
+    #
+    # Returns nothing
+    def process_config(configs_repo, assignment_repo, conf)
+      # Handle setup based on configuration type
+      conf_type = conf.path
+      case conf_type
+      when 'issues'
+        gen_issues(configs_repo, assignment_repo, conf.sha)
+      end
+    end
+
+    # Generates issues for the assignment_repo based on the configs
+    #
+    # configs_repo    - GitHubRepository containing the configuration files
+    # assignment_repo - GitHubRepository for which to perform the configuration
+    #                   setups
+    # issues_tree     - sha of the 'issues' tree
+    #
+    # Returns nothing
+    def gen_issues(configs_repo, assignment_repo, issues_tree)
+      # Generate issues for the repository
+      configs_repo.tree(issues_tree).tree.each do |issue|
+        blob = configs_repo.blob(issue.sha)
+        assignment_repo.add_issue(blob.data['title'], blob.body)
+      end
     end
   end
 end

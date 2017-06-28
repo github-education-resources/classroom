@@ -34,8 +34,44 @@ class GitHubRepository < GitHubResource
     end
   end
 
+  # Add issues to the GitHub repository.
+  #
+  # title    - The title of the issue.
+  # body     - The body of the issue.
+  #
+  # Returns the newly created issue, or raises a GitHub::Error.
+  def add_issue(title, body, **options)
+    GitHub::Errors.with_error_handling do
+      @client.create_issue(full_name, title, body, options)
+    end
+  rescue GitHub::Error
+    {}
+  end
+
+  # Get a tree object from the GitHub repository.
+  #
+  # sha    - sha of the tree.
+  #
+  # Returns a git Tree object, or raises a GitHub::Error.
+  def tree(sha, **options)
+    GitHub::Errors.with_error_handling do
+      @client.tree(full_name, sha, options)
+    end
+  rescue GitHub::Error
+    {}
+  end
+
+  # Get a blob from the GitHub repository.
+  #
+  # sha    - sha of the blob.
+  #
+  # Returns a GitHubBlob instance, or raises a GitHub::Error.
   def blob(sha, **options)
-    @blob = GitHubBlob.new(self, sha, options)
+    GitHub::Errors.with_error_handling do
+      @blob = GitHubBlob.new(self, sha, options)
+    end
+  rescue GitHub::Error
+    {}
   end
 
   def default_branch
@@ -44,6 +80,14 @@ class GitHubRepository < GitHubResource
 
       repository[:default_branch]
     end
+  end
+
+  def branch(name, **options)
+    GitHub::Errors.with_error_handling do
+      @client.branch(full_name, name, options)
+    end
+  rescue GitHub::Error
+    {}
   end
 
   def commits(branch)
@@ -60,6 +104,14 @@ class GitHubRepository < GitHubResource
 
   def present?(**options)
     self.class.present?(@client, @id, options)
+  end
+
+  def classroom_configs?(**options)
+    GitHub::Errors.with_error_handling do
+      @client.branches(full_name, options).map(&:name).include? 'github-classroom'
+    end
+  rescue GitHub::Error
+    []
   end
 
   def public=(is_public)
