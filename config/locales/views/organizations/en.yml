@@ -1,0 +1,52 @@
+en:
+  views:
+    organizations:
+      not_owner_error: 'You cannot add this organization to classroom because you are not an owner'
+      already_have_classroom: '@%{owner_login} has already added this organization to GitHub Classroom'
+      invite_other_admins: 'Invite other administrators'
+      add_other_admin_step_1_header: '1. Add them to your GitHub Organization'
+      add_other_admin_step_1_details: 'You must add them to the Organization as an Owner in order for them to have access.'
+      you_can_do_so: 'You can do so at'
+      add_other_admin_step_2_header: '2. Give them this URL'
+      add_other_admin_step_2_details: 'After signing in, they will automatically be added to this classroom.'
+      copy_classroom_link: 'Copy classroom link'
+      manage_classroom: 'Manage classroom'
+      remove_org_header: 'Are you ABSOLUTELY sure?'
+      remove_org_warning: "Unexpected things will happen if you don't read this!"
+      remove_org_details: 'This action <strong>CANNOT</strong> be undone.
+        Please note that resetting and removing this classroom will delete all repositories and teams under the <strong>%{org_login}</strong> account that were created by GitHub Classroom.'
+      confirm_org_name: 'Please type the name of the organization to confirm'
+      reset_and_remove_org: 'Reset and remove this classroom'
+      classroom_settings: 'Classroom settings'
+      classroom_profile: 'Classroom profile'
+      student_identifiers: 'Student identifiers'
+      team_management: 'Team management'
+      invite_other_admins: 'Invite other administrators'
+      profile_info: 'Profile information'
+      reset_classroom_warning: 'Once you reset this classroom, there is no going back. Please be certain.'
+      save_changes: 'Save changes'
+      new_classroom: 'New classroom'
+      classrooms: 'Classrooms'
+      not_mananging_classroom_yet: "You’re not managing any classrooms yet."
+      begin_creating_assignments: 'You can begin creating assignments once you have at least one classroom.'
+      create_first_classroom: 'Create your first classroom'
+      select_org_for_new_classroom: 'Select an organization for your new classroom'
+      no_github_account: "Oh, you don’t have any organizations on your GitHub account."
+      no_github_account_help: 'Please <a href="https://github.com/organizations/new">create an organization on GitHub.com</a> and then come back.'
+      assignments: 'Assignments'
+      new_assignment: 'New assignment'
+      no_assignment: "This organization doesn’t have any assignments yet."
+      create_first_assignment: 'Create first assignment'
+      set_of_teams: 'Set of teams'
+      no_set_of_teams: "This classroom doesn’t have any sets of teams yet."
+      assignment_type: 'Individual assignment'
+      assignment_type_details: 'Each participant works individually on their own repository.'
+      create_individual_assignment: 'Create an individual assignment'
+      group_assignment: 'Group assignment'
+      group_assignment_details: 'Participants form teams that work together on a shared repository.'
+      create_group_assignment: 'Create a group assignment'
+      name_your_classroom: 'Name your classroom'
+      classroom_name_advice: 'Please give your classroom a more descriptive name'
+      continue: 'Continue'
+      protip_slice_1: "<strong>ProTip!</strong> Don't see your organization? You need to"
+      protip_slice_2: "first."
