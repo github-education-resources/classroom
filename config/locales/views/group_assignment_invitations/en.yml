@@ -1,0 +1,22 @@
+en:
+  views:
+    group_assignment_invitations:
+      accept_invitation_header: 'Accept the <strong>%{group_assignment_title}</strong> assignment'
+      accept_invitation_info_slice_1: 'Accepting this assignment will give %{team_name} access to the'
+      accept_invitation_info_slice_2: 'repository in the'
+      accept_invitation_info_slice_3: 'organization on GitHub.'
+      accept_invitation_btn_text: 'Accept this assignment'
+      invitation_accepted_header: 'Accepted the <strong>%{group_assignment_title}</strong> assignment'
+      ready_to_go: 'You are ready to go!'
+      org_invitation_slice_1: 'You may receive an invitation to join'
+      org_invitation_slice_2: 'via email invitation on your behalf. No further action is necessary.'
+      created_assignment_location: 'Your assignment has been created here:'
+      accept_invitation_details: 'Accepting this assignment will give your team access to the assignment repository in the'
+      team_selection_warning: 'Please be certain that the team you are selecting is the correct team as you cannot change this later'
+      join_existing_team_header: 'Join an existing team'
+      create_new_team_header: 'Create a new team'
+      create_team: 'Create team'
+      full: 'Full'
+      join: 'Join'
+      student: 'student'
+      student_ellipse: 'student ellipse'

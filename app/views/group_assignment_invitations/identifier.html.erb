@@ -6,7 +6,7 @@
       <span class="assignment-icon assignment-icon-individual">
         <%= octicon('person') %>
       </span>
-      Accept the <strong><%= group_assignment.title %></strong> assignment
+      <%= raw t('views.group_assignment_invitations.accept_invitation_header', group_assignment_title: group_assignment.title) %>
     </h2>
   </div>
 </div>

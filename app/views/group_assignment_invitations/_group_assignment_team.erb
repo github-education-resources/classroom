@@ -4,13 +4,13 @@
       <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, :class => "team-actions-form", method: :patch) do %>
           <%= hidden_field_tag 'group[id]', group.id %>
           <% if group_assignment.max_members.present? && group.repo_accesses.count >= group_assignment.max_members %>
-              <%= submit_tag 'Full', class: 'btn btn-sm boxed-group-action', disabled: true %>
+              <%= submit_tag t('views.group_assignment_invitations.full'), class: 'btn btn-sm boxed-group-action', disabled: true %>
           <% else %>
-              <%= submit_tag 'Join', class: 'btn btn-sm boxed-group-action' %>
+              <%= submit_tag t('views.group_assignment_invitations.join'), class: 'btn btn-sm boxed-group-action' %>
           <% end %>
       <% end %>
       <h3><%= group.title %>
-        <span class="team-description"><%= pluralize(group.repo_accesses.count, 'student') %></span>
+        <span class="team-description"><%= pluralize(group.repo_accesses.count, t('views.group_assignment_invitations.student')) %></span>
       </h3>
       <div class="boxed-group-inner clearfix">
         <div class="team-members">
@@ -26,7 +26,7 @@
 
             <% if group.repo_accesses.count > 5 %>
               <li class="member">
-                <%= image_tag 'student-ellipse@2x.png', class: 'avatar avatar-small', height: 30, width: 30, alt: 'student ellipse' %>
+                <%= image_tag 'student-ellipse@2x.png', class: 'avatar avatar-small', height: 30, width: 30, alt: t('views.group_assignment_invitations.student_ellipse') %>
               </li>
             <% end %>
           </ul>
