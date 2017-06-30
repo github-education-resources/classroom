@@ -92,7 +92,7 @@ class Assignment
 
     def deadline_updated?
       return false unless @options[:deadline]
-      new_deadline_at = DateTime.strptime(@options[:deadline], '%m/%d/%Y %H:%M %z').utc
+      new_deadline_at = DateTime.strptime(@options[:deadline], DATETIME_FORMAT).utc
       new_deadline_at != @assignment.deadline&.deadline_at
     end
   end

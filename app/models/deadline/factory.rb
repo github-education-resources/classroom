@@ -2,8 +2,6 @@
 
 class Deadline
   class Factory
-    DATETIME_FORMAT = '%m/%d/%Y %H:%M %z'
-
     # Accepts an optional datetime format string :datetime_format
     # Default DateTime format is %m/%d/%Y %H:%M %z
     # e.g. 05/25/2017 13:17-0800
