@@ -1,6 +1,11 @@
 .stafftools {
   background: #fff;
 
+  .Box {
+    margin-top: 1rem;
+  }
+
+  .Box > .Box-header,
   .boxed-group > h3 {
     background-image: linear-gradient(
       -45deg,

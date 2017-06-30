@@ -18,7 +18,5 @@ module GitHubClassroom
   end
 end
 
-# Flipper group for staff
-Flipper.register(:staff) do |user|
-  user.respond_to?(:staff?) && user.staff?
-end
+Flipper.register(:staff)              { |user| user.respond_to?(:staff?) && user.staff?                         }
+Flipper.register(:feature_previewers) { |user| user.respond_to?(:feature_previewer?) && user.feature_previewer? }

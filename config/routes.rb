@@ -83,6 +83,9 @@ Rails.application.routes.draw do
       member do
         post :impersonate
         delete :stop_impersonating
+
+        patch  :preview_features, to: 'users#enable_feature_previewing',  as: :enable_feature_previewing
+        delete :preview_features, to: 'users#disable_feature_previewing', as: :disable_feature_previewing
       end
     end
 

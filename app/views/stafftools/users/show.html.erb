@@ -81,16 +81,44 @@
   <% end %>
 
   <% if @user.id != current_user.id %>
-    <div class="boxed-group dangerzone">
-      <h3>Dangerzone</h3>
-
-      <div class="boxed-group-inner">
-        <h4>Impersonate <%= "@#{@user.github_user.login}" %></h4>
-        <a data-remodal-target="impersonate-user" class="btn btn-danger boxed-action">Impersonate <%= "@#{@user.github_user.login}" %></a>
-        <p>This will send you to <strong><%= @user.github_user.login %></strong>'s Classroom dashboard as <strong><%= @user.github_user.login %></strong>.</p>
-
-        <%= render partial: 'stafftools/users/impersonate_user_confirmation_modal', locals: { user: @user } %>
+    <div class="Box Box--condensed Box--dangerzone">
+      <div class="Box-header">
+        <h3 class="Box-title">Dangerzone</h3>
       </div>
+      <ul>
+        <div class="Box-row d-flex flex-items-center">
+          <div class="flex-auto">
+            <strong>Impersonate <%= "@#{@user.github_user.login}" %></strong>
+            <div class="text-small text-gray-light">
+              This will send you to <strong><%= @user.github_user.login %></strong>'s Classroom dashboard as <strong><%= @user.github_user.login %></strong>.
+            </div>
+          </div>
+
+          <a data-remodal-target="impersonate-user" class="btn btn-danger">Impersonate</a>
+        </div>
+
+        <div class="Box-row d-flex flex-items-center">
+          <% if @user.feature_previewer? %>
+            <div class="flex-auto">
+              <strong>Disable <%= "@#{@user.github_user.login}" %> from previewing features</strong>
+              <div class="text-small text-gray-light">
+                <strong><%= @user.github_user.login %></strong> will no longer be able to see any feature we have enabled for the features preview group.
+              </div>
+            </div>
+
+            <%= link_to 'Disable', disable_feature_previewing_stafftools_user_path(@user), class: 'btn btn-danger', method: :delete %>
+          <% else %>
+            <div class="flex-auto">
+              <strong>Enable <%= "@#{@user.github_user.login}" %> to preview features</strong>
+              <div class="text-small text-gray-light">
+                This will allow <strong><%= @user.github_user.login %></strong> to see any feature we have enabled for the features preview group.
+              </div>
+            </div>
+
+            <%= link_to 'Enable', enable_feature_previewing_stafftools_user_path(@user), class: 'btn btn-danger', method: :patch %>
+          <% end %>
+        </div>
+      </ul>
     </div>
   <% end %>
 </div>
