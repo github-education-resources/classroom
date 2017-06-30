@@ -61,21 +61,6 @@ FactoryGirl.define do
     end
   end
 
-  factory :student_identifier do
-    type
-    organization
-    user
-
-    value { Faker::Lorem.word }
-  end
-
-  factory :student_identifier_type, aliases: [:type] do
-    organization
-
-    name         { Faker::Lorem.word     }
-    description  { Faker::Lorem.sentence }
-  end
-
   factory :user do
     uid    { rand(1..1_000_000) }
     token  { SecureRandom.hex(20) }
