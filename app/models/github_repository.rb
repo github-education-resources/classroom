@@ -122,8 +122,6 @@ class GitHubRepository < GitHubResource
     GitHub::Errors.with_error_handling do
       @client.branches(full_name, options).map(&:name).include? 'github-classroom'
     end
-  rescue GitHub::Error
-    []
   end
 
   def public=(is_public)

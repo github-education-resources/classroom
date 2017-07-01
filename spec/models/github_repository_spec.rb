@@ -139,5 +139,15 @@ describe GitHubRepository do
         ).with(body: { private: true, name: @github_repository.name })
       end
     end
+
+    describe '#import_progress', :vcr do
+      it 'returns progress' do
+        # 1296269 is octocat/Hello-World
+        starter_code_repository = GitHubRepository.new(@client, 1296269)
+        @github_repository.get_starter_code_from(starter_code_repository)
+
+        expect(@github_repository.import_progress).to be_a_kind_of(Sawyer::Resource)
+      end
+    end
   end
 end
