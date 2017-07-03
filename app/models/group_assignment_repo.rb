@@ -39,7 +39,7 @@ class GroupAssignmentRepo < ApplicationRecord
 
   # TODO: Move to a view model
   def disabled?
-    !github_repository.on_github? || !github_team.on_github?
+    @disabled ||= !github_repository.on_github? || !github_team.on_github?
   end
 
   def github_repository
