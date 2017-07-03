@@ -211,9 +211,10 @@ class AssignmentRepo
     end
 
     def wait_import_completion(github_repository)
+      t = 1
       loop do
-        break unless github_repository.import_progress[:status] != 'complete'
-        sleep 5 # NOTE rate limits
+        break if github_repository.import_progress[:status] == 'complete' || t > 60
+        sleep t += (t *= 0.25).ceil
       end
     end
 
