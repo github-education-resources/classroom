@@ -76,8 +76,6 @@ class GitHubRepository < GitHubResource
     GitHub::Errors.with_error_handling do
       @blob = GitHubBlob.new(self, sha, options)
     end
-  rescue GitHub::Error
-    []
   end
 
   def default_branch

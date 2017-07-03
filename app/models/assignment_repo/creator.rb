@@ -200,9 +200,8 @@ class AssignmentRepo
     # Returns nothing
     def setup_repository(configs_repo, assignment_repo)
       return unless configs_repo.classroom_configs?
-      priv_branch = configs_repo.branch('github-classroom')
-      configs_tree = priv_branch[:commit][:commit][:tree][:sha]
-      configs_repo.tree(configs_tree).tree.each do |conf|
+      conf_tree = configs_repo.branch('github-classroom').commit.commit.tree.sha
+      configs_repo.tree(conf_tree).tree.each do |conf|
         process_config(configs_repo, assignment_repo, conf)
       end
 
@@ -214,7 +213,7 @@ class AssignmentRepo
     def wait_import_completion(github_repository)
       loop do
         break unless github_repository.import_progress[:status] != 'complete'
-        sleep 30 # NOTE rate limits
+        sleep 5 # NOTE rate limits
       end
     end
 
@@ -228,8 +227,7 @@ class AssignmentRepo
     #
     # Returns nothing
     def process_config(configs_repo, assignment_repo, conf)
-      conf_type = conf.path
-      case conf_type
+      case conf.path
       when 'issues'
         gen_issues(configs_repo, assignment_repo, conf.sha)
       end
@@ -244,7 +242,6 @@ class AssignmentRepo
     #
     # Returns nothing
     def gen_issues(configs_repo, assignment_repo, issues_tree)
-      # Generate issues for the repository
       configs_repo.tree(issues_tree).tree.each do |issue|
         blob = configs_repo.blob(issue.sha)
         assignment_repo.add_issue(blob.data['title'], blob.body)
