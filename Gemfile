@@ -7,7 +7,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-ruby '2.4.1'
+ruby File.read(File.expand_path('../.ruby-version', __FILE__)).chomp
 gem 'rails', '~> 5.1', '>= 5.1.2'
 
 gem 'autoprefixer-rails'
