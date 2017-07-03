@@ -3,11 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe AssignmentsController, type: :controller do
-  let(:organization) { classroom_org     }
-  let(:user)         { classroom_teacher }
-
-  let(:assignment)              { create(:assignment, organization: organization)              }
-  let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
+  let(:organization) { classroom_org                                   }
+  let(:user)         { classroom_teacher                               }
+  let(:assignment)   { create(:assignment, organization: organization) }
 
   before do
     sign_in_as(user)
@@ -232,29 +230,6 @@ RSpec.describe AssignmentsController, type: :controller do
         end
       end
     end
-
-    context 'flipper is enabled for the user' do
-      before do
-        GitHubClassroom.flipper[:student_identifier].enable
-        post :create, params: {
-          organization_id:         organization.slug,
-          assignment:              attributes_for(:assignment, organization: organization),
-          student_identifier_type: { id: student_identifier_type.id }
-        }
-      end
-
-      it 'creates a new Assignment' do
-        expect(Assignment.count).to eql(1)
-      end
-
-      it 'sets correct student identifier type for the new Assignment' do
-        expect(Assignment.first.student_identifier_type.id).to eql(student_identifier_type.id)
-      end
-
-      after do
-        GitHubClassroom.flipper[:student_identifier].disable
-      end
-    end
   end
 
   describe 'GET #show', :vcr do
@@ -307,26 +282,6 @@ RSpec.describe AssignmentsController, type: :controller do
         patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
 
         expect(assigns(:assignment).slug).to_not be_nil
-      end
-    end
-
-    context 'flipper is enabled for the user' do
-      before do
-        GitHubClassroom.flipper[:student_identifier].enable
-        patch :update, params: {
-          id:                      assignment.slug,
-          organization_id:         organization.slug,
-          assignment:              attributes_for(:assignment, organization: organization),
-          student_identifier_type: { id: student_identifier_type.id }
-        }
-      end
-
-      it 'correctly updates the assignment' do
-        expect(Assignment.first.student_identifier_type.id).to eql(student_identifier_type.id)
-      end
-
-      after do
-        GitHubClassroom.flipper[:student_identifier].disable
       end
     end
   end
