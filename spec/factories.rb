@@ -61,6 +61,15 @@ FactoryGirl.define do
     end
   end
 
+  factory :roster do
+    identifier_name { 'email' }
+  end
+
+  factory :roster_entry do
+    roster
+    identifier { 'myemail@example.com' }
+  end
+
   factory :user do
     uid    { rand(1..1_000_000) }
     token  { SecureRandom.hex(20) }
