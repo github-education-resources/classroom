@@ -168,20 +168,20 @@ ActiveRecord::Schema.define(version: 20170629203747) do
     t.index ["user_id"], name: "index_repo_accesses_on_user_id"
   end
 
-  create_table "roster", force: :cascade do |t|
-    t.string "identifier_name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "roster_entry", force: :cascade do |t|
+  create_table "roster_entries", force: :cascade do |t|
     t.string "identifier", null: false
     t.bigint "roster_id", null: false
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["roster_id"], name: "index_roster_entry_on_roster_id"
-    t.index ["user_id"], name: "index_roster_entry_on_user_id"
+    t.index ["roster_id"], name: "index_roster_entries_on_roster_id"
+    t.index ["user_id"], name: "index_roster_entries_on_user_id"
+  end
+
+  create_table "rosters", force: :cascade do |t|
+    t.string "identifier_name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
