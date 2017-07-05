@@ -14,7 +14,7 @@ class RostersController < ApplicationController
     @roster = Roster.new(identifier_name: params[:identifier_name])
     @roster.save!
 
-    add_identifiers_to_roster(roster)
+    add_identifiers_to_roster
 
     @organization.roster = @roster
     @organization.save!
