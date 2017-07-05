@@ -11,7 +11,7 @@ class RostersController < ApplicationController
     roster = Roster.new(identifier_name: params[:identifier_name])
     roster.save!
 
-    add_identifiers_to_roster
+    add_identifiers_to_roster(roster)
 
     @organization.roster = roster
     @organization.save!
@@ -30,7 +30,7 @@ class RostersController < ApplicationController
     @organization = Organization.find_by!(slug: params[:id])
   end
 
-  def add_identifiers_to_roster
+  def add_identifiers_to_roster(roster)
     identifiers = split_identifiers(params[:identifiers])
     identifiers.each do |identifier|
       roster.roster_entries << RosterEntry.create(roster: roster, identifier: identifier)
