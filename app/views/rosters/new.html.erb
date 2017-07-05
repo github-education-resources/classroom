@@ -1,0 +1,39 @@
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">Enter a classroom roster</h2>
+  </div>
+  <div class="site-content-body">
+    <div class="markdown-body">
+      <p> Entering a classroom roster enables a number of features that allow for better management of your classroom.
+
+      <ul>
+        <li>View which students haven't started or completed an assignment</li>
+        <li>Link between a students real-life identity and their GitHub account</li>
+        <li>View student summaries showing activity during the course</li>
+      </ul>
+
+      <p>To enter a classroom roster, provide a list of unique student ifentifiers, one per line. These can be full names, student email addresses, or any other unique piece of information.</p>
+
+      <p>If you decide to skip, this can be done at a later time.</p>
+    </div>
+    </br>
+    <div>
+      <%= form_tag roster_path(@organization), method: :post do |f| %>
+        <dl class="form short-field">
+          <dt><label>Please enter a list of identifiers, one per line</label></dt>
+          <dd><%= text_area_tag(:identifiers, '', class: 'form-control input-block') %></dd>
+        </dl>
+
+        <dl class="form short-field">
+          <dt><label>Please give the identifier a name</label></dt>
+          <dd><%= text_field_tag(:identifier_name, '', class: 'form-control input-block') %></dd>
+        </dl>
+
+        <div class="form-actions">
+          <%= submit_tag 'Create', class: 'btn btn-primary right' %>
+          <%= link_to 'Skip', organization_path(@organization), class: 'btn btn-secondary right' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
