@@ -8,19 +8,18 @@ class RostersController < ApplicationController
   end
 
   def create
-    roster = Roster.new(identifier_name: params[:identifier_name])
-    roster.save!
+    @roster = Roster.new(identifier_name: params[:identifier_name])
+    @roster.save!
 
-    add_identifiers_to_roster(roster)
+    add_identifiers_to_roster
 
-    @organization.roster = roster
+    @organization.roster = @roster
     @organization.save!
 
     flash[:success] = 'Your classroom roster has been saved! Manage it HERE' # TODO: ADD LINK TO MANAGE PAGE
 
     redirect_to organization_path(@organization)
   rescue ActiveRecord::RecordInvalid
-    @roster = roster
     render :new
   end
 
@@ -30,10 +29,10 @@ class RostersController < ApplicationController
     @organization = Organization.find_by!(slug: params[:id])
   end
 
-  def add_identifiers_to_roster(roster)
+  def add_identifiers_to_roster
     identifiers = split_identifiers(params[:identifiers])
     identifiers.each do |identifier|
-      roster.roster_entries << RosterEntry.create(roster: roster, identifier: identifier)
+      @roster.roster_entries << RosterEntry.create(identifier: identifier)
     end
   end
 
