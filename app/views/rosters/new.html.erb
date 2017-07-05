@@ -1,3 +1,5 @@
+<% view = FormView.new(subject: @roster) %>
+
 <div class="site-content">
   <div class="site-content-cap">
     <h2 class="site-content-heading">Enter a classroom roster</h2>
@@ -19,14 +21,16 @@
     </br>
     <div>
       <%= form_tag roster_path(@organization), method: :post do |f| %>
-        <dl class="form short-field">
+        <dl class="<%= view.form_class_for(:identifiers) %> short-field">
           <dt><label>Please enter a list of identifiers, one per line</label></dt>
           <dd><%= text_area_tag(:identifiers, '', class: 'form-control input-block') %></dd>
+          <%= render('shared/form_error', errors: view.error_message_for(:identifiers)) if view.errors_for?(:identifiers) %>
         </dl>
 
-        <dl class="form short-field">
+        <dl class="<%= view.form_class_for(:identifier_name) %> short-field">
           <dt><label>Please give the identifier a name</label></dt>
           <dd><%= text_field_tag(:identifier_name, '', class: 'form-control input-block') %></dd>
+          <%= render('shared/form_error', errors: view.error_message_for(:identifier_name)) if view.errors_for?(:identifier_name) %>
         </dl>
 
         <div class="form-actions">
