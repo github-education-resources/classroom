@@ -4,7 +4,7 @@ require 'safe_yaml/load'
 
 class GitHubBlob
   # From jekyll/jekyll
-  # https://github.com/jekyll/jekyll/blob/master/lib/jekyll/document.rb#L13
+  # https://github.com/jekyll/jekyll/blob/74373baa550282a8630368e7b609ca9370f6d560/lib/jekyll/document.rb#L13
   YAML_FRONT_MATTER_REGEXP = /\A(---\s*\n.*?\n?)^((---|\.\.\.)\s*$\n?)/m
 
   attr_reader :data, :body
