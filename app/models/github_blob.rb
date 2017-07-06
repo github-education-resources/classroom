@@ -10,23 +10,20 @@ class GitHubBlob
   attr_reader :data, :body
 
   def initialize(github_repository, sha, **options)
-    repo = github_repository
-    @blob = repo.client.blob(repo.full_name, sha, options)
-    @data = nil
-    @body = nil
+    @blob = github_repository.client.blob(github_repository.full_name, sha, options)
     read_contents
   end
 
-  # Get the utf-8 formated content of the blob
+  # Public: Get the utf-8 formated content of the blob
   #
-  # Returns a string
+  # Returns a string.
   def utf_content
     decoded_content
   end
 
-  # Get the content of the blob
+  # Public: Get the content of the blob
   #
-  # Returns a base64 string
+  # Returns a base64 string.
   def content
     @blob.content
   end
@@ -34,16 +31,17 @@ class GitHubBlob
   private
 
   def decoded_content
-    return @blob.content unless @blob.content != 'utf-8'
+    return @blob.content if @blob.content == 'utf-8'
     Base64.decode64(@blob.content)
   end
 
+  # Internal: process yaml front matter
+  #
+  # Returns nothing.
   def read_contents
     match = YAML_FRONT_MATTER_REGEXP.match(decoded_content)
-    if match
-      @body = match.post_match
-      @data = SafeYAML.load(match.to_s)
-    end
-    @data
+    return unless match
+    @body = match.post_match
+    @data = SafeYAML.load(match.to_s)
   end
 end

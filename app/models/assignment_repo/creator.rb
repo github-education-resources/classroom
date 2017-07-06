@@ -191,7 +191,7 @@ class AssignmentRepo
       repository_name.truncate(100 - suffix.length, omission: '') + suffix
     end
 
-    # Handles assignment repository setup
+    # Internal: Handles assignment repository setup
     #
     # configs_repo    - GitHubRepository containing the configuration files
     # assignment_repo - GitHubRepository for which to perform the configuration
@@ -199,10 +199,10 @@ class AssignmentRepo
     #
     # Returns nothing
     def setup_repository(configs_repo, assignment_repo)
-      return unless configs_repo.classroom_configs?
-      conf_tree = configs_repo.branch('github-classroom').commit.commit.tree.sha
-      configs_repo.tree(conf_tree).tree.each do |conf|
-        process_config(configs_repo, assignment_repo, conf)
+      return unless configs_repo.branch_present? 'github-classroom'
+      configs_tree = configs_repo.branch_tree('github-classroom')
+      configs_tree.tree.each do |configuration|
+        process_configuration(configs_repo, assignment_repo, configuration)
       end
 
       wait_import_completion assignment_repo
@@ -210,40 +210,46 @@ class AssignmentRepo
       assignment_repo.remove_branch('github-classroom')
     end
 
+    # Internal: Wait for import completion
+    #
+    # github_repository - GitHubRepository awaiting import completion
+    #
+    # Returns nothing
     def wait_import_completion(github_repository)
+      wait_limit = 60
+      increment_rate = 0.25
       t = 1
       loop do
-        break if github_repository.import_progress[:status] == 'complete' || t > 60
-        sleep t += (t *= 0.25).ceil
+        break if github_repository.import_progress[:status] == 'complete' || t > wait_limit
+        sleep t += (t *= increment_rate).ceil
       end
     end
 
-    # Process the configurations separetly
+    # Internal: Process the configurations separetly
     #
     # configs_repo    - GitHubRepository containing the configuration files
     # assignment_repo - GitHubRepository for which to perform the configuration
     #                   setups
-    # conf            - GitObjects from of the 'github-classroom' branch tree
-    #                   of the configs_repo
+    # configuration   - GitObjects representing the configuration to process
     #
     # Returns nothing
-    def process_config(configs_repo, assignment_repo, conf)
-      case conf.path
+    def process_configuration(configs_repo, assignment_repo, configuration)
+      case configuration.path
       when 'issues'
-        gen_issues(configs_repo, assignment_repo, conf.sha)
+        generate_issues(configs_repo, assignment_repo, configuration.sha)
       end
     end
 
-    # Generates issues for the assignment_repo based on the configs
+    # Internal: Generates issues for the assignment_repo based on the configs
     #
     # configs_repo    - GitHubRepository containing the configuration files
     # assignment_repo - GitHubRepository for which to perform the configuration
     #                   setups
-    # issues_tree     - sha of the 'issues' tree
+    # tree_sha     - sha of the 'issues' tree
     #
     # Returns nothing
-    def gen_issues(configs_repo, assignment_repo, issues_tree)
-      configs_repo.tree(issues_tree).tree.each do |issue|
+    def generate_issues(configs_repo, assignment_repo, tree_sha)
+      configs_repo.tree(tree_sha).tree.each do |issue|
         blob = configs_repo.blob(issue.sha)
         assignment_repo.add_issue(blob.data['title'], blob.body)
       end

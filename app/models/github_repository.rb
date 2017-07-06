@@ -40,7 +40,7 @@ class GitHubRepository < GitHubResource
     end
   end
 
-  # Add issues to the GitHub repository.
+  # Public: Add issues to the GitHub repository.
   #
   # title    - The title of the issue.
   # body     - The body of the issue.
@@ -50,24 +50,22 @@ class GitHubRepository < GitHubResource
     GitHub::Errors.with_error_handling do
       @client.create_issue(full_name, title, body, options)
     end
-  rescue GitHub::Error
-    []
   end
 
-  # Get a tree object from the GitHub repository.
+  # Public: Get a tree object from the GitHub repository.
   #
   # sha    - sha of the tree.
   #
-  # Returns a git Tree object, or raises a GitHub::Error.
+  # Returns a git Tree object, or empty hash.
   def tree(sha, **options)
     GitHub::Errors.with_error_handling do
       @client.tree(full_name, sha, options)
     end
   rescue GitHub::Error
-    []
+    {}
   end
 
-  # Get a blob from the GitHub repository.
+  # Public: Get a blob from the GitHub repository.
   #
   # sha    - sha of the blob.
   #
@@ -91,7 +89,16 @@ class GitHubRepository < GitHubResource
       @client.branch(full_name, name, options)
     end
   rescue GitHub::Error
-    []
+    {}
+  end
+
+  def branch_tree(name, **options)
+    GitHub::Errors.with_error_handling do
+      branch_sha = branch(name).commit.sha
+      tree(branch_sha, options)
+    end
+  rescue GitHub::Error
+    {}
   end
 
   def remove_branch(name, **options)
@@ -116,10 +123,17 @@ class GitHubRepository < GitHubResource
     self.class.present?(@client, @id, options)
   end
 
-  def classroom_configs?(**options)
+  # Public: Checks if the GitHub repository has a given branch.
+  #
+  # branch    - name of the branch to check for
+  #
+  # Returns true if branch exists, false otherwise
+  def branch_present?(branch, **options)
     GitHub::Errors.with_error_handling do
-      @client.branches(full_name, options).map(&:name).include? 'github-classroom'
+      @client.branches(full_name, options).map(&:name).include? branch
     end
+  rescue GitHub::Error
+    false
   end
 
   def public=(is_public)
