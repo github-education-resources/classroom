@@ -7,6 +7,7 @@ class User < ApplicationRecord
 
   has_many :assignment_repos
   has_many :repo_accesses, dependent: :destroy
+  has_one :roster_entry
 
   has_and_belongs_to_many :organizations
 
