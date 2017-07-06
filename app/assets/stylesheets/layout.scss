@@ -858,3 +858,26 @@ hr {
 .form.short-field {
   width: 500px;
 }
+
+.site-content-body.tabnav-body {
+  padding-top: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.tabnav-body .assignment-list-items {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.tabnav-link {
+  cursor: pointer;
+}
+
+.hidden-tab {
+  display: none;
+}
+
+.right-button {
+  margin-left: auto;
+}

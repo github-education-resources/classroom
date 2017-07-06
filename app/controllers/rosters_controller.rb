@@ -2,6 +2,9 @@
 
 class RostersController < ApplicationController
   before_action :ensure_student_identifier_flipper_is_enabled, :set_organization
+  before_action :set_roster, only: [:show]
+
+  def show; end
 
   def new
     @roster = Roster.new
@@ -27,6 +30,10 @@ class RostersController < ApplicationController
 
   def set_organization
     @organization = Organization.find_by!(slug: params[:id])
+  end
+
+  def set_roster
+    @roster = @organization.roster
   end
 
   def add_identifiers_to_roster
