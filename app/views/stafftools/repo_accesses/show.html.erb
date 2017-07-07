@@ -8,15 +8,15 @@
 
     <div class="col-10 col-md-10 d-flex flex-column">
       <h2 class="stafftools-heading">
-        Repository access: <%= @repo_access.id %>
+        <%= t('views.stafftools.repo_accesses.repository_access') %>: <%= @repo_access.id %>
       </h2>
 
-      <p class="assignment-type text-gray">Repository access</p>
+      <p class="assignment-type text-gray"><%= t('views.stafftools.repo_accesses.repository_access')%></p>
     </div>
   </div>
 
   <div class="boxed-group">
-    <h3>Repository accesses</h3>
+    <h3><%= t('views.stafftools.repo_accesses.accesses')%></h3>
 
     <div class="boxed-group-inner">
       <% owner        = @repo_access.user %>
@@ -24,25 +24,25 @@
 
       <table>
         <tr>
-          <td class="text-emphasized">ID</td>
+          <td class="text-emphasized"><%= t('views.stafftools.repo_accesses.id') %></td>
           <td><%= @repo_access.id %></td>
         </tr>
         <% if @repo_access.github_team_id.present? %>
           <tr>
-            <td class="text-emphasized">GitHub Team ID</td>
+            <td class="text-emphasized"><%= t('views.stafftools.repo_accesses.github_team_id') %></td>
             <td><%= @repo_access.github_team_id %></td>
           </tr>
         <% end %>
         <tr>
-          <td class="text-emphasized">Owned by</td>
+          <td class="text-emphasized"><%= t('views.stafftools.repo_accesses.owned_by') %></td>
           <td><%= link_to owner.github_user.login, stafftools_user_path(owner) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Organization</td>
+          <td class="text-emphasized"><%= t('views.stafftools.repo_accesses.organization') %></td>
           <td><%= link_to organization.title, stafftools_organization_path(organization.id) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Created on</td>
+          <td class="text-emphasized"><%= t('views.stafftools.repo_accesses.created_on') %></td>
           <td><%= local_time(@repo_access.created_at) %></td>
         </tr>
       </table>
