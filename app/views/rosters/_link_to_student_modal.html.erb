@@ -8,9 +8,11 @@
   <div class="remodal-user-list">
     <% unlinked_entries.each do |entry| %>
       <div class="remodal-user">
-        <a href='#' class="remodal-user-name">
-          <%= entry.identifier %>
-        </a>
+        <%= form_tag({ controller: :rosters, action: :link }, method: :patch) do %>
+          <%= hidden_field_tag 'user_id', user.id %>
+          <%= hidden_field_tag 'roster_entry_id', entry.id %>
+          <%= submit_tag entry.identifier, class: 'remodal-user-name btn btn-outline' %>
+        <% end %>
       </div>
     <% end %>
   </div>

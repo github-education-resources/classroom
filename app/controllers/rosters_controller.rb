@@ -26,6 +26,37 @@ class RostersController < ApplicationController
     render :new
   end
 
+  def link
+    user = User.find(params[:user_id])
+    roster_entry = RosterEntry.find(params[:roster_entry_id])
+
+    roster_entry.user = user
+    roster_entry.save!
+
+    flash[:success] = 'Student and GitHub account linked!'
+    redirect_to roster_path(@organization)
+  rescue ActiveRecord::ActiveRecordError
+    # This will only occur if a roster_entry or user is deleted between loading the page and making the link
+    # the redirection here will reload the list for the user.
+    flash[:error] = 'An error has occured, please try again.'
+    redirect_to roster_path(@organization)
+  end
+
+  def unlink
+    roster_entry = RosterEntry.find(params[:roster_entry_id])
+
+    roster_entry.user = nil
+    roster_entry.save!
+
+    flash[:success] = 'Student and GitHub account unlinked!'
+    redirect_to roster_path(@organization)
+  rescue ActiveRecord::ActiveRecordError
+    # This will only occur if a roster_entry or user is deleted between loading the page and making the link
+    # the redirection here will reload the list for the user.
+    flash[:error] = 'An error has occured, please try again.'
+    redirect_to roster_path(@organization)
+  end
+
   private
 
   def set_organization

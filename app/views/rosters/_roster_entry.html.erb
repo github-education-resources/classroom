@@ -32,9 +32,12 @@
   <div class="d-flex right-button">
     <div class="flex-self-center input-group ">
       <% if view.linked? %>
-        <a class="btn btn-outline">Unlink GitHub account</a>
+        <%= form_tag({ controller: :rosters, action: :unlink }, method: :patch) do %>
+          <%= hidden_field_tag 'roster_entry_id', roster_entry.id %>
+          <%= submit_tag 'Unlink GitHub account', class: 'btn btn-outline' %>
+        <% end %>
       <% else %>
-        <a class="btn btn-outline", data-remodal-target="link-to-github_account-<%= roster_entry.id %>">Link to student</a>
+        <a class="btn btn-outline", data-remodal-target="link-to-github_account-<%= roster_entry.id %>">Link to GitHub account</a>
       <% end %>
     </div>
   </div>
