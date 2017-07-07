@@ -981,3 +981,13 @@ hr {
 .fixed-height-row {
   height: 56px;
 }
+
+.remodal-user {
+  margin-bottom: 10px;
+}
+
+.remodal-user-list {
+  max-height: 200px;
+  margin-left: 10px;
+  overflow: scroll;
+}

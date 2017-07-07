@@ -15,7 +15,9 @@
 
   <div class="d-flex right-button">
     <div class="flex-self-center input-group ">
-      <%= button_tag 'Link to student', class: "btn btn-outline"%>
+      <a class="btn btn-outline", data-remodal-target="link-to-student-<%= unlinked_user.id %>">Link to student</a>
     </div>
   </div>
 </div>
+
+<%= render partial: '/rosters/link_to_student_modal', locals: { user: unlinked_user, unlinked_entries: @roster.unlinked_entries } %>
