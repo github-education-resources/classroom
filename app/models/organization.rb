@@ -13,6 +13,8 @@ class Organization < ApplicationRecord
   has_many :group_assignments,        dependent: :destroy
   has_many :repo_accesses,            dependent: :destroy
 
+  belongs_to :roster
+
   has_and_belongs_to_many :users
 
   validates :github_id, presence: true, uniqueness: true
