@@ -1,0 +1,13 @@
+en:
+  views:
+    stafftools:
+      repo_accesses:
+        repository_access: 'Repository access'
+        accesses: 'Repository accesses'
+        id: 'ID'
+        github_team_id: 'GitHub Team ID'
+        owned_by: 'Owned by'
+        organization: 'Organization'
+        created_on: 'Created on'
+        created: 'Created'
+        repo_access_info: "%{user_login}'s repository access for %{organization_login}"
