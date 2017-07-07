@@ -4,23 +4,40 @@
   <div class="col-6 d-flex fixed-height-row">
     <div class="d-flex flex-column flex-justify-center flex-items-center flex-md-items-start">
       <span class="assignment-icon assignment-icon-individual left">
-        <%= octicon 'person', height: 22 %>
-        <% # This should be the avatar if they're linked %>
+        <% if view.linked? %>
+          <%= image_tag view.github_avatar_url, height: 46, width: 46, class: 'avatar left' %>
+        <% else %>
+          <%= octicon 'person', height: 22 %>
+          <% end %>
       </span>
     </div>
 
     <div class="flex-column">
-      <h3 class="assignment-name-link">
+      <h4 class="assignment-name-link">
         <%= view.identifier %>
-      </h3>
+      </h4>
 
-      <p class="assignment-type text-gray"><%= view.github_handle_text %></p>
+      <p class="assignment-type text-gray">
+        <% if view.linked? %>
+          <a class="" href='<%= view.github_profile_url %>'>
+            <%= view.github_handle_text %>
+          </a>
+        <% else %>
+          Unlinked user
+        <% end %>
+      </p>
     </div>
   </div>
 
   <div class="d-flex right-button">
     <div class="flex-self-center input-group ">
-      <%= button_tag view.button_text, class: "btn btn-outline"%>
+      <% if view.linked? %>
+        <a class="btn btn-outline">Unlink GitHub account</a>
+      <% else %>
+        <a class="btn btn-outline", data-remodal-target="link-to-github_account-<%= roster_entry.id %>">Link to student</a>
+      <% end %>
     </div>
   </div>
 </div>
+
+<%= render partial: '/rosters/link_to_github_account_modal', locals: { roster_entry: roster_entry } %>
