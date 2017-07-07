@@ -61,19 +61,13 @@ FactoryGirl.define do
     end
   end
 
-  factory :student_identifier do
-    type
-    organization
-    user
-
-    value { Faker::Lorem.word }
+  factory :roster do
+    identifier_name { 'email' }
   end
 
-  factory :student_identifier_type, aliases: [:type] do
-    organization
-
-    name         { Faker::Lorem.word     }
-    description  { Faker::Lorem.sentence }
+  factory :roster_entry do
+    roster
+    identifier { 'myemail@example.com' }
   end
 
   factory :user do

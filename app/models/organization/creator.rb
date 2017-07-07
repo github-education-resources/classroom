@@ -78,7 +78,7 @@ class Organization
       Result.success(organization)
     rescue Result::Error => err
       silently_destroy_organization_webhook(organization)
-      destroy_organziation(organization)
+      destroy_organization(organization)
 
       Result.failed(err.message)
     end
@@ -130,7 +130,7 @@ class Organization
     # Internal: Remove the Organization from the database.
     #
     # Returns true or raises an ActiveRecord::Error.
-    def destroy_organziation(organization)
+    def destroy_organization(organization)
       organization.destroy!
     end
 
