@@ -19,7 +19,7 @@ class RostersController < ApplicationController
     @organization.roster = @roster
     @organization.save!
 
-    flash[:success] = 'Your classroom roster has been saved! Manage it HERE' # TODO: ADD LINK TO MANAGE PAGE
+    flash[:success] = "Your classroom roster has been saved! Manage it <a href='#{roster_url(@organization)}'>here</a>."
 
     redirect_to organization_path(@organization)
   rescue ActiveRecord::RecordInvalid
@@ -36,8 +36,6 @@ class RostersController < ApplicationController
     flash[:success] = 'Student and GitHub account linked!'
     redirect_to roster_path(@organization)
   rescue ActiveRecord::ActiveRecordError
-    # This will only occur if a roster_entry or user is deleted between loading the page and making the link
-    # the redirection here will reload the list for the user.
     flash[:error] = 'An error has occured, please try again.'
     redirect_to roster_path(@organization)
   end
@@ -51,8 +49,6 @@ class RostersController < ApplicationController
     flash[:success] = 'Student and GitHub account unlinked!'
     redirect_to roster_path(@organization)
   rescue ActiveRecord::ActiveRecordError
-    # This will only occur if a roster_entry or user is deleted between loading the page and making the link
-    # the redirection here will reload the list for the user.
     flash[:error] = 'An error has occured, please try again.'
     redirect_to roster_path(@organization)
   end
