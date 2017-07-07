@@ -5,6 +5,8 @@ require 'rails_helper'
 RSpec.describe RostersController, type: :controller do
   let(:organization) { classroom_org     }
   let(:user)         { classroom_teacher }
+  let(:roster)       { create(:roster) }
+  let(:entry)        { create(:roster_entry, roster: roster) }
 
   describe 'GET #new', :vcr do
     before do
@@ -113,6 +115,194 @@ RSpec.describe RostersController, type: :controller do
     context 'with flipper disabled' do
       before do
         post :create, params: { id: organization.slug }
+      end
+
+      it '404s' do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  describe 'GET #show', :vcr do
+    before do
+      sign_in_as(user)
+    end
+
+    context 'with flipper enabled' do
+      before do
+        GitHubClassroom.flipper[:student_identifier].enable
+      end
+
+      context 'with no roster' do
+        before do
+          get :show, params: { id: organization.slug }
+        end
+
+        it 'succeeds' do
+          expect(response).to have_http_status(:success)
+        end
+
+        it 'renders roster/new' do
+          expect(response).to render_template('rosters/new')
+        end
+      end
+
+      context 'with a roster' do
+        before do
+          organization.roster = create(:roster)
+          organization.save
+
+          get :show, params: { id: organization.slug }
+        end
+
+        it 'succeeds' do
+          expect(response).to have_http_status(:success)
+        end
+
+        it 'renders roster/show' do
+          expect(response).to render_template('rosters/show')
+        end
+      end
+
+      after do
+        GitHubClassroom.flipper[:student_identifier].disable
+      end
+    end
+
+    context 'with flipper disabled' do
+      before do
+        get :show, params: { id: organization.slug }
+      end
+
+      it '404s' do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  describe 'PATCH #link', :vcr do
+    before do
+      sign_in_as(user)
+    end
+
+    context 'with flipper enabled' do
+      before do
+        GitHubClassroom.flipper[:student_identifier].enable
+      end
+
+      context 'user and entry exist' do
+        before do
+          patch :link, params: {
+            id:              organization.slug,
+            user_id:         user.id,
+            roster_entry_id: entry.id
+          }
+        end
+
+        it 'redirects to #show' do
+          expect(response).to redirect_to(roster_url(organization))
+        end
+
+        it 'creates link' do
+          expect(entry.reload.user).to eq(user)
+        end
+      end
+
+      context 'user/link does not exist' do
+        before do
+          patch :link, params: {
+            id:              organization.slug,
+            user_id:         3,
+            roster_entry_id: entry.id
+          }
+        end
+
+        it 'redirects to #show' do
+          expect(response).to redirect_to(roster_url(organization))
+        end
+
+        it 'does not create a link' do
+          expect(entry.reload.user).to be_nil
+        end
+      end
+
+      after do
+        GitHubClassroom.flipper[:student_identifier].disable
+      end
+    end
+
+    context 'with flipper disabled' do
+      before do
+        patch :link, params: {
+          id:              organization.slug,
+          user_id:         3,
+          roster_entry_id: 2
+        }
+      end
+
+      it '404s' do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  describe 'PATCH #unlink', :vcr do
+    before do
+      sign_in_as(user)
+    end
+
+    context 'with flipper enabled' do
+      before do
+        GitHubClassroom.flipper[:student_identifier].enable
+      end
+
+      context 'with a linked entry' do
+        before do
+          entry.user = user
+          entry.save
+
+          patch :unlink, params: {
+            id:              organization.slug,
+            roster_entry_id: entry.id
+          }
+        end
+
+        it 'redirects to roster page' do
+          expect(response).to redirect_to(roster_url(organization))
+        end
+
+        it 'unlinks entry and user' do
+          expect(entry.reload.user).to be_nil
+        end
+      end
+
+      context 'with an unlinked entry' do
+        before do
+          entry.user = nil
+          entry.save
+
+          patch :unlink, params: {
+            id:              organization.slug,
+            roster_entry_id: entry.id
+          }
+        end
+
+        it 'redirects to roster page' do
+          expect(response).to redirect_to(roster_url(organization))
+        end
+      end
+
+      after do
+        GitHubClassroom.flipper[:student_identifier].disable
+      end
+    end
+
+    context 'with flipper disabled' do
+      before do
+        patch :unlink, params: {
+          id:              organization.slug,
+          roster_entry_id: entry.id
+        }
       end
 
       it '404s' do

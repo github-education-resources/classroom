@@ -2,7 +2,7 @@
 
 class RostersController < ApplicationController
   before_action :ensure_student_identifier_flipper_is_enabled, :set_organization
-  before_action :set_roster, :set_unlinked_users, only: [:show]
+  before_action :set_roster, :redirect_if_no_roster, :set_unlinked_users, only: [:show]
 
   def show; end
 
@@ -54,6 +54,12 @@ class RostersController < ApplicationController
   end
 
   private
+
+  def redirect_if_no_roster
+    return if @roster
+
+    render :new
+  end
 
   def set_organization
     @organization = Organization.find_by!(slug: params[:id])
