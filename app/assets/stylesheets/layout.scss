@@ -214,6 +214,12 @@ main {
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
 
+  &.tabnav-body {
+    padding-top: 1rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+
   @media (max-width: 43em) {
     padding: 1rem;
   }
@@ -352,6 +358,10 @@ hr {
 .student-login {
   display: block;
   padding-top: 4px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 20px;
   color: $gray-dark;
 
   &:hover {
@@ -871,13 +881,6 @@ hr {
   margin-left: 50px;
 }
 
-.student-login {
-  margin: 0;
-  font-size: 14px;
-  font-weight: bold;
-  line-height: 20px;
-}
-
 .student-description {
   margin: 0;
   font-size: 14px;
@@ -955,15 +958,9 @@ hr {
   width: 500px;
 }
 
-.site-content-body.tabnav-body {
-  padding-top: 1rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
 .tabnav-body .assignment-list-items {
-  padding-left: 1rem;
   padding-right: 1rem;
+  padding-left: 1rem;
 }
 
 .tabnav-link {

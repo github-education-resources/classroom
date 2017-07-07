@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module UnlinkedUser
   class ShowView < ViewModel
     attr_reader :unlinked_user
