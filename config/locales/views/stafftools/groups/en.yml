@@ -1,0 +1,13 @@
+en:
+  views:
+    stafftools:
+      groups:
+        group: 'Group'
+        id: 'ID'
+        owner: 'Owned by'
+        grouping: 'Grouping'
+        github_url: 'GitHub URL'
+        created_on: 'Created on'
+        team_members: 'Team Members'
+        group_title: 'The %{title} Group for %{organization_login}'
+        created: 'Created'

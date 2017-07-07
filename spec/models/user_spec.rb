@@ -50,15 +50,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#identifier_for' do
-    it 'returns the proper identifier' do
-      identifier = create(:student_identifier, user: subject)
-      options    = { organization: identifier.organization, type: identifier.type }
-
-      expect(subject.identifier_for(options)).to eql(identifier)
-    end
-  end
-
   describe '#staff?' do
     it 'returns if the User is a site_admin' do
       expect(subject.staff?).to be(false)
