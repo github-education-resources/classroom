@@ -7,9 +7,9 @@
 
   <div class="col-10 col-md-10 d-flex flex-column">
     <%= link_to stafftools_group_path(group.id) do %>
-      <strong class="search-result-title">The <%= group.title %> Group for <%= group.organization_login %></strong>
+      <strong class="search-result-title"><%= t('views.stafftools.groups.group_title', title: group.title, organization_login: group.organization_login) %></strong>
     <% end %>
 
-    <span class="text-gray css-truncate css-truncate-target">Created <%= local_time_ago(group.created_at) %></span>
+    <span class="text-gray css-truncate css-truncate-target"><%= t('views.stafftools.groups.created') %> <%= local_time_ago(group.created_at) %></span>
   </div>
 </div>
