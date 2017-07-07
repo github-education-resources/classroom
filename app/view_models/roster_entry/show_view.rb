@@ -19,7 +19,7 @@ class RosterEntry
     end
 
     def github_avatar_url
-      linked? ? roster_entry.user.github_user.login : 'Not linked'
+      roster_entry.user.github_user.github_avatar_url(96)
     end
 
     def button_text
