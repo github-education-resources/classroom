@@ -42,3 +42,6 @@ spec/examples.txt
 
 # yarn
 /node_modules
+
+# knapsack
+knapsack_rspec_report.json
