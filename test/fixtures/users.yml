@@ -1,0 +1,18 @@
+DEFAULTS: &DEFAULTS
+  last_active_at: <%= Time.zone.now + 5.minutes %>
+
+teacher:
+  uid: 1
+  token: 0b4564cac91a89be6f79d8ea2231d61672cdf035
+  <<: *DEFAULTS
+
+student:
+  uid: 2
+  token: 7e6628b48d2897b4171ba40ead66c85566ed6119
+  <<: *DEFAULTS
+
+githubber:
+  uid: 3
+  token: a6cc9e11e3940a161ed97ca63ab8b2fe3d0fb731
+  site_admin: true
+  <<: *DEFAULTS
