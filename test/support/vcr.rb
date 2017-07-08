@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 VCR.configure do |c|
   c.configure_rspec_metadata!
   c.cassette_library_dir = 'test/fixtures/cassettes'
@@ -50,6 +51,7 @@ VCR.configure do |c|
 
   c.hook_into :webmock
 end
+# rubocop:enable Metrics/BlockLength
 
 def application_github_client_id
   ENV.fetch('GITHUB_CLIENT_ID') { 'i' * 20 }
