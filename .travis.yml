@@ -18,7 +18,6 @@ before_script:
 script:
   - "./bin/rspec"
   - "./bin/rails test"
-  - "./script/linter"
 
 cache:
   bundler: true
