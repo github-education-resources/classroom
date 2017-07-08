@@ -24,7 +24,7 @@ class AssignmentRepo < ApplicationRecord
   # This should really be in a view model
   # but it'll live here for now.
   def disabled?
-    !github_repository.on_github? || !github_user.on_github?
+    @disabled ||= !github_repository.on_github? || !github_user.on_github?
   end
 
   def private?
