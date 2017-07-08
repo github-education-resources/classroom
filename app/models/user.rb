@@ -29,10 +29,6 @@ class User < ApplicationRecord
     update_attributes(user_attributes)
   end
 
-  def self.create_from_auth_hash(hash)
-    create!(AuthHash.new(hash).user_info)
-  end
-
   def self.find_by_auth_hash(hash)
     conditions = AuthHash.new(hash).user_info.slice(:uid)
     find_by(conditions)
