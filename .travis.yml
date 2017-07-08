@@ -16,7 +16,7 @@ before_script:
   - bundle exec rake db:schema:load
 
 script:
-  - "KNAPSACK_GENERATE_REPORT=false ./bin/rake knapsack:rspec"
+  - "KNAPSACK_GENERATE_REPORT=true ./bin/rake knapsack:rspec"
 
 cache:
   bundler: true
