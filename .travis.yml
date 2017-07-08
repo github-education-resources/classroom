@@ -16,7 +16,8 @@ before_script:
   - bundle exec rake db:schema:load
 
 script:
-  - ./script/cibuild
+  - "./bin/rspec"
+  - "./script/linter"
 
 cache:
   bundler: true
