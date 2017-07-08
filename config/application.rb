@@ -26,11 +26,6 @@ module GitHubClassroom
     # Append directories to autoload paths
     config.eager_load_paths += %w[lib].map { |path| Rails.root.join(path).to_s }
 
-    # Configure the generators
-    config.generators do |g|
-      g.test_framework :rspec, fixture: false
-    end
-
     # GC Profiler for analytics
     GC::Profiler.enable
 
