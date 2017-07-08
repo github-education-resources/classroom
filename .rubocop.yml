@@ -38,6 +38,9 @@ Rails/DynamicFindBy:
   Whitelist:
     - find_by_auth_hash
 
+Style/ClassAndModuleChildren:
+  Enabled: false
+
 Style/FileName:
   Exclude:
     - 'Gemfile'
