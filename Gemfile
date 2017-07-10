@@ -74,6 +74,7 @@ group :development, :test do
   gem 'bullet'
   gem 'dotenv-rails'
   gem 'guard-rspec', require: false
+  gem 'knapsack', '~> 1.14'
   gem 'rails-controller-testing'
   gem 'rspec-rails'
   gem 'rubocop', require: false
