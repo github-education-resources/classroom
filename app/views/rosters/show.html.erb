@@ -17,7 +17,7 @@
           </div>
           <span id='students-span'>
             <div class="assignment-list-items">
-              <% @roster.roster_entries.each do |roster_entry| %>
+              <% @roster.roster_entries.order(:identifier).each do |roster_entry| %>
                 <%= render 'roster_entry', roster_entry: roster_entry %>
               <% end %>
             </div>
