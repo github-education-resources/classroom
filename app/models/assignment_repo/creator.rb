@@ -222,12 +222,17 @@ class AssignmentRepo
     # Returns nothing
     def wait_import_completion(github_repository)
       t = 1
-      wait_limit = 60
+      sleep_limit = 100
       increment_rate = 0.25
-      loop do
-        break if github_repository.import_progress[:status] == 'complete' || t > wait_limit
+
+      until github_repository.import_progress[:status] == 'complete' || !sleep_limit.positive?
         sleep t += (t *= increment_rate).ceil
+        sleep_limit -= t
       end
+
+      return if github_repository.import_progress[:status] == 'complete'
+
+      raise GitHub::Error, 'Source import failed'
     end
 
     # Internal: Process the configurations separetly
