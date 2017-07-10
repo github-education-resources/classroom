@@ -7,7 +7,7 @@
     </div>
 
     <div class="col-10 col-md-10 d-flex flex-column">
-      <h2 class="site-content-heading">
+      <h2 class="stafftools-heading">
         <%= @group.title %>
       </h2>
 
@@ -21,23 +21,23 @@
     <div class="boxed-group-inner">
       <table>
         <tr>
-          <td><%= t('views.stafftools.groups.id') %></td>
+          <td class="text-emphasized"><%= t('views.stafftools.groups.id') %></td>
           <td><%= @group.id %></td>
         </tr>
         <tr>
-          <td><%= t('views.stafftools.groups.owner') %></td>
+          <td class="text-emphasized"><%= t('views.stafftools.groups.owner') %></td>
           <td><%= link_to @group.organization.title, stafftools_organization_path(@group.organization.id) %></td>
         </tr>
         <tr>
-          <td><%= t('views.stafftools.groups.grouping') %></td>
+          <td class="text-emphasized"><%= t('views.stafftools.groups.grouping') %></td>
           <td><%= link_to @group.grouping.title, stafftools_grouping_path(@group.grouping.id) %></td>
         </tr>
         <tr>
-          <td><%= t('views.stafftools.groups.github_url') %></td>
+          <td class="text-emphasized"><%= t('views.stafftools.groups.github_url') %></td>
           <td><%= link_to @group.github_team.html_url, @group.github_team.html_url %></td>
         </tr>
         <tr>
-          <td><%= t('views.stafftools.groups.created_on') %></td>
+          <td class="text-emphasized"><%= t('views.stafftools.groups.created_on') %></td>
           <td><%= local_time(@group.created_at) %></td>
         </tr>
       </table>

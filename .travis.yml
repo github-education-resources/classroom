@@ -16,7 +16,7 @@ before_script:
   - bundle exec rake db:schema:load
 
 script:
-  - "./bin/rspec"
+  - "KNAPSACK_GENERATE_REPORT=true ./bin/rake knapsack:rspec"
   - "./bin/rails test"
 
 cache:
@@ -39,6 +39,10 @@ env:
     - RAILS_ENV=test
     - RACK_ENV=test
     - WEBHOOK_SECRET=abcdefg
+    - CI_NODE_TOTAL=2
+  matrix:
+    - CI_NODE_INDEX=0
+    - CI_NODE_INDEX=1
 
 notifications:
   email: false
