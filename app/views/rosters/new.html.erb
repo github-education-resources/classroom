@@ -7,7 +7,7 @@
   <div class="site-content-body">
     <div class="markdown-body">
       <p> Next, let's set up a "roster", so you can easily track student progress on your dashboard.
-      <p> To create your roster, you'll need to paste in unqiue identifiers, one per line. These identifiers can be:</p>
+      <p> To create your roster, you'll need to share a way to identify your students. These "identifiers" can be:</p>
 
       <ul>
         <li>Student last names</li>
@@ -15,8 +15,14 @@
         <li>Any other unique piece of information</li>
       </ul>
 
+<p>You can always come back and complete this step later.</p>
 
-      <p>You can always come back and complete this step later.</p>
+      <dl class="<%= view.form_class_for(:identifier_name) %> short-field">
+        <dt><label>What information would you like to use to identify your students? (emails, student ID #, etc.)</label></dt>
+        <dd><%= text_field_tag(:identifier_name, '', class: 'form-control input-block') %></dd>
+        <%= render('shared/form_error', errors: view.error_message_for(:identifier_name)) if view.errors_for?(:identifier_name) %>
+      </dl>
+
     </div>
     </br>
     <div>
@@ -27,11 +33,7 @@
           <%= render('shared/form_error', errors: view.error_message_for(:identifiers)) if view.errors_for?(:identifiers) %>
         </dl>
 
-        <dl class="<%= view.form_class_for(:identifier_name) %> short-field">
-          <dt><label>Give this batch of identifiers a name (in case you'd like to re-use it):</label></dt>
-          <dd><%= text_field_tag(:identifier_name, '', class: 'form-control input-block') %></dd>
-          <%= render('shared/form_error', errors: view.error_message_for(:identifier_name)) if view.errors_for?(:identifier_name) %>
-        </dl>
+
 
         <div class="form-actions">
           <%= submit_tag 'Create', class: 'btn btn-primary right' %>
