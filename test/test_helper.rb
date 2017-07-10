@@ -64,15 +64,35 @@ class ActiveSupport::TestCase
   def after_teardown
     Chewy.strategy(:bypass) do
       super if defined?(super)
-
       VCR.eject_cassette
-
-      if Bullet.warnings.present?
-        warnings = Bullet.warnings.map { |_k, warning| warning }.flatten.map(&:body_with_caller).join("\n-----\n\n")
-        flunk(warnings)
-      end
-
-      Bullet.end_request
     end
+
+    Bullet.perform_out_of_channel_notifications if Bullet.notification?
+    Bullet.end_request
+  end
+
+  # Add more helper methods to be used by all tests here...
+
+  # Public: Generate a random unsed integer for a given model to use
+  # as an attribute.
+  #
+  # subject   - The class of the object you want to find a unique attribute for.
+  # attribute - The Integer type attribute for which we are searching against.
+  #
+  # Examples:
+  #
+  #   unique_integer_attribute(User, :uid)
+  #   # => 42
+  #
+  # Returns an Integer.
+  def unique_integer_attribute(subject, attribute)
+    id = nil
+
+    loop do
+      id = SecureRandom.random_number(1_000_000)
+      break if subject.find_by(attribute => id).blank?
+    end
+
+    id
   end
 end

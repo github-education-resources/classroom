@@ -4,11 +4,11 @@ require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
   setup do
-    @subject              = users(:teacher)
-    @other_user           = users(:student)
-    @github_omniauth_hash = OmniAuth.config.mock_auth[:github]
+    @subject    = users(:teacher)
+    @other_user = users(:student)
 
     @invalid_token = 'e72e16c7e42f292c6912e7710c838347ae178b4a'
+    use_vcr_placeholder_for(@invalid_token, '<INVALID_GITHUB_TOKEN>')
   end
 
   test 'requires a uid' do
@@ -42,19 +42,23 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test '#authorized_access_token? returns true for a valid GitHub token' do
-    @subject.assign_from_auth_hash(@github_omniauth_hash)
     assert_predicate @subject, :authorized_access_token?
   end
 
   test '#authorized_access_token returns false for a invlaid GitHub token' do
-    refute_predicate @subject, :authorized_access_token?
+    options = { uid: unique_integer_attribute(User, :uid), token: @invalid_token }
+    use_vcr_placeholder_for(options[:uid], '<INVALID_GITHUB_ID>')
+
+    bad_token_hash = github_omniauth_hash(options)
+
+    user = User.new
+    user.assign_from_auth_hash(bad_token_hash)
+
+    refute_predicate user, :authorized_access_token?
   end
 
   test '#find_by_auth_hash finds user from an Omniauth hash' do
-    user = User.new
-    user.assign_from_auth_hash(@github_omniauth_hash)
-
-    assert_equal User.find_by(uid: @github_omniauth_hash[:uid]), user
+    assert_equal User.find_by_auth_hash(github_omniauth_hash), @subject
   end
 
   test '#flipper_id' do
@@ -72,9 +76,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test '#github_client_scopes returns an Array of GitHub token scopes' do
-    @subject.assign_from_auth_hash(@github_omniauth_hash)
     scopes = @subject.github_client_scopes
-
     assert_kind_of Array, scopes
 
     %w[admin:org admin:org_hook delete_repo repo user:email].each do |scopet|
@@ -102,7 +104,6 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test 'token scope cannot be downgraded' do
-    @subject.assign_from_auth_hash(@github_omniauth_hash)
     good_token = @subject.token
 
     @subject.update_attributes(token: @invalid_token)
