@@ -64,8 +64,9 @@ class ActiveSupport::TestCase
   def after_teardown
     Chewy.strategy(:bypass) do
       super if defined?(super)
-      VCR.eject_cassette
     end
+
+    VCR.eject_cassette
 
     Bullet.perform_out_of_channel_notifications if Bullet.notification?
     Bullet.end_request
@@ -95,4 +96,8 @@ class ActiveSupport::TestCase
 
     id
   end
+end
+
+class ActionDispatch::IntegrationTest
+  include SignInHelper
 end
