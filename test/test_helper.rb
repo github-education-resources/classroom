@@ -97,7 +97,3 @@ class ActiveSupport::TestCase
     id
   end
 end
-
-class ActionDispatch::IntegrationTest
-  include SignInHelper
-end
