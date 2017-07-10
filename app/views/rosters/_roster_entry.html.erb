@@ -34,7 +34,7 @@
       <% if view.linked? %>
         <%= form_tag({ controller: :rosters, action: :unlink }, method: :patch) do %>
           <%= hidden_field_tag 'roster_entry_id', roster_entry.id %>
-          <%= submit_tag 'Unlink GitHub account', class: 'btn btn-outline' %>
+          <%= submit_tag 'Unlink GitHub account', class: view.button_class %>
         <% end %>
       <% else %>
         <a class="btn btn-outline", data-remodal-target="link-to-github_account-<%= roster_entry.id %>">Link to GitHub account</a>

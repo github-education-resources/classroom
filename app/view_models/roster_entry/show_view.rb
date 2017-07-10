@@ -25,5 +25,9 @@ class RosterEntry
     def button_text
       linked? ? 'Unlink GitHub account' : 'Link GitHub account'
     end
+
+    def button_class
+      linked? ? 'btn btn-danger' : 'btn btn-outline'
+    end
   end
 end
