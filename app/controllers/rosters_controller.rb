@@ -58,7 +58,7 @@ class RostersController < ApplicationController
   def redirect_if_no_roster
     return if @roster
 
-    render :new
+    redirect_to new_roster_url(@organization)
   end
 
   def set_organization
