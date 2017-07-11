@@ -980,11 +980,24 @@ hr {
 }
 
 .remodal-user {
-  margin-bottom: 10px;
+  padding-left: 0;
+  margin-bottom: 8px;
+  color: $blue;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+
+
+  &:focus {
+    outline: none;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .remodal-user-list {
   max-height: 200px;
-  margin-left: 10px;
   overflow: scroll;
 }
