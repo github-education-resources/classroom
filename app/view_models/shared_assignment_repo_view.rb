@@ -17,11 +17,15 @@ class SharedAssignmentRepoView < ViewModel
 
   def commit_text
     pluralize(number_of_github_commits, 'commit')
+  rescue GitHub::Error
+    'Failed to fetch commit data'
   end
 
   def github_commits_url
     branch = github_repository.default_branch
     github_repository.commits_url(branch)
+  rescue GitHub::Error
+    ''
   end
 
   def disabled_class
