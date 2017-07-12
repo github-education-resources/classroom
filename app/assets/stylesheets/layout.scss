@@ -355,27 +355,9 @@ hr {
   margin-top: 2px;
 }
 
-.student-login {
-  display: block;
-  padding-top: 4px;
-  margin: 0;
-  font-size: 14px;
-  font-weight: bold;
-  line-height: 20px;
-  color: $gray-dark;
-
-  &:hover {
-    color: $blue;
-  }
-}
-
 .assignment-repo-list {
   .assignment-repo-list-item:not(:first-child) {
     border-top: 1px solid #e3e3e3;
-
-    @media screen and (max-width: 40em) {
-      margin-bottom: 0;
-    }
   }
 }
 
@@ -384,12 +366,12 @@ hr {
   padding-bottom: 1.5rem;
   font-size: 14px;
 
-  .octicon-alert {
-    display: none;
-  }
-
   &:last-child {
     padding-bottom: 0;
+  }
+
+  .octicon-alert {
+    display: none;
   }
 
   &.disabled {
@@ -832,6 +814,20 @@ hr {
 
 .student-information {
   margin-left: 50px;
+}
+
+.student-login {
+  display: block;
+  padding-top: 4px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 20px;
+  color: $gray-dark;
+
+  &:hover {
+    color: $blue;
+  }
 }
 
 .student-description {
