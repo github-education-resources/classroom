@@ -11,33 +11,33 @@
         <%= @assignment_invitation.key %>
       </h2>
 
-      <p class="assignment-type text-gray">Individual assignment invitation</p>
+      <p class="assignment-type text-gray"><%= t('views.stafftools.assignment_invitations.assignment_type') %></p>
     </div>
   </div>
-  
+
   <div class="boxed-group">
-    <h3>Assignment invitation information</h3>
+    <h3><%= t('views.stafftools.assignment_invitations.title') %></h3>
 
     <div class="boxed-group-inner">
       <table>
         <tr>
-          <td class="text-emphasized">ID</td>
+          <td class="text-emphasized"><%= t('views.stafftools.assignment_invitations.id') %></td>
           <td><%= @assignment_invitation.id %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Assignment</td>
+          <td class="text-emphasized"><%= t('views.stafftools.assignment_invitations.assignment') %></td>
           <td><%= link_to @assignment_invitation.assignment.title, stafftools_assignment_path(@assignment_invitation.assignment.id) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Owned by</td>
+          <td class="text-emphasized"><%= t('views.stafftools.assignment_invitations.owner') %></td>
           <td><%= link_to @assignment_invitation.organization.title, stafftools_organization_path(@assignment_invitation.organization.id) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Invitation URL</td>
+          <td class="text-emphasized"><%= t('views.stafftools.assignment_invitations.invitation_url') %></td>
           <td><%= link_to assignment_invitation_url(@assignment_invitation), assignment_invitation_url(@assignment_invitation) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Created on</td>
+          <td class="text-emphasized"><%= t('views.stafftools.assignment_invitations.created_on') %></td>
           <td><%= local_time(@assignment_invitation.created_at) %></td>
         </tr>
       </table>
