@@ -14,7 +14,8 @@ RSpec.describe AssignmentInvitation, type: :model do
 
   describe 'short_key' do
     it 'allows multiple invitations with nil short_key' do
-      first_inv, second_inv = create(:assignment_invitation), create(:assignment_invitation)
+      first_inv = create(:assignment_invitation)
+      second_inv = create(:assignment_invitation)
 
       first_inv.update_attributes!(short_key: nil)
       second_inv.short_key = nil
