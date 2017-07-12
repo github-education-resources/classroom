@@ -8,8 +8,17 @@ class AssignmentInvitationsController < ApplicationController
 
   def accept
     create_submission do
-      redirect_to success_assignment_invitation_path
+      redirect_to setup_assignment_invitation_path
     end
+  end
+
+  def setup
+    starter_code_repo_id = current_submission.assignment.starter_code_repo_id
+    redirect_to success_assignment_invitation_path unless starter_code_repo_id
+  end
+
+  def setup_status
+    # TODO: return the status of the import progress and repo setup in json
   end
 
   def show; end

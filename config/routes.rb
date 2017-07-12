@@ -25,6 +25,8 @@ Rails.application.routes.draw do
   resources :assignment_invitations, path: 'assignment-invitations', only: [:show] do
     member do
       patch :accept
+      get   :setup
+      get   :setup_status
       get   :success
     end
   end
