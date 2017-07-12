@@ -91,7 +91,9 @@ class Assignment
     end
 
     def deadline_updated?
-      @options[:deadline] != @assignment.deadline&.deadline_at
+      return false unless @options[:deadline]
+      new_deadline_at = DateTime.strptime(@options[:deadline], Deadline::Factory::DATETIME_FORMAT).utc
+      new_deadline_at != @assignment.deadline&.deadline_at
     end
   end
 end

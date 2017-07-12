@@ -7,8 +7,8 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-ruby '2.4.1'
-gem 'rails', '~> 5.1', '>= 5.1.1'
+ruby File.read(File.expand_path('../.ruby-version', __FILE__)).chomp
+gem 'rails', '~> 5.1', '>= 5.1.2'
 
 gem 'autoprefixer-rails'
 
@@ -74,6 +74,7 @@ group :development, :test do
   gem 'bullet'
   gem 'dotenv-rails'
   gem 'guard-rspec', require: false
+  gem 'knapsack', '~> 1.14'
   gem 'rails-controller-testing'
   gem 'rspec-rails'
   gem 'rubocop', require: false

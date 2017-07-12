@@ -3,11 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe GroupAssignmentsController, type: :controller do
-  let(:user)         { classroom_teacher }
-  let(:organization) { classroom_org     }
-
-  let(:group_assignment)        { create(:group_assignment, organization: organization)        }
-  let(:student_identifier_type) { create(:student_identifier_type, organization: organization) }
+  let(:user)             { classroom_teacher                                     }
+  let(:organization)     { classroom_org                                         }
+  let(:group_assignment) { create(:group_assignment, organization: organization) }
 
   before do
     sign_in_as(user)
@@ -174,30 +172,6 @@ RSpec.describe GroupAssignmentsController, type: :controller do
         end
       end
     end
-
-    context 'flipper is enabled for the user' do
-      before do
-        GitHubClassroom.flipper[:student_identifier].enable
-        post :create, params: {
-          organization_id:         organization.slug,
-          group_assignment:        { title: 'Learn JavaScript', slug: 'learn-javascript' },
-          grouping:                { title: 'Grouping 1' },
-          student_identifier_type: { id: student_identifier_type.id }
-        }
-      end
-
-      it 'creates a new Assignment' do
-        expect(GroupAssignment.count).to eql(1)
-      end
-
-      it 'sets correct student identifier type for the new Assignment' do
-        expect(GroupAssignment.first.student_identifier_type.id).to eql(student_identifier_type.id)
-      end
-
-      after do
-        GitHubClassroom.flipper[:student_identifier].disable
-      end
-    end
   end
 
   describe 'GET #show', :vcr do
@@ -267,27 +241,6 @@ RSpec.describe GroupAssignmentsController, type: :controller do
         }
 
         expect(assigns(:group_assignment).slug).to_not be_nil
-      end
-    end
-
-    context 'flipper is enabled for the user' do
-      before do
-        GitHubClassroom.flipper[:student_identifier].enable
-
-        patch :update, params: {
-          id:                      group_assignment.slug,
-          organization_id:         organization.slug,
-          group_assignment:        { title: 'JavaScript Calculator' },
-          student_identifier_type: { id: student_identifier_type.id }
-        }
-      end
-
-      it 'correctly updates the assignment' do
-        expect(GroupAssignment.first.student_identifier_type.id).to eql(student_identifier_type.id)
-      end
-
-      after do
-        GitHubClassroom.flipper[:student_identifier].disable
       end
     end
   end
