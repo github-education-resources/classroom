@@ -138,12 +138,8 @@ RSpec.describe RostersController, type: :controller do
           get :show, params: { id: organization.slug }
         end
 
-        it 'succeeds' do
-          expect(response).to have_http_status(:success)
-        end
-
-        it 'renders roster/new' do
-          expect(response).to render_template('rosters/new')
+        it 'redirects to roster/new' do
+          expect(response).to redirect_to(new_roster_url(organization))
         end
       end
 
