@@ -8,6 +8,17 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
     expect(group_assignment_invitation.key).to_not be_nil
   end
 
+  describe 'short_key' do
+    it 'allows multiple invitations with nil short_key' do
+      first_inv, second_inv = create(:group_assignment_invitation), create(:group_assignment_invitation)
+
+      first_inv.update_attributes!(short_key: nil)
+      second_inv.short_key = nil
+
+      expect(second_inv.save).to be_truthy
+    end
+  end
+
   describe '#redeem_for', :vcr do
     let(:student)       { classroom_student }
     let(:organization)  { classroom_org     }
