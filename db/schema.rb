@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170620200357) do
+ActiveRecord::Schema.define(version: 20170629203747) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,9 +21,11 @@ ActiveRecord::Schema.define(version: 20170620200357) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
+    t.string "short_key"
     t.index ["assignment_id"], name: "index_assignment_invitations_on_assignment_id"
     t.index ["deleted_at"], name: "index_assignment_invitations_on_deleted_at"
     t.index ["key"], name: "index_assignment_invitations_on_key", unique: true
+    t.index ["short_key"], name: "index_assignment_invitations_on_short_key"
   end
 
   create_table "assignment_repos", id: :serial, force: :cascade do |t|
@@ -52,7 +54,6 @@ ActiveRecord::Schema.define(version: 20170620200357) do
     t.integer "creator_id"
     t.datetime "deleted_at"
     t.string "slug", null: false
-    t.integer "student_identifier_type_id"
     t.boolean "students_are_repo_admins", default: false, null: false
     t.index ["deleted_at"], name: "index_assignments_on_deleted_at"
     t.index ["organization_id"], name: "index_assignments_on_organization_id"
@@ -74,9 +75,11 @@ ActiveRecord::Schema.define(version: 20170620200357) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
+    t.string "short_key"
     t.index ["deleted_at"], name: "index_group_assignment_invitations_on_deleted_at"
     t.index ["group_assignment_id"], name: "index_group_assignment_invitations_on_group_assignment_id"
     t.index ["key"], name: "index_group_assignment_invitations_on_key", unique: true
+    t.index ["short_key"], name: "index_group_assignment_invitations_on_short_key"
   end
 
   create_table "group_assignment_repos", id: :serial, force: :cascade do |t|
@@ -102,7 +105,6 @@ ActiveRecord::Schema.define(version: 20170620200357) do
     t.datetime "deleted_at"
     t.string "slug", null: false
     t.integer "max_members"
-    t.integer "student_identifier_type_id"
     t.boolean "students_are_repo_admins", default: false, null: false
     t.index ["deleted_at"], name: "index_group_assignments_on_deleted_at"
     t.index ["organization_id"], name: "index_group_assignments_on_organization_id"
@@ -145,8 +147,10 @@ ActiveRecord::Schema.define(version: 20170620200357) do
     t.string "slug", null: false
     t.integer "webhook_id"
     t.boolean "is_webhook_active", default: false
+    t.integer "roster_id"
     t.index ["deleted_at"], name: "index_organizations_on_deleted_at"
     t.index ["github_id"], name: "index_organizations_on_github_id", unique: true
+    t.index ["roster_id"], name: "index_organizations_on_roster_id"
     t.index ["slug"], name: "index_organizations_on_slug"
   end
 
@@ -168,28 +172,20 @@ ActiveRecord::Schema.define(version: 20170620200357) do
     t.index ["user_id"], name: "index_repo_accesses_on_user_id"
   end
 
-  create_table "student_identifier_types", id: :serial, force: :cascade do |t|
-    t.integer "organization_id"
-    t.string "name", null: false
-    t.string "description", null: false
+  create_table "roster_entries", force: :cascade do |t|
+    t.string "identifier", null: false
+    t.bigint "roster_id", null: false
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "deleted_at"
-    t.index ["organization_id"], name: "index_student_identifier_types_on_organization_id"
+    t.index ["roster_id"], name: "index_roster_entries_on_roster_id"
+    t.index ["user_id"], name: "index_roster_entries_on_user_id"
   end
 
-  create_table "student_identifiers", id: :serial, force: :cascade do |t|
-    t.integer "organization_id"
-    t.integer "user_id"
-    t.integer "student_identifier_type_id"
-    t.string "value", null: false
+  create_table "rosters", force: :cascade do |t|
+    t.string "identifier_name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "deleted_at"
-    t.index ["organization_id", "user_id", "student_identifier_type_id"], name: "index_student_identifiers_on_org_and_user_and_type", unique: true
-    t.index ["organization_id"], name: "index_student_identifiers_on_organization_id"
-    t.index ["student_identifier_type_id"], name: "index_student_identifiers_on_student_identifier_type_id"
-    t.index ["user_id"], name: "index_student_identifiers_on_user_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
