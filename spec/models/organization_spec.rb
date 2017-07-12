@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Organization, type: :model do
   subject { create(:organization, github_id: 12_345) }
 
-  describe 'roster' do
+  describe 'roster association' do
     it 'can have a roster' do
       subject.roster = create(:roster)
       expect(subject.save).to be_truthy
