@@ -5,6 +5,19 @@ require 'rails_helper'
 RSpec.describe Organization, type: :model do
   subject { create(:organization, github_id: 12_345) }
 
+  describe 'roster' do
+    it 'can have a roster' do
+      subject.roster = create(:roster)
+      expect(subject.save).to be_truthy
+    end
+
+    it 'can have no roster' do
+      subject.roster = nil
+
+      expect(subject.save).to be_truthy
+    end
+  end
+
   describe 'when title is changed' do
     it 'updates the slug' do
       subject.update_attributes(title: 'New Title')
