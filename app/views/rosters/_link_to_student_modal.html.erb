@@ -11,7 +11,7 @@
         <%= form_tag({ controller: :rosters, action: :link }, method: :patch) do %>
           <%= hidden_field_tag 'user_id', user.id %>
           <%= hidden_field_tag 'roster_entry_id', entry.id %>
-          <%= submit_tag entry.identifier, class: 'remodal-user-name btn btn-outline' %>
+          <%= submit_tag entry.identifier, class: 'remodal-user' %>
         <% end %>
       </div>
     <% end %>
