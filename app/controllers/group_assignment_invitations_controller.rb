@@ -90,15 +90,6 @@ class GroupAssignmentInvitationsController < ApplicationController
       .permit(:id, :title)
   end
 
-  def new_student_identifier_params
-    params
-      .require(:student_identifier)
-      .permit(:value)
-      .merge(user: current_user,
-             organization: organization,
-             student_identifier_type: group_assignment.student_identifier_type)
-  end
-
   def invitation
     @invitation ||= GroupAssignmentInvitation
                     .includes(group_assignment: :group_assignment_repos)

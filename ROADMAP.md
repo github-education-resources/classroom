@@ -2,7 +2,7 @@
 # Vision for GitHub Classroom
  
 ### Phase 1: Upgrade the teacher experience: 
-* Teachers adopt Classroom individually, generating demand for GitHub across their departments and schools. 
+* Features that enhance the ability for teachers to plan, manage and replicate for future courses.
 * Growth in daily active users and assignment creation. 
 
 ### Phase 2: Build a strong, extensible ecosystem: 
