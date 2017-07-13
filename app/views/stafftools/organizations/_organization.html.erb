@@ -8,6 +8,6 @@
       <strong class="search-result-title"><%= organization.login %></strong>
     <% end %>
 
-    <span class="text-gray css-truncate css-truncate-target">Added <%= local_time_ago(organization.created_at) %></span><br>
+    <span class="text-gray css-truncate css-truncate-target"><%= t('views.stafftools.organizations.added') %> <%= local_time_ago(organization.created_at) %></span><br>
   </div>
 </div>
