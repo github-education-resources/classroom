@@ -19,7 +19,7 @@ class GroupAssignmentInvitation < ApplicationRecord
   validates :key, presence:   true
   validates :key, uniqueness: true
 
-  validates :short_key, uniqueness: true
+  validates :short_key, uniqueness: true, allow_nil: true
 
   after_initialize :assign_key
 
