@@ -41,7 +41,7 @@
         <% end %>
         <tr>
           <td class="text-emphasized"><%= t('views.stafftools.group_assignments.grouping') %></td>
-          <td><%= link_to @group_assignment.grouping.title, stafftools_grouping_path(@group_assignment.grouping) %></td>
+          <td><%= link_to @group_assignment.grouping.title, stafftools_grouping_path(@group_assignment.grouping.id) %></td>
         </tr>
         <tr>
           <td class="text-emphasized"><%= t('views.stafftools.group_assignments.invitation') %></td>
