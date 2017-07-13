@@ -1,0 +1,19 @@
+en:
+  views:
+    stafftools:
+      organizations:
+        added: 'Added'
+        remove_owner_header: 'Are you sure you want to remove this owner?'
+        remove_owner_desc: 'Please note this will not remove the user from the organization.'
+        remove_user_btn_text: 'Remove user'
+        classroom: 'Classroom'
+        id: 'ID'
+        joined_on: 'Joined on'
+        last_updated: 'Last updated'
+        github_organization: 'GitHub organization'
+        homepage: 'Homepage'
+        webhook_url: 'WebHook URL'
+        webhook_enabled_check: 'WebHook Enabled?'
+        owners: 'Owners'
+        assignments: 'Assignments'
+        groupings: 'Groupings'
