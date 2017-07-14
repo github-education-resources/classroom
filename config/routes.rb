@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     member do
       patch :accept
       get   :setup
-      get   :setup_status
+      match :setup_progress, via: %i[get patch]
       get   :success
     end
   end

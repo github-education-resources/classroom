@@ -2,6 +2,7 @@
 
 class AssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
+  include SetupRepo
 
   before_action :check_user_not_previous_acceptee, only: [:show]
   before_action :ensure_submission_repository_exists, only: [:success]
@@ -17,8 +18,10 @@ class AssignmentInvitationsController < ApplicationController
     redirect_to success_assignment_invitation_path unless starter_code_repo_id
   end
 
-  def setup_status
-    # TODO: return the status of the import progress and repo setup in json
+  def setup_progress
+    perform_setup(current_submission.github_repository, classroom_config) if configure?
+
+    render json: setup_status(current_submission.github_repository, classroom_config)
   end
 
   def show; end
@@ -42,6 +45,19 @@ class AssignmentInvitationsController < ApplicationController
   def check_user_not_previous_acceptee
     return if current_submission.nil?
     redirect_to success_assignment_invitation_path
+  end
+
+  def classroom_config
+    starter_code_repo_id = current_submission.assignment.starter_code_repo_id
+    client               = current_submission.creator.github_client
+
+    starter_repo         = GitHubRepository.new(client, starter_code_repo_id)
+    ClassroomConfig.new(starter_repo)
+  end
+
+  def configure?
+    configurable = classroom_config.finished_setup? current_submission.github_repository
+    params[:configure].present? && configurable
   end
 
   def create_submission
