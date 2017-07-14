@@ -8,12 +8,10 @@ en:
       community_discussion: 'Community discussion'
       video_tutorials: 'Video tutorials'
       report_bug: 'Report a bug'
-      use_student_identifier_type: 'Use a student identifier type'
-      student_identifiers_required: 'Students will be required to enter their identifiers before accepting the assignment.'
-      create_first_identifier: 'Create your first student identifier'
       copy_to_clipboard: 'Copy to clipboard'
       copy_invitation_link: 'Copy invitation link'
       give_this_to_students: 'Give this to your students'
+      give_this_to_students_short: 'Or use this short URL'
       classroom_is_open_source: "GitHub Classroom is %{href}."
       open_source_href: "open source"
       with_love_by_github: "%{octicon_mortar_board} with %{octicon_heart} by %{href}"

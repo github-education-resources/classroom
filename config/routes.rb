@@ -14,6 +14,9 @@ Rails.application.routes.draw do
   match '/auth/:provider/callback', to: 'sessions#create',  via: %i[get post]
   match '/auth/failure',            to: 'sessions#failure', via: %i[get post]
 
+  get '/a/:short_key', to: 'short_url#assignment_invitation',       as: 'assignment_invitation_short'
+  get '/g/:short_key', to: 'short_url#group_assignment_invitation', as: 'group_assignment_invitation_short'
+
   get '/autocomplete/github_repos', to: 'autocomplete#github_repos'
 
   scope 'github', as: 'github' do
@@ -31,8 +34,6 @@ Rails.application.routes.draw do
 
   resources :group_assignment_invitations, path: 'group-assignment-invitations', only: [:show] do
     member do
-      get   :identifier
-      post  :submit_identifier
       get   :accept
       patch :accept_assignment
       patch :accept_invitation
@@ -49,6 +50,8 @@ Rails.application.routes.draw do
         patch :setup_organization
         get   'settings/invitations', to: 'organizations#invitation'
         get   'settings/teams',       to: 'organizations#show_groupings'
+
+        resource :roster, only: %i[new create]
       end
 
       resources :groupings, only: %i[show edit update] do
@@ -67,8 +70,6 @@ Rails.application.routes.draw do
       resources :group_assignments, path: 'group-assignments' do
         resources :group_assignment_repos, only: [:show]
       end
-
-      resources :student_identifier_types, path: 'identifiers', except: [:show]
     end
   end
 

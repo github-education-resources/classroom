@@ -50,6 +50,10 @@ class GitHubRepository < GitHubResource
     []
   end
 
+  def commits_url(branch)
+    html_url + '/commits/' + branch
+  end
+
   def tree_url_for_sha(sha)
     html_url + '/tree/' + sha
   end
