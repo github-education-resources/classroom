@@ -4,7 +4,6 @@ class AssignmentRepo
   # rubocop:disable Metrics/ClassLength
   class Creator
     DEFAULT_ERROR_MESSAGE                   = 'Assignment could not be created, please try again'
-    REPOSITORY_SETUP_FAILED                 = 'We were not able to setup the Assignment using your configurations, please try again.' # rubocop:disable LineLength
     REPOSITORY_CREATION_FAILED              = 'GitHub repository could not be created, please try again'
     REPOSITORY_STARTER_CODE_IMPORT_FAILED   = 'We were not able to import you the starter code to your assignment, please try again.' # rubocop:disable LineLength
     REPOSITORY_COLLABORATOR_ADDITION_FAILED = 'We were not able to add you to the Assignment as a collaborator, please try again.' # rubocop:disable LineLength
@@ -67,7 +66,6 @@ class AssignmentRepo
 
       if assignment.starter_code?
         push_starter_code!(assignment_repo.github_repo_id)
-        setup_repository!(assignment_repo.github_repo_id)
       end
 
       add_user_to_repository!(assignment_repo.github_repo_id)
@@ -191,84 +189,6 @@ class AssignmentRepo
 
       suffix = "-#{suffix_count}"
       repository_name.truncate(100 - suffix.length, omission: '') + suffix
-    end
-
-    # Internal: Handles assignment repository setup
-    #
-    # github_repo_id - The Integer id of the GitHub repository.
-    #
-    # Returns true of raises a Result::Error.
-    def setup_repository!(github_repo_id)
-      client = assignment.creator.github_client
-
-      assignment_repository = GitHubRepository.new(client, github_repo_id)
-      configs_repository    = GitHubRepository.new(client, assignment.starter_code_repo_id)
-
-      return unless configs_repository.branch_present? 'github-classroom'
-
-      process_configurations(configs_repository, assignment_repository)
-
-      wait_import_completion assignment_repository
-
-      assignment_repository.remove_branch('github-classroom')
-    rescue GitHub::Error
-      raise Result::Error, REPOSITORY_SETUP_FAILED
-    end
-
-    # Internal: Wait for import completion
-    #
-    # github_repository - GitHubRepository awaiting import completion
-    #
-    # Returns nothing
-    def wait_import_completion(github_repository)
-      t = 1
-      sleep_limit = 100
-      increment_rate = 0.25
-
-      until github_repository.import_progress[:status] == 'complete' || !sleep_limit.positive?
-        sleep t += (t *= increment_rate).ceil
-        sleep_limit -= t
-      end
-
-      return if github_repository.import_progress[:status] == 'complete'
-
-      raise GitHub::Error, 'Source import failed'
-    end
-
-    # Internal: Process the configurations separetly
-    #
-    # configs_repository    - GitHubRepository containing the configuration files
-    # assignment_repository - GitHubRepository for which to perform the configuration
-    #                   setups
-    #
-    # Returns nothing
-    def process_configurations(configs_repository, assignment_repository)
-      configs_tree = configs_repository.branch_tree('github-classroom')
-      GitHub::Errors.with_error_handling do
-        configs_tree.tree.each do |configuration|
-          case configuration.path
-          when 'issues'
-            generate_issues(configs_repository, assignment_repository, configuration.sha)
-          end
-        end
-      end
-    end
-
-    # Internal: Generates issues for the assignment_repository based on the configs
-    #
-    # configs_repository    - GitHubRepository containing the configuration files
-    # assignment_repository - GitHubRepository for which to perform the configuration
-    #                   setups
-    # tree_sha     - sha of the 'issues' tree
-    #
-    # Returns nothing
-    def generate_issues(configs_repository, assignment_repository, tree_sha)
-      GitHub::Errors.with_error_handling do
-        configs_repository.tree(tree_sha).tree.each do |issue|
-          blob = configs_repository.blob(issue.sha)
-          assignment_repository.add_issue(blob.data['title'], blob.body)
-        end
-      end
     end
   end
 end
