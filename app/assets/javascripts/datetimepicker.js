@@ -10,6 +10,13 @@ function leftpad(val){
   return ("0" + val).slice(-2);
 }
 
+function timeRoundedUp() {
+  var currentDateTime = new Date();
+  var nextHour = currentDateTime.getHours() + 1;
+
+  return (leftpad(nextHour) + ':00');
+}
+
 function initializePicker(picker){
   if($(picker).val() !== ""){
     var d = new Date($(picker).val() + " UTC");
@@ -29,7 +36,8 @@ function initializePicker(picker){
   }
 
   $(picker).datetimepicker({
-    format: 'm/d/Y H:i O'
+    format: 'm/d/Y H:i O',
+    defaultTime: timeRoundedUp()
   });
 }
 

@@ -12,24 +12,22 @@
 
     <%= render 'shared/open_graph' %>
   </head>
-  <body class="site <%= controller_name %> <%= action_name %> d-block">
+  <body class="site <%= controller_name %> <%= action_name %>">
     <div class="loading-indicator" style="display: none;"></div>
 
     <%= render 'peek/bar' %>
-    <%= render 'shared/message_of_the_day' %>
-    <%= render 'shared/header' %>
-
     <main>
+      <%= render 'shared/message_of_the_day' %>
+      <%= render 'shared/header' %>
+
       <%= yield :organization_banner %>
 
       <div id="flash-messages">
         <%= render 'shared/flash_messages' %>
       </div>
 
-      <div class="site-content">
-        <div class="container-lg">
+      <div class="container-lg">
           <%= yield %>
-        </div>
       </div>
     </main>
 
