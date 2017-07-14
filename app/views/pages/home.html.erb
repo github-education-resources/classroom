@@ -13,9 +13,9 @@
       <h1 class="heading"><%= t('views.pages.banner_heading') %></h1>
       <p class="subheading"><%= t('views.pages.banner_subheading') %></p>
 
-      <a class="open-video " data-remodal-target="getting-started-video"><%= image_tag('play@2x.png', class: 'play-icon', alt: 'Play') %><%= t('views.pages.see_how_it_works') %></a>
-      <div class="d-flex flex-justify-center mt-3">
-        <%= link_to t('views.pages.sign_in_to_start'), login_path, class: 'btn btn-blue btn-large btn-blue f3' %>
+      <div class="d-flex flex-column flex-items-center">
+        <a class="open-video mb-3" data-remodal-target="getting-started-video"><%= image_tag('play@2x.png', class: 'play-icon', alt: 'Play') %><%= t('views.pages.see_how_it_works') %></a>
+        <%= link_to t('views.pages.sign_in_to_start'), login_path, class: 'btn btn-blue btn-large btn-blue' %>
       </div>
     </div>
   </div>

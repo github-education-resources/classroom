@@ -6,8 +6,8 @@
   </div>
 
   <div class="site-content-body">
-    <div class="columns">
-      <div class="one-half column text-center">
+    <div class="columns d-table col-12 clearfix  d-flex flex-wrap flex-content-between">
+      <div class="col-md-6 float-left mx-auto  text-center p-2  d-sm-block">
         <span class="assignment-icon assignment-icon-individual">
           <%= octicon 'person', height: 22 %>
         </span>
@@ -18,7 +18,7 @@
           <%= t('views.organizations.create_individual_assignment') %>
         <% end %>
       </div>
-      <div class="one-half column text-center">
+      <div class="col-md-6 float-left mx-auto text-center p-2 d-sm-block">
         <span class="assignment-icon assignment-icon-group">
           <%= octicon 'organization', height: 22 %>
         </span>
