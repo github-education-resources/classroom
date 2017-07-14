@@ -14,6 +14,8 @@ class AssignmentInvitationsController < ApplicationController
   end
 
   def setup
+    redirect_to success_assignment_invitation_path unless repo_setup_enabled?
+
     starter_code_repo_id = current_submission.assignment.starter_code_repo_id
     redirect_to success_assignment_invitation_path unless starter_code_repo_id
   end
