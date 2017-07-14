@@ -24,6 +24,25 @@ a {
   }
 }
 
+a,
+span {
+  &.submission-icon-container {
+    text-decoration: none;
+
+    .success {
+      fill: #28a745;
+    }
+
+    .failed {
+      fill: #d73a49;
+    }
+
+    .neutral {
+      fill: #6a737d;
+    }
+  }
+}
+
 .submission-icon-container {
   text-decoration: none;
   cursor: pointer;
@@ -310,7 +329,6 @@ hr {
 
 .invitation-content {
   padding-bottom: 2rem;
-  margin-bottom: 2rem;
   border-bottom: 1px solid #e3e3e3;
 
   @media screen and (max-width: 40em) {
@@ -319,20 +337,31 @@ hr {
   }
 }
 
+.assignment-repo-github-url {
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+.user-list {
+  margin-top: 2px;
+}
+
 .assignment-repo-list {
   .assignment-repo-list-item:not(:first-child) {
-    padding-top: 1rem;
-    margin-top: 1rem;
     border-top: 1px solid #e3e3e3;
-
-    @media screen and (max-width: 40em) {
-      margin-bottom: 0;
-    }
   }
 }
 
 .assignment-repo-list-item {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
   font-size: 14px;
+
+  &:last-child {
+    padding-bottom: 0;
+  }
 
   .octicon-alert {
     display: none;
@@ -349,72 +378,6 @@ hr {
   }
 
   &.is-error {
-    height: 48px;
-    background-color: rgba($red, 0.9);
-    border-radius: 3px;
-
-    &.assignment-repo-list-item {
-      .octicon-alert {
-        display: unset;
-        fill: #fff;
-      }
-
-      .spinner {
-        display: none;
-      }
-    }
-  }
-
-  .avatar {
-    margin-right: 10px;
-
-    @media screen and (max-width: 40em) {
-      margin-right: 0;
-    }
-  }
-
-  .css-truncate-target {
-    max-width: 20rem;
-  }
-
-  .student-login {
-    display: block;
-    padding-top: 4px;
-    color: $gray-dark;
-
-    &:hover {
-      color: $blue;
-    }
-  }
-}
-
-.group-assignment-repo-list {
-  .group-assignment-repo-list-item:not(:first-child) {
-    padding-top: 1rem;
-    margin-top: 1rem;
-    border-top: 1px solid #e3e3e3;
-  }
-}
-
-.group-assignment-repo-list-item {
-  font-size: 14px;
-
-  .octicon-alert {
-    display: none;
-  }
-
-  &.disabled {
-    a {
-      color: $gray;
-    }
-
-    .avatar {
-      filter: grayscale(1);
-    }
-  }
-
-  &.is-error {
-    height: 48px;
     background-color: rgba($red, 0.9);
     border-radius: 3px;
 
@@ -457,6 +420,18 @@ hr {
         margin-left: 0;
       }
     }
+  }
+}
+
+.avatar-large {
+  margin-right: 10px;
+}
+
+.assignment-repo-button {
+  margin-left: 80px;
+
+  @media screen and (max-width: 40em) {
+    margin-left: 15px;
   }
 }
 
@@ -863,4 +838,21 @@ hr {
 
 .flash.flash-error p:first-of-type {
   margin-top: 0;
+}
+
+.repo-detail-item {
+  margin-right: 15px;
+  text-decoration: none;
+
+  &:not(:hover) {
+    color: #000;
+  }
+}
+
+.assignment-properties {
+  margin-top: 5px;
+}
+
+.form.short-field {
+  width: 500px;
 }
