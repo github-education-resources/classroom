@@ -264,23 +264,6 @@ main {
   background-color: #555;
 }
 
-.assignment-list-items {
-  .assignment-list-item:not(:first-child) {
-    padding-top: 1rem;
-    margin-top: 1rem;
-    border-top: 1px solid #e3e3e3;
-
-    @media screen and (max-width: 40em) {
-      padding-top: 1rem;
-      margin-top: 0.5rem;
-    }
-  }
-
-  .assignment-list-item:not(:last-child) {
-    margin-bottom: 1rem;
-  }
-}
-
 .assignment-name-link {
   padding-top: 0.4rem;
   margin-top: 0;
@@ -431,19 +414,6 @@ hr {
 
   @media screen and (max-width: 40em) {
     margin-left: 15px;
-  }
-}
-
-.organization-list-items {
-  .organization-list-item:not(:first-child) {
-    padding-top: 2rem;
-    margin-top: 2rem;
-    border-top: 1px solid #e3e3e3;
-
-    @media screen and (max-width: 40em) {
-      padding-top: 1rem;
-      margin-top: 1rem;
-    }
   }
 }
 
