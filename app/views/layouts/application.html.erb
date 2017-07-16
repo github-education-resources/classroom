@@ -16,6 +16,7 @@
     <div class="loading-indicator" style="display: none;"></div>
 
     <%= render 'peek/bar' %>
+
     <main>
       <%= render 'shared/message_of_the_day' %>
       <%= render 'shared/header' %>
@@ -26,8 +27,8 @@
         <%= render 'shared/flash_messages' %>
       </div>
 
-      <div class="container-lg">
-          <%= yield %>
+      <div class="site-content container-lg">
+        <%= yield %>
       </div>
     </main>
 

@@ -1,27 +1,26 @@
-<div class="site-content">
-
-  <div class="site-content-cap clearfix">
+<div class="Box Box--spacious">
+  <div class="Box-header d-flex flex-items-center">
+    <h3 class="Box-title overflow-hidden flex-auto">Classrooms</h3>
     <% if @organizations.present? %>
-      <%= link_to new_organization_path, class: 'btn btn-primary float-right', role: 'button' do %>
+      <%= link_to new_organization_path, class: 'btn btn-primary', role: 'button' do %>
         New classroom
       <% end %>
     <% end %>
-    <h2 class="site-content-heading float-left">Classrooms</h2>
   </div>
+  <% if @organizations.present? %>
+    <div><%= render @organizations %></div>
+  <% else %>
+    <div class="blankslate blankslate-clean-background blankslate-spacious">
+      <h3>You’re not managing any classrooms yet.</h3>
+      <p>You can begin creating assignments once you have at least one classroom.</p>
 
-  <div class="site-content-body organization-list-items">
-    <% if @organizations.present? %>
-      <%= render @organizations %>
-      <%= render partial: 'shared/pagination', locals: { collection: @organizations } %>
-    <% else %>
-      <div class="blankslate large-format spacious clean-background">
-        <h3>You’re not managing any classrooms yet.</h3>
-        <p>You can begin creating assignments once you have at least one classroom.</p>
-
-        <%= link_to new_organization_path, class: 'btn btn-primary btn-big', role: 'button' do %>
-          Create your first classroom
-        <% end %>
-      </div>
-    <% end %>
-  </div>
+      <%= link_to new_organization_path, class: 'btn btn-primary btn-big', role: 'button' do %>
+        Create your first classroom
+      <% end %>
+    </div>
+  <% end %>
 </div>
+
+<% if @organizations.present? %>
+  <%= render partial: 'shared/pagination', locals: { collection: @organizations } %>
+<% end %>
