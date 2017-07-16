@@ -53,3 +53,9 @@
   overflow: hidden;
   line-height: 27px;
 }
+// Issue #1010: reposition Impersonate user button
+.imp-user{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
