@@ -1,0 +1,19 @@
+// Overridden from https://github.com/primer/primer-css/blob/293d832cc638a0aeeaa64da0b1dc3389f37d40da/modules/primer-box/lib/box.scss
+
+.Box {
+  border: $border-width $border-style #e3e3e3;
+}
+
+.Box-header {
+  background-color: #fbfbfb;
+  border-color: #e3e3e3;
+}
+
+.Box-title {
+  font-weight: $font-weight-normal;
+  color: #5d666f;
+}
+
+.Box-row {
+  border-top: $border-width $border-style #e3e3e3;
+}
