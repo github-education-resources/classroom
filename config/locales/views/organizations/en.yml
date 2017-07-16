@@ -24,8 +24,7 @@ en:
       group_assignments: 'Group Assignments'
       are_you_sure: 'Are you ABSOLUTELY sure?'
       delete_warning: "Unexpected things will happen if you don't read this!"
-      delete_consequences: "This action <strong>CANNOT</strong> be undone.
-      Please note that reseting and removing this classroom will delete all repositories and teams under the <strong>%{organization}</strong> account that were created by GitHub Classroom."
+      delete_consequences: "This action <strong>CANNOT</strong> be undone. Please note that reseting and removing this classroom will delete all repositories and teams under the <strong>%{organization}</strong> account that were created by GitHub Classroom."
       delete_confirm: 'Please type the name of the organization to confirm'
       delete_submit: 'Reset and remove this classroom'
       classroom_settings: 'Classroom settings'
@@ -40,9 +39,9 @@ en:
       classrooms: 'Classrooms'
       no_classrooms: "You're not managing any classrooms yet."
       no_classrooms_desc: 'You can begin creating assignments once you have at least one classroom.'
-      create_first_classroom: 'Create your first classroom.'
-      new_assignment: 'New Assignment'
-      individual_assignment: 'Individual Assignment'
+      create_first_classroom: 'Create your first classroom'
+      new_assignment: 'New assignment'
+      individual_assignment: 'Individual assignment'
       individual_assignment_desc: 'Each participant works individually on their own repository.'
       create_individual_assignment: 'Create an individual assignment'
       group_assignment: 'Group assignment'

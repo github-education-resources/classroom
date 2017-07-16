@@ -17,7 +17,7 @@
         <div class="input-group">
           <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "organization-#{@organization.github_id}", value: organization_url(@organization), readonly: 'readonly' %>
           <span class="input-group-button">
-            <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#organization-#{@organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copy_to_clipboard') %>" type="button">
+            <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#organization-#{@organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
               <%= octicon 'clippy' %>
               <%= t('views.organizations.copy_classroom_link') %>
             </button>
