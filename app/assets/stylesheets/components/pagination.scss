@@ -4,7 +4,7 @@
 }
 
 .pagination {
-  background-color: #fff;
+  background-color: inherit;
 
   .disabled {
     color: #d3d3d3;
@@ -20,6 +20,7 @@
   a,
   em,
   span {
+    background-color: #fff;
     padding: 7px 12px;
     margin-right: -4px;
     font-size: 13px;
