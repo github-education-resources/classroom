@@ -23,7 +23,7 @@ Rails.application.configure do
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
-  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
+  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :uglifier
@@ -57,17 +57,17 @@ Rails.application.configure do
   config.log_tags = [:request_id]
 
   # Use a different cache store in production.
-  memcachedcloud_servers = ENV['MEMCACHEDCLOUD_SERVERS'].split(',')
+  memcachedcloud_servers = ENV["MEMCACHEDCLOUD_SERVERS"].split(",")
 
   dalli_store_name_and_password = {
-    username: ENV['MEMCACHEDCLOUD_USERNAME'],
-    password: ENV['MEMCACHEDCLOUD_PASSWORD']
+    username: ENV["MEMCACHEDCLOUD_USERNAME"],
+    password: ENV["MEMCACHEDCLOUD_PASSWORD"]
   }
 
   dalli_store_config = {
-    namespace:  'CLASSROOM',
-    expires_in: (ENV.fetch('REQUEST_CACHE_TIMEOUT') { 30 }).to_i.minutes,
-    pool_size:  (ENV.fetch('RAILS_MAX_THREADS') { 5 })
+    namespace:  "CLASSROOM",
+    expires_in: (ENV.fetch("REQUEST_CACHE_TIMEOUT") { 30 }).to_i.minutes,
+    pool_size:  (ENV.fetch("RAILS_MAX_THREADS") { 5 })
   }
 
   config.cache_store = :dalli_store,
@@ -101,7 +101,7 @@ Rails.application.configure do
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
-  if ENV['RAILS_LOG_TO_STDOUT'].present?
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
@@ -112,7 +112,7 @@ Rails.application.configure do
 
   # Enable google analytics via Rack
   config.middleware.use(Rack::Tracker) do
-    handler :google_analytics, tracker: ENV['GOOGLE_ANALYTICS_TRACKING_ID']
+    handler :google_analytics, tracker: ENV["GOOGLE_ANALYTICS_TRACKING_ID"]
   end
 
   # Do not dump schema after migrations.

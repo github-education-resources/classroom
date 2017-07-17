@@ -7,7 +7,7 @@ module ValidatesNotReservedWord
     def self.validates_not_reserved_word(field)
       validates field, exclusion: {
         in: GitHubClassroom::Blacklist::NAMES,
-        message: 'is a reserved word'
+        message: "is a reserved word"
       }
     end
   end

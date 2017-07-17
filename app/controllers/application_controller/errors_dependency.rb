@@ -9,9 +9,9 @@ class ApplicationController
     if flash[:error].blank?
       case exception
       when NotAuthorized
-        flash[:error] = 'You are not authorized to perform this action'
+        flash[:error] = "You are not authorized to perform this action"
       when GitHub::Error, GitHub::Forbidden, GitHub::NotFound
-        flash[:error] = 'Uh oh, an error has occurred.'
+        flash[:error] = "Uh oh, an error has occurred."
       end
     end
 

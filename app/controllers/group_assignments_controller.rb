@@ -62,7 +62,7 @@ class GroupAssignmentsController < ApplicationController
     return if grouping_id.blank?
     return if @organization.groupings.find_by(id: grouping_id)
 
-    raise NotAuthorized, 'You are not permitted to select this set of teams'
+    raise NotAuthorized, "You are not permitted to select this set of teams"
   end
 
   def build_group_assignment

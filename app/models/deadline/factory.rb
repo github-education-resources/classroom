@@ -2,7 +2,7 @@
 
 class Deadline
   class Factory
-    DATETIME_FORMAT = '%m/%d/%Y %H:%M %z'
+    DATETIME_FORMAT = "%m/%d/%Y %H:%M %z"
 
     # Accepts an optional datetime format string :datetime_format
     # Default DateTime format is %m/%d/%Y %H:%M %z
@@ -15,7 +15,7 @@ class Deadline
 
       deadline
     rescue ArgumentError
-      deadline.errors.add(:deadline_at, 'not formatted correctly.') && deadline
+      deadline.errors.add(:deadline_at, "not formatted correctly.") && deadline
     end
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'support/vcr'
-require 'securerandom'
+require_relative "support/vcr"
+require "securerandom"
 
 FactoryGirl.define do
   factory :assignment do
@@ -62,12 +62,12 @@ FactoryGirl.define do
   end
 
   factory :roster do
-    identifier_name { 'email' }
+    identifier_name { "email" }
   end
 
   factory :roster_entry do
     roster
-    identifier { 'myemail@example.com' }
+    identifier { "myemail@example.com" }
   end
 
   factory :user do

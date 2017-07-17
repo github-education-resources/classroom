@@ -85,7 +85,7 @@ class Assignment
 
     def update_attribute_for_all_assignment_repos(attribute:, change:)
       case attribute
-      when 'public_repo'
+      when "public_repo"
         Assignment::RepositoryVisibilityJob.perform_later(@assignment, change: change)
       end
     end

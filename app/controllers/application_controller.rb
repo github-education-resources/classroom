@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
   private
 
   def not_found
-    raise ActionController::RoutingError, 'Not Found'
+    raise ActionController::RoutingError, "Not Found"
   end
 
   def redirect_to_root
@@ -36,9 +36,9 @@ class ApplicationController < ActionController::Base
   def render_404(exception)
     case exception
     when ActionController::RoutingError
-      render file: Rails.root.join('public', '404.html'), layout: false, status: :not_found
+      render file: Rails.root.join("public", "404.html"), layout: false, status: :not_found
     when ActiveRecord::RecordNotFound
-      render file: Rails.root.join('public', 'invalid_link_error.html'), layout: false, status: :not_found
+      render file: Rails.root.join("public", "invalid_link_error.html"), layout: false, status: :not_found
     end
   end
 end
