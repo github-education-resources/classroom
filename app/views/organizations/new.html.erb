@@ -1,14 +1,14 @@
 <div class="site-content">
   <div class="site-content-cap">
-    <h2 class="site-content-heading">Select an organization for your new classroom</h2>
+    <h2 class="site-content-heading"><%= t('views.organizations.select_organization') %></h2>
   </div>
 
   <div class="site-content-body">
     <% if @users_github_organizations.empty? %>
       <div class="blankslate large-format spacious clean-background">
-        <h3>Oh, you don’t have any organizations on your GitHub account.</h3>
+        <h3><%= t('views.organizations.no_organizations') %></h3>
 
-        <p>Please <a href="https://github.com/organizations/new">create an organization on GitHub.com</a> and then come back.</p>
+        <p><%= t('views.organizations.please_create_new_organization').html_safe %></p>
       </div>
     <% else %>
       <%= form_for @organization do |f| %>
@@ -32,5 +32,5 @@
 </div>
 
 <div class="protip">
-  <%= octicon 'light-bulb' %> <strong>ProTip!</strong> Don't see your organization? You need to <%= link_to 'grant us access', "https://github.com/settings/connections/applications/#{Rails.application.secrets.github_client_id}", target: '_blank' %> first.
+  <%= octicon 'light-bulb' %> <%= t('views.organizations.grant_organization_access', href: link_to(t('views.organizations.grant_organization_access_link'), "https://github.com/settings/connections/applications/#{Rails.application.secrets.github_client_id}", target: '_blank')).html_safe %>
 </div>

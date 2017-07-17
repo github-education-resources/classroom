@@ -1,24 +1,23 @@
 <div class="remodal text-left" data-remodal-id="reset-and-remove-organization">
   <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
-  <h2 class="remodal-header">Are you ABSOLUTELY sure?</h2>
+  <h2 class="remodal-header"><%= t('views.organizations.are_you_sure') %></h2>
 
   <div class="remodal-warning">
-    Unexpected things will happen if you don't read this!
+    <%= t('views.organizations.delete_warning') %>
   </div>
 
   <div class="remodal-description">
     <p>
-      This action <strong>CANNOT</strong> be undone.
-      Please note that resetting and removing this classroom will delete all repositories and teams under the <strong><%= @organization.github_organization.login %></strong> account that were created by GitHub Classroom.
+      <%= t('views.organizations.delete_consequences_html', organization: sanitize(@organization.github_organization.login)) %>
     </p>
   </div>
 
   <%= form_for @organization, html: { "data-name" => @organization.github_organization.login, method: 'delete' } do |f| %>
     <dl class="form js-normalize-submit">
-      <dt>Please type the name of the organization to confirm</dt>
+      <dt><%= t('views.organizations.delete_confirm') %></dt>
       <dd><input type="text" class="js-input-block form-control input-contrast input-block" autofocus></dd>
     </dl>
 
-    <%= f.submit 'Reset and remove this classroom', class: 'btn btn-danger btn-block js-submit', disabled: true %>
+    <%= f.submit t('views.organizations.delete_submit'), class: 'btn btn-danger btn-block js-submit', disabled: true %>
   <% end %>
 </div>

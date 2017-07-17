@@ -1,6 +1,6 @@
 <div class="site-content">
   <div class="site-content-cap">
-    <h2 class="site-content-heading">Name your classroom</h2>
+    <h2 class="site-content-heading"><%= t('views.organizations.name_your_classroom') %></h2>
   </div>
 
   <div class="site-content-body">
@@ -10,14 +10,14 @@
       <div class="columns">
         <div class="two-thirds column">
           <dl class="form">
-            <dt><label>Please give your classroom a more descriptive name</label></dt>
-            <dd><%= f.text_field :title, class: 'textfield form-control input-contrast input-block', placeholder: 'Please give your classroom a more descriptive name' %></dd>
+            <dt><label><%= t('views.organizations.give_descriptive_name') %></label></dt>
+            <dd><%= f.text_field :title, class: 'textfield form-control input-contrast input-block', placeholder: t('views.organizations.give_descriptive_name') %></dd>
           </dl>
         </div>
       </div>
 
       <div class="form-actions">
-        <%= f.submit 'Continue', class: 'btn btn-primary' %>
+        <%= f.submit t('views.organizations.continue'), class: 'btn btn-primary' %>
       </div>
     <% end %>
   </div>

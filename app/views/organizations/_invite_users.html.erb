@@ -1,15 +1,15 @@
 <div class="site-content">
   <div class="site-content-cap">
-    <h2 class="site-content-heading">Invite other administrators</h2>
+    <h2 class="site-content-heading"><%= t('views.organizations.invite_administrator') %></h2>
   </div>
 
   <div class="site-content-body markdown-body">
-    <h3>1. Add them to your GitHub Organization</h3>
-    <p><strong>You must add them to the Organization as an Owner in order for them to have access.</strong></p>
-    <p>You can do so at <%= link_to @organization.github_organization.team_invitations_url, @organization.github_organization.team_invitations_url %></p>
+    <h3><%= t('views.organizations.add_to_organization') %></h3>
+    <p><strong><%= t('views.organizations.must_add_as_owner') %></strong></p>
+    <p><%= t('views.organizations.link_to_add_owner', href: link_to(@organization.github_organization.team_invitations_url, @organization.github_organization.team_invitations_url)).html_safe %></p>
 
-    <h3>2. Give them this URL</h3>
-    <p>After signing in, they will automatically be added to this classroom.</p>
+    <h3><%= t('views.organizations.give_this_link') %></h3>
+    <p><%= t('views.organizations.give_this_link_desc') %></p>
     <%= link_to organization_url(@organization), organization_url(@organization), class: 'mobile-invitation-content' %>
 
     <div class="columns desktop-invitation-content">
@@ -17,9 +17,9 @@
         <div class="input-group">
           <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "organization-#{@organization.github_id}", value: organization_url(@organization), readonly: 'readonly' %>
           <span class="input-group-button">
-            <button aria-label="Copy to clipboard" data-clipboard-target=<%= "#organization-#{@organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="Copied!" type="button">
+            <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#organization-#{@organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
               <%= octicon 'clippy' %>
-              Copy classroom link
+              <%= t('views.organizations.copy_classroom_link') %>
             </button>
           </span>
         </div>
@@ -29,7 +29,7 @@
     <% if action_name == 'invite' %>
       <div class="form-actions">
         <% path = student_identifier_enabled? ? new_roster_path(@organization) : organization_path(@organization) %>
-        <%= link_to 'Continue', path, class: 'btn btn-primary right' %>
+        <%= link_to t('views.organizations.continue'), path, class: 'btn btn-primary right' %>
       </div>
     <% end %>
   </div>
