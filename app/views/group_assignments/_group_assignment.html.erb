@@ -1,4 +1,4 @@
-<div class="assignment-list-item container-lg clearfix">
+<div class="Box-row d-flex flex-wrap flex-content-center">
   <div class="float-left col-sm-6 d-flex">
     <div class="d-flex flex-column flex-justify-center flex-items-center flex-md-items-start">
       <span class="group-assignment-icon assignment-icon-group left">
@@ -15,7 +15,7 @@
   </div>
 
   <div class="float-left col-sm-6 d-flex clipboard-form">
-    <div class="flex-self-center input-group assignment-invite-link">
+    <div class="flex-self-center input-group">
       <%= render partial: "shared/invitations/clipboard_form", locals: InvitationHelper.attributes(group_assignment.invitation, request.base_url) %>
     </div>
   </div>

@@ -1,114 +1,119 @@
-<div class="site-content">
-  <div class="d-flex flex-md-row flex-items-center stafftools-page-header">
-    <div class="col-1 assignment-icon assignment-icon-group">
-      <%= image_tag @organization.github_organization.github_avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{@organization.github_organization.login}" %>
-    </div>
-
-    <div class="col-10 col-md-10 d-flex flex-column">
-      <h2 class="stafftools-heading">
-        <%= @organization.title %>
-      </h2>
-
-      <p class="assignment-type text-gray"><%= t('views.stafftools.organizations.classroom') %></p>
-    </div>
+<div class="d-flex flex-md-row flex-items-center stafftools-page-header mt-2">
+  <div class="col-1 assignment-icon assignment-icon-group">
+    <%= image_tag @organization.github_organization.github_avatar_url(96), height: 48, width: 48, class: 'avatar left', alt: "@#{@organization.github_organization.login}" %>
   </div>
 
-  <div class="boxed-group">
-    <h3><%= t('views.stafftools.organizations.classroom') %></h3>
+  <div class="col-10 col-md-10 d-flex flex-column">
+    <h2 class="stafftools-heading">
+      <%= @organization.title %>
+    </h2>
 
-    <div class="boxed-group-inner">
-      <table>
-        <tr>
-          <td class="text-emphasized"><%= t('views.stafftools.organizations.id') %></td>
-          <td><%= @organization.id %></td>
-        </tr>
-        <tr>
-          <td class="text-emphasized"><%= t('views.stafftools.organizations.classroom') %></td>
-          <td><%= link_to organization_url(@organization), organization_url(@organization) %></td>
-        </tr>
-        <tr>
-          <td class="text-emphasized"><%= t('views.stafftools.organizations.joined_on') %></td>
-          <td><%= local_time(@organization.created_at) %></td>
-        </tr>
-        <tr>
-          <td class="text-emphasized"><%= t('views.stafftools.organizations.last_updated') %></td>
-          <td><%= local_time(@organization.updated_at) %></td>
-        </tr>
-      </table>
-    </div>
+    <p class="assignment-type text-gray"><%= t('views.stafftools.organizations.classroom') %></p>
   </div>
-
-  <div class="boxed-group">
-    <h3><%= t('views.stafftools.organizations.github_organization') %></h3>
-
-    <div class="boxed-group-inner">
-      <table>
-        <tr>
-          <td class="text-emphasized"><%= t('views.stafftools.organizations.id') %></td>
-          <td><%= @organization.github_id %></td>
-        </tr>
-        <tr>
-          <td class="text-emphasized"><%= t('views.stafftools.organizations.homepage') %></td>
-          <td><%= link_to @organization.github_organization.html_url, @organization.github_organization.html_url %></td>
-        </tr>
-        <% if @organization.webhook_id.present? %>
-          <tr>
-            <td class="text-emphasized"><%= t('views.stafftools.organizations.webhook_url') %></td>
-            <% url = "https://github.com/organizations/#{@organization.github_organization.login}/settings/hooks/#{@organization.webhook_id}" %>
-            <td><%= link_to url, url %></td>
-          </tr>
-          <tr>
-            <td class="text-emphasized"><%= t('views.stafftools.organizations.webhook_enabled_check') %></td>
-            <td><%= @organization.is_webhook_active? %></td>
-          </tr>
-        <% end %>
-      </table>
-    </div>
-  </div>
-
-  <div class="boxed-group">
-    <h3><%= t('views.stafftools.organizations.owners') %></h3>
-
-    <div class="boxed-group-inner">
-      <ul class="boxed-group-list standalone">
-        <% @organization.users.each do |user| %>
-          <li class="stafftools-button-li clearfix">
-            <%= render partial: 'stafftools/organizations/user', locals: { user: user } %>
-            <a data-remodal-target="remove-user-from-organization-<%= user.id %>" class="btn btn-danger stafftools-small-button<%= ' disabled' if @organization.users.count < 2 %>">Remove</a>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-  </div>
-
-  <% @organization.users.each do |user| %>
-    <%= render partial: 'stafftools/organizations/remove_user_from_organization_modal', locals: { user: user } %>
-  <% end %>
-
-  <% if @organization.all_assignments.present? %>
-    <div class="boxed-group">
-      <h3><%= t('views.stafftools.organizations.assignments') %></h3>
-
-      <div class="boxed-group-inner">
-        <ul class="boxed-group-list standalone">
-          <% @organization.all_assignments.each do |assignment| %>
-            <% type = assignment.class.to_s.underscore %>
-            <%= render partial: "stafftools/organizations/#{type}", locals: { :"#{type}" => assignment } %>
-          <% end %>
-        </ul>
-      </div>
-    </div>
-  <% end %>
-
-  <% if @organization.groupings.present? %>
-    <div class="boxed-group">
-      <h3><%= t('views.stafftools.organizations.groupings') %></h3>
-
-      <div class="boxed-group-inner">
-        <ul class="boxed-group-list standalone">
-          <%= render partial: "stafftools/organizations/grouping", collection: @organization.groupings %>
-        </ul>
-      </div>
-    </div>
-  <% end %>
 </div>
+
+<div class="Box Box--stafftools Box--condensed">
+  <div class="Box-header">
+    <h3 class="Box-title"><%= t('views.stafftools.organizations.classroom') %></h3>
+  </div>
+
+  <div class="Box-body">
+    <table>
+      <tr>
+        <td class="text-emphasized"><%= t('views.stafftools.organizations.id') %></td>
+        <td><%= @organization.id %></td>
+      </tr>
+      <tr>
+        <td class="text-emphasized"><%= t('views.stafftools.organizations.classroom') %></td>
+        <td><%= link_to organization_url(@organization), organization_url(@organization) %></td>
+      </tr>
+      <tr>
+        <td class="text-emphasized"><%= t('views.stafftools.organizations.joined_on') %></td>
+        <td><%= local_time(@organization.created_at) %></td>
+      </tr>
+      <tr>
+        <td class="text-emphasized"><%= t('views.stafftools.organizations.last_updated') %></td>
+        <td><%= local_time(@organization.updated_at) %></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="Box Box--stafftools Box--condensed mt-3">
+  <div class="Box-header">
+    <h3 class="Box-title"><%= t('views.stafftools.organizations.github_organization') %></h3>
+  </div>
+
+  <div class="Box-body">
+    <table>
+      <tr>
+        <td class="text-emphasized"><%= t('views.stafftools.organizations.id') %></td>
+        <td><%= @organization.github_id %></td>
+      </tr>
+      <tr>
+        <td class="text-emphasized"><%= t('views.stafftools.organizations.homepage') %></td>
+        <td><%= link_to @organization.github_organization.html_url, @organization.github_organization.html_url %></td>
+      </tr>
+      <% if @organization.webhook_id.present? %>
+        <tr>
+          <td class="text-emphasized"><%= t('views.stafftools.organizations.webhook_url') %></td>
+          <% url = "https://github.com/organizations/#{@organization.github_organization.login}/settings/hooks/#{@organization.webhook_id}" %>
+          <td><%= link_to url, url %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized"><%= t('views.stafftools.organizations.webhook_enabled_check') %></td>
+          <td><%= @organization.is_webhook_active? %></td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+
+<div class="Box Box--stafftools Box--condensed mt-3">
+  <div class="Box-header">
+    <h3 class="Box-title"><%= t('views.stafftools.organizations.owners') %></h3>
+  </div>
+
+  <ul>
+    <% @organization.users.each do |user| %>
+      <li class="Box-row d-flex flex-items-center">
+        <div class="flex-auto">
+          <%= render partial: 'stafftools/organizations/user', locals: { user: user } %>
+        </div>
+
+        <a data-remodal-target="remove-user-from-organization-<%= user.id %>" class="btn btn-danger stafftools-small-button<%= ' disabled' if @organization.users.count < 2 %>">Remove</a>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<% @organization.users.each do |user| %>
+  <%= render partial: 'stafftools/organizations/remove_user_from_organization_modal', locals: { user: user } %>
+<% end %>
+
+<% if @organization.all_assignments.present? %>
+  <div class="Box Box--stafftools Box--condensed mt-3">
+    <div class="Box-header">
+      <h3 class="Box-title"><%= t('views.stafftools.organizations.assignments') %></h3>
+    </div>
+
+    <ul>
+      <% @organization.all_assignments.each do |assignment| %>
+        <% type = assignment.class.to_s.underscore %>
+        <%= render partial: "stafftools/organizations/#{type}", locals: { :"#{type}" => assignment } %>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<% if @organization.groupings.present? %>
+  <div class="Box Box--stafftools Box--condensed mt-3">
+    <div class="Box-header">
+      <h3 class="Box-title"><%= t('views.stafftools.organizations.groupings') %></h3>
+    </div>
+
+    <ul>
+      <%= render partial: "stafftools/organizations/grouping", collection: @organization.groupings %>
+    </ul>
+  </div>
+<% end %>

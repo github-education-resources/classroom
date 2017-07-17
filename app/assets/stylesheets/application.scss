@@ -3,10 +3,10 @@
 
 @import "variables";
 @import "primer-css/index";
+@import "primer-overrides/*";
 
 @import "include-fragment-element/include-fragment-element";
 @import "components/*";
-
 
 @import "layout";
 @import "stafftools";
