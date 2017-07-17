@@ -8,6 +8,6 @@ module ShortKey
   end
 
   def assign_short_key
-    self.short_key ||= SecureRandom.urlsafe_base64(6).sub('+', '=')
+    self.short_key ||= SecureRandom.urlsafe_base64(6).sub("+", "=")
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PagesController < ApplicationController
-  layout 'layouts/pages'
+  layout "layouts/pages"
 
   skip_before_action :authenticate_user!
 

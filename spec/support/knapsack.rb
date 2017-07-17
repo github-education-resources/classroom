@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'knapsack'
+require "knapsack"
 
 # CUSTOM_CONFIG_GOES_HERE
 
