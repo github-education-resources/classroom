@@ -70,6 +70,10 @@ Rails.application.routes.draw do
         resources :assignment_repos, only: [:show]
       end
 
+      resources :graphql_assignments do
+        resources :assignment_repos, only: [:show]
+      end
+
       resources :group_assignments, path: 'group-assignments' do
         resources :group_assignment_repos, only: [:show]
       end

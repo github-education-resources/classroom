@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class ApplicationController
+  def deadlines_enabled?
+    logged_in? && current_user.feature_enabled?(:deadlines)
+  end
+  helper_method :deadlines_enabled?
+
   def ensure_team_management_flipper_is_enabled
     not_found unless team_management_enabled?
   end
@@ -8,6 +13,12 @@ class ApplicationController
   def ensure_student_identifier_flipper_is_enabled
     not_found unless student_identifier_enabled?
   end
+
+  def graphql_enabled?
+    logged_in? && current_user.feature_enabled?(:graphql)
+  end
+
+  helper_method :graphql_enabled?
 
   def student_identifier_enabled?
     logged_in? && current_user.feature_enabled?(:student_identifier)
@@ -18,9 +29,4 @@ class ApplicationController
     logged_in? && current_user.feature_enabled?(:team_management)
   end
   helper_method :team_management_enabled?
-
-  def deadlines_enabled?
-    logged_in? && current_user.feature_enabled?(:deadlines)
-  end
-  helper_method :deadlines_enabled?
 end
