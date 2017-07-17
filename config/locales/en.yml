@@ -68,6 +68,10 @@ en:
               blank: 'must be present'
             slug:
               taken: 'must be unique'
+        roster:
+          attributes:
+            roster_entries:
+              blank: 'must have at least one student.'
   views:
     pagination:
       previous: 'Previous'

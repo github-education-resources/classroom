@@ -26,7 +26,8 @@ RSpec.describe Roster, type: :model do
 
       subject.roster_entries << unlinked_entry << linked_entry
 
-      expect(subject.unlinked_entries).to eq([unlinked_entry])
+      expect(subject.unlinked_entries).to include(unlinked_entry)
+      expect(subject.unlinked_entries).to_not include(linked_entry)
     end
   end
 end

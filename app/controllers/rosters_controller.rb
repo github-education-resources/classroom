@@ -15,18 +15,13 @@ class RostersController < ApplicationController
 
     add_identifiers_to_roster
 
-    if @roster.roster_entries.empty?
-      @roster.errors.add(:roster_entries, "must include at least one student")
-      render :new
-    else
-      @roster.save!
-      @organization.roster = @roster
-      @organization.save!
+    @roster.save!
+    @organization.roster = @roster
+    @organization.save!
 
-      flash[:success] = "Your classroom roster has been saved! Manage it <a href='#{roster_url(@organization)}'>here</a>."
+    flash[:success] = "Your classroom roster has been saved! Manage it <a href='#{roster_url(@organization)}'>here</a>."
 
-      redirect_to organization_path(@organization)
-    end
+    redirect_to organization_path(@organization)
   rescue ActiveRecord::RecordInvalid
     render :new
   end
