@@ -12,16 +12,21 @@ class RostersController < ApplicationController
 
   def create
     @roster = Roster.new(identifier_name: params[:identifier_name])
-    @roster.save!
 
     add_identifiers_to_roster
 
-    @organization.roster = @roster
-    @organization.save!
+    if @roster.roster_entries.empty?
+      @roster.errors.add(:roster_entries, "must include at least one student")
+      render :new
+    else
+      @roster.save!
+      @organization.roster = @roster
+      @organization.save!
 
-    flash[:success] = "Your classroom roster has been saved! Manage it <a href='#{roster_url(@organization)}'>here</a>."
+      flash[:success] = "Your classroom roster has been saved! Manage it <a href='#{roster_url(@organization)}'>here</a>."
 
-    redirect_to organization_path(@organization)
+      redirect_to organization_path(@organization)
+    end
   rescue ActiveRecord::RecordInvalid
     render :new
   end
@@ -84,7 +89,7 @@ class RostersController < ApplicationController
   def add_identifiers_to_roster
     identifiers = split_identifiers(params[:identifiers])
     identifiers.each do |identifier|
-      @roster.roster_entries << RosterEntry.create(identifier: identifier)
+      @roster.roster_entries << RosterEntry.new(identifier: identifier)
     end
   end
 

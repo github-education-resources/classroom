@@ -47,6 +47,8 @@ en:
       assignment:
         title: 'Your assignment title'
         slug:  'Your assignment repository prefix'
+      roster:
+        roster_entries: 'Your roster'
     errors:
       models:
         grouping:
