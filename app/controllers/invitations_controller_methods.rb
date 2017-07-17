@@ -4,7 +4,7 @@ module InvitationsControllerMethods
   extend ActiveSupport::Concern
 
   included do
-    layout 'layouts/invitations'
+    layout "layouts/invitations"
 
     helper_method :current_assignment,
                   :current_invitation,

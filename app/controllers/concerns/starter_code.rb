@@ -3,8 +3,8 @@
 module StarterCode
   extend ActiveSupport::Concern
 
-  INVALID_SELECTION = 'Invalid repository selection, please check it again.'
-  WRONG_FORMAT      = 'Invalid repository name, use the format owner/name.'
+  INVALID_SELECTION = "Invalid repository selection, please check it again."
+  WRONG_FORMAT      = "Invalid repository name, use the format owner/name."
 
   def starter_code_repository_id(repo_name)
     return if repo_name.blank?

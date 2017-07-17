@@ -14,6 +14,6 @@
 
 # These inflection rules are supported but not enabled by default:
 ActiveSupport::Inflector.inflections do |inflect|
-  inflect.acronym 'GitHub'
-  inflect.acronym 'API'
+  inflect.acronym "GitHub"
+  inflect.acronym "API"
 end

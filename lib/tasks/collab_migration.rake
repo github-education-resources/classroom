@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../collab_migration'
+require_relative "../collab_migration"
 
 task collab_migration: :environment do
   User.find_in_batches(batch_size: 100) do |users|

@@ -5,7 +5,7 @@ class GitHubOrganization < GitHubResource
     return if organization_member?(user_github_login)
 
     GitHub::Errors.with_error_handling do
-      @client.update_organization_membership(login, state: 'active')
+      @client.update_organization_membership(login, state: "active")
     end
   end
 
@@ -20,7 +20,7 @@ class GitHubOrganization < GitHubResource
   def admin?(user_github_login)
     GitHub::Errors.with_error_handling do
       membership = @client.organization_membership(login, user: user_github_login)
-      membership.role == 'admin' && membership.state == 'active'
+      membership.role == "admin" && membership.state == "active"
     end
   rescue GitHub::Error
     false
@@ -47,7 +47,7 @@ class GitHubOrganization < GitHubResource
       @client.create_team(@id,
                           description: "#{team_name} created by GitHub Classroom",
                           name: team_name,
-                          permission: 'push')
+                          permission: "push")
     end
 
     GitHubTeam.new(@client, github_team.id)
@@ -58,7 +58,7 @@ class GitHubOrganization < GitHubResource
   end
 
   def geo_pattern_data_uri
-    @geo_pattern_data_uri ||= GeoPattern.generate(id, color: '#5fb27b').to_data_uri
+    @geo_pattern_data_uri ||= GeoPattern.generate(id, color: "#5fb27b").to_data_uri
   end
 
   def github_avatar_url(size = 40)
@@ -81,7 +81,7 @@ class GitHubOrganization < GitHubResource
         return { owned_private_repos: organization.owned_private_repos, private_repos: organization.plan.private_repos }
       end
 
-      raise GitHub::Error, 'Cannot retrieve this organizations repo plan, please reauthenticate your token.'
+      raise GitHub::Error, "Cannot retrieve this organizations repo plan, please reauthenticate your token."
     end
   end
 
@@ -101,12 +101,12 @@ class GitHubOrganization < GitHubResource
 
   def create_organization_webhook(config: {}, options: {})
     GitHub::Errors.with_error_handling do
-      hook_config = { content_type: 'json', secret: webhook_secret }.merge(config)
+      hook_config = { content_type: "json", secret: webhook_secret }.merge(config)
 
       hook_options = {
         # Send the [wildcard](https://developer.github.com/webhooks/#wildcard-event)
         # so that we don't have to upgrade the webhooks everytime we need something new.
-        events: ['*'],
+        events: ["*"],
         active: true
       }.merge(options)
 
@@ -126,7 +126,7 @@ class GitHubOrganization < GitHubResource
       @client.update_organization(
         @id,
         { default_repository_permission: default_repository_permission },
-        accept: 'application/vnd.github.korra-preview+json'
+        accept: "application/vnd.github.korra-preview+json"
       )
     end
   end

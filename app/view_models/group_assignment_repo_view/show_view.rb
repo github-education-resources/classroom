@@ -17,7 +17,7 @@ module GroupAssignmentRepoView
     end
 
     def members_text
-      pluralize(github_team_members.length, 'member')
+      pluralize(github_team_members.length, "member")
     end
   end
 end
