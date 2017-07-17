@@ -12,48 +12,47 @@
         <%= @group_assignment.title %>
       </h2>
 
-      <p class="assignment-type text-gray">Group assignment</p>
+      <p class="assignment-type text-gray"><%= t('views.stafftools.group_assignments.group_assignment') %></p>
     </div>
   </div>
 
   <div class="boxed-group">
-    <h3>Group assignment information</h3>
+    <h3><%= t('views.stafftools.group_assignments.group_assignment_info') %></h3>
 
     <div class="boxed-group-inner">
       <table>
         <tr>
-          <td class="text-emphasized">ID</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignments.id') %></td>
           <td><%= @group_assignment.id %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Owned by</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignments.owned_by') %></td>
           <td><%= link_to @group_assignment.organization.title, stafftools_organization_path(@group_assignment.organization.id) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Created by</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignments.created_by') %></td>
           <td><%= link_to @group_assignment.creator.github_user.login, stafftools_user_path(@group_assignment.creator) %></td>
         </tr>
         <% if @group_assignment.starter_code? %>
         <tr>
-          <td class="text-emphasized">Starter code</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignments.starter_code') %></td>
           <td><%= link_to @group_assignment.starter_code_repository.html_url, @group_assignment.starter_code_repository.html_url %></td>
         </tr>
         <% end %>
         <tr>
-          <td class="text-emphasized">Grouping</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignments.grouping') %></td>
           <td><%= link_to @group_assignment.grouping.title, stafftools_grouping_path(@group_assignment.grouping.id) %></td>
-
         </tr>
         <tr>
-          <td class="text-emphasized">Invitation</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignments.invitation') %></td>
           <td><%= link_to @group_assignment.group_assignment_invitation.key, stafftools_group_assignment_invitation_path(@group_assignment.group_assignment_invitation.id) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Created on</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignments.created_on') %></td>
           <td><%= local_time(@group_assignment.created_at) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Last updated</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignments.last_updated') %></td>
           <td><%= local_time(@group_assignment.created_at) %></td>
 
         </tr>
@@ -63,7 +62,7 @@
 
   <% if @group_assignment.group_assignment_repos.present? %>
     <div class="boxed-group">
-      <h3>Group assignment repositories</h3>
+      <h3><%= t('views.stafftools.group_assignments.group_assignment_repo') %></h3>
 
       <div class="boxed-group-inner">
         <ul class="boxed-group-list standalone">
