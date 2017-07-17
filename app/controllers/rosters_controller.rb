@@ -89,6 +89,6 @@ class RostersController < ApplicationController
   end
 
   def split_identifiers(raw_identifiers_string)
-    raw_identifiers_string.split("\r\n").reject(&:empty?).uniq
+    raw_identifiers_string.split("\r\n").reject(&:blank?).uniq
   end
 end
