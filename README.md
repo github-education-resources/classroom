@@ -235,3 +235,4 @@ If you're interested in helping out with Classroom development and looking for a
 Classroom is developed by these [contributors](https://github.com/education/classroom/graphs/contributors).
 
 Shout out to [GitHub Summer of Code](https://github.com/blog/1970-students-work-on-open-source-with-github-this-summer) student, [Mark Tareshawty](http://marktareshawty.com), from [The Ohio State University](https://www.osu.edu/) for his work on GitHub Classroom.
+
