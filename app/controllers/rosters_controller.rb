@@ -2,7 +2,7 @@
 
 class RostersController < ApplicationController
   before_action :ensure_student_identifier_flipper_is_enabled, :set_organization
-  before_action :set_roster, :redirect_if_no_roster, only: [:show, :add_student]
+  before_action :set_roster, :redirect_if_no_roster, only: %i[show add_student]
   before_action :set_unlinked_users, only: [:show]
 
   def show; end

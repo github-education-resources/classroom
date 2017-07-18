@@ -332,7 +332,8 @@ RSpec.describe RostersController, type: :controller do
   describe "PATCH #add_student", :vcr do
     before do
       sign_in_as(user)
-      organization.update_attribute(:roster, roster)
+      organization.roster = roster
+      organization.save
     end
 
     context "with flipper enabled" do
@@ -378,12 +379,12 @@ RSpec.describe RostersController, type: :controller do
         end
 
         it "does not create the student on the roster" do
-          expect {
+          expect do
             patch :add_student, params: {
               id:         organization.slug,
               identifier: ""
             }
-          }.to change(roster.reload.roster_entries, :count).by(0)
+          end.to change(roster.reload.roster_entries, :count).by(0)
         end
       end
 
