@@ -12,10 +12,10 @@ class RostersController < ApplicationController
 
   def create
     @roster = Roster.new(identifier_name: params[:identifier_name])
-    @roster.save!
 
     add_identifiers_to_roster
 
+    @roster.save!
     @organization.roster = @roster
     @organization.save!
 
@@ -84,11 +84,11 @@ class RostersController < ApplicationController
   def add_identifiers_to_roster
     identifiers = split_identifiers(params[:identifiers])
     identifiers.each do |identifier|
-      @roster.roster_entries << RosterEntry.create(identifier: identifier)
+      @roster.roster_entries << RosterEntry.new(identifier: identifier)
     end
   end
 
   def split_identifiers(raw_identifiers_string)
-    raw_identifiers_string.split("\r\n").reject(&:empty?).uniq
+    raw_identifiers_string.split("\r\n").reject(&:blank?).uniq
   end
 end
