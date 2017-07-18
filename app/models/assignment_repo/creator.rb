@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class AssignmentRepo
-  # rubocop:disable Metrics/ClassLength
   class Creator
     DEFAULT_ERROR_MESSAGE                   = 'Assignment could not be created, please try again'
     REPOSITORY_CREATION_FAILED              = 'GitHub repository could not be created, please try again'
