@@ -7,7 +7,6 @@ RSpec.describe RostersController, type: :controller do
   let(:user)         { classroom_teacher }
   let(:roster)       { create(:roster) }
   let(:entry)        { create(:roster_entry, roster: roster) }
-  let(:second_entry) { create(:roster_entry, roster: roster) }
 
   describe "GET #new", :vcr do
     before do
@@ -320,11 +319,13 @@ RSpec.describe RostersController, type: :controller do
 
       context "when there is 1 entry in the roster" do
         before do
-          roster.roster_entries = [entry]
-          roster.save
+          @roster = build(:roster)
+          @entry = build(:roster_entry)
+          @roster.roster_entries << @entry
+          @roster.save
 
           patch :delete_entry, params: {
-            roster_entry_id: entry.id,
+            roster_entry_id: @entry.id,
             id:              organization.slug
           }
         end
@@ -334,7 +335,7 @@ RSpec.describe RostersController, type: :controller do
         end
 
         it "does not remove the roster entry from the roster" do
-          expect(roster.reload.roster_entries).to eq([entry])
+          expect(@roster.reload.roster_entries).to eq([@entry])
         end
 
         it "displays error message" do
@@ -344,11 +345,14 @@ RSpec.describe RostersController, type: :controller do
 
       context "when there are more than 1 entry in the roster" do
         before(:each) do
-          roster.roster_entries = [entry, second_entry]
-          roster.save
+          @roster = build(:roster)
+          @first_entry = build(:roster_entry)
+          @second_entry = build(:roster_entry)
+          @roster.roster_entries = [@first_entry, @second_entry]
+          @roster.save
 
           patch :delete_entry, params: {
-            roster_entry_id: entry.id,
+            roster_entry_id: @first_entry.id,
             id:              organization.slug
           }
         end
@@ -358,7 +362,7 @@ RSpec.describe RostersController, type: :controller do
         end
 
         it "removes the roster entry from the roster" do
-          expect(roster.reload.roster_entries).to eq([second_entry])
+          expect(@roster.reload.roster_entries).to eq([@second_entry])
         end
 
         it "displays success message" do
