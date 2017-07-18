@@ -63,6 +63,10 @@ FactoryGirl.define do
 
   factory :roster do
     identifier_name { "email" }
+
+    after(:build) do |roster|
+      roster.roster_entries << RosterEntry.create(identifier: "email")
+    end
   end
 
   factory :roster_entry do
