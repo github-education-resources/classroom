@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ShortUrlController < ApplicationController
+  skip_before_action :authenticate_user!
+
   def assignment_invitation
     invitation = AssignmentInvitation.find_by(short_key: key)
 
