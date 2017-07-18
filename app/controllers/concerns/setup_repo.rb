@@ -13,10 +13,7 @@ module SetupRepo
     progress
   end
 
-  def perform_setup(repo, config)
-    config.setup_repository(repo)
-    true
-  rescue GitHub::Error
-    false
+  def perform_setup(assignment_repo, config)
+    assignment_repo.destory! unless config.setup_repository(assignment_repo.github_repository)
   end
 end

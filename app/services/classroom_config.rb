@@ -12,13 +12,14 @@ class ClassroomConfig
 
   def setup_repository(repo)
     configs_tree = @github_repository.branch_tree('github-classroom')
-    GitHub::Errors.with_error_handling do
-      configs_tree.tree.each do |config|
-        send("generate_#{config.path}", repo, config.sha) if CONFIGURABLES.include? config.path
-      end
-
-      repo.remove_branch('github-classroom')
+    configs_tree.tree.each do |config|
+      send("generate_#{config.path}", repo, config.sha) if CONFIGURABLES.include? config.path
     end
+
+    repo.remove_branch('github-classroom')
+    true
+  rescue GitHub::Error
+    false
   end
 
   def configurable?(repo)
@@ -39,11 +40,9 @@ class ClassroomConfig
   #
   # Returns nothing
   def generate_issues(repo, tree_sha)
-    GitHub::Errors.with_error_handling do
-      @github_repository.tree(tree_sha).tree.each do |issue|
-        blob = @github_repository.blob(issue.sha)
-        repo.add_issue(blob.data['title'], blob.body) if blob.data.present?
-      end
+    @github_repository.tree(tree_sha).tree.each do |issue|
+      blob = @github_repository.blob(issue.sha)
+      repo.add_issue(blob.data['title'], blob.body) if blob.data.present?
     end
   end
 end
