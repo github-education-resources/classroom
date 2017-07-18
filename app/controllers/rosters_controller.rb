@@ -3,6 +3,7 @@
 class RostersController < ApplicationController
   before_action :ensure_student_identifier_flipper_is_enabled, :set_organization
   before_action :set_roster, :redirect_if_no_roster, :set_unlinked_users, only: [:show]
+  before_action :ensure_enough_members_in_roster, only: [:delete_entry]
 
   def show; end
 
@@ -53,12 +54,34 @@ class RostersController < ApplicationController
     redirect_to roster_path(@organization)
   end
 
+  def delete_entry
+    roster_entry = RosterEntry.find(params[:roster_entry_id])
+
+    roster_entry.destroy!
+
+    flash[:success] = "Student successfully removed from roster!"
+    redirect_to roster_path(@organization)
+  rescue ActiveRecord::ActiveRecordError
+    flash[:error] = "An error has occured, please try again."
+    redirect_to roster_path(@organization)
+  end
+
   private
 
   def redirect_if_no_roster
     return if @roster
 
     redirect_to new_roster_url(@organization)
+  end
+
+  def ensure_enough_members_in_roster
+    roster_entry = RosterEntry.find(params[:roster_entry_id])
+    roster = roster_entry.roster
+
+    return if roster.roster_entries.length > 1
+
+    flash[:error] = "You cannot delete the last member of your roster!"
+    redirect_to roster_url(@organization)
   end
 
   def set_organization

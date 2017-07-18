@@ -39,8 +39,12 @@
       <% else %>
         <a class="btn btn-outline", data-remodal-target="link-to-github_account-<%= roster_entry.id %>">Link to GitHub account</a>
       <% end %>
+      <span class='clickable' data-remodal-target="delete-entry-<%= roster_entry.id %>">
+        <%= octicon 'x', height: 22, class: "remove-roster-entry-button" %>
+      </span>
     </div>
   </div>
 </div>
 
 <%= render partial: '/rosters/link_to_github_account_modal', locals: { roster_entry: roster_entry } %>
+<%= render partial: '/rosters/delete_roster_entry_modal', locals: { roster_entry: roster_entry } %>
