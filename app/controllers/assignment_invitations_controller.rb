@@ -21,7 +21,7 @@ class AssignmentInvitationsController < ApplicationController
   end
 
   def setup_progress
-    perform_setup(current_submission.github_repository, classroom_config) if configure?
+    perform_setup(current_submission.github_repository, classroom_config) if configurable_submission?
 
     render json: setup_status(current_submission.github_repository, classroom_config)
   end
@@ -57,9 +57,10 @@ class AssignmentInvitationsController < ApplicationController
     ClassroomConfig.new(starter_repo)
   end
 
-  def configure?
-    configurable = classroom_config.finished_setup? current_submission.github_repository
-    params[:configure].present? && configurable
+  def configurable_submission?
+    repo = current_submission.github_repository
+    configurable = classroom_config.configurable? repo
+    repo.import_progress[:status] == 'complete' && configurable
   end
 
   def create_submission
