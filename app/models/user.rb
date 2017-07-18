@@ -3,7 +3,7 @@
 class User < ApplicationRecord
   include Flippable
 
-  update_index('stafftools#user') { self }
+  update_index("stafftools#user") { self }
 
   has_many :assignment_repos
   has_many :repo_accesses, dependent: :destroy

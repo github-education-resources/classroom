@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'boot'
+require_relative "boot"
 
-require 'rails/all'
+require "rails/all"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -18,7 +18,7 @@ module GitHubClassroom
     # -- all .rb files in that directory are automatically loaded.
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
-    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
+    config.i18n.load_path += Dir[Rails.root.join("config", "locales", "**", "*.{rb,yml}")]
 
     # Available locales
     I18n.available_locales = [:en]
@@ -38,28 +38,28 @@ module GitHubClassroom
     config.active_job.queue_adapter = :sidekiq
 
     # Health checks endpoint for monitoring
-    if ENV['PINGLISH_ENABLED'] == 'true'
+    if ENV["PINGLISH_ENABLED"] == "true"
       config.middleware.use Pinglish do |ping|
         ping.check :db do
           ActiveRecord::Base.connection.tables.size
-          'ok'
+          "ok"
         end
 
         ping.check :memcached do
           Rails.cache.dalli.checkout.alive!
-          'ok'
+          "ok"
         end
 
         ping.check :redis do
           Sidekiq.redis(&:ping)
-          'ok'
+          "ok"
         end
 
         ping.check :elasticsearch do
-          status = Chewy.client.cluster.health['status'] || 'unavailable'
+          status = Chewy.client.cluster.health["status"] || "unavailable"
 
-          if status == 'green' # rubocop:disable Style/GuardClause
-            'ok'
+          if status == "green" # rubocop:disable Style/GuardClause
+            "ok"
           else
             raise "Elasticsearch status is #{status}"
           end

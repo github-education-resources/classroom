@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe RostersController, type: :controller do
   let(:organization) { classroom_org     }
@@ -8,24 +8,24 @@ RSpec.describe RostersController, type: :controller do
   let(:roster)       { create(:roster) }
   let(:entry)        { create(:roster_entry, roster: roster) }
 
-  describe 'GET #new', :vcr do
+  describe "GET #new", :vcr do
     before do
       sign_in_as(user)
     end
 
-    context 'with flipper enabled' do
+    context "with flipper enabled" do
       before do
         GitHubClassroom.flipper[:student_identifier].enable
 
         get :new, params: { id: organization.slug }
       end
 
-      it 'succeeds' do
+      it "succeeds" do
         expect(response).to have_http_status(:success)
       end
 
-      it 'renders correct template' do
-        expect(response).to render_template('rosters/new')
+      it "renders correct template" do
+        expect(response).to render_template("rosters/new")
       end
 
       after do
@@ -33,23 +33,23 @@ RSpec.describe RostersController, type: :controller do
       end
     end
 
-    context 'with flipper disabled' do
+    context "with flipper disabled" do
       before do
         get :new, params: { id: organization.slug }
       end
 
-      it '404s' do
+      it "404s" do
         expect(response).to have_http_status(:not_found)
       end
     end
   end
 
-  describe 'POST #create', :vcr do
+  describe "POST #create", :vcr do
     before do
       sign_in_as(user)
     end
 
-    context 'with flipper enabled' do
+    context "with flipper enabled" do
       before(:each) do
         Roster.destroy_all
       end
@@ -58,51 +58,51 @@ RSpec.describe RostersController, type: :controller do
         GitHubClassroom.flipper[:student_identifier].enable
       end
 
-      context 'with no identifier_name' do
+      context "with no identifier_name" do
         before do
-          post :create, params: { id: organization.slug, identifiers: 'myemail' }
+          post :create, params: { id: organization.slug, identifiers: "myemail" }
         end
 
-        it 'renders new' do
-          expect(response).to render_template('rosters/new')
+        it "renders new" do
+          expect(response).to render_template("rosters/new")
         end
 
-        it 'does not create any rosters' do
+        it "does not create any rosters" do
           expect(Roster.count).to eq(0)
         end
       end
 
-      context 'with identifier_name' do
+      context "with identifier_name" do
         before do
           post :create, params: {
             id: organization.slug,
             identifiers: "email1\r\nemail2",
-            identifier_name: 'emails'
+            identifier_name: "emails"
           }
 
           @roster = Roster.first
           @roster_entries = @roster.roster_entries
         end
 
-        it 'redirects to organization path' do
+        it "redirects to organization path" do
           expect(response).to redirect_to(organization_url(organization))
         end
 
-        it 'creates one roster with correct identifier_name' do
+        it "creates one roster with correct identifier_name" do
           expect(Roster.count).to eq(1)
-          expect(@roster.identifier_name).to eq('emails')
+          expect(@roster.identifier_name).to eq("emails")
         end
 
-        it 'creates two roster_entries' do
+        it "creates two roster_entries" do
           expect(RosterEntry.count).to eq(2)
         end
 
-        it 'creates roster_entries with correct identifier' do
-          expect(@roster_entries[0].identifier).to eq('email1')
-          expect(@roster_entries[1].identifier).to eq('email2')
+        it "creates roster_entries with correct identifier" do
+          expect(@roster_entries[0].identifier).to eq("email1")
+          expect(@roster_entries[1].identifier).to eq("email2")
         end
 
-        it 'sets flash[:success]' do
+        it "sets flash[:success]" do
           expect(flash[:success]).to be_present
         end
       end
@@ -112,38 +112,38 @@ RSpec.describe RostersController, type: :controller do
       end
     end
 
-    context 'with flipper disabled' do
+    context "with flipper disabled" do
       before do
         post :create, params: { id: organization.slug }
       end
 
-      it '404s' do
+      it "404s" do
         expect(response).to have_http_status(:not_found)
       end
     end
   end
 
-  describe 'GET #show', :vcr do
+  describe "GET #show", :vcr do
     before do
       sign_in_as(user)
     end
 
-    context 'with flipper enabled' do
+    context "with flipper enabled" do
       before do
         GitHubClassroom.flipper[:student_identifier].enable
       end
 
-      context 'with no roster' do
+      context "with no roster" do
         before do
           get :show, params: { id: organization.slug }
         end
 
-        it 'redirects to roster/new' do
+        it "redirects to roster/new" do
           expect(response).to redirect_to(new_roster_url(organization))
         end
       end
 
-      context 'with a roster' do
+      context "with a roster" do
         before do
           organization.roster = create(:roster)
           organization.save
@@ -151,12 +151,12 @@ RSpec.describe RostersController, type: :controller do
           get :show, params: { id: organization.slug }
         end
 
-        it 'succeeds' do
+        it "succeeds" do
           expect(response).to have_http_status(:success)
         end
 
-        it 'renders roster/show' do
-          expect(response).to render_template('rosters/show')
+        it "renders roster/show" do
+          expect(response).to render_template("rosters/show")
         end
       end
 
@@ -165,28 +165,28 @@ RSpec.describe RostersController, type: :controller do
       end
     end
 
-    context 'with flipper disabled' do
+    context "with flipper disabled" do
       before do
         get :show, params: { id: organization.slug }
       end
 
-      it '404s' do
+      it "404s" do
         expect(response).to have_http_status(:not_found)
       end
     end
   end
 
-  describe 'PATCH #link', :vcr do
+  describe "PATCH #link", :vcr do
     before do
       sign_in_as(user)
     end
 
-    context 'with flipper enabled' do
+    context "with flipper enabled" do
       before do
         GitHubClassroom.flipper[:student_identifier].enable
       end
 
-      context 'user and entry exist' do
+      context "user and entry exist" do
         before do
           patch :link, params: {
             id:              organization.slug,
@@ -195,16 +195,16 @@ RSpec.describe RostersController, type: :controller do
           }
         end
 
-        it 'redirects to #show' do
+        it "redirects to #show" do
           expect(response).to redirect_to(roster_url(organization))
         end
 
-        it 'creates link' do
+        it "creates link" do
           expect(entry.reload.user).to eq(user)
         end
       end
 
-      context 'user/link does not exist' do
+      context "user/link does not exist" do
         before do
           patch :link, params: {
             id:              organization.slug,
@@ -213,11 +213,11 @@ RSpec.describe RostersController, type: :controller do
           }
         end
 
-        it 'redirects to #show' do
+        it "redirects to #show" do
           expect(response).to redirect_to(roster_url(organization))
         end
 
-        it 'does not create a link' do
+        it "does not create a link" do
           expect(entry.reload.user).to be_nil
         end
       end
@@ -227,7 +227,7 @@ RSpec.describe RostersController, type: :controller do
       end
     end
 
-    context 'with flipper disabled' do
+    context "with flipper disabled" do
       before do
         patch :link, params: {
           id:              organization.slug,
@@ -236,23 +236,23 @@ RSpec.describe RostersController, type: :controller do
         }
       end
 
-      it '404s' do
+      it "404s" do
         expect(response).to have_http_status(:not_found)
       end
     end
   end
 
-  describe 'PATCH #unlink', :vcr do
+  describe "PATCH #unlink", :vcr do
     before do
       sign_in_as(user)
     end
 
-    context 'with flipper enabled' do
+    context "with flipper enabled" do
       before do
         GitHubClassroom.flipper[:student_identifier].enable
       end
 
-      context 'with a linked entry' do
+      context "with a linked entry" do
         before do
           entry.user = user
           entry.save
@@ -263,16 +263,16 @@ RSpec.describe RostersController, type: :controller do
           }
         end
 
-        it 'redirects to roster page' do
+        it "redirects to roster page" do
           expect(response).to redirect_to(roster_url(organization))
         end
 
-        it 'unlinks entry and user' do
+        it "unlinks entry and user" do
           expect(entry.reload.user).to be_nil
         end
       end
 
-      context 'with an unlinked entry' do
+      context "with an unlinked entry" do
         before do
           entry.user = nil
           entry.save
@@ -283,7 +283,7 @@ RSpec.describe RostersController, type: :controller do
           }
         end
 
-        it 'redirects to roster page' do
+        it "redirects to roster page" do
           expect(response).to redirect_to(roster_url(organization))
         end
       end
@@ -293,7 +293,7 @@ RSpec.describe RostersController, type: :controller do
       end
     end
 
-    context 'with flipper disabled' do
+    context "with flipper disabled" do
       before do
         patch :unlink, params: {
           id:              organization.slug,
@@ -301,7 +301,7 @@ RSpec.describe RostersController, type: :controller do
         }
       end
 
-      it '404s' do
+      it "404s" do
         expect(response).to have_http_status(:not_found)
       end
     end

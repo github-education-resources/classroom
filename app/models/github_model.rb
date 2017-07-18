@@ -40,7 +40,7 @@ class GitHubModel
         attr[gh_attr.to_sym] = github_response(client, id).send(gh_attr)
       end
 
-      remove_instance_variable('@response')
+      remove_instance_variable("@response")
     end
 
     update(attributes || {})
@@ -144,7 +144,7 @@ class GitHubModel
   #
   # Returns a Symbol.
   def github_type
-    self.class.to_s.underscore.gsub(/github_/, '').to_sym
+    self.class.to_s.underscore.gsub(/github_/, "").to_sym
   end
 
   # Internal: Determin the appropriate NullGitHubObject

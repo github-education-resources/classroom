@@ -11,7 +11,7 @@ class RosterEntry
     end
 
     def github_handle_text
-      linked? ? '@' + roster_entry.user.github_user.login : 'Not linked'
+      linked? ? "@" + roster_entry.user.github_user.login : "Not linked"
     end
 
     def github_profile_url
@@ -23,11 +23,11 @@ class RosterEntry
     end
 
     def button_text
-      linked? ? 'Unlink GitHub account' : 'Link GitHub account'
+      linked? ? "Unlink GitHub account" : "Link GitHub account"
     end
 
     def button_class
-      linked? ? 'btn btn-danger' : 'btn btn-outline'
+      linked? ? "btn btn-danger" : "btn btn-outline"
     end
   end
 end
