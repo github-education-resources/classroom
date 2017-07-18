@@ -74,37 +74,59 @@ RSpec.describe RostersController, type: :controller do
       end
 
       context "with identifier_name" do
-        before do
-          post :create, params: {
-            id: organization.slug,
-            identifiers: "email1\r\nemail2",
-            identifier_name: "emails"
-          }
+        context "with valid identifiers" do
+          before do
+            post :create, params: {
+              id: organization.slug,
+              identifiers: "email1\r\nemail2",
+              identifier_name: "emails"
+            }
 
-          @roster = Roster.first
-          @roster_entries = @roster.roster_entries
+            @roster = Roster.first
+            @roster_entries = @roster.roster_entries
+          end
+
+          it "redirects to organization path" do
+            expect(response).to redirect_to(organization_url(organization))
+          end
+
+          it "creates one roster with correct identifier_name" do
+            expect(Roster.count).to eq(1)
+            expect(@roster.identifier_name).to eq("emails")
+          end
+
+          it "creates two roster_entries" do
+            expect(RosterEntry.count).to eq(2)
+          end
+
+          it "creates roster_entries with correct identifier" do
+            expect(@roster_entries[0].identifier).to eq("email1")
+            expect(@roster_entries[1].identifier).to eq("email2")
+          end
+
+          it "sets flash[:success]" do
+            expect(flash[:success]).to be_present
+          end
         end
 
-        it "redirects to organization path" do
-          expect(response).to redirect_to(organization_url(organization))
-        end
+        context "with an empty set of identifiers" do
+          before do
+            post :create, params: {
+              id: organization.slug,
+              identifiers: "    \r\n ",
+              identifier_name: "emails"
+            }
 
-        it "creates one roster with correct identifier_name" do
-          expect(Roster.count).to eq(1)
-          expect(@roster.identifier_name).to eq("emails")
-        end
+            @roster = Roster.first
+          end
 
-        it "creates two roster_entries" do
-          expect(RosterEntry.count).to eq(2)
-        end
+          it "does not create a roster" do
+            expect(@roster).to be_nil
+          end
 
-        it "creates roster_entries with correct identifier" do
-          expect(@roster_entries[0].identifier).to eq("email1")
-          expect(@roster_entries[1].identifier).to eq("email2")
-        end
-
-        it "sets flash[:success]" do
-          expect(flash[:success]).to be_present
+          it "renders :new" do
+            expect(response).to render_template("rosters/new")
+          end
         end
       end
 
