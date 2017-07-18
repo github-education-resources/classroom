@@ -32,7 +32,7 @@
   <div class="d-flex right-button">
     <div class="flex-self-center input-group ">
       <% if view.linked? %>
-        <%= form_tag({ controller: :rosters, action: :unlink }, method: :patch) do %>
+        <%= form_tag({ controller: :rosters, action: :unlink }, method: :patch, class: "d-inline") do %>
           <%= hidden_field_tag 'roster_entry_id', roster_entry.id %>
           <%= submit_tag 'Unlink GitHub account', class: view.button_class %>
         <% end %>
