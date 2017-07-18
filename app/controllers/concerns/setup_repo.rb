@@ -14,6 +14,6 @@ module SetupRepo
   end
 
   def perform_setup(assignment_repo, config)
-    assignment_repo.destory! unless config.setup_repository(assignment_repo.github_repository)
+    assignment_repo.destroy! unless config.setup_repository(assignment_repo.github_repository)
   end
 end
