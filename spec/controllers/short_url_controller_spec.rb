@@ -4,7 +4,6 @@ require "rails_helper"
 
 RSpec.describe ShortUrlController, type: :controller do
   describe "unauthenticated request" do
-
     describe "GET #accept_assignment", :vcr do
       let(:invitation) { create(:assignment_invitation) }
 
