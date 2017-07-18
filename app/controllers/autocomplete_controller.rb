@@ -7,7 +7,7 @@ class AutocompleteController < ApplicationController
 
     respond_to do |format|
       format.html do
-        render partial: 'autocomplete/repository_suggestions', locals: { repos: results, error_message: error_message }
+        render partial: "autocomplete/repository_suggestions", locals: { repos: results, error_message: error_message }
       end
     end
   end

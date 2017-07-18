@@ -4,7 +4,7 @@ class Organization < ApplicationRecord
   include Flippable
   include Sluggable
 
-  update_index('stafftools#organization') { self }
+  update_index("stafftools#organization") { self }
 
   default_scope { where(deleted_at: nil) }
 
@@ -13,7 +13,7 @@ class Organization < ApplicationRecord
   has_many :group_assignments,        dependent: :destroy
   has_many :repo_accesses,            dependent: :destroy
 
-  belongs_to :roster
+  belongs_to :roster, optional: true
 
   has_and_belongs_to_many :users
 
@@ -36,7 +36,7 @@ class Organization < ApplicationRecord
   end
 
   def github_client
-    token = users.limit(1).order('RANDOM()').pluck(:token)[0]
+    token = users.limit(1).order("RANDOM()").pluck(:token)[0]
     Octokit::Client.new(access_token: token)
   end
 

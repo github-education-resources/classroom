@@ -8,7 +8,7 @@
     <div class="three-fourths column">
 
       <div class="boxed-group">
-        <h3>Profile information</h3>
+        <h3><%= t('views.organizations.profile_information') %></h3>
         <div class="boxed-group-inner clearfix">
           <%= form_for @organization do |f| %>
             <%= render 'shared/error_messages', object: f.object %>
@@ -17,18 +17,18 @@
               <dd><%= f.text_field :title, class: 'textfield form-control input-contrast input-block' %></dd>
             </dl>
             <div class="form-actions">
-              <%= f.submit 'Save changes', class: 'btn btn-primary' %>
+              <%= f.submit t('views.organizations.save_changes'), class: 'btn btn-primary' %>
             </div>
           <% end %>
         </div>
       </div>
 
       <div class="boxed-group dangerzone">
-        <h3>Reset and remove this classroom</h3>
+        <h3><%= t('views.organizations.delete_submit') %></h3>
         <div class="boxed-group-inner pt-2 clearfix">
-          <p>Once you reset this classroom, there is no going back. Please be certain.</p>
+          <p><%= t('views.organizations.theres_no_going_back') %></p>
           <p>
-            <a data-remodal-target="reset-and-remove-organization" class="btn btn-danger">Reset and remove this classroom</a>
+            <a data-remodal-target="reset-and-remove-organization" class="btn btn-danger"><%= t('views.organizations.delete_submit') %></a>
           </p>
         </div>
       </div>

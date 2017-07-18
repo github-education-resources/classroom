@@ -12,7 +12,7 @@
   };
 
   show_flash_message = function(msg, type) {
-    $("#flash-messages").html("<div class='flash-application container'><div class='flash " + type + "'>" + msg + "</div></div>");
+    $("#flash-messages").html("<div class='flash-application container-lg'><div class='flash " + type + "'>" + msg + "</div></div>");
     return fade_flash_message();
   };
 

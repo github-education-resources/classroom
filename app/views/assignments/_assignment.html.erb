@@ -1,5 +1,5 @@
-<div class="assignment-list-item d-flex col-12">
-  <div class="col-6 d-flex">
+<div class="assignment-list-item container-lg clearfix">
+  <div class="float-left col-sm-6 d-flex">
     <div class="d-flex flex-column flex-justify-center flex-items-center flex-md-items-start">
       <span class="assignment-icon assignment-icon-individual left">
         <%= octicon 'person', height: 22 %>
@@ -15,7 +15,7 @@
     </div>
   </div>
 
-  <div class="col-6 d-flex clipboard-form">
+  <div class="float-right col-sm-6 d-flex clipboard-form">
     <div class="flex-self-center input-group assignment-invite-link">
       <%= render partial: "shared/invitations/clipboard_form", locals: InvitationHelper.attributes(assignment.invitation, request.base_url) %>
     </div>

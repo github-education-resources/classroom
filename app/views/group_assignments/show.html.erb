@@ -42,7 +42,7 @@
     </div>
 
     <% if @group_assignment_repos.present? %>
-      <div class="group-assignment-repo-list">
+      <div class="assignment-repo-list">
         <% @group_assignment_repos.each do |group_assignment_repo| %>
           <%= render partial: 'group_assignment_repos/group_assignment_repo', \
             locals: { url: organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo) } %>
