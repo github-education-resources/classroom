@@ -54,6 +54,7 @@ Rails.application.routes.draw do
         resource :roster, only: %i[show new create] do
           patch :link
           patch :unlink
+          patch :add_student
         end
       end
 
