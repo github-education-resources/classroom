@@ -8,18 +8,15 @@ module SetupRepo
   def setup_status(repo, config)
     progress = { status: 'importing', message: IMPORT_IN_PROGRESS }
 
-    return progress unless repo.import_progress[:status] == 'complete'
-
-    progress.update(status: 'complete') unless config.github_repository.branch_present? 'github-classroom'
-    progress.update(status: 'configuring', message: CONFIGURATION_PROGRESS) if repo.branch_present? 'github-classroom'
-    progress.update(status: 'complete') unless config.finished_setup? repo
+    progress.update(status: 'configuring', message: CONFIGURATION_PROGRESS) if config.configurable? repo
+    progress.update(status: 'complete') unless config.configured? repo
     progress
   end
 
   def perform_setup(repo, config)
     config.setup_repository(repo)
-    return true
+    true
   rescue GitHub::Error
-    return false
+    false
   end
 end

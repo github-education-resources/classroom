@@ -21,8 +21,12 @@ class ClassroomConfig
     end
   end
 
-  def finished_setup?(repo)
-    repo.branch_present? 'github-classroom'
+  def configurable?(repo)
+    repo.branch_present?('github-classroom')
+  end
+
+  def configured?(repo)
+    !configurable?(repo) && repo.import_progress[:status] == 'complete'
   end
 
   private
