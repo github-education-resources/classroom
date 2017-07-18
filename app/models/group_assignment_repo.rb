@@ -5,7 +5,7 @@ class GroupAssignmentRepo < ApplicationRecord
   include GitHubRepoable
   include Nameable
 
-  update_index('stafftools#group_assignment_repo') { self }
+  update_index("stafftools#group_assignment_repo") { self }
 
   belongs_to :group
   belongs_to :group_assignment

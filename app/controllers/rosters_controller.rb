@@ -33,10 +33,10 @@ class RostersController < ApplicationController
     roster_entry.user = user
     roster_entry.save!
 
-    flash[:success] = 'Student and GitHub account linked!'
+    flash[:success] = "Student and GitHub account linked!"
     redirect_to roster_path(@organization)
   rescue ActiveRecord::ActiveRecordError
-    flash[:error] = 'An error has occured, please try again.'
+    flash[:error] = "An error has occured, please try again."
     redirect_to roster_path(@organization)
   end
 
@@ -46,10 +46,10 @@ class RostersController < ApplicationController
     roster_entry.user = nil
     roster_entry.save!
 
-    flash[:success] = 'Student and GitHub account unlinked!'
+    flash[:success] = "Student and GitHub account unlinked!"
     redirect_to roster_path(@organization)
   rescue ActiveRecord::ActiveRecordError
-    flash[:error] = 'An error has occured, please try again.'
+    flash[:error] = "An error has occured, please try again."
     redirect_to roster_path(@organization)
   end
 

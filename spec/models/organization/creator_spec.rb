@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Organization::Creator, type: :model do
   let(:github_organization_id) { classroom_owner_organization_github_id.to_i }
@@ -10,9 +10,9 @@ RSpec.describe Organization::Creator, type: :model do
     @organization.try(:destroy)
   end
 
-  describe '::perform', :vcr do
-    describe 'successful creation' do
-      it 'creates an Organization with a webhook_id' do
+  describe "::perform", :vcr do
+    describe "successful creation" do
+      it "creates an Organization with a webhook_id" do
         result = Organization::Creator.perform(github_id: github_organization_id, users: [user])
 
         expect(result.success?).to be_truthy
@@ -20,21 +20,21 @@ RSpec.describe Organization::Creator, type: :model do
       end
     end
 
-    describe 'unsucessful creation' do
-      it 'does not allow non admins to be added' do
+    describe "unsucessful creation" do
+      it "does not allow non admins to be added" do
         non_admin_user = create(:user, uid: 1)
         result = Organization::Creator.perform(github_id: github_organization_id, users: [non_admin_user])
         expect(result.failed?).to be_truthy
       end
 
-      it 'deletes the webhook if the process could not be completed' do
+      it "deletes the webhook if the process could not be completed" do
         result = Organization::Creator.perform(github_id: github_organization_id, users: [])
         expect(result.failed?).to be_truthy
       end
 
-      it 'deletes the organization if the repository permissions cannot be set to none' do
+      it "deletes the organization if the repository permissions cannot be set to none" do
         stub_request(:patch, github_url("/organizations/#{github_organization_id}"))
-          .to_return(body: '{}', status: 401)
+          .to_return(body: "{}", status: 401)
 
         result = Organization::Creator.perform(github_id: github_organization_id, users: [user])
 

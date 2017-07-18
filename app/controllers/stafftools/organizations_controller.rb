@@ -10,10 +10,10 @@ module Stafftools
       user = User.find(params[:user_id])
 
       if Assignment.find_by(creator: user).present?
-        flash[:error] = 'This user owns at least one assignment and cannot be deleted'
+        flash[:error] = "This user owns at least one assignment and cannot be deleted"
       else
         @organization.users.delete(user)
-        flash[:success] = 'The user has been removed from the classroom'
+        flash[:success] = "The user has been removed from the classroom"
       end
 
       redirect_to stafftools_organization_path(@organization.id)

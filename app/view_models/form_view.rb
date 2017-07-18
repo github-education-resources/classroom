@@ -8,7 +8,7 @@ class FormView < ViewModel
   end
 
   def error_message_for(field)
-    subject.errors.full_messages_for(field).join(', ')
+    subject.errors.full_messages_for(field).join(", ")
   end
 
   def form_class_for(field)

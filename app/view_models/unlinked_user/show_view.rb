@@ -5,7 +5,7 @@ module UnlinkedUser
     attr_reader :unlinked_user
 
     def github_handle_text
-      '@' + unlinked_user.github_user.login
+      "@" + unlinked_user.github_user.login
     end
 
     def github_avatar_url
