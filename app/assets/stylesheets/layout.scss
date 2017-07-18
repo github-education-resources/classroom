@@ -213,6 +213,12 @@ main {
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
 
+  &.tabnav-body {
+    padding-top: 1rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+
   @media (max-width: 43em) {
     padding: 1rem;
   }
@@ -390,6 +396,14 @@ hr {
       .spinner {
         display: none;
       }
+    }
+  }
+
+  .avatar {
+    margin-right: 10px;
+
+    @media screen and (max-width: 40em) {
+      margin-right: 0;
     }
   }
 
@@ -801,10 +815,17 @@ hr {
 }
 
 .student-login {
+  display: block;
+  padding-top: 4px;
   margin: 0;
   font-size: 14px;
   font-weight: bold;
   line-height: 20px;
+  color: $gray-dark;
+
+  &:hover {
+    color: $blue;
+  }
 }
 
 .student-description {
@@ -855,4 +876,48 @@ hr {
 
 .form.short-field {
   width: 500px;
+}
+
+.tabnav-body .assignment-list-items {
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+.tabnav-link {
+  cursor: pointer;
+}
+
+.hidden-tab {
+  display: none;
+}
+
+.right-button {
+  margin-left: auto;
+}
+
+.fixed-height-row {
+  height: 56px;
+}
+
+.remodal-user {
+  padding-left: 0;
+  margin-bottom: 8px;
+  color: $blue;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+
+
+  &:focus {
+    outline: none;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.remodal-user-list {
+  max-height: 200px;
+  overflow: scroll;
 }

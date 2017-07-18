@@ -101,7 +101,7 @@ class Organization
         return webhook.id if webhook.try(:id).present?
         raise GitHub::Error
       rescue GitHub::Error
-        raise Result::Error, 'Could not create WebHook, please try again.'
+        raise Result::Error, "Could not create WebHook, please try again."
       end
     end
 
@@ -122,7 +122,7 @@ class Organization
     #
     # Returns nil or raises a Result::Error
     def update_default_repository_permission_to_none!(organization)
-      organization.github_organization.update_default_repository_permission!('none')
+      organization.github_organization.update_default_repository_permission!("none")
     rescue GitHub::Error => err
       raise Result::Error, err.message
     end
@@ -156,7 +156,7 @@ class Organization
     #
     # Returns the String title.
     def title
-      return '' if users.empty?
+      return "" if users.empty?
 
       github_client = users.sample.github_client
       github_org = GitHubOrganization.new(github_client, github_id)
@@ -185,7 +185,7 @@ class Organization
       @users_with_scope = []
 
       users.each do |user|
-        next unless user.github_client_scopes.include?('admin:org_hook')
+        next unless user.github_client_scopes.include?("admin:org_hook")
         @users_with_scope << user
       end
 
@@ -202,12 +202,12 @@ class Organization
     #
     # Returns a String for the url or raises a Result::Error
     def webhook_url
-      webhook_url_prefix = ENV['CLASSROOM_WEBHOOK_URL_PREFIX']
+      webhook_url_prefix = ENV["CLASSROOM_WEBHOOK_URL_PREFIX"]
 
       error_message = if Rails.env.production?
-                        'WebHook failed to be created, please open an issue at https://github.com/education/classroom/issues/new'
+                        "WebHook failed to be created, please open an issue at https://github.com/education/classroom/issues/new" # rubocop:disable Metrics/LineLength
                       else
-                        'CLASSROOM_WEBHOOK_URL_PREFIX is not set, please check your .env file'
+                        "CLASSROOM_WEBHOOK_URL_PREFIX is not set, please check your .env file"
                       end
 
       hooks_path = Rails.application.routes.url_helpers.github_hooks_path

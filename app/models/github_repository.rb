@@ -12,7 +12,7 @@ class GitHubRepository < GitHubResource
   def get_starter_code_from(source)
     GitHub::Errors.with_error_handling do
       options = {
-        vcs:          'git',
+        vcs:          "git",
         accept:       Octokit::Preview::PREVIEW_TYPES[:source_imports],
         vcs_username: @client.login,
         vcs_password: @client.access_token
@@ -116,11 +116,11 @@ class GitHubRepository < GitHubResource
   end
 
   def commits_url(branch)
-    html_url + '/commits/' + branch
+    html_url + "/commits/" + branch
   end
 
   def tree_url_for_sha(sha)
-    html_url + '/tree/' + sha
+    html_url + "/tree/" + sha
   end
 
   def present?(**options)

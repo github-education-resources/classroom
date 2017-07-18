@@ -10,10 +10,10 @@ module Stafftools
       group_assignment = @group_assignment_repo.group_assignment
 
       if @group_assignment_repo.destroy
-        flash[:success] = 'Group assignment repository was destroyed'
+        flash[:success] = "Group assignment repository was destroyed"
         redirect_to stafftools_group_assignment_path(group_assignment.id)
       else
-        flash[:error] = 'Could not delete group assignment repository'
+        flash[:error] = "Could not delete group assignment repository"
         render :show
       end
     end

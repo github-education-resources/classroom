@@ -7,7 +7,7 @@
 
         <div class="col-6 float-right text-right pl-2">
           <% if @assignments.present? %>
-            <%= link_to 'New assignment', new_assignment_organization_path(@organization), class: 'btn btn-primary right', role: 'button'%>
+            <%= link_to t('views.organizations.new_assignment'), new_assignment_organization_path(@organization), class: 'btn btn-primary right', role: 'button'%>
           <% end %>
         </div>
   </div>
@@ -19,9 +19,9 @@
       <%= render partial: 'shared/pagination', locals: { collection: @assignments } %>
     <% else %>
       <div class="blankslate blankslate-spacious blankslate-clean-background">
-        <h3>This organization doesn’t have any assignments yet.</h3>
+        <h3><%= t('views.organizations.no_assignments') %></h3>
         <%= link_to new_assignment_organization_path(@organization), class: 'btn btn-large btn-primary f3 mt-3', role: 'button' do %>
-          Create your first assignment
+          <%= t('views.organizations.create_first_assignment') %>
         <% end %>
       </div>
     <% end %>

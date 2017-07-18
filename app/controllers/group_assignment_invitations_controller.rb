@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GroupAssignmentInvitationsController < ApplicationController
-  layout 'layouts/invitations'
+  layout "layouts/invitations"
 
   before_action :check_group_not_previous_acceptee, only: [:show]
   before_action :check_user_not_group_member,       only: [:show]
@@ -46,7 +46,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     validate_max_members_not_exceeded!(group)
     return if group_assignment.grouping.groups.find_by(id: group_id)
 
-    raise NotAuthorized, 'You are not permitted to select this team'
+    raise NotAuthorized, "You are not permitted to select this team"
   end
 
   def validate_max_members_not_exceeded!(group)
@@ -69,7 +69,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     if users_group_assignment_repo.present?
       yield if block_given?
     else
-      flash[:error] = 'An error has occurred, please refresh the page and try again.'
+      flash[:error] = "An error has occurred, please refresh the page and try again."
       redirect_to :show
     end
   end

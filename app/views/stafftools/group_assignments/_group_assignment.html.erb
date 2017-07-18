@@ -10,6 +10,6 @@
       <strong class="search-result-title"><%= group_assignment.title %></strong>
     <% end %>
 
-    <span class="text-gray css-truncate css-truncate-target">Created <%= local_time_ago(group_assignment.created_at) %></span>
+    <span class="text-gray css-truncate css-truncate-target"><%= t('views.stafftools.group_assignments.created') %> <%= local_time_ago(group_assignment.created_at) %></span>
   </div>
 </div>

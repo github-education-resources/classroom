@@ -4,7 +4,7 @@
 # upon requiring. We wait to require it until here so that we may skip using it
 # in the development and test environments.
 unless Rails.env.test? || Rails.env.development?
-  require 'rack-timeout'
+  require "rack-timeout"
 
   # Raise an error when the request time exceeds 25 seconds.
   Rack::Timeout.timeout = 25

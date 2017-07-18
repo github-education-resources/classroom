@@ -1,0 +1,40 @@
+<div class="remodal-bg">
+  <%= render 'organizations/organization_banner' %>
+
+  <div class="columns">
+    <div class="one-fourth column">
+      <%= render partial: 'organizations/side_menu' %>
+    </div>
+    <div class="three-fourths column">
+      <div class="boxed-group">
+        <h3>Classroom roster</h3>
+        <div class="site-content-body tabnav-body clearfix">
+          <div class="tabnav">
+            <nav class="tabnav-tabs">
+              <span id='students-tab' onclick="selectTab(this)" class="tabnav-tab selected tabnav-link" aria-current="page">All students</span>
+              <span id='unlinked-tab' onclick="selectTab(this)" class="tabnav-tab tabnav-link">Unlinked GitHub accounts</span>
+            </nav>
+          </div>
+          <span id='students-span'>
+            <div class="assignment-list-items">
+              <% @roster.roster_entries.order(:identifier).each do |roster_entry| %>
+                <%= render 'roster_entry', roster_entry: roster_entry %>
+              <% end %>
+            </div>
+          </span>
+          <span id='unlinked-span' class='hidden-tab'>
+            <div class="assignment-list-items">
+              <% if @unlinked_users.empty? %>
+                <%= render 'unlinked_users_blank_slate' %>
+              <% else %>
+                <% @unlinked_users.each do |user| %>
+                  <%= render 'unlinked_user', unlinked_user: user %>
+                  <% end %>
+              <% end %>
+            </div>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

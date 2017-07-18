@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe GroupsController, type: :controller do
   let(:organization)  { classroom_org     }
   let(:user)          { classroom_teacher }
 
   let(:grouping) { create(:grouping, organization: organization)         }
-  let(:group)    { Group.create(title: 'The Group', grouping: grouping)  }
+  let(:group)    { Group.create(title: "The Group", grouping: grouping)  }
 
   before do
     sign_in_as(user)
@@ -18,17 +18,17 @@ RSpec.describe GroupsController, type: :controller do
     Group.destroy_all
   end
 
-  context 'flipper is enabled for the user' do
+  context "flipper is enabled for the user" do
     before do
       GitHubClassroom.flipper[:team_management].enable
     end
 
-    describe 'PATCH #add_membership', :vcr do
+    describe "PATCH #add_membership", :vcr do
       before do
         RepoAccess.find_or_create_by!(user: user, organization: organization)
       end
 
-      it 'correctly adds the user' do
+      it "correctly adds the user" do
         expect(group.repo_accesses.count).to eql(0)
 
         patch :add_membership, params: {
@@ -42,13 +42,13 @@ RSpec.describe GroupsController, type: :controller do
       end
     end
 
-    describe 'DELETE #remove_membership', :vcr do
+    describe "DELETE #remove_membership", :vcr do
       before do
         repo_access = RepoAccess.find_or_create_by!(user: user, organization: organization)
         group.repo_accesses << repo_access
       end
 
-      it 'correctly removes the user' do
+      it "correctly removes the user" do
         expect(group.repo_accesses.count).to eql(1)
 
         delete :remove_membership, params: {
@@ -72,9 +72,9 @@ RSpec.describe GroupsController, type: :controller do
     end
   end
 
-  context 'flipper is not enabled for the user' do
-    describe 'PATCH #remove_membership', :vcr do
-      it 'returns a 404' do
+  context "flipper is not enabled for the user" do
+    describe "PATCH #remove_membership", :vcr do
+      it "returns a 404" do
         patch :add_membership, params: {
           organization_id: organization.slug,
           grouping_id: grouping.slug,
@@ -84,8 +84,8 @@ RSpec.describe GroupsController, type: :controller do
       end
     end
 
-    describe 'DELETE #remove_membership', :vcr do
-      it 'returns a 404' do
+    describe "DELETE #remove_membership", :vcr do
+      it "returns a 404" do
         delete :remove_membership, params: {
           organization_id: organization.slug,
           grouping_id: grouping.slug,

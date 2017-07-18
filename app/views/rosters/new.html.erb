@@ -16,7 +16,6 @@
       </ul>
 
       <p>You can always come back and complete this step later.</p>
-
     </div>
     </br>
     <div>
@@ -27,10 +26,10 @@
           <%= render('shared/form_error', errors: view.error_message_for(:identifier_name)) if view.errors_for?(:identifier_name) %>
         </dl>
 
-        <dl class="<%= view.form_class_for(:identifiers) %> short-field">
+        <dl class="<%= view.form_class_for(:roster_entries) %> short-field">
           <dt><label>Paste your list of identifiers below (one per line, please!):</label></dt>
           <dd><%= text_area_tag(:identifiers, '', class: 'form-control input-block') %></dd>
-          <%= render('shared/form_error', errors: view.error_message_for(:identifiers)) if view.errors_for?(:identifiers) %>
+          <%= render('shared/form_error', errors: view.error_message_for(:roster_entries)) if view.errors_for?(:roster_entries) %>
         </dl>
 
         <div class="form-actions">

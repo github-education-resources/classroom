@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AssignmentRepo < ApplicationRecord
-  update_index('stafftools#assignment_repo') { self }
+  update_index("stafftools#assignment_repo") { self }
 
   belongs_to :assignment
   belongs_to :repo_access, optional: true
