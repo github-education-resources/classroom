@@ -63,11 +63,11 @@ class AssignmentRepo
         user: user
       )
 
-      add_user_to_repository!(assignment_repo.github_repo_id)
-
       if assignment.starter_code?
         push_starter_code!(assignment_repo.github_repo_id)
       end
+
+      add_user_to_repository!(assignment_repo.github_repo_id)
 
       begin
         assignment_repo.save!

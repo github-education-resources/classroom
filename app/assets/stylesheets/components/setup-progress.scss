@@ -1,0 +1,13 @@
+.status {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+
+  .complete-indicator {
+    display: none;
+
+    &.active {
+      display: initial;
+    }
+  }
+}

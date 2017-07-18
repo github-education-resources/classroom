@@ -21,7 +21,8 @@
     </div>
 
     <div class="form-actions">
-      <%= submit_tag 'Accept this assignment', class: 'btn btn-primary js-navigation' %>
+      <% loader = ''; loader = ' js-navigation' unless repo_setup_enabled? %>
+      <%= submit_tag 'Accept this assignment', class: 'btn btn-primary' + loader%>
     </div>
   <% end %>
 </div>

@@ -22,6 +22,12 @@ class GitHubRepository < GitHubResource
     end
   end
 
+  def import_progress(**options)
+    GitHub::Errors.with_error_handling do
+      @client.source_import_progress(full_name, options)
+    end
+  end
+
   # Public: Invite a user to a GitHub repository.
   #
   # user - The String GitHub login for the user.
@@ -34,11 +40,70 @@ class GitHubRepository < GitHubResource
     end
   end
 
+  # Public: Add issues to the GitHub repository.
+  #
+  # title    - The title of the issue.
+  # body     - The body of the issue.
+  #
+  # Returns the newly created issue, or raises a GitHub::Error.
+  def add_issue(title, body, **options)
+    GitHub::Errors.with_error_handling do
+      @client.create_issue(full_name, title, body, options)
+    end
+  end
+
+  # Public: Get a tree object from the GitHub repository.
+  #
+  # sha    - sha of the tree.
+  #
+  # Returns a git Tree object, or empty hash.
+  def tree(sha, **options)
+    GitHub::Errors.with_error_handling do
+      @client.tree(full_name, sha, options)
+    end
+  rescue GitHub::Error
+    {}
+  end
+
+  # Public: Get a blob from the GitHub repository.
+  #
+  # sha    - sha of the blob.
+  #
+  # Returns a GitHubBlob instance, or raises a GitHub::Error.
+  def blob(sha, **options)
+    GitHub::Errors.with_error_handling do
+      @blob = GitHubBlob.new(self, sha, options)
+    end
+  end
+
   def default_branch
     GitHub::Errors.with_error_handling do
       repository = @client.repository(full_name)
 
       repository[:default_branch]
+    end
+  end
+
+  def branch(name, **options)
+    GitHub::Errors.with_error_handling do
+      @client.branch(full_name, name, options)
+    end
+  rescue GitHub::Error
+    {}
+  end
+
+  def branch_tree(name, **options)
+    GitHub::Errors.with_error_handling do
+      branch_sha = branch(name).commit.sha
+      tree(branch_sha, options)
+    end
+  rescue GitHub::Error
+    {}
+  end
+
+  def remove_branch(name, **options)
+    GitHub::Errors.with_error_handling do
+      @client.delete_branch(full_name, name, options)
     end
   end
 
@@ -60,6 +125,19 @@ class GitHubRepository < GitHubResource
 
   def present?(**options)
     self.class.present?(@client, @id, options)
+  end
+
+  # Public: Checks if the GitHub repository has a given branch.
+  #
+  # branch    - name of the branch to check for
+  #
+  # Returns true if branch exists, false otherwise
+  def branch_present?(branch, **options)
+    GitHub::Errors.with_error_handling do
+      @client.branches(full_name, options).map(&:name).include? branch
+    end
+  rescue GitHub::Error
+    false
   end
 
   def public=(is_public)
