@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'safe_yaml/load'
+require "safe_yaml/load"
 
 class GitHubBlob
   # From jekyll/jekyll
@@ -31,7 +31,7 @@ class GitHubBlob
   private
 
   def decoded_content
-    return @blob.content if @blob.content == 'utf-8'
+    return @blob.content if @blob.content == "utf-8"
     Base64.decode64(@blob.content)
   end
 
