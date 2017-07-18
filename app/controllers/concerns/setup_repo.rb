@@ -9,7 +9,7 @@ module SetupRepo
     progress = { status: 'importing', message: IMPORT_IN_PROGRESS }
 
     progress.update(status: 'configuring', message: CONFIGURATION_PROGRESS) if config.configurable? repo
-    progress.update(status: 'complete') unless config.configured? repo
+    progress.update(status: 'complete') if config.configured? repo
     progress
   end
 

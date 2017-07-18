@@ -60,7 +60,7 @@ class AssignmentInvitationsController < ApplicationController
   def configurable_submission?
     repo = current_submission.github_repository
     configurable = classroom_config.configurable? repo
-    repo.import_progress[:status] == 'complete' && configurable
+    repo.import_progress[:status] == 'complete' && configurable && params[:configure]
   end
 
   def create_submission
