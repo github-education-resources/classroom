@@ -3,7 +3,7 @@
 class AssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
 
-  before_action :check_user_not_previous_acceptee,  :check_should_redirect_to_roster_page, only: [:show]
+  before_action :check_user_not_previous_acceptee, :check_should_redirect_to_roster_page, only: [:show]
   before_action :ensure_submission_repository_exists, only: [:success]
 
   def accept
@@ -54,8 +54,8 @@ class AssignmentInvitationsController < ApplicationController
   # - The roster=ignore param is not set (we set this if the user chooses to "skip" joining a roster for now)
   def check_should_redirect_to_roster_page
     return if params[:roster] == "ignore" ||
-      organization.roster.blank? ||
-      user_on_roster?
+              organization.roster.blank? ||
+              user_on_roster?
 
     @roster = organization.roster
 
@@ -64,7 +64,7 @@ class AssignmentInvitationsController < ApplicationController
 
   def user_on_roster?
     roster = organization.roster
-    return RosterEntry.find_by(roster: roster, user: current_user)
+    RosterEntry.find_by(roster: roster, user: current_user)
   end
 
   def create_submission
