@@ -3,7 +3,7 @@
 class AssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
 
-  before_action :check_user_not_previous_acceptee, only: [:show]
+  before_action :check_user_not_previous_acceptee,  :check_should_redirect_to_roster_page, only: [:show]
   before_action :ensure_submission_repository_exists, only: [:success]
 
   def accept
@@ -15,6 +15,19 @@ class AssignmentInvitationsController < ApplicationController
   def show; end
 
   def success; end
+
+  def join_roster
+    entry = RosterEntry.find(params[:roster_entry_id])
+
+    unless user_on_roster?
+      entry.user = current_user
+      entry.save
+    end
+
+    redirect_to assignment_invitation_url(current_invitation)
+  rescue ActiveRecord::ActiveRecordError
+    flash[:error] = "An error occured, please try again!"
+  end
 
   private
 
@@ -33,6 +46,25 @@ class AssignmentInvitationsController < ApplicationController
   def check_user_not_previous_acceptee
     return if current_submission.nil?
     redirect_to success_assignment_invitation_path
+  end
+
+  # We should redirect to the join_roster page if:
+  # - The org has a roster
+  # - The user is not on the roster
+  # - The roster=ignore param is not set (we set this if the user chooses to "skip" joining a roster for now)
+  def check_should_redirect_to_roster_page
+    return if params[:roster] == "ignore" ||
+      organization.roster.blank? ||
+      user_on_roster?
+
+    @roster = organization.roster
+
+    render "join_roster"
+  end
+
+  def user_on_roster?
+    roster = organization.roster
+    return RosterEntry.find_by(roster: roster, user: current_user)
   end
 
   def create_submission

@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     member do
       patch :accept
       get   :success
+      patch :join_roster
     end
   end
 
