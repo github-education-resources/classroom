@@ -88,6 +88,8 @@ GEM
       execjs
     awesome_print (1.7.0)
     bindex (0.5.0)
+    bootsnap (1.1.2)
+      msgpack (~> 1.0)
     builder (3.2.3)
     bullet (5.5.1)
       activesupport (>= 3.0.0)
@@ -222,6 +224,7 @@ GEM
     mime-types-data (3.2016.0521)
     mini_portile2 (2.2.0)
     minitest (5.10.2)
+    msgpack (1.1.0)
     multi_json (1.12.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
@@ -440,6 +443,7 @@ DEPENDENCIES
   airbrake
   autoprefixer-rails
   awesome_print
+  bootsnap (>= 1.1.0)
   bullet
   chewy (~> 0.9.0)
   connection_pool
