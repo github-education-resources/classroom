@@ -36,4 +36,13 @@ describe GitHubBlob do
     expect(github_blob.data).to have_key "title"
     expect(github_blob.data["title"]).to eq("About")
   end
+
+  it "converts base64 to utf-8", :vcr do
+    # sha for jekyll/example/README.md
+    blob_sha = "c5dd07b3c9f63dcf9864e289def55485514774de"
+    github_blob = @github_repository.blob(blob_sha)
+
+    expect(github_blob.encoding).to eq("base64")
+    expect(github_blob.content).not_to eq(github_blob.utf_content)
+  end
 end
