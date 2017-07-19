@@ -341,10 +341,8 @@ RSpec.describe RostersController, type: :controller do
 
       context "when there is 1 entry in the roster" do
         before do
-          @roster = build(:roster)
-          @entry = build(:roster_entry)
-          @roster.roster_entries << @entry
-          @roster.save
+          @roster = create(:roster)
+          @entry = roster.roster_entries.first
 
           patch :delete_entry, params: {
             roster_entry_id: @entry.id,
@@ -357,7 +355,7 @@ RSpec.describe RostersController, type: :controller do
         end
 
         it "does not remove the roster entry from the roster" do
-          expect(@roster.reload.roster_entries).to eq([@entry])
+          expect(@roster.roster_entries.length).to eq(1)
         end
 
         it "displays error message" do
