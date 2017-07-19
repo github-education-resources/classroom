@@ -48,25 +48,6 @@ class AssignmentInvitationsController < ApplicationController
     redirect_to success_assignment_invitation_path
   end
 
-  # We should redirect to the join_roster page if:
-  # - The org has a roster
-  # - The user is not on the roster
-  # - The roster=ignore param is not set (we set this if the user chooses to "skip" joining a roster for now)
-  def check_should_redirect_to_roster_page
-    return if params[:roster] == "ignore" ||
-              organization.roster.blank? ||
-              user_on_roster?
-
-    @roster = organization.roster
-
-    render "join_roster"
-  end
-
-  def user_on_roster?
-    roster = organization.roster
-    RosterEntry.find_by(roster: roster, user: current_user)
-  end
-
   def create_submission
     result = current_invitation.redeem_for(current_user)
 
