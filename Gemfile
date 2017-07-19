@@ -12,6 +12,8 @@ gem "rails", "~> 5.1", ">= 5.1.2"
 
 gem "autoprefixer-rails"
 
+gem "bootsnap", ">= 1.1.0", require: false
+
 gem "chewy", "~> 0.9.0"
 gem "connection_pool"
 
