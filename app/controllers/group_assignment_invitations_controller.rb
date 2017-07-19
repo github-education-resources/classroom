@@ -3,8 +3,9 @@
 class GroupAssignmentInvitationsController < ApplicationController
   layout "layouts/invitations"
 
-  before_action :check_group_not_previous_acceptee, only: [:show]
-  before_action :check_user_not_group_member,       only: [:show]
+  before_action :check_group_not_previous_acceptee,    only: [:show]
+  before_action :check_user_not_group_member,          only: [:show]
+  before_action :check_should_redirect_to_roster_page, only: [:show]
 
   before_action :authorize_group_access, only: [:accept_invitation]
 
@@ -32,6 +33,19 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   def successful_invitation; end
 
+  def join_roster
+    entry = RosterEntry.find(params[:roster_entry_id])
+
+    unless user_on_roster?
+      entry.user = current_user
+      entry.save
+    end
+
+    redirect_to group_assignment_invitation_url(invitation)
+  rescue ActiveRecord::ActiveRecordError
+    flash[:error] = "An error occured, please try again!"
+  end
+
   private
 
   def required_scopes
@@ -53,6 +67,25 @@ class GroupAssignmentInvitationsController < ApplicationController
     return unless group.present? && group_assignment.present? && group_assignment.max_members.present?
     return unless group.repo_accesses.count >= group_assignment.max_members
     raise NotAuthorized, "This team has reached its maximum member limit of #{group_assignment.max_members}."
+  end
+
+  # We should redirect to the join_roster page if:
+  # - The org has a roster
+  # - The user is not on the roster
+  # - The roster=ignore param is not set (we set this if the user chooses to "skip" joining a roster for now)
+  def check_should_redirect_to_roster_page
+    return if params[:roster] == "ignore" ||
+              organization.roster.blank? ||
+              user_on_roster?
+
+    @roster = organization.roster
+
+    render "join_roster"
+  end
+
+  def user_on_roster?
+    roster = organization.roster
+    RosterEntry.find_by(roster: roster, user: current_user)
   end
 
   def group
