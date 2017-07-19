@@ -67,7 +67,7 @@ class GitHubRepository < GitHubResource
 
   # Public: Get a blob from the GitHub repository.
   #
-  # sha    - sha of the blob.
+  # sha    - The string sha value of the blob.
   #
   # Returns a GitHubBlob instance, or raises a GitHub::Error.
   def blob(sha, **options)
