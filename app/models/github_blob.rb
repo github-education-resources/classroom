@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "safe_yaml/load"
-
 class GitHubBlob
   # From jekyll/jekyll
   # https://github.com/jekyll/jekyll/blob/74373baa550282a8630368e7b609ca9370f6d560/lib/jekyll/document.rb#L13
@@ -39,6 +37,6 @@ class GitHubBlob
     match = YAML_FRONT_MATTER_REGEXP.match(utf_content)
     return unless match
     @body = match.post_match
-    @data = SafeYAML.load(match.to_s)
+    @data = YAML.safe_load(match.to_s)
   end
 end
