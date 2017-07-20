@@ -41,6 +41,7 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
   config.include GitHubFactory
+  config.include RepositoryFactory
 
   config.include ActiveJob::TestHelper, type: :job
   config.include ActiveJob::TestHelper, type: :controller
