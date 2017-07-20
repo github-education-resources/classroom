@@ -37,6 +37,6 @@ class GitHubBlob
     match = YAML_FRONT_MATTER_REGEXP.match(utf_content)
     return unless match
     @body = match.post_match
-    @data = SafeYAML.load(match.to_s, safe: true)
+    @data = YAML.safe_load(match.to_s)
   end
 end
