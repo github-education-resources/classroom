@@ -34,17 +34,6 @@ class GitHubRepository < GitHubResource
     end
   end
 
-  # Public: Get a blob from the GitHub repository.
-  #
-  # sha    - The string sha value of the blob.
-  #
-  # Returns a GitHubBlob instance, or raises a GitHub::Error.
-  def blob(sha, **options)
-    GitHub::Errors.with_error_handling do
-      @blob = GitHubBlob.new(self, sha, options)
-    end
-  end
-
   def default_branch
     GitHub::Errors.with_error_handling do
       repository = @client.repository(full_name)
