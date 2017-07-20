@@ -5,6 +5,7 @@ class AssignmentsController < ApplicationController
   include StarterCode
 
   before_action :set_assignment, except: %i[new create]
+  before_action :set_unlinked_users, only: [:show]
 
   def new
     @assignment = Assignment.new
@@ -62,6 +63,18 @@ class AssignmentsController < ApplicationController
              organization: @organization,
              starter_code_repo_id: starter_code_repo_id_param,
              deadline: deadline_param)
+  end
+
+  # An unlinked user is a user who:
+  # - Is a user on an assignment or group assignment belonging to the org
+  # - Is not on the organization roster
+  def set_unlinked_users
+    group_assignment_users = @organization.repo_accesses.map(&:user)
+    assignment_users = @organization.assignments.map(&:users).flatten.uniq
+
+    roster_entry_users = @organization.roster.roster_entries.map(&:user).compact
+
+    @unlinked_users = (group_assignment_users + assignment_users).uniq - roster_entry_users
   end
 
   def set_assignment
