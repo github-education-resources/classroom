@@ -1,0 +1,47 @@
+{
+  "sha": "issues/tree.json",
+  "url": "",
+  "tree": [
+    {
+      "path": "001-hello-world.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "issues/001-hello-world.md",
+      "size": 0,
+      "url": ""
+    },
+    {
+      "path": "002-first-pr.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "issues/002-first-pr.md",
+      "size": 0,
+      "url": ""
+    },
+    {
+      "path": "003-finalize-and-polish.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "issues/003-finalize-and-polish.md",
+      "size": 0,
+      "url": ""
+    },
+    {
+      "path": "004-empty-issue.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "issues/004-empty-issue.md",
+      "size": 0,
+      "url": ""
+    },
+    {
+      "path": "005-no-label-content-issue.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "issues/005-no-label-content-issue.md",
+      "size": 0,
+      "url": ""
+    }
+  ],
+  "truncated": false
+}

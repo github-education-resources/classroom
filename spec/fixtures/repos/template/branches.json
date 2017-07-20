@@ -1,0 +1,16 @@
+[
+  {
+    "name": "master",
+    "commit": {
+      "sha": "",
+      "url": ""
+    }
+  },
+  {
+    "name": "github-classroom",
+    "commit": {
+      "sha": "github-classroom-branch.json",
+      "url": ""
+    }
+  }
+]

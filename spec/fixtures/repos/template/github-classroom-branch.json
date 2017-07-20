@@ -1,0 +1,23 @@
+{
+  "sha": "",
+  "url": "",
+  "tree": [
+    {
+      "path": "issues",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "issues/tree.json",
+      "size": 0,
+      "url": ""
+    },
+    {
+      "path": "labels",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "labels/tree.json",
+      "size": 0,
+      "url": ""
+    }
+  ],
+  "truncated": false
+}

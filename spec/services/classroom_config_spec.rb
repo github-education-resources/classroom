@@ -3,6 +3,73 @@
 require "rails_helper"
 
 describe ClassroomConfig do
-  describe "#setup_repository", :vcr do
+  let(:organization) { classroom_org }
+
+  before do
+    Octokit.reset!
+    @client = oauth_client
+  end
+
+  before(:each) do
+    github_organization = GitHubOrganization.new(@client, organization.github_id)
+    @github_repository  = github_organization.create_repository("test-repository", private: true)
+  end
+
+  after(:each) do
+    @client.delete_repository(@github_repository.id)
+  end
+
+  describe "#initialize", :vcr do
+    it "raises Error without github-classroom branch" do
+      expect { ClassroomConfig.new(@github_repository) }.to raise_error(ArgumentError)
+    end
+
+    it "succeeds with a github-classroom branch" do
+      expect { ClassroomConfig.new(example_repository("template")) }.not_to raise_error
+    end
+  end
+
+  context "valid template repo" do
+    subject { ClassroomConfig.new(example_repository("template")) }
+
+    before(:each) do
+      @client.create_contents(@github_repository.full_name,
+                              "README.md",
+                              "Add README.md",
+                              "Hello world GitHub Classroom",
+                              branch: "github-classroom")
+    end
+
+    describe "#setup_repository", :vcr do
+      it "completes repo setup" do
+        setup = subject.setup_repository(@github_repository)
+        expect(setup).to eq(true)
+        expect(@github_repository).not_to be_branch_present "github-classroom"
+      end
+    end
+
+    describe "#configurable?", :vcr do
+      it "is configurable when github-classroom exists" do
+        expect(@github_repository).to be_branch_present "github-classroom"
+        expect(subject).to be_configurable @github_repository
+      end
+
+      it "is not configurable after setup" do
+        subject.setup_repository(@github_repository)
+        expect(@github_repository).to_not be_branch_present "github-classroom"
+        expect(subject).to_not be_configurable @github_repository
+      end
+    end
+
+    describe "#configured?", :vcr do
+      it "is not configured until setup finished" do
+        expect(subject).not_to be_configured @github_repository
+      end
+
+      it "is configured when setup finished" do
+        configured_repo = example_repository("configured-repo")
+        expect(subject).to be_configured configured_repo
+      end
+    end
   end
 end
