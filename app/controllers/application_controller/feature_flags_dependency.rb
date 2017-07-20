@@ -23,4 +23,9 @@ class ApplicationController
     logged_in? && current_user.feature_enabled?(:deadlines)
   end
   helper_method :deadlines_enabled?
+
+  def repo_setup_enabled?
+    logged_in? && current_user.feature_enabled?(:repo_setup)
+  end
+  helper_method :repo_setup_enabled?
 end
