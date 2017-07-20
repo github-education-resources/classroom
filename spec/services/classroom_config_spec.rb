@@ -33,11 +33,7 @@ describe ClassroomConfig do
     subject { ClassroomConfig.new(example_repository("template")) }
 
     before(:each) do
-      @client.create_contents(@github_repository.full_name,
-                              "README.md",
-                              "Add README.md",
-                              "Hello world GitHub Classroom",
-                              branch: "github-classroom")
+      create_github_branch(@client, @github_repository, "github-classroom")
     end
 
     describe "#setup_repository", :vcr do
