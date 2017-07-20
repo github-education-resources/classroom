@@ -57,6 +57,7 @@ gem "rails-i18n", "~> 5.0", ">= 5.0.1"
 gem "redis-namespace"
 gem "ruby-progressbar", "~> 1.8", ">= 1.8.1", require: false
 
+gem "safe_yaml"
 gem "sass-rails", "~> 5.0", ">= 5.0.6"
 gem "sidekiq",    "~> 5.0"
 gem "sprockets"
