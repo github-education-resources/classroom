@@ -406,4 +406,84 @@ RSpec.describe RostersController, type: :controller do
       end
     end
   end
+
+  describe "PATCH #delete_entry", :vcr do
+    before do
+      sign_in_as(user)
+    end
+
+    context "with flipper enabled" do
+      before do
+        GitHubClassroom.flipper[:student_identifier].enable
+      end
+
+      context "when there is 1 entry in the roster" do
+        before do
+          @roster = create(:roster)
+          @entry = roster.roster_entries.first
+
+          patch :delete_entry, params: {
+            roster_entry_id: @entry.id,
+            id:              organization.slug
+          }
+        end
+
+        it "redirects to roster page" do
+          expect(response).to redirect_to(roster_url(organization))
+        end
+
+        it "does not remove the roster entry from the roster" do
+          expect(@roster.roster_entries.length).to eq(1)
+        end
+
+        it "displays error message" do
+          expect(flash[:error]).to_not be_nil
+        end
+      end
+
+      context "when there are more than 1 entry in the roster" do
+        before(:each) do
+          @roster = build(:roster)
+          @first_entry = build(:roster_entry)
+          @second_entry = build(:roster_entry)
+          @roster.roster_entries = [@first_entry, @second_entry]
+          @roster.save
+
+          patch :delete_entry, params: {
+            roster_entry_id: @first_entry.id,
+            id:              organization.slug
+          }
+        end
+
+        it "redirects to roster page" do
+          expect(response).to redirect_to(roster_url(organization))
+        end
+
+        it "removes the roster entry from the roster" do
+          expect(@roster.reload.roster_entries).to eq([@second_entry])
+        end
+
+        it "displays success message" do
+          expect(flash[:success]).to_not be_nil
+        end
+      end
+
+      after do
+        GitHubClassroom.flipper[:student_identifier].disable
+      end
+    end
+
+    context "with flipper disabled" do
+      before do
+        patch :delete_entry, params: {
+          roster_entry_id: entry.id,
+          id:              organization.slug
+        }
+      end
+
+      it "404s" do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
 end
