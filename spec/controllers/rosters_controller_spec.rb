@@ -406,7 +406,7 @@ RSpec.describe RostersController, type: :controller do
       end
     end
   end
-  
+
   describe "PATCH #delete_entry", :vcr do
     before do
       sign_in_as(user)
