@@ -329,6 +329,84 @@ RSpec.describe RostersController, type: :controller do
     end
   end
 
+  describe "PATCH #add_student", :vcr do
+    before do
+      sign_in_as(user)
+      organization.roster = roster
+      organization.save
+    end
+
+    context "with flipper enabled" do
+      before do
+        GitHubClassroom.flipper[:student_identifier].enable
+      end
+
+      context "when identifier is valid" do
+        before do
+          patch :add_student, params: {
+            id:         organization.slug,
+            identifier: "new_entry"
+          }
+        end
+
+        it "redirects to rosters page" do
+          expect(response).to redirect_to(roster_url(organization))
+        end
+
+        it "sets success message" do
+          expect(flash[:success]).to be_present
+        end
+
+        it "creates the student on the roster" do
+          expect(roster.reload.roster_entries).to include(RosterEntry.find_by(identifier: "new_entry"))
+        end
+      end
+
+      context "when identifier is invalid" do
+        before do
+          patch :add_student, params: {
+            id:         organization.slug,
+            identifier: ""
+          }
+        end
+
+        it "redirects to rosters page" do
+          expect(response).to redirect_to(roster_url(organization))
+        end
+
+        it "sets error message" do
+          expect(flash[:error]).to be_present
+        end
+
+        it "does not create the student on the roster" do
+          expect do
+            patch :add_student, params: {
+              id:         organization.slug,
+              identifier: ""
+            }
+          end.to change(roster.reload.roster_entries, :count).by(0)
+        end
+      end
+
+      after do
+        GitHubClassroom.flipper[:student_identifier].disable
+      end
+    end
+
+    context "with flipper disabled" do
+      before do
+        patch :add_student, params: {
+          id:         organization.slug,
+          identifier: "Hello"
+        }
+      end
+
+      it "404s" do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+  
   describe "PATCH #delete_entry", :vcr do
     before do
       sign_in_as(user)
