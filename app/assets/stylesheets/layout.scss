@@ -923,6 +923,11 @@ hr {
   overflow: scroll;
 }
 
+div.site-content-body.tabnav-body.join-box {
+  padding-right: 0;
+  padding-bottom: 1rem;
+}
+
 .remove-roster-entry-button {
   margin-left: 10px;
   fill: #d73a49;

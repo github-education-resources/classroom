@@ -1,0 +1,40 @@
+<% view = Shared::SharedJoinRosterView.new(roster: roster, invitation: invitation) %>
+
+<%= render 'organizations/organization_invitation_banner' %>
+
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">
+      <span class="assignment-icon assignment-icon-individual">
+        <%= octicon view.octicon_name, height: 22 %>
+      </span>
+      Join the classroom roster
+    </h2>
+  </div>
+</div>
+
+<div class="site-content-body">
+  <div class="markdown-body">
+      Your teacher has configured this classroom to pair GitHub accounts with identifiers. Please select yourself from the list below. You can also skip this step for now.
+  </div>
+</br>
+  <div class="boxed-group">
+    <h3><%= roster.identifier_name %></h3>
+      <div class="site-content-body tabnav-body clearfix join-box">
+        <div class="remodal-user-list">
+        <% roster.unlinked_entries.each do |entry| %>
+          <div class="remodal-user">
+            <%= form_tag({ controller: view.controller_name, action: :join_roster }, method: :patch) do %>
+              <%= hidden_field_tag 'roster_entry_id', entry.id %>
+              <%= submit_tag entry.identifier, class: 'remodal-user' %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</br>
+  <div class="form-options">
+    <%= link_to "Skip", view.skip_path, class: "btn" %>
+  </div>
+</div>
