@@ -25,12 +25,12 @@ describe ClassroomConfig do
     end
 
     it "succeeds with a github-classroom branch" do
-      expect { ClassroomConfig.new(example_repository("template")) }.not_to raise_error
+      expect { ClassroomConfig.new(stub_repository("template")) }.not_to raise_error
     end
   end
 
   context "valid template repo" do
-    subject { ClassroomConfig.new(example_repository("template")) }
+    subject { ClassroomConfig.new(stub_repository("template")) }
 
     before(:each) do
       create_github_branch(@client, @github_repository, "github-classroom")
@@ -63,7 +63,7 @@ describe ClassroomConfig do
       end
 
       it "is configured when setup finished" do
-        configured_repo = example_repository("configured-repo")
+        configured_repo = stub_repository("configured-repo")
         expect(subject).to be_configured configured_repo
       end
     end
