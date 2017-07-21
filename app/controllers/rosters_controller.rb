@@ -2,7 +2,8 @@
 
 class RostersController < ApplicationController
   before_action :ensure_student_identifier_flipper_is_enabled, :set_organization
-  before_action :set_roster, :redirect_if_no_roster, :set_unlinked_users, only: [:show]
+  before_action :set_roster, :redirect_if_no_roster, only: %i[show add_student]
+  before_action :set_unlinked_users, only: [:show]
 
   def show; end
 
@@ -50,6 +51,18 @@ class RostersController < ApplicationController
     redirect_to roster_path(@organization)
   rescue ActiveRecord::ActiveRecordError
     flash[:error] = "An error has occured, please try again."
+    redirect_to roster_path(@organization)
+  end
+
+  def add_student
+    entry = RosterEntry.new(identifier: params[:identifier], roster: @roster)
+
+    if entry.save
+      flash[:success] = "Student created!"
+    else
+      flash[:error] = "An error has occured, please try again."
+    end
+
     redirect_to roster_path(@organization)
   end
 
