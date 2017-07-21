@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 require_relative "vcr"
-require "safe_yaml/load"
 
-class ExampleRepository
+class StubRepository
   attr_reader :full_name, :branches
 
   def repo_file(repo_name, path)
@@ -41,7 +40,7 @@ class ExampleRepository
       match = GitHubBlob::YAML_FRONT_MATTER_REGEXP.match(utf_content)
       return unless match
       @body = match.post_match
-      @data = SafeYAML.load(match.to_s)
+      @data = YAML.safe_load(match.to_s)
     end
   end
 
@@ -78,8 +77,8 @@ class ExampleRepository
 end
 
 module RepositoryFactory
-  def example_repository(full_name)
-    ExampleRepository.new(full_name)
+  def stub_repository(full_name)
+    StubRepository.new(full_name)
   end
 
   def create_github_branch(client, repo, branch)
