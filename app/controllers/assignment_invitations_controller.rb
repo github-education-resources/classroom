@@ -10,19 +10,20 @@ class AssignmentInvitationsController < ApplicationController
 
   def accept
     create_submission do
-      redirect_to setup_assignment_invitation_path
+      if current_submission.assignment.starter_code_repo_id
+        redirect_to setup_assignment_invitation_path
+      else
+        redirect_to success_assignment_invitation_path
+      end
     end
   end
 
-  def setup
-    starter_code_repo_id = current_submission.assignment.starter_code_repo_id
-    redirect_to success_assignment_invitation_path unless starter_code_repo_id
-  end
+  def setup; end
 
   def setup_progress
     perform_setup(current_submission, classroom_config) if configurable_submission?
 
-    render json: setup_status(current_submission.github_repository, classroom_config)
+    render json: setup_status(current_submission)
   end
 
   def show; end
@@ -61,9 +62,10 @@ class AssignmentInvitationsController < ApplicationController
   end
 
   def configurable_submission?
-    repo = current_submission.github_repository
-    configurable = classroom_config.configurable? repo
-    repo.import_progress[:status] == "complete" && configurable && params[:configure]
+    repo             = current_submission.github_repository
+    import           = repo.import_progress[:status]
+    classroom_branch = repo.branch_present?("github-classroom")
+    import == "complete" && classroom_branch && current_submission.not_configured?
   end
 
   def create_submission

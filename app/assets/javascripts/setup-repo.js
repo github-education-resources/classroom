@@ -1,5 +1,5 @@
 (function() {
-  var ready, check_progress, show_success, invitation_path, progress_path, sucess_path, display_progress, indicate_completion, indicate_in_progress, configuring;
+  var ready, check_progress, show_success, invitation_path, progress_path, sucess_path, display_progress, indicate_completion, indicate_in_progress;
 
   indicate_completion = function(step_indicator){
     $(step_indicator).addClass("border-green bg-green-light");
@@ -85,12 +85,8 @@
     var progress_indicator = $(".setup-progress");
     var path = progress_path();
 
-    $.ajax({type: "PATCH", url: path, data: {configure: configuring}}).done(function(data){
+    $.ajax({type: "PATCH", url: path}).done(function(data){
        display_progress(data);
-       if (data.status == "configuring" && !configuring) {
-         configuring = true;
-       }
-
        setTimeout(check_progress, 3000);
      });
   };
@@ -98,7 +94,6 @@
   ready  = (function() {
     var setup_progress = $(".setup-progress");
     if(setup_progress.length !== 0){
-      configuring = false;
       var import_indicator = $("#import-progress");
       indicate_in_progress(import_indicator);
       check_progress();

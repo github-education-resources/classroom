@@ -26,10 +26,6 @@ class ClassroomConfig
     repo.branch_present?("github-classroom")
   end
 
-  def configured?(repo)
-    !configurable?(repo) && repo.import_progress[:status] == "complete"
-  end
-
   private
 
   # Internal: Generates issues for the assignment_repository based on the configs

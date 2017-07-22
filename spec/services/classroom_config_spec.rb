@@ -56,16 +56,5 @@ describe ClassroomConfig do
         expect(subject).to_not be_configurable @github_repository
       end
     end
-
-    describe "#configured?", :vcr do
-      it "is not configured until setup finished" do
-        expect(subject).not_to be_configured @github_repository
-      end
-
-      it "is configured when setup finished" do
-        configured_repo = stub_repository("configured-repo")
-        expect(subject).to be_configured configured_repo
-      end
-    end
   end
 end
