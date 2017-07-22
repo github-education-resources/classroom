@@ -59,7 +59,9 @@ class AssignmentInvitationsController < ApplicationController
 
   def check_user_not_previous_acceptee
     return if current_submission.nil?
-    return redirect_to setup_assignment_invitation_path unless setup_status(current_submission)[:status] == :complete
+    if repo_setup_enabled?
+      return redirect_to setup_assignment_invitation_path unless setup_status(current_submission)[:status] == :complete
+    end
     redirect_to success_assignment_invitation_path
   end
 
