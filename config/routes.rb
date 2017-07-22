@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     member do
       patch :accept
       get   :success
+      patch :join_roster
     end
   end
 
@@ -38,6 +39,7 @@ Rails.application.routes.draw do
       patch :accept_assignment
       patch :accept_invitation
       get   :successful_invitation, path: :success
+      patch :join_roster
     end
   end
 
@@ -54,6 +56,8 @@ Rails.application.routes.draw do
         resource :roster, only: %i[show new create] do
           patch :link
           patch :unlink
+          patch :delete_entry
+          patch :add_student
         end
       end
 
