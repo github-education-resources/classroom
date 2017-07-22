@@ -26,6 +26,55 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         expect(response).to redirect_to(login_path)
       end
     end
+
+    context "authenticated request" do
+      before(:each) do
+        sign_in_as(student)
+      end
+
+      context "no roster" do
+        it "will bring you to the page" do
+          get :show, params: { id: invitation.key }
+          expect(response).to have_http_status(:success)
+          expect(response).to render_template("group_assignment_invitations/show")
+        end
+      end
+
+      context "with a roster" do
+        before do
+          organization.roster = create(:roster)
+          organization.save
+        end
+
+        context "with no ignore param" do
+          context "when user is on the roster" do
+            before do
+              RosterEntry.create(roster: organization.roster, user: student, identifier: "a@b.c")
+            end
+
+            it "will bring you to the show page" do
+              get :show, params: { id: invitation.key }
+              expect(response).to render_template("group_assignment_invitations/show")
+            end
+          end
+
+          context "when user is not on the roster" do
+            it "will bring you to the join_roster page" do
+              get :show, params: { id: invitation.key }
+              expect(response).to render_template("group_assignment_invitations/join_roster")
+            end
+          end
+        end
+
+        context "with ignore param" do
+          it "will bring you to the show page" do
+            get :show, params: { id: invitation.key, roster: "ignore" }
+            expect(response).to have_http_status(:success)
+            expect(response).to render_template("group_assignment_invitations/show")
+          end
+        end
+      end
+    end
   end
 
   describe "GET #accept", :vcr do
@@ -176,6 +225,55 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
       it "creates a new group assignment repo for the group" do
         expect(GroupAssignmentRepo.last.id).not_to eq(@group_assignment_repo.id)
+      end
+    end
+  end
+
+  describe "PATCH #join_roster", :vcr do
+    before do
+      organization.roster = create(:roster)
+      organization.save
+    end
+
+    context "unauthenticated request" do
+      it "redirects the new user to sign in with GitHub" do
+        patch :join_roster, params: { id: invitation.key }
+        expect(response).to redirect_to(login_path)
+      end
+    end
+
+    context "authenticated request" do
+      before(:each) do
+        sign_in_as(student)
+      end
+
+      context "with invalid roster entry id" do
+        before do
+          patch :join_roster, params: { id: invitation.key, roster_entry_id: "not_an_id" }
+        end
+
+        it "renders join_roster view" do
+          expect(response).to render_template("group_assignment_invitations/join_roster")
+        end
+
+        it "shows flash message" do
+          expect(flash[:error]).to be_present
+        end
+      end
+
+      context "with a valid roster entry id" do
+        before do
+          entry = organization.roster.roster_entries.first
+          patch :join_roster, params: { id: invitation.key, roster_entry_id: entry.id }
+        end
+
+        it "adds the user to the roster entry" do
+          expect(RosterEntry.find_by(user: student, roster: organization.roster)).to be_present
+        end
+
+        it "renders show" do
+          expect(response).to redirect_to(group_assignment_invitation_url(invitation))
+        end
       end
     end
   end

@@ -7,7 +7,13 @@
     </div>
     <div class="three-fourths column">
       <div class="boxed-group">
-        <h3>Classroom roster</h3>
+        <h3 class='d-flex flex-justify-between flex-items-center'>
+          <span>
+            Classroom roster
+          </span>
+          <span class="btn btn-primary btn-sm", role="button" data-remodal-target="new-student-modal">New student</span>
+        </h3>
+
         <div class="site-content-body tabnav-body clearfix">
           <div class="tabnav">
             <nav class="tabnav-tabs">
@@ -38,3 +44,5 @@
     </div>
   </div>
 </div>
+
+<%= render partial: '/rosters/new_student_modal', locals: { roster: @roster } %>

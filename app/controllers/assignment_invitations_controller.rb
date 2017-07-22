@@ -4,9 +4,9 @@ class AssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
   include SetupRepo
 
-  before_action :check_user_not_previous_acceptee, only: [:show]
+  before_action :check_user_not_previous_acceptee, :check_should_redirect_to_roster_page, only: [:show]
   before_action :ensure_submission_repository_exists, only: %i[setup setup_progress success]
-  before_action :check_authorized_repo_setup, only: %i[setup setup_progress]
+  before_action :ensure_authorized_repo_setup, only: %i[setup setup_progress]
 
   def accept
     create_submission do
@@ -30,6 +30,19 @@ class AssignmentInvitationsController < ApplicationController
 
   def success; end
 
+  def join_roster
+    entry = RosterEntry.find(params[:roster_entry_id])
+
+    unless user_on_roster?
+      entry.user = current_user
+      entry.save
+    end
+
+    redirect_to assignment_invitation_url(current_invitation)
+  rescue ActiveRecord::ActiveRecordError
+    flash[:error] = "An error occured, please try again!"
+  end
+
   private
 
   def ensure_submission_repository_exists
@@ -49,7 +62,7 @@ class AssignmentInvitationsController < ApplicationController
     redirect_to success_assignment_invitation_path
   end
 
-  def check_authorized_repo_setup
+  def ensure_authorized_repo_setup
     redirect_to success_assignment_invitation_path unless repo_setup_enabled?
   end
 
