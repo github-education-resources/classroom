@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170629203747) do
+ActiveRecord::Schema.define(version: 20170721190601) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 20170629203747) do
     t.integer "user_id"
     t.string "submission_sha"
     t.string "global_relay_id"
+    t.integer "configuration_state", default: 0
     t.index ["assignment_id"], name: "index_assignment_repos_on_assignment_id"
     t.index ["github_repo_id"], name: "index_assignment_repos_on_github_repo_id", unique: true
     t.index ["global_relay_id"], name: "index_assignment_repos_on_global_relay_id"
