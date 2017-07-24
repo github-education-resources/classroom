@@ -69,6 +69,8 @@ class AssignmentsController < ApplicationController
   # - Is a user on an assignment or group assignment belonging to the org
   # - Is not on the organization roster
   def set_unlinked_users
+    return unless @organization.roster
+    
     group_assignment_users = @organization.repo_accesses.map(&:user)
     assignment_users = @organization.assignments.map(&:users).flatten.uniq
 
