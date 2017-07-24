@@ -10,7 +10,6 @@ RSpec.describe RosterEntriesController, type: :controller do
   let(:student) { classroom_student }
   let(:teacher) { classroom_teacher }
 
-
   describe "GET #show", :vcr do
     context "when not logged in" do
       before do
