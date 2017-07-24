@@ -1,0 +1,32 @@
+#!/bin/bash
+
+export USER && export UID
+
+usage() {
+  echo "Usage: ./dev {build|shell|stop|rm}"
+}
+
+build() {
+  docker-compose build app
+}
+
+shell() {
+  docker-compose up -d
+  docker-compose exec app bash
+}
+
+stop() {
+  docker-compose stop
+}
+
+rm() {
+  docker-compose down
+}
+
+case $1 in
+  build) build;;
+  shell) shell;;
+  stop) stop;;
+  rm) rm;;
+  *) usage;;
+esac
