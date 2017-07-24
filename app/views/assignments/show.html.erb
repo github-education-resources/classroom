@@ -60,7 +60,7 @@
           </span>
           <span id='unlinked-span' class='hidden-tab'>
             <% if @unlinked_users.empty? %>
-              <%= render 'unlinked_users_blank_slate' %>
+              <%= render 'shared/unlinked_blank_slate' %>
             <% else %>
               <% @unlinked_users.each do |user| %>
                 <%= render 'assignment_repos/unlinked_user', unlinked_user: user, assignment_repo: @assignment_repos.select{ |repo| repo.user == user }.first %>

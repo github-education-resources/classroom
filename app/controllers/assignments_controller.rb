@@ -65,18 +65,16 @@ class AssignmentsController < ApplicationController
              deadline: deadline_param)
   end
 
-  # An unlinked user is a user who:
-  # - Is a user on an assignment or group assignment belonging to the org
+  # An unlinked user in the context of an assignment is a user who:
+  # - Is a user on the assignment
   # - Is not on the organization roster
   def set_unlinked_users
     return unless @organization.roster
 
-    group_assignment_users = @organization.repo_accesses.map(&:user)
-    assignment_users = @organization.assignments.map(&:users).flatten.uniq
-
+    assignment_users = @assignment.users
     roster_entry_users = @organization.roster.roster_entries.map(&:user).compact
 
-    @unlinked_users = (group_assignment_users + assignment_users).uniq - roster_entry_users
+    @unlinked_users = assignment_users - roster_entry_users
   end
 
   def set_assignment
