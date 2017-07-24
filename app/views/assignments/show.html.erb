@@ -52,7 +52,9 @@
             <div class="assignment-repo-list">
               <% # TODO: FIX ORDERING HERE %>
               <% @organization.roster.roster_entries.each do |entry| %>
-                <%= render entry, assignment_repo: @assignment_repos.select{ |repo| repo.user == entry.user }.first %>
+                <%= render partial: 'assignment_repos/assignment_repo', locals: {
+                  url: organization_assignment_roster_entry_path(@organization, @assignment, entry)
+                } %>
               <% end %>
             </div>
           </span>
