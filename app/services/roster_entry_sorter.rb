@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Sorts roster entries by:
 # - Linked + accepted
 # - Linked + not accepted
@@ -14,18 +16,12 @@ class RosterEntrySorter
   def sort
     users_with_repo = @assignment.repos.map(&:user_id)
 
-    @entries.sort_by { |entry|
+    @entries.sort_by do |entry|
       if entry.user.present?
-        if users_with_repo.include? entry.user.id
-          0
-        else
-          1
-        end
+        users_with_repo.include?(entry.user.id) ? 0 : 1
       else
         2
       end
-    }
+    end
   end
-
-
 end
