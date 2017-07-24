@@ -3,7 +3,7 @@
 class AssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
 
-  before_action :check_user_not_previous_acceptee, only: [:show]
+  before_action :check_user_not_previous_acceptee, :check_should_redirect_to_roster_page, only: [:show]
   before_action :ensure_submission_repository_exists, only: [:success]
 
   def accept
@@ -15,6 +15,19 @@ class AssignmentInvitationsController < ApplicationController
   def show; end
 
   def success; end
+
+  def join_roster
+    entry = RosterEntry.find(params[:roster_entry_id])
+
+    unless user_on_roster?
+      entry.user = current_user
+      entry.save
+    end
+
+    redirect_to assignment_invitation_url(current_invitation)
+  rescue ActiveRecord::ActiveRecordError
+    flash[:error] = "An error occured, please try again!"
+  end
 
   private
 
