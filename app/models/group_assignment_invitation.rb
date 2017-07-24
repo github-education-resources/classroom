@@ -5,7 +5,7 @@ class GroupAssignmentInvitation < ApplicationRecord
 
   default_scope { where(deleted_at: nil) }
 
-  update_index('stafftools#group_assignment_invitation') { self }
+  update_index("stafftools#group_assignment_invitation") { self }
 
   belongs_to :group_assignment
 
@@ -19,7 +19,7 @@ class GroupAssignmentInvitation < ApplicationRecord
   validates :key, presence:   true
   validates :key, uniqueness: true
 
-  validates :short_key, uniqueness: true
+  validates :short_key, uniqueness: true, allow_nil: true
 
   after_initialize :assign_key
 

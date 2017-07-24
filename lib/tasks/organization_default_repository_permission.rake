@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require 'ruby-progressbar'
+require "ruby-progressbar"
 
 namespace :organization_default_repository_permission do
   desc "Migrate all Organizations to have default repository permission 'none'"
   task migrate: :environment do
     progress_bar = ProgressBar.create(
-      title: 'Iterating over Organizations',
+      title: "Iterating over Organizations",
       starting_at: 0,
       total: Organization.count,
-      format: '%t: %a %e %c/%C (%j%%) %R |%B|',
+      format: "%t: %a %e %c/%C (%j%%) %R |%B|",
       throttle_rate: 0.5,
       output: Rails.env.test? ? StringIO.new : STDERR
     )

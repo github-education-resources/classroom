@@ -36,7 +36,7 @@ module InvitationHelper
       invitation.class.to_s.underscore
     end
 
-    # rubocop:disable Style/MethodLength
+    # rubocop:disable Metrics/MethodLength
     def invitation_url(invitation:, base_url:)
       type = invitation_type(invitation)
       url  = nil
@@ -55,6 +55,6 @@ module InvitationHelper
 
       Rails.application.routes.url_helpers.send(url.to_sym, options)
     end
-    # rubocop:enable Style/MethodLength
+    # rubocop:enable Metrics/MethodLength
   end
 end

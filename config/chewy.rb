@@ -8,8 +8,8 @@ Chewy.strategy(:active_job)
 # of the request.
 Chewy.request_strategy = :active_job
 
-ActiveSupport::Notifications.subscribe('import_objects.chewy') do |_name, start, finish, _id, payload|
-  metric_name = 'Database/ElasticSearch/import'
+ActiveSupport::Notifications.subscribe("import_objects.chewy") do |_name, start, finish, _id, payload|
+  metric_name = "Database/ElasticSearch/import"
   duration = (finish - start).to_f
   logged = "#{payload[:type]} #{payload[:import].to_a.map { |i| i.join(':') }.join(', ')}"
 
@@ -20,8 +20,8 @@ ActiveSupport::Notifications.subscribe('import_objects.chewy') do |_name, start,
   end
 end
 
-ActiveSupport::Notifications.subscribe('search_query.chewy') do |_name, start, finish, _id, payload|
-  metric_name = 'Database/ElasticSearch/search'
+ActiveSupport::Notifications.subscribe("search_query.chewy") do |_name, start, finish, _id, payload|
+  metric_name = "Database/ElasticSearch/search"
   duration = (finish - start).to_f
   logged = "#{payload[:type].presence || payload[:index]} #{payload[:request]}"
 

@@ -1,0 +1,19 @@
+<div class="remodal text-left" data-remodal-id="link-to-student-<%= user.id %>">
+  <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
+  <h2 class="remodal-header text-left">Select a student to link with</h2>
+
+  <p>
+    <strong>Select a student from your roster to link this GitHub account to</strong>
+  </p>
+  <div class="remodal-user-list">
+    <% unlinked_entries.each do |entry| %>
+      <div class="remodal-user">
+        <%= form_tag({ controller: :rosters, action: :link }, method: :patch) do %>
+          <%= hidden_field_tag 'user_id', user.id %>
+          <%= hidden_field_tag 'roster_entry_id', entry.id %>
+          <%= submit_tag entry.identifier, class: 'remodal-user' %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

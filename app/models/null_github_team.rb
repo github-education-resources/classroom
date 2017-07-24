@@ -2,7 +2,7 @@
 
 class NullGitHubTeam < NullGitHubResource
   def name
-    'Deleted team'
+    "Deleted team"
   end
 
   def organization
@@ -10,6 +10,6 @@ class NullGitHubTeam < NullGitHubResource
   end
 
   def slug
-    'ghost'
+    "ghost"
   end
 end

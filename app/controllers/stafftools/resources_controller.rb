@@ -8,7 +8,7 @@ module Stafftools
 
     def search
       respond_to do |format|
-        format.html { render partial: 'stafftools/resources/search_results', locals: { resources: @resources } }
+        format.html { render partial: "stafftools/resources/search_results", locals: { resources: @resources } }
       end
     end
 
@@ -25,7 +25,7 @@ module Stafftools
 
     def match_phrase_prefix(query)
       searchable_fields = %w[github_id github_repo_id github_team_id id key login name slug title uid]
-      { bool: { should: searchable_fields.map { |field| { 'match_phrase_prefix' => { field => query } } } } }
+      { bool: { should: searchable_fields.map { |field| { "match_phrase_prefix" => { field => query } } } } }
     end
   end
 end

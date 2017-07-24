@@ -1,0 +1,12 @@
+<div class="remodal text-left" data-remodal-id="new-student-modal">
+  <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
+  <h2 class="remodal-header text-left">Add a student to your Roster</h2>
+
+  <%= form_tag({ controller: :rosters, action: :add_student }, method: :patch) do %>
+    <dl class="form">
+      <dt><label><%= roster.identifier_name %></label></dt>
+      <%= text_field_tag 'identifier', nil, class: "form-control input-block" %>
+    </dl>
+    <%= submit_tag 'Create student', class: "btn btn-primary" %>
+  <% end %>
+</div>
