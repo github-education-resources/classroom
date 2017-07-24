@@ -40,6 +40,6 @@ class RosterEntriesController < ApplicationController
   end
 
   def set_assignment_repo
-    @assignment_repo = @assignment.repos.select{ |repo| repo.user == @roster_entry.user }.first
+    @assignment_repo = @assignment.repos.select { |repo| repo.user == @roster_entry.user }.first
   end
 end
