@@ -128,6 +128,8 @@ RSpec.describe Assignment::Editor do
       end
 
       it "enqueues repository visibility job if public_repo is updated" do
+        ActiveJob::Base.queue_adapter = :test
+
         expect do
           subject.perform(assignment: assignment, options: { public_repo: true })
         end.to have_enqueued_job(Assignment::RepositoryVisibilityJob)
