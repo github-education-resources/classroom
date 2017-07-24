@@ -71,7 +71,8 @@ RSpec.describe RosterEntriesController, type: :controller do
 
       context "when user is in classroom but has not accepted assignment" do
         before do
-          roster_entry.update_attribute(:user, student)
+          roster_entry.user = student
+          roster_entry.save
 
           get :show, params: {
             organization_id: organization.slug,
@@ -91,7 +92,9 @@ RSpec.describe RosterEntriesController, type: :controller do
 
       context "when user is in classroom and has accepted assignment" do
         before do
-          roster_entry.update_attribute(:user, student)
+          roster_entry.user = student
+          roster_entry.save
+
           create(:assignment_repo, user: student, assignment: assignment)
 
           get :show, params: {
