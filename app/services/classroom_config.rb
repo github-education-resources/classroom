@@ -1,29 +1,30 @@
 # frozen_string_literal: true
 
 class ClassroomConfig
-  CONFIGURABLES = %w[issues].freeze
+  CONFIGURABLES   = %w[issues].freeze
+  CONFIGBRANCH    = "github-classroom"
 
   attr_reader :github_repository
 
   def initialize(github_repository)
-    raise ArgumentError, "Invalid configuration repo" unless github_repository.branch_present? "github-classroom"
+    raise ArgumentError, "Invalid configuration repo" unless github_repository.branch_present? CONFIGBRANCH
     @github_repository = github_repository
   end
 
   def setup_repository(repo)
-    configs_tree = @github_repository.branch_tree("github-classroom")
+    configs_tree = @github_repository.branch_tree(CONFIGBRANCH)
     configs_tree.tree.each do |config|
       send("generate_#{config.path}", repo, config.sha) if CONFIGURABLES.include? config.path
     end
 
-    repo.remove_branch("github-classroom")
+    repo.remove_branch(CONFIGBRANCH)
     true
   rescue GitHub::Error
     false
   end
 
   def configurable?(repo)
-    repo.branch_present?("github-classroom")
+    repo.branch_present?(CONFIGBRANCH)
   end
 
   def configured?(repo)
