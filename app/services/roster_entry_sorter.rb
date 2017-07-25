@@ -14,14 +14,11 @@ class RosterEntrySorter
   end
 
   def sort
-    users_with_repo = @assignment.repos.map(&:user_id)
+    users_with_repo = @assignment.repos.pluck(:user_id)
 
     @entries.sort_by do |entry|
-      if entry.user.present?
-        users_with_repo.include?(entry.user.id) ? 0 : 1
-      else
-        2
-      end
+      next 2 unless entry.user.present?
+      users_with_repo.include?(entry.user.id) ? 0 : 1
     end
   end
 end
