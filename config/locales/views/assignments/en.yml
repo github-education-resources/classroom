@@ -1,0 +1,29 @@
+en:
+  views:
+    assignments:
+      assignment_type: 'Individual assignment'
+      public: 'Public'
+      public_submission_info: 'Submit assignments using public repositories. All submissions will be visible to the world.'
+      private: 'Private'
+      private_submission_info: 'Submit assignments using private repositories. Submissions will only be visible to the submitter and organization owners.'
+      repo_permission_info: 'Give students Admin permissions on their repository'
+      starter_code_info: '<label>Add your starter code from GitHub <small>(optional)</small></label>'
+      deadline: '<label>Deadline <small>(optional)</small></label>'
+      deadline_info: 'After the deadline, GitHub Classroom will save the latest commit from each repo as a submission. Submission commits are viewable on the assignment page.'
+      remove_assignment_header: 'Are you sure you want to delete this?'
+      remove_assignment_warning: "Unexpected things will happen if you don't read this!"
+      remove_assignment_info: 'This action <strong>CANNOT</strong> be undone.
+        This will permanently delete the <strong>%{assignment_title}</strong> assignment from GitHub Classroom.
+        In addition this will also delete <strong>%{repo_count}</strong>
+        under the <strong>%{organization_login}</strong> organization.'
+      confirm_assignment_name: 'Please type the name of the assignment to confirm'
+      remove_assignment_btn_text: Delete this assignment'
+      assignment_settings: 'Assignment settings'
+      remove_assignment_details: 'Once you delete this assignment, there is no going back. Please be certain.'
+      save_assignment_btn_text: 'Save changes'
+      cancel: 'Cancel'
+      new_assignment: 'New individual assignment'
+      create_assignment_btn_text: 'Create Assignment'
+      deadline_passed: '- Deadline Passed'
+      have_no_repository: '%{assignment_title} does not have any repositories.'
+      share_invitation_link: 'Share the invitation link with your students to get started.'

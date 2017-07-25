@@ -1,26 +1,23 @@
 <div class="remodal text-left" data-remodal-id="delete-assignment">
   <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
-  <h2 class="remodal-header text-left">Are you sure you want to delete this?</h2>
+  <h2 class="remodal-header text-left"><%= t('views.assignments.remove_assignment_header') %></h2>
 
   <div class="remodal-warning">
-    Unexpected things will happen if you don't read this!
+    <%= t('views.assignments.remove_assignment_warning') %>
   </div>
 
   <div class="remodal-description">
     <p>
-      This action <strong>CANNOT</strong> be undone.
-      This will permanently delete the <strong><%= @assignment.title %></strong> assignment from GitHub Classroom.
-      In addition this will also delete <strong><%= pluralize(@assignment.assignment_repos.count, 'participant repository') %></strong>
-      under the <strong><%= @organization.github_organization.login %></strong> organization.
+      <%= raw t('views.assignments.remove_assignment_info', assignment_title: @assignment.title,repo_count: pluralize(@assignment.assignment_repos.count, 'participant repository'),organization_login: @organization.github_organization.login) %>
     </p>
   </div>
 
   <%= form_for [@organization, @assignment], html: { "data-name" => @assignment.title, method: 'delete' } do |f| %>
     <dl class="form js-normalize-submit">
-      <dt>Please type the name of the assignment to confirm</dt>
+      <dt><%= t('views.assignments.confirm_assignment_name') %></dt>
       <dd><input type="text" class="js-input-block form-control input-contrast input-block mt-1" autofocus></dd>
     </dl>
 
-    <%= f.submit 'Delete this assignment', class: 'btn btn-danger btn-block js-submit', disabled: true %>
+    <%= f.submit t('views.assignments.remove_assignment_btn_text'), class: 'btn btn-danger btn-block js-submit', disabled: true %>
   <% end %>
 </div>
