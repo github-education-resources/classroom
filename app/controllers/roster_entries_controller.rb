@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class RosterEntriesController < ApplicationController
-  before_action :set_roster_entry, :set_organization, :set_assignment, :set_assignment_repo, :ensure_authorized
+  include OrganizationAuthorization
+
+  before_action :set_roster_entry, :set_organization, :set_assignment, :set_assignment_repo
 
   layout false
 
@@ -16,10 +18,6 @@ class RosterEntriesController < ApplicationController
   end
 
   private
-
-  def ensure_authorized
-    not_found unless @organization.users.include? current_user
-  end
 
   def set_assignment
     @assignment = Assignment.find_by!(slug: params[:assignment_id])
