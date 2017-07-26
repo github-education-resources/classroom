@@ -9,11 +9,11 @@ class RosterEntriesController < ApplicationController
 
   def show
     if @assignment_repo
-      render "roster_entries/assignment_repos/linked_accepted"
+      render partial: "roster_entries/assignment_repos/linked_accepted"
     elsif @roster_entry.user
-      render "roster_entries/assignment_repos/linked_not_accepted"
+      render partial: "roster_entries/assignment_repos/linked_not_accepted"
     else
-      render "roster_entries/assignment_repos/not_in_classroom"
+      render partial: "roster_entries/assignment_repos/not_in_classroom"
     end
   end
 
