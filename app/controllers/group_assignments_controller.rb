@@ -101,11 +101,11 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def set_students_not_on_team
-    return unless @organization.roster.present?
+    return if @organization.roster.blank?
 
     students_on_team = @group_assignment_repos.map(&:repo_accesses).flatten.map(&:user).map(&:id).uniq
-    @students_not_on_team = @organization.roster.roster_entries.select do |entry|
-      !students_on_team.include?(entry.user.try(:id))
+    @students_not_on_team = @organization.roster.roster_entries.reject do |entry|
+      students_on_team.include?(entry.user.try(:id))
     end
   end
 

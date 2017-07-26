@@ -20,11 +20,11 @@ class RosterEntriesController < ApplicationController
   private
 
   def set_assignment
-    if(params[:assignment_id])
-      @assignment = Assignment.find_by!(slug: params[:assignment_id])
-    else
-      @assignment = GroupAssignment.find_by!(slug: params[:group_assignment_id])
-    end
+    @assignment = if params[:assignment_id]
+                    Assignment.find_by!(slug: params[:assignment_id])
+                  else
+                    GroupAssignment.find_by!(slug: params[:group_assignment_id])
+                  end
   rescue ActiveRecord::ActiveRecordError
     not_found
   end
