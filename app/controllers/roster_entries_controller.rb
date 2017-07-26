@@ -3,7 +3,7 @@
 class RosterEntriesController < ApplicationController
   include OrganizationAuthorization
 
-  before_action :set_roster_entry, :set_organization, :set_assignment, :set_assignment_repo
+  before_action :set_roster_entry, :set_assignment, :set_assignment_repo
 
   layout false
 
@@ -21,12 +21,6 @@ class RosterEntriesController < ApplicationController
 
   def set_assignment
     @assignment = Assignment.find_by!(slug: params[:assignment_id])
-  rescue ActiveRecord::ActiveRecordError
-    not_found
-  end
-
-  def set_organization
-    @organization = Organization.find_by!(slug: params[:organization_id])
   rescue ActiveRecord::ActiveRecordError
     not_found
   end

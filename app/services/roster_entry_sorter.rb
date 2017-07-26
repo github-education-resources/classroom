@@ -17,7 +17,7 @@ class RosterEntrySorter
     users_with_repo = @assignment.repos.pluck(:user_id)
 
     @entries.sort_by do |entry|
-      next 2 unless entry.user.present?
+      next 2 if entry.user.blank?
       users_with_repo.include?(entry.user.id) ? 0 : 1
     end
   end

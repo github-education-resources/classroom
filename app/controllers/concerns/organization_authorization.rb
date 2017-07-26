@@ -4,7 +4,7 @@ module OrganizationAuthorization
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_org, :authorize_organization_access
+    before_action :set_organization, :authorize_organization_access
   end
 
   def authorize_organization_access
@@ -18,7 +18,7 @@ module OrganizationAuthorization
     @github_organization ||= GitHubOrganization.new(current_user.github_client, @organization.github_id)
   end
 
-  def set_org
+  def set_organization
     @organization = Organization.find_by!(slug: params[:organization_id])
   end
 end

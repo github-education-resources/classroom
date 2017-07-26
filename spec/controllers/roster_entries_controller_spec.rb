@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe RosterEntriesController, type: :controller do
   let(:roster) { create(:roster) }
   let(:roster_entry) { roster.roster_entries.first }
-  let(:organization) { create(:organization, roster: roster) }
+  let(:organization) { create(:organization, roster: roster, github_id: 1000) }
   let(:assignment) { create(:assignment, organization: organization) }
   let(:student) { classroom_student }
   let(:teacher) { classroom_teacher }
