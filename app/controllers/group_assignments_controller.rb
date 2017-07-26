@@ -4,10 +4,11 @@ class GroupAssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
 
-  before_action :set_group_assignment, except: %i[new create]
-  before_action :set_groupings,        except: [:show]
-
+  before_action :set_group_assignment,      except: %i[new create]
+  before_action :set_groupings,             except: [:show]
   before_action :authorize_grouping_access, only: %i[create update]
+
+  before_action :set_group_assignment_repos, :set_students_not_on_team, only: [:show]
 
   def new
     @group_assignment = GroupAssignment.new
@@ -26,9 +27,7 @@ class GroupAssignmentsController < ApplicationController
     end
   end
 
-  def show
-    @group_assignment_repos = GroupAssignmentRepo.where(group_assignment: @group_assignment).page(params[:page])
-  end
+  def show; end
 
   def edit; end
 
@@ -95,6 +94,19 @@ class GroupAssignmentsController < ApplicationController
                         .group_assignments
                         .includes(:group_assignment_invitation)
                         .find_by!(slug: params[:id])
+  end
+
+  def set_group_assignment_repos
+    @group_assignment_repos = GroupAssignmentRepo.where(group_assignment: @group_assignment).page(params[:page])
+  end
+
+  def set_students_not_on_team
+    return unless @organization.roster.present?
+
+    students_on_team = @group_assignment_repos.map(&:repo_accesses).flatten.map(&:user).map(&:id).uniq
+    @students_not_on_team = @organization.roster.roster_entries.select do |entry|
+      !students_on_team.include?(entry.user.try(:id))
+    end
   end
 
   def deadline_param
