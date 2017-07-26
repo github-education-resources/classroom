@@ -65,7 +65,7 @@ RSpec.describe RosterEntriesController, type: :controller do
         end
 
         it "renders not_in_classroom" do
-          expect(response).to render_template("roster_entries/assignment_repos/not_in_classroom")
+          expect(response).to render_template("roster_entries/assignment_repos/_not_in_classroom")
         end
       end
 
@@ -86,7 +86,7 @@ RSpec.describe RosterEntriesController, type: :controller do
         end
 
         it "renders not_accepted" do
-          expect(response).to render_template("roster_entries/assignment_repos/linked_not_accepted")
+          expect(response).to render_template("roster_entries/assignment_repos/_linked_not_accepted")
         end
       end
 
@@ -109,7 +109,7 @@ RSpec.describe RosterEntriesController, type: :controller do
         end
 
         it "renders not_accepted" do
-          expect(response).to render_template("roster_entries/assignment_repos/linked_accepted")
+          expect(response).to render_template("roster_entries/assignment_repos/_linked_accepted")
         end
       end
     end
