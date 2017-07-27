@@ -6,7 +6,7 @@
       <span class="assignment-icon assignment-icon-group">
         <%= octicon 'organization', height: 22 %>
       </span>
-      Group assignment settings
+      <%= t('views.group_assignments.assignment_settings') %>
     </h2>
   </div>
 </div>
@@ -20,16 +20,16 @@
       </div>
 
       <div class="one-third column dangerzone-container pt-3">
-        <p class="text-emphasized">Delete this group assignment</p>
-        <p class="text-gray">Once you delete this group assignment, there is no going back. Please be certain.</p>
+        <p class="text-emphasized"><%= t('views.group_assignments.remove_assignment_btn_text') %></p>
+        <p class="text-gray"><%= t('views.group_assignments.remove_assignment_details') %></p>
 
-        <a data-remodal-target="delete-group-assignment" class="btn btn-danger btn-block">Delete this group assignment</a>
+        <a data-remodal-target="delete-group-assignment" class="btn btn-danger btn-block"><%= t('views.group_assignments.remove_assignment_btn_text') %></a>
       </div>
     </div>
 
     <div class="form-actions">
-      <%= f.submit 'Save changes', class: 'btn btn-primary' %>
-      <%= link_to 'Cancel', [@organization, @group_assignment], class: 'btn', role: 'button' %>
+      <%= f.submit t('views.group_assignments.save_assignment_btn_text'), class: 'btn btn-primary' %>
+      <%= link_to t('views.group_assignments.cancel'), [@organization, @group_assignment], class: 'btn', role: 'button' %>
     </div>
   <% end %>
 </div>

@@ -1,0 +1,34 @@
+en:
+  views:
+    group_assignments:
+      public: 'Public'
+      public_submission_info: 'Submit assignments using public repositories. All submissions will be visible to the world.'
+      private: 'Private'
+      private_submission_info: 'Submit assignments using private repositories. Submissions will only be visible to the submitter and organization owners.'
+      repo_permission_info: 'Give students Admin permissions on their repository'
+      starter_code_info: '<label>Add your starter code from GitHub <small>(optional)</small></label>'
+      max_members_info: 'Maximum number of members in each team (optional)'
+      deadline: '<label>Deadline <small>(optional)</small></label>'
+      deadline_info: 'After the deadline, GitHub Classroom will save the latest commit from each repo as a submission. Submission commits are viewable on the assignment page.'
+      choose_existing_team: '<label>Choose an existing set of teams</label>'
+      create_new_set_of_teams: 'Create a new set of teams'
+      remove_assignment_header: 'Are you sure you want to delete this?'
+      remove_assignment_warning: "Unexpected things will happen if you don't read this!"
+      remove_assignment_info_slice_1: 'This action <strong>CANNOT</strong> be undone.
+        This will permanently delete the <strong>%{assignment_title}</strong> group assignment from GitHub Classroom.
+        In addition this will also delete'
+      remove_assignment_info_slice_2: 'under the <strong>%{organization_login}</strong> organization.'
+      participant_repo: 'participant repository'
+      confirm_assignment_name: 'Please type the name of the group assignment to confirm'
+      remove_assignment_btn_text: Delete this group assignment'
+      assignment_settings: 'Group Assignment settings'
+      remove_assignment_details: 'Once you delete this group assignment, there is no going back. Please be certain.'
+      save_assignment_btn_text: 'Save changes'
+      cancel: 'Cancel'
+      new_assignment: 'New group assignment'
+      create_assignment_btn_text: 'Create Assignment'
+      assignment_for: 'Group assignment for'
+      deadline_passed: '- Deadline Passed'
+      deadline_in: '- Deadline in'
+      have_no_repository: '"%{assignment_title}" does not have any repositories.'
+      share_invitation_link: 'Share the invitation link with your students to get started.'
