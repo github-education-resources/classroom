@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-#require_relative "vcr" TODO: Uncomment this out
+require_relative "vcr"
 require "digest"
 
 class StubRepository
