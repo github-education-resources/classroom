@@ -59,7 +59,7 @@ class ClassroomConfig
   def generate_issues(repo, tree_sha)
     @github_repository.tree(tree_sha).tree.each do |issue|
       blob = @github_repository.blob(issue.sha)
-      repo.add_issue(blob.data["title"], blob.body) if blob.data.present?
+      repo.create_issue(blob.data["title"], blob.body) if blob.data.present?
     end
   end
 end

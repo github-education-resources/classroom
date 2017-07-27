@@ -46,7 +46,7 @@ class GitHubRepository < GitHubResource
   # body     - The body of the issue.
   #
   # Returns the newly created issue, or raises a GitHub::Error.
-  def add_issue(title, body, **options)
+  def create_issue(title, body, **options)
     GitHub::Errors.with_error_handling do
       @client.create_issue(full_name, title, body, options)
     end
