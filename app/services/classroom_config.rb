@@ -1,29 +1,41 @@
 # frozen_string_literal: true
 
 class ClassroomConfig
-  CONFIGURABLES = %w[issues].freeze
+  CONFIGURABLES   = %w[issues].freeze
+  CONFIGBRANCH    = "github-classroom"
 
   attr_reader :github_repository
 
   def initialize(github_repository)
-    raise ArgumentError, "Invalid configuration repo" unless github_repository.branch_present? "github-classroom"
+    raise ArgumentError, "Invalid configuration repo" unless github_repository.branch_present? CONFIGBRANCH
     @github_repository = github_repository
   end
 
+  # Public: Setup a GitHub Repository based on classroom configurations
+  #
+  # repo - A GitHubRepository instance for which to perform the configuration
+  #                   setups
+  #
+  # Returns true when setup is successful false otherwise
   def setup_repository(repo)
-    configs_tree = @github_repository.branch_tree("github-classroom")
+    configs_tree = @github_repository.branch_tree(CONFIGBRANCH)
     configs_tree.tree.each do |config|
       send("generate_#{config.path}", repo, config.sha) if CONFIGURABLES.include? config.path
     end
 
-    repo.remove_branch("github-classroom")
+    repo.remove_branch(CONFIGBRANCH)
     true
   rescue GitHub::Error
     false
   end
 
+  # Public: Check if a GitHubRepository can be configured
+  #
+  # repo - A GitHubRepository instance
+  #
+  # Returns true or false
   def configurable?(repo)
-    repo.branch_present?("github-classroom")
+    repo.branch_present?(CONFIGBRANCH)
   end
 
   private
@@ -38,7 +50,7 @@ class ClassroomConfig
   def generate_issues(repo, tree_sha)
     @github_repository.tree(tree_sha).tree.each do |issue|
       blob = @github_repository.blob(issue.sha)
-      repo.add_issue(blob.data["title"], blob.body) if blob.data.present?
+      repo.create_issue(blob.data["title"], blob.body) if blob.data.present?
     end
   end
 end
