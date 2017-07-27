@@ -72,20 +72,27 @@ class StubRepository
     @heads.map { |h| h.split("refs/heads/").second }
   end
 
+  # Internal: Add the head branch's tree to StubRepository trees
+  #
   def generate_head_objects
-    @trees[head_sha] = OpenStruct.new(sha: head_sha, url: repo_path,
-                                      tree: sub_objects(repo_path), truncated: false)
+    @trees[head_sha] ||= OpenStruct.new(sha: head_sha, url: repo_path,
+                                        tree: sub_objects(repo_path), truncated: false)
   end
 
+  # Internal: Add all repo trees to StubRepository trees
+  #
   def generate_git_objects
     generate_head_objects
     Dir.glob(repo_path + "/**/*/").each do |t|
       tree_sha = Digest::SHA2.hexdigest(t)
-      @trees[tree_sha] = OpenStruct.new(path: t.split("/").last, mode: "040000", type: "tree",
-                                        sha: tree_sha, size: 0, url: t, tree: sub_objects(t))
+      @trees[tree_sha] ||= OpenStruct.new(path: t.split("/").last, mode: "040000", type: "tree",
+                                          sha: tree_sha, size: 0, url: t, tree: sub_objects(t))
     end
   end
 
+  # Internal: Get all git objects (trees and blobs) from a given path
+  #
+  # Returns a list of git objects
   def sub_objects(path)
     tree = []
     Dir.glob(path.to_s + "/*").each do |t|
@@ -95,9 +102,14 @@ class StubRepository
     tree
   end
 
+  # Internal: Get git object (tree or blob) using a given path
+  #
+  # path - The path to the git object
+  #
+  # Returns a git object (As an OpenStruct instance)
   def git_object(path)
-    object_sha = Digest::SHA2.hexdigest(path)
-    @blobs[object_sha] = Blob.new(self, path) unless File.directory?(path)
+    object_sha = Digest::SHA2.hexdigest(path.to_s)
+    @blobs[object_sha] ||= Blob.new(self, path) unless File.directory?(path)
     OpenStruct.new(path: path.split("/").last, mode: File.directory?(path) ? "tree" : "blob",
                    type: File.directory?(path) ? "040000" : "100644", sha: object_sha, size: 0, url: path)
   end
