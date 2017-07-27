@@ -1,35 +1,24 @@
 # frozen_string_literal: true
 
-require_relative "vcr"
+#require_relative "vcr" TODO: Uncomment this out
+require "digest"
 
 class StubRepository
   attr_reader :full_name, :branches
 
-  def repo_file(repo_name, path)
-    File.read(Rails.root.join("spec/fixtures/repos/#{repo_name}", path.to_s))
+  def file(path)
+    File.read(path.to_s)
   end
 
-  def repo_json(repo_name, path)
-    JSON.parse(repo_file(repo_name, path), object_class: OpenStruct)
-  end
-
-  class Tree
-    attr_reader :sha, :url, :tree, :truncated
-
-    def initialize(repo, sha)
-      tree_json = repo.repo_json(repo.full_name, sha)
-      @sha       = tree_json.sha
-      @url       = tree_json.url
-      @tree      = tree_json.tree || []
-      @truncated = tree_json.truncated
-    end
+  def json_file(path)
+    JSON.parse(file(path), object_class: OpenStruct)
   end
 
   class Blob
     attr_reader :data, :body, :utf_content
 
-    def initialize(repo, sha)
-      file_blob = repo.repo_file(repo.full_name, sha)
+    def initialize(repo, path)
+      file_blob = repo.file(path)
       @utf_content = file_blob
       read_contents
     end
@@ -46,33 +35,88 @@ class StubRepository
 
   def initialize(full_name)
     @full_name = full_name
-    @branches = repo_json(full_name, "branches.json") || []
+    @heads     = head_refs
+    @branches  = branch_names
+    @trees     = {}
+    @blobs     = {}
+
+    generate_git_objects
   end
 
   def import_progress
-    repo_json(full_name, "import_progress.json")
+    import_json_path = repo_path + "/.git/import_progress.json"
+    return nil unless File.exist? import_json_path
+    json_file(import_json_path)
   end
 
   def branch_present?(name)
-    @branches.map(&:name).include? name
-  end
-
-  def branch(name)
-    return {} unless branch_present? name
-    @branches.select { |b| b.name == name }.last
+    @branches.include? name
   end
 
   def branch_tree(name)
-    return {} unless branch_present? name
-    Tree.new(self, branch(name).commit.sha)
+    return {} unless head == name
+    @trees[head_sha]
   end
 
   def tree(sha)
-    Tree.new(self, sha)
+    @trees[sha]
   end
 
   def blob(sha)
-    Blob.new(self, sha)
+    @blobs[sha]
+  end
+
+  private
+
+  def branch_names
+    @heads.map { |h| h.split("refs/heads/").second }
+  end
+
+  def generate_head_objects
+    @trees[head_sha] = OpenStruct.new(sha: head_sha, url: repo_path,
+                                      tree: sub_objects(repo_path), truncated: false)
+  end
+
+  def generate_git_objects
+    generate_head_objects
+    Dir.glob(repo_path + "/**/*/").each do |t|
+      tree_sha = Digest::SHA2.hexdigest(t)
+      @trees[tree_sha] = OpenStruct.new(path: t.split("/").last, mode: "040000", type: "tree",
+                                        sha: tree_sha, size: 0, url: t, tree: sub_objects(t))
+    end
+  end
+
+  def sub_objects(path)
+    tree = []
+    Dir.glob(path.to_s + "/*").each do |t|
+      t += "/" if File.directory?(t)
+      tree << git_object(t)
+    end
+    tree
+  end
+
+  def git_object(path)
+    object_sha = Digest::SHA2.hexdigest(path)
+    @blobs[object_sha] = Blob.new(self, path) unless File.directory?(path)
+    OpenStruct.new(path: path.split("/").last, mode: File.directory?(path) ? "tree" : "blob",
+                   type: File.directory?(path) ? "040000" : "100644", sha: object_sha, size: 0, url: path)
+  end
+
+  def head
+    file(repo_path + "/.git/HEAD").strip.split("refs/heads/").second.to_s
+  end
+
+  def head_sha
+    Digest::SHA2.hexdigest repo_path + head
+  end
+
+  def head_refs
+    Dir.glob(repo_path + "/.git/refs/**/*").reject { |f| File.directory?(f) }
+       .map { |f| f.split(".git/").second }
+  end
+
+  def repo_path
+    Rails.root.to_s + "/spec/fixtures/repos/#{full_name}"
   end
 end
 
