@@ -11,6 +11,12 @@ class ClassroomConfig
     @github_repository = github_repository
   end
 
+  # Public: Setup a GitHub Repository based on classroom configurations
+  #
+  # repo - A GitHubRepository instance for which to perform the configuration
+  #                   setups
+  #
+  # Returns true when setup is successful false otherwise
   def setup_repository(repo)
     configs_tree = @github_repository.branch_tree(CONFIGBRANCH)
     configs_tree.tree.each do |config|
@@ -23,10 +29,20 @@ class ClassroomConfig
     false
   end
 
+  # Public: Check if a GitHubRepository can be configured
+  #
+  # repo - A GitHubRepository instance
+  #
+  # Returns true or false
   def configurable?(repo)
     repo.branch_present?(CONFIGBRANCH)
   end
 
+  # Public: Check if a GitHubRepository is already configured
+  #
+  # repo - A GitHubRepository instance
+  #
+  # Returns true or false
   def configured?(repo)
     !configurable?(repo) && repo.import_progress[:status] == "complete"
   end
