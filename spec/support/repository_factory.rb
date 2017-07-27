@@ -44,7 +44,7 @@ class StubRepository
   end
 
   def import_progress
-    import_json_path = repo_path + "/.git/import_progress.json"
+    import_json_path = repo_path + "/.git_/import_progress.json"
     return nil unless File.exist? import_json_path
     json_file(import_json_path)
   end
@@ -115,7 +115,7 @@ class StubRepository
   end
 
   def head
-    file(repo_path + "/.git/HEAD").strip.split("refs/heads/").second.to_s
+    file(repo_path + "/.git_/HEAD").strip.split("refs/heads/").second.to_s
   end
 
   def head_sha
@@ -123,8 +123,8 @@ class StubRepository
   end
 
   def head_refs
-    Dir.glob(repo_path + "/.git/refs/**/*").reject { |f| File.directory?(f) }
-       .map { |f| f.split(".git/").second }
+    Dir.glob(repo_path + "/.git_/refs/**/*").reject { |f| File.directory?(f) }
+       .map { |f| f.split(".git_/").second }
   end
 
   def repo_path
