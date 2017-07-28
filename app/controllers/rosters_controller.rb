@@ -35,7 +35,7 @@ class RostersController < ApplicationController
     @organization.roster = nil
     @organization.save!
 
-    roster.destroy! if roster.reload.organizations.length == 0
+    roster.destroy! if roster.reload.organizations.empty?
 
     flash[:success] = "Roster successfully deleted!"
   rescue ActiveRecord::RecordInvalid
