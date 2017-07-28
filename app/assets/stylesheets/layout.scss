@@ -934,7 +934,12 @@ div.site-content-body.tabnav-body.join-box {
 
 .remove-roster-entry-button {
   margin-left: 10px;
-  fill: #d73a49;
+  fill: #333;
+  opacity: 0.25;
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .clickable {
