@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require File.expand_path('../../config/environment', __FILE__)
-require 'rails/test_help'
+require File.expand_path("../../config/environment", __FILE__)
+require "rails/test_help"
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join('test', 'support', '**', '*.rb')].each { |f| require f }
+Dir[Rails.root.join("test", "support", "**", "*.rb")].each { |f| require f }
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
@@ -53,7 +53,7 @@ class ActiveSupport::TestCase
       # will automatically use VCR to intercept and record/play back any external
       # HTTP requests using `fixtures/cassettes/order_test/test_user_can_place_order.json`.
       base_path = self.class.name.underscore
-      VCR.insert_cassette(base_path + '/' + name)
+      VCR.insert_cassette(base_path + "/" + name)
 
       Bullet.start_request
 
