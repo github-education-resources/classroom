@@ -53,9 +53,15 @@ class StubRepository
     @branches.include? name
   end
 
-  def branch_tree(name)
+  def branch(name)
     return {} unless head == name
     @trees[head_sha]
+  end
+
+  def tree_objects(tree_sha)
+    git_tree = tree(tree_sha)
+    return [] if git_tree.blank?
+    git_tree.tree
   end
 
   def tree(sha)
@@ -75,8 +81,8 @@ class StubRepository
   # Internal: Add the head branch's tree to StubRepository trees
   #
   def generate_head_objects
-    @trees[head_sha] ||= OpenStruct.new(sha: head_sha, url: repo_path,
-                                        tree: sub_objects(repo_path), truncated: false)
+    @trees[head_sha] ||= OpenStruct.new(sha: head_sha, url: repo_path, tree: sub_objects(repo_path),
+                                        truncated: false, commit: OpenStruct.new(sha: head_sha))
   end
 
   # Internal: Add all repo trees to StubRepository trees

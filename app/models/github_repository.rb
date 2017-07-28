@@ -92,13 +92,15 @@ class GitHubRepository < GitHubResource
     {}
   end
 
-  def branch_tree(name, **options)
-    GitHub::Errors.with_error_handling do
-      branch_sha = branch(name).commit.sha
-      tree(branch_sha, options)
-    end
-  rescue GitHub::Error
-    {}
+  # Internal: Helper to get a tree's objects of a git tree
+  #
+  # tree_sha - The string sha of a git tree
+  #
+  # Returns a list of objects
+  def tree_objects(tree_sha)
+    git_tree = tree(tree_sha)
+    return [] if git_tree.blank?
+    git_tree.tree
   end
 
   def remove_branch(name, **options)
