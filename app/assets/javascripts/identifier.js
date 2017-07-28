@@ -8,7 +8,7 @@ function onIdentifiersUploaded(){
   reader.onload = function(e){
     var identifiers = e.target.result;
     entriesField.value += identifiers;
-  }
+  };
 
   reader.readAsText(file);
 }
