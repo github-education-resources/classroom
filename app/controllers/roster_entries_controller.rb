@@ -20,7 +20,11 @@ class RosterEntriesController < ApplicationController
   private
 
   def set_assignment
-    @assignment = Assignment.find_by!(slug: params[:assignment_id])
+    @assignment = if params[:assignment_id]
+                    Assignment.find_by!(slug: params[:assignment_id])
+                  else
+                    GroupAssignment.find_by!(slug: params[:group_assignment_id])
+                  end
   rescue ActiveRecord::ActiveRecordError
     not_found
   end
@@ -32,6 +36,12 @@ class RosterEntriesController < ApplicationController
   end
 
   def set_assignment_repo
-    @assignment_repo = @assignment.repos.select { |repo| repo.user == @roster_entry.user }.first
+    @assignment_repo = @assignment.repos.select do |repo|
+      if @assignment.is_a? Assignment
+        repo.user == @roster_entry.user
+      else
+        repo.repo_accesses.map(&:user).include? @roster_entry.user
+      end
+    end.first
   end
 end
