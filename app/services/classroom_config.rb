@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ClassroomConfig
-  CONFIGURABLES   = %w[issues]
+  CONFIGURABLES   = %w[issues].freeze
   CONFIG_BRANCH   = "github-classroom"
 
   attr_reader :github_repository
