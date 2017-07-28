@@ -29,6 +29,21 @@ class RostersController < ApplicationController
     render :new
   end
 
+  def remove_organization
+    roster = @organization.roster
+
+    @organization.roster = nil
+    @organization.save!
+
+    roster.destroy! if roster.reload.organizations.length == 0
+
+    flash[:success] = "Roster successfully deleted!"
+  rescue ActiveRecord::RecordInvalid
+    flash[:error] = "An error has occured while trying to delete the roster. Please try again."
+  ensure
+    redirect_to organization_path(@organization)
+  end
+
   def link
     user = User.find(params[:user_id])
     roster_entry = RosterEntry.find(params[:roster_entry_id])
