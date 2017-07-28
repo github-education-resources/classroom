@@ -3,11 +3,11 @@
     <%= image_tag organization.github_organization.github_avatar_url(120), class: 'avatar left', height: 60, width: 60, alt: "@#{organization.github_organization.login}" %>
   </div>
   <div class="float-right pt-2">
-    <span class="p-1 organization-stat-item text-gray tooltipped tooltipped-s" aria-label="Individual Assignments">
+    <span class="p-1 organization-stat-item text-gray tooltipped tooltipped-s" aria-label="<%= t('views.organizations.individual_assignments') %>">
       <%= octicon 'person', :class => "mr-1" %><%= organization.assignments.count %>
     </span>
 
-    <span class="p-1 organization-stat-item text-gray tooltipped tooltipped-s" aria-label="Group Assignments">
+    <span class="p-1 organization-stat-item text-gray tooltipped tooltipped-s" aria-label="<%= t('views.organizations.group_assignments') %>">
       <%= octicon 'organization', :class => "mr-1" %><%= organization.group_assignments.count %>
     </span>
   </div>

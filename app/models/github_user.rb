@@ -28,7 +28,7 @@ class GitHubUser < GitHubResource
 
   def organization_memberships
     GitHub::Errors.with_error_handling do
-      @client.organization_memberships(state: 'active', headers: GitHub::APIHeaders.no_cache_no_store)
+      @client.organization_memberships(state: "active", headers: GitHub::APIHeaders.no_cache_no_store)
     end
   end
 

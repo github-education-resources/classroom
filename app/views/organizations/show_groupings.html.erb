@@ -8,14 +8,14 @@
     <div class="three-fourths column">
 
       <div class="boxed-group">
-        <h3>Set of teams</h3>
+        <h3><%= t('views.organizations.set_of_teams') %></h3>
         <div class="boxed-group-inner clearfix">
           <ul class="boxed-group-list standalone">
             <% if @organization.groupings.present? %>
               <%= render partial: "organizations/grouping", collection: @organization.groupings %>
             <% else %>
               <div class="blankslate clean-background">
-                <p><h4>This classroom doesn’t have any sets of teams yet.</h4></p>
+                <p><h4><%= t('views.organizations.no_teams') %></h4></p>
               </div>
             <% end %>
           </ul>

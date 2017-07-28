@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe AssignmentsController, type: :controller do
   let(:organization) { classroom_org                                   }
@@ -11,20 +11,20 @@ RSpec.describe AssignmentsController, type: :controller do
     sign_in_as(user)
   end
 
-  describe 'GET #new', :vcr do
-    it 'returns success status' do
+  describe "GET #new", :vcr do
+    it "returns success status" do
       get :new, params: { organization_id: organization.slug }
       expect(response).to have_http_status(:success)
     end
 
-    it 'has a new Assignment' do
+    it "has a new Assignment" do
       get :new, params: { organization_id: organization.slug }
       expect(assigns(:assignment)).to_not be_nil
     end
   end
 
-  describe 'POST #create', :vcr do
-    it 'creates a new Assignment' do
+  describe "POST #create", :vcr do
+    it "creates a new Assignment" do
       expect do
         post :create, params: {
           assignment: attributes_for(:assignment, organization: organization),
@@ -33,45 +33,45 @@ RSpec.describe AssignmentsController, type: :controller do
       end.to change(Assignment, :count)
     end
 
-    context 'valid starter_code repo_name input' do
+    context "valid starter_code repo_name input" do
       before do
         post :create, params: {
           organization_id: organization.slug,
           assignment:      attributes_for(:assignment, organization: organization),
-          repo_name:       'rails/rails'
+          repo_name:       "rails/rails"
         }
       end
 
-      it 'creates a new Assignment' do
+      it "creates a new Assignment" do
         expect(Assignment.count).to eql(1)
       end
     end
 
-    context 'invalid starter_code repo_name input' do
+    context "invalid starter_code repo_name input" do
       before do
-        request.env['HTTP_REFERER'] = 'http://test.host/classrooms/new'
+        request.env["HTTP_REFERER"] = "http://test.host/classrooms/new"
 
         post :create, params: {
           organization_id: organization.slug,
           assignment:      attributes_for(:assignment, organization: organization),
-          repo_name:       'https://github.com/rails/rails'
+          repo_name:       "https://github.com/rails/rails"
         }
       end
 
-      it 'fails to create a new Assignment' do
+      it "fails to create a new Assignment" do
         expect(Assignment.count).to eql(0)
       end
 
-      it 'does not return an internal server error' do
+      it "does not return an internal server error" do
         expect(response).not_to have_http_status(:internal_server_error)
       end
 
-      it 'provides a friendly error message' do
-        expect(flash[:error]).to eql('Invalid repository name, use the format owner/name.')
+      it "provides a friendly error message" do
+        expect(flash[:error]).to eql("Invalid repository name, use the format owner/name.")
       end
     end
 
-    context 'valid repo_id for starter_code is passed' do
+    context "valid repo_id for starter_code is passed" do
       before do
         post :create, params: {
           organization_id: organization.slug,
@@ -80,81 +80,81 @@ RSpec.describe AssignmentsController, type: :controller do
         }
       end
 
-      it 'creates a new Assignment' do
+      it "creates a new Assignment" do
         expect(Assignment.count).to eql(1)
       end
 
-      it 'sets correct starter_code_repo for the new Assignment' do
+      it "sets correct starter_code_repo for the new Assignment" do
         expect(Assignment.first.starter_code_repo_id).to be(8514)
       end
     end
 
-    context 'invalid repo_id for starter_code is passed' do
+    context "invalid repo_id for starter_code is passed" do
       before do
-        request.env['HTTP_REFERER'] = 'http://test.host/classrooms/new'
+        request.env["HTTP_REFERER"] = "http://test.host/classrooms/new"
 
         post :create, params: {
           organization_id: organization.slug,
           assignment:      attributes_for(:assignment, organization: organization),
-          repo_id:         'invalid_id' # id must be an integer
+          repo_id:         "invalid_id" # id must be an integer
         }
       end
 
-      it 'fails to create a new Assignment' do
+      it "fails to create a new Assignment" do
         expect(Assignment.count).to eql(0)
       end
 
-      it 'does not return an internal server error' do
+      it "does not return an internal server error" do
         expect(response).not_to have_http_status(:internal_server_error)
       end
 
-      it 'provides a friendly error message' do
-        expect(flash[:error]).to eql('Invalid repository selection, please check it again.')
+      it "provides a friendly error message" do
+        expect(flash[:error]).to eql("Invalid repository selection, please check it again.")
       end
     end
 
-    context 'deadline flipper is enabled for user' do
+    context "deadline flipper is enabled for user" do
       before do
         GitHubClassroom.flipper[:deadlines].enable
       end
 
-      context 'valid datetime for deadline is passed' do
+      context "valid datetime for deadline is passed" do
         before do
           post :create, params: {
             organization_id: organization.slug,
             assignment:      attributes_for(:assignment, organization: organization)
-              .merge(deadline: '05/25/2018 13:17-0800')
+              .merge(deadline: "05/25/2018 13:17-0800")
           }
         end
 
-        it 'creates a new assignment' do
+        it "creates a new assignment" do
           expect(Assignment.count).to eq(1)
         end
 
-        it 'sets deadline' do
+        it "sets deadline" do
           expect(Assignment.first.deadline).to be_truthy
         end
       end
 
-      context 'invalid datetime for deadline passed' do
+      context "invalid datetime for deadline passed" do
         before do
           post :create, params: {
             organization_id: organization.slug,
             assignment:      attributes_for(:assignment, organization: organization)
-              .merge(deadline: 'I am not a datetime')
+              .merge(deadline: "I am not a datetime")
           }
         end
 
-        it 'creates a new assignment' do
+        it "creates a new assignment" do
           expect(Assignment.count).to eq(1)
         end
 
-        it 'sets deadline to nil' do
+        it "sets deadline to nil" do
           expect(Assignment.first.deadline).to be_nil
         end
       end
 
-      context 'no deadline passed' do
+      context "no deadline passed" do
         before do
           post :create, params: {
             organization_id: organization.slug,
@@ -162,11 +162,11 @@ RSpec.describe AssignmentsController, type: :controller do
           }
         end
 
-        it 'creates a new assignment' do
+        it "creates a new assignment" do
           expect(Assignment.count).to eq(1)
         end
 
-        it 'sets deadline to nil' do
+        it "sets deadline to nil" do
           expect(Assignment.first.deadline).to be_nil
         end
       end
@@ -176,44 +176,44 @@ RSpec.describe AssignmentsController, type: :controller do
       end
     end
 
-    context 'deadline flipper is disabled' do
-      context 'valid datetime for deadline is passed' do
+    context "deadline flipper is disabled" do
+      context "valid datetime for deadline is passed" do
         before do
           post :create, params: {
             organization_id: organization.slug,
             assignment:      attributes_for(:assignment, organization: organization)
-              .merge(deadline: '05/25/2018 13:17-0800')
+              .merge(deadline: "05/25/2018 13:17-0800")
           }
         end
 
-        it 'creates a new assignment' do
+        it "creates a new assignment" do
           expect(Assignment.count).to eq(1)
         end
 
-        it 'does not set deadline' do
+        it "does not set deadline" do
           expect(Assignment.first.deadline).to be_nil
         end
       end
 
-      context 'invalid datetime for deadline passed' do
+      context "invalid datetime for deadline passed" do
         before do
           post :create, params: {
             organization_id: organization.slug,
             assignment:      attributes_for(:assignment, organization: organization)
-              .merge(deadline: 'I am not a datetime')
+              .merge(deadline: "I am not a datetime")
           }
         end
 
-        it 'creates a new assignment' do
+        it "creates a new assignment" do
           expect(Assignment.count).to eq(1)
         end
 
-        it 'sets deadline to nil' do
+        it "sets deadline to nil" do
           expect(Assignment.first.deadline).to be_nil
         end
       end
 
-      context 'no deadline passed' do
+      context "no deadline passed" do
         before do
           post :create, params: {
             organization_id: organization.slug,
@@ -221,26 +221,26 @@ RSpec.describe AssignmentsController, type: :controller do
           }
         end
 
-        it 'creates a new assignment' do
+        it "creates a new assignment" do
           expect(Assignment.count).to eq(1)
         end
 
-        it 'sets deadline to nil' do
+        it "sets deadline to nil" do
           expect(Assignment.first.deadline).to be_nil
         end
       end
     end
   end
 
-  describe 'GET #show', :vcr do
-    it 'returns success status' do
+  describe "GET #show", :vcr do
+    it "returns success status" do
       get :show, params: { organization_id: organization.slug, id: assignment.slug }
       expect(response).to have_http_status(:success)
     end
   end
 
-  describe 'GET #edit', :vcr do
-    it 'returns success and sets the assignment' do
+  describe "GET #edit", :vcr do
+    it "returns success and sets the assignment" do
       get :edit, params: { id: assignment.slug, organization_id: organization.slug }
 
       expect(response).to have_http_status(:success)
@@ -248,17 +248,17 @@ RSpec.describe AssignmentsController, type: :controller do
     end
   end
 
-  describe 'PATCH #update', :vcr do
-    it 'correctly updates the assignment' do
-      options = { title: 'Ruby on Rails' }
+  describe "PATCH #update", :vcr do
+    it "correctly updates the assignment" do
+      options = { title: "Ruby on Rails" }
       patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
 
       expect(response).to redirect_to(organization_assignment_path(organization, Assignment.find(assignment.id)))
     end
 
-    context 'public_repo is changed' do
-      it 'calls the AssignmentVisibility background job' do
-        options = { title: 'Ruby on Rails', public_repo: !assignment.public? }
+    context "public_repo is changed" do
+      it "calls the AssignmentVisibility background job" do
+        options = { title: "Ruby on Rails", public_repo: !assignment.public? }
 
         assert_enqueued_jobs 1, only: Assignment::RepositoryVisibilityJob do
           patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
@@ -266,9 +266,9 @@ RSpec.describe AssignmentsController, type: :controller do
       end
     end
 
-    context 'public_repo is not changed' do
-      it 'will not kick off an AssignmentVisibility job' do
-        options = { title: 'Ruby on Rails' }
+    context "public_repo is not changed" do
+      it "will not kick off an AssignmentVisibility job" do
+        options = { title: "Ruby on Rails" }
 
         assert_no_enqueued_jobs only: Assignment::RepositoryVisibilityJob do
           patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
@@ -276,9 +276,9 @@ RSpec.describe AssignmentsController, type: :controller do
       end
     end
 
-    context 'slug is empty' do
-      it 'correctly reloads the assignment' do
-        options = { slug: '' }
+    context "slug is empty" do
+      it "correctly reloads the assignment" do
+        options = { slug: "" }
         patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
 
         expect(assigns(:assignment).slug).to_not be_nil
@@ -286,8 +286,8 @@ RSpec.describe AssignmentsController, type: :controller do
     end
   end
 
-  describe 'DELETE #destroy', :vcr do
-    it 'sets the `deleted_at` column for the assignment' do
+  describe "DELETE #destroy", :vcr do
+    it "sets the `deleted_at` column for the assignment" do
       assignment
 
       expect do
@@ -297,7 +297,7 @@ RSpec.describe AssignmentsController, type: :controller do
       expect(Assignment.unscoped.find(assignment.id).deleted_at).not_to be_nil
     end
 
-    it 'calls the DestroyResource background job' do
+    it "calls the DestroyResource background job" do
       delete :destroy, params: { id: assignment.slug, organization_id: organization }
 
       assert_enqueued_jobs 1 do
@@ -305,7 +305,7 @@ RSpec.describe AssignmentsController, type: :controller do
       end
     end
 
-    it 'redirects back to the organization' do
+    it "redirects back to the organization" do
       delete :destroy, params: { id: assignment.slug, organization_id: organization.slug }
       expect(response).to redirect_to(organization)
     end

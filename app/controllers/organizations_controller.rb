@@ -92,7 +92,7 @@ class OrganizationsController < ApplicationController
     new_github_organization = github_organization_from_params
 
     return if new_github_organization.admin?(current_user.github_user.login)
-    raise NotAuthorized, 'You are not permitted to add this organization as a classroom'
+    raise NotAuthorized, "You are not permitted to add this organization as a classroom"
   end
 
   def github_organization_from_params

@@ -46,3 +46,6 @@ Style/FileName:
     - 'Gemfile'
     - 'Guardfile'
     - 'Brewfile'
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes

@@ -4,7 +4,7 @@ module InvitationsControllerMethods
   extend ActiveSupport::Concern
 
   included do
-    layout 'layouts/invitations'
+    layout "layouts/invitations"
 
     helper_method :current_assignment,
                   :current_invitation,
@@ -25,6 +25,25 @@ module InvitationsControllerMethods
   end
 
   private
+
+  # We should redirect to the join_roster page if:
+  # - The org has a roster
+  # - The user is not on the roster
+  # - The roster=ignore param is not set (we set this if the user chooses to "skip" joining a roster for now)
+  def check_should_redirect_to_roster_page
+    return if params[:roster] == "ignore" ||
+              organization.roster.blank? ||
+              user_on_roster?
+
+    @roster = organization.roster
+
+    render "join_roster"
+  end
+
+  def user_on_roster?
+    roster = organization.roster
+    RosterEntry.find_by(roster: roster, user: current_user)
+  end
 
   # Private: Returns the Assignment or
   # GroupAssignment for the current_invitation.

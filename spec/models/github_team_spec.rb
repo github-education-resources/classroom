@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 describe GitHubTeam do
   before do
@@ -11,7 +11,7 @@ describe GitHubTeam do
   end
 
   before(:each) do
-    team = @github_organization.create_team('Team')
+    team = @github_organization.create_team("Team")
     @github_team = GitHubTeam.new(@client, team.id)
   end
 
@@ -19,7 +19,7 @@ describe GitHubTeam do
     @client.delete_team(@github_team.id)
   end
 
-  it 'responds to all (GitHub) attributes', :vcr do
+  it "responds to all (GitHub) attributes", :vcr do
     gh_team = @client.team(@github_team.id)
 
     @github_team.attributes.each do |attribute, value|
@@ -32,23 +32,23 @@ describe GitHubTeam do
     expect(WebMock).to have_requested(:get, github_url("/teams/#{@github_team.id}")).times(3)
   end
 
-  it 'responds to all *_no_cache methods', :vcr do
+  it "responds to all *_no_cache methods", :vcr do
     @github_team.attributes.each do |attribute, _|
       next if %i[id client access_token organization].include?(attribute)
       expect(@github_team).to respond_to("#{attribute}_no_cache")
     end
   end
 
-  describe '#add_team_membership', :vcr do
-    it 'adds a user to the given GitHubTeam' do
+  describe "#add_team_membership", :vcr do
+    it "adds a user to the given GitHubTeam" do
       login = @client.user.login
       @github_team.add_team_membership(login)
       expect(WebMock).to have_requested(:put, github_url("teams/#{@github_team.id}/memberships/#{login}"))
     end
   end
 
-  describe '#team_repository?', :vcr do
-    it 'checks if a repo is managed by a specific team' do
+  describe "#team_repository?", :vcr do
+    it "checks if a repo is managed by a specific team" do
       is_team_repo = @github_team.team_repository?("#{@github_organization_login}/notateamrepository")
       url = "/teams/#{@github_team.id}/repos/#{@github_organization_login}/notateamrepository"
 
@@ -57,8 +57,8 @@ describe GitHubTeam do
     end
   end
 
-  describe '#html_url', :vcr do
-    it 'returns the GitHub URL for the team' do
+  describe "#html_url", :vcr do
+    it "returns the GitHub URL for the team" do
       expected_url = "https://github.com/orgs/#{@github_organization.login}/teams/#{@github_team.slug}"
       expect(@github_team.html_url).to eql(expected_url)
     end

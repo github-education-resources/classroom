@@ -30,18 +30,18 @@ module GitHub
 
       # rubocop:disable AbcSize
       def build_error_message(error)
-        return 'An error has occurred' if error.errors.blank?
+        return "An error has occurred" if error.errors.blank?
 
         error.errors.map do |err|
           error_message = []
 
           error_message << "#{err[:resource]}:"
-          error_message << err[:code].tr('_', ' ') if err[:message].nil?
+          error_message << err[:code].tr("_", " ") if err[:message].nil?
           error_message << err[:field] if err[:message].nil?
           error_message << err[:message] unless err[:message].nil?
 
-          error_message.map(&:to_s).join(' ')
-        end.join(' ')
+          error_message.map(&:to_s).join(" ")
+        end.join(" ")
       end
       # rubocop:enable AbcSize
 
@@ -50,15 +50,15 @@ module GitHub
       end
 
       def raise_github_forbidden_error
-        raise GitHub::Forbidden, 'You are forbidden from performing this action on github.com'
+        raise GitHub::Forbidden, "You are forbidden from performing this action on github.com"
       end
 
       def raise_github_not_found_error
-        raise GitHub::NotFound, 'Resource could not be found on github.com'
+        raise GitHub::NotFound, "Resource could not be found on github.com"
       end
 
       def raise_github_server_error
-        raise GitHub::Error, 'There seems to be a problem on github.com, please try again.'
+        raise GitHub::Error, "There seems to be a problem on github.com, please try again."
       end
 
       def raise_github_too_many_requests(error)

@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 class GroupAssignmentInvitationsController < ApplicationController
-  layout 'layouts/invitations'
+  include InvitationsControllerMethods
 
-  before_action :check_group_not_previous_acceptee, only: [:show]
-  before_action :check_user_not_group_member,       only: [:show]
+  layout "layouts/invitations"
+
+  before_action :check_group_not_previous_acceptee,    only: [:show]
+  before_action :check_user_not_group_member,          only: [:show]
+  before_action :check_should_redirect_to_roster_page, only: [:show]
 
   before_action :authorize_group_access, only: [:accept_invitation]
 
@@ -32,6 +35,19 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   def successful_invitation; end
 
+  def join_roster
+    entry = RosterEntry.find(params[:roster_entry_id])
+
+    unless user_on_roster?
+      entry.user = current_user
+      entry.save
+    end
+
+    redirect_to group_assignment_invitation_url(invitation)
+  rescue ActiveRecord::ActiveRecordError
+    flash[:error] = "An error occured, please try again!"
+  end
+
   private
 
   def required_scopes
@@ -46,7 +62,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     validate_max_members_not_exceeded!(group)
     return if group_assignment.grouping.groups.find_by(id: group_id)
 
-    raise NotAuthorized, 'You are not permitted to select this team'
+    raise NotAuthorized, "You are not permitted to select this team"
   end
 
   def validate_max_members_not_exceeded!(group)
@@ -69,7 +85,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     if users_group_assignment_repo.present?
       yield if block_given?
     else
-      flash[:error] = 'An error has occurred, please refresh the page and try again.'
+      flash[:error] = "An error has occurred, please refresh the page and try again."
       redirect_to :show
     end
   end

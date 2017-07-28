@@ -1,15 +1,20 @@
 <nav class="menu">
-  <span class="menu-heading">Classroom settings</span>
+  <span class="menu-heading"><%= t('views.organizations.classroom_settings') %></span>
 
-  <%= link_to 'Classroom profile', edit_organization_path(@organization),
+  <%= link_to t('views.organizations.classroom_profile'), edit_organization_path(@organization),
               class: "menu-item #{'selected' if current_page?(edit_organization_path(@organization))}" %>
 
   <% if team_management_enabled? %>
-    <%= link_to 'Team management', settings_teams_organization_path(@organization),
+    <%= link_to t('views.organizations.team_management'), settings_teams_organization_path(@organization),
                 class: "menu-item #{'selected' if current_page?(settings_teams_organization_path(@organization))}" %>
   <% end %>
 
-  <%= link_to 'Invite other administrators',
+  <%= link_to t('views.organizations.invite_other_admin'),
               settings_invitations_organization_path(@organization),
               class: "menu-item #{'selected' if current_page?(settings_invitations_organization_path(@organization))}" %>
+
+  <% if student_identifier_enabled? %>
+    <%= link_to 'Roster management', roster_path(@organization),
+                class: "menu-item #{'selected' if current_page?(roster_path(@organization))}" %>
+  <% end %>
 </nav>

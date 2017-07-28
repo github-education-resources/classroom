@@ -1,13 +1,21 @@
 function offsetToTimezoneString(offset){
   var sign = offset > 0 ? "-" : "+";
-  var offsetString = String(Math.abs(offset))
-  var paddedString = offsetString.length == 1 ? "0" + offsetString : offsetString;
+  var wholeTime = String(Math.floor(Math.abs(offset)));
+  var fractionTime = String((Math.abs(offset))%1 * 60);
+  var paddedString = wholeTime.length == 1 ? "0" + wholeTime + fractionTime : wholeTime + fractionTime;
 
-  return sign + paddedString + "00";
+  return sign + paddedString;
 }
 
 function leftpad(val){
   return ("0" + val).slice(-2);
+}
+
+function timeRoundedUp() {
+  var currentDateTime = new Date();
+  var nextHour = currentDateTime.getHours() + 1;
+
+  return (leftpad(nextHour) + ':00');
 }
 
 function initializePicker(picker){
@@ -29,7 +37,8 @@ function initializePicker(picker){
   }
 
   $(picker).datetimepicker({
-    format: 'm/d/Y H:i O'
+    format: 'm/d/Y H:i O',
+    defaultTime: timeRoundedUp()
   });
 }
 
