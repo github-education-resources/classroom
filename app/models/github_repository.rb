@@ -22,6 +22,12 @@ class GitHubRepository < GitHubResource
     end
   end
 
+  def import_progress(**options)
+    GitHub::Errors.with_error_handling do
+      @client.source_import_progress(full_name, options)
+    end
+  end
+
   # Public: Invite a user to a GitHub repository.
   #
   # user - The String GitHub login for the user.
@@ -32,6 +38,31 @@ class GitHubRepository < GitHubResource
       options[:accept] = Octokit::Preview::PREVIEW_TYPES[:repository_invitations]
       @client.invite_user_to_repository(@id, user, options)
     end
+  end
+
+  # Public: Add issues to the GitHub repository.
+  #
+  # title    - The title of the issue.
+  # body     - The body of the issue.
+  #
+  # Returns the newly created issue, or raises a GitHub::Error.
+  def create_issue(title, body, **options)
+    GitHub::Errors.with_error_handling do
+      @client.create_issue(full_name, title, body, options)
+    end
+  end
+
+  # Public: Get a tree object from the GitHub repository.
+  #
+  # sha    - sha of the tree.
+  #
+  # Returns a git Tree object, or empty hash.
+  def tree(sha, **options)
+    GitHub::Errors.with_error_handling do
+      @client.tree(full_name, sha, options)
+    end
+  rescue GitHub::Error
+    {}
   end
 
   # Public: Get a blob from the GitHub repository.
@@ -53,6 +84,31 @@ class GitHubRepository < GitHubResource
     end
   end
 
+  def branch(name, **options)
+    GitHub::Errors.with_error_handling do
+      @client.branch(full_name, name, options)
+    end
+  rescue GitHub::Error
+    {}
+  end
+
+  # Internal: Helper to get a tree's objects of a git tree
+  #
+  # tree_sha - The string sha of a git tree
+  #
+  # Returns a list of objects
+  def tree_objects(tree_sha)
+    git_tree = tree(tree_sha)
+    return [] if git_tree.blank?
+    git_tree.tree
+  end
+
+  def remove_branch(name, **options)
+    GitHub::Errors.with_error_handling do
+      @client.delete_branch(full_name, name, options)
+    end
+  end
+
   def commits(branch)
     GitHub::Errors.with_error_handling do
       @client.commits(full_name, sha: branch)
@@ -67,6 +123,19 @@ class GitHubRepository < GitHubResource
 
   def tree_url_for_sha(sha)
     html_url + "/tree/" + sha
+  end
+
+  # Public: Checks if the GitHub repository has a given branch.
+  #
+  # branch    - name of the branch to check for
+  #
+  # Returns true if branch exists, false otherwise
+  def branch_present?(branch, **options)
+    GitHub::Errors.with_error_handling do
+      @client.branches(full_name, options).map(&:name).include? branch
+    end
+  rescue GitHub::Error
+    false
   end
 
   def present?(**options)
