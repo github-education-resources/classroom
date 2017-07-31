@@ -10,7 +10,7 @@ class AssignmentInvitationsController < ApplicationController
 
   def accept
     create_submission do
-      if current_submission.assignment.starter_code_repo_id
+      if current_submission.starter_code_repo_id
         redirect_to setup_assignment_invitation_path
       else
         redirect_to success_assignment_invitation_path
@@ -70,7 +70,7 @@ class AssignmentInvitationsController < ApplicationController
   end
 
   def classroom_config
-    starter_code_repo_id = current_submission.assignment.starter_code_repo_id
+    starter_code_repo_id = current_submission.starter_code_repo_id
     client               = current_submission.creator.github_client
 
     starter_repo         = GitHubRepository.new(client, starter_code_repo_id)
