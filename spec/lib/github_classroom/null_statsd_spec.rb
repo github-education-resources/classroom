@@ -10,8 +10,8 @@ describe GitHubClassroom::NullStatsD do
     expect(subject.increment("foo", bad: "option")).to be_nil
   end
 
-  it "responds to #time with nil" do
-    expect(subject).to respond_to(:time)
-    expect(subject.time("foo", bad: "option")).to be_nil
+  it "responds to #timing with nil" do
+    expect(subject).to respond_to(:timing)
+    expect(subject.timing("foo", 25, bad: "option")).to be_nil
   end
 end

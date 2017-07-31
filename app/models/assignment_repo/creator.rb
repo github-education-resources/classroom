@@ -56,33 +56,34 @@ class AssignmentRepo
     # rubocop:disable MethodLength
     # rubocop:disable AbcSize
     def perform
-      GitHubClassroom.statsd.time("excercise.create.time") do
-        begin
-          verify_organization_has_private_repos_available!
+      start = Time.zone.now
 
-          assignment_repo = assignment.assignment_repos.build(
-            github_repo_id: create_github_repository!,
-            user: user
-          )
+      verify_organization_has_private_repos_available!
 
-          add_user_to_repository!(assignment_repo.github_repo_id)
+      assignment_repo = assignment.assignment_repos.build(
+        github_repo_id: create_github_repository!,
+        user: user
+      )
 
-          if assignment.starter_code?
-            push_starter_code!(assignment_repo.github_repo_id)
-          end
+      add_user_to_repository!(assignment_repo.github_repo_id)
 
-          begin
-            assignment_repo.save!
-          rescue ActiveRecord::RecordInvalid
-            raise Result::Error, DEFAULT_ERROR_MESSAGE
-          end
-
-          Result.success(assignment_repo)
-        rescue Result::Error => err
-          delete_github_repository(assignment_repo.try(:github_repo_id))
-          Result.failed(err.message)
-        end
+      if assignment.starter_code?
+        push_starter_code!(assignment_repo.github_repo_id)
       end
+
+      begin
+        assignment_repo.save!
+      rescue ActiveRecord::RecordInvalid
+        raise Result::Error, DEFAULT_ERROR_MESSAGE
+      end
+
+      duration_in_millseconds = (Time.zone.now - start) * 1_000
+      GitHubClassroom.statsd.timing("excercise.create.time", duration_in_millseconds)
+
+      return Result.success(assignment_repo)
+    rescue Result::Error => err
+      delete_github_repository(assignment_repo.try(:github_repo_id))
+      return Result.failed(err.message)
     end
     # rubocop:enable AbcSize
     # rubocop:enable MethodLength
