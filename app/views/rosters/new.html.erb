@@ -28,8 +28,14 @@
 
         <dl class="<%= view.form_class_for(:roster_entries) %> short-field">
           <dt><label>Paste your list of identifiers below (one per line, please!):</label></dt>
-          <dd><%= text_area_tag(:identifiers, '', class: 'form-control input-block') %></dd>
+          <dd><%= text_area_tag(:identifiers, '', class: 'form-control input-block', id: 'entries-field') %></dd>
           <%= render('shared/form_error', errors: view.error_message_for(:roster_entries)) if view.errors_for?(:roster_entries) %>
+        </dl>
+
+        <dl class="form">
+          <dt><label>OR upload a CSV or text file:</label></dt>
+          <label class='btn btn-secondary btn-sm' for="file-upload">Upload file</label>
+          <%= file_field_tag :identifiers_file, style: 'display: none', id: 'file-upload', onchange: 'onIdentifiersUploaded()' %>
         </dl>
 
         <div class="form-actions">
