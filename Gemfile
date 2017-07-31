@@ -18,7 +18,7 @@ gem "chewy", "~> 0.9.0"
 gem "connection_pool"
 
 gem "dalli"
-gem 'dogstatsd-ruby'
+gem "dogstatsd-ruby"
 
 gem "faraday-http-cache"
 gem "flipper"

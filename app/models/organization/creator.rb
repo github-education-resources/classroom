@@ -75,7 +75,7 @@ class Organization
 
       update_default_repository_permission_to_none!(organization)
 
-      GitHubClassroom.statsd.increment('classroom.created')
+      GitHubClassroom.statsd.increment("classroom.created")
 
       Result.success(organization)
     rescue Result::Error => err
