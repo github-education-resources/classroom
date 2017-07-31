@@ -3,7 +3,7 @@
 require "datadog/statsd"
 
 class StubStatsd
-  def increment; end
+  def increment(stat, opts={}); end
 end
 
 module GitHubClassroom
