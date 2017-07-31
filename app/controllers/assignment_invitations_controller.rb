@@ -8,6 +8,8 @@ class AssignmentInvitationsController < ApplicationController
 
   def accept
     create_submission do
+      GitHubClassroom.statsd.increment("assignmentinvitation.accepted")
+
       redirect_to success_assignment_invitation_path
     end
   end
