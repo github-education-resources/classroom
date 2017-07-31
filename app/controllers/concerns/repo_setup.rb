@@ -10,7 +10,7 @@ module RepoSetup
     return progress unless repo.import_progress[:status] == "complete"
 
     progress.update(status: :configuring) if assignment_repo.configuring?
-    progress.update(status: :complete) if assignment_repo.configured? || !repo.branch_present?("github-classroom")
+    progress.update(status: :complete) if assignment_repo.configured? || !repo.branch_present?(config_branch)
     progress
   end
 
@@ -21,5 +21,9 @@ module RepoSetup
     else
       assignment_repo.destroy!
     end
+  end
+
+  def config_branch
+    ClassroomConfig::CONFIG_BRANCH
   end
 end

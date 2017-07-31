@@ -80,7 +80,7 @@ class AssignmentInvitationsController < ApplicationController
   def configurable_submission?
     repo             = current_submission.github_repository
     import           = repo.import_progress[:status]
-    classroom_branch = repo.branch_present?("github-classroom")
+    classroom_branch = repo.branch_present? config_branch
     import == "complete" && classroom_branch && current_submission.not_configured?
   end
 
