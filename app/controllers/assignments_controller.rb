@@ -19,9 +19,7 @@ class AssignmentsController < ApplicationController
     if @assignment.save
       @assignment.deadline&.create_job
 
-      GitHubClassroom.statsd.increment("assignment.created")
-      GitHubClassroom.statsd.increment("deadline.created") if @assignment.deadline
-
+      send_create_assignment_statsd_events
       flash[:success] = "\"#{@assignment.title}\" has been created!"
       redirect_to organization_assignment_path(@organization, @assignment)
     else
@@ -106,5 +104,10 @@ class AssignmentsController < ApplicationController
       .require(:assignment)
       .permit(:title, :slug, :public_repo, :students_are_repo_admins, :deadline)
       .merge(starter_code_repo_id: starter_code_repo_id_param)
+  end
+
+  def send_create_assignment_statsd_events
+    GitHubClassroom.statsd.increment("assignment.created")
+    GitHubClassroom.statsd.increment("deadline.created") if @assignment.deadline
   end
 end
