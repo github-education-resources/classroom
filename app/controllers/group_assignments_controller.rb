@@ -48,6 +48,8 @@ class GroupAssignmentsController < ApplicationController
     if @group_assignment.update_attributes(deleted_at: Time.zone.now)
       DestroyResourceJob.perform_later(@group_assignment)
 
+      GitHubClassroom.statsd.increment("groupassignment.deleted")
+
       flash[:success] = "\"#{@group_assignment.title}\" is being deleted"
       redirect_to @organization
     else

@@ -48,6 +48,9 @@ class AssignmentsController < ApplicationController
   def destroy
     if @assignment.update_attributes(deleted_at: Time.zone.now)
       DestroyResourceJob.perform_later(@assignment)
+
+      GitHubClassroom.statsd.increment("assignment.deleted")
+
       flash[:success] = "\"#{@assignment.title}\" is being deleted"
       redirect_to @organization
     else
