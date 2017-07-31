@@ -21,7 +21,7 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   def accept_assignment
     create_group_assignment_repo do
-      GitHubClassroom.statsd.increment("groupassignmentinvitation.accepted")
+      GitHubClassroom.statsd.increment("group-assignment-invitation.accepted")
 
       redirect_to successful_invitation_group_assignment_invitation_path
     end
