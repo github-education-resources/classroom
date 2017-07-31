@@ -38,6 +38,16 @@ RSpec.describe GroupAssignmentsController, type: :controller do
       end.to change(GroupAssignment, :count)
     end
 
+    it "sends an event to statsd" do
+      expect(GitHubClassroom.statsd).to receive(:increment).with("group-assignment.created")
+
+      post :create, params: {
+        organization_id: organization.slug,
+        group_assignment: { title: "Learn JavaScript", slug: "learn-javascript" },
+        grouping:         { title: "Grouping 1" }
+      }
+    end
+
     it "does not allow groupings to be added that do not belong to the organization" do
       other_group_assignment = create(:group_assignment)
 
@@ -262,6 +272,12 @@ RSpec.describe GroupAssignmentsController, type: :controller do
       assert_enqueued_jobs 1 do
         DestroyResourceJob.perform_later(group_assignment)
       end
+    end
+
+    it "sends an event to statsd" do
+      expect(GitHubClassroom.statsd).to receive(:increment).with("group-assignment.deleted")
+
+      delete :destroy, params: { id: group_assignment.slug, organization_id: organization }
     end
 
     it "redirects back to the organization" do

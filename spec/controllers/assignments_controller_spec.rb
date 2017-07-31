@@ -33,6 +33,15 @@ RSpec.describe AssignmentsController, type: :controller do
       end.to change(Assignment, :count)
     end
 
+    it "sends an event to statsd" do
+      expect(GitHubClassroom.statsd).to receive(:increment).with("assignment.created")
+
+      post :create, params: {
+        assignment: attributes_for(:assignment, organization: organization),
+        organization_id: organization.slug
+      }
+    end
+
     context "valid starter_code repo_name input" do
       before do
         post :create, params: {
@@ -303,6 +312,12 @@ RSpec.describe AssignmentsController, type: :controller do
       assert_enqueued_jobs 1 do
         DestroyResourceJob.perform_later(assignment)
       end
+    end
+
+    it "sends an event to statsd" do
+      expect(GitHubClassroom.statsd).to receive(:increment).with("assignment.deleted")
+
+      delete :destroy, params: { id: assignment.slug, organization_id: organization }
     end
 
     it "redirects back to the organization" do
