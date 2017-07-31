@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "datadog/statsd"
+require "datadog/statsd" if Rails.env.production?
 
 class StubStatsd
   def increment(stat, opts = {}); end
