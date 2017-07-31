@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 require "datadog/statsd" if Rails.env.production?
-
-class StubStatsd
-  def increment(stat, opts = {}); end
-end
+require "./lib/github_classroom/null_statsd"
 
 module GitHubClassroom
   APP_NAME = ENV["HEROKU_APP_NAME"] || "github-classroom"
@@ -14,7 +11,7 @@ module GitHubClassroom
     @statsd ||= if Rails.env.production?
                   ::Datadog::Statsd.new("localhost", 8125, tags: ["application:#{APP_NAME}", "dyno_id:#{DYNO}"])
                 else
-                  ::StubStatsd.new
+                  ::GitHubClassroom::NullStatsD.new
                 end
   end
 end
