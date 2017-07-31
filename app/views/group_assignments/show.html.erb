@@ -35,26 +35,66 @@
       </div>
   </div>
 
-
   <div class="site-content-body">
     <div class="invitation-content">
       <%= render @group_assignment.group_assignment_invitation %>
     </div>
 
-    <% if @group_assignment_repos.present? %>
-      <div class="assignment-repo-list">
-        <% @group_assignment_repos.each do |group_assignment_repo| %>
-          <%= render partial: 'group_assignment_repos/group_assignment_repo', \
-            locals: { url: organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo) } %>
-        <% end %>
-      </div>
+    <% if @organization.roster %>
+      <div class="assignment-container">
+        <div class="tabnav-body clearfix ">
+          <div class="tabnav">
+            <nav class="tabnav-tabs">
+              <span id='students-tab' onclick="selectTab(this)" class="tabnav-tab selected tabnav-link" aria-current="page">Teams</span>
+              <span id='unlinked-tab' onclick="selectTab(this)" class="tabnav-tab tabnav-link">Students not on a team</span>
+            </nav>
+          </div>
+          <span id='students-span'>
+            <div class="assignment-repo-list">
+              <% if @group_assignment_repos.present? %>
+                <div class="assignment-repo-list">
+                  <% @group_assignment_repos.each do |group_assignment_repo| %>
+                    <%= render partial: 'group_assignment_repos/group_assignment_repo', \
+                      locals: { url: organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo) } %>
+                  <% end %>
+                </div>
 
-      <%= render partial: 'shared/pagination', locals: { collection: @group_assignment_repos } %>
-    <% else %>
-      <div class="blankslate">
-        <h3>"<%= @group_assignment.title %>" does not have any repositories.</h3>
-        <p>Share the invitation link with your students to get started.</p>
+                <%= render partial: 'shared/pagination', locals: { collection: @group_assignment_repos } %>
+              <% else %>
+                <div class="blankslate">
+                  <h3>"<%= @group_assignment.title %>" does not have any repositories.</h3>
+                  <p>Share the invitation link with your students to get started.</p>
+                </div>
+              <% end %>
+            </div>
+          </span>
+          <span id='unlinked-span' class='hidden-tab'>
+            <div class="assignment-repo-list">
+              <% @students_not_on_team.each do |entry| %>
+                <%= render partial: 'assignment_repos/assignment_repo', locals: {
+                  url: organization_group_assignment_roster_entry_path(@organization, @group_assignment, entry)
+                } %>
+              <% end %>
+            </div>
+          </span>
+        </div>
       </div>
+    <% else %>
+      <% if @group_assignment_repos.present? %>
+        <div class="assignment-repo-list">
+          <% @group_assignment_repos.each do |group_assignment_repo| %>
+            <%= render partial: 'group_assignment_repos/group_assignment_repo', \
+              locals: { url: organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo) } %>
+          <% end %>
+        </div>
+
+        <%= render partial: 'shared/pagination', locals: { collection: @group_assignment_repos } %>
+      <% else %>
+        <div class="blankslate">
+          <h3>"<%= @group_assignment.title %>" does not have any repositories.</h3>
+          <p>Share the invitation link with your students to get started.</p>
+        </div>
+      <% end %>
     <% end %>
   </div>
 </div>
