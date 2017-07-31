@@ -2,7 +2,7 @@
 
 class AssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
-  include SetupRepo
+  include RepoSetup
 
   before_action :check_user_not_previous_acceptee, :check_should_redirect_to_roster_page, only: [:show]
   before_action :ensure_submission_repository_exists, only: %i[setup setup_progress success]

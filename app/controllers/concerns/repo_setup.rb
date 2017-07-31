@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module SetupRepo
+module RepoSetup
   extend ActiveSupport::Concern
 
   def setup_status(assignment_repo)
