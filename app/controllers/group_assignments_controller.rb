@@ -21,6 +21,7 @@ class GroupAssignmentsController < ApplicationController
       @group_assignment.deadline&.create_job
 
       GitHubClassroom.statsd.increment("groupassignment.created")
+      GitHubClassroom.statsd.increment("deadline.created") if @group_assignment.deadline
 
       flash[:success] = "\"#{@group_assignment.title}\" has been created!"
       redirect_to organization_group_assignment_path(@organization, @group_assignment)

@@ -20,6 +20,7 @@ class AssignmentsController < ApplicationController
       @assignment.deadline&.create_job
 
       GitHubClassroom.statsd.increment("assignment.created")
+      GitHubClassroom.statsd.increment("deadline.created") if @assignment.deadline
 
       flash[:success] = "\"#{@assignment.title}\" has been created!"
       redirect_to organization_assignment_path(@organization, @assignment)
