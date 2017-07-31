@@ -58,6 +58,7 @@ Rails.application.routes.draw do
           patch :unlink
           patch :delete_entry
           patch :add_student
+          patch :remove_organization
         end
       end
 

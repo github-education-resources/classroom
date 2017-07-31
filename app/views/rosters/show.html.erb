@@ -41,8 +41,26 @@
           </span>
         </div>
       </div>
+
+      <div class="boxed-group dangerzone">
+        <h3>Delete this roster</h3>
+        <div class="boxed-group-inner pt-2 clearfix">
+          <p>
+            Deleting the roster will delete all students.
+          </p>
+          <p>
+            This will not delete assignments, assignment repos, or submissions.
+          </p>
+            After deleting your roster, repos and submissions will be identified by GitHub handle instead of your roster identifier.
+          </p>
+          <p>
+            <a data-remodal-target="remove-roster" class="btn btn-danger">Delete roster</a>
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <%= render partial: '/rosters/new_student_modal', locals: { roster: @roster } %>
+<%= render partial: '/rosters/remove_roster_modal', locals: { roster: @roster, organization: @organization } %>
