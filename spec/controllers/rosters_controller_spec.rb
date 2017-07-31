@@ -486,4 +486,84 @@ RSpec.describe RostersController, type: :controller do
       end
     end
   end
+
+  describe "PATCH #remove_organization", :vcr do
+    before do
+      sign_in_as(user)
+    end
+
+    context "with flipper enabled" do
+      before do
+        GitHubClassroom.flipper[:student_identifier].enable
+
+        roster.organizations << organization
+      end
+
+      context "when there are multiple organizations in the roster" do
+        before do
+          roster.organizations << create(:organization)
+
+          patch :remove_organization, params: {
+            id: organization.slug
+          }
+        end
+
+        it "does not destroy the organization" do
+          expect(Roster.find_by(id: roster.id)).to be_truthy
+        end
+
+        it "removes organization from roster" do
+          expect(roster.reload.organizations).to_not include(organization)
+        end
+
+        it "renders success message" do
+          expect(flash[:success]).to be_present
+        end
+
+        it "redirects to organization path" do
+          expect(response).to redirect_to(organization_path(organization))
+        end
+      end
+
+      context "when there is one organization in the roster" do
+        before do
+          patch :remove_organization, params: {
+            id: organization.slug
+          }
+        end
+
+        it "destroys the roster" do
+          expect(Roster.find_by(id: roster.id)).to be_falsey
+        end
+
+        it "nullifies organization.roster" do
+          expect(organization.reload.roster).to be_nil
+        end
+
+        it "renders success message" do
+          expect(flash[:success]).to be_present
+        end
+
+        it "redirects to organization path" do
+          expect(response).to redirect_to(organization_path(organization))
+        end
+      end
+
+      after do
+        GitHubClassroom.flipper[:student_identifier].disable
+      end
+    end
+
+    context "with flipper disabled" do
+      before do
+        patch :remove_organization, params: {
+          id: organization.slug
+        }
+      end
+
+      it "404s" do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
 end
