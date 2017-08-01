@@ -18,6 +18,8 @@ class ApplicationController < ActionController::Base
               GitHub::NotFound,
               NotAuthorized, with: :flash_and_redirect_back_with_message
   rescue_from ActionController::RoutingError, ActiveRecord::RecordNotFound, with: :render_404
+  rescue_from StandardError, with: :send_to_statsd
+
 
   def peek_enabled?
     logged_in? && current_user.staff?

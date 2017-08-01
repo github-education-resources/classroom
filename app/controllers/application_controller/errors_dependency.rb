@@ -17,4 +17,9 @@ class ApplicationController
 
     redirect_back(fallback_location: root_path)
   end
+
+  def send_to_statsd(exception)
+    GitHubClassroom.statsd.increment("exception.raise")
+    raise exception
+  end
 end
