@@ -116,6 +116,45 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
   end
 
+  describe "GET #setup", :vcr do
+    let(:assignment) do
+      create(:assignment, title: "Learn Clojure", starter_code_repo_id: 1_062_897, organization: organization)
+    end
+
+    let(:invitation2) { create(:assignment_invitation, assignment: assignment) }
+
+    before do
+      GitHubClassroom.flipper[:repo_setup].enable
+    end
+
+    context "unauthenticated request" do
+      it "redirects the new user to sign in with GitHub" do
+        get :setup, params: { id: invitation2.key }
+        expect(response).to redirect_to(login_path)
+      end
+    end
+
+    context "authenticated request" do
+      before(:each) do
+        sign_in_as(user)
+
+        assignment_repo = create(:assignment_repo, assignment: invitation2.assignment, github_repo_id: 8485, user: user)
+        allow(assignment_repo).to receive(:github_repository).and_return(unconfigured_repo)
+
+        result = AssignmentRepo::Creator::Result.success(assignment_repo)
+        allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result)
+      end
+
+      it "shows setup" do
+        get :setup, params: { id: invitation2.key }
+
+        expect(request.url).to eq(setup_assignment_invitation_url(invitation2))
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template("assignment_invitations/setup")
+      end
+    end
+  end
+
   describe "GET #success" do
     let(:assignment) do
       create(:assignment, title: "Learn Clojure", starter_code_repo_id: 1_062_897, organization: organization)
