@@ -59,7 +59,7 @@ RSpec.describe RostersController, type: :controller do
       end
 
       it "sends an event to statsd" do
-        expect(GitHubClassroom.statsd).to receive(:increment).with("roster.created")
+        expect(GitHubClassroom.statsd).to receive(:increment).with("roster.create")
 
         post :create, params: {
           id: organization.slug,

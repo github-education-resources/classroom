@@ -125,7 +125,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       end
 
       it "sends an event to statsd" do
-        expect(GitHubClassroom.statsd).to receive(:increment).with("group-excercise-invitation.accepted")
+        expect(GitHubClassroom.statsd).to receive(:increment).with("group-excercise-invitation.accept")
 
         patch :accept_invitation, params: { id: invitation.key, group: { title: "Code Squad" } }
       end
@@ -151,6 +151,12 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
         it "does not allow user to join" do
           expect_any_instance_of(ApplicationController).to receive(:flash_and_redirect_back_with_message)
+          patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
+        end
+
+        it "sends an event to statsd" do
+          expect(GitHubClassroom.statd).to receive(:increment).with("group-excercise-invitation.fail")
+
           patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
         end
       end
