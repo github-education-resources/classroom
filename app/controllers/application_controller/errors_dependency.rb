@@ -20,6 +20,6 @@ class ApplicationController
 
   def send_to_statsd(exception)
     GitHubClassroom.statsd.increment("exception.raise")
-    raise exception
+    raise
   end
 end

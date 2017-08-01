@@ -13,13 +13,12 @@ class ApplicationController < ActionController::Base
   helper_method :student_identifier_enabled?, :team_management_enabled? # feature_flags_dependency
 
   # errors_dependency
+  rescue_from StandardError, with: :send_to_statsd
   rescue_from GitHub::Error,
               GitHub::Forbidden,
               GitHub::NotFound,
               NotAuthorized, with: :flash_and_redirect_back_with_message
   rescue_from ActionController::RoutingError, ActiveRecord::RecordNotFound, with: :render_404
-  rescue_from StandardError, with: :send_to_statsd
-
 
   def peek_enabled?
     logged_in? && current_user.staff?
