@@ -125,7 +125,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       end
 
       it "sends an event to statsd" do
-        expect(GitHubClassroom.statsd).to receive(:increment).with("group-excercise-invitation.accept")
+        expect(GitHubClassroom.statsd).to receive(:increment).with("group_excercise-invitation.accept")
 
         patch :accept_invitation, params: { id: invitation.key, group: { title: "Code Squad" } }
       end
@@ -155,7 +155,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         end
 
         it "sends an event to statsd" do
-          expect(GitHubClassroom.statd).to receive(:increment).with("group-excercise-invitation.fail")
+          expect(GitHubClassroom.statd).to receive(:increment).with("group_excercise-invitation.fail")
 
           patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
         end
