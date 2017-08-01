@@ -27,13 +27,24 @@ RSpec.describe HooksController, type: :controller do
     end
 
     GitHub::WebHook::ACCEPTED_EVENTS.map do |event|
-      it "queues a job for the '#{event}' event" do
-        set_http_header("HTTP_X_GITHUB_EVENT", event)
-        job_class = "#{event}_event_job".classify.constantize
+      context event do
+        let(:job_class) { "#{event}_event_job".classify.constantize }
 
-        expect do
+        before do
+          set_http_header("HTTP_X_GITHUB_EVENT", event)
+        end
+
+        it "queues a job for the '#{event}' event" do
+          expect do
+            send_webhook(foo: "bar")
+          end.to have_enqueued_job(job_class)
+        end
+
+        it "sends an event to statsd" do
+          expect(GitHubClassroom.statsd).to receive(:increment).with("webhook.#{event}")
+
           send_webhook(foo: "bar")
-        end.to have_enqueued_job(job_class)
+        end
       end
     end
   end

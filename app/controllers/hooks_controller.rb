@@ -20,6 +20,9 @@ class HooksController < ApplicationController
   def send_github_payload_to_job(payload_body)
     github_event = request.env["HTTP_X_GITHUB_EVENT"]
     return unless GitHub::WebHook::ACCEPTED_EVENTS.include?(github_event)
+
+    GitHubClassroom.statsd.increment("webhook.#{github_event}")
+
     "#{github_event}_event_job".classify.constantize.perform_later(payload_body)
   end
 
