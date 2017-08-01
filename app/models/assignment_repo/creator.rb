@@ -65,6 +65,7 @@ class AssignmentRepo
         user: user
       )
 
+      user.github_user.watch_repository(assignment_repo)
       add_user_to_repository!(assignment_repo.github_repo_id)
 
       if assignment.starter_code?

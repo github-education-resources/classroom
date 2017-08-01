@@ -83,6 +83,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     users_group_assignment_repo = invitation.redeem_for(current_user, selected_group, new_group_title)
 
     if users_group_assignment_repo.present?
+      current_user.github_user.watch_repository(users_group_assignment_repo)
       yield if block_given?
     else
       flash[:error] = "An error has occurred, please refresh the page and try again."

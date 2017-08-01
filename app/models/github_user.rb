@@ -11,6 +11,14 @@ class GitHubUser < GitHubResource
     end
   end
 
+  def watch_repository(repo)
+    GitHub::Errors.with_error_handling do
+      @client.update_subscription(repo.github_repository.full_name, subscribed: true)
+    end
+  rescue GitHub::Error
+    false
+  end
+
   def authorized_access_token?
     GitHub::Errors.with_error_handling do
       GitHubClassroom.github_client.check_application_authorization(
