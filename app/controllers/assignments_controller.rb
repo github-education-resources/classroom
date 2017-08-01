@@ -48,7 +48,7 @@ class AssignmentsController < ApplicationController
     if @assignment.update_attributes(deleted_at: Time.zone.now)
       DestroyResourceJob.perform_later(@assignment)
 
-      GitHubClassroom.statsd.increment("assignment.deleted")
+      GitHubClassroom.statsd.increment("excercise.deleted")
 
       flash[:success] = "\"#{@assignment.title}\" is being deleted"
       redirect_to @organization
@@ -107,7 +107,7 @@ class AssignmentsController < ApplicationController
   end
 
   def send_create_assignment_statsd_events
-    GitHubClassroom.statsd.increment("assignment.created")
+    GitHubClassroom.statsd.increment("excercise.created")
     GitHubClassroom.statsd.increment("deadline.created") if @assignment.deadline
   end
 end

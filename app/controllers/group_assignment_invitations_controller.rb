@@ -20,9 +20,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   def accept; end
 
   def accept_assignment
-    create_group_assignment_repo do
-      redirect_to successful_invitation_group_assignment_invitation_path
-    end
+    create_group_assignment_repo { redirect_to successful_invitation_group_assignment_invitation_path }
   end
 
   def accept_invitation
@@ -85,7 +83,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     users_group_assignment_repo = invitation.redeem_for(current_user, selected_group, new_group_title)
 
     if users_group_assignment_repo.present?
-      GitHubClassroom.statsd.increment("group-assignment-invitation.accepted")
+      GitHubClassroom.statsd.increment("group-excercise-invitation.accepted")
       yield if block_given?
     else
       flash[:error] = "An error has occurred, please refresh the page and try again."

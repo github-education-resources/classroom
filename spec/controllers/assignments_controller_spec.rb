@@ -34,7 +34,7 @@ RSpec.describe AssignmentsController, type: :controller do
     end
 
     it "sends an event to statsd" do
-      expect(GitHubClassroom.statsd).to receive(:increment).with("assignment.created")
+      expect(GitHubClassroom.statsd).to receive(:increment).with("excercise.created")
 
       post :create, params: {
         assignment: attributes_for(:assignment, organization: organization),
@@ -128,7 +128,7 @@ RSpec.describe AssignmentsController, type: :controller do
       end
 
       it "sends an event to statsd" do
-        expect(GitHubClassroom.statsd).to receive(:increment).with("assignment.created")
+        expect(GitHubClassroom.statsd).to receive(:increment).with("excercise.created")
         expect(GitHubClassroom.statsd).to receive(:increment).with("deadline.created")
 
         post :create, params: {
@@ -326,7 +326,7 @@ RSpec.describe AssignmentsController, type: :controller do
     end
 
     it "sends an event to statsd" do
-      expect(GitHubClassroom.statsd).to receive(:increment).with("assignment.deleted")
+      expect(GitHubClassroom.statsd).to receive(:increment).with("excercise.deleted")
 
       delete :destroy, params: { id: assignment.slug, organization_id: organization }
     end

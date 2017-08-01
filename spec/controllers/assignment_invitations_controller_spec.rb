@@ -85,7 +85,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
 
     it "sends an event to statsd" do
-      expect(GitHubClassroom.statsd).to receive(:increment).with("assignment-invitation.accepted")
+      expect(GitHubClassroom.statsd).to receive(:increment).with("excercise-invitation.accepted")
 
       allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result)
 
