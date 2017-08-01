@@ -20,7 +20,7 @@ class GroupAssignmentsController < ApplicationController
     if @group_assignment.save
       @group_assignment.deadline&.create_job
 
-      GitHubClassroom.statsd.increment("group_excercise.create")
+      GitHubClassroom.statsd.increment("group_exercise.create")
       GitHubClassroom.statsd.increment("deadline.create") if @group_assignment.deadline
 
       flash[:success] = "\"#{@group_assignment.title}\" has been created!"
@@ -49,7 +49,7 @@ class GroupAssignmentsController < ApplicationController
     if @group_assignment.update_attributes(deleted_at: Time.zone.now)
       DestroyResourceJob.perform_later(@group_assignment)
 
-      GitHubClassroom.statsd.increment("group_excercise.destroy")
+      GitHubClassroom.statsd.increment("group_exercise.destroy")
 
       flash[:success] = "\"#{@group_assignment.title}\" is being deleted"
       redirect_to @organization

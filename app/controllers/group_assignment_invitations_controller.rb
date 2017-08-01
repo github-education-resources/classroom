@@ -83,10 +83,10 @@ class GroupAssignmentInvitationsController < ApplicationController
     users_group_assignment_repo = invitation.redeem_for(current_user, selected_group, new_group_title)
 
     if users_group_assignment_repo.present?
-      GitHubClassroom.statsd.increment("group_excercise_invitation.accept")
+      GitHubClassroom.statsd.increment("group_exercise_invitation.accept")
       yield if block_given?
     else
-      GitHubClassroom.statsd.increment("group_excercise_invitation.fail")
+      GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
 
       flash[:error] = "An error has occurred, please refresh the page and try again."
       redirect_to :show
