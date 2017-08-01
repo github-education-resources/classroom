@@ -62,12 +62,15 @@ class GroupAssignmentInvitationsController < ApplicationController
     validate_max_members_not_exceeded!(group)
     return if group_assignment.grouping.groups.find_by(id: group_id)
 
+    GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
     raise NotAuthorized, "You are not permitted to select this team"
   end
 
   def validate_max_members_not_exceeded!(group)
     return unless group.present? && group_assignment.present? && group_assignment.max_members.present?
     return unless group.repo_accesses.count >= group_assignment.max_members
+
+    GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
     raise NotAuthorized, "This team has reached its maximum member limit of #{group_assignment.max_members}."
   end
 
