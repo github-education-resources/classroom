@@ -78,7 +78,7 @@ class AssignmentRepo
       end
 
       duration_in_millseconds = (Time.zone.now - start) * 1_000
-      GitHubClassroom.statsd.timing("exercise-repo.create.time", duration_in_millseconds)
+      GitHubClassroom.statsd.timing("exercise_repo.create.time", duration_in_millseconds)
 
       Result.success(assignment_repo)
     rescue Result::Error => err
