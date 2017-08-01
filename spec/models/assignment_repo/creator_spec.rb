@@ -31,6 +31,11 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
         expect(result.assignment_repo.user).to eql(student)
       end
 
+      it "tracks the how long it too to be created" do
+        expect(GitHubClassroom.statsd).to receive(:timing)
+        AssignmentRepo::Creator.perform(assignment: assignment, user: student)
+      end
+
       context "github repository with the same name already exists" do
         before do
           result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)

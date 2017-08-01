@@ -56,6 +56,8 @@ class AssignmentRepo
     # rubocop:disable MethodLength
     # rubocop:disable AbcSize
     def perform
+      start = Time.zone.now
+
       verify_organization_has_private_repos_available!
 
       assignment_repo = assignment.assignment_repos.build(
@@ -74,6 +76,9 @@ class AssignmentRepo
       rescue ActiveRecord::RecordInvalid
         raise Result::Error, DEFAULT_ERROR_MESSAGE
       end
+
+      duration_in_millseconds = (Time.zone.now - start) * 1_000
+      GitHubClassroom.statsd.timing("exercise_repo.create.time", duration_in_millseconds)
 
       Result.success(assignment_repo)
     rescue Result::Error => err
