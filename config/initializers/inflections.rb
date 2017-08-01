@@ -16,4 +16,5 @@
 ActiveSupport::Inflector.inflections do |inflect|
   inflect.acronym "GitHub"
   inflect.acronym "API"
+  inflect.acronym "StatsD"
 end

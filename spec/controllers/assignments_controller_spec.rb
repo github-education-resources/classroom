@@ -33,6 +33,15 @@ RSpec.describe AssignmentsController, type: :controller do
       end.to change(Assignment, :count)
     end
 
+    it "sends an event to statsd" do
+      expect(GitHubClassroom.statsd).to receive(:increment).with("exercise.create")
+
+      post :create, params: {
+        assignment: attributes_for(:assignment, organization: organization),
+        organization_id: organization.slug
+      }
+    end
+
     context "valid starter_code repo_name input" do
       before do
         post :create, params: {
@@ -116,6 +125,17 @@ RSpec.describe AssignmentsController, type: :controller do
     context "deadline flipper is enabled for user" do
       before do
         GitHubClassroom.flipper[:deadlines].enable
+      end
+
+      it "sends an event to statsd" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise.create")
+        expect(GitHubClassroom.statsd).to receive(:increment).with("deadline.create")
+
+        post :create, params: {
+          organization_id: organization.slug,
+          assignment:      attributes_for(:assignment, organization: organization)
+            .merge(deadline: "05/25/2018 13:17-0800")
+        }
       end
 
       context "valid datetime for deadline is passed" do
@@ -303,6 +323,12 @@ RSpec.describe AssignmentsController, type: :controller do
       assert_enqueued_jobs 1 do
         DestroyResourceJob.perform_later(assignment)
       end
+    end
+
+    it "sends an event to statsd" do
+      expect(GitHubClassroom.statsd).to receive(:increment).with("exercise.destroy")
+
+      delete :destroy, params: { id: assignment.slug, organization_id: organization }
     end
 
     it "redirects back to the organization" do

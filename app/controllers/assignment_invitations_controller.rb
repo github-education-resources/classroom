@@ -10,6 +10,7 @@ class AssignmentInvitationsController < ApplicationController
 
   def accept
     create_submission do
+      GitHubClassroom.statsd.increment("exercise_invitation.accept")
       if current_submission.starter_code_repo_id
         redirect_to setup_assignment_invitation_path
       else
@@ -90,6 +91,8 @@ class AssignmentInvitationsController < ApplicationController
     if result.success?
       yield if block_given?
     else
+      GitHubClassroom.statsd.increment("exercise_invitation.fail")
+
       flash[:error] = result.error
       redirect_to assignment_invitation_path(current_invitation)
     end

@@ -18,6 +18,12 @@ RSpec.describe Organization::Creator, type: :model do
         expect(result.success?).to be_truthy
         expect(result.organization.github_id).to eql(github_organization_id)
       end
+
+      it "sends an event to statd" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("classroom.created")
+
+        Organization::Creator.perform(github_id: github_organization_id, users: [user])
+      end
     end
 
     describe "unsucessful creation" do

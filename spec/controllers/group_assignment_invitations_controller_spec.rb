@@ -124,6 +124,12 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         expect(student.repo_accesses.count).to eql(1)
       end
 
+      it "sends an event to statsd" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_invitation.accept")
+
+        patch :accept_invitation, params: { id: invitation.key, group: { title: "Code Squad" } }
+      end
+
       it "does not allow users to join a group that is not apart of the grouping" do
         other_grouping = create(:grouping, organization: organization)
         other_group    = Group.create(title: "The Group", grouping: other_grouping)
@@ -134,7 +140,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         expect(student.repo_accesses.count).to eql(0)
       end
 
-      context "group has reached maximum number of members" do
+      context "group has reached maximum number of members", :vcr do
         let(:group) { Group.create(title: "The Group", grouping: grouping) }
 
         before(:each) do
@@ -145,6 +151,12 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
         it "does not allow user to join" do
           expect_any_instance_of(ApplicationController).to receive(:flash_and_redirect_back_with_message)
+          patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
+        end
+
+        it "sends an event to statsd" do
+          expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_invitation.fail")
+
           patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
         end
       end

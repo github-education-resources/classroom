@@ -88,6 +88,14 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       expect(user.assignment_repos.count).to eql(1)
     end
 
+    it "sends an event to statsd" do
+      expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_invitation.accept")
+
+      allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result)
+
+      patch :accept, params: { id: invitation.key }
+    end
+
     context "with repo setup enabled", :vcr do
       before do
         GitHubClassroom.flipper[:repo_setup].enable

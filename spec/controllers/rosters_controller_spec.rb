@@ -58,6 +58,16 @@ RSpec.describe RostersController, type: :controller do
         GitHubClassroom.flipper[:student_identifier].enable
       end
 
+      it "sends an event to statsd" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("roster.create")
+
+        post :create, params: {
+          id: organization.slug,
+          identifiers: "email1\r\nemail2",
+          identifier_name: "emails"
+        }
+      end
+
       context "with no identifier_name" do
         before do
           post :create, params: { id: organization.slug, identifiers: "myemail" }

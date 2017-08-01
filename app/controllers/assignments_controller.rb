@@ -19,6 +19,7 @@ class AssignmentsController < ApplicationController
     if @assignment.save
       @assignment.deadline&.create_job
 
+      send_create_assignment_statsd_events
       flash[:success] = "\"#{@assignment.title}\" has been created!"
       redirect_to organization_assignment_path(@organization, @assignment)
     else
@@ -46,6 +47,9 @@ class AssignmentsController < ApplicationController
   def destroy
     if @assignment.update_attributes(deleted_at: Time.zone.now)
       DestroyResourceJob.perform_later(@assignment)
+
+      GitHubClassroom.statsd.increment("exercise.destroy")
+
       flash[:success] = "\"#{@assignment.title}\" is being deleted"
       redirect_to @organization
     else
@@ -100,5 +104,10 @@ class AssignmentsController < ApplicationController
       .require(:assignment)
       .permit(:title, :slug, :public_repo, :students_are_repo_admins, :deadline)
       .merge(starter_code_repo_id: starter_code_repo_id_param)
+  end
+
+  def send_create_assignment_statsd_events
+    GitHubClassroom.statsd.increment("exercise.create")
+    GitHubClassroom.statsd.increment("deadline.create") if @assignment.deadline
   end
 end
