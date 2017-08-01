@@ -127,6 +127,17 @@ RSpec.describe AssignmentsController, type: :controller do
         GitHubClassroom.flipper[:deadlines].enable
       end
 
+      it "sends an event to statsd" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("assignment.created")
+        expect(GitHubClassroom.statsd).to receive(:increment).with("deadline.created")
+
+        post :create, params: {
+          organization_id: organization.slug,
+          assignment:      attributes_for(:assignment, organization: organization)
+            .merge(deadline: "05/25/2018 13:17-0800")
+        }
+      end
+
       context "valid datetime for deadline is passed" do
         before do
           post :create, params: {

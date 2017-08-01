@@ -64,6 +64,18 @@ RSpec.describe GroupAssignmentsController, type: :controller do
         GitHubClassroom.flipper[:deadlines].enable
       end
 
+      it "sends an event to statsd" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("group-assignment.created")
+        expect(GitHubClassroom.statsd).to receive(:increment).with("deadline.created")
+
+        post :create, params: {
+          organization_id:  organization.slug,
+          grouping:         { title: "Grouping 1" },
+          group_assignment: attributes_for(:group_assignment, organization: organization)
+            .merge(deadline: "05/25/2018 13:17-0800")
+        }
+      end
+
       context "valid datetime for deadline is passed" do
         before do
           post :create, params: {
