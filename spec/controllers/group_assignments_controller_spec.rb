@@ -38,6 +38,16 @@ RSpec.describe GroupAssignmentsController, type: :controller do
       end.to change(GroupAssignment, :count)
     end
 
+    it "sends an event to statsd" do
+      expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise.create")
+
+      post :create, params: {
+        organization_id: organization.slug,
+        group_assignment: { title: "Learn JavaScript", slug: "learn-javascript" },
+        grouping:         { title: "Grouping 1" }
+      }
+    end
+
     it "does not allow groupings to be added that do not belong to the organization" do
       other_group_assignment = create(:group_assignment)
 
@@ -52,6 +62,18 @@ RSpec.describe GroupAssignmentsController, type: :controller do
     context "deadline flipper is enabled" do
       before do
         GitHubClassroom.flipper[:deadlines].enable
+      end
+
+      it "sends an event to statsd" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise.create")
+        expect(GitHubClassroom.statsd).to receive(:increment).with("deadline.create")
+
+        post :create, params: {
+          organization_id:  organization.slug,
+          grouping:         { title: "Grouping 1" },
+          group_assignment: attributes_for(:group_assignment, organization: organization)
+            .merge(deadline: "05/25/2018 13:17-0800")
+        }
       end
 
       context "valid datetime for deadline is passed" do
@@ -262,6 +284,12 @@ RSpec.describe GroupAssignmentsController, type: :controller do
       assert_enqueued_jobs 1 do
         DestroyResourceJob.perform_later(group_assignment)
       end
+    end
+
+    it "sends an event to statsd" do
+      expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise.destroy")
+
+      delete :destroy, params: { id: group_assignment.slug, organization_id: organization }
     end
 
     it "redirects back to the organization" do

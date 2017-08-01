@@ -83,6 +83,14 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       patch :accept, params: { id: invitation.key }
       expect(user.assignment_repos.count).to eql(1)
     end
+
+    it "sends an event to statsd" do
+      expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_invitation.accept")
+
+      allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result)
+
+      patch :accept, params: { id: invitation.key }
+    end
   end
 
   describe "GET #success" do

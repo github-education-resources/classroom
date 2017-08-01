@@ -22,6 +22,8 @@ class RostersController < ApplicationController
     @organization.roster = @roster
     @organization.save!
 
+    GitHubClassroom.statsd.increment("roster.create")
+
     flash[:success] = "Your classroom roster has been saved! Manage it <a href='#{roster_url(@organization)}'>here</a>."
 
     redirect_to organization_path(@organization)
