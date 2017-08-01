@@ -5,8 +5,12 @@ require "rails_helper"
 RSpec.describe AssignmentInvitationsController, type: :controller do
   let(:organization) { classroom_org     }
   let(:user)         { classroom_student }
+  let(:config_branch) { ClassroomConfig::CONFIG_BRANCH }
 
   let(:invitation) { create(:assignment_invitation, organization: organization) }
+
+  let(:unconfigured_repo) { stub_repository("template") }
+  let(:configured_repo) { stub_repository("configured-repo") }
 
   describe "GET #show", :vcr do
     context "unauthenticated request" do
@@ -82,6 +86,33 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
       patch :accept, params: { id: invitation.key }
       expect(user.assignment_repos.count).to eql(1)
+    end
+
+    context "with repo setup enabled", :vcr do
+      before do
+        GitHubClassroom.flipper[:repo_setup].enable
+      end
+
+      it "redirects to success after accepting assignment without starter code" do
+        allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result)
+
+        patch :accept, params: { id: invitation.key }
+        expect(response).to redirect_to(success_assignment_invitation_url(invitation))
+      end
+
+      it "redirects to setup after accepting assignment with starter code" do
+        assignment = create(:assignment, title: "Learn Clojure", starter_code_repo_id: 1_062_897,
+                                         organization: organization)
+        invitation2 = create(:assignment_invitation, assignment: assignment)
+        assignment_repo = create(:assignment_repo, assignment: invitation2.assignment, user: user)
+
+        result2 = AssignmentRepo::Creator::Result.success(assignment_repo)
+
+        allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result2)
+
+        patch :accept, params: { id: invitation2.key }
+        expect(response).to redirect_to(setup_assignment_invitation_url(invitation2))
+      end
     end
   end
 
