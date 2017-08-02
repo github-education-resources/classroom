@@ -6,7 +6,7 @@
       <span class="assignment-icon assignment-icon-individual">
         <%= octicon 'person', height: 22 %>
       </span>
-      Accept the <strong><%= current_assignment.title %></strong> assignment
+      <%= raw t('views.assignment_invitations.accept_invitation_header', assignment_title: current_assignment.title) %>
     </h2>
   </div>
 </div>
@@ -15,13 +15,13 @@
   <%= form_tag({ controller: :assignment_invitations, action: :accept }, method: :patch) do %>
     <div class="markdown-body">
       <p>
-        Accepting this assignment will give you access to the <strong><%= "#{current_assignment.slug}-#{current_user.github_user.login}" %></strong>
-        repository in the <%= link_to "@#{organization.github_organization.login}", organization.github_organization.html_url %> organization on GitHub.
+        <%= t('views.assignment_invitations.accept_invitation_info_slice_1') %> <strong><%= "#{current_assignment.slug}-#{current_user.github_user.login}" %></strong>
+        <%= t('views.assignment_invitations.accept_invitation_info_slice_2') %> <%= link_to "@#{organization.github_organization.login}", organization.github_organization.html_url %> <%= t('views.assignment_invitations.accept_invitation_info_slice_3') %>
       </p>
     </div>
 
     <div class="form-actions">
-      <%= submit_tag 'Accept this assignment', class: 'btn btn-primary js-navigation' %>
+      <%= submit_tag t('views.assignment_invitations.accept_invitation_btn_text'), class: 'btn btn-primary js-navigation' %>
     </div>
   <% end %>
 </div>
