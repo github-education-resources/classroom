@@ -19,7 +19,7 @@ class ApplicationController
   end
 
   def send_to_statsd(exception)
-    GitHubClassroom.statsd.increment("exception.raise")
+    GitHubClassroom.statsd.increment("exception.raise", tags: [exception.class])
     raise exception
   end
 end
