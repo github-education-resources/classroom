@@ -5,8 +5,12 @@ require "rails_helper"
 RSpec.describe AssignmentInvitationsController, type: :controller do
   let(:organization) { classroom_org     }
   let(:user)         { classroom_student }
+  let(:config_branch) { ClassroomConfig::CONFIG_BRANCH }
 
   let(:invitation) { create(:assignment_invitation, organization: organization) }
+
+  let(:unconfigured_repo) { stub_repository("template") }
+  let(:configured_repo) { stub_repository("configured-repo") }
 
   describe "GET #show", :vcr do
     context "unauthenticated request" do
@@ -90,6 +94,112 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result)
 
       patch :accept, params: { id: invitation.key }
+    end
+
+    context "with repo setup enabled", :vcr do
+      before do
+        GitHubClassroom.flipper[:repo_setup].enable
+      end
+
+      it "redirects to success after accepting assignment without starter code" do
+        allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result)
+
+        patch :accept, params: { id: invitation.key }
+        expect(response).to redirect_to(success_assignment_invitation_url(invitation))
+      end
+
+      it "redirects to setup after accepting assignment with starter code" do
+        assignment = create(:assignment, title: "Learn Clojure", starter_code_repo_id: 1_062_897,
+                                         organization: organization)
+        invitation2 = create(:assignment_invitation, assignment: assignment)
+        assignment_repo = create(:assignment_repo, assignment: invitation2.assignment, user: user)
+
+        result2 = AssignmentRepo::Creator::Result.success(assignment_repo)
+
+        allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result2)
+
+        patch :accept, params: { id: invitation2.key }
+        expect(response).to redirect_to(setup_assignment_invitation_url(invitation2))
+      end
+    end
+  end
+
+  describe "GET #setup", :vcr do
+    let(:assignment) do
+      create(:assignment, title: "Learn Clojure", starter_code_repo_id: 1_062_897, organization: organization)
+    end
+
+    let(:invitation) { create(:assignment_invitation, assignment: assignment) }
+
+    before do
+      GitHubClassroom.flipper[:repo_setup].enable
+    end
+
+    context "unauthenticated request" do
+      it "redirects the new user to sign in with GitHub" do
+        get :setup, params: { id: invitation.key }
+        expect(response).to redirect_to(login_path)
+      end
+    end
+
+    context "authenticated request" do
+      before(:each) do
+        sign_in_as(user)
+
+        assignment_repo = create(:assignment_repo, assignment: invitation.assignment, github_repo_id: 8485, user: user)
+        allow(assignment_repo).to receive(:github_repository).and_return(unconfigured_repo)
+
+        result = AssignmentRepo::Creator::Result.success(assignment_repo)
+        allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result)
+      end
+
+      it "shows setup" do
+        get :setup, params: { id: invitation.key }
+
+        expect(request.url).to eq(setup_assignment_invitation_url(invitation))
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template("assignment_invitations/setup")
+      end
+    end
+  end
+
+  describe "PATCH #setup_progress", :vcr do
+    let(:assignment) do
+      create(:assignment, title: "Learn Clojure", starter_code_repo_id: 1_062_897, organization: organization)
+    end
+
+    let(:invitation) { create(:assignment_invitation, assignment: assignment) }
+
+    before(:each) do
+      GitHubClassroom.flipper[:repo_setup].enable
+      sign_in_as(user)
+
+      @assignment_repo = create(:assignment_repo, assignment: invitation.assignment, github_repo_id: 8485, user: user)
+
+      result = AssignmentRepo::Creator::Result.success(@assignment_repo)
+      allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result)
+    end
+
+    it "gives status of complete when configured" do
+      @assignment_repo.configured!
+      allow_any_instance_of(AssignmentRepo).to receive(:github_repository).and_return(configured_repo)
+      patch :setup_progress, params: { id: invitation.key }
+
+      expect(response).to have_http_status(:success)
+      expect(response.header["Content-Type"]).to include "application/json"
+      progress = JSON(response.body)
+      expect(progress["status"]).to eq("complete")
+    end
+
+    it "gives status of configuring when unconfigured" do
+      @assignment_repo.configuring!
+      allow_any_instance_of(AssignmentRepo).to receive(:github_repository).and_return(unconfigured_repo)
+      patch :setup_progress, params: { id: invitation.key }
+
+      expect(response).to have_http_status(:success)
+      expect(response.header["Content-Type"]).to include "application/json"
+      progress = JSON(response.body)
+      expect(progress["status"]).to eq("configuring")
     end
   end
 
