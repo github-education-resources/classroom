@@ -149,5 +149,40 @@ describe GitHubRepository do
         expect(@github_repository.import_progress).to be_a_kind_of(Sawyer::Resource)
       end
     end
+
+    describe "#create_label", :vcr do
+      it "creates label with default color" do
+        label = @github_repository.create_label("test-label")
+
+        expect(label[:color]).to eq(GitHubRepository::DEFAULT_LABEL_COLOR)
+      end
+
+      it "creates label with specified color" do
+        label = @github_repository.create_label("test-label", "f3fdef")
+
+        expect(label[:color]).to eq("f3fdef")
+      end
+    end
+
+    describe "#labels", :vcr do
+      it "returns labels" do
+        @github_repository.create_label("test-label1")
+        @github_repository.create_label("test-label2")
+
+        labels = @github_repository.labels.map(&:name)
+        expect(labels).to include "test-label1"
+        expect(labels).to include "test-label2"
+      end
+    end
+
+    describe "#delete_label!", :vcr do
+      it "deletes an existing label" do
+        @github_repository.create_label("test-label")
+        expect(@github_repository.labels.map(&:name)).to include "test-label"
+
+        @github_repository.delete_label!("test-label")
+        expect(@github_repository.labels.map(&:name)).not_to include "test-label"
+      end
+    end
   end
 end
