@@ -72,6 +72,10 @@ class StubRepository
     @blobs[sha]
   end
 
+  def present?(**_options)
+    true
+  end
+
   private
 
   def branch_names
