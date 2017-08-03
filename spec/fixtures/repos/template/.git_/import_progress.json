@@ -1,0 +1,15 @@
+{
+ "vcs": "git",
+ "use_lfs":"undecided",
+ "vcs_url": "https://github.com/education/template",
+ "status":"complete",
+ "status_text":"Done",
+ "has_large_files": false,
+ "large_files_size": 0,
+ "large_files_count": 0,
+ "authors_count": 0,
+ "url" : "https://api.github.com/repos/education/configured-repo/import",
+ "html_url" : "https://github.com/education/configured-repo/import",
+ "authors_url" : "https://api.github.com/repos/education/configured-repo/import/authors",
+ "repository_url" : "https://api.github.com/repos/education/configured-repo"
+}
