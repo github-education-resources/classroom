@@ -120,19 +120,56 @@ RSpec.describe Assignment::Editor do
       end
     end
 
-    describe "repository visibility job" do
-      before do
-        create(:assignment_repo, assignment: assignment)
-        assignment.public_repo = false
-        assignment.save
+    describe "setting to private" do
+      let(:plan_with_private_repos) { { owned_private_repos: 0, private_repos: 2 } }
+      let(:plan_without_private_repos) { { owned_private_repos: 0, private_repos: 0 } }
+
+      context "when we don't have private repos" do
+        before do
+          allow_any_instance_of(GitHubOrganization).to receive(:plan).and_return(plan_without_private_repos)
+
+          create(:assignment_repo, assignment: assignment)
+          assignment.public_repo = true
+          assignment.save
+        end
+
+        it "does not enqueue repository visibility job" do
+          ActiveJob::Base.queue_adapter = :test
+
+          expect do
+            subject.perform(assignment: assignment, options: { public_repo: false })
+          end.to_not have_enqueued_job(Assignment::RepositoryVisibilityJob)
+        end
+
+        it "returns failed result" do
+          result = subject.perform(assignment: assignment, options: { public_repo: false })
+
+          expect(result.failed?).to be_truthy
+        end
       end
 
-      it "enqueues repository visibility job if public_repo is updated" do
-        ActiveJob::Base.queue_adapter = :test
+      context "when we have private repos" do
+        before do
+          allow_any_instance_of(GitHubOrganization).to receive(:plan).and_return(plan_with_private_repos)
 
-        expect do
-          subject.perform(assignment: assignment, options: { public_repo: true })
-        end.to have_enqueued_job(Assignment::RepositoryVisibilityJob)
+          create(:assignment_repo, assignment: assignment)
+          assignment.public_repo = true
+          assignment.save
+        end
+
+        it "does not enqueue repository visibility job" do
+          ActiveJob::Base.queue_adapter = :test
+
+          expect do
+            subject.perform(assignment: assignment, options: { public_repo: false })
+          end.to have_enqueued_job(Assignment::RepositoryVisibilityJob)
+        end
+
+        it "returns success result" do
+          result = subject.perform(assignment: assignment, options: { public_repo: false })
+
+          expect(result.success?).to be_truthy
+        end
       end
     end
   end
