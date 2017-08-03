@@ -38,15 +38,6 @@ class ClassroomConfig
     repo.branch_present?(CONFIG_BRANCH)
   end
 
-  # Public: Check if a GitHubRepository is already configured
-  #
-  # repo - A GitHubRepository instance
-  #
-  # Returns true or false
-  def configured?(repo)
-    !configurable?(repo) && repo.import_progress[:status] == "complete"
-  end
-
   private
 
   # Internal: Generates issues for the assignment_repository based on the configs
