@@ -5,7 +5,8 @@ require "rails_helper"
 RSpec.describe Assignment::Editor do
   subject { Assignment::Editor }
 
-  let(:assignment) { create(:assignment) }
+  let(:organization) { classroom_org }
+  let(:assignment) { create(:assignment, organization: organization) }
 
   describe "#perform" do
     describe "attribute updating" do
@@ -120,7 +121,7 @@ RSpec.describe Assignment::Editor do
       end
     end
 
-    describe "setting to private" do
+    describe "setting to private", :vcr do
       let(:plan_with_private_repos) { { owned_private_repos: 0, private_repos: 2 } }
       let(:plan_without_private_repos) { { owned_private_repos: 0, private_repos: 0 } }
 
@@ -128,7 +129,7 @@ RSpec.describe Assignment::Editor do
         before do
           allow_any_instance_of(GitHubOrganization).to receive(:plan).and_return(plan_without_private_repos)
 
-          create(:assignment_repo, assignment: assignment)
+          create(:assignment_repo, assignment: assignment, github_repo_id: 2)
           assignment.public_repo = true
           assignment.save
         end
@@ -152,7 +153,7 @@ RSpec.describe Assignment::Editor do
         before do
           allow_any_instance_of(GitHubOrganization).to receive(:plan).and_return(plan_with_private_repos)
 
-          create(:assignment_repo, assignment: assignment)
+          create(:assignment_repo, assignment: assignment, github_repo_id: 2)
           assignment.public_repo = true
           assignment.save
         end

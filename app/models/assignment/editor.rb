@@ -60,6 +60,8 @@ class Assignment
       Result.success(@assignment)
     rescue Result::Error => err
       Result.failed(err.message)
+    rescue GitHub::Error => err
+      Result.failed(err.message)
     end
     # rubocop:enable AbcSize
 
