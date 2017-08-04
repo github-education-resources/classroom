@@ -249,6 +249,54 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     end
   end
 
+  describe "PATCH #setup_progress", :vcr do
+    let(:unconfigured_repo) { stub_repository("template") }
+    let(:configured_repo) { stub_repository("configured-repo") }
+
+    let(:repo_access) { RepoAccess.create(user: student, organization: organization) }
+    let(:group)       { Group.create(title: "Group 1", grouping: grouping) }
+
+    before do
+      GitHubClassroom.flipper[:repo_setup].enable
+    end
+
+    before(:each) do
+      allow_any_instance_of(GroupAssignment).to receive(:starter_code_repo_id).and_return(1_062_897)
+
+      group.repo_accesses << repo_access
+      @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
+      sign_in_as(student)
+    end
+
+    after(:each) do
+      group.destroy
+      repo_access.destroy
+      @group_assignment_repo.destroy if @group_assignment_repo.present?
+    end
+
+    it "gives status of complete when configured" do
+      @group_assignment_repo.configured!
+      allow_any_instance_of(GroupAssignmentRepo).to receive(:github_repository).and_return(configured_repo)
+      patch :setup_progress, params: { id: invitation.key }
+
+      expect(response).to have_http_status(:success)
+      expect(response.header["Content-Type"]).to include "application/json"
+      progress = JSON(response.body)
+      expect(progress["status"]).to eq("complete")
+    end
+
+    it "gives status of configuring when unconfigured" do
+      @group_assignment_repo.configuring!
+      allow_any_instance_of(GroupAssignmentRepo).to receive(:github_repository).and_return(unconfigured_repo)
+      patch :setup_progress, params: { id: invitation.key }
+
+      expect(response).to have_http_status(:success)
+      expect(response.header["Content-Type"]).to include "application/json"
+      progress = JSON(response.body)
+      expect(progress["status"]).to eq("configuring")
+    end
+  end
+
   describe "GET #successful_invitation" do
     let(:group) { Group.create(title: "The Group", grouping: grouping) }
 
