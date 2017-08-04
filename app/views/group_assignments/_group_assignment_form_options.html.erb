@@ -13,7 +13,7 @@
   <span class="note"><%= t('assignment_form.slug_note') %></span>
 </dl>
 
-<dl class="form">
+<dl class="<%= view.form_class_for(:public_repo) %>">
   <div class="form-checkbox">
     <label><%= f.radio_button :public_repo, true %> Public</label>
     <%= octicon 'repo', height: 32 %>
@@ -26,6 +26,10 @@
     <span class="note">Submit assignments using private repositories. Submissions will only be visible to the submitter and organization owners.</span>
   </div>
 
+  <%= render('shared/form_error', errors: view.error_message_for(:public_repo)) if view.errors_for?(:public_repo) %>
+</dl>
+
+<dl class="form">
   <div class="form-checkbox">
     <label><%= f.check_box :students_are_repo_admins %> Give students Admin permissions on their repository</label>
   </div>
