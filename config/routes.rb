@@ -39,7 +39,7 @@ Rails.application.routes.draw do
     member do
       get   :accept
       patch :accept_assignment
-      patch :accept_invitationget
+      patch :accept_invitation
       get   :setup
       patch :setup_progress
       get   :successful_invitation, path: :success

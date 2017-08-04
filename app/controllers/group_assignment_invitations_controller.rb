@@ -2,7 +2,7 @@
 
 class GroupAssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
-  include SetupRepo
+  include RepoSetup
 
   layout "layouts/invitations"
 
@@ -78,12 +78,15 @@ class GroupAssignmentInvitationsController < ApplicationController
     validate_max_members_not_exceeded!(group)
     return if group_assignment.grouping.groups.find_by(id: group_id)
 
+    GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
     raise NotAuthorized, "You are not permitted to select this team"
   end
 
   def validate_max_members_not_exceeded!(group)
     return unless group.present? && group_assignment.present? && group_assignment.max_members.present?
     return unless group.repo_accesses.count >= group_assignment.max_members
+
+    GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
     raise NotAuthorized, "This team has reached its maximum member limit of #{group_assignment.max_members}."
   end
 
@@ -99,8 +102,11 @@ class GroupAssignmentInvitationsController < ApplicationController
     users_group_assignment_repo = invitation.redeem_for(current_user, selected_group, new_group_title)
 
     if users_group_assignment_repo.present?
+      GitHubClassroom.statsd.increment("group_exercise_invitation.accept")
       yield if block_given?
     else
+      GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
+
       flash[:error] = "An error has occurred, please refresh the page and try again."
       redirect_to :show
     end
@@ -154,10 +160,7 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   def check_group_not_previous_acceptee
     return unless group.present? && group_assignment_repo.present?
-    byebug
-    if repo_setup_enabled? && setup_status(group_assignment_repo)[:status] != :complete
-      return redirect_to setup_assignment_invitation_path
-    end
+    return redirect_to setup_group_assignment_invitation_path if repo_setup_enabled? && setup_status(group_assignment_repo)[:status] != :complete
     redirect_to successful_invitation_group_assignment_invitation_path
   end
 
