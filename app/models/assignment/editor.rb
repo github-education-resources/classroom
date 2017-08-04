@@ -48,6 +48,7 @@ class Assignment
     end
 
     # rubocop:disable AbcSize
+    # rubocop:disable Metrics/MethodLength
     def perform
       recreate_deadline(@options[:deadline]) if deadline_updated_and_valid?
 
@@ -67,6 +68,7 @@ class Assignment
 
       Result.failed(err.message)
     end
+    # rubocop:enable Metrics/MethodLength
     # rubocop:enable AbcSize
 
     private
