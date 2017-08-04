@@ -160,8 +160,12 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   def check_group_not_previous_acceptee
     return unless group.present? && group_assignment_repo.present?
-    return redirect_to setup_group_assignment_invitation_path if repo_setup_enabled? && setup_status(group_assignment_repo)[:status] != :complete
-    redirect_to successful_invitation_group_assignment_invitation_path
+
+    if repo_setup_enabled? && setup_status(assignment_repo)[:status] != :complete
+      redirect_to setup_group_assignment_invitation_path
+    else
+      redirect_to successful_invitation_group_assignment_invitation_path
+    end
   end
 
   def check_user_not_group_member
