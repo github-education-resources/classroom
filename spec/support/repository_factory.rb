@@ -15,11 +15,12 @@ class StubRepository
   end
 
   class Blob
-    attr_reader :data, :body, :utf_content
+    attr_reader :data, :body, :encoding, :utf_content
 
     def initialize(repo, path)
-      file_blob = repo.file(path)
+      file_blob    = repo.file(path)
       @utf_content = file_blob
+      @encoding    = "utf-8"
       read_contents
     end
 

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class GitHubRepository < GitHubResource
+  DEFAULT_LABEL_COLOR = "ffffff"
+
   # NOTE: LEGACY, DO NOT REMOVE.
   # This is needed for the lib/collab_migration.rb
   def add_collaborator(collaborator, options = {})
@@ -40,10 +42,49 @@ class GitHubRepository < GitHubResource
     end
   end
 
+  # Public: Get all labels of a GitHub repository.
+  #
+  # Returns a list of labels
+  def labels(options = {})
+    GitHub::Errors.with_error_handling do
+      @client.labels(full_name, options)
+    end
+  rescue GitHub::Error
+    []
+  end
+
+  # Public: Add a label to a GitHub repository.
+  #
+  # label - The String name of the label.
+  # color -  (defaults to: "ffffff")  A color, in hex, without the leading #
+  #
+  # Returns a Hash of the label, or raises a GitHub::Error.
+  def create_label(label, color = DEFAULT_LABEL_COLOR, options = {})
+    GitHub::Errors.with_error_handling do
+      @client.add_label(full_name, label, color, options)
+    end
+  end
+
+  # Public: Delete a label to a GitHub repository.
+  #
+  # label - The String name of the label.
+  #
+  # Returns nothing, or raises a GitHub::Error.
+  def delete_label!(label, options = {})
+    GitHub::Errors.with_error_handling do
+      @client.delete_label!(full_name, label, options)
+    end
+  end
+
   # Public: Add issues to the GitHub repository.
   #
   # title    - The title of the issue.
   # body     - The body of the issue.
+  #
+  # options - optional params
+  #          :assignee - User login.
+  #          :milestone - Milestone number.
+  #          :labels - List of comma separated Label names.
   #
   # Returns the newly created issue, or raises a GitHub::Error.
   def create_issue(title, body, **options)
