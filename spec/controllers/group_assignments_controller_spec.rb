@@ -228,7 +228,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
 
     context "public_repo attribute is changed" do
       it "calls the AssignmentVisibility background job" do
-        private_repos_plan =  { owned_private_repos: 0, private_repos: 2 }
+        private_repos_plan = { owned_private_repos: 0, private_repos: 2 }
         options = { title: "JavaScript Calculator", public_repo: !group_assignment.public? }
 
         allow_any_instance_of(GitHubOrganization).to receive(:plan).and_return(private_repos_plan)
