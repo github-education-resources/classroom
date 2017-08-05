@@ -12,8 +12,8 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   before_action :authorize_group_access, only: [:accept_invitation]
 
-  before_action :ensure_github_repo_exists,    only: %i[setup setup_progress successful_invitation]
   before_action :ensure_authorized_repo_setup, only: %i[setup setup_progress]
+  before_action :ensure_github_repo_exists,    only: %i[setup setup_progress successful_invitation]
 
   def show
     @groups = invitation.groups.map { |group| [group.title, group.id] }
@@ -143,12 +143,12 @@ class GroupAssignmentInvitationsController < ApplicationController
   def classroom_config
     starter_code_repo_id = group_assignment_repo.starter_code_repo_id
 
-    return nil unless starter_code_repo_id
+    return unless starter_code_repo_id
 
     client       = group_assignment_repo.creator.github_client
     starter_repo = GitHubRepository.new(client, starter_code_repo_id)
 
-    ClassroomConfig.new(starter_repo)
+    @classroom_config ||= ClassroomConfig.new(starter_repo)
   end
 
   def configurable_submission?
