@@ -278,7 +278,10 @@ RSpec.describe AssignmentsController, type: :controller do
 
     context "public_repo is changed" do
       it "calls the AssignmentVisibility background job" do
+        private_repos_plan = { owned_private_repos: 0, private_repos: 2 }
         options = { title: "Ruby on Rails", public_repo: !assignment.public? }
+
+        allow_any_instance_of(GitHubOrganization).to receive(:plan).and_return(private_repos_plan)
 
         assert_enqueued_jobs 1, only: Assignment::RepositoryVisibilityJob do
           patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
