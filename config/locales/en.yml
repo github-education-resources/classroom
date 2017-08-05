@@ -41,12 +41,14 @@ en:
         title: 'Your team'
         slug:  'Your team'
       group_assignment:
-        title:    'Your assignment title'
-        slug:     'Your assignment repository prefix'
-        grouping: 'Your set of teams'
+        title:       'Your assignment title'
+        slug:        'Your assignment repository prefix'
+        grouping:    'Your set of teams'
+        public_repo: ''
       assignment:
         title: 'Your assignment title'
         slug:  'Your assignment repository prefix'
+        public_repo: ''
       roster:
         roster_entries: 'Your roster'
     errors:

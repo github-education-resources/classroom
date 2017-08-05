@@ -48,6 +48,7 @@ class Assignment
     end
 
     # rubocop:disable AbcSize
+    # rubocop:disable Metrics/MethodLength
     def perform
       recreate_deadline(@options[:deadline]) if deadline_updated_and_valid?
 
@@ -60,7 +61,14 @@ class Assignment
       Result.success(@assignment)
     rescue Result::Error => err
       Result.failed(err.message)
+    rescue GitHub::Error => err
+      if no_private_repos_error?(err)
+        @assignment.errors.add(:public_repo, "You have no private repositories available.")
+      end
+
+      Result.failed(err.message)
     end
+    # rubocop:enable Metrics/MethodLength
     # rubocop:enable AbcSize
 
     private
@@ -97,6 +105,10 @@ class Assignment
       new_deadline_at != @assignment.deadline&.deadline_at
     rescue ArgumentError
       false
+    end
+
+    def no_private_repos_error?(error)
+      error.message.include? "Cannot make this private assignment, your limit of"
     end
   end
 end
