@@ -43,9 +43,12 @@ class GroupAssignmentInvitationsController < ApplicationController
     selected_group       = Group.find_by(id: group_params[:id])
     selected_group_title = group_params[:title]
 
-    create_group_assignment_repo(selected_group: selected_group,
-                                 new_group_title: selected_group_title) do
-      redirect_to successful_invitation_group_assignment_invitation_path
+    create_group_assignment_repo(selected_group: selected_group, new_group_title: selected_group_title) do
+      if group_assignment_repo.starter_code_repo_id
+        redirect_to setup_group_assignment_invitation_path
+      else
+        redirect_to successful_invitation_group_assignment_invitation_path
+      end
     end
   end
 
@@ -161,7 +164,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   def check_group_not_previous_acceptee
     return unless group.present? && group_assignment_repo.present?
 
-    if repo_setup_enabled? && setup_status(assignment_repo)[:status] != :complete
+    if repo_setup_enabled? && setup_status(group_assignment_repo)[:status] != :complete
       redirect_to setup_group_assignment_invitation_path
     else
       redirect_to successful_invitation_group_assignment_invitation_path
