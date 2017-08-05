@@ -31,7 +31,8 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   def accept_assignment
     create_group_assignment_repo do
-      if group_assignment_repo.starter_code_repo_id
+      if repo_setup_enabled? && group_assignment_repo.starter_code_repo_id
+        RepoSetupJob.set(wait: 1.hour).perform_later(GroupAssignmentRepo.name, group_assignment_repo.id)
         redirect_to setup_group_assignment_invitation_path
       else
         redirect_to successful_invitation_group_assignment_invitation_path
