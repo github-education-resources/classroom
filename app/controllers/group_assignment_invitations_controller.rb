@@ -2,6 +2,7 @@
 
 class GroupAssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
+  include RepoSetup
 
   layout "layouts/invitations"
 
@@ -11,25 +12,43 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   before_action :authorize_group_access, only: [:accept_invitation]
 
-  before_action :ensure_github_repo_exists, only: [:successful_invitation]
+  before_action :ensure_authorized_repo_setup, only: %i[setup setup_progress]
+  before_action :ensure_github_repo_exists,    only: %i[setup setup_progress successful_invitation]
 
   def show
     @groups = invitation.groups.map { |group| [group.title, group.id] }
   end
 
+  def setup; end
+
+  def setup_progress
+    perform_setup(group_assignment_repo, classroom_config) if configurable_submission?
+
+    render json: setup_status(group_assignment_repo)
+  end
+
   def accept; end
 
   def accept_assignment
-    create_group_assignment_repo { redirect_to successful_invitation_group_assignment_invitation_path }
+    create_group_assignment_repo do
+      if group_assignment_repo.starter_code_repo_id
+        redirect_to setup_group_assignment_invitation_path
+      else
+        redirect_to successful_invitation_group_assignment_invitation_path
+      end
+    end
   end
 
   def accept_invitation
     selected_group       = Group.find_by(id: group_params[:id])
     selected_group_title = group_params[:title]
 
-    create_group_assignment_repo(selected_group: selected_group,
-                                 new_group_title: selected_group_title) do
-      redirect_to successful_invitation_group_assignment_invitation_path
+    create_group_assignment_repo(selected_group: selected_group, new_group_title: selected_group_title) do
+      if group_assignment_repo.starter_code_repo_id
+        redirect_to setup_group_assignment_invitation_path
+      else
+        redirect_to successful_invitation_group_assignment_invitation_path
+      end
     end
   end
 
@@ -124,14 +143,41 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
   helper_method :organization
 
+  def classroom_config
+    starter_code_repo_id = group_assignment_repo.starter_code_repo_id
+
+    return unless starter_code_repo_id
+
+    client       = group_assignment_repo.creator.github_client
+    starter_repo = GitHubRepository.new(client, starter_code_repo_id)
+
+    @classroom_config ||= ClassroomConfig.new(starter_repo)
+  end
+
+  def configurable_submission?
+    repo             = group_assignment_repo.github_repository
+    import           = repo.import_progress[:status]
+    classroom_branch = repo.branch_present?("github-classroom")
+    import == "complete" && classroom_branch && group_assignment_repo.not_configured?
+  end
+
   def check_group_not_previous_acceptee
     return unless group.present? && group_assignment_repo.present?
-    redirect_to successful_invitation_group_assignment_invitation_path
+
+    if repo_setup_enabled? && setup_status(group_assignment_repo)[:status] != :complete
+      redirect_to setup_group_assignment_invitation_path
+    else
+      redirect_to successful_invitation_group_assignment_invitation_path
+    end
   end
 
   def check_user_not_group_member
     return if group.blank?
     redirect_to accept_group_assignment_invitation_path
+  end
+
+  def ensure_authorized_repo_setup
+    redirect_to success_assignment_invitation_path unless repo_setup_enabled?
   end
 
   def ensure_github_repo_exists
