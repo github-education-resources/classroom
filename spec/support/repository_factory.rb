@@ -78,7 +78,7 @@ class StubRepository
   end
 
   def importing?
-    GitHubRepository::IMPORT_IN_PROGRESS.include? import_progress[:status]
+    GitHubRepository::IMPORT_ONGOING.include? import_progress[:status]
   end
 
   def imported?

@@ -2,8 +2,8 @@
 
 module GitHubImportable
   extend ActiveSupport::Concern
-  IMPORT_ERRORS      = %w[auth_failed error detection_needs_auth detection_found_nothing detection_found_multiple].freeze
-  IMPORT_IN_PROGRESS = %w[detecting importing mapping pushing].freeze
+  IMPORT_ERRORS  = %w[auth_failed error detection_needs_auth detection_found_nothing detection_found_multiple].freeze
+  IMPORT_ONGOING = %w[detecting importing mapping pushing].freeze
 
   def get_starter_code_from(source)
     GitHub::Errors.with_error_handling do
@@ -28,7 +28,7 @@ module GitHubImportable
   #
   # Returns true or false
   def importing?
-    IMPORT_IN_PROGRESS.include? import_progress[:status]
+    IMPORT_ONGOING.include? import_progress[:status]
   end
 
   # Public: Check if import is complete
