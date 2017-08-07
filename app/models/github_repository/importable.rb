@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-module GitHubImportable
-  extend ActiveSupport::Concern
+module Importable
   IMPORT_ERRORS  = %w[auth_failed error detection_needs_auth detection_found_nothing detection_found_multiple].freeze
   IMPORT_ONGOING = %w[detecting importing mapping pushing].freeze
 

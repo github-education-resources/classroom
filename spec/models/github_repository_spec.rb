@@ -150,6 +150,44 @@ describe GitHubRepository do
       end
     end
 
+    context "importable" do
+      describe "#importing?", :vcr do
+        before do
+          allow_any_instance_of(GitHubRepository).to receive(:import_progress).and_return(status: "importing")
+        end
+
+        it "returns true when status is importing" do
+          expect(@github_repository.imported?).to be_falsey
+          expect(@github_repository.import_failed?).to be_falsey
+          expect(@github_repository.importing?).to be_truthy
+        end
+      end
+
+      describe "#imported?", :vcr do
+        before do
+          allow_any_instance_of(GitHubRepository).to receive(:import_progress).and_return(status: "complete")
+        end
+
+        it "returns true when status is complete" do
+          expect(@github_repository.importing?).to be_falsey
+          expect(@github_repository.import_failed?).to be_falsey
+          expect(@github_repository.imported?).to be_truthy
+        end
+      end
+
+      describe "#import_failed?", :vcr do
+        before do
+          allow_any_instance_of(GitHubRepository).to receive(:import_progress).and_return(status: "error")
+        end
+
+        it "returns true when status is error" do
+          expect(@github_repository.imported?).to be_falsey
+          expect(@github_repository.importing?).to be_falsey
+          expect(@github_repository.import_failed?).to be_truthy
+        end
+      end
+    end
+
     describe "#create_label", :vcr do
       it "creates label with default color" do
         label = @github_repository.create_label("test-label")
