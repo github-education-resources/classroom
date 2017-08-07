@@ -158,6 +158,24 @@ class GitHubRepository < GitHubResource
     []
   end
 
+  # The `commits` method paginates to 30 commits.
+  # As an alternative, we fetch the contribution stats for the
+  # top 100 contributors, then sum the commits.
+  # This isn't perfect, but it's better than our current approach which
+  # shows 30 commits for anything with more than 30 commits.
+  def number_of_commits
+    GitHub::Errors.with_error_handling do
+      result = @client.contributors_stats(full_name, retry_timeout: 2)
+      return 0 unless result
+
+      result.sum do |user|
+        user["total"]
+      end
+    end
+  rescue GitHub::Error
+    0
+  end
+
   def commits_url(branch)
     html_url + "/commits/" + branch
   end
