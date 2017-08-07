@@ -1,0 +1,27 @@
+<%= render 'organizations/organization_invitation_banner' %>
+
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">
+      Please wait for Repository setup to finish. Do not leave this page.
+    </h2>
+  </div>
+</div>
+
+<div class="site-content-body ">
+  <div class="d-flex flex-justify-between text-center setup-progress"
+    data-invitation='group-assignment' data-invitation-id='<%= invitation.key %>'>
+    <div id="import-progress" class="col-4 border rounded-1 mr-4 p-4">
+      <span class='status'><%= octicon("check", class: 'text-green complete-indicator', height: 30) %></span>
+      <p class="v-align-baseline f4 mt-4">1. Importing complete</p>
+    </div>
+    <div id="config-progress" class="col-4 border rounded-1 mr-4 p-4">
+      <span class='status'><%= octicon("check", class: 'text-green complete-indicator', height: 30) %></span>
+      <p class="v-align-baseline f4 mt-4">2. Configuring...</p>
+    </div>
+    <div id="finalize-progress" class="col-4 border border-gray rounded-1  p-4">
+      <span class='status'><%= octicon("check", class: 'text-green complete-indicator', height: 30) %></span>
+      <p class="v-align-baseline f4 mt-4">3. Finalize</p>
+    </div>
+  </div>
+</div>
