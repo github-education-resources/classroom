@@ -4,6 +4,9 @@ require_relative "vcr"
 require "digest"
 
 class StubRepository
+  IMPORT_ERRORS      = %w[auth_failed error detection_needs_auth detection_found_nothing detection_found_multiple].freeze
+  IMPORT_IN_PROGRESS = %w[detecting importing mapping pushing].freeze
+
   attr_reader :full_name, :branches
 
   def file(path)
@@ -75,6 +78,18 @@ class StubRepository
 
   def present?(**_options)
     true
+  end
+
+  def importing?
+    IMPORT_IN_PROGRESS.include? import_progress[:status]
+  end
+
+  def imported?
+    import_progress[:status] == "complete"
+  end
+
+  def import_failed?
+    IMPORT_ERRORS.include? import_progress[:status]
   end
 
   private
