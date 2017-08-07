@@ -11,8 +11,7 @@ class SharedAssignmentRepoView < ViewModel
   end
 
   def number_of_github_commits
-    branch = github_repository.default_branch
-    github_repository.commits(branch).length
+    github_repository.number_of_commits
   end
 
   def commit_text
