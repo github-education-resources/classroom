@@ -188,7 +188,7 @@ describe GitHubRepository do
     describe "#number_of_commits", :vcr do
       it "returns a number greater than 30 for large repos" do
         # education/classroom
-        github_repository = GitHubRepository.new(@client, 35079964)
+        github_repository = GitHubRepository.new(@client, 35_079_964)
 
         expect(github_repository.number_of_commits).to be > 30
       end
