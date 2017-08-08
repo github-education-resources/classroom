@@ -59,11 +59,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
       end.not_to change(GroupAssignment, :count)
     end
 
-    context "deadline flipper is enabled" do
-      before do
-        GitHubClassroom.flipper[:deadlines].enable
-      end
-
+    context "deadlines" do
       it "sends an event to statsd" do
         expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise.create")
         expect(GitHubClassroom.statsd).to receive(:increment).with("deadline.create")
@@ -92,68 +88,6 @@ RSpec.describe GroupAssignmentsController, type: :controller do
 
         it "sets deadline" do
           expect(GroupAssignment.first.deadline).to be_truthy
-        end
-      end
-
-      context "invalid datetime for deadline passed" do
-        before do
-          post :create, params: {
-            organization_id:  organization.slug,
-            grouping:         { title: "Grouping 1" },
-            group_assignment: attributes_for(:group_assignment, organization: organization)
-              .merge(deadline: "I am not a datetime")
-          }
-        end
-
-        it "creates a new assignment" do
-          expect(GroupAssignment.count).to eq(1)
-        end
-
-        it "sets deadline to nil" do
-          expect(GroupAssignment.first.deadline).to be_nil
-        end
-      end
-
-      context "no deadline passed" do
-        before do
-          post :create, params: {
-            organization_id:  organization.slug,
-            grouping:         { title: "Grouping 1" },
-            group_assignment: attributes_for(:group_assignment, organization: organization)
-          }
-        end
-
-        it "creates a new assignment" do
-          expect(GroupAssignment.count).to eq(1)
-        end
-
-        it "sets deadline to nil" do
-          expect(GroupAssignment.first.deadline).to be_nil
-        end
-      end
-
-      after do
-        GitHubClassroom.flipper[:deadlines].disable
-      end
-    end
-
-    context "deadline flipper is disabled" do
-      context "valid datetime for deadline is passed" do
-        before do
-          post :create, params: {
-            organization_id:  organization.slug,
-            grouping:         { title: "Grouping 1" },
-            group_assignment: attributes_for(:group_assignment, organization: organization)
-              .merge(deadline: "05/25/2018 13:17-0800")
-          }
-        end
-
-        it "creates a new assignment" do
-          expect(GroupAssignment.count).to eq(1)
-        end
-
-        it "does not set deadline" do
-          expect(GroupAssignment.first.deadline).to be_nil
         end
       end
 
@@ -228,7 +162,10 @@ RSpec.describe GroupAssignmentsController, type: :controller do
 
     context "public_repo attribute is changed" do
       it "calls the AssignmentVisibility background job" do
+        private_repos_plan = { owned_private_repos: 0, private_repos: 2 }
         options = { title: "JavaScript Calculator", public_repo: !group_assignment.public? }
+
+        allow_any_instance_of(GitHubOrganization).to receive(:plan).and_return(private_repos_plan)
 
         assert_enqueued_jobs 1, only: Assignment::RepositoryVisibilityJob do
           patch :update, params: {
