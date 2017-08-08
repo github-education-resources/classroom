@@ -51,8 +51,8 @@
   <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, method: :patch) do %>
     <dl class="form">
       <dt><label><%= 'OR' if @groups.present? %> Create a new team</label></dt>
-      <dd>
-        <%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'textfield' %>
+      <dd class="d-flex">
+        <%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'form-control input-block' %>
         <%= button_tag(type: 'submit', class: 'btn btn-primary js-navigation js-form-submit') do %>
           <%= octicon 'plus' %> Create team
         <% end %>
