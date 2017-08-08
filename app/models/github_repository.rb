@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-require "github_repository/importable"
-
 class GitHubRepository < GitHubResource
-  include Importable
+  depends_on :import
 
   DEFAULT_LABEL_COLOR = "ffffff"
 
