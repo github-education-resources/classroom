@@ -16,8 +16,8 @@ module GitHubClassroom
   end
 end
 
-ActiveSupport::Notifications.subscribe('process_action.action_controller') do |_name, start_time, finish_time, _id, payload|
-  next if payload[:path] =~ /\A\/peek/
+ActiveSupport::Notifications.subscribe("process_action.action_controller") do |_, start_time, finish_time, _id, payload|
+  next if payload[:path].match? %r{\A\/peek/}
 
   total_time = finish_time - start_time
 
