@@ -21,7 +21,7 @@ ActiveSupport::Notifications.subscribe("process_action.action_controller") do |_
 
   view_time = payload[:view_runtime]
   db_time   = payload[:db_runtime]
-  return unless view_time.respond_to? :+ && db_time.respond_to? :+
+  next unless view_time.respond_to?(:+) && db_time.respond_to?(:+)
 
   total_time = view_time + db_time
 
