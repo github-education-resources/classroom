@@ -156,7 +156,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
         it "sends an event to statsd" do
           expect(GitHubClassroom.statsd).to receive(:increment).with("exception.swallowed",
-                                                                     tags: [ApplicationController::NotAuthorized])
+                                                                     tags: [ApplicationController::NotAuthorized.to_s])
           expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_invitation.fail")
 
           patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }

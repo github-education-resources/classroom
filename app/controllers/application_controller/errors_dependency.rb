@@ -15,13 +15,13 @@ class ApplicationController
       end
     end
 
-    GitHubClassroom.statsd.increment("exception.swallowed", tags: [exception.class])
+    GitHubClassroom.statsd.increment("exception.swallowed", tags: [exception.class.to_s])
 
     redirect_back(fallback_location: root_path)
   end
 
   def send_to_statsd_and_reraise(exception)
-    GitHubClassroom.statsd.increment("exception.raise", tags: [exception.class])
+    GitHubClassroom.statsd.increment("exception.raise", tags: [exception.class.to_s])
     raise exception
   end
 end

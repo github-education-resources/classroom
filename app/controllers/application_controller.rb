@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render_404(exception)
-    GitHubClassroom.statsd.increment("exception.not_found", tags: [exception.class])
+    GitHubClassroom.statsd.increment("exception.not_found", tags: [exception.class.to_s])
 
     case exception
     when ActionController::RoutingError
