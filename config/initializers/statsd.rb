@@ -19,7 +19,9 @@ end
 ActiveSupport::Notifications.subscribe("process_action.action_controller") do |_, start_time, finish_time, _id, payload|
   next if payload[:path].match? %r{\A\/peek/}
 
-  total_time = finish_time - start_time
+  view_time = payload[:view_runtime]
+  db_time   = payload[:db_runtime]
+  total_time = view_time + db_time
 
   GitHubClassroom.statsd.timing("request.response_time", total_time)
 end
