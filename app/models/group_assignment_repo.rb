@@ -7,6 +7,8 @@ class GroupAssignmentRepo < ApplicationRecord
 
   update_index("stafftools#group_assignment_repo") { self }
 
+  enum configuration_state: %i[not_configured configuring configured]
+
   belongs_to :group
   belongs_to :group_assignment
   alias assignment group_assignment

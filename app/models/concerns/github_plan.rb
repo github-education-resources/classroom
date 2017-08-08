@@ -4,7 +4,7 @@ module GitHubPlan
   extend ActiveSupport::Concern
 
   included do
-    before_validation(on: :create) do
+    before_validation do
       verify_organization_has_private_repos_available if private?
     end
   end
