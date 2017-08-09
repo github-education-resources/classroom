@@ -4,30 +4,20 @@ require "rails_helper"
 
 RSpec.describe RepoSetupJob, type: :job do
   let(:organization) { classroom_org }
-  let(:user)         { classroom_student }
 
-  let(:assignment)      { create(:assignment, organization: organization) }
-  let(:assignment_repo) { create(:assignment_repo, assignment: assignment, user: user, github_repo_id: 848) }
+  let(:assignment_repo) { create(:assignment_repo, github_repo_id: 848, organization: organization) }
 
   let(:unconfigured_repo) { stub_repository("template") }
   let(:configured_repo)   { stub_repository("configured-repo") }
-
-  let(:repo_access)  { RepoAccess.create(user: user, organization: organization) }
 
   let(:grouping)     { create(:grouping, organization: organization) }
   let(:group)        { Group.create(title: "Group 1", grouping: grouping) }
 
   let(:group_assignment) do
-    create(:group_assignment,
-           grouping: grouping,
-           title: "Learn JavaScript",
-           organization: organization,
-           public_repo: true,
-           starter_code_repo_id: 1_062_897)
+    create(:group_assignment, title: "Learn JavaScript", organization: organization, starter_code_repo_id: 1_062_897)
   end
 
   let(:group_assignment_repo) do
-    group.repo_accesses << repo_access
     GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
   end
 
@@ -37,7 +27,6 @@ RSpec.describe RepoSetupJob, type: :job do
 
   after(:each) do
     group.destroy
-    repo_access.destroy
     AssignmentRepo.destroy_all
     GroupAssignmentRepo.destroy_all
   end
@@ -49,23 +38,12 @@ RSpec.describe RepoSetupJob, type: :job do
     assignment_repo.configured!
     group_assignment_repo.configured!
 
-    assert_performed_with(job: RepoSetupJob, args: [AssignmentRepo.name, assignment_repo.id], queue: "repo_setup") do
-      RepoSetupJob.perform_later(AssignmentRepo.name, assignment_repo.id)
+    assert_performed_with(job: RepoSetupJob, args: [assignment_repo], queue: "repo_setup") do
+      RepoSetupJob.perform_later(assignment_repo)
     end
-    assert_performed_with(job: RepoSetupJob, args: [GroupAssignmentRepo.name,
-                                                    group_assignment_repo.id], queue: "repo_setup") do
-      RepoSetupJob.perform_later(GroupAssignmentRepo.name, group_assignment_repo.id)
+    assert_performed_with(job: RepoSetupJob, args: [group_assignment_repo], queue: "repo_setup") do
+      RepoSetupJob.perform_later(group_assignment_repo)
     end
-  end
-
-  it "does not throw if the assignment_repo no longer exists", :vcr do
-    id   = assignment_repo.id
-    g_id = group_assignment_repo.id
-    assignment_repo.destroy
-    group_assignment_repo.destroy
-
-    RepoSetupJob.perform_now(AssignmentRepo.name, id)
-    RepoSetupJob.perform_now(GroupAssignmentRepo.name, g_id)
   end
 
   it "schedules another job if import not complete", :vcr do
@@ -78,12 +56,12 @@ RSpec.describe RepoSetupJob, type: :job do
     ActiveJob::Base.queue_adapter = :test
 
     expect do
-      RepoSetupJob.perform_now(AssignmentRepo.name, assignment_repo.id)
-    end.to have_enqueued_job(RepoSetupJob).with(AssignmentRepo.name, assignment_repo.id)
+      RepoSetupJob.perform_now(assignment_repo)
+    end.to have_enqueued_job(RepoSetupJob).with(assignment_repo)
 
     expect do
-      RepoSetupJob.perform_now(GroupAssignmentRepo.name, group_assignment_repo.id)
-    end.to have_enqueued_job(RepoSetupJob).with(GroupAssignmentRepo.name, group_assignment_repo.id)
+      RepoSetupJob.perform_now(group_assignment_repo)
+    end.to have_enqueued_job(RepoSetupJob).with(group_assignment_repo)
   end
 
   it "does not schedule another job if configured", :vcr do
@@ -95,11 +73,11 @@ RSpec.describe RepoSetupJob, type: :job do
     ActiveJob::Base.queue_adapter = :test
 
     expect do
-      RepoSetupJob.perform_now(AssignmentRepo.name, assignment_repo.id)
-    end.not_to have_enqueued_job(RepoSetupJob).with(AssignmentRepo.name, assignment_repo.id)
+      RepoSetupJob.perform_now(assignment_repo)
+    end.not_to have_enqueued_job(RepoSetupJob).with(assignment_repo)
 
     expect do
-      RepoSetupJob.perform_now(GroupAssignmentRepo.name, group_assignment_repo.id)
-    end.not_to have_enqueued_job(RepoSetupJob).with(GroupAssignmentRepo.name, group_assignment_repo.id)
+      RepoSetupJob.perform_now(group_assignment_repo)
+    end.not_to have_enqueued_job(RepoSetupJob).with(group_assignment_repo)
   end
 end
