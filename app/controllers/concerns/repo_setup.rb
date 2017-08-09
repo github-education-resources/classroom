@@ -15,6 +15,7 @@ module RepoSetup
   end
 
   def perform_setup(assignment_repo, config)
+    assignment_repo.destroy! if assignment_repo.github_repository.import_failed?
     assignment_repo.configuring!
     if config.setup_repository(assignment_repo.github_repository)
       assignment_repo.configured!

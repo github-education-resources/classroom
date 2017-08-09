@@ -46,12 +46,14 @@ RSpec.describe RepoSetupJob, type: :job do
     end
   end
 
-  it "schedules another job if import not complete", :vcr do
+  it "schedules another job if import is ongoing", :vcr do
     allow_any_instance_of(AssignmentRepo).to receive(:github_repository).and_return(unconfigured_repo)
     allow_any_instance_of(GroupAssignmentRepo).to receive(:github_repository).and_return(unconfigured_repo)
 
-    allow(assignment_repo.github_repository).to receive(:import_progress).and_return(status: "importing")
-    allow(group_assignment_repo.github_repository).to receive(:import_progress).and_return(status: "importing")
+    state = GitHubRepository::IMPORT_ONGOING.sample
+
+    allow(assignment_repo.github_repository).to receive(:import_progress).and_return(status: state)
+    allow(group_assignment_repo.github_repository).to receive(:import_progress).and_return(status: state)
 
     ActiveJob::Base.queue_adapter = :test
 

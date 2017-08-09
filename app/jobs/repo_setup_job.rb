@@ -10,7 +10,7 @@ class RepoSetupJob < ApplicationJob
   end
 
   def perform(assignment_repo)
-    if assignment_repo.github_repository.import_progress[:status] != "complete"
+    if assignment_repo.github_repository.importing?
       RepoSetupJob.set(wait: 1.hour).perform_later(assignment_repo)
     else
       perform_setup(assignment_repo, classroom_config(assignment_repo)) unless assignment_repo.configured?
