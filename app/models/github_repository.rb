@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class GitHubRepository < GitHubResource
+  depends_on :import
+
   DEFAULT_LABEL_COLOR = "ffffff"
 
   # NOTE: LEGACY, DO NOT REMOVE.
@@ -8,25 +10,6 @@ class GitHubRepository < GitHubResource
   def add_collaborator(collaborator, options = {})
     GitHub::Errors.with_error_handling do
       @client.add_collaborator(@id, collaborator, options)
-    end
-  end
-
-  def get_starter_code_from(source)
-    GitHub::Errors.with_error_handling do
-      options = {
-        vcs:          "git",
-        accept:       Octokit::Preview::PREVIEW_TYPES[:source_imports],
-        vcs_username: @client.login,
-        vcs_password: @client.access_token
-      }
-
-      @client.start_source_import(@id, "https://github.com/#{source.full_name}", options)
-    end
-  end
-
-  def import_progress(**options)
-    GitHub::Errors.with_error_handling do
-      @client.source_import_progress(full_name, options)
     end
   end
 
@@ -156,6 +139,24 @@ class GitHubRepository < GitHubResource
     end
   rescue GitHub::Error
     []
+  end
+
+  # The `commits` method paginates to 30 commits.
+  # As an alternative, we fetch the contribution stats for the
+  # top 100 contributors, then sum the commits.
+  # This isn't perfect, but it's better than our current approach which
+  # shows 30 commits for anything with more than 30 commits.
+  def number_of_commits
+    GitHub::Errors.with_error_handling do
+      result = @client.contributors_stats(full_name, retry_timeout: 2)
+      return 0 unless result
+
+      result.sum do |user|
+        user["total"]
+      end
+    end
+  rescue GitHub::Error
+    0
   end
 
   def commits_url(branch)

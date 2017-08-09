@@ -158,9 +158,8 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   def configurable_submission?
     repo             = group_assignment_repo.github_repository
-    import           = repo.import_progress[:status]
     classroom_branch = repo.branch_present?("github-classroom")
-    import == "complete" && classroom_branch && group_assignment_repo.not_configured?
+    repo.imported? && classroom_branch && group_assignment_repo.not_configured?
   end
 
   def check_group_not_previous_acceptee

@@ -42,11 +42,9 @@
   <input class="js-autocomplete-resource-id" type="hidden" name="repo_id" />
 </dl>
 
-<% if current_user.feature_enabled?(:deadlines) %>
-  <dl class="<%= view.form_class_for(:deadline) %>">
-    <dt><label>Deadline <small>(optional)</small></label></dt>
-    <dd><%= f.text_field :deadline, class: 'jquery-datetimepicker form-control input-contrast input-block', value: DeadlineFormatHelper.convert(f.object.deadline) %></dd>
-    <%= render('shared/form_error', errors: view.error_message_for(:deadline)) if view.errors_for?(:deadline) %>
-    <span class="note">After the deadline, GitHub Classroom will save the latest commit from each repo as a submission. Submission commits are viewable on the assignment page.</span>
-  </dl>
-<% end %>
+<dl class="<%= view.form_class_for(:deadline) %>">
+  <dt><label>Deadline <small>(optional)</small></label></dt>
+  <dd><%= f.text_field :deadline, class: 'jquery-datetimepicker form-control input-contrast input-block', value: DeadlineFormatHelper.convert(f.object.deadline) %></dd>
+  <%= render('shared/form_error', errors: view.error_message_for(:deadline)) if view.errors_for?(:deadline) %>
+  <span class="note">After the deadline, GitHub Classroom will save the latest commit from each repo as a submission. Submission commits are viewable on the assignment page.</span>
+</dl>
