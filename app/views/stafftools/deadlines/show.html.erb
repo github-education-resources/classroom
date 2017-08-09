@@ -1,0 +1,37 @@
+<div class="site-content">
+  <div class="boxed-group">
+    <h3>Deadline information</h3>
+
+    <div class="boxed-group-inner">
+      <table>
+        <tr>
+          <td class="text-emphasized">ID</td>
+          <td><%= @deadline.id %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Assignment Type</td>
+          <td><%= @deadline.assignment_type %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Assignment ID</td>
+          <td><%= link_to @deadline.assignment_id,
+                    @deadline.assignment.is_a?(Assignment) ?
+                      stafftools_assignment_path(@deadline.assignment.id) :
+                      stafftools_group_assignment_path(@deadline.assignment.id) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Deadline at</td>
+          <td><%= local_time(@deadline.deadline_at) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Created at</td>
+          <td><%= local_time(@deadline.created_at) %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized">Updated at</td>
+          <td><%= local_time(@deadline.created_at) %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

@@ -117,6 +117,8 @@ Rails.application.routes.draw do
     resources :assignment_repos,       only: %i[show destroy]
     resources :assignments,            only: [:show]
 
+    resources :deadlines, only: [:show]
+
     resources :group_assignment_invitations, path: "group-assignment-invitations", only: [:show]
     resources :group_assignment_repos,       path: "group-assignment-repos",       only: %i[show destroy]
     resources :group_assignments,            path: "group-assignments",            only: [:show]
