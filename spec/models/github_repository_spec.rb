@@ -152,37 +152,67 @@ describe GitHubRepository do
 
     context "importable" do
       describe "#importing?", :vcr do
-        before do
-          allow_any_instance_of(GitHubRepository).to receive(:import_progress).and_return(status: "importing")
+        it "returns true when import is ongoing" do
+          state = GitHubRepository::IMPORT_ONGOING.sample
+          allow_any_instance_of(GitHubRepository).to receive(:import_progress).and_return(status: state)
+
+          expect(@github_repository.importing?).to be_truthy
         end
 
-        it "returns true when status is importing" do
-          expect(@github_repository.imported?).to be_falsey
-          expect(@github_repository.import_failed?).to be_falsey
-          expect(@github_repository.importing?).to be_truthy
+        it "returns false when import is complete" do
+          allow_any_instance_of(GitHubRepository).to receive(:import_progress).and_return(status: "complete")
+
+          expect(@github_repository.importing?).to be_falsey
+        end
+
+        it "returns false when import fails" do
+          state = GitHubRepository::IMPORT_ERRORS.sample
+          allow_any_instance_of(GitHubRepository).to receive(:import_progress).and_return(status: state)
+
+          expect(@github_repository.importing?).to be_falsey
         end
       end
 
       describe "#imported?", :vcr do
-        before do
-          allow_any_instance_of(GitHubRepository).to receive(:import_progress).and_return(status: "complete")
+        it "returns false when import is ongoing" do
+          state = GitHubRepository::IMPORT_ONGOING.sample
+          allow_any_instance_of(GitHubRepository).to receive(:import_progress).and_return(status: state)
+
+          expect(@github_repository.imported?).to be_falsey
         end
 
-        it "returns true when status is complete" do
-          expect(@github_repository.importing?).to be_falsey
-          expect(@github_repository.import_failed?).to be_falsey
+        it "returns true when import is complete" do
+          allow_any_instance_of(GitHubRepository).to receive(:import_progress).and_return(status: "complete")
+
           expect(@github_repository.imported?).to be_truthy
+        end
+
+        it "returns false when import fails" do
+          state = GitHubRepository::IMPORT_ERRORS.sample
+          allow_any_instance_of(GitHubRepository).to receive(:import_progress).and_return(status: state)
+
+          expect(@github_repository.imported?).to be_falsey
         end
       end
 
       describe "#import_failed?", :vcr do
-        before do
-          allow_any_instance_of(GitHubRepository).to receive(:import_progress).and_return(status: "error")
+        it "returns false when import is ongoing" do
+          state = GitHubRepository::IMPORT_ONGOING.sample
+          allow_any_instance_of(GitHubRepository).to receive(:import_progress).and_return(status: state)
+
+          expect(@github_repository.import_failed?).to be_falsey
         end
 
-        it "returns true when status is error" do
-          expect(@github_repository.imported?).to be_falsey
-          expect(@github_repository.importing?).to be_falsey
+        it "returns false when import is complete" do
+          allow_any_instance_of(GitHubRepository).to receive(:import_progress).and_return(status: "complete")
+
+          expect(@github_repository.import_failed?).to be_falsey
+        end
+
+        it "returns true when import fails" do
+          state = GitHubRepository::IMPORT_ERRORS.sample
+          allow_any_instance_of(GitHubRepository).to receive(:import_progress).and_return(status: state)
+
           expect(@github_repository.import_failed?).to be_truthy
         end
       end
