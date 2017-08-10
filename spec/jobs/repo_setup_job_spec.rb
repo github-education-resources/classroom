@@ -25,7 +25,7 @@ RSpec.describe RepoSetupJob, type: :job do
     Octokit.reset!
   end
 
-  after(:each) do
+  after do
     group.destroy
     AssignmentRepo.destroy_all
     GroupAssignmentRepo.destroy_all
