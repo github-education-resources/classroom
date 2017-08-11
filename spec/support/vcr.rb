@@ -13,6 +13,8 @@ VCR.configure do |c|
     record: ENV["TRAVIS"] ? :none : :once
   }
 
+  c.before_record { |i| i.request.headers.delete "Authorization" }
+
   # Application id
   c.filter_sensitive_data("<TEST_APPLICATION_GITHUB_CLIENT_ID>") do
     application_github_client_id
@@ -27,10 +29,6 @@ VCR.configure do |c|
     classroom_owner_github_id
   end
 
-  c.filter_sensitive_data("<TEST_CLASSROOM_OWNER_GITHUB_TOKEN>") do
-    classroom_owner_github_token
-  end
-
   # Owners Org
   c.filter_sensitive_data("<TEST_CLASSROOM_OWNER_ORGANIZATION_GITHUB_ID>") do
     classroom_owner_organization_github_id
@@ -43,10 +41,6 @@ VCR.configure do |c|
   # Student
   c.filter_sensitive_data("<TEST_CLASSROOM_STUDENT_GITHUB_ID>") do
     classroom_student_github_id
-  end
-
-  c.filter_sensitive_data("<TEST_CLASSROOM_STUDENT_GITHUB_TOKEN>") do
-    classroom_student_github_token
   end
 
   c.hook_into :webmock
