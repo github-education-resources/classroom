@@ -17,6 +17,7 @@ before_script:
 
 script:
   - "KNAPSACK_GENERATE_REPORT=true ./bin/rake knapsack:rspec"
+  - "./bin/rails test"
 
 cache:
   bundler: true

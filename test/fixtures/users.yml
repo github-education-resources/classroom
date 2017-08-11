@@ -1,0 +1,18 @@
+DEFAULTS: &DEFAULTS
+  last_active_at: <%= Time.zone.now + 5.minutes %>
+
+teacher:
+  <<: *DEFAULTS
+  uid: <%= ENV.fetch('TEST_CLASSROOM_OWNER_GITHUB_ID') { 8_675_309 } %>
+  token: <%= ENV.fetch('TEST_CLASSROOM_OWNER_GITHUB_TOKEN') { 'x' * 40 } %>
+
+student:
+  <<: *DEFAULTS
+  uid: <%= ENV.fetch('TEST_CLASSROOM_STUDENT_GITHUB_ID') { 42 } %>
+  token: <%= ENV.fetch('TEST_CLASSROOM_STUDENT_GITHUB_TOKEN') { 'x' * 40 } %>
+
+githubber:
+  <<: *DEFAULTS
+  uid: 3
+  token: a6cc9e11e3940a161ed97ca63ab8b2fe3d0fb731
+  site_admin: true

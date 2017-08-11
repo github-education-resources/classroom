@@ -7,7 +7,7 @@ set -e
 cd "$(dirname "$0")/.."
 
 echo "==> Running rubocop..."
-./bin/rubocop
+./bin/rubocop -P
 
 echo "==> Running scss-lint..."
 ./bin/scss-lint

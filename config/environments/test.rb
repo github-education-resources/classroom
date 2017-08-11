@@ -44,4 +44,11 @@ Rails.application.configure do
 
   # Turn off caching for tests
   config.cache_store = :null_store
+
+  # Enable bullet for testing
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.bullet_logger = true
+    Bullet.raise = true # raise an error if n+1 query occurs
+  end
 end
