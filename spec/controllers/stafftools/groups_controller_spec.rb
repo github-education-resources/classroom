@@ -13,12 +13,12 @@ RSpec.describe Stafftools::GroupsController, type: :controller do
     sign_in_as(user)
   end
 
-  after do
+  after(:each) do
     Group.destroy_all
   end
 
   describe "GET #show", :vcr do
-    context "as an unauthorized user" do
+    context "as an unauthorized user", focus: true do
       it "returns a 404" do
         get :show, params: { id: group.id }
         expect(response.status).to eq(404)
@@ -37,6 +37,29 @@ RSpec.describe Stafftools::GroupsController, type: :controller do
 
       it "sets the GroupAssignment" do
         expect(assigns(:group).id).to eq(group.id)
+      end
+    end
+  end
+
+  describe "DELETE #destroy", :vcr do
+    context "as an unauthorized user" do
+      it "returns a 404" do
+        delete :destroy, params: { id: group.id }
+        expect(response.status).to eq(404)
+      end
+    end
+    context "as an authorized user" do
+      before do
+        user.update_attributes(site_admin: true)
+        delete :destroy, params: { id: group.id }
+      end
+
+      it "deletes the group" do
+        expect { group.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it "redirect to the grouping show page" do
+        expect(response).to redirect_to(stafftools_grouping_path(grouping.id))
       end
     end
   end
