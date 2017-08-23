@@ -63,7 +63,7 @@ RSpec.describe User, type: :model do
       subject.assign_from_auth_hash(github_omniauth_hash)
       scopes = subject.github_client_scopes
 
-      %w[write:org read:org admin:org_hook delete_repo repo:status repo_deployment public_repo user:email].each do |s|
+      %w[write:org read:org admin:org_hook delete_repo repo:status repo_deployment public_repo repo:invite user:email].each do |s| # rubocop:disable Metrics/LineLength
         expect(scopes).to include(s)
       end
     end
