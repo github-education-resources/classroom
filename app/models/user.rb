@@ -3,11 +3,11 @@
 class User < ApplicationRecord
   include Flippable
 
-  update_index('stafftools#user') { self }
+  update_index("stafftools#user") { self }
 
   has_many :assignment_repos
   has_many :repo_accesses, dependent: :destroy
-  has_many :identifiers, class_name: 'StudentIdentifier', dependent: :destroy
+  has_many :roster_entries
 
   has_and_belongs_to_many :organizations
 
@@ -48,18 +48,6 @@ class User < ApplicationRecord
 
   def github_client_scopes
     GitHub::Token.scopes(token, github_client)
-  end
-
-  # Public: Get an identifier for an organization based on the type.
-  #
-  # Example:
-  #
-  #   current_user.identifier_for(organization: current_organization, type: @type)
-  #   # => #<StudentIdentifier:0x007fb2c9eea380>
-  #
-  # Returns a StudentIdentifier or nil.
-  def identifier_for(organization:, type:)
-    identifiers.find_by(organization: organization, type: type)
   end
 
   def staff?

@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
   helper_method :student_identifier_enabled?, :team_management_enabled? # feature_flags_dependency
 
   # errors_dependency
+  rescue_from StandardError, with: :send_to_statsd_and_reraise
   rescue_from GitHub::Error,
               GitHub::Forbidden,
               GitHub::NotFound,
@@ -26,7 +27,7 @@ class ApplicationController < ActionController::Base
   private
 
   def not_found
-    raise ActionController::RoutingError, 'Not Found'
+    raise ActionController::RoutingError, "Not Found"
   end
 
   def redirect_to_root
@@ -34,11 +35,13 @@ class ApplicationController < ActionController::Base
   end
 
   def render_404(exception)
+    GitHubClassroom.statsd.increment("exception.not_found", tags: [exception.class.to_s])
+
     case exception
     when ActionController::RoutingError
-      render file: Rails.root.join('public', '404.html'), layout: false, status: :not_found
+      render file: Rails.root.join("public", "404.html"), layout: false, status: :not_found
     when ActiveRecord::RecordNotFound
-      render file: Rails.root.join('public', 'invalid_link_error.html'), layout: false, status: :not_found
+      render file: Rails.root.join("public", "invalid_link_error.html"), layout: false, status: :not_found
     end
   end
 end

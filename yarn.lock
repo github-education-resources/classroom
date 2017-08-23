@@ -6,6 +6,10 @@ ansi-regex@^2.0.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-2.1.1.tgz#c3b33ab5ee360d86e0e628f0468ae7ef27d654df"
 
+ansi-regex@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-3.0.0.tgz#ed0317c322064f79466c02966bddb605ab37d998"
+
 atoa@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/atoa/-/atoa-1.0.0.tgz#0cc0e91a480e738f923ebc103676471779b34a49"
@@ -123,8 +127,8 @@ graceful-fs@^4.1.2:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
 hosted-git-info@^2.1.4:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.4.2.tgz#0076b9f46a270506ddbaaea56496897460612a67"
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.5.0.tgz#6d60e34b3abbc8313062c3b798ef8d901a07af3c"
 
 include-fragment-element@^3.0.0:
   version "3.0.0"
@@ -203,11 +207,11 @@ locate-path@^2.0.0:
     path-exists "^3.0.0"
 
 lru-cache@^4.0.1:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-4.0.2.tgz#1d17679c069cda5d040991a09dbc2c0db377e55e"
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-4.1.1.tgz#622e32e82488b49279114a4f9ecf45e7cd6bba55"
   dependencies:
-    pseudomap "^1.0.1"
-    yallist "^2.0.0"
+    pseudomap "^1.0.2"
+    yallist "^2.1.2"
 
 mem@^1.1.0:
   version "1.1.0"
@@ -220,8 +224,8 @@ mimic-fn@^1.0.0:
   resolved "https://registry.yarnpkg.com/mimic-fn/-/mimic-fn-1.1.0.tgz#e667783d92e89dbd342818b5230b9d62a672ad18"
 
 normalize-package-data@^2.3.2:
-  version "2.3.8"
-  resolved "https://registry.yarnpkg.com/normalize-package-data/-/normalize-package-data-2.3.8.tgz#d819eda2a9dedbd1ffa563ea4071d936782295bb"
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/normalize-package-data/-/normalize-package-data-2.4.0.tgz#12f95a307d58352075a04907b84ac8be98ac012f"
   dependencies:
     hosted-git-info "^2.1.4"
     is-builtin-module "^1.0.0"
@@ -298,21 +302,233 @@ pinkie@^2.0.0:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
 
-"primer-css@git+https://git@github.com/primer/primer-css.git#v2.7.0":
-  version "2.7.0"
-  resolved "git+https://git@github.com/primer/primer-css.git#901f14ea27bd321ced2fd6f07d5c55f06d429925"
+primer-alerts@^1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/primer-alerts/-/primer-alerts-1.1.7.tgz#22585d938fdff02b6d22ce603ddfb1967329a88a"
+  dependencies:
+    primer-support "^4.0.6"
 
-"primer-markdown@git+https://git@github.com/primer/primer-markdown.git#v2.1.8":
+primer-avatars@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/primer-avatars/-/primer-avatars-1.0.1.tgz#33d6670eb656a46716aec2b49079eca1d2a1ff93"
+  dependencies:
+    primer-support "^4.0.6"
+
+primer-base@^0.4.0:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/primer-base/-/primer-base-0.4.2.tgz#10bea7bdd454c447b1ed6e801595f3888b30f01f"
+  dependencies:
+    primer-support "*"
+
+primer-blankslate@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/primer-blankslate/-/primer-blankslate-1.0.1.tgz#7de263f82eeb432d108d441fbf2324d7624041bc"
+  dependencies:
+    primer-support "^4.0.6"
+
+primer-box@^2.1.7:
   version "2.1.7"
-  resolved "git+https://git@github.com/primer/primer-markdown.git#de16d017d7b92ef53c54d695323f979af6df8161"
+  resolved "https://registry.yarnpkg.com/primer-box/-/primer-box-2.1.7.tgz#04b719d5ebe6a7080f59581bf7bf754c94d57342"
+  dependencies:
+    primer-support "^4.0.6"
 
-pseudomap@^1.0.1:
+primer-breadcrumb@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/primer-breadcrumb/-/primer-breadcrumb-1.0.1.tgz#d0ef69d2f1de4ce9d4dd93c7c059954506dc0ee4"
+  dependencies:
+    primer-marketing-support "^1.0.1"
+    primer-support "^4.0.6"
+
+primer-buttons@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/primer-buttons/-/primer-buttons-2.0.5.tgz#0bdec1f102dffb23eff112971f29e0d836a30288"
+  dependencies:
+    primer-support "^4.0.6"
+
+primer-cards@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/primer-cards/-/primer-cards-0.1.7.tgz#9a6eac6d53bd3de2b45f3956a012b3f637fb2b7a"
+  dependencies:
+    primer-marketing-support "^1.0.1"
+    primer-support "^4.0.6"
+
+primer-core@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/primer-core/-/primer-core-5.0.1.tgz#4d9abf5ae477b3b049afbfe51bbf18a4003fd0cb"
+  dependencies:
+    primer-base "^0.4.0"
+    primer-box "^2.1.7"
+    primer-buttons "^2.0.5"
+    primer-forms "^1.0.12"
+    primer-layout "^1.0.4"
+    primer-navigation "^1.0.5"
+    primer-support "^4.0.6"
+    primer-table-object "^1.0.8"
+    primer-tooltips "^1.0.1"
+    primer-truncate "^1.0.1"
+    primer-utilities "^4.3.4"
+
+primer-css@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/primer-css/-/primer-css-8.0.0.tgz#e5762dabf7fad925f30978bbbc588f3bd466ae5f"
+  dependencies:
+    primer-alerts "^1.1.7"
+    primer-avatars "^1.0.1"
+    primer-base "^0.4.0"
+    primer-blankslate "^1.0.1"
+    primer-box "^2.1.7"
+    primer-breadcrumb "^1.0.1"
+    primer-buttons "^2.0.5"
+    primer-cards "^0.1.7"
+    primer-core "^5.0.1"
+    primer-forms "^1.0.12"
+    primer-labels "^1.1.5"
+    primer-layout "^1.0.4"
+    primer-markdown "^3.3.12"
+    primer-marketing "^5.0.1"
+    primer-marketing-support "^1.0.1"
+    primer-marketing-type "^1.0.1"
+    primer-marketing-utilities "^1.0.1"
+    primer-navigation "^1.0.5"
+    primer-page-headers "^1.0.1"
+    primer-page-sections "^1.0.1"
+    primer-product "^5.0.1"
+    primer-support "^4.0.6"
+    primer-table-object "^1.0.8"
+    primer-tables "^1.0.1"
+    primer-tooltips "^1.0.1"
+    primer-truncate "^1.0.1"
+    primer-utilities "^4.3.4"
+
+primer-forms@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/primer-forms/-/primer-forms-1.0.12.tgz#01b98f50885272fa8b787e204337983e57f7f015"
+  dependencies:
+    primer-support "^4.0.6"
+
+primer-labels@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/primer-labels/-/primer-labels-1.1.5.tgz#1752b9dfa952ee66276046e221dd5e10a0f8be99"
+  dependencies:
+    primer-support "^4.0.6"
+
+primer-layout@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/primer-layout/-/primer-layout-1.0.4.tgz#ef7d277fed5b4e4ee37584ab67a4a0b8b661cdd2"
+  dependencies:
+    primer-support "^4.0.6"
+
+primer-markdown@^3.3.12:
+  version "3.3.12"
+  resolved "https://registry.yarnpkg.com/primer-markdown/-/primer-markdown-3.3.12.tgz#68de88600edc49d28727afeee32e0effc1ca2afe"
+  dependencies:
+    primer-support "^4.0.6"
+
+primer-marketing-support@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/primer-marketing-support/-/primer-marketing-support-1.0.1.tgz#68bd8d11636f7342483590e4ea65eef5ee74370e"
+
+primer-marketing-type@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/primer-marketing-type/-/primer-marketing-type-1.0.1.tgz#58c57fba54de27a2912b79821cb29d52cc94a55d"
+  dependencies:
+    primer-marketing-support "^1.0.1"
+    primer-support "^4.0.6"
+
+primer-marketing-utilities@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/primer-marketing-utilities/-/primer-marketing-utilities-1.0.1.tgz#482fbcf19f9b81f7d289b26ee43bcc94d563856e"
+  dependencies:
+    primer-marketing-support "^1.0.1"
+    primer-support "^4.0.6"
+
+primer-marketing@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/primer-marketing/-/primer-marketing-5.0.1.tgz#27eaf4ebb279c755e8642de1be1bbe189a683e7a"
+  dependencies:
+    primer-breadcrumb "^1.0.1"
+    primer-cards "^0.1.7"
+    primer-marketing-support "^1.0.1"
+    primer-marketing-type "^1.0.1"
+    primer-marketing-utilities "^1.0.1"
+    primer-page-headers "^1.0.1"
+    primer-page-sections "^1.0.1"
+    primer-support "^4.0.6"
+    primer-tables "^1.0.1"
+
+primer-navigation@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/primer-navigation/-/primer-navigation-1.0.5.tgz#e87b0386f1636624d275bd55650b3b1d476b050f"
+  dependencies:
+    primer-support "^4.0.6"
+
+primer-page-headers@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/primer-page-headers/-/primer-page-headers-1.0.1.tgz#e32e15cfb6a2c49bb99f1cd71c3ca04e817a0f77"
+  dependencies:
+    primer-marketing-support "^1.0.1"
+    primer-support "^4.0.6"
+
+primer-page-sections@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/primer-page-sections/-/primer-page-sections-1.0.1.tgz#0f42a7c9ce8fe12ac8abd21d4d3a1321414359e9"
+  dependencies:
+    primer-marketing-support "^1.0.1"
+    primer-support "^4.0.6"
+
+primer-product@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/primer-product/-/primer-product-5.0.1.tgz#a9c79500830abef2a9e40260e15b52d7e3ea86e4"
+  dependencies:
+    primer-alerts "^1.1.7"
+    primer-avatars "^1.0.1"
+    primer-blankslate "^1.0.1"
+    primer-labels "^1.1.5"
+    primer-markdown "^3.3.12"
+    primer-support "^4.0.6"
+
+primer-support@*, primer-support@^4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/primer-support/-/primer-support-4.0.6.tgz#80f3bf1ceb63fda1cf2fdbcea09b632c812e1d54"
+
+primer-table-object@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/primer-table-object/-/primer-table-object-1.0.8.tgz#1c1614bd68f6ad872e5d344470fb34d8382db15f"
+  dependencies:
+    primer-support "^4.0.6"
+
+primer-tables@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/primer-tables/-/primer-tables-1.0.1.tgz#cd2364576b3a7b13534804f124536e61fc078464"
+  dependencies:
+    primer-marketing-support "^1.0.1"
+    primer-support "^4.0.6"
+
+primer-tooltips@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/primer-tooltips/-/primer-tooltips-1.0.1.tgz#0692af6ac2aa17346421bedc2832014b267754df"
+  dependencies:
+    primer-support "^4.0.6"
+
+primer-truncate@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/primer-truncate/-/primer-truncate-1.0.1.tgz#36b96206b11bc90d4428b8ea90f9a53b1a92abcf"
+  dependencies:
+    primer-support "^4.0.6"
+
+primer-utilities@^4.3.4:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/primer-utilities/-/primer-utilities-4.3.4.tgz#ffc89bd99eaf6924d5904fe30081170c6c855008"
+  dependencies:
+    primer-support "^4.0.6"
+
+pseudomap@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/pseudomap/-/pseudomap-1.0.2.tgz#f052a28da70e618917ef0a8ac34c1ae5a68286b3"
 
 rails-ujs@^5.1.1:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/rails-ujs/-/rails-ujs-5.1.1.tgz#0d6e660533141f1ac352830b31c5bfe1b58f79aa"
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/rails-ujs/-/rails-ujs-5.1.2.tgz#94919e35e7fa07467223e9c81444704593559ef5"
 
 read-pkg-up@^2.0.0:
   version "2.0.0"
@@ -382,17 +598,23 @@ string-width@^1.0.1:
     strip-ansi "^3.0.0"
 
 string-width@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/string-width/-/string-width-2.0.0.tgz#635c5436cc72a6e0c387ceca278d4e2eec52687e"
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/string-width/-/string-width-2.1.0.tgz#030664561fc146c9423ec7d978fe2457437fe6d0"
   dependencies:
     is-fullwidth-code-point "^2.0.0"
-    strip-ansi "^3.0.0"
+    strip-ansi "^4.0.0"
 
 strip-ansi@^3.0.0, strip-ansi@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-3.0.1.tgz#6a385fb8853d952d5ff05d0e8aaf94278dc63dcf"
   dependencies:
     ansi-regex "^2.0.0"
+
+strip-ansi@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-4.0.0.tgz#a8479022eb1ac368a871389b635262c505ee368f"
+  dependencies:
+    ansi-regex "^3.0.0"
 
 strip-bom@^3.0.0:
   version "3.0.0"
@@ -407,8 +629,8 @@ ticky@1.0.1:
   resolved "https://registry.yarnpkg.com/ticky/-/ticky-1.0.1.tgz#b7cfa71e768f1c9000c497b9151b30947c50e46d"
 
 tiny-emitter@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-2.0.0.tgz#bad327adb1804b42a231afa741532bd884cd09ad"
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-2.0.1.tgz#e65919d91e488e2a78f7ebe827a56c6b188d51af"
 
 transliteration@^1.6.2:
   version "1.6.2"
@@ -452,7 +674,7 @@ y18n@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-3.2.1.tgz#6d15fba884c08679c0d77e88e7759e811e07fa41"
 
-yallist@^2.0.0:
+yallist@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-2.1.2.tgz#1c11f9218f076089a47dd512f93c6699a6a81d52"
 
@@ -463,8 +685,8 @@ yargs-parser@^7.0.0:
     camelcase "^4.1.0"
 
 yargs@^8.0.1:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/yargs/-/yargs-8.0.1.tgz#420ef75e840c1457a80adcca9bc6fa3849de51aa"
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-8.0.2.tgz#6299a9055b1cefc969ff7e79c1d918dceb22c360"
   dependencies:
     camelcase "^4.1.0"
     cliui "^3.2.0"

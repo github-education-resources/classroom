@@ -5,10 +5,13 @@ class GroupAssignmentRepo < ApplicationRecord
   include GitHubRepoable
   include Nameable
 
-  update_index('stafftools#group_assignment_repo') { self }
+  update_index("stafftools#group_assignment_repo") { self }
+
+  enum configuration_state: %i[not_configured configuring configured]
 
   belongs_to :group
   belongs_to :group_assignment
+  alias assignment group_assignment
 
   has_one :organization, -> { unscope(where: :deleted_at) }, through: :group_assignment
 
@@ -34,10 +37,11 @@ class GroupAssignmentRepo < ApplicationRecord
 
   delegate :creator, :starter_code_repo_id, to: :group_assignment
   delegate :github_team_id,                 to: :group
+  delegate :default_branch, :commits,       to: :github_repository
 
   # TODO: Move to a view model
   def disabled?
-    !github_repository.on_github? || !github_team.on_github?
+    @disabled ||= !github_repository.on_github? || !github_team.on_github?
   end
 
   def github_repository

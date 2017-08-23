@@ -34,7 +34,7 @@ module GitHubRepoable
     yield
   rescue GitHub::Error
     silently_destroy_github_repository
-    raise GitHub::Error, 'Assignment failed to be created'
+    raise GitHub::Error, "Assignment failed to be created"
   end
 
   # Public
@@ -76,7 +76,7 @@ module GitHubRepoable
   #
   def repository_permissions
     {}.tap do |options|
-      options[:permission] = 'admin' if give_admin_permission?
+      options[:permission] = "admin" if give_admin_permission?
     end
   end
 end

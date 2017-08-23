@@ -1,47 +1,89 @@
 <%= render 'organizations/organization_banner' %>
 
 <div class="site-content">
-  <div class="site-content-cap">
-    <div class="flex-table">
-      <div class="flex-table-item">
-        <span class="assignment-icon assignment-icon-individual left">
-          <%= octicon 'person', height: 22 %>
-        </span>
+  <div class="site-content-cap d-flex flex-justify-between">
+      <div class="pr-2">
+        <div class="d-table col-12">
+          <div class="col-1 d-table-cell v-align-middle">
+            <span class="assignment-icon assignment-icon-individual left">
+              <%= octicon 'person', height: 22 %>
+            </span>
+          </div>
 
-        <h2 class="site-content-heading">
-          <%= @assignment.title %>
-        </h2>
-
-        <p class="assignment-type text-muted">Individual assignment</p>
+          <div class="col-11 d-table-cell v-align-middle">
+            <h2 class="site-content-heading">
+              <%= @assignment.title %>
+            </h2>
+            <p class="assignment-type text-gray">Individual assigment
+              <% if @assignment.deadline %>
+                <% if @assignment.deadline.passed? %>
+                  - Deadline Passed
+                <% else %>
+                  <%= "- Deadline in #{distance_of_time_in_words(Time.zone.now, @assignment.deadline.deadline_at)}" %>
+                <% end %>
+              <% end %>
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div class="flex-table-item settings">
+      <div class="text-right pl-2 settings">
         <%= link_to edit_organization_assignment_path(@organization, @assignment), class: 'btn right' do %>
           <%= octicon 'gear' %>
           Assignment settings
         <% end %>
       </div>
-    </div>
   </div>
 
   <div class="site-content-body">
     <div class="invitation-content">
       <%= render @assignment.assignment_invitation %>
     </div>
-
-    <% if @assignment_repos.present? %>
-      <div class="assignment-repo-list">
-        <% @assignment_repos.each do |assignment_repo| %>
-          <%= render partial: 'assignment_repos/assignment_repo', locals: { url: organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo) } %>
-        <% end %>
+    <% if @organization.roster %>
+      <div class="assignment-container">
+        <div class="tabnav-body clearfix ">
+          <div class="tabnav">
+            <nav class="tabnav-tabs">
+              <span id='students-tab' onclick="selectTab(this)" class="tabnav-tab selected tabnav-link" aria-current="page">All students</span>
+              <span id='unlinked-tab' onclick="selectTab(this)" class="tabnav-tab tabnav-link">Unlinked GitHub accounts</span>
+            </nav>
+          </div>
+          <span id='students-span'>
+            <div class="assignment-repo-list">
+              <% sorter = RosterEntrySorter.new(@organization.roster.roster_entries, @assignment) %>
+              <% sorter.sort.each do |entry| %>
+                <%= render partial: 'assignment_repos/assignment_repo', locals: {
+                  url: organization_assignment_roster_entry_path(@organization, @assignment, entry)
+                } %>
+              <% end %>
+            </div>
+          </span>
+          <span id='unlinked-span' class='hidden-tab'>
+            <% if @unlinked_users.empty? %>
+              <%= render 'shared/unlinked_blank_slate' %>
+            <% else %>
+              <% @unlinked_users.each do |user| %>
+                <%= render 'assignment_repos/unlinked_user', unlinked_user: user, assignment_repo: @assignment_repos.select{ |repo| repo.user == user }.first %>
+              <% end %>
+            <% end %>
+          </span>
+        </div>
       </div>
-
-      <%= render partial: 'shared/pagination', locals: { collection: @assignment_repos } %>
     <% else %>
-      <div class="blankslate">
-        <h3>"<%= @assignment.title %>" does not have any repositories.</h3>
-        <p>Share the invitation link with your students to get started.</p>
-      </div>
+      <% if @assignment_repos.present? %>
+        <div class="assignment-repo-list">
+          <% @assignment_repos.each do |assignment_repo| %>
+            <%= render partial: 'assignment_repos/assignment_repo', locals: { url: organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo) } %>
+          <% end %>
+        </div>
+
+        <%= render partial: 'shared/pagination', locals: { collection: @assignment_repos } %>
+      <% else %>
+        <div class="blankslate">
+          <h3>"<%= @assignment.title %>" does not have any repositories.</h3>
+          <p>Share the invitation link with your students to get started.</p>
+        </div>
+      <% end %>
     <% end %>
   </div>
 </div>

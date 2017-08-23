@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class StafftoolsController < ApplicationController
-  layout 'stafftools'
+  layout "stafftools"
 
   before_action :authorize_access
 

@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class AssignmentRepo < ApplicationRecord
-  update_index('stafftools#assignment_repo') { self }
+  update_index("stafftools#assignment_repo") { self }
+
+  enum configuration_state: %i[not_configured configuring configured]
 
   belongs_to :assignment
-  belongs_to :repo_access
+  belongs_to :repo_access, optional: true
   belongs_to :user
 
   has_one :organization, -> { unscope(where: :deleted_at) }, through: :assignment
@@ -19,11 +21,12 @@ class AssignmentRepo < ApplicationRecord
 
   delegate :creator, :starter_code_repo_id, to: :assignment
   delegate :github_user,                    to: :user
+  delegate :default_branch, :commits,       to: :github_repository
 
   # This should really be in a view model
   # but it'll live here for now.
   def disabled?
-    !github_repository.on_github? || !github_user.on_github?
+    @disabled ||= !github_repository.on_github? || !github_user.on_github?
   end
 
   def private?

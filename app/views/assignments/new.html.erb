@@ -15,7 +15,6 @@
   <%= form_for [@organization, @assignment] do |f| %>
     <div class="columns">
       <div class="two-thirds column">
-        <%= render 'shared/error_messages', object: f.object %>
         <%= render partial: 'assignments/assignment_form_options', locals: { f: f } %>
       </div>
 
@@ -23,7 +22,7 @@
     </div>
 
     <div class="form-actions">
-      <%= f.submit 'Create Assignment', class: 'btn btn-green', id: 'assignment_submit' %>
+      <%= f.submit 'Create Assignment', class: 'btn btn-primary', id: 'assignment_submit' %>
       <%= link_to 'Cancel', organization_path(@organization), class: 'btn', role: 'button' %>
     </div>
   <% end %>

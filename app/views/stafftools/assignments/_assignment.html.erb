@@ -1,11 +1,15 @@
-<div class="classroom-resource-item">
-  <span class="assignment-icon assignment-icon-individual left">
-    <%= octicon 'person' %>
-  </span>
+<div class="d-flex flex-md-row flex-items-center classroom-resource-item">
+  <div class="col-1 d-flexp">
+    <span class="assignment-icon assignment-icon-individual left">
+      <%= octicon 'person' %>
+    </span>
+  </div>
 
-  <%= link_to stafftools_assignment_path(assignment.id) do %>
-    <strong class="search-result-title">Assignment <%= assignment.title %> for <%= assignment.organization_login %></strong>
-  <% end %>
+  <div class="col-10 col-md-10 d-flex flex-column">
+    <%= link_to stafftools_assignment_path(assignment.id) do %>
+      <strong class="search-result-title"><%= t('views.stafftools.assignments.assignment_title', title: assignment.title, organization_login: assignment.organization_login) %></strong>
+    <% end %>
 
-  <span class="text-muted css-truncate css-truncate-target">Created <%= local_time_ago(assignment.created_at) %></span>
+    <span class="text-gray css-truncate css-truncate-target"><%= t('views.stafftools.assignments.created') %> <%= local_time_ago(assignment.created_at) %></span>
+  </div>
 </div>

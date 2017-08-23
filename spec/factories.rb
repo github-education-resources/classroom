@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'support/vcr'
-require 'securerandom'
+require_relative "support/vcr"
+require "securerandom"
 
 FactoryGirl.define do
   factory :assignment do
@@ -21,6 +21,11 @@ FactoryGirl.define do
     user
 
     github_repo_id { rand(1..1_000_000) }
+  end
+
+  factory :deadline do
+    assignment
+    deadline_at { Time.zone.tomorrow }
   end
 
   factory :group_assignment do
@@ -56,19 +61,17 @@ FactoryGirl.define do
     end
   end
 
-  factory :student_identifier do
-    type
-    organization
-    user
+  factory :roster do
+    identifier_name { "email" }
 
-    value { Faker::Lorem.word }
+    after(:build) do |roster|
+      roster.roster_entries << RosterEntry.create(identifier: "email")
+    end
   end
 
-  factory :student_identifier_type, aliases: [:type] do
-    organization
-
-    name         { Faker::Lorem.word     }
-    description  { Faker::Lorem.sentence }
+  factory :roster_entry do
+    roster
+    identifier { "myemail@example.com" }
   end
 
   factory :user do

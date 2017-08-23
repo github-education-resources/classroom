@@ -18,4 +18,9 @@ class ApplicationController
     logged_in? && current_user.feature_enabled?(:team_management)
   end
   helper_method :team_management_enabled?
+
+  def repo_setup_enabled?
+    logged_in? && current_user.feature_enabled?(:repo_setup)
+  end
+  helper_method :repo_setup_enabled?
 end

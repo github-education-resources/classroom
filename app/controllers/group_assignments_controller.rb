@@ -4,10 +4,11 @@ class GroupAssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
 
-  before_action :set_group_assignment, except: %i[new create]
-  before_action :set_groupings,        except: [:show]
-
+  before_action :set_group_assignment,      except: %i[new create]
+  before_action :set_groupings,             except: [:show]
   before_action :authorize_grouping_access, only: %i[create update]
+
+  before_action :set_group_assignment_repos, :set_students_not_on_team, only: [:show]
 
   def new
     @group_assignment = GroupAssignment.new
@@ -17,6 +18,11 @@ class GroupAssignmentsController < ApplicationController
     @group_assignment = build_group_assignment
 
     if @group_assignment.save
+      @group_assignment.deadline&.create_job
+
+      GitHubClassroom.statsd.increment("group_exercise.create")
+      GitHubClassroom.statsd.increment("deadline.create") if @group_assignment.deadline
+
       flash[:success] = "\"#{@group_assignment.title}\" has been created!"
       redirect_to organization_group_assignment_path(@organization, @group_assignment)
     else
@@ -24,9 +30,7 @@ class GroupAssignmentsController < ApplicationController
     end
   end
 
-  def show
-    @group_assignment_repos = GroupAssignmentRepo.where(group_assignment: @group_assignment).page(params[:page])
-  end
+  def show; end
 
   def edit; end
 
@@ -36,7 +40,6 @@ class GroupAssignmentsController < ApplicationController
       flash[:success] = "Assignment \"#{@group_assignment.title}\" is being updated"
       redirect_to organization_group_assignment_path(@organization, @group_assignment)
     else
-      flash[:error] = result.error
       @group_assignment.reload if @group_assignment.slug.blank?
       render :edit
     end
@@ -45,6 +48,8 @@ class GroupAssignmentsController < ApplicationController
   def destroy
     if @group_assignment.update_attributes(deleted_at: Time.zone.now)
       DestroyResourceJob.perform_later(@group_assignment)
+
+      GitHubClassroom.statsd.increment("group_exercise.destroy")
 
       flash[:success] = "\"#{@group_assignment.title}\" is being deleted"
       redirect_to @organization
@@ -55,20 +60,13 @@ class GroupAssignmentsController < ApplicationController
 
   private
 
-  def student_identifier_types
-    @student_identifier_types ||= @organization.student_identifier_types.select(:name, :id).map do |student_identifier|
-      [student_identifier.name, student_identifier.id]
-    end
-  end
-  helper_method :student_identifier_types
-
   def authorize_grouping_access
     grouping_id = new_group_assignment_params[:grouping_id]
 
     return if grouping_id.blank?
     return if @organization.groupings.find_by(id: grouping_id)
 
-    raise NotAuthorized, 'You are not permitted to select this set of teams'
+    raise NotAuthorized, "You are not permitted to select this set of teams"
   end
 
   def build_group_assignment
@@ -82,7 +80,7 @@ class GroupAssignmentsController < ApplicationController
       .merge(creator: current_user,
              organization: @organization,
              starter_code_repo_id: starter_code_repo_id_param,
-             student_identifier_type: student_identifier_type_param)
+             deadline: deadline_param)
   end
 
   def new_grouping_params
@@ -103,6 +101,25 @@ class GroupAssignmentsController < ApplicationController
                         .find_by!(slug: params[:id])
   end
 
+  def set_group_assignment_repos
+    @group_assignment_repos = GroupAssignmentRepo.where(group_assignment: @group_assignment).page(params[:page])
+  end
+
+  def set_students_not_on_team
+    return if @organization.roster.blank?
+
+    students_on_team = @group_assignment_repos.map(&:repo_accesses).flatten.map(&:user).map(&:id).uniq
+    @students_not_on_team = @organization.roster.roster_entries.reject do |entry|
+      students_on_team.include?(entry.user.try(:id))
+    end
+  end
+
+  def deadline_param
+    return if params[:group_assignment][:deadline].blank?
+
+    Deadline::Factory.build_from_string(deadline_at: params[:group_assignment][:deadline])
+  end
+
   def starter_code_repo_id_param
     if params[:repo_id].present?
       validate_starter_code_repository_id(params[:repo_id])
@@ -111,21 +128,10 @@ class GroupAssignmentsController < ApplicationController
     end
   end
 
-  def student_identifier_type_param
-    return unless params.key?(:student_identifier_type)
-    StudentIdentifierType.find_by(id: student_identifier_type_params[:id], organization: @organization)
-  end
-
   def update_group_assignment_params
     params
       .require(:group_assignment)
-      .permit(:title, :slug, :public_repo, :max_members, :students_are_repo_admins)
-      .merge(starter_code_repo_id: starter_code_repo_id_param, student_identifier_type: student_identifier_type_param)
-  end
-
-  def student_identifier_type_params
-    params
-      .require(:student_identifier_type)
-      .permit(:id)
+      .permit(:title, :slug, :public_repo, :max_members, :students_are_repo_admins, :deadline)
+      .merge(starter_code_repo_id: starter_code_repo_id_param)
   end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe GroupAssignmentReposController, type: :controller do
   let(:user)         { classroom_teacher }
@@ -10,7 +10,7 @@ RSpec.describe GroupAssignmentReposController, type: :controller do
   let(:repo_access)  { RepoAccess.create(user: student, organization: organization) }
 
   let(:group_assignment) do
-    create(:group_assignment, title: 'Learn Ruby', organization: organization, public_repo: false)
+    create(:group_assignment, title: "Learn Ruby", organization: organization, public_repo: false)
   end
 
   let(:group) { Group.create(title: Time.zone.now, grouping: group_assignment.grouping) }
@@ -28,13 +28,13 @@ RSpec.describe GroupAssignmentReposController, type: :controller do
     Grouping.destroy_all
   end
 
-  describe 'GET #show', :vcr do
-    context 'as an unauthorized user' do
+  describe "GET #show", :vcr do
+    context "as an unauthorized user" do
       before do
         sign_out
       end
 
-      it 'returns a 404' do
+      it "returns a 404" do
         params = {
           id: group_assignment_repo.id,
           organization_id: organization.slug,
@@ -46,7 +46,7 @@ RSpec.describe GroupAssignmentReposController, type: :controller do
       end
     end
 
-    context 'as an authorized user' do
+    context "as an authorized user" do
       before do
         params = {
           id: group_assignment_repo.id,
@@ -57,11 +57,11 @@ RSpec.describe GroupAssignmentReposController, type: :controller do
         get :show, params: params
       end
 
-      it 'succeeds' do
+      it "succeeds" do
         expect(response).to have_http_status(:success)
       end
 
-      it 'sets the GroupAssignmentRepo' do
+      it "sets the GroupAssignmentRepo" do
         expect(assigns[:group_assignment_repo].id).to eq(group_assignment_repo.id)
       end
     end

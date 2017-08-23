@@ -24,6 +24,38 @@ a {
   }
 }
 
+a,
+span {
+  &.submission-icon-container {
+    text-decoration: none;
+
+    .success {
+      fill: #28a745;
+    }
+
+    .failed {
+      fill: #d73a49;
+    }
+
+    .neutral {
+      fill: #6a737d;
+    }
+  }
+}
+
+.submission-icon-container {
+  text-decoration: none;
+  cursor: pointer;
+
+  .success {
+    fill: $green;
+  }
+
+  .failed {
+    fill: $red;
+  }
+}
+
 main {
   flex: 1;
 }
@@ -57,7 +89,6 @@ main {
 
 .site-nav {
   float: right;
-  height: 28px;
   margin-top: 0.1rem;
   font-size: 0.9rem;
 
@@ -143,6 +174,7 @@ main {
 }
 
 .organization-login {
+  display: inline-block;
   margin-top: 0.2rem;
   font-size: 1rem;
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
@@ -181,6 +213,12 @@ main {
   border-top: 0;
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
+
+  &.tabnav-body {
+    padding-top: 1rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
 
   @media (max-width: 43em) {
     padding: 1rem;
@@ -298,7 +336,6 @@ hr {
 
 .invitation-content {
   padding-bottom: 2rem;
-  margin-bottom: 2rem;
   border-bottom: 1px solid #e3e3e3;
 
   @media screen and (max-width: 40em) {
@@ -307,20 +344,31 @@ hr {
   }
 }
 
+.assignment-repo-github-url {
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+.user-list {
+  margin-top: 2px;
+}
+
 .assignment-repo-list {
   .assignment-repo-list-item:not(:first-child) {
-    padding-top: 1rem;
-    margin-top: 1rem;
     border-top: 1px solid #e3e3e3;
-
-    @media screen and (max-width: 40em) {
-      margin-bottom: 0;
-    }
   }
 }
 
 .assignment-repo-list-item {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
   font-size: 14px;
+
+  &:last-child {
+    padding-bottom: 0;
+  }
 
   .octicon-alert {
     display: none;
@@ -328,7 +376,7 @@ hr {
 
   &.disabled {
     a {
-      color: $brand-gray;
+      color: $gray;
     }
 
     .avatar {
@@ -337,8 +385,7 @@ hr {
   }
 
   &.is-error {
-    height: 48px;
-    background-color: rgba($brand-red, 0.9);
+    background-color: rgba($red, 0.9);
     border-radius: 3px;
 
     &.assignment-repo-list-item {
@@ -363,63 +410,6 @@ hr {
 
   .css-truncate-target {
     max-width: 20rem;
-  }
-
-  .student-login {
-    display: block;
-    padding-top: 4px;
-    color: $brand-gray-dark;
-
-    &:hover {
-      color: $brand-blue;
-    }
-  }
-}
-
-.group-assignment-repo-list {
-  .group-assignment-repo-list-item:not(:first-child) {
-    padding-top: 1rem;
-    margin-top: 1rem;
-    border-top: 1px solid #e3e3e3;
-  }
-}
-
-.group-assignment-repo-list-item {
-  font-size: 14px;
-
-  .octicon-alert {
-    display: none;
-  }
-
-  &.disabled {
-    a {
-      color: $brand-gray;
-    }
-
-    .avatar {
-      filter: grayscale(1);
-    }
-  }
-
-  &.is-error {
-    height: 48px;
-    background-color: rgba($brand-red, 0.9);
-    border-radius: 3px;
-
-    &.assignment-repo-list-item {
-      .octicon-alert {
-        display: unset;
-        fill: #fff;
-      }
-
-      .spinner {
-        display: none;
-      }
-    }
-  }
-
-  .css-truncate-target {
-    max-width: 20rem;
 
     @media screen and (max-width: 40em) {
       max-width: 10rem;
@@ -428,10 +418,10 @@ hr {
 
   .team-name {
     display: block;
-    color: $brand-gray-dark;
+    color: $gray-dark;
 
     &:hover {
-      color: $brand-blue;
+      color: $blue;
     }
   }
 
@@ -445,6 +435,18 @@ hr {
         margin-left: 0;
       }
     }
+  }
+}
+
+.avatar-large {
+  margin-right: 10px;
+}
+
+.assignment-repo-button {
+  margin-left: 80px;
+
+  @media screen and (max-width: 40em) {
+    margin-left: 15px;
   }
 }
 
@@ -473,7 +475,7 @@ hr {
     padding-top: 0.4em;
 
     &:hover {
-      color: $brand-blue;
+      color: $blue;
     }
   }
 
@@ -672,9 +674,9 @@ hr {
   &:active,
   &.selected {
     color: #fff;
-    background-color: $brand-blue;
+    background-color: $blue;
     background-image: none;
-    border-color: $brand-blue;
+    border-color: $blue;
   }
 
   &.disabled {
@@ -715,7 +717,7 @@ hr {
 
   &.disabled {
     a {
-      color: $brand-gray;
+      color: $gray;
     }
 
     .avatar {
@@ -738,10 +740,10 @@ hr {
   .search-result-title {
     display: block;
     padding-top: 4px;
-    color: $brand-gray-dark;
+    color: $gray-dark;
 
     &:hover {
-      color: $brand-blue;
+      color: $blue;
     }
   }
 }
@@ -814,10 +816,17 @@ hr {
 }
 
 .student-login {
+  display: block;
+  padding-top: 4px;
   margin: 0;
   font-size: 14px;
   font-weight: bold;
   line-height: 20px;
+  color: $gray-dark;
+
+  &:hover {
+    color: $blue;
+  }
 }
 
 .student-description {
@@ -849,49 +858,94 @@ hr {
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.12);
 }
 
-.identifier-type-list-items {
-  padding: 10px 0;
-
-  .identifier-type-list-item:not(:first-child) {
-    padding-top: 1rem;
-    margin-top: 1rem;
-    border-top: 1px solid #e3e3e3;
-
-    @media screen and (max-width: 40em) {
-      padding-top: 1rem;
-      margin-top: 0.5rem;
-    }
-  }
-
-  .identifier-type-list-item:not(:last-child) {
-    margin-bottom: 1rem;
-  }
-
-  .meta-data {
-    margin-right: 10px;
-    line-height: 36px;
-    color: #767676;
-  }
-
-  .btn-group {
-    margin-top: 1px;
-  }
-}
-
-.identifier-type-description {
-  margin-top: 0;
-  margin-bottom: 0;
-  font-style: italic;
-
-  @media screen and (max-width: 40em) {
-    max-width: 125px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    vertical-align: top;
-  }
-}
-
 .flash.flash-error p:first-of-type {
   margin-top: 0;
+}
+
+.repo-detail-item {
+  margin-right: 15px;
+  text-decoration: none;
+
+  &:not(:hover) {
+    color: #000;
+  }
+}
+
+.assignment-properties {
+  margin-top: 5px;
+}
+
+.form.short-field {
+  width: 500px;
+}
+
+.tabnav-body .assignment-list-items {
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+.tabnav-link {
+  cursor: pointer;
+}
+
+.hidden-tab {
+  display: none;
+}
+
+.right-button {
+  margin-left: auto;
+}
+
+.fixed-height-row {
+  height: 56px;
+}
+
+.remodal-user {
+  padding-left: 0;
+  margin-bottom: 8px;
+  color: $blue;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+
+
+  &:focus {
+    outline: none;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.remodal-user-list {
+  max-height: 200px;
+  overflow: scroll;
+}
+
+.assignment-container {
+  padding-top: 2rem;
+}
+
+div.site-content-body.tabnav-body.join-box {
+  padding-right: 0;
+  padding-bottom: 1rem;
+}
+
+.remove-roster-entry-button {
+  margin-left: 10px;
+  fill: #333;
+  opacity: 0.25;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.form-checkbox:last-of-type {
+  margin-bottom: 0;
 }

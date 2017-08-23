@@ -1,58 +1,69 @@
 <div class="site-content">
-  <div class="stafftools-page-header clearfix">
-    <span class="assignment-icon assignment-icon-individual left">
-      <%= octicon 'person', height: 22 %>
-    </span>
 
-    <h2 class="stafftools-heading">
-      <%= @assignment.title %>
-    </h2>
+  <div class="d-flex flex-column flex-md-row flex-items-center flex-md-items-center stafftools-page-header clearfix">
+    <div class="col-1 d-flex">
+      <span class="assignment-icon assignment-icon-group">
+        <%= octicon 'person', height: 22 %>
+      </span>
+    </div>
 
-    <p class="assignment-type text-muted">Individual assignment</p>
+    <div class="col-10 col-md-10 d-flex flex-column">
+      <h2 class="stafftools-heading">
+        <%= @assignment.title %>
+      </h2>
+
+      <p class="assignment-type text-gray"><%= t('views.stafftools.assignments.assignment_type') %></p>
+    </div>
   </div>
 
   <div class="boxed-group">
-    <h3>Assignment information</h3>
+    <h3><%= t('views.stafftools.assignments.assignment_info') %></h3>
 
     <div class="boxed-group-inner">
       <table>
         <tr>
-          <td class="text-emphasized">ID</td>
+          <td class="text-emphasized"><%= t('views.stafftools.assignments.id') %></td>
           <td><%= @assignment.id %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Owned by</td>
+          <td class="text-emphasized"><%= t('views.stafftools.assignments.owned_by') %></td>
           <td><%= link_to @assignment.organization.title, stafftools_organization_path(@assignment.organization.id) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Created by</td>
+          <td class="text-emphasized"><%= t('views.stafftools.assignments.created_by') %></td>
           <td><%= link_to @assignment.creator.github_user.login, stafftools_user_path(@assignment.creator) %></td>
         </tr>
         <% if @assignment.starter_code? %>
         <tr>
-          <td class="text-emphasized">Starter code</td>
+          <td class="text-emphasized"><%= t('views.stafftools.assignments.starter_code') %></td>
           <td><%= link_to @assignment.starter_code_repository.html_url, @assignment.starter_code_repository.html_url %></td>
         </tr>
         <% end %>
         <tr>
-          <td class="text-emphasized">Invitation</td>
+          <td class="text-emphasized"><%= t('views.stafftools.assignments.invitation') %></td>
           <td><%= link_to @assignment.assignment_invitation.key, stafftools_assignment_invitation_path(@assignment.assignment_invitation.id) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Created on</td>
+          <td class="text-emphasized"><%= t('views.stafftools.assignments.created_on') %></td>
           <td><%= local_time(@assignment.created_at) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Last updated</td>
+          <td class="text-emphasized"><%= t('views.stafftools.assignments.last_updated') %></td>
           <td><%= local_time(@assignment.created_at) %></td>
         </tr>
+        <% if @assignment.deadline.present? %>
+          <tr>
+            <td class="text-emphasized"><%= t('views.stafftools.assignments.deadline') %></td>
+            <td><%= link_to local_time(@assignment.deadline.deadline_at), stafftools_deadline_path(@assignment.deadline.id) %></td>
+          </tr>
+        <% end %>
       </table>
     </div>
   </div>
 
   <% if @assignment.assignment_repos.present? %>
     <div class="boxed-group">
-      <h3>Assignment repositories</h3>
+      <h3><%= t('views.stafftools.assignments.assignment_repo') %></h3>
 
       <div class="boxed-group-inner">
         <ul class="boxed-group-list standalone">

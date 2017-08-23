@@ -16,20 +16,18 @@
     <div class="loading-indicator" style="display: none;"></div>
 
     <%= render 'peek/bar' %>
-    <%= render 'shared/message_of_the_day' %>
-    <%= render 'shared/header' %>
-
     <main>
+      <%= render 'shared/message_of_the_day' %>
+      <%= render 'shared/header' %>
+
       <%= yield :organization_banner %>
 
       <div id="flash-messages">
         <%= render 'shared/flash_messages' %>
       </div>
 
-      <div class="site-content">
-        <div class="container">
+      <div class="container-lg">
           <%= yield %>
-        </div>
       </div>
     </main>
 

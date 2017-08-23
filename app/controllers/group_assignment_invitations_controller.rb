@@ -1,36 +1,71 @@
 # frozen_string_literal: true
 
 class GroupAssignmentInvitationsController < ApplicationController
-  layout 'layouts/invitations'
+  include InvitationsControllerMethods
+  include RepoSetup
 
-  before_action :check_group_not_previous_acceptee, only: [:show]
-  before_action :check_user_not_group_member,       only: [:show]
+  layout "layouts/invitations"
+
+  before_action :check_group_not_previous_acceptee,    only: [:show]
+  before_action :check_user_not_group_member,          only: [:show]
+  before_action :check_should_redirect_to_roster_page, only: [:show]
 
   before_action :authorize_group_access, only: [:accept_invitation]
 
-  before_action :ensure_github_repo_exists, only: [:successful_invitation]
+  before_action :ensure_authorized_repo_setup, only: %i[setup setup_progress]
+  before_action :ensure_github_repo_exists,    only: %i[setup setup_progress successful_invitation]
 
   def show
     @groups = invitation.groups.map { |group| [group.title, group.id] }
   end
 
+  def setup; end
+
+  def setup_progress
+    perform_setup(group_assignment_repo, classroom_config) if configurable_submission?
+
+    render json: setup_status(group_assignment_repo)
+  end
+
   def accept; end
 
   def accept_assignment
-    create_group_assignment_repo { redirect_to successful_invitation_group_assignment_invitation_path }
+    create_group_assignment_repo do
+      if group_assignment_repo.starter_code_repo_id
+        redirect_to setup_group_assignment_invitation_path
+      else
+        redirect_to successful_invitation_group_assignment_invitation_path
+      end
+    end
   end
 
   def accept_invitation
     selected_group       = Group.find_by(id: group_params[:id])
     selected_group_title = group_params[:title]
 
-    create_group_assignment_repo(selected_group: selected_group,
-                                 new_group_title: selected_group_title) do
-      redirect_to successful_invitation_group_assignment_invitation_path
+    create_group_assignment_repo(selected_group: selected_group, new_group_title: selected_group_title) do
+      if group_assignment_repo.starter_code_repo_id
+        redirect_to setup_group_assignment_invitation_path
+      else
+        redirect_to successful_invitation_group_assignment_invitation_path
+      end
     end
   end
 
   def successful_invitation; end
+
+  def join_roster
+    entry = RosterEntry.find(params[:roster_entry_id])
+
+    unless user_on_roster?
+      entry.user = current_user
+      entry.save
+    end
+
+    redirect_to group_assignment_invitation_url(invitation)
+  rescue ActiveRecord::ActiveRecordError
+    flash[:error] = "An error occured, please try again!"
+  end
 
   private
 
@@ -46,12 +81,15 @@ class GroupAssignmentInvitationsController < ApplicationController
     validate_max_members_not_exceeded!(group)
     return if group_assignment.grouping.groups.find_by(id: group_id)
 
-    raise NotAuthorized, 'You are not permitted to select this team'
+    GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
+    raise NotAuthorized, "You are not permitted to select this team"
   end
 
   def validate_max_members_not_exceeded!(group)
     return unless group.present? && group_assignment.present? && group_assignment.max_members.present?
     return unless group.repo_accesses.count >= group_assignment.max_members
+
+    GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
     raise NotAuthorized, "This team has reached its maximum member limit of #{group_assignment.max_members}."
   end
 
@@ -67,9 +105,12 @@ class GroupAssignmentInvitationsController < ApplicationController
     users_group_assignment_repo = invitation.redeem_for(current_user, selected_group, new_group_title)
 
     if users_group_assignment_repo.present?
+      GitHubClassroom.statsd.increment("group_exercise_invitation.accept")
       yield if block_given?
     else
-      flash[:error] = 'An error has occurred, please refresh the page and try again.'
+      GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
+
+      flash[:error] = "An error has occurred, please refresh the page and try again."
       redirect_to :show
     end
   end
@@ -90,15 +131,6 @@ class GroupAssignmentInvitationsController < ApplicationController
       .permit(:id, :title)
   end
 
-  def new_student_identifier_params
-    params
-      .require(:student_identifier)
-      .permit(:value)
-      .merge(user: current_user,
-             organization: organization,
-             student_identifier_type: group_assignment.student_identifier_type)
-  end
-
   def invitation
     @invitation ||= GroupAssignmentInvitation
                     .includes(group_assignment: :group_assignment_repos)
@@ -111,14 +143,41 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
   helper_method :organization
 
+  def classroom_config
+    starter_code_repo_id = group_assignment_repo.starter_code_repo_id
+
+    return unless starter_code_repo_id
+
+    client       = group_assignment_repo.creator.github_client
+    starter_repo = GitHubRepository.new(client, starter_code_repo_id)
+
+    @classroom_config ||= ClassroomConfig.new(starter_repo)
+  end
+
+  def configurable_submission?
+    repo             = group_assignment_repo.github_repository
+    import           = repo.import_progress[:status]
+    classroom_branch = repo.branch_present?("github-classroom")
+    import == "complete" && classroom_branch && group_assignment_repo.not_configured?
+  end
+
   def check_group_not_previous_acceptee
     return unless group.present? && group_assignment_repo.present?
-    redirect_to successful_invitation_group_assignment_invitation_path
+
+    if repo_setup_enabled? && setup_status(group_assignment_repo)[:status] != :complete
+      redirect_to setup_group_assignment_invitation_path
+    else
+      redirect_to successful_invitation_group_assignment_invitation_path
+    end
   end
 
   def check_user_not_group_member
     return if group.blank?
     redirect_to accept_group_assignment_invitation_path
+  end
+
+  def ensure_authorized_repo_setup
+    redirect_to success_assignment_invitation_path unless repo_setup_enabled?
   end
 
   def ensure_github_repo_exists

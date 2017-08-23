@@ -15,23 +15,23 @@ Rails.application.configure do
   config.consider_all_requests_local = true
 
   # Enable/disable caching. By default caching is disabled.
-  if Rails.root.join('tmp', 'caching-dev.txt').exist?
+  if Rails.root.join("tmp", "caching-dev.txt").exist?
     config.action_controller.perform_caching = true
 
     config.public_file_server.headers = {
-      'Cache-Control' => 'public, max-age=172800'
+      "Cache-Control" => "public, max-age=172800"
     }
 
     dalli_store_config = {
-      namespace:  'CLASSROOM_DEVELOPMENT',
-      expires_in: (ENV.fetch('REQUEST_CACHE_TIMEOUT') { 30 }).to_i.minutes,
-      pool_size:  (ENV.fetch('RAILS_MAX_THREADS') { 5 })
+      namespace:  "CLASSROOM_DEVELOPMENT",
+      expires_in: (ENV.fetch("REQUEST_CACHE_TIMEOUT") { 30 }).to_i.minutes,
+      pool_size:  (ENV.fetch("RAILS_MAX_THREADS") { 5 })
     }
 
-    config.cache_store = :dalli_store, 'localhost:11211', dalli_store_config
+    config.cache_store = :dalli_store, "localhost:11211", dalli_store_config
 
     config.peek.adapter = :memcache, {
-      client: Dalli::Client.new('localhost:11211')
+      client: Dalli::Client.new("localhost:11211")
     }
   else
     config.action_controller.perform_caching = false

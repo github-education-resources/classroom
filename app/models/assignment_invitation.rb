@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class AssignmentInvitation < ApplicationRecord
+  include ShortKey
+
   default_scope { where(deleted_at: nil) }
 
-  update_index('stafftools#assignment_invitation') { self }
+  update_index("stafftools#assignment_invitation") { self }
 
   belongs_to :assignment
 
@@ -13,6 +15,8 @@ class AssignmentInvitation < ApplicationRecord
 
   validates :key, presence:   true
   validates :key, uniqueness: true
+
+  validates :short_key, uniqueness: true, allow_nil: true
 
   after_initialize :assign_key
 

@@ -1,13 +1,11 @@
 <header class="site-header">
-  <div class="container">
+  <div class="container-lg clearfix">
     <%= link_to(image_tag('logo@2x.png', class: 'site-logo', alt: 'GitHub for Classrooms'), (logged_in? ? organizations_path : root_path)) %>
 
-    <nav class="site-nav">
-      <ul>
-        <li>
-          <%= link_to "GitHub Education", 'https://education.github.com', target: '_blank' %>
-        </li>
+    <nav class="site-nav float-right  d-flex flex-wrap flex-content-start flex-justify-center">
+      <%= link_to "GitHub Education", 'https://education.github.com', target: '_blank' %>
 
+      <ul>
         <% if logged_in? %>
           <li>
             <%= link_to 'https://education.github.com/forum', class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.community_discussion') do %>

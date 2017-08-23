@@ -1,0 +1,4 @@
+en:
+  views:
+    rosters:
+      blank_slate_header: 'No unlinked GitHub accounts'

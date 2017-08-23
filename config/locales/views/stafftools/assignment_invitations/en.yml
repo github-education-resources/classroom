@@ -1,0 +1,13 @@
+en:
+  views:
+    stafftools:
+      assignment_invitations:
+        invitation_for: 'Assignment invitation for '
+        created: 'Created'
+        assignment_type: 'Individual assignment invitation'
+        assignment_invitation_title: 'Assignment invitation information'
+        id: 'ID'
+        assignment: 'Assignment'
+        owner: 'Owned by'
+        invitation_url: 'Invitation URL'
+        created_on: 'Created on'

@@ -2,10 +2,10 @@
 
 class AssignmentRepo
   class Creator
-    DEFAULT_ERROR_MESSAGE                   = 'Assignment could not be created, please try again'
-    REPOSITORY_CREATION_FAILED              = 'GitHub repository could not be created, please try again'
-    REPOSITORY_STARTER_CODE_IMPORT_FAILED   = 'We were not able to import you the starter code to your assignment, please try again.' # rubocop:disable LineLength
-    REPOSITORY_COLLABORATOR_ADDITION_FAILED = 'We were not able to add you to the Assignment as a collaborator, please try again.' # rubocop:disable LineLength
+    DEFAULT_ERROR_MESSAGE                   = "Assignment could not be created, please try again"
+    REPOSITORY_CREATION_FAILED              = "GitHub repository could not be created, please try again"
+    REPOSITORY_STARTER_CODE_IMPORT_FAILED   = "We were not able to import you the starter code to your assignment, please try again." # rubocop:disable LineLength
+    REPOSITORY_COLLABORATOR_ADDITION_FAILED = "We were not able to add you to the Assignment as a collaborator, please try again." # rubocop:disable LineLength
 
     attr_reader :assignment, :user, :organization
 
@@ -56,6 +56,8 @@ class AssignmentRepo
     # rubocop:disable MethodLength
     # rubocop:disable AbcSize
     def perform
+      start = Time.zone.now
+
       verify_organization_has_private_repos_available!
 
       assignment_repo = assignment.assignment_repos.build(
@@ -75,6 +77,9 @@ class AssignmentRepo
         raise Result::Error, DEFAULT_ERROR_MESSAGE
       end
 
+      duration_in_millseconds = (Time.zone.now - start) * 1_000
+      GitHubClassroom.statsd.timing("exercise_repo.create.time", duration_in_millseconds)
+
       Result.success(assignment_repo)
     rescue Result::Error => err
       delete_github_repository(assignment_repo.try(:github_repo_id))
@@ -90,7 +95,7 @@ class AssignmentRepo
     #
     # Returns true if successful, otherwise raises a Result::Error
     def add_user_to_repository!(github_repository_id)
-      options = {}.tap { |opt| opt[:permission] = 'admin' if assignment.students_are_repo_admins? }
+      options = {}.tap { |opt| opt[:permission] = "admin" if assignment.students_are_repo_admins? }
 
       github_repository = GitHubRepository.new(organization.github_client, github_repository_id)
       github_repository.add_collaborator(user.github_user.login_no_cache, options)
@@ -187,7 +192,7 @@ class AssignmentRepo
       return repository_name if suffix_count.zero?
 
       suffix = "-#{suffix_count}"
-      repository_name.truncate(100 - suffix.length, omission: '') + suffix
+      repository_name.truncate(100 - suffix.length, omission: "") + suffix
     end
   end
 end

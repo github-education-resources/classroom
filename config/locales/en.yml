@@ -41,12 +41,16 @@ en:
         title: 'Your team'
         slug:  'Your team'
       group_assignment:
-        title:    'Your assignment title'
-        slug:     'Your assignment repository prefix'
-        grouping: 'Your set of teams'
+        title:       'Your assignment title'
+        slug:        'Your assignment repository prefix'
+        grouping:    'Your set of teams'
+        public_repo: ''
       assignment:
         title: 'Your assignment title'
         slug:  'Your assignment repository prefix'
+        public_repo: ''
+      roster:
+        roster_entries: 'Your roster'
     errors:
       models:
         grouping:
@@ -66,6 +70,10 @@ en:
               blank: 'must be present'
             slug:
               taken: 'must be unique'
+        roster:
+          attributes:
+            roster_entries:
+              blank: 'must have at least one student.'
   views:
     pagination:
       previous: 'Previous'
