@@ -19,7 +19,7 @@ describe GitHub::Token do
       expected_expanded = [
         "test",
         "read:user", "user:email", "user:follow",
-        "repo:status", "repo_deployment", "public_repo",
+        "repo:status", "repo_deployment", "public_repo", "repo:invite",
         "write:org", "read:org",
         "write:public_key", "read:public_key",
         "write:repo_hook", "read:repo_hook",

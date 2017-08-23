@@ -5,7 +5,7 @@ module GitHub
     class << self
       EXPANSIONS = {
         user:               ["read:user", "user:email", "user:follow"],
-        repo:               ["repo:status", "repo_deployment", "public_repo"],
+        repo:               ["repo:status", "repo_deployment", "public_repo", "repo:invite"],
         'admin:org':        ["write:org", "read:org"],
         'admin:public_key': ["write:public_key", "read:public_key"],
         'admin:repo_hook':  ["write:repo_hook", "read:repo_hook"],
