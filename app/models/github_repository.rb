@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class GitHubRepository < GitHubResource
   DEFAULT_LABEL_COLOR = "ffffff"
 
@@ -228,3 +229,4 @@ class GitHubRepository < GitHubResource
     %w[name full_name html_url]
   end
 end
+# rubocop:enable Metrics/ClassLength

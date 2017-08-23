@@ -3,6 +3,7 @@
 class ApplicationController
   class NotAuthorized < StandardError; end
 
+  # rubocop:disable Metrics/MethodLength
   def flash_and_redirect_back_with_message(exception)
     flash[:error] = exception.message
 
@@ -19,6 +20,7 @@ class ApplicationController
 
     redirect_back(fallback_location: root_path)
   end
+  # rubocop:enable Metrics/MethodLength
 
   def send_to_statsd_and_reraise(exception)
     GitHubClassroom.statsd.increment("exception.raise", tags: [exception.class.to_s])
