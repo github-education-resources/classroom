@@ -15,7 +15,7 @@ describe GitHubClassroom::Scopes do
   end
 
   it "has the correct scopes for a student accepting an individual assignment" do
-    expect(subject::ASSIGNMENT_STUDENT).to eql(%w[user:email])
+    expect(subject::ASSIGNMENT_STUDENT).to eql(%w[user:email repo:invite])
   end
 
   it "ensures that the scopes are correctly sized" do
