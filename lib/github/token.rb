@@ -4,7 +4,7 @@ module GitHub
   module Token
     class << self
       EXPANSIONS = {
-        "repo"             => { "repo:status" => {}, "repo_deployment" => {}, "public_repo" => {}, "repo_invite" => {} },
+        "repo"             => { "repo:status" => {}, "repo_deployment" => {}, "public_repo" => {}, "repo:invite" => {} },
         "admin:org"        => { "write:org" => { "read:org" => {} } },
         "admin:public_key" => { "write:public_key" => { "read:public_key" => {} } },
         "admin:repo_hook"  => { "write:repo_hook" => { "read:repo_hook" => {} } },
@@ -34,13 +34,15 @@ module GitHub
           all << scope
           all << descendents(scope)
         end
+
+        all.flatten
       end
 
       def descendents(scope)
-        if child?(scope)
-          EXPANSIONS.keys.each do |top_level_key|
-            if EXPANSIONS[top_level_key].key?(scope)
-              return EXPANSIONS[top_level_key][scope].keys
+        if EXPANSIONS[scope].nil?
+          EXPANSIONS.keys.each do |top|
+            if EXPANSIONS[top].key?(scope)
+              return EXPANSIONS[top][scope].keys
             end
           end
         else
@@ -54,12 +56,6 @@ module GitHub
         end
 
         []
-      end
-
-      private
-
-      def child?(scope)
-        EXPANSIONS[scope].nil?
       end
     end
   end

@@ -22,7 +22,7 @@ describe GitHub::Token do
         "write:org", "read:org"
       ]
 
-      expect(described_class.expand_scopes(scope_list)).to eq(expected_expanded)
+      expect(described_class.expand_scopes(scope_list)).to match_array(expected_expanded)
     end
   end
 
