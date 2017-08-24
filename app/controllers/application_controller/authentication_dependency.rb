@@ -13,8 +13,9 @@ class ApplicationController
   end
 
   def adequate_scopes?
+    current_expanded_scopes = GitHub::Token.expand_scopes(current_scopes)
     GitHub::Token.expand_scopes(required_scopes).all? do |scope|
-      GitHub::Token.expand_scopes(current_scopes).include?(scope)
+      current_expanded_scopes.include?(scope)
     end
   end
 
