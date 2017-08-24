@@ -4,12 +4,12 @@ module GitHub
   module Token
     class << self
       EXPANSIONS = {
-        user:               ["read:user", "user:email", "user:follow"],
-        repo:               ["repo:status", "repo_deployment", "public_repo", "repo:invite"],
-        'admin:org':        ["write:org", "read:org"],
-        'admin:public_key': ["write:public_key", "read:public_key"],
-        'admin:repo_hook':  ["write:repo_hook", "read:repo_hook"],
-        'admin:gpg_key':    ["write:gpg_key", "read:gpg_key"]
+        "repo"             => { "repo:status" => {}, "repo_deployment" => {}, "public_repo" => {}, "repo_invite" => {} },
+        "admin:org"        => { "write:org" => { "read:org" => {} } },
+        "admin:public_key" => { "write:public_key" => { "read:public_key" => {} } },
+        "admin:repo_hook"  => { "write:repo_hook" => { "read:repo_hook" => {} } },
+        "user"             => { "read:user" => {}, "user:email" => {}, "user:follow" => {} },
+        "admin:gpg_key"    => { "write:gpg_key" => { "read:gpg_key" => {} } }
       }.freeze
 
       def scopes(token, client = nil)
