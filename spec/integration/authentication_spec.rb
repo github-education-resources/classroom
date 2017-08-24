@@ -15,7 +15,7 @@ RSpec.describe "OAuth scope requirements", type: :request do
       it "sets required scopes in session" do
         get url_for(organization)
         expect(session[:required_scopes])
-          .to eq("user:email,repo:status,repo_deployment,public_repo,delete_repo,write:org,read:org,admin:org_hook")
+          .to eq("user:email,repo,delete_repo,admin:org,admin:org_hook")
       end
     end
 
@@ -42,8 +42,7 @@ RSpec.describe "OAuth scope requirements", type: :request do
 
     it "redirects to omniauth" do
       get response.redirect_url
-      url = "/auth/github?scope=user%3Aemail%2Crepo%3Astatus%2Crepo_deployment%2C" \
-        "public_repo%2Cdelete_repo%2Cwrite%3Aorg%2Cread%3Aorg%2Cadmin%3Aorg_hook"
+      url = "/auth/github?scope=user%3Aemail%2Crepo%2Cdelete_repo%2Cadmin%3Aorg%2Cadmin%3Aorg_hook"
       expect(response).to redirect_to(url)
     end
   end
