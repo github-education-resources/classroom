@@ -13,7 +13,9 @@ class ApplicationController
   end
 
   def adequate_scopes?
-    GitHub::Token.scopes_match?(required_scopes, current_scopes)
+    GitHub::Token.expand_scopes(required_scopes).all? do |scope|
+      GitHub::Token.expand_scopes(current_scopes).include?(scope)
+    end
   end
 
   def authenticate_user!
