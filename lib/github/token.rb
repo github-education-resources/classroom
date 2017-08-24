@@ -47,10 +47,6 @@ module GitHub
         []
       end
 
-      def scopes_match?(scopes, other_scopes)
-        expand_scopes(scopes) == expand_scopes(other_scopes)
-      end
-
       # Having a scope like 'user' is actually read:user, user:email and user:follow
       # This method expands these collection scopes to make checking which scopes we have more simple
       def expand_scopes(scopes)
