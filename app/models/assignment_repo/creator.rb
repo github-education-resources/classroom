@@ -94,14 +94,18 @@ class AssignmentRepo
     # as a collaborator.
     #
     # Returns true if successful, otherwise raises a Result::Error
+    # rubocop:disable Metrics/AbcSize
     def add_user_to_repository!(github_repository_id)
       options = {}.tap { |opt| opt[:permission] = "admin" if assignment.students_are_repo_admins? }
 
       github_repository = GitHubRepository.new(organization.github_client, github_repository_id)
-      github_repository.add_collaborator(user.github_user.login_no_cache, options)
+      invitation_id = github_repository.invite(user.github_user.login_no_cache, options).id
+
+      user.github_user.accept_repository_invitation(invitation_id)
     rescue GitHub::Error
       raise Result::Error, REPOSITORY_COLLABORATOR_ADDITION_FAILED
     end
+    # rubocop:enable Metrics/AbcSize
 
     # Internal: Create the GitHub repository for the AssignmentRepo.
     #

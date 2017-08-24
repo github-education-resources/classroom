@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class GroupAssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
   include RepoSetup
@@ -85,6 +86,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     raise NotAuthorized, "You are not permitted to select this team"
   end
 
+  # rubocop:disable Metrics/AbcSize
   def validate_max_members_not_exceeded!(group)
     return unless group.present? && group_assignment.present? && group_assignment.max_members.present?
     return unless group.repo_accesses.count >= group_assignment.max_members
@@ -92,6 +94,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
     raise NotAuthorized, "This team has reached its maximum member limit of #{group_assignment.max_members}."
   end
+  # rubocop:enable Metrics/AbcSize
 
   def group
     repo_access = current_user.repo_accesses.find_by(organization: organization)
@@ -192,3 +195,4 @@ class GroupAssignmentInvitationsController < ApplicationController
     create_group_assignment_repo(selected_group: group)
   end
 end
+# rubocop:enable Metrics/ClassLength
