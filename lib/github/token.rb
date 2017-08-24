@@ -29,33 +29,41 @@ module GitHub
       # Having a scope like 'user' is actually read:user, user:email and user:follow
       # This method expands these collection scopes to make checking which scopes we have more simple
       def expand_scopes(scopes)
-        all = []
-        scopes.each do |scope|
-          all << scope
-          all << descendents(scope)
-        end
-
-        all.flatten
+        scopes.map do |scope|
+          [scope, descendents(scope)]
+        end.flatten
       end
 
+      # Note that this will only work for a scope that is _at MAX_
+      # three children deep.
+      #
+      # Since I don't think OAuth scopes will ever get that deep ¯\_(ツ)_/¯
+      # - <3 @tarebyte
       def descendents(scope)
-        if EXPANSIONS[scope].nil?
-          EXPANSIONS.keys.each do |top|
+        if parent_scope?(scope)
+          return EXPANSIONS[scope].keys.map do |child|
+            [child, descendents(child)]
+          end.flatten
+        else
+          parent_scopes.each do |top|
             if EXPANSIONS[top].key?(scope)
               return EXPANSIONS[top][scope].keys
             end
           end
-        else
-          summation = []
-          EXPANSIONS[scope].keys.each do |child|
-            summation << child
-            summation << descendents(child)
-          end
-
-          return summation.flatten
         end
 
         []
+      end
+
+      private
+
+      def parent_scopes
+        return @parent_scopes if defined?(@parent_scopes)
+        @parent_scopes = EXPANSIONS.keys
+      end
+
+      def parent_scope?(scope)
+        !EXPANSIONS[scope].nil?
       end
     end
   end
