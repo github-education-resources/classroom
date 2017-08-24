@@ -3,7 +3,7 @@
 module GitHub
   module Token
     class << self
-      EXPANSIONS = {
+      SCOPE_TREE = {
         "repo" => {
           "repo:status"     => {},
           "repo_deployment" => {},
@@ -66,12 +66,12 @@ module GitHub
       # - <3 @tarebyte
       def descendents(scope)
         if parent_scope?(scope)
-          return EXPANSIONS[scope].keys.map do |child|
+          return SCOPE_TREE[scope].keys.map do |child|
             [child, descendents(child)]
           end.flatten
         else
           parent_scopes.each do |top|
-            return EXPANSIONS[top][scope].keys if EXPANSIONS[top].key?(scope)
+            return SCOPE_TREE[top][scope].keys if SCOPE_TREE[top].key?(scope)
           end
         end
 
@@ -82,11 +82,11 @@ module GitHub
 
       def parent_scopes
         return @parent_scopes if defined?(@parent_scopes)
-        @parent_scopes = EXPANSIONS.keys
+        @parent_scopes = SCOPE_TREE.keys
       end
 
       def parent_scope?(scope)
-        !EXPANSIONS[scope].nil?
+        !SCOPE_TREE[scope].nil?
       end
     end
   end
