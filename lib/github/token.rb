@@ -25,11 +25,15 @@ module GitHub
             "read:repo_hook" => {}
           }
         },
+        "admin:org_hook" => {},
+        "gist" => {},
+        "notifications" => {},
         "user" => {
           "read:user"   => {},
           "user:email"  => {},
           "user:follow" => {}
         },
+        "delete_repo" => {},
         "admin:gpg_key" => {
           "write:gpg_key" => {
             "read:gpg_key" => {}

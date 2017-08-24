@@ -27,7 +27,7 @@ describe GitHub::Token do
   end
 
   describe "descendents" do
-    it "returns nil when it is a last child" do
+    it "returns [] when the scope is the last child" do
       expect(subject.descendents("read:org")).to eq([])
     end
 
@@ -37,6 +37,10 @@ describe GitHub::Token do
 
     it "returns a list of children when it is a parent" do
       expect(subject.descendents("admin:org")).to eq(["write:org", "read:org"])
+    end
+
+    it "returns [] when the scope is childless" do
+      expect(subject.descendents("gist")).to eq([])
     end
   end
 end
