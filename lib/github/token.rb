@@ -22,12 +22,44 @@ module GitHub
         []
       end
 
+      def scopes_match?(scopes, other_scopes)
+        expand_scopes(scopes) == expand_scopes(other_scopes)
+      end
+
       # Having a scope like 'user' is actually read:user, user:email and user:follow
       # This method expands these collection scopes to make checking which scopes we have more simple
       def expand_scopes(scopes)
-        scopes
-          .map { |scope| EXPANSIONS.key?(scope.to_sym) ? EXPANSIONS[scope.to_sym] : scope }
-          .flatten
+        all = []
+        scopes.each do |scope|
+          all << scope
+          all << descendents(scope)
+        end
+      end
+
+      def descendents(scope)
+        if child?(scope)
+          EXPANSIONS.keys.each do |top_level_key|
+            if EXPANSIONS[top_level_key].key?(scope)
+              return EXPANSIONS[top_level_key][scope].keys
+            end
+          end
+        else
+          summation = []
+          EXPANSIONS[scope].keys.each do |child|
+            summation << child
+            summation << descendents(child)
+          end
+
+          return summation.flatten
+        end
+
+        []
+      end
+
+      private
+
+      def child?(scope)
+        EXPANSIONS[scope].nil?
       end
     end
   end
