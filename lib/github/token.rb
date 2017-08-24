@@ -31,13 +31,13 @@ module GitHub
       def expand_scopes(scopes)
         scopes.map do |scope|
           [scope, descendents(scope)]
-        end.flatten
+        end.flatten.uniq.sort
       end
 
       # Note that this will only work for a scope that is _at MAX_
       # three children deep.
       #
-      # Since I don't think OAuth scopes will ever get that deep ¯\_(ツ)_/¯
+      # Since I don't think OAuth scopes will ever get that deep YOLO
       # - <3 @tarebyte
       def descendents(scope)
         if parent_scope?(scope)
@@ -46,9 +46,7 @@ module GitHub
           end.flatten
         else
           parent_scopes.each do |top|
-            if EXPANSIONS[top].key?(scope)
-              return EXPANSIONS[top][scope].keys
-            end
+            return EXPANSIONS[top][scope].keys if EXPANSIONS[top].key?(scope)
           end
         end
 
