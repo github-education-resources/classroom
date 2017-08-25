@@ -3,8 +3,10 @@ en:
     organizations:
       select_organization: 'Select an organization for your new classroom'
       no_organizations: 'Oh, you don’t have any organizations on your GitHub account.'
-      please_create_new_organization: "Please <a href='https://github.com/organizations/new'>create an organization on GitHub.com</a> and then come back."
-      grant_organization_access: "<strong>ProTip!</strong> Don't see your organization? You need to %{href} first."
+      please_create_or_authorize_new_organization: "Please <a href='https://github.com/organizations/new'>create an organization on GitHub.com</a> or %{authorize_href} and then come back."
+      authorize_organization_access_link: "authorise an existing one"
+      grant_organization_access: "Grant access to an organization that is not listed"
+      grant_organization_access_protip: "<strong>ProTip!</strong> Don't see your organization? You need to %{href} first."
       grant_organization_access_link: 'grant us access'
       you_are_not_owner: 'You cannot add this organization to classroom because you are not an owner'
       already_added: '@%{owner} has already added this organization to GitHub Classroom'

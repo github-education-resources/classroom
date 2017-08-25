@@ -7,8 +7,7 @@
     <% if @users_github_organizations.empty? %>
       <div class="blankslate large-format spacious clean-background">
         <h3><%= t('views.organizations.no_organizations') %></h3>
-
-        <p><%= t('views.organizations.please_create_new_organization').html_safe %></p>
+        <p><%= t('views.organizations.please_create_or_authorize_new_organization', authorize_href: link_to(t('views.organizations.authorize_organization_access_link'), "https://github.com/settings/connections/applications/#{Rails.application.secrets.github_client_id}", target: '_blank')).html_safe %></p>
       </div>
     <% else %>
       <%= form_for @organization do |f| %>
@@ -22,6 +21,9 @@
               <%= render partial: 'disabled_organization_select', locals: { org: org } %>
             <% end %>
           <% end %>
+          <a href="<%= "https://github.com/settings/connections/applications/#{Rails.application.secrets.github_client_id}" %>" target="_blank" class="organization-select-target organization-grant-access-avatar">
+            <%= t('views.organizations.grant_organization_access').html_safe %>
+          </a>
           <div style="clear:both"></div>
         </div>
       <% end %>
@@ -32,5 +34,5 @@
 </div>
 
 <div class="protip">
-  <%= octicon 'light-bulb' %> <%= t('views.organizations.grant_organization_access', href: link_to(t('views.organizations.grant_organization_access_link'), "https://github.com/settings/connections/applications/#{Rails.application.secrets.github_client_id}", target: '_blank')).html_safe %>
+  <%= octicon 'light-bulb' %> <%= t('views.organizations.grant_organization_access_protip', href: link_to(t('views.organizations.grant_organization_access_link'), "https://github.com/settings/connections/applications/#{Rails.application.secrets.github_client_id}", target: '_blank')).html_safe %>
 </div>
