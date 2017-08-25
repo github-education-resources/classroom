@@ -14,7 +14,8 @@ RSpec.describe "OAuth scope requirements", type: :request do
 
       it "sets required scopes in session" do
         get url_for(organization)
-        expect(session[:required_scopes]).to eq("user:email,repo,delete_repo,admin:org,admin:org_hook")
+        expect(session[:required_scopes])
+          .to eq("user:email,repo,delete_repo,admin:org,admin:org_hook")
       end
     end
 

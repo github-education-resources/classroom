@@ -54,8 +54,13 @@
         <tr>
           <td class="text-emphasized"><%= t('views.stafftools.group_assignments.last_updated') %></td>
           <td><%= local_time(@group_assignment.created_at) %></td>
-
         </tr>
+        <% if @group_assignment.deadline.present? %>
+          <tr>
+            <td class="text-emphasized"><%= t('views.stafftools.group_assignments.deadline') %></td>
+            <td><%= link_to local_time(@group_assignment.deadline.deadline_at), stafftools_deadline_path(@group_assignment.deadline.id) %></td>
+          </tr>
+        <% end %>
       </table>
     </div>
   </div>

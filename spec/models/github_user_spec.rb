@@ -33,13 +33,13 @@ describe GitHubUser do
 
   describe "#github_avatar_url", :vcr do
     it "returns the correct url with a default size of 40" do
-      expected_url = "https://avatars.githubusercontent.com/u/#{github_user.id}?v=3&size=40"
+      expected_url = "https://avatars2.githubusercontent.com/u/#{github_user.id}?v=4&size=40"
       expect(github_user.github_avatar_url).to eql(expected_url)
     end
 
     it "has a customizeable size" do
       size         = 90
-      expected_url = "https://avatars.githubusercontent.com/u/#{github_user.id}?v=3&size=#{size}"
+      expected_url = "https://avatars2.githubusercontent.com/u/#{github_user.id}?v=4&size=#{size}"
 
       expect(github_user.github_avatar_url(size)).to eql(expected_url)
     end
