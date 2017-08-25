@@ -77,6 +77,18 @@ class StubRepository
     true
   end
 
+  def importing?
+    GitHubRepository::IMPORT_ONGOING.include? import_progress[:status]
+  end
+
+  def imported?
+    import_progress[:status] == "complete"
+  end
+
+  def import_failed?
+    GitHubRepository::IMPORT_ERRORS.include? import_progress[:status]
+  end
+
   private
 
   def branch_names

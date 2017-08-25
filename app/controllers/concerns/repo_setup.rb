@@ -7,10 +7,10 @@ module RepoSetup
     repo     = assignment_repo.github_repository
     progress = { status: :importing }
 
-    return progress unless repo.import_progress[:status] == "complete"
+    return progress unless repo.imported?
 
     progress.update(status: :configuring) if assignment_repo.configuring?
-    progress.update(status: :complete) if assignment_repo.configured? || !repo.branch_present?(config_branch)
+    progress.update(status: :complete) if assignment_repo.configured?
     progress
   end
 

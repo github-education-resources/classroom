@@ -2,6 +2,8 @@
 
 # rubocop:disable Metrics/ClassLength
 class GitHubRepository < GitHubResource
+  depends_on :import
+
   DEFAULT_LABEL_COLOR = "ffffff"
 
   # NOTE: LEGACY, DO NOT REMOVE.
@@ -9,25 +11,6 @@ class GitHubRepository < GitHubResource
   def add_collaborator(collaborator, options = {})
     GitHub::Errors.with_error_handling do
       @client.add_collaborator(@id, collaborator, options)
-    end
-  end
-
-  def get_starter_code_from(source)
-    GitHub::Errors.with_error_handling do
-      options = {
-        vcs:          "git",
-        accept:       Octokit::Preview::PREVIEW_TYPES[:source_imports],
-        vcs_username: @client.login,
-        vcs_password: @client.access_token
-      }
-
-      @client.start_source_import(@id, "https://github.com/#{source.full_name}", options)
-    end
-  end
-
-  def import_progress(**options)
-    GitHub::Errors.with_error_handling do
-      @client.source_import_progress(full_name, options)
     end
   end
 
