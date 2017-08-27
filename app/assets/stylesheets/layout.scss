@@ -699,10 +699,14 @@ hr {
 }
 
 .organization-grant-access-avatar {
+  display: table;
   width: 127px;
   height: 147px;
-  padding: 10px auto;
-  margin: auto;
+}
+
+.organization-grant-access-text {
+  display: table-cell;
+  vertical-align: middle;
 }
 
 .search-results {

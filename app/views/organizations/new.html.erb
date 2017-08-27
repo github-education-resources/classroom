@@ -22,7 +22,7 @@
             <% end %>
           <% end %>
           <a href="<%= "https://github.com/settings/connections/applications/#{Rails.application.secrets.github_client_id}" %>" target="_blank" class="organization-select-target organization-grant-access-avatar">
-            <%= t('views.organizations.grant_organization_access').html_safe %>
+            <span class="organization-grant-access-text"><%= t('views.organizations.grant_organization_access').html_safe %></span>
           </a>
           <div style="clear:both"></div>
         </div>
