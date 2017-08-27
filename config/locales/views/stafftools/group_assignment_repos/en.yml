@@ -1,0 +1,25 @@
+en:
+  views:
+    stafftools:
+      group_assignment_repos:
+        title: "%{group_title}'s group assignment repository for %{group_assignment_title}"
+        created: 'Created'
+        assignment_type: 'Group assignment repository'
+        general_info: 'General information'
+        id: 'ID'
+        owned_by: 'Owned by'
+        created_on: 'Created on'
+        group_assignment: 'Group assignment'
+        group: 'Group'
+        created_by: 'Created by'
+        github_repo: 'GitHub repository'
+        repo_id: 'Repository ID'
+        source_code: 'Source code'
+        dangerzone: 'Dangerzone'
+        delete_repo_title: 'Delete this group assignment repository'
+        delete_repo_confirmation: 'Are you ABSOLUTELY sure?'
+        delete_repo_warning: "Unexpected things will happen if you don't read this!"
+        delete_repo_desc: 'This action <strong>CANNOT</strong> be undone.<br>
+          Please note this will delete the record on GitHub Classroom <strong>AND</strong> the repository on GitHub.'
+        repo_id_confirmation: 'Please type the ID (%{group_assignment_repo_id}) of the group assignment repository to confirm'
+        delete_repo_link_text: 'Delete this group assignment repository'
