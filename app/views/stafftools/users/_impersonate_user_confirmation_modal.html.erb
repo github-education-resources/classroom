@@ -1,24 +1,21 @@
 <div class="remodal text-left" data-remodal-id="impersonate-user">
   <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
-  <h2 class="remodal-header">Are you ABSOLUTELY sure?</h2>
+  <h2 class="remodal-header"><%= t('views.stafftools.users.impersonate_user_header') %></h2>
 
   <div class="remodal-warning">
-    Please make sure you really want to do this.
+    <%= t('views.stafftools.users.impersonate_user_warning') %>
   </div>
 
   <div class="remodal-description">
-    <p>
-      All actions that you perform on behalf of the user will affect their experience.
-      <strong>Please use caution when impersonating another user.</strong>
-    </p>
+    <p><%= raw t('views.stafftools.users.impersonate_user_desc') %></p>
   </div>
 
   <%= form_tag impersonate_stafftools_user_path(user.id), 'data-name' => user.github_user.login do %>
     <dl class="form js-normalize-submit">
-      <dt>Please type the user's GitHub login <strong>(<%= user.github_user.login %>)</strong> to confirm</dt>
+      <dt><%= raw t('views.stafftools.users.impersonate_user_confirmation', user_login: user.github_user.login) %></dt>
       <dd><input type="text" class="js-input-block form-control"></dd>
     </dl>
 
-    <%= submit_tag "Impersonate @#{user.github_user.login}", class: 'btn btn-block btn-danger js-submit', disabled: true %>
+    <%= submit_tag t('views.stafftools.users.impersonate_user_btn', user_login: user.github_user.login), class: 'btn btn-block btn-danger js-submit', disabled: true %>
   <% end %>
 </div>
