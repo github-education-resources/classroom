@@ -7,6 +7,7 @@
     <% if @users_github_organizations.empty? %>
       <div class="blankslate large-format spacious clean-background">
         <h3><%= t('views.organizations.no_organizations') %></h3>
+
         <p><%= t('views.organizations.please_create_or_authorize_new_organization', authorize_href: link_to(t('views.organizations.authorize_organization_access_link'), "https://github.com/settings/connections/applications/#{Rails.application.secrets.github_client_id}", target: '_blank')).html_safe %></p>
       </div>
     <% else %>
