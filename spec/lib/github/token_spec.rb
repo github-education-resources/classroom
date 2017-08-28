@@ -27,20 +27,35 @@ describe GitHub::Token do
   end
 
   describe "descendents" do
+
+    scope_tree = {
+      "admin:org" => {
+        "write:org" => {
+          "read:org" => {}
+        }
+      },
+      "admin:public_key" => {
+        "write:public_key" => {
+          "read:public_key" => {}
+        }
+      },
+      "gist" => {}
+    }.freeze
+
     it "returns [] when the scope is the last child" do
-      expect(subject.descendents("read:org")).to eq([])
+      expect(subject.descendents("read:org", scope_tree)).to eq([])
     end
 
     it "returns a list of children when it is a middle child" do
-      expect(subject.descendents("write:org")).to eq(["read:org"])
+      expect(subject.descendents("write:org", scope_tree)).to eq(["read:org"])
     end
 
     it "returns a list of children when it is a parent" do
-      expect(subject.descendents("admin:org")).to eq(["write:org", "read:org"])
+      expect(subject.descendents("admin:org", scope_tree)).to eq(["write:org", "read:org"])
     end
 
     it "returns [] when the scope is childless" do
-      expect(subject.descendents("gist")).to eq([])
+      expect(subject.descendents("gist", scope_tree)).to eq([])
     end
   end
 end

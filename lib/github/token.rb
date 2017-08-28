@@ -64,14 +64,14 @@ module GitHub
       #
       # Since I don't think OAuth scopes will ever get that deep YOLO
       # - <3 @tarebyte
-      def descendents(scope)
-        if parent_scope?(scope)
-          return SCOPE_TREE[scope].keys.map do |child|
+      def descendents(scope, scope_tree = SCOPE_TREE)
+        if parent_scope?(scope, scope_tree)
+          return scope_tree[scope].keys.map do |child|
             [child, descendents(child)]
           end.flatten
         else
-          parent_scopes.each do |top|
-            return SCOPE_TREE[top][scope].keys if SCOPE_TREE[top].key?(scope)
+          parent_scopes(scope_tree).each do |top|
+            return scope_tree[top][scope].keys if scope_tree[top].key?(scope)
           end
         end
 
@@ -80,13 +80,13 @@ module GitHub
 
       private
 
-      def parent_scopes
+      def parent_scopes(scope_tree)
         return @parent_scopes if defined?(@parent_scopes)
-        @parent_scopes = SCOPE_TREE.keys
+        @parent_scopes = scope_tree.keys
       end
 
-      def parent_scope?(scope)
-        !SCOPE_TREE[scope].nil?
+      def parent_scope?(scope, scope_tree)
+        !scope_tree[scope].nil?
       end
     end
   end
