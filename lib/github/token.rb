@@ -59,34 +59,19 @@ module GitHub
         end.flatten.uniq.sort
       end
 
-      # Note that this will only work for a scope that is _at MAX_
-      # three children deep.
-      #
-      # Since I don't think OAuth scopes will ever get that deep YOLO
-      # - <3 @tarebyte
       def descendents(scope, scope_tree = SCOPE_TREE)
-        if parent_scope?(scope, scope_tree)
-          return scope_tree[scope].keys.map do |child|
-            [child, descendents(child)]
-          end.flatten
-        else
-          parent_scopes(scope_tree).each do |top|
-            return scope_tree[top][scope].keys if scope_tree[top].key?(scope)
+        if scope_tree.key?(scope)
+          if scope_tree[scope].empty?
+            return []
+          else
+            children = scope_tree[scope].keys.map { |key| descendents(key, scope_tree) }
+            return [scope_tree[scope].keys, children].flatten
           end
+        else
+            return scope_tree.keys.map do |key|
+              descendents(scope, scope_tree[key])
+            end.flatten
         end
-
-        []
-      end
-
-      private
-
-      def parent_scopes(scope_tree)
-        return @parent_scopes if defined?(@parent_scopes)
-        @parent_scopes = scope_tree.keys
-      end
-
-      def parent_scope?(scope, scope_tree)
-        !scope_tree[scope].nil?
       end
     end
   end
