@@ -37,6 +37,13 @@ describe GitHub::Token do
       "admin:public_key" => {
         "write:public_key" => {
           "read:public_key" => {}
+        },
+        "admin:obscure_key" => {
+          "write:obscure_key" => {
+            "read:obscure_key" => {
+              "execute:obscure_key" => {}
+            }
+          }
         }
       },
       "gist" => {}
@@ -56,6 +63,14 @@ describe GitHub::Token do
 
     it "returns [] when the scope is childless" do
       expect(subject.descendents("gist", scope_tree)).to eq([])
+    end
+
+    it "returns children when the scope is a grandchild" do
+      expect(subject.descendents("read:obscure_key", scope_tree)).to eq(["execute:obscure_key"])
+    end
+
+    it "returns grandchildren when the scope is a child" do
+      expect(subject.descendents("write:obscure_key", scope_tree)).to eq(["read:obscure_key", "execute:obscure_key"])
     end
   end
 end
