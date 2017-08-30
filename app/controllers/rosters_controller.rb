@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class RostersController < ApplicationController
-  before_action :ensure_student_identifier_flipper_is_enabled, :set_organization
+  include OrganizationAuthorization
+
+  before_action :ensure_student_identifier_flipper_is_enabled
 
   before_action :ensure_enough_members_in_roster, only: [:delete_entry]
   before_action :set_roster, :redirect_if_no_roster, only: %i[show add_student]
@@ -113,10 +115,6 @@ class RostersController < ApplicationController
 
     flash[:error] = "You cannot delete the last member of your roster!"
     redirect_to roster_url(@organization)
-  end
-
-  def set_organization
-    @organization = Organization.find_by!(slug: params[:id])
   end
 
   def set_roster
