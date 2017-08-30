@@ -10,22 +10,30 @@ RSpec.describe RostersController, type: :controller do
 
   describe "GET #new", :vcr do
     before do
-      sign_in_as(user)
     end
 
     context "with flipper enabled" do
       before do
         GitHubClassroom.flipper[:student_identifier].enable
-
-        get :new, params: { id: organization.slug }
       end
 
       it "succeeds" do
+        sign_in_as(user)
+        get :new, params: { id: organization.slug }
         expect(response).to have_http_status(:success)
       end
 
       it "renders correct template" do
+        sign_in_as(user)
+        get :new, params: { id: organization.slug }
         expect(response).to render_template("rosters/new")
+      end
+
+      it "redirects if the user doesn't belong to the organization" do
+        sign_in_as(classroom_student)
+
+        get :new, params: { id: organization.slug }
+        expect(response).to have_http_status(:redirect)
       end
 
       after do
@@ -35,6 +43,7 @@ RSpec.describe RostersController, type: :controller do
 
     context "with flipper disabled" do
       before do
+        sign_in_as(user)
         get :new, params: { id: organization.slug }
       end
 
