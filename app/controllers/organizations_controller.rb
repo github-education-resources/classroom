@@ -104,10 +104,6 @@ class OrganizationsController < ApplicationController
     params.require(:organization).permit(:github_id).merge(users: [current_user])
   end
 
-  def set_organization
-    @organization = Organization.find_by!(slug: params[:id])
-  end
-
   # rubocop:disable AbcSize
   def set_users_github_organizations
     @users_github_organizations = current_user.github_user.organization_memberships.map do |membership|
