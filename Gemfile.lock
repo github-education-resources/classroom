@@ -391,7 +391,7 @@ GEM
       rake (>= 0.9, < 13)
       sass (~> 3.4.20)
     shellany (0.0.1)
-    sidekiq (5.0.0)
+    sidekiq (5.0.4)
       concurrent-ruby (~> 1.0)
       connection_pool (~> 2.2, >= 2.2.0)
       rack-protection (>= 1.5.0)
