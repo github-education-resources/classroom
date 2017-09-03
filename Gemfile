@@ -19,6 +19,7 @@ gem "connection_pool"
 
 gem "dalli"
 
+gem "failbot_rails", "~> 0.5.0"
 gem "faraday-http-cache"
 gem "flipper"
 gem "flipper-redis"
