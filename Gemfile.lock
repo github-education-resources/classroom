@@ -276,7 +276,7 @@ GEM
       peek
     peek-performance_bar (1.2.1)
       peek (>= 0.1.0)
-    pg (0.20.0)
+    pg (0.21.0)
     pinglish (0.2.1)
       rack
     powerpack (0.1.1)
