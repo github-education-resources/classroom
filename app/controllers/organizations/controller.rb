@@ -7,7 +7,7 @@ module Organizations
 
     protected
 
-    def add_user_to_organization_or_404
+    def add_current_user_to_current_organization_or_404
       github_organization = GitHubOrganization.new(current_user.github_client, current_organization.github_id)
       return not_found unless github_organization.admin?(current_user.github_user.login)
       current_organization.users << current_user
@@ -20,7 +20,7 @@ module Organizations
 
     def ensure_current_organization_visible_to_current_user
       return true if current_organization.users.pluck(:id).include?(current_user.id)
-      add_user_to_organization_or_404
+      add_current_user_to_current_organization_or_404
     end
 
     def current_organization
