@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class OrganizationsController < Organizations::Controller
+class OrganizationsController < Orgs::Controller
   before_action :ensure_team_management_flipper_is_enabled, only: [:show_groupings]
 
   before_action :authorize_organization_addition,     only: [:create]
