@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Organizations
+module Orgs
   class Controller < ApplicationController
     before_action :ensure_current_organization
     before_action :ensure_current_organization_visible_to_current_user
