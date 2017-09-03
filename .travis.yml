@@ -45,3 +45,5 @@ env:
 
 notifications:
   email: false
+  slack:
+    secure: hYvPi67Ka3T873Roo2WASv6anZUqnkkcvFjUrtxnYwDB14XueP9VXAbFFW8zYl9Uj6eAsPzxbGsGUzW0dUvhHXElffglNnrSh33FtbvrImnzhJvhORYh9+sFK1QWZEKj10oon715kjkRaltu2gqB0fon2bvGgFfdbLQJj8Kh6m8=
