@@ -29,5 +29,10 @@ module Organizations
       @current_organization = Organization.find_by!(slug: organization_id)
     end
     helper_method :current_organization
+
+    def failbot_context
+      super unless current_organization.nil?
+      super.merge(organization: current_organization.id)
+    end
   end
 end
