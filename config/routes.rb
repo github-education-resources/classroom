@@ -77,12 +77,12 @@ Rails.application.routes.draw do
 
       resources :assignments do
         resources :assignment_repos, only: [:show]
-        get "/roster_entries/:roster_entry_id", to: "roster_entries#show", as: "roster_entry"
+        get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
       end
 
       resources :group_assignments, path: "group-assignments" do
         resources :group_assignment_repos, only: [:show]
-        get "/roster_entries/:roster_entry_id", to: "roster_entries#show", as: "roster_entry"
+        get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
       end
     end
   end
