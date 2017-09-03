@@ -6,18 +6,18 @@
   <div class="site-content-body markdown-body">
     <h3><%= t('views.organizations.add_to_organization') %></h3>
     <p><strong><%= t('views.organizations.must_add_as_owner') %></strong></p>
-    <p><%= t('views.organizations.link_to_add_owner', href: link_to(@organization.github_organization.team_invitations_url, @organization.github_organization.team_invitations_url)).html_safe %></p>
+    <p><%= t('views.organizations.link_to_add_owner', href: link_to(this_organization.github_organization.team_invitations_url, this_organization.github_organization.team_invitations_url)).html_safe %></p>
 
     <h3><%= t('views.organizations.give_this_link') %></h3>
     <p><%= t('views.organizations.give_this_link_desc') %></p>
-    <%= link_to organization_url(@organization), organization_url(@organization), class: 'mobile-invitation-content' %>
+    <%= link_to organization_url(this_organization), organization_url(this_organization), class: 'mobile-invitation-content' %>
 
     <div class="columns desktop-invitation-content">
       <div class="two-thirds">
         <div class="input-group">
-          <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "organization-#{@organization.github_id}", value: organization_url(@organization), readonly: 'readonly' %>
+          <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "organization-#{this_organization.github_id}", value: organization_url(this_organization), readonly: 'readonly' %>
           <span class="input-group-button">
-            <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#organization-#{@organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
+            <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#organization-#{this_organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
               <%= octicon 'clippy' %>
               <%= t('views.organizations.copy_classroom_link') %>
             </button>
@@ -28,7 +28,7 @@
 
     <% if action_name == 'invite' %>
       <div class="form-actions">
-        <% path = student_identifier_enabled? ? new_roster_path(@organization) : organization_path(@organization) %>
+        <% path = student_identifier_enabled? ? new_roster_path(this_organization) : organization_path(this_organization) %>
         <%= link_to t('views.organizations.continue'), path, class: 'btn btn-primary right' %>
       </div>
     <% end %>
