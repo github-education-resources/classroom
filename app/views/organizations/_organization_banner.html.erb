@@ -1,4 +1,4 @@
-<% organization = @organization || this_organization %>
+<% organization = @organization || current_organization %>
 
 <% content_for :organization_banner do %>
   <div class="organization-banner" style="background-image: <%= organization.github_organization.geo_pattern_data_uri %>">

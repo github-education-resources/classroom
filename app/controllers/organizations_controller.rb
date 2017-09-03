@@ -8,8 +8,8 @@ class OrganizationsController < Organizations::Controller
   before_action :add_current_user_to_organizations,   only: [:index]
   before_action :paginate_users_github_organizations, only: %i[new create]
 
-  skip_before_action :ensure_this_organization,                         only: %i[index new create]
-  skip_before_action :ensure_this_organization_visible_to_current_user, only: %i[index new create]
+  skip_before_action :ensure_current_organization,                         only: %i[index new create]
+  skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create]
 
   def index
     @organizations = current_user.organizations.page(params[:page])
@@ -38,7 +38,7 @@ class OrganizationsController < Organizations::Controller
 
   def show
     @assignments = Kaminari
-                   .paginate_array(this_organization.all_assignments(with_invitations: true)
+                   .paginate_array(current_organization.all_assignments(with_invitations: true)
                    .sort_by(&:updated_at))
                    .page(params[:page])
   end
@@ -48,23 +48,23 @@ class OrganizationsController < Organizations::Controller
   def invitation; end
 
   def show_groupings
-    @groupings = this_organization.groupings
+    @groupings = current_organization.groupings
   end
 
   def update
-    if this_organization.update_attributes(update_organization_params)
-      flash[:success] = "Organization \"#{this_organization.title}\" updated"
-      redirect_to this_organization
+    if current_organization.update_attributes(update_organization_params)
+      flash[:success] = "Organization \"#{current_organization.title}\" updated"
+      redirect_to current_organization
     else
       render :edit
     end
   end
 
   def destroy
-    if this_organization.update_attributes(deleted_at: Time.zone.now)
-      DestroyResourceJob.perform_later(this_organization)
+    if current_organization.update_attributes(deleted_at: Time.zone.now)
+      DestroyResourceJob.perform_later(current_organization)
 
-      flash[:success] = "Your organization, @#{this_organization.github_organization.login} is being reset"
+      flash[:success] = "Your organization, @#{current_organization.github_organization.login} is being reset"
       redirect_to organizations_path
     else
       render :edit
@@ -78,8 +78,8 @@ class OrganizationsController < Organizations::Controller
   def setup; end
 
   def setup_organization
-    if this_organization.update_attributes(update_organization_params)
-      redirect_to invite_organization_path(this_organization)
+    if current_organization.update_attributes(update_organization_params)
+      redirect_to invite_organization_path(current_organization)
     else
       render :setup
     end
