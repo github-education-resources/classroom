@@ -1,20 +1,20 @@
 <nav class="menu">
   <span class="menu-heading"><%= t('views.organizations.classroom_settings') %></span>
 
-  <%= link_to t('views.organizations.classroom_profile'), edit_organization_path(@organization),
-              class: "menu-item #{'selected' if current_page?(edit_organization_path(@organization))}" %>
+  <%= link_to t('views.organizations.classroom_profile'), edit_organization_path(current_organization),
+              class: "menu-item #{'selected' if current_page?(edit_organization_path(current_organization))}" %>
 
   <% if team_management_enabled? %>
-    <%= link_to t('views.organizations.team_management'), settings_teams_organization_path(@organization),
-                class: "menu-item #{'selected' if current_page?(settings_teams_organization_path(@organization))}" %>
+    <%= link_to t('views.organizations.team_management'), settings_teams_organization_path(current_organization),
+                class: "menu-item #{'selected' if current_page?(settings_teams_organization_path(current_organization))}" %>
   <% end %>
 
   <%= link_to t('views.organizations.invite_other_admin'),
-              settings_invitations_organization_path(@organization),
-              class: "menu-item #{'selected' if current_page?(settings_invitations_organization_path(@organization))}" %>
+              settings_invitations_organization_path(current_organization),
+              class: "menu-item #{'selected' if current_page?(settings_invitations_organization_path(current_organization))}" %>
 
   <% if student_identifier_enabled? %>
-    <%= link_to 'Roster management', roster_path(@organization),
-                class: "menu-item #{'selected' if current_page?(roster_path(@organization))}" %>
+    <%= link_to 'Roster management', roster_path(current_organization),
+                class: "menu-item #{'selected' if current_page?(roster_path(current_organization))}" %>
   <% end %>
 </nav>

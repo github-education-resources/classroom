@@ -143,7 +143,7 @@ RSpec.describe OrganizationsController, type: :controller do
       get :show, params: { id: organization.slug }
 
       expect(response.status).to eq(200)
-      expect(assigns(:organization)).to_not be_nil
+      expect(assigns(:current_organization)).to_not be_nil
     end
   end
 
@@ -152,7 +152,7 @@ RSpec.describe OrganizationsController, type: :controller do
       get :edit, params: { id: organization.slug }
 
       expect(response).to have_http_status(:success)
-      expect(assigns(:organization)).to_not be_nil
+      expect(assigns(:current_organization)).to_not be_nil
     end
   end
 
@@ -161,7 +161,7 @@ RSpec.describe OrganizationsController, type: :controller do
       get :invitation, params: { id: organization.slug }
 
       expect(response).to have_http_status(:success)
-      expect(assigns(:organization)).to_not be_nil
+      expect(assigns(:current_organization)).to_not be_nil
     end
   end
 
@@ -175,7 +175,7 @@ RSpec.describe OrganizationsController, type: :controller do
         get :show_groupings, params: { id: organization.slug }
 
         expect(response).to have_http_status(:success)
-        expect(assigns(:organization)).to_not be_nil
+        expect(assigns(:current_organization)).to_not be_nil
       end
 
       after do
@@ -227,7 +227,7 @@ RSpec.describe OrganizationsController, type: :controller do
       get :invite, params: { id: organization.slug }
 
       expect(response.status).to eq(200)
-      expect(assigns(:organization)).to_not be_nil
+      expect(assigns(:current_organization)).to_not be_nil
     end
   end
 
@@ -236,7 +236,7 @@ RSpec.describe OrganizationsController, type: :controller do
       get :setup, params: { id: organization.slug }
 
       expect(response.status).to eq(200)
-      expect(assigns(:organization)).to_not be_nil
+      expect(assigns(:current_organization)).to_not be_nil
     end
   end
 

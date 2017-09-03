@@ -4,7 +4,7 @@
   </div>
 
   <div class="site-content-body">
-    <%= form_for @organization, url: { action: :setup_organization } do |f| %>
+    <%= form_for current_organization, url: { action: :setup_organization } do |f| %>
       <%= render 'shared/error_messages', object: f.object %>
 
       <div class="columns">

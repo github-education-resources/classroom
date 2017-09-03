@@ -24,6 +24,16 @@ class ApplicationController < ActionController::Base
     logged_in? && current_user.staff?
   end
 
+  def failbot_context
+    {
+      current_scopes:  session[:current_scopes],
+      impersonator:    session[:impersonated_user_id],
+      required_scopes: session[:required_scopes],
+      user:            session[:user_id],
+      zone:            Time.zone.now
+    }
+  end
+
   private
 
   def not_found

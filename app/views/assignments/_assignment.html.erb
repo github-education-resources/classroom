@@ -8,7 +8,7 @@
 
     <div class="flex-column">
       <h3 class="assignment-name-link">
-        <%= link_to assignment.title, organization_assignment_path(@organization, assignment) %>
+        <%= link_to assignment.title, organization_assignment_path(current_organization, assignment) %>
       </h3>
 
       <p class="assignment-type text-gray">Individual assignment</p>
