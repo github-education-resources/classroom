@@ -21,10 +21,14 @@ class ApplicationController < ActionController::Base
   rescue_from ActionController::RoutingError, ActiveRecord::RecordNotFound, with: :render_404
 
   rescue_from ActionController::InvalidAuthenticityToken do
+    pre_login_destination = session[:pre_login_destination]
     reset_session
 
+    session[:pre_login_destination] = pre_login_destination if pre_login_destination.present?
+    url = session[:pre_login_destination] || root_path
+
     flash[:alert] = "Cannot verify CSRF Token Authenticity"
-    redirect_to root_path
+    redirect_to url
   end
 
   def peek_enabled?
