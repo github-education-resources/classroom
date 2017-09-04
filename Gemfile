@@ -91,7 +91,7 @@ end
 group :production do
   gem "airbrake"
   gem "dogstatsd-ruby"
-  gem "lograge", "~> 0.5.1"
+  gem "lograge", "~> 0.6.0"
   gem "newrelic_rpm"
   gem "pinglish"
   gem "puma_worker_killer"
