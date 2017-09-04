@@ -50,7 +50,7 @@ gem "peek-sidekiq", github: "Soliah/peek-sidekiq", ref: "261c857578ae6dc189506a3
 gem "pg"
 gem "pry-byebug"
 gem "pry-rails"
-gem "puma", "~> 3.9", ">= 3.9.1"
+gem "puma", "~> 3.10"
 
 gem "rack-canonical-host"
 gem "rack-timeout", require: false
