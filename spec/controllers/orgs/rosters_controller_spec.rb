@@ -2,16 +2,17 @@
 
 require "rails_helper"
 
-RSpec.describe RostersController, type: :controller do
+RSpec.describe Orgs::RostersController, type: :controller do
   let(:organization) { classroom_org     }
   let(:user)         { classroom_teacher }
-  let(:roster)       { create(:roster) }
-  let(:entry)        { create(:roster_entry, roster: roster) }
+  let(:roster)       { create(:roster)   }
+  let(:entry)        { roster.roster_entries.first }
+
+  before(:each) do
+    organization.update_attributes!(roster_id: roster.id)
+  end
 
   describe "GET #new", :vcr do
-    before do
-    end
-
     context "with flipper enabled" do
       before do
         GitHubClassroom.flipper[:student_identifier].enable
@@ -94,13 +95,17 @@ RSpec.describe RostersController, type: :controller do
       context "with identifier_name" do
         context "with valid identifiers" do
           before do
+            organization.update_attributes(roster_id: nil)
+            Roster.destroy_all
+            RosterEntry.destroy_all
+
             post :create, params: {
               id: organization.slug,
               identifiers: "email1\r\nemail2",
               identifier_name: "emails"
             }
 
-            @roster = Roster.first
+            @roster = organization.reload.roster
             @roster_entries = @roster.roster_entries
           end
 
@@ -118,8 +123,7 @@ RSpec.describe RostersController, type: :controller do
           end
 
           it "creates roster_entries with correct identifier" do
-            expect(@roster_entries[0].identifier).to eq("email1")
-            expect(@roster_entries[1].identifier).to eq("email2")
+            expect(@roster_entries.map(&:identifier)).to match_array(%w[email1 email2])
           end
 
           it "sets flash[:success]" do
@@ -172,6 +176,7 @@ RSpec.describe RostersController, type: :controller do
     context "with flipper enabled" do
       before do
         GitHubClassroom.flipper[:student_identifier].enable
+        organization.update_attributes!(roster_id: nil)
       end
 
       context "with no roster" do
@@ -229,6 +234,10 @@ RSpec.describe RostersController, type: :controller do
 
       context "user and entry exist" do
         before do
+          # Create an unlinked user
+          assignment = create(:assignment, organization: organization)
+          create(:assignment_repo, assignment: assignment, user: user)
+
           patch :link, params: {
             id:              organization.slug,
             user_id:         user.id,
@@ -351,8 +360,6 @@ RSpec.describe RostersController, type: :controller do
   describe "PATCH #add_student", :vcr do
     before do
       sign_in_as(user)
-      organization.roster = roster
-      organization.save
     end
 
     context "with flipper enabled" do
@@ -438,12 +445,9 @@ RSpec.describe RostersController, type: :controller do
 
       context "when there is 1 entry in the roster" do
         before do
-          @roster = create(:roster)
-          @entry = roster.roster_entries.first
-
           patch :delete_entry, params: {
-            roster_entry_id: @entry.id,
-            id:              organization.slug
+            id: organization.slug,
+            roster_entry_id: entry.id
           }
         end
 
@@ -452,7 +456,7 @@ RSpec.describe RostersController, type: :controller do
         end
 
         it "does not remove the roster entry from the roster" do
-          expect(@roster.roster_entries.length).to eq(1)
+          expect(roster.roster_entries.length).to eq(1)
         end
 
         it "displays error message" do
@@ -462,14 +466,11 @@ RSpec.describe RostersController, type: :controller do
 
       context "when there are more than 1 entry in the roster" do
         before(:each) do
-          @roster = build(:roster)
-          @first_entry = build(:roster_entry)
-          @second_entry = build(:roster_entry)
-          @roster.roster_entries = [@first_entry, @second_entry]
-          @roster.save
+          @second_entry = create(:roster_entry, roster: roster)
+          roster.reload
 
           patch :delete_entry, params: {
-            roster_entry_id: @first_entry.id,
+            roster_entry_id: entry.id,
             id:              organization.slug
           }
         end
@@ -479,7 +480,7 @@ RSpec.describe RostersController, type: :controller do
         end
 
         it "removes the roster entry from the roster" do
-          expect(@roster.reload.roster_entries).to eq([@second_entry])
+          expect(roster.reload.roster_entries).to eq([@second_entry])
         end
 
         it "displays success message" do
