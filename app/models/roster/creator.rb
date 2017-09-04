@@ -2,8 +2,6 @@
 
 class Roster
   class Creator
-    attr_reader :organization
-
     class Result
       class Error < StandardError; end
 
