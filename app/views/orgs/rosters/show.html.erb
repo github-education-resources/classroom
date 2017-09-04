@@ -34,7 +34,7 @@
           </span>
           <span id='unlinked-span' class='hidden-tab'>
             <div class="assignment-list-items">
-              <% if unlinked_users.empty? %>
+              <% if unlinked_users.total_count.zero? %>
                 <%= render 'shared/unlinked_blank_slate' %>
               <% else %>
                 <% @current_unlinked_users.each do |user| %>
@@ -42,7 +42,7 @@
                 <% end %>
 
                 <div class="d-flex col-12">
-                  <%= render partial: 'shared/pagination', locals: { collection: @current_unlinked_users, param_name: :unlink_user_page } %>
+                  <%= render partial: 'shared/pagination', locals: { collection: @current_unlinked_users, param_name: :unlinked_users_page } %>
                 </div>
               <% end %>
             </div>

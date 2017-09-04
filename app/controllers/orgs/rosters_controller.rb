@@ -11,8 +11,11 @@ module Orgs
     helper_method :current_roster, :unlinked_users
 
     def show
-      @roster_entries = current_roster.roster_entries.order(:identifier).page(params[:roster_entries_page])
-      @current_unlinked_users = Kaminari.paginate_array(unlinked_users).page(params[:unlinked_users_page])
+      @roster_entries = current_roster.roster_entries
+                                      .includes(:user).order(:identifier)
+                                      .page(params[:roster_entries_page])
+
+      @current_unlinked_users = User.where(id: unlinked_user_ids).page(params[:unlinked_users_page])
     end
 
     def new
@@ -59,11 +62,11 @@ module Orgs
     # rubocop:enable Metrics/AbcSize
 
     def link
-      user = User.find(params[:user_id])
-
       # Make sure the user is on the list
-      raise ActiveRecord::ActiveRecordError unless unlinked_users.include?(user)
-      current_roster_entry.update_attributes!(user_id: user.id)
+      user_id = params[:user_id].to_i
+      raise ActiveRecord::ActiveRecordError unless unlinked_user_ids.include?(user_id)
+
+      current_roster_entry.update_attributes!(user_id: user_id)
 
       flash[:success] = "Student and GitHub account linked!"
     rescue ActiveRecord::ActiveRecordError
@@ -136,15 +139,26 @@ module Orgs
     # - Is not on the organization roster
     #
     # rubocop:disable Metrics/AbcSize
-    def unlinked_users
-      return @unlinked_users if defined?(@unlinked_users)
+    def unlinked_user_ids
+      return @unlinked_user_ids if defined?(@unlinked_user_ids)
 
-      assignment_users       = current_organization.assignments.map(&:users).flatten.uniq
-      roster_entry_users     = current_roster.roster_entries.map(&:user).compact
-      group_assignment_users = current_organization.repo_accesses.map(&:user)
+      assignment_query = "assignment_repos.assignment_id IN (?) AND assignment_repos.user_id IS NOT NULL"
+      assignments_ids  = current_organization.assignments.pluck(:id)
+      assignment_users = AssignmentRepo.where(assignment_query, assignments_ids).pluck(:user_id).uniq
 
-      @unlinked_users = (group_assignment_users + assignment_users).uniq - roster_entry_users
+      roster_query       = "roster_entries.roster_id = ? AND roster_entries.user_id IS NOT NULL"
+      roster_entry_users = RosterEntry.where(roster_query, current_roster.id).pluck(:user_id)
+
+      group_assignment_query = "repo_accesses.organization_id = ? AND repo_accesses.user_id IS NOT NULL"
+      group_assignment_users = RepoAccess.where(group_assignment_query, current_organization.id).pluck(:user_id)
+
+      @unlinked_user_ids = (group_assignment_users + assignment_users).uniq - roster_entry_users
     end
     # rubocop:enable Metrics/AbcSize
+
+    def unlinked_users
+      return @unlinked_users if defined?(@unlinked_users)
+      @unlinked_users = StafftoolsIndex::User.query(ids: { values: unlinked_user_ids })
+    end
   end
 end

@@ -11,7 +11,7 @@
         <%= form_tag({ controller: :rosters, action: :link }, method: :patch) do %>
           <%= hidden_field_tag 'user_id', user.id %>
           <%= hidden_field_tag 'roster_entry_id', roster_entry.id %>
-          <%= submit_tag ('@' + user.github_user.login), class: 'remodal-user' %>
+          <%= submit_tag ('@' + user.login), class: 'remodal-user' %>
         <% end %>
       </div>
     <% end %>
