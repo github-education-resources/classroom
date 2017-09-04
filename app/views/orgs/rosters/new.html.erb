@@ -19,7 +19,7 @@
     </div>
     </br>
     <div>
-      <%= form_tag roster_path(@organization), method: :post do |f| %>
+      <%= form_tag roster_path(current_organization), method: :post do |f| %>
         <dl class="<%= view.form_class_for(:identifier_name) %> short-field">
           <dt><label>What information would you like to use to identify your students?</br> (emails, student ID #, etc.)</label></dt>
           <dd><%= text_field_tag(:identifier_name, '', class: 'form-control input-block') %></dd>
@@ -40,7 +40,7 @@
 
         <div class="form-actions">
           <%= submit_tag 'Create roster', class: 'btn btn-primary right' %>
-          <%= link_to 'Skip', organization_path(@organization), class: 'btn btn-secondary right' %>
+          <%= link_to 'Skip', organization_path(current_organization), class: 'btn btn-secondary right' %>
         </div>
       <% end %>
     </div>

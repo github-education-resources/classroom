@@ -57,7 +57,7 @@ Rails.application.routes.draw do
         get   "settings/invitations", to: "organizations#invitation"
         get   "settings/teams",       to: "organizations#show_groupings"
 
-        resource :roster, only: %i[show new create] do
+        resource :roster, only: %i[show new create], controller: "orgs/rosters" do
           patch :link
           patch :unlink
           patch :delete_entry
