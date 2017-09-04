@@ -34,7 +34,7 @@
           </span>
           <span id='unlinked-span' class='hidden-tab'>
             <div class="assignment-list-items">
-              <% if unlinked_users.total_count.zero? %>
+              <% if unlinked_users.empty? %>
                 <%= render 'shared/unlinked_blank_slate' %>
               <% else %>
                 <% @current_unlinked_users.each do |user| %>
