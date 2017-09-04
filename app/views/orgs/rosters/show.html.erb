@@ -23,9 +23,13 @@
           </div>
           <span id='students-span'>
             <div class="assignment-list-items">
-              <% current_roster.roster_entries.order(:identifier).each do |roster_entry| %>
+              <% @roster_entries.each do |roster_entry| %>
                 <%= render 'roster_entry', roster_entry: roster_entry %>
               <% end %>
+
+              <div class="d-flex col-12">
+                <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :roster_entries_page } %>
+              </div>
             </div>
           </span>
           <span id='unlinked-span' class='hidden-tab'>
@@ -33,9 +37,13 @@
               <% if unlinked_users.empty? %>
                 <%= render 'shared/unlinked_blank_slate' %>
               <% else %>
-                <% unlinked_users.each do |user| %>
+                <% @current_unlinked_users.each do |user| %>
                   <%= render 'unlinked_user', unlinked_user: user %>
                 <% end %>
+
+                <div class="d-flex col-12">
+                  <%= render partial: 'shared/pagination', locals: { collection: @current_unlinked_users, param_name: :unlink_user_page } %>
+                </div>
               <% end %>
             </div>
           </span>

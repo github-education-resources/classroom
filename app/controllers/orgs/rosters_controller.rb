@@ -10,7 +10,10 @@ module Orgs
 
     helper_method :current_roster, :unlinked_users
 
-    def show; end
+    def show
+      @roster_entries = current_roster.roster_entries.order(:identifier).page(params[:roster_entries_page])
+      @current_unlinked_users = Kaminari.paginate_array(unlinked_users).page(params[:unlinked_users_page])
+    end
 
     def new
       @roster = Roster.new
