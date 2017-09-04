@@ -464,7 +464,7 @@ DEPENDENCIES
   flipper-redis (~> 0.10.2)
   flipper-ui (~> 0.10.2)
   foreman (~> 0.84.0)
-  geo_pattern
+  geo_pattern (~> 1.4)
   guard-rspec (~> 4.7, >= 4.7.3)
   jquery-datetimepicker-rails (~> 2.4, >= 2.4.1.0)
   jquery-turbolinks (~> 2.1)

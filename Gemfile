@@ -25,7 +25,7 @@ gem "flipper",            "~> 0.10.2"
 gem "flipper-redis",      "~> 0.10.2"
 gem "flipper-ui",         "~> 0.10.2"
 
-gem "geo_pattern"
+gem 'geo_pattern', '~> 1.4'
 
 gem "jquery-datetimepicker-rails", "~> 2.4", ">= 2.4.1.0"
 gem "jquery-turbolinks",           "~> 2.1"
