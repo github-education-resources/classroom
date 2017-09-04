@@ -32,12 +32,7 @@ class AssignmentInvitationsController < ApplicationController
   def success; end
 
   def join_roster
-    entry = RosterEntry.find(params[:roster_entry_id])
-
-    unless user_on_roster?
-      entry.user = current_user
-      entry.save
-    end
+    super
 
     redirect_to assignment_invitation_url(current_invitation)
   rescue ActiveRecord::ActiveRecordError

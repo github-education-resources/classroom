@@ -24,6 +24,11 @@ module InvitationsControllerMethods
     raise NotImplementedError
   end
 
+  def join_roster
+    entry = organization.roster.roster_entries.find(params[:roster_entry_id])
+    entry.update_attributes!(user: current_user) unless user_on_roster?
+  end
+
   private
 
   # We should redirect to the join_roster page if:
