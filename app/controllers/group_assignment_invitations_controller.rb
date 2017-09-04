@@ -54,6 +54,8 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
 
   def successful_invitation; end
+
+  def join_roster
     super
 
     redirect_to group_assignment_invitation_url(invitation)
