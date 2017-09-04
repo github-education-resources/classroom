@@ -83,7 +83,7 @@ class Roster
     end
 
     def ensure_organization_does_not_have_roster!
-      raise Result::Error, "This organization already has a roster" unless organization.roster.nil?
+      raise Result::Error, "This organization already has a roster" unless @organization.roster.nil?
     end
   end
 end
