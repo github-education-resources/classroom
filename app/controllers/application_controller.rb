@@ -20,6 +20,13 @@ class ApplicationController < ActionController::Base
               NotAuthorized, with: :flash_and_redirect_back_with_message
   rescue_from ActionController::RoutingError, ActiveRecord::RecordNotFound, with: :render_404
 
+  rescue_from ActionController::InvalidAuthenticityToken do
+    reset_session
+
+    flash[:alert] = "Cannot verify CSRF Token Authenticity"
+    redirect_to root_path
+  end
+
   def peek_enabled?
     logged_in? && current_user.staff?
   end
