@@ -12,7 +12,8 @@ module Orgs
 
     def show
       if current_assignment_repo
-        render partial: "orgs/roster_entries/assignment_repos/linked_accepted"
+        render partial: "orgs/roster_entries/assignment_repos/linked_accepted",
+               locals: { assignment_repo: current_assignment_repo }
       elsif current_roster_entry.user
         render partial: "orgs/roster_entries/assignment_repos/linked_not_accepted"
       else
