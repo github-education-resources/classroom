@@ -23,19 +23,19 @@
           </div>
           <span id='students-span'>
             <div class="assignment-list-items">
-              <% @roster.roster_entries.order(:identifier).each do |roster_entry| %>
+              <% current_roster.roster_entries.order(:identifier).each do |roster_entry| %>
                 <%= render 'roster_entry', roster_entry: roster_entry %>
               <% end %>
             </div>
           </span>
           <span id='unlinked-span' class='hidden-tab'>
             <div class="assignment-list-items">
-              <% if @unlinked_users.empty? %>
+              <% if unlinked_users.empty? %>
                 <%= render 'shared/unlinked_blank_slate' %>
               <% else %>
-                <% @unlinked_users.each do |user| %>
+                <% unlinked_users.each do |user| %>
                   <%= render 'unlinked_user', unlinked_user: user %>
-                  <% end %>
+                <% end %>
               <% end %>
             </div>
           </span>
@@ -62,5 +62,5 @@
   </div>
 </div>
 
-<%= render partial: '/rosters/new_student_modal', locals: { roster: @roster } %>
-<%= render partial: '/rosters/remove_roster_modal', locals: { roster: @roster, organization: @organization } %>
+<%= render partial: '/rosters/new_student_modal', locals: { roster: current_roster } %>
+<%= render partial: '/rosters/remove_roster_modal', locals: { roster: current_roster, organization: current_organization } %>
