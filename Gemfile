@@ -14,7 +14,7 @@ gem "autoprefixer-rails"
 
 gem "bootsnap", ">= 1.1.0", require: false
 
-gem "chewy", "~> 0.9.0"
+gem "chewy", "~> 0.10.1"
 gem "connection_pool"
 
 gem "dalli"
