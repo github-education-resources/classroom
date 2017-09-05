@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe GroupAssignmentReposController, type: :controller do
+RSpec.describe Orgs::GroupAssignmentReposController, type: :controller do
   let(:user)         { classroom_teacher }
   let(:organization) { classroom_org     }
   let(:student)      { classroom_student }
@@ -38,7 +38,7 @@ RSpec.describe GroupAssignmentReposController, type: :controller do
         params = {
           id: group_assignment_repo.id,
           organization_id: organization.slug,
-          group_assignment_id: group_assignment.id
+          group_assignment_id: group_assignment.slug
         }
 
         get :show, params: params
@@ -47,22 +47,38 @@ RSpec.describe GroupAssignmentReposController, type: :controller do
     end
 
     context "as an authorized user" do
-      before do
-        params = {
-          id: group_assignment_repo.id,
-          organization_id: organization.slug,
-          group_assignment_id: group_assignment.id
-        }
+      context "with properly scoped resource" do
+        before do
+          params = {
+            id: group_assignment_repo.id,
+            organization_id: organization.slug,
+            group_assignment_id: group_assignment.slug
+          }
 
-        get :show, params: params
+          get :show, params: params
+        end
+
+        it "succeeds" do
+          expect(response).to have_http_status(:success)
+        end
+
+        it "sets the GroupAssignmentRepo" do
+          expect(assigns[:group_assignment_repo].id).to eq(group_assignment_repo.id)
+        end
       end
 
-      it "succeeds" do
-        expect(response).to have_http_status(:success)
-      end
+      context "with improperly scoped resource" do
+        it "returns not found" do
+          params = {
+            id: group_assignment_repo.id,
+            organization_id: organization.slug,
+            group_assignment_id: "#{group_assignment.slug}-a"
+          }
 
-      it "sets the GroupAssignmentRepo" do
-        expect(assigns[:group_assignment_repo].id).to eq(group_assignment_repo.id)
+          get :show, params: params
+
+          expect(response).to have_http_status(:not_found)
+        end
       end
     end
   end
