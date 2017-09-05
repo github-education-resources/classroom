@@ -54,7 +54,7 @@
               <% if @group_assignment_repos.present? %>
                 <div class="assignment-repo-list">
                   <% @group_assignment_repos.each do |group_assignment_repo| %>
-                    <%= render partial: 'group_assignment_repos/group_assignment_repo', \
+                    <%= render partial: 'orgs/group_assignment_repos/group_assignment_repo', \
                       locals: { url: organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo) } %>
                   <% end %>
                 </div>
@@ -71,7 +71,7 @@
           <span id='unlinked-span' class='hidden-tab'>
             <div class="assignment-repo-list">
               <% @students_not_on_team.each do |entry| %>
-                <%= render partial: 'assignment_repos/assignment_repo', locals: {
+                <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
                   url: organization_group_assignment_roster_entry_path(@organization, @group_assignment, entry)
                 } %>
               <% end %>
