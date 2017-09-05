@@ -9,7 +9,8 @@ class User < ApplicationRecord
   has_many :repo_accesses, dependent: :destroy
   has_many :roster_entries
 
-  has_and_belongs_to_many :organizations
+  has_many :organization_users
+  has_many :organizations, through: :organization_users
 
   validates :last_active_at, presence: true
 
