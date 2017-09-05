@@ -63,7 +63,7 @@
               <%= render 'shared/unlinked_blank_slate' %>
             <% else %>
               <% @unlinked_users.each do |user| %>
-                <% assignment_repo = @assignment_repos.select{ |repo| repo.user == user }.first %>
+                <% assignment_repo = @assignment_repos.select{ |repo| repo.user_id == user.id }.first %>
                 <% next unless assignment_repo.present? %>
                 <%= render 'assignment_repos/unlinked_user', unlinked_user: user, assignment_repo: assignment_repo %>
               <% end %>

@@ -28,11 +28,15 @@ class Organization < ApplicationRecord
 
   before_destroy :silently_remove_organization_webhook
 
-  def all_assignments(with_invitations: false)
-    return assignments + group_assignments unless with_invitations
+  def all_assignments(with_groupings: false, with_invitations: false)
+    assignment_includes = []
+    assignment_includes << :assignment_invitation if with_invitations
 
-    assignments.includes(:assignment_invitation) + \
-      group_assignments.includes(:group_assignment_invitation)
+    group_assignment_includes = []
+    group_assignment_includes << :group_assignment_invitation if with_invitations
+    group_assignment_includes << :grouping                    if with_groupings
+
+    assignments.includes(*assignment_includes) + group_assignments.includes(*group_assignment_includes)
   end
 
   def github_client

@@ -9,7 +9,7 @@ module GroupAssignmentRepoView
     end
 
     def github_team_members
-      assignment_repo.group.repo_accesses.map(&:user)
+      assignment_repo.group.repo_accesses.includes(:user).map(&:user)
     end
 
     def github_team_url

@@ -105,14 +105,20 @@ class GroupAssignmentsController < ApplicationController
     @group_assignment_repos = GroupAssignmentRepo.where(group_assignment: @group_assignment).page(params[:page])
   end
 
+  # rubocop:disable Metrics/AbcSize
   def set_students_not_on_team
     return if @organization.roster.blank?
 
-    students_on_team = @group_assignment_repos.map(&:repo_accesses).flatten.map(&:user).map(&:id).uniq
+    students_on_team = @group_assignment_repos.includes(group: [:repo_accesses])
+                                              .map(&:group).map(&:repo_accesses)
+                                              .flatten.map(&:user_id).uniq
+
     @students_not_on_team = @organization.roster.roster_entries.reject do |entry|
-      students_on_team.include?(entry.user.try(:id))
+      next false if entry.user_id.nil?
+      students_on_team.include?(entry.user_id)
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   def deadline_param
     return if params[:group_assignment][:deadline].blank?
