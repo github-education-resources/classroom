@@ -213,40 +213,74 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
   end
 
   describe "GET #setup", :vcr do
-    before do
-      GitHubClassroom.flipper[:repo_setup].enable
-    end
-
     let(:repo_access) { RepoAccess.create(user: student, organization: organization) }
     let(:group)       { Group.create(title: "Group 1", grouping: grouping) }
 
-    context "unauthenticated request" do
-      it "redirects the new user to sign in with GitHub" do
-        get :setup, params: { id: invitation.key }
-        expect(response).to redirect_to(login_path)
+    context "repo setup enabled" do
+      before { GitHubClassroom.flipper[:repo_setup].enable }
+
+      context "unauthenticated request" do
+        it "redirects the new user to sign in with GitHub" do
+          get :setup, params: { id: invitation.key }
+          expect(response).to redirect_to(login_path)
+        end
+      end
+
+      context "authenticated request" do
+        before(:each) do
+          allow_any_instance_of(GroupAssignment).to receive(:starter_code_repo_id).and_return(1_062_897)
+
+          group.repo_accesses << repo_access
+          @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
+          sign_in_as(student)
+        end
+
+        after(:each) do
+          group.destroy
+          repo_access.destroy
+          @group_assignment_repo.destroy if @group_assignment_repo.present?
+        end
+
+        it "shows setup" do
+          get :setup, params: { id: invitation.key }
+          expect(request.url).to eq(setup_group_assignment_invitation_url(invitation))
+          expect(response).to have_http_status(:success)
+          expect(response).to render_template("group_assignment_invitations/setup")
+        end
       end
     end
 
-    context "authenticated request" do
-      before(:each) do
-        allow_any_instance_of(GroupAssignment).to receive(:starter_code_repo_id).and_return(1_062_897)
+    context "repo setup disabled" do
+      before { GitHubClassroom.flipper[:repo_setup].disable }
 
-        group.repo_accesses << repo_access
-        @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
-        sign_in_as(student)
+      context "unauthenticated request" do
+        it "redirects the new user to sign in with GitHub" do
+          get :setup, params: { id: invitation.key }
+          expect(response).to redirect_to(login_path)
+        end
       end
 
-      after(:each) do
-        group.destroy
-        repo_access.destroy
-        @group_assignment_repo.destroy if @group_assignment_repo.present?
-      end
+      context "authenticated request" do
+        before(:each) do
+          allow_any_instance_of(GroupAssignment).to receive(:starter_code_repo_id).and_return(1_062_897)
 
-      it "shows setup" do
-        get :setup, params: { id: invitation.key }
-        expect(request.url).to eq(setup_group_assignment_invitation_url(invitation))
-        expect(response).to have_http_status(:success)
-        expect(response).to render_template("group_assignment_invitations/setup")
+          group.repo_accesses << repo_access
+          @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
+          sign_in_as(student)
+        end
+
+        after(:each) do
+          group.destroy
+          repo_access.destroy
+          @group_assignment_repo.destroy if @group_assignment_repo.present?
+        end
+
+        it "redirects to the success page" do
+          get :setup, params: { id: invitation.key }
+          expect(request.url).to eq(setup_group_assignment_invitation_url(invitation))
+          expect(response).to have_http_status(:redirect)
+          expect(response).to redirect_to(successful_invitation_group_assignment_invitation_url)
+        end
       end
     end
   end

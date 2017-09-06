@@ -56,12 +56,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   def successful_invitation; end
 
   def join_roster
-    entry = RosterEntry.find(params[:roster_entry_id])
-
-    unless user_on_roster?
-      entry.user = current_user
-      entry.save
-    end
+    super
 
     redirect_to group_assignment_invitation_url(invitation)
   rescue ActiveRecord::ActiveRecordError
@@ -179,7 +174,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
 
   def ensure_authorized_repo_setup
-    redirect_to success_assignment_invitation_path unless repo_setup_enabled?
+    redirect_to successful_invitation_group_assignment_invitation_path unless repo_setup_enabled?
   end
 
   def ensure_github_repo_exists

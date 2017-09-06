@@ -11,8 +11,8 @@
         <h3><%= t('views.organizations.set_of_teams') %></h3>
         <div class="boxed-group-inner clearfix">
           <ul class="boxed-group-list standalone">
-            <% if @organization.groupings.present? %>
-              <%= render partial: "organizations/grouping", collection: @organization.groupings %>
+            <% if current_organization.groupings.present? %>
+              <%= render partial: "organizations/grouping", collection: current_organization.groupings %>
             <% else %>
               <div class="blankslate clean-background">
                 <p><h4><%= t('views.organizations.no_teams') %></h4></p>

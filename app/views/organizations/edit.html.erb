@@ -10,7 +10,7 @@
       <div class="boxed-group">
         <h3><%= t('views.organizations.profile_information') %></h3>
         <div class="boxed-group-inner clearfix">
-          <%= form_for @organization do |f| %>
+          <%= form_for current_organization do |f| %>
             <%= render 'shared/error_messages', object: f.object %>
             <dl class="form">
               <dt><%= f.label :title %></dt>
