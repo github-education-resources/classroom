@@ -275,7 +275,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
           @group_assignment_repo.destroy if @group_assignment_repo.present?
         end
 
-        it "shows setup" do
+        it "redirects to the success page" do
           get :setup, params: { id: invitation.key }
           expect(request.url).to eq(setup_group_assignment_invitation_url(invitation))
           expect(response).to have_http_status(:redirect)
