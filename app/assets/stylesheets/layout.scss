@@ -698,6 +698,17 @@ hr {
   margin-bottom: 9px;
 }
 
+.organization-grant-access-avatar {
+  display: table;
+  width: 127px;
+  height: 147px;
+}
+
+.organization-grant-access-text {
+  display: table-cell;
+  vertical-align: middle;
+}
+
 .search-results {
   margin-top: 2em;
 }
