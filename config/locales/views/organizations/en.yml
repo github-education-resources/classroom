@@ -4,7 +4,7 @@ en:
       select_organization: 'Select an organization for your new classroom'
       no_organizations: 'Oh, you don’t have any organizations on your GitHub account.'
       please_create_or_authorize_new_organization: "Please <a href='https://github.com/organizations/new'>create an organization on GitHub.com</a> or %{authorize_href} and then come back."
-      authorize_organization_access_link: "authorise an existing one"
+      authorize_organization_access_link: "authorize an existing one"
       grant_organization_access: "Grant access to an organization that is not listed"
       grant_organization_access_protip: "<strong>ProTip!</strong> Don't see your organization? You need to %{href} first."
       grant_organization_access_link: 'grant us access'
