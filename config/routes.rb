@@ -57,7 +57,7 @@ Rails.application.routes.draw do
         get   "settings/invitations", to: "organizations#invitation"
         get   "settings/teams",       to: "organizations#show_groupings"
 
-        resource :roster, only: %i[show new create] do
+        resource :roster, only: %i[show new create], controller: "orgs/rosters" do
           patch :link
           patch :unlink
           patch :delete_entry
@@ -76,13 +76,13 @@ Rails.application.routes.draw do
       end
 
       resources :assignments do
-        resources :assignment_repos, only: [:show]
-        get "/roster_entries/:roster_entry_id", to: "roster_entries#show", as: "roster_entry"
+        resources :assignment_repos, only: [:show], controller: "orgs/assignment_repos"
+        get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
       end
 
       resources :group_assignments, path: "group-assignments" do
-        resources :group_assignment_repos, only: [:show]
-        get "/roster_entries/:roster_entry_id", to: "roster_entries#show", as: "roster_entry"
+        resources :group_assignment_repos, only: [:show], controller: "orgs/group_assignment_repos"
+        get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
       end
     end
   end

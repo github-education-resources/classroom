@@ -1,0 +1,15 @@
+<div class='d-flex flex-row flex-justify-between flex-items-center assignment-repo-list-item'>
+  <div class='d-flex'>
+    <span class="assignment-icon assignment-icon-individual left">
+      <%= octicon 'person', height: 22 %>
+    </span>
+    <div class='d-flex flex-column flex-justify-around'>
+      <div>
+        <h4 class="css-truncate css-truncate-target"><%= current_roster_entry.identifier %></h3>
+      </div>
+      <div class="assignment-properties">
+        <%= render partial: 'shared/failed_repo_detail', locals: { text: 'Not joined classroom' } %>
+      </div>
+    </div>
+  </div>
+</div>

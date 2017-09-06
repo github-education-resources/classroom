@@ -8,11 +8,11 @@
 
   <div class="remodal-description">
     <p>
-      <%= t('views.organizations.delete_consequences_html', organization: sanitize(@organization.github_organization.login)) %>
+      <%= t('views.organizations.delete_consequences_html', organization: sanitize(current_organization.github_organization.login)) %>
     </p>
   </div>
 
-  <%= form_for @organization, html: { "data-name" => @organization.github_organization.login, method: 'delete' } do |f| %>
+  <%= form_for current_organization, html: { "data-name" => current_organization.github_organization.login, method: 'delete' } do |f| %>
     <dl class="form js-normalize-submit">
       <dt><%= t('views.organizations.delete_confirm') %></dt>
       <dd><input type="text" class="js-input-block form-control input-contrast input-block" autofocus></dd>

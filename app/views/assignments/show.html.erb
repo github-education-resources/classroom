@@ -52,7 +52,7 @@
             <div class="assignment-repo-list">
               <% sorter = RosterEntrySorter.new(@organization.roster.roster_entries, @assignment) %>
               <% sorter.sort.each do |entry| %>
-                <%= render partial: 'assignment_repos/assignment_repo', locals: {
+                <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
                   url: organization_assignment_roster_entry_path(@organization, @assignment, entry)
                 } %>
               <% end %>
@@ -63,7 +63,9 @@
               <%= render 'shared/unlinked_blank_slate' %>
             <% else %>
               <% @unlinked_users.each do |user| %>
-                <%= render 'assignment_repos/unlinked_user', unlinked_user: user, assignment_repo: @assignment_repos.select{ |repo| repo.user == user }.first %>
+                <% assignment_repo = @assignment_repos.select{ |repo| repo.user == user }.first %>
+                <% next unless assignment_repo.present? %>
+                <%= render 'orgs/assignment_repos/unlinked_user', unlinked_user: user, assignment_repo: assignment_repo %>
               <% end %>
             <% end %>
           </span>
@@ -73,7 +75,7 @@
       <% if @assignment_repos.present? %>
         <div class="assignment-repo-list">
           <% @assignment_repos.each do |assignment_repo| %>
-            <%= render partial: 'assignment_repos/assignment_repo', locals: { url: organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo) } %>
+            <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: { url: organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo) } %>
           <% end %>
         </div>
 
