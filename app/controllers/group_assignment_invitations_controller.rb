@@ -174,7 +174,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
 
   def ensure_authorized_repo_setup
-    redirect_to success_assignment_invitation_path unless repo_setup_enabled?
+    redirect_to successful_invitation_group_assignment_invitation_path unless repo_setup_enabled?
   end
 
   def ensure_github_repo_exists
