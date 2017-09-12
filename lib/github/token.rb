@@ -61,17 +61,19 @@ module GitHub
 
       def descendents(scope, scope_tree = SCOPE_TREE)
         if scope_tree.key?(scope)
-          if scope_tree[scope].empty?
-            return []
-          else
-            children = scope_tree[scope].keys.map { |key| descendents(key, scope_tree) }
-            return [scope_tree[scope].keys, children].flatten
-          end
+          return [] if scope_tree[scope].empty?
+          top_level_recurse(scope, scope_tree)
         else
-            return scope_tree.keys.map do |key|
-              descendents(scope, scope_tree[key])
-            end.flatten
+          mid_level_recurse(scope, scope_tree)
         end
+      end
+
+      def top_level_recurse(scope, scope_tree)
+        [scope_tree[scope].keys, scope_tree[scope].keys.map { |key| descendents(key, scope_tree) }].flatten
+      end
+
+      def mid_level_recurse(scope, scope_tree)
+        scope_tree.keys.map { |key| descendents(scope, scope_tree[key]) }.flatten
       end
     end
   end

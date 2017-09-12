@@ -27,7 +27,6 @@ describe GitHub::Token do
   end
 
   describe "descendents" do
-
     scope_tree = {
       "admin:org" => {
         "write:org" => {
