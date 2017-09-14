@@ -14,6 +14,7 @@ before_install:
 before_script:
   - psql -c 'create database classroom_test;' -U postgres
   - bundle exec rake db:schema:load
+  - bundle exec rake factory_girl:lint
 
 script:
   - "KNAPSACK_GENERATE_REPORT=true ./bin/rake knapsack:rspec"
