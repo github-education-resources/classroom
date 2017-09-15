@@ -19,6 +19,8 @@ Rails.application.routes.draw do
 
   get "/autocomplete/github_repos", to: "autocomplete#github_repos"
 
+  get "/boom", to: "site#boom_town"
+
   scope "github", as: "github" do
     constraints user_agent: %r{\AGitHub-Hookshot/\w+\z}, format: "json" do
       post :hooks, to: "hooks#receive"
