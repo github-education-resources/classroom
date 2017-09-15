@@ -106,8 +106,8 @@ First things first, you'll need to install Ruby 2.4.0. We recommend using the ex
 and [ruby-build](https://github.com/sstephenson/ruby-build)
 
 ```bash
-rbenv install 2.4.1
-rbenv global 2.4.1
+rbenv install 2.4.2
+rbenv global 2.4.2
 ```
 
 Next, you'll need to make sure that you have Nodejs, PostgreSQL, Redis, Memcached, and Elasticsearch installed. This can be done easily :
