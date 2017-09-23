@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-options.tap do |opts|
+options = {}.tap do |opts|
   opts[:scope] = "user:email,repo,delete_repo,admin:org,admin:org_hook"
 
   if GitHubClassroom.enterprise_instance?
