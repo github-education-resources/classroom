@@ -3,8 +3,7 @@
 module GitHubClassroom
   def self.github_client(options = {})
     client_options = {}.tap do |opts|
-      opts[:user_agent]    = "GitHub Classroom"
-      opts[:auto_paginate] = false
+      opts[:user_agent] = "GitHub Classroom"
 
       if options.has_key?(:access_token)
         opts[:access_token] = options[:access_token]
