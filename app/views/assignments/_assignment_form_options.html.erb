@@ -42,7 +42,7 @@
 </dl>
 
 
-<% if ENV['GITHUB_ENTERPRISE'] == false %>
+<% if !GitHubClassroom.enterprise_instance? %>
 <dl class="form">
   <dt><label>Add your starter code from GitHub <small>(optional)</small> </label></dt>
   <dd><input class="textfield js-autocomplete-textfield form-control input-contrast input-block" type="text" name="repo_name" value="<%= @assignment.starter_code_repository.try(:full_name) %>" placeholder="<%= @assignment.starter_code_repository.try(:full_name) || 'Search repositories'%>" autocomplete="off" data-autocomplete-search-endpoint="github_repos"></dd>
