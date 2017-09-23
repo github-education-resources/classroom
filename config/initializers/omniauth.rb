@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 options.tap do |opts|
-  opts[:scope] = 'user:email,repo,delete_repo,admin:org,admin:org_hook'
+  opts[:scope] = "user:email,repo,delete_repo,admin:org,admin:org_hook"
 
   if GitHubClassroom.enterprise_instance?
     hostname = Rails.application.secrets.github_enterprise_hostname
