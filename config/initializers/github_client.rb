@@ -5,7 +5,7 @@ module GitHubClassroom
     client_options = {}.tap do |opts|
       opts[:user_agent] = "GitHub Classroom"
 
-      if options.has_key?(:access_token)
+      if options.key?(:access_token)
         opts[:access_token] = options[:access_token]
       else
         opts[:client_id]     = Rails.application.secrets.github_client_id
