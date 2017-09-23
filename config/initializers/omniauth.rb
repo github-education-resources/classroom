@@ -7,7 +7,7 @@ options = {}.tap do |opts|
     hostname = Rails.application.secrets.github_enterprise_hostname
     opts[:site]          = "https://#{hostname}/api/v3"
     opts[:authorize_url] = "https://#{hostname}/login/oauth/authorize"
-    opts[:token_url]     = "https://#{hostname}/oauth/access_token"
+    opts[:token_url]     = "https://#{hostname}/login/oauth/access_token"
   end
 
   Rails.application.config.middleware.use OmniAuth::Builder do
