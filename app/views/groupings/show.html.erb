@@ -9,7 +9,7 @@
 
     <div class="markdown-body">
     <p>
-      You can <b>drag and drop</b> the student avatars to move them from one team to another.
+      <%= raw t('views.groupings.drag_and_drop_student_avatars') %>
     </p>
       </div>
 
@@ -35,8 +35,8 @@
       </div>
     <% else %>
       <div class="blankslate">
-        <h3>"<%= @grouping.title %>" does not have any teams.</h3>
-        <p>Share group assignment invitation links with your students to get started.</p>
+        <h3><%= t('views.groupings.group_has_no_teams', group_title: @grouping.title) %></h3>
+        <p><%= t('views.groupings.share_invitation_links') %></p>
       </div>
     <% end %>
   </div>

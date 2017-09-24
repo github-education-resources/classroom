@@ -1,7 +1,7 @@
 <div class="team-panel">
   <div class="boxed-group">
     <a class="btn btn-sm boxed-group-action" href="#">
-      Manage
+      <%= t('views.groupings.manage') %>
     </a>
     <h3><%= group.title %>
       <span class="team-description" group-description-id="<%= group.slug %>" itemprop="description"><%= pluralize(group.repo_accesses.count, 'student') %></span>

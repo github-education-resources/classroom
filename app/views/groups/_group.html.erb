@@ -1,5 +1,5 @@
 <div class="form-checkbox">
   <%= octicon 'organization', height: 22 %>
-  <label><%= radio_button 'group', 'id', 1 %> Public</label>
-  <span class="note">Anyone can see this repository. You choose who can commit.</span>
+  <label><%= radio_button 'group', 'id', 1 %> <%= t('views.groups.public') %></label>
+  <span class="note"><%= t('views.groups.you_choose_who_can_commit') %></span>
 </div>
