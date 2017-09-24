@@ -6,6 +6,10 @@ class PagesController < ApplicationController
   skip_before_action :authenticate_user!
 
   def home
-    redirect_to organizations_path if logged_in?
+    if logged_in?
+      redirect_to organizations_path
+    else
+      use_content_security_policy_named_append(:unauthed_video)
+    end
   end
 end

@@ -57,9 +57,10 @@ gem "rails-i18n",          "~> 5.0", ">= 5.0.1"
 gem "redis-namespace",     "~> 1.5", ">= 1.5.3"
 gem "ruby-progressbar",    "~> 1.8", ">= 1.8.1", require: false
 
-gem "sass-rails", "~> 5.0", ">= 5.0.6"
-gem "sidekiq",    "~> 5.0", ">= 5.0.4"
-gem "sprockets",  "~> 3.7", ">= 3.7.1"
+gem "sass-rails",     "~> 5.0", ">= 5.0.6"
+gem "secure_headers", "~> 4.0", ">= 4.0.0"
+gem "sidekiq",        "~> 5.0", ">= 5.0.4"
+gem "sprockets",      "~> 3.7", ">= 3.7.1"
 
 gem "turbolinks", github: "turbolinks/turbolinks-classic", ref: "37a7c296232d20a61bd1946f600da7f2009189db"
 gem "typhoeus",   "~> 1.3"
