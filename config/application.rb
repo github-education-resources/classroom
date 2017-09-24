@@ -49,9 +49,12 @@ module GitHubClassroom
         default_src: %w(https: 'self'),
         style_src: %w('self' 'unsafe-inline'),
         script_src: %w('self'),
+        img_src: %w('self' data: *.githubusercontent.com),
       }
     end
 
+    # Provide additional permissions on home page for video
+    # `unauthed_video`
     SecureHeaders::Configuration.named_append(:unauthed_video) do |request|
       {
         script_src: %w(https://www.youtube.com https://s.ytimg.com),
