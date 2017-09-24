@@ -55,7 +55,7 @@ gem "rack-canonical-host", "~> 0.2.3"
 gem "rack-timeout",        "~> 0.4.2", require: false
 gem "rails-i18n",          "~> 5.0", ">= 5.0.1"
 gem "redis-namespace",     "~> 1.5", ">= 1.5.3"
-gem "ruby-progressbar",    "~> 1.8", ">= 1.8.1", require: false
+gem "ruby-progressbar",    "~> 1.8", require: false
 
 gem "sass-rails", "~> 5.0", ">= 5.0.6"
 gem "sidekiq",    "~> 5.0", ">= 5.0.4"
