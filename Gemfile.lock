@@ -1,9 +1,9 @@
 GIT
   remote: git://github.com/anglinb/jquery-datetimepicker-rails.git
-  revision: 2936a01c0fd6b3167cfa59b30e98a7fc776f8fdc
-  tag: v2.4.1.1
+  revision: 535e81708a45ef077b408b6e5a5c47196cbf911f
+  tag: v2.5.4.0
   specs:
-    jquery-datetimepicker-rails (2.4.1.1)
+    jquery-datetimepicker-rails (2.5.4.0)
 
 GIT
   remote: https://github.com/Soliah/peek-sidekiq.git

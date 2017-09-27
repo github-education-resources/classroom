@@ -27,7 +27,7 @@ gem "flipper-ui",         "~> 0.10.2"
 
 gem "geo_pattern", "~> 1.4"
 
-gem "jquery-datetimepicker-rails", git: "git://github.com/anglinb/jquery-datetimepicker-rails.git", tag: "v2.4.1.1"
+gem "jquery-datetimepicker-rails", git: "git://github.com/anglinb/jquery-datetimepicker-rails.git", tag: "v2.5.4.0"
 gem "jquery-turbolinks",           "~> 2.1"
 
 gem "kaminari", "~> 1.0", ">= 1.0.1"
