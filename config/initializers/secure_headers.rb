@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 # Setup Secure Headers with default values
-# rubocop:disable Lint/PercentStringArray
 SecureHeaders::Configuration.default do |config|
   config.csp = {
-    default_src: %w[https: 'self'],
-    style_src: %w['self' 'unsafe-inline'],
-    script_src: %w['self'],
-    img_src: %w['self' data: *.githubusercontent.com]
+    default_src: ["https:", "'self'"],
+    style_src: ["'self',", "'unsafe-inline'"],
+    script_src: ["'self'"],
+    img_src: ["'self'", "data:", "*.githubusercontent.com"]
   }
 end
 
@@ -13,8 +14,7 @@ end
 # `unauthed_video`
 SecureHeaders::Configuration.named_append(:unauthed_video) do
   {
-    script_src: %w[https://www.youtube.com https://s.ytimg.com],
-    child_src: %w[https://www.youtube.com/ https://s.ytimg.com]
+    script_src: ["https://www.youtube.com", "https://s.ytimg.com"],
+    child_src: ["https://www.youtube.com", "https://s.ytimg.com"]
   }
 end
-# rubocop:enable Lint/PercentStringArray
