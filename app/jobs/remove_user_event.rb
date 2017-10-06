@@ -1,14 +1,19 @@
-# Documentation: https://developer.github.com/v3/activity/events/types/#membershipevent
-class RemoveUserJob < ApplicationJob
-  queue_as :github_event
-  def perform(payload)
-    return true unless payload_body.dig('action') == 'removed'
+# frozen_string_literal: true
 
-    github_user_id = payload_body.dig('member', 'id')
-    github_organization_id = payload_body.dig('organization','id')
+# Documentation: https://developer.github.com/v3/activity/events/types/#membershipevent
+class MemberEventJob < ApplicationJob
+  queue_as :github_event
+  def perform(payload_body)
+    return true unless payload_body["action"] == "removed"
+
+    github_user_id = payload_body.dig("member", "id")
+    github_organization_id = payload_body.dig("organization", "id")
 
     organization = Organization.find_by(github_id: github_organization_id)
-    organization.users.delete(github_id: github_user_id)
-    organization.save
+    user = organization.users.find_by(id: github_user_id)
+    return true if user.nil?
+
+    user.update_attributes(deleted_at: Time.zone.now)
+    DestroyResourceJob.perform_later(current_organization)
   end
 end
