@@ -28,7 +28,11 @@ class AssignmentsController < ApplicationController
   end
 
   def show
-    @assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
+    @matching_repos   = AssignmentRepo.where(assignment: @assignment)
+    @hide_sort_btn    = params[:sort_assignment_repos_by]
+    @sorted_repos     = sort_assignment_repositories(@matching_repos)
+    @assignment_repos = Kaminari.paginate_array(@sorted_repos).page(params[:page])
+    flash[:success]   = "Sorted the assignment repositories by #{@hide_sort_btn}."
   end
 
   def edit; end
@@ -109,5 +113,18 @@ class AssignmentsController < ApplicationController
   def send_create_assignment_statsd_events
     GitHubClassroom.statsd.increment("exercise.create")
     GitHubClassroom.statsd.increment("deadline.create") if @assignment.deadline
+  end
+
+  def sort_assignment_repositories(assignment_repos)
+    @hide_sort_btn ||= "time of accepting assignment"
+
+    case @hide_sort_btn
+    when "time of accepting assignment"
+      assignment_repos.to_a
+    when "student username"
+      assignment_repos.sort_by { |repo| repo.github_user.login }
+    when "student name"
+      assignment_repos.sort_by { |repo| repo.github_user.name }
+    end
   end
 end
