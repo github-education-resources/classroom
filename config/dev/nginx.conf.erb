@@ -8,7 +8,7 @@ server {
   listen [::]:8080;
 
   root <%= root %>/public;
-  server_name <%= name %>.dev ~^<%= name %>\.dev\.\d+\.\d+\.\d+\.\d+\.xip\.io$;
+  server_name <%= name %>.localhost ~^<%= name %>\.localhost\.\d+\.\d+\.\d+\.\d+\.xip\.io$;
 
   location / {
     proxy_read_timeout 300;
