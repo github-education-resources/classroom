@@ -103,5 +103,5 @@ group :test do
   gem "faker",              "~> 1.8", ">= 1.8.4"
   gem "simplecov",          "~> 0.15.0", require: false
   gem "vcr",                "~> 3.0", ">= 3.0.3"
-  gem "webmock",            "~> 3.0", ">= 3.0.1"
+  gem "webmock",            "~> 3.1"
 end
