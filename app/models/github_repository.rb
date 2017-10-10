@@ -181,11 +181,6 @@ class GitHubRepository < GitHubResource
     false
   end
 
-  def user
-    id = @client.user(name.split("-").last).id
-    GitHubUser.new(@client, id)
-  end
-
   def present?(**options)
     self.class.present?(@client, @id, options)
   end
