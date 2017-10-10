@@ -74,15 +74,11 @@
     <% else %>
       <% if @assignment_repos.present? %>
         <nav class="subnav">
-          <%
-            ["time of accepting assignment", "student username", "student name"].each do |sort_mode|
-              unless @hide_sort_btn == sort_mode
-          %>
-            <a class="subnav-item btn btn-primary" style="margin: 10px;" href="?sort_assignment_repos_by=<%= sort_mode %>">Sort by <%= sort_mode %></a>
-          <%
-              end
-            end
-          %>
+          <a class="subnav-item"><%= octicon 'tools' %> Sort by : </a>
+          <a class="subnav-item"><%= @current_sort_mode.camelcase %></a>
+          <% @show_sort_btns.each do |sort_mode| %>
+            <a class="subnav-item btn btn-primary" href="?sort_assignment_repos_by=<%= sort_mode %>"><%= sort_mode.camelcase %></a>
+          <% end %>
         </nav>
 
         <% @assignment_repos.each do |assignment_repo| %>

@@ -7,6 +7,9 @@ class AssignmentsController < ApplicationController
   before_action :set_assignment, except: %i[new create]
   before_action :set_unlinked_users, only: [:show]
 
+  SORT_MODES        = ["time of accepting assignment", "student username", "student name"].freeze
+  DEFAULT_SORT_MODE = "time of accepting assignment"
+
   def new
     @assignment = Assignment.new
   end
@@ -28,11 +31,9 @@ class AssignmentsController < ApplicationController
   end
 
   def show
-    @matching_repos   = AssignmentRepo.where(assignment: @assignment)
-    @hide_sort_btn    = params[:sort_assignment_repos_by]
-    @sorted_repos     = sort_assignment_repositories(@matching_repos)
-    @assignment_repos = Kaminari.paginate_array(@sorted_repos).page(params[:page])
-    flash[:success]   = "Sorted the assignment repositories by #{@hide_sort_btn}."
+    @matching_repos    = AssignmentRepo.where(assignment: @assignment)
+    @sorted_repos      = sort_assignment_repositories(@matching_repos)
+    @assignment_repos  = Kaminari.paginate_array(@sorted_repos).page(params[:page])
   end
 
   def edit; end
@@ -116,9 +117,10 @@ class AssignmentsController < ApplicationController
   end
 
   def sort_assignment_repositories(assignment_repos)
-    @hide_sort_btn ||= "time of accepting assignment"
+    @current_sort_mode = params[:sort_assignment_repos_by] || DEFAULT_SORT_MODE
+    @show_sort_btns    = SORT_MODES.reject { |sort_mode| @current_sort_mode == sort_mode }
 
-    case @hide_sort_btn
+    case @current_sort_mode
     when "time of accepting assignment"
       assignment_repos.to_a
     when "student username"
