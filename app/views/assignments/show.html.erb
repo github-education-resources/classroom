@@ -73,13 +73,15 @@
       </div>
     <% else %>
       <% if @assignment_repos.present? %>
-        <nav class="subnav">
-          <a class="subnav-item"><%= octicon 'tools' %> Sort by : </a>
-          <a class="subnav-item"><%= @current_sort_mode.camelcase %></a>
-          <% @show_sort_btns.each do |sort_mode| %>
-            <a class="subnav-item btn btn-primary" href="?sort_assignment_repos_by=<%= sort_mode %>"><%= sort_mode.camelcase %></a>
-          <% end %>
-        </nav>
+        <%= 
+          render partial: 'shared/select_menu',
+            locals: { 
+              title: 'Sort by:',
+              options: @all_sort_modes,
+              option_links: @all_sort_modes.map { |mode| "?sort_assignment_repos_by=#{mode}" },
+              selected_option: @current_sort_mode
+            }
+        %>
 
         <% @assignment_repos.each do |assignment_repo| %>
           <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: { url: organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo) } %>

@@ -1,0 +1,29 @@
+<div class="select-menu">
+  <button class="btn btn-sm select-menu-button" aria-expanded="false" tabindex="0">
+    <i><%= title %></i>
+    <span><%= selected_option %></span>
+  </button>
+  <div class="select-menu-modal-holder">
+    <div class="select-menu-modal">
+      <div class="select-menu-header" tabindex="-1">
+        <%= octicon 'x', class: "select-menu-close-button" %>
+        <span class="select-menu-title">Options</span>
+      </div>
+      <div class="select-menu-list">
+        <span class="select-menu-item selected">
+          <%= octicon 'check', class: "select-menu-item-icon" %>
+          <span class="select-menu-item-text">
+            <%= selected_option %>
+          </span>
+        </span>
+        <% options.each_with_index do |option, i| %>
+          <% unless option == selected_option %>
+            <%= link_to option_links[i], class: 'select-menu-item' do %>
+              <span class="select-menu-item-text"><%= option %></span>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

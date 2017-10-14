@@ -1,0 +1,99 @@
+.select-menu {
+  margin-bottom: 10px;
+}
+
+.select-menu-button::after {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  vertical-align: -2px;
+  content: "";
+  border: 4px solid;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+}
+
+.select-menu.active .select-menu-modal-holder {
+  display: block;
+}
+
+.select-menu-modal-holder {
+  position: absolute;
+  z-index: 30;
+  display: none;
+}
+
+.select-menu-item {
+  display: block;
+  padding: 8px 8px 8px 30px;
+  overflow: hidden;
+  color: inherit;
+  cursor: pointer;
+  border-bottom: 1px solid #eaecef;
+}
+
+.select-menu-modal {
+  position: relative;
+  width: 300px;
+  margin-top: 4px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  font-size: 12px;
+  color: #586069;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(27,31,35,0.15);
+  border-radius: 3px;
+  box-shadow: 0 3px 12px rgba(27,31,35,0.15);
+}
+
+.select-menu-header, .select-menu-divider {
+  padding: 8px 10px;
+  line-height: 16px;
+  background: #f6f8fa;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.select-menu-item.selected .octicon-check {
+  color: inherit;
+  visibility: visible;
+}
+
+.select-menu-item-icon {
+  float: left;
+  margin-left: -20px;
+}
+
+.select-menu-header .select-menu-close-button {
+  display: block;
+  float: right;
+  color: #c6cbd1;
+  cursor: pointer;
+}
+
+.select-menu-title {
+  font-weight: 600;
+  color: #24292e;
+}
+
+.select-menu-close-button:hover {
+  color: #444d56;
+}
+
+.select-menu-list .select-menu-item:hover {
+  background: #0366DB;
+  /*
+    @note
+
+    The background color is set to this value rather than $blue,
+    so as to closely resemble GitHub's other sort buttons.
+
+    Signed off by Athitya Kumar on 15th October 2017
+  */
+
+  color: #fff;
+  .octicon {
+    color: #fff;
+  }
+}
