@@ -1,8 +1,8 @@
 $(document).ready(function() {
-  select_menu              = $(".select-menu")
-  select_menu_modal        = $(".select-menu-modal-holder")
-  select_menu_button       = $(".select-menu-button")
-  select_menu_close_button = $(".select-menu-close-button")
+  select_menu              = $(".select-menu");
+  select_menu_modal        = $(".select-menu-modal-holder");
+  select_menu_button       = $(".select-menu-button");
+  select_menu_close_button = $(".select-menu-close-button");
 
   select_menu.click(function(event) {
     event.stopPropagation();
