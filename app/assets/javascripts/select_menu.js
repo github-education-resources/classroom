@@ -21,15 +21,13 @@ $(document).ready(function() {
   });
 
   function openSelectMenu() {
-    select_menu.addClass("is-dirty active");
-    select_menu_modal.addClass("js-active-navigation-container");
+    select_menu_modal.addClass("active");
     select_menu_button.addClass("active");
     select_menu_button.attr("aria-expanded", "true");
   }
 
   function closeSelectMenu() {
-    select_menu.removeClass("is-dirty active");
-    select_menu_modal.removeClass("js-active-navigation-container");
+    select_menu_modal.removeClass("active");
     select_menu_button.removeClass("active");
     select_menu_button.attr("aria-expanded", "false");
   }

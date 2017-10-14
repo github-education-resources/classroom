@@ -1,5 +1,9 @@
 .select-menu {
   margin-bottom: 10px;
+
+  .select-menu-modal-holder.active {
+    display: block;
+  }
 }
 
 .select-menu-button::after {
@@ -12,10 +16,6 @@
   border-right-color: transparent;
   border-bottom-color: transparent;
   border-left-color: transparent;
-}
-
-.select-menu.active .select-menu-modal-holder {
-  display: block;
 }
 
 .select-menu-modal-holder {
@@ -31,6 +31,11 @@
   color: inherit;
   cursor: pointer;
   border-bottom: 1px solid #eaecef;
+
+  .selected .octicon-check {
+    color: inherit;
+    visibility: visible;
+  }
 }
 
 .select-menu-modal {
@@ -43,21 +48,17 @@
   color: #586069;
   background-color: #fff;
   background-clip: padding-box;
-  border: 1px solid rgba(27,31,35,0.15);
+  border: 1px solid rgba(27, 31, 35, 0.15);
   border-radius: 3px;
-  box-shadow: 0 3px 12px rgba(27,31,35,0.15);
+  box-shadow: 0 3px 12px rgba(27, 31, 35, 0.15);
 }
 
-.select-menu-header, .select-menu-divider {
+.select-menu-header,
+.select-menu-divider {
   padding: 8px 10px;
   line-height: 16px;
   background: #f6f8fa;
   border-bottom: 1px solid #e1e4e8;
-}
-
-.select-menu-item.selected .octicon-check {
-  color: inherit;
-  visibility: visible;
 }
 
 .select-menu-item-icon {
@@ -82,17 +83,17 @@
 }
 
 .select-menu-list .select-menu-item:hover {
-  background: #0366DB;
+  color: #fff;
+  background: #0366db;
   /*
     @note
 
-    The background color is set to this value rather than $blue,
+    The background color is set to this value and not $blue,
     so as to closely resemble GitHub's other sort buttons.
 
     Signed off by Athitya Kumar on 15th October 2017
   */
 
-  color: #fff;
   .octicon {
     color: #fff;
   }

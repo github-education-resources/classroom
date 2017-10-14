@@ -7,7 +7,7 @@
     <div class="select-menu-modal">
       <div class="select-menu-header" tabindex="-1">
         <%= octicon 'x', class: "select-menu-close-button" %>
-        <span class="select-menu-title">Options</span>
+        <span class="select-menu-title"><%= title %></span>
       </div>
       <div class="select-menu-list">
         <span class="select-menu-item selected">
@@ -18,7 +18,7 @@
         </span>
         <% options.each_with_index do |option, i| %>
           <% unless option == selected_option %>
-            <%= link_to option_links[i], class: 'select-menu-item' do %>
+            <%= link_to option_links[i], class: "select-menu-item" do %>
               <span class="select-menu-item-text"><%= option %></span>
             <% end %>
           <% end %>
