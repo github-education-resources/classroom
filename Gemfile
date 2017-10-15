@@ -12,7 +12,7 @@ gem "rails", "~> 5.1", ">= 5.1.3"
 
 gem "autoprefixer-rails", "~> 7.1", ">= 7.1.3"
 
-gem "bootsnap", "~> 1.1", ">= 1.1.2", require: false
+gem "bootsnap", "~> 1.1", require: false
 
 gem "chewy", "~> 0.10.1"
 gem "connection_pool", "~> 2.2", ">= 2.2.1"
