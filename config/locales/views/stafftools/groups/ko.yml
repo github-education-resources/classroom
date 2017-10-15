@@ -1,0 +1,13 @@
+ko:
+  views:
+    stafftools:
+      groups:
+        group: '그룹'
+        id: '아이디'
+        owner: '소유자'
+        grouping: '그룹화'
+        github_url: '깃허브 URL'
+        created_on: '생성일'
+        team_members: '팀 맴버'
+        group_title: '%{organization_login}용 %{title} 그룹'
+        created: '생성됨'

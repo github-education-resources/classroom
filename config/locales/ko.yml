@@ -1,0 +1,81 @@
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t 'hello'
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t('hello') %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# The following keys must be escaped otherwise they will not be retrieved by
+# the default I18n backend:
+#
+# true, false, on, off, yes, no
+#
+# Instead, surround them with single quotes.
+#
+# en:
+#   'true': 'foo'
+#
+# To learn more, please read the Rails Internationalization guide
+# available at http://guides.rubyonrails.org/i18n.html.
+
+ko:
+  assignment_form:
+    slug_note: '이 할당을 위해 생성된 각각의 깃허브 저장소 앞에 접두사가 붙습니다. 영숫자, 밑줄 또는 하이픈만 사용할 수 있습니다.'
+  activerecord:
+    attributes:
+      grouping:
+        title: '팀의 세트'
+        slug:  '팀의 세트'
+      group:
+        title: '당신의 팀'
+        slug:  '당신의 팀'
+      group_assignment:
+        title:       '당신의 과제 제목'
+        slug:        '과제 저장소 접두어'
+        grouping:    '팀의 세트'
+        public_repo: ''
+      assignment:
+        title: '과제 제목'
+        slug:  '과제 저장소 접두어'
+        public_repo: ''
+      roster:
+        roster_entries: '당신의 명단'
+    errors:
+      models:
+        grouping:
+          attributes:
+            title:
+              blank: '참석해야 함'
+              taken: '조직에서 이미 사용중'
+        group_assignment:
+          attributes:
+            title:
+              blank: '참석해야 함'
+            slug:
+              taken: '고유해야 함'
+        assignment:
+          attributes:
+            title:
+              blank: '참석해야 함'
+            slug:
+              taken: '고유해야 함'
+        roster:
+          attributes:
+            roster_entries:
+              blank: '적어도 한명의 학생은 있어야 합니다.'
+  views:
+    pagination:
+      previous: '이전'
+      next: '다음'
+      truncate: '...'

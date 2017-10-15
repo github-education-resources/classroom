@@ -1,0 +1,13 @@
+ko:
+  views:
+    stafftools:
+      assignment_invitations:
+        invitation_for: '과제 초대하는 '
+        created: '만들어짐'
+        assignment_type: '개별 과제 초대'
+        assignment_invitation_title: '과제 초대 정보'
+        id: '아이디'
+        assignment: '과제'
+        owner: '소유자'
+        invitation_url: '초대 URL'
+        created_on: '생성일'

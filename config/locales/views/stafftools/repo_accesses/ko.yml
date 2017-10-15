@@ -1,0 +1,13 @@
+ko:
+  views:
+    stafftools:
+      repo_accesses:
+        repository_access: '저장소 접근'
+        accesses: '저장소 접근'
+        id: '아이디'
+        github_team_id: '깃허브 팀 아이디'
+        owned_by: '소유자'
+        organization: '조직'
+        created_on: '생성일'
+        created: '생성됨'
+        repo_access_info: "%{organization_login}용 %{user_login}의 저장소 접근"

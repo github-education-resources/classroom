@@ -1,0 +1,4 @@
+ko:
+  views:
+    rosters:
+      blank_slate_header: '연결되지 않은 깃허브 계정 없음'

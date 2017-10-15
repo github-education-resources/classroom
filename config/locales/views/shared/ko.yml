@@ -1,0 +1,17 @@
+ko:
+  views:
+    shared:
+      sign_in: '로그인'
+      sign_out: '로그아웃'
+      stop_impersonating: '@%{user} 명의도용 금지하기'
+      view_gh_profile: '깃허브 프로필 보기'
+      community_discussion: '커뮤니티 토론'
+      video_tutorials: '비디오 튜토리얼'
+      report_bug: '버그 제출하기'
+      copy_to_clipboard: '클립보드 복사하기'
+      copy_invitation_link: '초대 링크 복사하기'
+      give_this_to_students: '학생에게 건내주기'
+      give_this_to_students_short: '또는 짧은 URL을 사용하기'
+      classroom_is_open_source: "깃허브 강의실은 %{href}입니다."
+      open_source_href: "오픈소스"
+      with_love_by_github: "%{octicon_mortar_board} with %{octicon_heart} by %{href}"
