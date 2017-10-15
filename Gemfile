@@ -90,7 +90,7 @@ end
 group :production do
   gem "airbrake",           "~> 6.2", ">= 6.2.1"
   gem "dogstatsd-ruby",     "~> 3.0"
-  gem "lograge",            "~> 0.6.0"
+  gem "lograge",            "~> 0.7.1"
   gem "newrelic_rpm",       "~> 4.4", ">= 4.4.0.336"
   gem "pinglish",           "~> 0.2.1"
   gem "puma_worker_killer", "~> 0.1.0"
