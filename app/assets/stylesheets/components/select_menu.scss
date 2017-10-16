@@ -6,6 +6,10 @@
   }
 }
 
+.select-menu-button {
+  margin-top: 10px;
+}
+
 .select-menu-button::after {
   display: inline-block;
   width: 0;
@@ -86,14 +90,6 @@
 .select-menu-list .select-menu-item:hover {
   color: #fff;
   background: #0366db;
-  /*
-    @note
-
-    The background color is set to this value and not $blue,
-    so as to closely resemble GitHub's other sort buttons.
-
-    Signed off by Athitya Kumar on 15th October 2017
-  */
 
   .octicon {
     color: #fff;
