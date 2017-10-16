@@ -7,8 +7,8 @@ class AssignmentsController < ApplicationController
   before_action :set_assignment, except: %i[new create]
   before_action :set_unlinked_users, only: [:show]
 
-  SORT_MODES        = ["Time of accepting assignment", "Student username", "Student name"].freeze
-  DEFAULT_SORT_MODE = "Time of accepting assignment"
+  SORT_MODES        = ["Assignment acceptance time", "Student name", "Student username"].freeze
+  DEFAULT_SORT_MODE = "Assignment acceptance time"
 
   def new
     @assignment = Assignment.new
@@ -121,12 +121,12 @@ class AssignmentsController < ApplicationController
     @all_sort_modes    = SORT_MODES
 
     case @current_sort_mode
-    when "Time of accepting assignment"
+    when "Assignment acceptance time"
       assignment_repos.to_a
-    when "Student username"
-      assignment_repos.sort_by { |repo| repo.github_user.login }
     when "Student name"
       assignment_repos.sort_by { |repo| repo.github_user.name }
+    when "Student username"
+      assignment_repos.sort_by { |repo| repo.github_user.login }
     end
   end
 end
