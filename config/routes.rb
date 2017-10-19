@@ -19,6 +19,8 @@ Rails.application.routes.draw do
 
   get "/autocomplete/github_repos", to: "autocomplete#github_repos"
 
+  get "/boom", to: "site#boom_town"
+
   scope "github", as: "github" do
     constraints user_agent: %r{\AGitHub-Hookshot/\w+\z}, format: "json" do
       post :hooks, to: "hooks#receive"
@@ -76,12 +78,12 @@ Rails.application.routes.draw do
       end
 
       resources :assignments do
-        resources :assignment_repos, only: [:show]
+        resources :assignment_repos, only: [:show], controller: "orgs/assignment_repos"
         get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
       end
 
       resources :group_assignments, path: "group-assignments" do
-        resources :group_assignment_repos, only: [:show]
+        resources :group_assignment_repos, only: [:show], controller: "orgs/group_assignment_repos"
         get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
       end
     end
