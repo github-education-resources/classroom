@@ -45,3 +45,14 @@ RUN git clone https://github.com/nodenv/nodenv.git $NODENV_ROOT && \
     cd $_cwd && \
     echo 'eval "$(nodenv init -)"' > $NODENV_ROOT/nodenv.env && \
     . $NODENV_ROOT/nodenv.env
+
+COPY Gemfile* /app/
+COPY vendor/assets /app/vendor/assets
+RUN gem install bundler -v '1.12.5' && \
+    bundle install --local
+
+RUN mkdir /app/log
+
+COPY . /app/
+
+EXPOSE 3000
