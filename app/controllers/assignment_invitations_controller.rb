@@ -11,7 +11,8 @@ class AssignmentInvitationsController < ApplicationController
   def accept
     create_submission do
       GitHubClassroom.statsd.increment("exercise_invitation.accept")
-      if current_submission.starter_code_repo_id
+      if repo_setup_enabled? && current_submission.starter_code_repo_id
+        RepoSetupJob.set(wait: 1.hour).perform_later(current_submission)
         redirect_to setup_assignment_invitation_path
       else
         redirect_to success_assignment_invitation_path
