@@ -28,7 +28,7 @@ class AssignmentsController < ApplicationController
   end
 
   def show
-    @assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
+    @assignment_repos = AssignmentRepo.includes(:organization).where(assignment: @assignment).page(params[:page])
   end
 
   def edit; end
@@ -76,7 +76,7 @@ class AssignmentsController < ApplicationController
     return unless @organization.roster
 
     assignment_users = @assignment.users
-    roster_entry_users = @organization.roster.roster_entries.map(&:user).compact
+    roster_entry_users = @organization.roster.roster_entries.includes(:user).map(&:user).compact
 
     @unlinked_users = assignment_users - roster_entry_users
   end

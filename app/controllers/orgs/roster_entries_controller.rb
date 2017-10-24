@@ -70,8 +70,8 @@ module Orgs
     end
 
     def find_group_assignment_repo
-      current_assignment.repos.select do |repo|
-        repo.repo_accesses.map(&:user).include?(current_roster_entry.user)
+      current_assignment.map(&:group_assignment_repos).select do |repo|
+        repo.repo_accesses.map(&:user_id).include?(current_roster_entry.user_id)
       end.first
     end
   end
