@@ -27,7 +27,7 @@ module GitHubClassroom
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "**", "*.{rb,yml}")]
 
     # Available locales
-    I18n.available_locales = [:en, :ko]
+    I18n.available_locales = %i[en ko]
 
     # Append directories to autoload paths
     config.eager_load_paths += %w[lib].map { |path| Rails.root.join(path).to_s }
