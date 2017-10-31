@@ -4,7 +4,7 @@ class Group < ApplicationRecord
   include GitHubTeamable
   include Sluggable
 
-  update_index('stafftools#group') { self }
+  update_index("stafftools#group") { self }
 
   belongs_to :grouping
 

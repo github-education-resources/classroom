@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170629203747) do
+ActiveRecord::Schema.define(version: 20170802170240) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,9 +21,11 @@ ActiveRecord::Schema.define(version: 20170629203747) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
+    t.string "short_key"
     t.index ["assignment_id"], name: "index_assignment_invitations_on_assignment_id"
     t.index ["deleted_at"], name: "index_assignment_invitations_on_deleted_at"
     t.index ["key"], name: "index_assignment_invitations_on_key", unique: true
+    t.index ["short_key"], name: "index_assignment_invitations_on_short_key"
   end
 
   create_table "assignment_repos", id: :serial, force: :cascade do |t|
@@ -35,6 +37,7 @@ ActiveRecord::Schema.define(version: 20170629203747) do
     t.integer "user_id"
     t.string "submission_sha"
     t.string "global_relay_id"
+    t.integer "configuration_state", default: 0
     t.index ["assignment_id"], name: "index_assignment_repos_on_assignment_id"
     t.index ["github_repo_id"], name: "index_assignment_repos_on_github_repo_id", unique: true
     t.index ["global_relay_id"], name: "index_assignment_repos_on_global_relay_id"
@@ -73,9 +76,11 @@ ActiveRecord::Schema.define(version: 20170629203747) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
+    t.string "short_key"
     t.index ["deleted_at"], name: "index_group_assignment_invitations_on_deleted_at"
     t.index ["group_assignment_id"], name: "index_group_assignment_invitations_on_group_assignment_id"
     t.index ["key"], name: "index_group_assignment_invitations_on_key", unique: true
+    t.index ["short_key"], name: "index_group_assignment_invitations_on_short_key"
   end
 
   create_table "group_assignment_repos", id: :serial, force: :cascade do |t|
@@ -85,6 +90,7 @@ ActiveRecord::Schema.define(version: 20170629203747) do
     t.integer "group_assignment_id"
     t.integer "group_id", null: false
     t.string "submission_sha"
+    t.integer "configuration_state", default: 0
     t.index ["github_repo_id"], name: "index_group_assignment_repos_on_github_repo_id", unique: true
     t.index ["group_assignment_id"], name: "index_group_assignment_repos_on_group_assignment_id"
   end

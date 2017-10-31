@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'vcr'
+require_relative "vcr"
 
 module GitHubFactory
   def classroom_student

@@ -3,7 +3,7 @@
 class RepoAccess < ApplicationRecord
   include GitHubTeamable
 
-  update_index('stafftools#repo_access') { self }
+  update_index("stafftools#repo_access") { self }
 
   belongs_to :user
   belongs_to(:organization, -> { unscope(where: :deleted_at) })
@@ -39,7 +39,7 @@ class RepoAccess < ApplicationRecord
     github_organization.accept_membership(user.github_user.login)
   rescue GitHub::Error
     silently_remove_organization_member
-    raise GitHub::Error, 'Failed to add user to the Classroom, please try again'
+    raise GitHub::Error, "Failed to add user to the Classroom, please try again"
   end
 
   def remove_organization_member

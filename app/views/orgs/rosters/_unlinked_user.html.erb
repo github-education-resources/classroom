@@ -1,0 +1,22 @@
+<% view = User::UnlinkedUser::ShowView.new(unlinked_user: unlinked_user) %>
+
+<div class="assignment-list-item d-flex col-12">
+  <div class="col-6 d-flex flex-items-center fixed-height-row">
+    <div class="d-flex flex-column flex-justify-center flex-items-center flex-md-items-start">
+      <span class="left assignment-icon">
+        <%= image_tag view.github_avatar_url, height: 46, width: 46, class: 'avatar left' %>
+      </span>
+    </div>
+    <a class='student-login' href="<%= view.github_url %>">
+      <h4><%= view.github_handle_text %></h4>
+    </a>
+  </div>
+
+  <div class="d-flex right-button">
+    <div class="flex-self-center input-group ">
+      <a class="btn btn-outline", data-remodal-target="link-to-student-<%= unlinked_user.id %>">Link to student</a>
+    </div>
+  </div>
+</div>
+
+<%= render partial: 'link_to_student_modal', locals: { user: unlinked_user, unlinked_entries: current_roster.unlinked_entries } %>

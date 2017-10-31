@@ -17,7 +17,7 @@ module GitHub
       #
       # Returns the HMAC string.
       def generate_hmac(payload)
-        OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'), webhook_secret, payload)
+        OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new("sha1"), webhook_secret, payload)
       end
 
       private
@@ -28,7 +28,7 @@ module GitHub
       def webhook_secret
         @webhook_secret ||= Rails.application.secrets.webhook_secret
         return @webhook_secret if @webhook_secret.present?
-        raise 'WEBHOOK_SECRET is not set, please check you .env file'
+        raise "WEBHOOK_SECRET is not set, please check you .env file"
       end
     end
   end

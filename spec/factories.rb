@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative 'support/vcr'
-require 'securerandom'
+require_relative "support/vcr"
+require "securerandom"
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :assignment do
     organization
 
@@ -62,12 +62,16 @@ FactoryGirl.define do
   end
 
   factory :roster do
-    identifier_name { 'email' }
+    identifier_name { "email" }
+
+    after(:build) do |roster|
+      roster.roster_entries << RosterEntry.create(identifier: "email")
+    end
   end
 
   factory :roster_entry do
     roster
-    identifier { 'myemail@example.com' }
+    identifier { "myemail@example.com" }
   end
 
   factory :user do

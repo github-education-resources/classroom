@@ -6,7 +6,7 @@ class PingEventJob < ApplicationJob
 
   # rubocop:disable GuardClause
   def perform(payload_body)
-    if (organization = Organization.find_by(github_id: payload_body['organization']['id']))
+    if (organization = Organization.find_by(github_id: payload_body["organization"]["id"]))
       organization.update_attributes!(is_webhook_active: true)
     end
   end

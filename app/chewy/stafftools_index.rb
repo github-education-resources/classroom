@@ -30,6 +30,13 @@ class StafftoolsIndex < Chewy::Index
     field :user_login,       value: ->(assignment_repo) { assignment_repo.user.github_user.login }
   end
 
+  define_type Deadline do
+    field :id
+    field :deadline_at
+    field :created_at
+    field :updated_at
+  end
+
   define_type Group.includes(:organization) do
     field :id
     field :title
@@ -98,6 +105,11 @@ class StafftoolsIndex < Chewy::Index
 
     field :login, value: ->(organization) { organization.github_organization.login }
     field :name,  value: ->(organization) { organization.github_organization.name  }
+  end
+
+  define_type OrganizationUser do
+    field :organization_id
+    field :user_id
   end
 
   define_type User do

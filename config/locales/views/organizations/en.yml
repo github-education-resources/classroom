@@ -1,0 +1,58 @@
+en:
+  views:
+    organizations:
+      select_organization: 'Select an organization for your new classroom'
+      no_organizations: 'Oh, you don’t have any organizations on your GitHub account.'
+      please_create_or_authorize_new_organization: "Please <a href='https://github.com/organizations/new'>create an organization on GitHub.com</a> or %{authorize_href} and then come back."
+      authorize_organization_access_link: "authorize an existing one"
+      grant_organization_access: "Grant access to an organization that is not listed"
+      grant_organization_access_protip: "<strong>ProTip!</strong> Don't see your organization? You need to %{href} first."
+      grant_organization_access_link: 'grant us access'
+      you_are_not_owner: 'You cannot add this organization to classroom because you are not an owner'
+      already_added: '@%{owner} has already added this organization to GitHub Classroom'
+      manage_classroom: 'Manage classroom'
+      edit: 'Edit'
+      invite_administrator: 'Invite other administrators'
+      add_to_organization: '1. Add them to your GitHub Organization'
+      must_add_as_owner: 'You must add them to the Organization as an Owner in order for them to have access.'
+      link_to_add_owner: 'You can do so at %{href}'
+      give_this_link: '2. Give them this URL'
+      give_this_link_desc: 'After signing in, they will automatically be added to this classroom.'
+      copy_to_clipboard: 'Copy to clipboard'
+      copied: 'Copied!'
+      copy_classroom_link: 'Copy classroom link'
+      continue: 'Continue'
+      individual_assignments: 'Individual Assignments'
+      group_assignments: 'Group Assignments'
+      are_you_sure: 'Are you ABSOLUTELY sure?'
+      delete_warning: "Unexpected things will happen if you don't read this!"
+      delete_consequences_html: "This action <strong>CANNOT</strong> be undone. Please note that reseting and removing this classroom will delete all repositories and teams under the <strong>%{organization}</strong> account that were created by GitHub Classroom."
+      delete_confirm: 'Please type the name of the organization to confirm'
+      delete_submit: 'Reset and remove this classroom'
+      classroom_settings: 'Classroom settings'
+      classroom_profile: 'Classroom profile'
+      student_identifiers: 'Student identifiers'
+      team_management: 'Team management'
+      invite_other_admin: 'Invite other administrators'
+      profile_information: 'Profile information'
+      save_changes: 'Save changes'
+      theres_no_going_back: 'Once you reset this classroom, there is no going back. Please be certain.'
+      new_classroom: 'New classroom'
+      classrooms: 'Classrooms'
+      no_classrooms: "You're not managing any classrooms yet."
+      no_classrooms_desc: 'You can begin creating assignments once you have at least one classroom.'
+      create_first_classroom: 'Create your first classroom'
+      new_assignment: 'New assignment'
+      individual_assignment: 'Individual assignment'
+      individual_assignment_desc: 'Each participant works individually on their own repository.'
+      create_individual_assignment: 'Create an individual assignment'
+      group_assignment: 'Group assignment'
+      group_assignment_desc: 'Participants form teams that work together on a shared repository.'
+      create_group_assignment: 'Create a group assignment'
+      name_your_classroom: 'Name your classroom'
+      give_descriptive_name: 'Please give your classroom a more descriptive name'
+      set_of_teams: 'Set of teams'
+      no_teams: "This classroom doesn't have any sets of teams yet."
+      assignments: 'Assignments'
+      no_assignments: "This organization doesn't have any assignments yet."
+      create_first_assignment: 'Create your first assignment'

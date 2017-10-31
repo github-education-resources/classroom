@@ -7,7 +7,7 @@ module GitHubClassroom
 
   def self.flipper!
     adapter = if Rails.env.test?
-                require 'flipper/adapters/memory'
+                require "flipper/adapters/memory"
                 Flipper::Adapters::Memory.new
               else
                 namespaced_client = Redis::Namespace.new(:flipper, redis: GitHubClassroom.redis)

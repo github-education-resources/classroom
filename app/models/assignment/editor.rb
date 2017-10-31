@@ -48,8 +48,9 @@ class Assignment
     end
 
     # rubocop:disable AbcSize
+    # rubocop:disable Metrics/MethodLength
     def perform
-      recreate_deadline(@options[:deadline]) if deadline_updated?
+      recreate_deadline(@options[:deadline]) if deadline_updated_and_valid?
 
       @assignment.update_attributes(@options.except(:deadline))
       raise Result::Error, @assignment.errors.full_messages.join("\n") unless @assignment.valid?
@@ -60,7 +61,14 @@ class Assignment
       Result.success(@assignment)
     rescue Result::Error => err
       Result.failed(err.message)
+    rescue GitHub::Error => err
+      if no_private_repos_error?(err)
+        @assignment.errors.add(:public_repo, "You have no private repositories available.")
+      end
+
+      Result.failed(err.message)
     end
+    # rubocop:enable Metrics/MethodLength
     # rubocop:enable AbcSize
 
     private
@@ -85,15 +93,22 @@ class Assignment
 
     def update_attribute_for_all_assignment_repos(attribute:, change:)
       case attribute
-      when 'public_repo'
+      when "public_repo"
         Assignment::RepositoryVisibilityJob.perform_later(@assignment, change: change)
       end
     end
 
-    def deadline_updated?
-      return false unless @options[:deadline]
+    def deadline_updated_and_valid?
+      return true if @options[:deadline].blank?
+
       new_deadline_at = DateTime.strptime(@options[:deadline], Deadline::Factory::DATETIME_FORMAT).utc
       new_deadline_at != @assignment.deadline&.deadline_at
+    rescue ArgumentError
+      false
+    end
+
+    def no_private_repos_error?(error)
+      error.message.include? "Cannot make this private assignment, your limit of"
     end
   end
 end

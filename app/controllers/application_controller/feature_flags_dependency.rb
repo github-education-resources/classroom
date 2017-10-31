@@ -19,8 +19,8 @@ class ApplicationController
   end
   helper_method :team_management_enabled?
 
-  def deadlines_enabled?
-    logged_in? && current_user.feature_enabled?(:deadlines)
+  def repo_setup_enabled?
+    logged_in? && current_user.feature_enabled?(:repo_setup)
   end
-  helper_method :deadlines_enabled?
+  helper_method :repo_setup_enabled?
 end

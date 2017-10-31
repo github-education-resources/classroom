@@ -1,0 +1,31 @@
+<% view = AssignmentRepoView::ShowView.new(assignment_repo: assignment_repo) %>
+
+<div class='d-flex flex-row flex-justify-between flex-items-center assignment-repo-list-item <%= view.disabled_class %>'>
+  <div class='d-flex'>
+    <div>
+      <%= link_to view.github_user_url, class: "tooltipped tooltipped-n #{view.disabled_class}", target: '_blank', 'aria-label' => view.github_user_login do %>
+        <%= image_tag view.github_avatar_url, height: 48, width: 48, class: 'avatar avatar-large', alt: "@#{view.github_user_login}" %>
+      <% end %>
+    </div>
+    <div class='d-flex flex-column flex-justify-around'>
+      <div>
+        <%= link_to view.github_user_url, class: "assignment-repo-github-url", target: '_blank' do %>
+          <h3 class="css-truncate css-truncate-target"><%= view.github_user_login %></h3>
+        <% end %>
+      </div>
+      <div class="assignment-properties">
+        <%= render 'shared/commit_repo_detail', text: view.commit_text, url: view.github_commits_url %>
+        <% if view.submission_passed? %>
+          <% if view.submission_succeeded? %>
+            <%= render 'shared/submission_succeeded_repo_detail', url: view.submission_url %>
+          <% else %>
+            <%= render 'shared/submission_failed_repo_detail' %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div>
+    <%= link_to view.repository_text, view.github_repo_url, class: "btn btn-outline #{'disabled' if view.disabled?}", role: 'button', target: '_blank' %>
+  </div>
+</div>

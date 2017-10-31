@@ -70,7 +70,7 @@ class OrganizationDefaultRepositoryPermissionMigrator
 
     begin
       github_organization = GitHubOrganization.new(org_admin.github_client, organization.github_id)
-      github_organization.update_default_repository_permission!('none')
+      github_organization.update_default_repository_permission!("none")
     rescue GitHub::Error => err
       return Result.failed("For Organization #{organization.id}: #{err.message}")
     end

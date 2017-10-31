@@ -1,0 +1,50 @@
+<% view = RosterEntry::ShowView.new(roster_entry: roster_entry) %>
+
+<div class="assignment-list-item d-flex col-12">
+  <div class="col-6 d-flex fixed-height-row">
+    <div class="d-flex flex-column flex-justify-center flex-items-center flex-md-items-start">
+      <span class="assignment-icon assignment-icon-individual left">
+        <% if view.linked? %>
+          <%= image_tag view.github_avatar_url, height: 46, width: 46, class: 'avatar left' %>
+        <% else %>
+          <%= octicon 'person', height: 22 %>
+          <% end %>
+      </span>
+    </div>
+
+    <div class="flex-column">
+      <h4 class="assignment-name-link">
+        <%= view.identifier %>
+      </h4>
+
+      <p class="assignment-type text-gray">
+        <% if view.linked? %>
+          <a class="" href='<%= view.github_profile_url %>'>
+            <%= view.github_handle_text %>
+          </a>
+        <% else %>
+          Unlinked user
+        <% end %>
+      </p>
+    </div>
+  </div>
+
+  <div class="d-flex right-button">
+    <div class="flex-self-center input-group ">
+      <% if view.linked? %>
+        <%= form_tag({ controller: :rosters, action: :unlink }, method: :patch, class: "d-inline") do %>
+          <%= hidden_field_tag 'roster_entry_id', roster_entry.id %>
+          <%= submit_tag 'Unlink GitHub account', class: view.button_class %>
+        <% end %>
+      <% else %>
+        <a class="btn btn-outline", data-remodal-target="link-to-github_account-<%= roster_entry.id %>">Link to GitHub account</a>
+      <% end %>
+      <span class='clickable' data-remodal-target="delete-entry-<%= roster_entry.id %>">
+        <%= octicon 'x', height: 22, class: "remove-roster-entry-button" %>
+      </span>
+    </div>
+  </div>
+</div>
+
+<%= render partial: 'link_to_github_account_modal', locals: { roster_entry: roster_entry } %>
+<%= render partial: 'delete_roster_entry_modal', locals: { roster_entry: roster_entry } %>
