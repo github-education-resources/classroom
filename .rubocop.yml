@@ -31,9 +31,6 @@ Metrics/BlockLength:
     - 'config/routes.rb'
     - 'config/environments/*.rb'
 
-Rails/HasAndBelongsToMany:
-  Enabled: false
-
 Rails/DynamicFindBy:
   Whitelist:
     - find_by_auth_hash
