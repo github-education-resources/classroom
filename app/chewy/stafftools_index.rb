@@ -107,6 +107,11 @@ class StafftoolsIndex < Chewy::Index
     field :name,  value: ->(organization) { organization.github_organization.name  }
   end
 
+  define_type OrganizationUser do
+    field :organization_id
+    field :user_id
+  end
+
   define_type User do
     field :id
     field :uid

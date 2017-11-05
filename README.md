@@ -17,7 +17,7 @@ Set due dates, track assignments in your teacher dashboard, or integrate other t
 
 With Classroom, you can spin up your course on GitHub and move on to the good stuff.
 
-[@johndbritton](https://github.com/johndbritton), [@mozzadrella](https://github.com/mozzadrella), [@nwoodthorpe](https://github.com/nwoodthorpe), [@tarebyte](https://github.com/tarebyte), and [@wilfriedE](https://github.com/wilfriedE) are all maintainers.
+[@johndbritton](https://github.com/johndbritton), [@mozzadrella](https://github.com/mozzadrella), [@nwoodthorpe](https://github.com/nwoodthorpe), and [@tarebyte](https://github.com/tarebyte), are all maintainers.
 
 ![GitHub Classroom screenshot](https://cloud.githubusercontent.com/assets/1311594/14748352/32f677b0-0887-11e6-9ac2-8aa06e4341fa.png)
 
@@ -106,8 +106,8 @@ First things first, you'll need to install Ruby 2.4.0. We recommend using the ex
 and [ruby-build](https://github.com/sstephenson/ruby-build)
 
 ```bash
-rbenv install 2.4.1
-rbenv global 2.4.1
+rbenv install 2.4.2
+rbenv global 2.4.2
 ```
 
 Next, you'll need to make sure that you have Nodejs, PostgreSQL, Redis, Memcached, and Elasticsearch installed. This can be done easily :
