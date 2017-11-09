@@ -1,6 +1,17 @@
 # GitHub Classroom
 [![Build Status](https://travis-ci.org/education/classroom.svg?branch=master)](https://travis-ci.org/education/classroom) [![Code Climate](https://codeclimate.com/github/education/classroom/badges/gpa.svg)](https://codeclimate.com/github/education/classroom)
 
+## Table of Contents
+
+- [The workflow you use as a developer, scaled for the needs of students.](#the-workflow-you-use-as-a-developer-scaled-for-the-needs-of-students)
+- [Why try Classroom?](#why-try-classroom)
+- [Design principles](#design-principles)
+- [GitHub Classroom and the edtech ecosystem](#github-classroom-and-the-edtech-ecosystem)
+- [The technical details](#the-technical-details)
+- [Deployment](#deployment)
+- [Help wanted](#help-wanted)
+- [Contributors](#contributors)
+
 ## The workflow you use as a developer, scaled for the needs of students.
 
 Developers rarely work all by themselves, on a deadline, or ship something they’ll only use once (with no idea whether it actually works).
