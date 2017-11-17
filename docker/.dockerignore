@@ -1,0 +1,26 @@
++**.orig
+ +*.rbc
+ +*.sassc
+ +.DS_Store
+ +.env
+ +.rspec
+ +.rvmrc
+ +.sass-cache
+ +.bundle
+ +config/dev/nginx.conf
+ +coverage/
+ +db/*.sqlite3
+ +doc/build/
+ +doc/stage/
+ +log/*
+ +public/assets/
+ +public/system/*
+ +public/uploads/
+ +spec/tmp/*
+ +tmp/*
+ +vendor/assets/components/mapbox.js/node_modules
+ +vendor/bundle
+ +vendor/gems
+ +capybara-*.html
+ +dump.rdb
+ +node_modules
