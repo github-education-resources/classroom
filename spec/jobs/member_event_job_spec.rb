@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe RemoveUserJob, type: :job do
+RSpec.describe MemberEventJob, type: :job do
   let(:organization) { classroom_org }
   let(:payload)      { json_payload("webhook_events/user_removed.json") }
 
