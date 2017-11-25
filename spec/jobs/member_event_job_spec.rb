@@ -10,7 +10,7 @@ RSpec.describe MemberEventJob, type: :job do
     it "deletes user from organization" do
       github_user_id = payload.dig("member", "id")
 
-      RemoveUserJob.perform_now(payload)
+      MemberEventJob.perform_now(payload)
       expect { organization.users.find_by(github_id: github_user_id) }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
