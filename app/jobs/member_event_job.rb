@@ -15,5 +15,6 @@ class MemberEventJob < ApplicationJob
 
     user.update_attributes(deleted_at: Time.zone.now)
     DestroyResourceJob.perform_later(current_organization)
+    organization.save
   end
 end
