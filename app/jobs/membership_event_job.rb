@@ -9,7 +9,7 @@ class MembershipEventJob < ApplicationJob
     github_user_id = payload_body.dig("member", "id")
     github_organization_id = payload_body.dig("organization", "id")
 
-    organization = Organization.find_by(github_id: github_organization_id)
+    organization = Organization.find(github_organization_id)
     user = organization.users.find_by(id: github_user_id)
     return true if user.nil?
 
