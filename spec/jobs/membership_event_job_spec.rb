@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe MemberEventJob, type: :job do
+RSpec.describe MembershipEventJob, type: :job do
   let(:organization) { classroom_org }
   let(:payload)      { json_payload("webhook_events/user_removed.json") }
 
@@ -10,7 +10,7 @@ RSpec.describe MemberEventJob, type: :job do
     it "deletes user from organization" do
       github_user_id = payload.dig("member", "id")
 
-      MemberEventJob.perform_now(payload)
+      MembershipEventJob.perform_now(payload)
       expect { organization.users.find_by(github_id: github_user_id) }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
