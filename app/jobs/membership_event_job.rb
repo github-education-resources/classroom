@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Documentation: https://developer.github.com/v3/activity/events/types/#membershipevent
-class MemberEventJob < ApplicationJob
+class MembershipEventJob < ApplicationJob
   queue_as :github_event
   def perform(payload_body)
     return true unless payload_body["action"] == "removed"
