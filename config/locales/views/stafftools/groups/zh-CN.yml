@@ -1,0 +1,13 @@
+zh-CN:
+  views:
+    stafftools:
+      groups:
+        group: '组'
+        id: 'ID'
+        owner: '所有者'
+        grouping: '组'
+        github_url: 'GitHub 链接'
+        created_on: '创建日期'
+        team_members: '小组成员'
+        group_title: '%{organization_login}的 %{title} 小组'
+        created: '已创建'

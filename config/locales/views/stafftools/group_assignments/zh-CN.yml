@@ -1,0 +1,18 @@
+zh-CN:
+  views:
+    stafftools:
+      group_assignments:
+        created: '已创建'
+        group_assignment: '小组作业'
+        group_assignment_info: '小组作业信息'
+        id: 'ID'
+        owned_by: '所有者'
+        created_by: '创建者'
+        starter_code: '初始代码'
+        groupig: '组'
+        invitation: '邀请'
+        created_on: '创建日期'
+        last_updated: '最后更新'
+        group_assignment_repo: '小组作业库'
+        deadline: '截止日期'
+

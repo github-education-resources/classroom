@@ -1,0 +1,17 @@
+zh-CN:
+  views:
+    shared:
+      sign_in: '登录'
+      sign_out: '注销'
+      stop_impersonating: '停止模仿 @%{user}'
+      view_gh_profile: '察看 GitHub 用户信息'
+      community_discussion: '社区讨论'
+      video_tutorials: '视频教程'
+      report_bug: '报告错误'
+      copy_to_clipboard: '复制到剪切板'
+      copy_invitation_link: '复制邀请链接'
+      give_this_to_students: '把这个给你的学生'
+      give_this_to_students_short: '或使用这个短链接'
+      classroom_is_open_source: "GitHub 教室是 %{href}。"
+      open_source_href: "开源"
+      with_love_by_github: "%{octicon_mortar_board} 和 %{octicon_heart} 由 %{href}"

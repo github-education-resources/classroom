@@ -1,0 +1,81 @@
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t 'hello'
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t('hello') %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# The following keys must be escaped otherwise they will not be retrieved by
+# the default I18n backend:
+#
+# true, false, on, off, yes, no
+#
+# Instead, surround them with single quotes.
+#
+# en:
+#   'true': 'foo'
+#
+# To learn more, please read the Rails Internationalization guide
+# available at http://guides.rubyonrails.org/i18n.html.
+
+zh-CN:
+  assignment_form:
+    slug_note: '这会在Github中为这个作业创建的库添加前缀。只能包含字母，下划线，和中画线。'
+  activerecord:
+    attributes:
+      grouping:
+        title: '你的团队'
+        slug:  '你的团队'
+      group:
+        title: '你的团队'
+        slug:  '你的团队'
+      group_assignment:
+        title:       '你的作业标题'
+        slug:        '你作业库的前缀'
+        grouping:    '你的团队'
+        public_repo: ''
+      assignment:
+        title:       '你的作业标题'
+        slug:        '你作业库的前缀'
+        public_repo: ''
+      roster:
+        roster_entries: '你的执勤表'
+    errors:
+      models:
+        grouping:
+          attributes:
+            title:
+              blank: '不能为空'
+              taken: '你所在的学校已经使用'
+        group_assignment:
+          attributes:
+            title:
+              blank: '不能为空'
+            slug:
+              taken: '必须唯一'
+        assignment:
+          attributes:
+            title:
+              blank: '不能为空'
+            slug:
+              taken: '必须唯一'
+        roster:
+          attributes:
+            roster_entries:
+              blank: '至少有一个学生。'
+  views:
+    pagination:
+      previous: '上一个'
+      next: '下一个'
+      truncate: '...'

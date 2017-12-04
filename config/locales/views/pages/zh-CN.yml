@@ -1,0 +1,13 @@
+zh-CN:
+  views:
+    pages:
+      banner_heading: '你在Github上的课程作业'
+      banner_subheading: 'GitHub 教室会自动化库创建和访问控制，从而使得在Github分发初始代码和收作业变得很容易。'
+      see_how_it_works: '看一下它如何工作'
+      sign_in_to_start: '登录你的Github帐户来开始'
+      create_assignments: '创建作业' 
+      create_assignments_desc: '分发作业的初始代码。学生们使用Github私有库或公共库来开始他们的个人或小组作业。'
+      invite_students: '邀请学生'
+      invite_students_desc: '学生们使用独立的邀请链接访问作业，从而无需事先获得学生的Github用户名和人工管理对作业的访问。' 
+      review_progress: '检查进度'
+      review_progress_desc: '老师和助教可以按照作业浏览学生提交的答案，这样更容易察看学生进度。'

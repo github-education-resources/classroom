@@ -1,0 +1,4 @@
+zh-CN:
+  views:
+    rosters:
+      blank_slate_header: '没有未链接的 GitHub 帐户'

@@ -1,0 +1,13 @@
+zh-CN:
+  views:
+    stafftools:
+      repo_accesses:
+        repository_access: '库访问'
+        accesses: '库访问'
+        id: 'ID'
+        github_team_id: 'GitHub 团队 ID'
+        owned_by: '所有者'
+        organization: '组织'
+        created_on: '创建日期'
+        created: '已创建'
+        repo_access_info: "%{user_login} 在%{organization_login}内的库访问"
