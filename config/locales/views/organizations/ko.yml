@@ -3,12 +3,12 @@ ko:
     organizations:
       select_organization: '새로운 강의실용 조직 선택하기'
       no_organizations: '오,깃허브 계정에 모든 조직이 없습니다.'
-      please_create_or_authorize_new_organization: "<a href='https://github.com/organizations/new'>GitHub.com에서 조직을 생성</a> 하거나 %{authorize_href}하여 다시 방문하십시오."
-      authorize_organization_access_link: "기존의 것을 허가"
-      grant_organization_access: "목록에 없는 조직에 대한 액세스 권한 부여"
+      please_create_or_authorize_new_organization: "<a href='https://github.com/organizations/new'>GitHub.com에서 조직을 생성</a>하거나 %{authorize_href}하여 다시 방문하십시오."
+      authorize_organization_access_link: "기존의 것을 허가하기"
+      grant_organization_access: "목록에 없는 조직에 대한 액세스 권한 부여하기"
       grant_organization_access_protip: "<strong>프로팁!</strong> 조직이 보이지 않나요? 먼저 %{href}이(가) 필요합니다."
-      grant_organization_access_link: '우리에게 액세스 권한 부여'
-      you_are_not_owner: '당신은 소유자가 아니기 때문에 이 조직을 강의실에 추가 할 수 없습니다'
+      grant_organization_access_link: '우리에게 액세스 권한 부여하기'
+      you_are_not_owner: '당신은 소유자가 아니기 때문에 이 조직을 강의실에 추가할 수 없습니다'
       already_added: '@%{owner}은(는) 이미 깃허브 강의실에 이 조직을 추가했습니다.'
       manage_classroom: '강의실 관리'
       edit: '수정'
@@ -26,7 +26,7 @@ ko:
       group_assignments: '그룹 과제'
       are_you_sure: '절대적으로 확신하십니까?'
       delete_warning: "당신이 이것을 읽지 않으면 예기치 않은 일이 일어날 것입니다!"
-      delete_consequences_html: "이 작업은 취소 <strong>할 수 없습니다</strong>. 이 강의실을 재설정하거나 삭제하면 깃허브 강의실에서 만든 <strong>%{organization}</strong> 계정 아래의 모든 저장소와 팀이 삭제됩니다."
+      delete_consequences_html: "이 작업은 취소<strong>할 수 없습니다</strong>. 이 강의실을 재설정하거나 삭제하면 깃허브 강의실에서 만든 <strong>%{organization}</strong> 계정 아래의 모든 저장소와 팀이 삭제됩니다."
       delete_confirm: '확인하려는 조직의 이름을 입력하십시오.'
       delete_submit: '이 강의실 초기화하고 삭제하기'
       classroom_settings: '강의실 설정'
@@ -36,10 +36,10 @@ ko:
       invite_other_admin: '다른 관리자 초대'
       profile_information: '프로필 정보'
       save_changes: '변경점 저장'
-      theres_no_going_back: '이 강의실을 초기화 하면, 돌아갈 수 없습니다. 다시 확인해주세요.'
+      theres_no_going_back: '이 강의실을 초기화하면, 이전으로 돌아갈 수 없습니다. 다시 확인해주세요.'
       new_classroom: '새로운 강의실'
       classrooms: '강의실'
-      no_classrooms: "아직 어떤 강의실도 관리하고 있지 않습니다."
+      no_classrooms: "아직 어떠한 강의실도 관리하고 있지 않습니다."
       no_classrooms_desc: '최소한 하나의 강의실을 가지면 과제를 시작할 수 있습니다.'
       create_first_classroom: '첫번째 강의실 생성'
       new_assignment: '새로운 과제'
@@ -51,7 +51,7 @@ ko:
       create_group_assignment: '그룹 과제 생성'
       name_your_classroom: '강의실 이름'
       give_descriptive_name: '강의실에 더 알기 쉬운 이름을 지정하십시오.'
-      set_of_teams: '팀의 세트'
+      set_of_teams: '팀의 집합'
       no_teams: "이 강의실에는 아직 팀이 없습니다."
       assignments: '과제'
       no_assignments: "이 조직에는 아직 과제가 없습니다."

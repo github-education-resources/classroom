@@ -35,41 +35,41 @@ ko:
   activerecord:
     attributes:
       grouping:
-        title: '팀의 세트'
-        slug:  '팀의 세트'
+        title: '팀의 집합'
+        slug:  '팀의 집합'
       group:
-        title: '당신의 팀'
-        slug:  '당신의 팀'
+        title: '팀'
+        slug:  '팀'
       group_assignment:
-        title:       '당신의 과제 제목'
+        title:       '과제 제목'
         slug:        '과제 저장소 접두어'
-        grouping:    '팀의 세트'
+        grouping:    '팀의 집합'
         public_repo: ''
       assignment:
         title: '과제 제목'
         slug:  '과제 저장소 접두어'
         public_repo: ''
       roster:
-        roster_entries: '당신의 명단'
+        roster_entries: '명단'
     errors:
       models:
         grouping:
           attributes:
             title:
-              blank: '참석해야 함'
+              blank: '참석해야 합니다'
               taken: '조직에서 이미 사용중'
         group_assignment:
           attributes:
             title:
-              blank: '참석해야 함'
+              blank: '참석해야 합니다'
             slug:
-              taken: '고유해야 함'
+              taken: '유일해야 합니다'
         assignment:
           attributes:
             title:
-              blank: '참석해야 함'
+              blank: '참석해야 합니다'
             slug:
-              taken: '고유해야 함'
+              taken: '유일해야 합니다'
         roster:
           attributes:
             roster_entries:

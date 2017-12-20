@@ -2,12 +2,12 @@ ko:
   views:
     pages:
       banner_heading: '깃허브의 과제 코스'
-      banner_subheading: '깃허브 강의실은 저장소 생성 및 액세스 제어를 자동화하므로 깃허브에서 시작 코드를 배포하고 할당을 쉽게 할 수 있습니다.'
+      banner_subheading: '깃허브 강의실은 저장소 생성 및 접근 제어를 자동화하므로 깃허브에서 시작 코드를 배포하고 할당하는 것을 쉽게 할 수 있습니다.'
       see_how_it_works: '작동 방법 보기'
       sign_in_to_start: '시작하려면 깃허브 계정으로 로그인'
       create_assignments: '과제 만들기'
       create_assignments_desc: '시작 코드로 과제을 배분하십시오. 학생들은 공개 또는 비공개 깃허브 저장소를 사용하여 과제를 개별적으로 또는 그룹으로 작업합니다.'
       invite_students: '학생 초대'
-      invite_students_desc: '학생들은 고유한 초대 URL을 사용하여 과제에 접근할 수 있으므로, 사전에 깃허브 사용자 이름을 수집하고 수동으로 접근을 관리 할 필요가 없습니다.'
+      invite_students_desc: '학생들은 고유한 초대 URL을 사용하여 과제에 접근할 수 있으므로, 사전에 깃허브 사용자 이름을 수집하고 수동으로 접근을 관리할 필요가 없습니다.'
       review_progress: '진행상황 리뷰'
       review_progress_desc: '교사와 조교는 과제물 제출을 찾아 볼 수 있으므로, 학생의 진도를 쉽게 따라갈 수 있습니다.'

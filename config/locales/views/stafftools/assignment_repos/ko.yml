@@ -18,9 +18,9 @@ ko:
         source_code: '소스 코드'
         dangerzone: '위험 구역'
         delete_repo_title: '이 과제 저장소 삭제'
-        delete_repo_confirmation: '당신은 절대적으로 확신합니까?'
-        delete_repo_warning: "당신이 이것을 읽지 않으면 예기치 않은 일이 일어날 것입니다!"
-        delete_repo_desc: '이 작업은 취소 <strong>할 수 없습니다</strong>. <br>
+        delete_repo_confirmation: '절대적으로 확신합니까?'
+        delete_repo_warning: "이것을 읽지 않으면 예기치 않은 일이 일어날 것입니다!"
+        delete_repo_desc: '이 작업은 취소<strong>할 수 없습니다</strong>. <br>
         깃허브 강의실의 기록<strong>과</strong> GitHub의 저장소가 삭제됩니다.'
-        repo_id_confirmation: '확인을 위해 할당 저장소의 아이디 (%{assignment_repo_id})를 입력하십시오.'
+        repo_id_confirmation: '확인을 위해 할당 저장소의 아이디(%{assignment_repo_id})를 입력하십시오.'
         delete_repo_link_text: '이 과제 저장소 삭제'

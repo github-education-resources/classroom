@@ -8,7 +8,7 @@ ko:
         id: '아이디'
         owned_by: '소유자'
         created_by: '생성자'
-        starter_code: '스타터 코드'
+        starter_code: '시작 코드'
         groupig: '그룹화'
         invitation: '초대'
         created_on: '생성일'
