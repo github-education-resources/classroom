@@ -1,6 +1,17 @@
 # GitHub Classroom
 [![Build Status](https://travis-ci.org/education/classroom.svg?branch=master)](https://travis-ci.org/education/classroom) [![Code Climate](https://codeclimate.com/github/education/classroom/badges/gpa.svg)](https://codeclimate.com/github/education/classroom)
 
+## Table of Contents
+
+- [The workflow you use as a developer, scaled for the needs of students.](#the-workflow-you-use-as-a-developer-scaled-for-the-needs-of-students)
+- [Why try Classroom?](#why-try-classroom)
+- [Design principles](#design-principles)
+- [GitHub Classroom and the edtech ecosystem](#github-classroom-and-the-edtech-ecosystem)
+- [The technical details](#the-technical-details)
+- [Deployment](#deployment)
+- [Help wanted](#help-wanted)
+- [Contributors](#contributors)
+
 ## The workflow you use as a developer, scaled for the needs of students.
 
 Developers rarely work all by themselves, on a deadline, or ship something they’ll only use once (with no idea whether it actually works).
@@ -112,7 +123,7 @@ rbenv global 2.4.2
 
 Next, you'll need to make sure that you have Nodejs, PostgreSQL, Redis, Memcached, and Elasticsearch installed. This can be done easily :
 * For OSX using [Homebrew](http://brew.sh) : You don't have to do anything! When you run `script/setup` later on this will be taken care of for you.
-* For Linux : `apt-get install nodejs postgresql redis-server memcached`. For Elasticsearch, follow the instructions on [their website](https://www.elastic.co/guide/en/elasticsearch/reference/1.7/_installation.html).
+* For Debian/Ubuntu based GNU/Linux : `apt-get install nodejs postgresql redis-server memcached`. For Elasticsearch, follow the instructions on [their website](https://www.elastic.co/guide/en/elasticsearch/reference/1.7/_installation.html).
 
 You will want to set PostgreSQL to autostart at login via launchctl, if not already. See `brew info postgresql`. Redis and memcached may be setup similarly via launchctl or setup project wide by using foreman, described below.
 
