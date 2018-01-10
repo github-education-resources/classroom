@@ -67,6 +67,8 @@
                 <% next unless assignment_repo.present? %>
                 <%= render 'orgs/assignment_repos/unlinked_user', unlinked_user: user, assignment_repo: assignment_repo %>
               <% end %>
+
+              <%= render partial: 'shared/pagination', locals: { collection: @assignment_repos } %>
             <% end %>
           </span>
         </div>
