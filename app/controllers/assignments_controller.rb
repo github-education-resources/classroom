@@ -28,7 +28,24 @@ class AssignmentsController < ApplicationController
   end
 
   def show
-    @assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
+    if @organization.roster
+      users_with_repo = @assignment.repos.pluck(:user_id)
+
+      # Move this into the model
+      @roster_entries = @organization.roster.roster_entries.page(params[:students_page])
+        .order <<~SQL
+          CASE
+            WHEN roster_entries.user_id IS NULL THEN 2
+            WHEN roster_entries.user_id IN (#{users_with_repo.join(",")}) THEN 1
+            ELSE 0
+          END
+          , id
+        SQL
+
+      @unlinked_user_repos = AssignmentRepo.where(assignment: @assignment, user: @unlinked_users).page(params[:unlinked_accounts_page])
+    else
+      @assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
+    end
   end
 
   def edit; end
