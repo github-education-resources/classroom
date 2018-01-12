@@ -60,16 +60,17 @@
             <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :students_page } %>
           </span>
           <span id='unlinked-span' class='hidden-tab'>
-            <% if @unlinked_users.empty? %>
-              <%= render 'shared/unlinked_blank_slate' %>
-            <% else %>
-              <% @unlinked_user_repos.each do |repo| %>
-                <% # Remove this unlinked_user thing later %>
-                <%= render 'orgs/assignment_repos/unlinked_user', unlinked_user: repo.user, assignment_repo: repo %>
+            <span>
+              <% if @unlinked_users.empty? %>
+                <%= render 'shared/unlinked_blank_slate' %>
+              <% else %>
+                <% @unlinked_user_repos.each do |repo| %>
+                  <% # Remove this unlinked_user thing later %>
+                  <%= render 'orgs/assignment_repos/unlinked_user', unlinked_user: repo.user, assignment_repo: repo %>
+                <% end %>
               <% end %>
-
-              <%= render partial: 'shared/pagination', locals: { collection: @unlinked_user_repos, param_name: :unlinked_accounts_page } %>
-            <% end %>
+            </span>
+            <%= render partial: 'shared/pagination', locals: { collection: @unlinked_user_repos, param_name: :unlinked_accounts_page } %>
           </span>
         </div>
       </div>
