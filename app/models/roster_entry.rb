@@ -9,9 +9,9 @@ class RosterEntry < ApplicationRecord
 
   # Orders the relation for display in a view.
   # Ordering is:
-  # first:  roster entry has no user
-  # second: roster entry has a user who's created a repo before
-  # last:   everything else
+  # first:  Accepted the assignment
+  # second: Linked but not accepted
+  # last:   Unlinked student
   #
   # with a secondary sort on ID to ensure ties are always handled in the same way
   def self.order_for_view(assignment)
@@ -20,9 +20,9 @@ class RosterEntry < ApplicationRecord
 
     order <<~SQL
       CASE
-        WHEN roster_entries.user_id IS NULL THEN 2
-        WHEN roster_entries.user_id IN #{sql_formatted_users} THEN 1
-        ELSE 0
+        WHEN roster_entries.user_id IS NULL THEN 2                   /* Not linked */
+        WHEN roster_entries.user_id IN #{sql_formatted_users} THEN 0 /* Accepted */
+        ELSE 1                                                       /* Linked but not accepted */
       END
       , id
     SQL

@@ -42,9 +42,10 @@ RSpec.describe RosterEntry, type: :model do
     let(:linked_not_accepted_entry) { create(:roster_entry, roster: roster, user: student2) }
 
     it "orders correctly" do
+      roster.roster_entries.first.destroy # Ignore the default entry here
       expected_ordering = [linked_accepted_entry, linked_not_accepted_entry, not_linked_entry]
 
-      expect(RosterEntry.where(roster: roster).order_for_view(assignment).to_a).to equal(expected_ordering)
+      expect(RosterEntry.where(roster: roster).order_for_view(assignment).to_a).to eq(expected_ordering)
     end
   end
 end
