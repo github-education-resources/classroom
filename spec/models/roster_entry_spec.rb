@@ -44,7 +44,7 @@ RSpec.describe RosterEntry, type: :model do
     it "orders correctly" do
       expected_ordering = [linked_accepted_entry, linked_not_accepted_entry, not_linked_entry]
 
-      expect(RosterEntry.order_for_view(assignment).to_a).to equal(expected_ordering)
+      expect(RosterEntry.where(roster: roster).order_for_view(assignment).to_a).to equal(expected_ordering)
     end
   end
 end
