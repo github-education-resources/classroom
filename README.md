@@ -230,6 +230,10 @@ And another terminal with:
 script/ngrok
 ```
 
+Then enable features with:
+
+```rake enable_features```
+
 That's it! You should have a working instance of GitHub Classroom located [here](http://localhost:5000)
 
 ## Deployment
