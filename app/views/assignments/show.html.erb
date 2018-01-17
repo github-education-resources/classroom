@@ -92,3 +92,13 @@
     <% end %>
   </div>
 </div>
+
+<script>
+  if(typeof selectTab === "function"){
+    setTabOnLoad();
+  }else{
+    document.addEventListener("DOMContentLoaded", function(_event) {
+      setTabOnLoad();
+    });
+  }
+</script>
