@@ -1,20 +1,19 @@
 language: ruby
 
 node_js:
-  - 7.7.1
+  - 7
 
 sudo: false
 
 before_install:
   - gem update --system
-  - nvm install 7.7.1
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.24.6
   - export PATH=$HOME/.yarn/bin:$PATH
 
 before_script:
   - psql -c 'create database classroom_test;' -U postgres
   - bundle exec rake db:schema:load
-  - bundle exec rake factory_girl:lint
+  - bundle exec rake factory_bot:lint
 
 script:
   - "KNAPSACK_GENERATE_REPORT=true ./bin/rake knapsack:rspec"

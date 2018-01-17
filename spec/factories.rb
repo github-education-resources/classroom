@@ -3,7 +3,7 @@
 require_relative "support/vcr"
 require "securerandom"
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :assignment do
     organization
 
