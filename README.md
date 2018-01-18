@@ -230,7 +230,7 @@ And another terminal with:
 script/ngrok
 ```
 
-You might want some features to be enabled, if it is the case then just run:
+To enable optional features, run:
 
 ```rake enable_features```
 
