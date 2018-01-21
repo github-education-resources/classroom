@@ -15,8 +15,7 @@ class Organization < ApplicationRecord
 
   belongs_to :roster, optional: true
 
-  has_many :organization_users
-  has_many :users, through: :organization_users
+  has_and_belongs_to_many :users
 
   validates :github_id, presence: true, uniqueness: true
 

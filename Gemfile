@@ -99,7 +99,7 @@ end
 
 group :test do
   gem "database_cleaner",   "~> 1.6", ">= 1.6.1"
-  gem "factory_girl_rails", "~> 4.8"
+  gem "factory_bot_rails",  "~> 4.8"
   gem "faker",              "~> 1.8", ">= 1.8.4"
   gem "simplecov",          "~> 0.15.0", require: false
   gem "vcr",                "~> 3.0", ">= 3.0.3"
