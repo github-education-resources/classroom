@@ -31,9 +31,11 @@ class GroupAssignmentsController < ApplicationController
   def show
     @group_assignment_repos = GroupAssignmentRepo.where(group_assignment: @group_assignment).page(params[:teams_page])
 
-    if @organization.roster
-      @students_not_on_team = @organization.roster.roster_entries.students_not_on_team(@group_assignment).page(params[:students_page])
-    end
+    return unless @organization.roster
+
+    @students_not_on_team = @organization.roster.roster_entries
+                                         .students_not_on_team(@group_assignment)
+                                         .page(params[:students_page])
   end
 
   def edit; end
