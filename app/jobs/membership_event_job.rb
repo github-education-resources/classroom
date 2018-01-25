@@ -15,7 +15,7 @@ class MembershipEventJob < ApplicationJob
     repo_accesses = GroupAssignmentRepo.find_by(group_id: group_id).repo_accesses
 
     repo_access = repo_accesses.find_by(user_id: user.id)
-    repo_access.delete if repo_access
+    repo_access&.delete
 
     # Do we remove github_repo as well ?
   end
