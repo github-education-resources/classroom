@@ -5,7 +5,7 @@ module Orgs
     before_action :ensure_student_identifier_flipper_is_enabled
 
     before_action :ensure_current_roster,           except: %i[new create]
-    before_action :ensure_current_roster_entry,     except: %i[show new create remove_organization add_student download_roster]
+    before_action :ensure_current_roster_entry,     except: %i[show new create remove_organization add_student]
     before_action :ensure_enough_members_in_roster, only: [:delete_entry]
 
     helper_method :current_roster, :unlinked_users
