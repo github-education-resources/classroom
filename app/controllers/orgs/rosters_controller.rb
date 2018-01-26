@@ -17,7 +17,6 @@ module Orgs
 
       @current_unlinked_users = User.where(id: unlinked_user_ids).page(params[:unlinked_users_page])
 
-
       download_roster if params.dig('format')
     end
 
