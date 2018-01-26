@@ -22,7 +22,7 @@
     <h3><%= roster.identifier_name %></h3>
       <div class="site-content-body tabnav-body clearfix join-box">
         <div class="remodal-user-list">
-        <% roster.unlinked_entries.each do |entry| %>
+        <% roster.unlinked_entries.sort_by { |entry| entry.identifier }.each do |entry| %>
           <div class="remodal-user">
             <%= form_tag({ controller: view.controller_name, action: :join_roster }, method: :patch) do %>
               <%= hidden_field_tag 'roster_entry_id', entry.id %>
