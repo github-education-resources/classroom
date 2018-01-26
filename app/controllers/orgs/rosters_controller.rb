@@ -5,7 +5,7 @@ module Orgs
     before_action :ensure_student_identifier_flipper_is_enabled
 
     before_action :ensure_current_roster,           except: %i[new create]
-    before_action :ensure_current_roster_entry,     except: %i[show new create remove_organization add_student]
+    before_action :ensure_current_roster_entry,     except: %i[show new create remove_organization add_student download_roster]
     before_action :ensure_enough_members_in_roster, only: [:delete_entry]
 
     helper_method :current_roster, :unlinked_users
@@ -16,6 +16,9 @@ module Orgs
                                       .page(params[:roster_entries_page])
 
       @current_unlinked_users = User.where(id: unlinked_user_ids).page(params[:unlinked_users_page])
+
+
+      download_roster if params.dig('format')
     end
 
     def new
@@ -105,6 +108,14 @@ module Orgs
       end
 
       redirect_to roster_path(current_organization)
+    end
+
+    def download_roster
+      respond_to do |format|
+        format.csv { send_data @roster_entries.to_csv, filename: 'classroom_roster.csv', disposition: 'attachment' }
+      end
+
+      return
     end
 
     private
