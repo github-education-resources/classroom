@@ -17,7 +17,7 @@ module Orgs
 
       @current_unlinked_users = User.where(id: unlinked_user_ids).page(params[:unlinked_users_page])
 
-      download_roster if params.dig('format')
+      download_roster if params.dig("format")
     end
 
     def new
@@ -111,7 +111,7 @@ module Orgs
 
     def download_roster
       respond_to do |format|
-        format.csv { send_data @roster_entries.to_csv, filename: 'classroom_roster.csv', disposition: 'attachment' }
+        format.csv { send_data @roster_entries.to_csv, filename: "classroom_roster.csv", disposition: "attachment" }
       end
 
       return

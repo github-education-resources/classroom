@@ -9,18 +9,18 @@ class RosterEntry < ApplicationRecord
 
   def self.to_csv
     header = %i[identifier github_username name]
-    roster_array = Array.new
+    roster_array = []
 
-    CSV.generate(headers: true, col_sep: ',', force_quotes: true) do |csv|
+    CSV.generate(headers: true, col_sep: ",", force_quotes: true) do |csv|
       csv << header
 
       all.sort_by(&:identifier).each do |entry|
         row   = []
-        login = ''
-        name  = ''
+        login = ""
+        name  = ""
         if entry.user
           login = entry.user.github_user.login
-          name  = entry.user.github_user.name ? entry.user.github_user.name : ''
+          name  = entry.user.github_user.name ? entry.user.github_user.name : ""
         end
 
         row << entry.identifier
