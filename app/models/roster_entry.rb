@@ -8,18 +8,15 @@ class RosterEntry < ApplicationRecord
   validates :roster,     presence: true
 
   def self.to_csv
-    roster_array = []
     CSV.generate(headers: true, col_sep: ",", force_quotes: true) do |csv|
       csv << %i[identifier github_username name]
 
       all.sort_by(&:identifier).each do |entry|
-        name  = ""
-        login = entry.user ? entry.user.github_user.login : ""
-        name  = entry.user.github_user.name ? entry.user.github_user.name : "" if entry.user
-
-        roster_array << [entry.identifier, login, name]
+        github_user = entry.user.try(:github_user)
+        login = github_user.try(:login) || ""
+        name = github_user.try(:name) || ""
+        csv << [entry.identifier, login, name]
       end
-      roster_array.map { |e| csv << e }
     end
   end
 end
