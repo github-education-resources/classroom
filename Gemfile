@@ -27,7 +27,7 @@ gem "flipper-ui",         "~> 0.10.2"
 
 gem "geo_pattern", "~> 1.4"
 
-gem "jquery-datetimepicker-rails", "~> 2.4", ">= 2.4.1.0"
+gem "jquery-datetimepicker-rails", git: "git://github.com/anglinb/jquery-datetimepicker-rails.git", tag: "v2.5.4.0"
 gem "jquery-turbolinks",           "~> 2.1"
 
 gem "kaminari", "~> 1.0", ">= 1.0.1"
@@ -57,9 +57,10 @@ gem "rails-i18n",          "~> 5.0", ">= 5.0.1"
 gem "redis-namespace",     "~> 1.5", ">= 1.5.3"
 gem "ruby-progressbar",    "~> 1.8", ">= 1.8.1", require: false
 
-gem "sass-rails", "~> 5.0", ">= 5.0.6"
-gem "sidekiq",    "~> 5.0", ">= 5.0.4"
-gem "sprockets",  "~> 3.7", ">= 3.7.1"
+gem "sass-rails",     "~> 5.0", ">= 5.0.6"
+gem "secure_headers", "~> 4.0", ">= 4.0.0"
+gem "sidekiq",        "~> 5.0", ">= 5.0.4"
+gem "sprockets",      "~> 3.7", ">= 3.7.1"
 
 gem "turbolinks", github: "turbolinks/turbolinks-classic", ref: "37a7c296232d20a61bd1946f600da7f2009189db"
 gem "typhoeus",   "~> 1.3"
