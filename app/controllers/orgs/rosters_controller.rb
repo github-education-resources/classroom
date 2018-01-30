@@ -113,8 +113,6 @@ module Orgs
       respond_to do |format|
         format.csv { send_data @roster_entries.to_csv, filename: "classroom_roster.csv", disposition: "attachment" }
       end
-
-      return
     end
 
     private
