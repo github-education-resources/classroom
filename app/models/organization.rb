@@ -44,8 +44,8 @@ class Organization < ApplicationRecord
     @github_organization ||= GitHubOrganization.new(github_client, github_id)
   end
 
-  def slugify
-    self.slug = "#{github_id} #{title}".parameterize
+  def name_for_slug
+    "#{github_id} #{title}"
   end
 
   def silently_remove_organization_webhook
