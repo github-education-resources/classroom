@@ -100,9 +100,11 @@ class Organization
         github_organization = GitHubOrganization.new(user.github_client, github_id)
         webhook = github_organization.create_organization_webhook(config: { url: webhook_url })
 
-        return webhook.id if webhook.try(:id).present?
-        raise GitHub::Error
-      rescue GitHub::Error
+        raise GitHub::Error if webhook.try(:id).nil?
+
+        webhook.id
+      rescue GitHub::Error => e
+        return nil if e.message == "Hook: Hook already exists on this organization"
         raise Result::Error, "Could not create WebHook, please try again."
       end
     end

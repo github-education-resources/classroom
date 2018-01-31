@@ -16,7 +16,7 @@
 
         <div class="org-select-grid">
           <% @users_github_organizations.each do |org| %>
-            <% if org[:role] == 'admin' && !org[:classroom].present? %>
+            <% if org[:role] == 'admin' %>
               <%= render partial: 'organization_select', locals: { org: org } %>
             <% else %>
               <%= render partial: 'disabled_organization_select', locals: { org: org } %>
