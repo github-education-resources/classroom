@@ -17,7 +17,7 @@ class Organization < ApplicationRecord
 
   has_and_belongs_to_many :users
 
-  validates :github_id, presence: true, uniqueness: true
+  validates :github_id, presence: true
 
   validates :title, presence: true
   validates :title, length: { maximum: 60 }
