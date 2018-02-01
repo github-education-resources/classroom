@@ -31,6 +31,15 @@ if ! [ -f "$(which rbenv)" ]; then
   exit 1
 fi
 
+# Make sure the system has rbenv installed
+# otherwise we can't get our gems setup properly
+if ! [ -f "$(which rbenv)" ]; then
+  echo "It looks like you don't have Rbenv installed"
+  echo "Check out https://github.com/rbenv/rbenv#installation to get it running on your system <3"
+
+  exit 1
+fi
+
 # Install the correct Ruby version
 if [ -z "$(rbenv version-name 2>/dev/null)" ]; then
   echo "==> Installing Ruby $(cat .ruby-version) via Rbenv..."
