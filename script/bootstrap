@@ -26,16 +26,7 @@ fi
 # otherwise we can't get our gems setup properly
 if ! [ -f "$(which rbenv)" ]; then
   echo "It looks like you don't have Rbenv installed"
-  echo "Check out https://github.com/rbenv/rbenv#installation to get it running on your system <3"
-
-  exit 1
-fi
-
-# Make sure the system has rbenv installed
-# otherwise we can't get our gems setup properly
-if ! [ -f "$(which rbenv)" ]; then
-  echo "It looks like you don't have Rbenv installed"
-  echo "Check out https://github.com/rbenv/rbenv#installation to get it running on your system <3"
+  echo "Check out https://github.com/rbenv/rbenv#installation to get it running on your system"
 
   exit 1
 fi
@@ -70,7 +61,7 @@ bundle check 2>&1 || {
 # postgres or elasticsearch
 if ! [ -f "$(which docker-compose)" ]; then
   echo "Docker compose appears to not be installed"
-  echo "Check out https://docs.docker.com/compose/install/ to get it running on your system <3"
+  echo "Check out https://docs.docker.com/compose/install/ to get it running on your system"
 
   exit 1
 fi
