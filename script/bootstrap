@@ -74,3 +74,5 @@ if ! [ -f "$(which docker-compose)" ]; then
 
   exit 1
 fi
+
+./script/docker-services
