@@ -11,8 +11,12 @@ before_install:
   - export PATH=$HOME/.yarn/bin:$PATH
 
 before_script:
-  - psql -c 'create database classroom_test;' -U postgres
-  - bundle exec rake db:schema:load
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - ./script/docker-services
+  - bundle exec rake db:create db:schema:load
   - bundle exec rake factory_bot:lint
 
 script:
@@ -26,12 +30,9 @@ install:
   - bundle install --without development production --deployment --jobs=3 --retry=3
   - yarn install
 
-services:
-  - postgresql
-  - redis-server
-
 env:
   global:
+    - DOCKER_COMPOSE_VERSION=2.1
     - CLASSROOM_WEBHOOK_URL_PREFIX="https://example.com/github/hooks"
     - GITHUB_CLIENT_ID=client_id
     - GITHUB_CLIENT_SECRET=client_secret
