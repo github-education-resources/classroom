@@ -28,7 +28,6 @@ install:
 
 env:
   global:
-    - DOCKER_COMPOSE_VERSION=1.18
     - CLASSROOM_WEBHOOK_URL_PREFIX="https://example.com/github/hooks"
     - GITHUB_CLIENT_ID=client_id
     - GITHUB_CLIENT_SECRET=client_secret
