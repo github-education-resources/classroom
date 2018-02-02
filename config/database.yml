@@ -37,7 +37,7 @@ local: &local
   # domain sockets, so uncomment these lines.
   host: localhost
 
-  port: 2345
+  port: <% ENV.fetch("TRAVIS", false) ? 5432 : 2345 %>
 
 development:
   <<: *default

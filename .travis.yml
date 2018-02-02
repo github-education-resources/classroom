@@ -38,6 +38,7 @@ env:
     - GITHUB_CLIENT_SECRET=client_secret
     - RAILS_ENV=test
     - RACK_ENV=test
+    - REDIS_URL="redis://localhost:6379/0"
     - WEBHOOK_SECRET=abcdefg
   matrix:
     - CI_NODE_INDEX=0
