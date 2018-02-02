@@ -1,0 +1,9 @@
+# pack-refs with: peeled fully-peeled sorted 
+9bbe212ed1b6b4a4ad56ded1ef4cf9179cdac0cd refs/heads/master
+784f05ce8ac2ef166e39db4279d274a9283d99c1 refs/heads/rails5-ruby2-update
+eb81630b726f3a9382fddd20b779faafaaeaca77 refs/tags/v1.0.0
+^0b8d5af24411e822bd963686e870b7cfd43ce684
+6614d387ef74f71bf8250e7f9ca4c1b025d875f1 refs/tags/v1.1.0
+^99c3696385b5b8193bd342803f29975bf512c1f9
+2a5013fe8f96e70f33ca3257435bf16d981b52ad refs/tags/v1.2.0
+^8005ef3e17ececba5ed61715a6f7eb56bd76e06f
