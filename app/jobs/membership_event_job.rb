@@ -16,7 +16,7 @@ class MembershipEventJob < ApplicationJob
     group = Group.find_by(github_team_id: team_id)
     return true if group.present?
 
-    group.repo_accesses.find_by(user_id: user.id)
+    repo_access = group.repo_accesses.find_by(user_id: user.id)
     repo_access&.destroy
   end
 end

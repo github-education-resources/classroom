@@ -4,30 +4,23 @@ require "rails_helper"
 
 RSpec.describe MembershipEventJob, type: :job do
   let(:payload)      { json_payload("webhook_events/team_member_removed.json") }
-  let(:organization) { create(:organization, github_id: payload.dig("organization", "id")) }
+  let(:organization) { classroom_org }
   let(:student)      { create(:user, uid: payload.dig("member", "id")) }
   let(:repo_access)  { RepoAccess.create(user: student, organization: organization) }
-  let(:grouping)     { create(:grouping, organization: organization) }
-  let(:group)        { Group.create(title: "Group 1", grouping: grouping) }
+  let(:group)        { Group.create(title: "Group 2", github_team_id: payload.dig("team", "id")) }
 
   let(:group_assignment) do
-    create(:group_assignment,
-           grouping: grouping,
-           title: "Learn JavaScript",
-           organization: organization,
-           public_repo: true,
-           starter_code_repo_id: 1_062_897)
+    create(:group_assignment, title: "Learn Ruby", organization: organization, public_repo: false)
   end
 
-  before(:each) do
+  let(:group_assignment_repo) do
+    GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
+  end
+
+  it "removes user from team", :vcr do
     group.repo_accesses << repo_access
-    @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
-  end
 
-  context "Action removed", :vcr do
-    it "removes user from team" do
-      MembershipEventJob.perform_now(payload)
-      expect { organization.users.find_by(uid: student.uid) }.to raise_error(ActiveRecord::RecordNotFound)
-    end
+    MembershipEventJob.perform_now(payload)
+    expect { group.repo_accesses.find_by(user_id: student.id) }.to raise_error(ActiveRecord::RecordNotFound)
   end
 end
