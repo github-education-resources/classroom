@@ -9,9 +9,14 @@ cd "$(dirname "$0")/.."
 
 script/bootstrap
 
-echo "===> Setting up DB..."
-# reset database to a fresh state.
-bin/rake db:reset
+echo "===> Preparing database..."
+bin/rails db:setup
+
+echo "===> Remove old logs and tempfiles..."
+bin/rails log:clear tmp:clear
+
+echo "===> Restart application server..."
+bin/rails restart
 
 if [ -z "$RAILS_ENV" ] && [ -z "$RACK_ENV" ]; then
   # Only things for a development environment will run inside here
