@@ -47,7 +47,7 @@ rbenv which bundle >/dev/null 2>&1  || {
 # Install all of our gems if we need to
 bundle check 2>&1 || {
   echo "==> Installing gem dependencies..."
-  bundle install --without production
+  bundle install --local --without production
 }
 
 # Install all of our JS dependencies if we need to
