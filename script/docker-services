@@ -17,6 +17,7 @@ chdir APP_ROOT do
     puts "\n==> Docker services are loaded..."
   else
     puts "\n==> Starting Docker services..."
-    system! "./script/start-docker-services"
+    system! "docker-compose up > log/docker-services.log 2>&1 &"
+    system "./script/poll-for-services"
   end
 end
