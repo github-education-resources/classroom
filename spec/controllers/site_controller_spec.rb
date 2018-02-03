@@ -29,4 +29,25 @@ RSpec.describe SiteController, type: :controller do
       end
     end
   end
+
+  describe "GET #boom_sidekiq", :vcr do
+    context "as an unauthorized user" do
+      it "returns a 404" do
+        get :boom_sidekiq
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "as a site admin" do
+      before do
+        user.update_attributes(site_admin: true)
+      end
+
+      it "queues a BoomJob" do
+        expect do
+          get :boom_sidekiq
+        end.to enqueue_job(BoomJob)
+      end
+    end
+  end
 end
