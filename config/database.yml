@@ -6,6 +6,9 @@ default: &default
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
+production: &production
+  url: <%= ENV["DATABASE_URL"] %>
+
 development:
   <<: *default
   database: classroom_development
@@ -13,3 +16,11 @@ development:
 test:
   <<: *default
   database: classroom_test
+
+staging:
+  <<: *default
+  <<: *production
+
+production:
+  <<: *default
+  <<: *production
