@@ -15,9 +15,3 @@ test -z "$RACK_ENV" &&
 
 # boot the app and any other necessary processes.
 bundle exec foreman start -f Procfile.dev
-
-function finish {
-  docker-compose stop
-}
-
-trap finish EXIT
