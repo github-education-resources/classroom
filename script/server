@@ -17,7 +17,7 @@ test -z "$RACK_ENV" &&
 bundle exec foreman start -f Procfile.dev
 
 function finish {
-  docker-compose down --remove-orphans
+  docker-compose stop
 }
 
 trap finish EXIT
