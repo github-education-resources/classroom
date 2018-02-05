@@ -53,7 +53,7 @@ bundle check 2>&1 || {
 }
 
 # Install the correct version of node
-if [ -z "$(nodev version-name 2>/dev/null)" ]; then
+if [ -z "$(nodenv version-name 2>/dev/null)" ]; then
   echo "==> Installing NodeJS..."
   nodenv install --skip-existing
 fi
