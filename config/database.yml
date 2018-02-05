@@ -39,6 +39,9 @@ local: &local
 
   port: <% ENV.fetch("TRAVIS", false) ? 5432 : 2345 %>
 
+production: &production
+  url: <%= ENV["DATABASE_URL"] %>
+
 development:
   <<: *default
   <<: *local
@@ -49,6 +52,10 @@ test:
   <<: *local
   database: classroom_test
 
+staging:
+  <<: *default
+  <<: *production
+
 production:
   <<: *default
-  url: <%= ENV["DATABASE_URL"] %>
+  <<: *production
