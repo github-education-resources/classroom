@@ -16,7 +16,7 @@ chdir APP_ROOT do
   if DockerCompose.all_services_up?
     puts "==> Docker services are loaded..."
   else
-    puts "\n==> Starting Docker services..."
+    puts "==> Starting Docker services..."
     system! "docker-compose up -d"
     system "./script/poll-for-services"
   end
