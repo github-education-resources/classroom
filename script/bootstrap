@@ -12,12 +12,12 @@ if [ "$(uname -s)" = "Darwin" ]; then
   echo "==> Ensuring Homebrew macOS dependencies..."
   brew update
 
+  brew bootstrap-rbenv-ruby
+  brew bootstrap-nodenv-node
+
   brew bundle check >/dev/null 2>&1 || {
     echo "==> Installing Homebrew dependencies..."
     brew bundle
-
-    brew bootstrap-rbenv-ruby
-    brew bootstrap-nodenv-node
 
     brew setup-nginx-conf classroom . config/dev/nginx.conf.erb
     brew services restart nginx
@@ -33,30 +33,11 @@ if ! [ -f "$(which rbenv)" ]; then
   exit 1
 fi
 
-# Install the correct Ruby version
-if [ -z "$(rbenv version-name 2>/dev/null)" ]; then
-  echo "==> Installing Ruby $(cat .ruby-version) via Rbenv..."
-  rbenv install --skip-existing
-fi
-
-# Make sure we have bundler gem, cause it's _still_
-# not included in Ruby
-rbenv which bundle >/dev/null 2>&1  || {
-  gem install bundler
-  rbenv rehash
-}
-
 # Install all of our gems if we need to
 bundle check 2>&1 || {
   echo "==> Installing gem dependencies..."
   bundle install --local --without production
 }
-
-# Install the correct version of node
-if [ -z "$(nodenv version-name 2>/dev/null)" ]; then
-  echo "==> Installing NodeJS..."
-  nodenv install --skip-existing
-fi
 
 # Install all of our JS dependencies if we need to
 ./bin/yarn check 2>&1 || {
