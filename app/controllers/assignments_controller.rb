@@ -28,14 +28,7 @@ class AssignmentsController < ApplicationController
   end
 
   def show
-    if @organization.roster
-      @roster_entries = @organization.roster.roster_entries.page(params[:students_page]).order_for_view(@assignment)
-
-      @unlinked_user_repos = AssignmentRepo.where(assignment: @assignment, user: @unlinked_users)
-                                           .page(params[:unlinked_accounts_page])
-    else
-      @assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
-    end
+    @assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
   end
 
   def edit; end

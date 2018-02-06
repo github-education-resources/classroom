@@ -50,27 +50,24 @@
           </div>
           <span id='students-span'>
             <div class="assignment-repo-list">
-              <% @roster_entries.each do |entry| %>
+              <% sorter = RosterEntrySorter.new(@organization.roster.roster_entries, @assignment) %>
+              <% sorter.sort.each do |entry| %>
                 <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
                   url: organization_assignment_roster_entry_path(@organization, @assignment, entry)
                 } %>
               <% end %>
             </div>
-
-            <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :students_page } %>
           </span>
           <span id='unlinked-span' class='hidden-tab'>
-            <span>
-              <% if @unlinked_users.empty? %>
-                <%= render 'shared/unlinked_blank_slate' %>
-              <% else %>
-                <% @unlinked_user_repos.each do |repo| %>
-                  <% # Remove this unlinked_user thing later %>
-                  <%= render 'orgs/assignment_repos/unlinked_user', unlinked_user: repo.user, assignment_repo: repo %>
-                <% end %>
+            <% if @unlinked_users.empty? %>
+              <%= render 'shared/unlinked_blank_slate' %>
+            <% else %>
+              <% @unlinked_users.each do |user| %>
+                <% assignment_repo = @assignment_repos.select{ |repo| repo.user == user }.first %>
+                <% next unless assignment_repo.present? %>
+                <%= render 'orgs/assignment_repos/unlinked_user', unlinked_user: user, assignment_repo: assignment_repo %>
               <% end %>
-            </span>
-            <%= render partial: 'shared/pagination', locals: { collection: @unlinked_user_repos, param_name: :unlinked_accounts_page } %>
+            <% end %>
           </span>
         </div>
       </div>
@@ -92,5 +89,3 @@
     <% end %>
   </div>
 </div>
-
-<%= render partial: "shared/roster_tab_script" %>

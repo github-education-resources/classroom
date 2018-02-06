@@ -59,7 +59,7 @@
                   <% end %>
                 </div>
 
-                <%= render partial: 'shared/pagination', locals: { collection: @group_assignment_repos, param_name: :teams_page } %>
+                <%= render partial: 'shared/pagination', locals: { collection: @group_assignment_repos } %>
               <% else %>
                 <div class="blankslate">
                   <h3>"<%= @group_assignment.title %>" does not have any repositories.</h3>
@@ -70,18 +70,10 @@
           </span>
           <span id='unlinked-span' class='hidden-tab'>
             <div class="assignment-repo-list">
-              <% if @students_not_on_team.present? %>
-                <% @students_not_on_team.each do |entry| %>
-                  <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
-                    url: organization_group_assignment_roster_entry_path(@organization, @group_assignment, entry)
-                  } %>
-                <% end %>
-
-                <%= render partial: 'shared/pagination', locals: { collection: @students_not_on_team, param_name: :students_page } %>
-              <% else %>
-              <div class="blankslate">
-                <h3>All students have joined a team.</h3>
-              </div>
+              <% @students_not_on_team.each do |entry| %>
+                <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
+                  url: organization_group_assignment_roster_entry_path(@organization, @group_assignment, entry)
+                } %>
               <% end %>
             </div>
           </span>
@@ -106,5 +98,3 @@
     <% end %>
   </div>
 </div>
-
-<%= render partial: "shared/roster_tab_script" %>
