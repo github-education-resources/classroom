@@ -4,8 +4,9 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
-# Ignore bundler config.
+# Bundler stuff
 /.bundle
+vendor/bundle
 
 # Ignore all logfiles and tempfiles.
 /log/*
