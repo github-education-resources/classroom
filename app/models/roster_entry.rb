@@ -18,6 +18,7 @@ class RosterEntry < ApplicationRecord
         csv << [entry.identifier, login, name]
       end
     end
+  end
 
   # Orders the relation for display in a view.
   # Ordering is:
