@@ -1,6 +1,17 @@
 # GitHub Classroom
 [![Build Status](https://travis-ci.org/education/classroom.svg?branch=master)](https://travis-ci.org/education/classroom) [![Code Climate](https://codeclimate.com/github/education/classroom/badges/gpa.svg)](https://codeclimate.com/github/education/classroom)
 
+## Table of Contents
+
+- [The workflow you use as a developer, scaled for the needs of students.](#the-workflow-you-use-as-a-developer-scaled-for-the-needs-of-students)
+- [Why try Classroom?](#why-try-classroom)
+- [Design principles](#design-principles)
+- [GitHub Classroom and the edtech ecosystem](#github-classroom-and-the-edtech-ecosystem)
+- [The technical details](#the-technical-details)
+- [Deployment](#deployment)
+- [Help wanted](#help-wanted)
+- [Contributors](#contributors)
+
 ## The workflow you use as a developer, scaled for the needs of students.
 
 Developers rarely work all by themselves, on a deadline, or ship something they’ll only use once (with no idea whether it actually works).
@@ -17,7 +28,7 @@ Set due dates, track assignments in your teacher dashboard, or integrate other t
 
 With Classroom, you can spin up your course on GitHub and move on to the good stuff.
 
-[@johndbritton](https://github.com/johndbritton), [@mozzadrella](https://github.com/mozzadrella), [@nwoodthorpe](https://github.com/nwoodthorpe), and [@tarebyte](https://github.com/tarebyte), are all maintainers.
+[@johndbritton](https://github.com/johndbritton), [@mozzadrella](https://github.com/mozzadrella), [@d12](https://github.com/d12), and [@tarebyte](https://github.com/tarebyte), are all maintainers.
 
 ![GitHub Classroom screenshot](https://cloud.githubusercontent.com/assets/1311594/14748352/32f677b0-0887-11e6-9ac2-8aa06e4341fa.png)
 
@@ -111,8 +122,8 @@ rbenv global 2.4.2
 ```
 
 Next, you'll need to make sure that you have Nodejs, PostgreSQL, Redis, Memcached, and Elasticsearch installed. This can be done easily :
-* For OSX using [Homebrew](http://brew.sh) : You don't have to do anything! When you run `script/setup` later on this will be taken care of for you.
-* For Linux : `apt-get install nodejs postgresql redis-server memcached`. For Elasticsearch, follow the instructions on [their website](https://www.elastic.co/guide/en/elasticsearch/reference/1.7/_installation.html).
+* For OSX using [Homebrew](http://brew.sh) : If you already have a PostgreSQL running, please update to the latest version. If you already have Java, check if you're not in 1.9, if it's the case then uninstall it to avoid any troubles later. Then, you don't have to do anything! When you run `script/setup` later on this will be taken care of for you.
+* For Debian/Ubuntu based GNU/Linux : `apt-get install nodejs postgresql redis-server memcached`. For Elasticsearch, follow the instructions on [their website](https://www.elastic.co/guide/en/elasticsearch/reference/1.7/_installation.html).
 
 You will want to set PostgreSQL to autostart at login via launchctl, if not already. See `brew info postgresql`. Redis and memcached may be setup similarly via launchctl or setup project wide by using foreman, described below.
 
@@ -218,6 +229,10 @@ And another terminal with:
 ```bash
 script/ngrok
 ```
+
+To enable optional features, run:
+
+```rake enable_features```
 
 That's it! You should have a working instance of GitHub Classroom located [here](http://localhost:5000)
 

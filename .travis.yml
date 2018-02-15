@@ -1,13 +1,12 @@
 language: ruby
 
 node_js:
-  - 7.7.1
+  - 7
 
 sudo: false
 
 before_install:
   - gem update --system
-  - nvm install 7.7.1
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.24.6
   - export PATH=$HOME/.yarn/bin:$PATH
 
@@ -24,7 +23,7 @@ cache:
   yarn: true
 
 install:
-  - bundle install --without development production --deployment --jobs=3 --retry=3
+  - bundle install --local --without development production --deployment --jobs=3 --retry=3
   - yarn install
 
 services:
