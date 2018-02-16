@@ -99,9 +99,12 @@ class AssignmentRepo
       options = {}.tap { |opt| opt[:permission] = "admin" if assignment.students_are_repo_admins? }
 
       github_repository = GitHubRepository.new(organization.github_client, github_repository_id)
-      invitation_id = github_repository.invite(user.github_user.login_no_cache, options).id
-
-      user.github_user.accept_repository_invitation(invitation_id)
+      invitation = github_repository.invite(user.github_user.login_no_cache, options)
+      # if the API returns an invitation we accept it on behalf of the user
+      if invitation do
+        user.github_user.accept_repository_invitation(invitation.id)
+      end
+      # if the API returns 204 then the we do nothing and assume it's all good
     rescue GitHub::Error
       raise Result::Error, REPOSITORY_COLLABORATOR_ADDITION_FAILED
     end
