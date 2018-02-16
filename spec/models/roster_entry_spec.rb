@@ -47,5 +47,15 @@ RSpec.describe RosterEntry, type: :model do
 
       expect(RosterEntry.where(roster: roster).order_for_view(assignment).to_a).to eq(expected_ordering)
     end
+
+    it "orders correctly, even with no accepted students" do
+      roster.roster_entries.first.destroy # Ignore the default entry here
+      assignment_repo.delete
+      linked_accepted_entry.destroy
+
+      expected_ordering = [linked_not_accepted_entry, not_linked_entry]
+
+      expect(RosterEntry.where(roster: roster).order_for_view(assignment).to_a).to eq(expected_ordering)
+    end
   end
 end
