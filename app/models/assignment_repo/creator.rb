@@ -102,9 +102,7 @@ class AssignmentRepo
       invitation = github_repository.invite(user.github_user.login_no_cache, options)
 
       # if the API returns an invitation and a 201 we accept it on behalf of the user
-      if invitation
-        user.github_user.accept_repository_invitation(invitation.id)
-      end
+      user.github_user.accept_repository_invitation(invitation.id) if invitation
 
       # if the API returns 204 then the we do nothing and assume it's all good
     rescue GitHub::Error
