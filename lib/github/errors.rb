@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require "english"
+
 module GitHub
   module Errors
     class << self
       def with_error_handling
         yield
       rescue Octokit::Error => err
+        failbot($ERROR_INFO)
         process_octokit_error(err)
       end
 
