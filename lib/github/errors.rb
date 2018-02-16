@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "english"
+require "English"
 
 module GitHub
   module Errors
