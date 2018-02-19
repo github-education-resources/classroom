@@ -39,7 +39,7 @@ class OrganizationsController < Orgs::Controller
   def show
     @assignments = Kaminari
                    .paginate_array(current_organization.all_assignments(with_invitations: true)
-                   .sort_by(&:updated_at))
+                   .sort_by(&:title))
                    .page(params[:page])
   end
 
