@@ -102,7 +102,6 @@ class AssignmentRepo
       invitation = github_repository.invite(user.github_user.login_no_cache, options)
 
       user.github_user.accept_repository_invitation(invitation.id) if invitation.present?
-
     rescue GitHub::Error
       raise Result::Error, REPOSITORY_COLLABORATOR_ADDITION_FAILED
     end
