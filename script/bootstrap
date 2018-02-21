@@ -1,20 +1,57 @@
 #!/bin/sh
+
 # Usage: script/boostrap
 # Ensures all dependencies are installed locally.
 
 set -e
+
 cd "$(dirname "$0")/.."
 
+# Install all the macOS dependencies via the Brewfile
 if [ "$(uname -s)" = "Darwin" ]; then
-  echo "==> Bootstrapping Homebrew OSX environment"
-  brew update >/dev/null
-  brew bundle check &>/dev/null || brew bundle
+  echo "==> Ensuring Homebrew macOS dependencies..."
+  brew update
 
-  brew setup-nginx-conf classroom . config/dev/nginx.conf.erb
+  brew bundle check >/dev/null 2>&1 || {
+    echo "==> Installing Homebrew dependencies..."
+    brew bundle
+
+    brew bootstrap-rbenv-ruby
+    brew setup-nginx-conf classroom . config/dev/nginx.conf.erb
+    brew services restart nginx
+  }
 fi
 
-echo "==> Installing gem dependencies…"
-bundle install --without production
+# Make sure the system has rbenv installed
+# otherwise we can't get our gems setup properly
+if ! [ -f "$(which rbenv)" ]; then
+  echo "It looks like you don't have Rbenv installed"
+  echo "Check out https://github.com/rbenv/rbenv#installation to get it running on your system <3"
 
-echo "==> Installing javascript dependencies…"
-yarn install
+  exit 1
+fi
+
+# Install the correct Ruby version
+if [ -z "$(rbenv version-name 2>/dev/null)" ]; then
+  echo "==> Installing Ruby $(cat .ruby-version) via Rbenv..."
+  rbenv install --skip-existing
+fi
+
+# Make sure we have bundler gem, cause it's _still_
+# not included in Ruby
+rbenv which bundle >/dev/null 2>&1  || {
+  gem install bundler
+  rbenv rehash
+}
+
+# Install all of our gems if we need to
+bundle check 2>&1 || {
+  echo "==> Installing gem dependencies..."
+  bundle install --local --without production
+}
+
+# Install all of our JS dependencies if we need to
+./bin/yarn check 2>&1 || {
+  echo "==> Installing javascript dependencies..."
+  ./bin/yarn install
+}

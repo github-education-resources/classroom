@@ -12,7 +12,7 @@ ENV["FAILBOT_BACKEND"] ||= "memory"
 
 # report exceptions using Failbot
 require "failbot_rails"
-FailbotRails.setup("github-classroom#{'-staging' if Rails.env.staging?}")
+FailbotRails.setup("classroom#{'-staging' if Rails.env.staging?}")
 
 module GitHubClassroom
   class Application < Rails::Application

@@ -122,7 +122,7 @@ rbenv global 2.4.2
 ```
 
 Next, you'll need to make sure that you have Nodejs, PostgreSQL, Redis, Memcached, and Elasticsearch installed. This can be done easily :
-* For OSX using [Homebrew](http://brew.sh) : You don't have to do anything! When you run `script/setup` later on this will be taken care of for you.
+* For OSX using [Homebrew](http://brew.sh) : If you already have a PostgreSQL running, please update to the latest version. If you already have Java, check if you're not in 1.9, if it's the case then uninstall it to avoid any troubles later. Then, you don't have to do anything! When you run `script/setup` later on this will be taken care of for you.
 * For Debian/Ubuntu based GNU/Linux : `apt-get install nodejs postgresql redis-server memcached`. For Elasticsearch, follow the instructions on [their website](https://www.elastic.co/guide/en/elasticsearch/reference/1.7/_installation.html).
 
 You will want to set PostgreSQL to autostart at login via launchctl, if not already. See `brew info postgresql`. Redis and memcached may be setup similarly via launchctl or setup project wide by using foreman, described below.
@@ -229,6 +229,10 @@ And another terminal with:
 ```bash
 script/ngrok
 ```
+
+To enable optional features, run:
+
+```rake enable_features```
 
 That's it! You should have a working instance of GitHub Classroom located [here](http://localhost:5000)
 
