@@ -25,8 +25,6 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
       end
 
       it "creates an AssignmentRepo as an outside_collaborator" do
-        # @TODO add a check about the user type (member of the org or outside collaborator)
-
         result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
 
         expect(result.success?).to be_truthy
