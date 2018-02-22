@@ -7,6 +7,7 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   layout "layouts/invitations"
 
+  before_action :check_user_already_on_team,           only: [:show]
   before_action :check_group_not_previous_acceptee,    only: [:show]
   before_action :check_user_not_group_member,          only: [:show]
   before_action :check_should_redirect_to_roster_page, only: [:show]
@@ -156,6 +157,14 @@ class GroupAssignmentInvitationsController < ApplicationController
     repo             = group_assignment_repo.github_repository
     classroom_branch = repo.branch_present?("github-classroom")
     repo.imported? && classroom_branch && group_assignment_repo.not_configured?
+  end
+
+  def check_user_already_on_team
+    return unless group.present? && group_assignment_repo.present?
+
+    if group.repo_accesses.find_by(user_id: current_user.id)
+      redirect_to successful_invitation_group_assignment_invitation_path
+    end
   end
 
   def check_group_not_previous_acceptee
