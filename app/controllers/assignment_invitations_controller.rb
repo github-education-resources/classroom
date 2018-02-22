@@ -4,6 +4,7 @@ class AssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
   include RepoSetup
 
+  before_action :check_already_on_github, only: [:show]
   before_action :check_user_not_previous_acceptee, :check_should_redirect_to_roster_page, only: [:show]
   before_action :ensure_submission_repository_exists, only: %i[setup setup_progress success]
   before_action :ensure_authorized_repo_setup, only: %i[setup setup_progress]
@@ -51,6 +52,14 @@ class AssignmentInvitationsController < ApplicationController
     remove_instance_variable(:@current_submission)
 
     create_submission
+  end
+
+  def check_already_on_github
+    return if current_submission.nil?
+    import_status = current_submission.github_repository.import_progress.status
+    if current_submission.github_repository.on_github? && import_status == "complete"
+      return redirect_to success_assignment_invitation_path
+    end
   end
 
   def check_user_not_previous_acceptee
