@@ -161,8 +161,8 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   def check_user_already_on_team
     return unless group.present? && group_assignment_repo.present?
-
-    redirect_to successful_invitation_group_assignment_invitation_path if group.repo_accesses.find_by(user_id: current_user.id)
+    user_in_group = group.repo_accesses.find_by(user_id: current_user.id)
+    redirect_to successful_invitation_group_assignment_invitation_path if user_in_group
   end
 
   def check_group_not_previous_acceptee
