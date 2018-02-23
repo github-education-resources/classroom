@@ -39,6 +39,16 @@ RSpec.describe AssignmentInvitation, type: :model do
       expect(result.success?).to be_truthy
       expect(result.assignment_repo).to eql(AssignmentRepo.last)
     end
+
+    it "fails if invitations are not enabled" do
+      assignment = subject.assignment
+
+      assignment.invitations_enabled = false
+      assignment.save
+
+      result = subject.redeem_for(student)
+      expect(result.success?).to be_falsey
+    end
   end
 
   describe "#title" do

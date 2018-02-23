@@ -69,7 +69,7 @@ class AssignmentsController < ApplicationController
   def new_assignment_params
     params
       .require(:assignment)
-      .permit(:title, :slug, :public_repo, :students_are_repo_admins)
+      .permit(:title, :slug, :public_repo, :students_are_repo_admins, :invitations_enabled)
       .merge(creator: current_user,
              organization: @organization,
              starter_code_repo_id: starter_code_repo_id_param,
@@ -109,7 +109,7 @@ class AssignmentsController < ApplicationController
   def update_assignment_params
     params
       .require(:assignment)
-      .permit(:title, :slug, :public_repo, :students_are_repo_admins, :deadline)
+      .permit(:title, :slug, :public_repo, :students_are_repo_admins, :deadline, :invitations_enabled)
       .merge(starter_code_repo_id: starter_code_repo_id_param)
   end
 
