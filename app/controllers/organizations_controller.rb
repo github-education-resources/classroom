@@ -37,6 +37,7 @@ class OrganizationsController < Orgs::Controller
   # rubocop:enable MethodLength
 
   def show
+    # sort assignments by title
     @assignments = Kaminari
                    .paginate_array(current_organization.all_assignments(with_invitations: true)
                    .sort_by(&:title))
