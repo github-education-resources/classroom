@@ -4,8 +4,7 @@ class AssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
   include RepoSetup
 
-  before_action :check_repo_already_on_github, :check_user_not_previous_acceptee,
-  :check_should_redirect_to_roster_page, only: [:show]
+  before_action :check_user_not_previous_acceptee, :check_should_redirect_to_roster_page, only: :show
   before_action :ensure_submission_repository_exists, only: %i[setup setup_progress success]
   before_action :ensure_authorized_repo_setup, only: %i[setup setup_progress]
 
@@ -28,7 +27,9 @@ class AssignmentInvitationsController < ApplicationController
     render json: setup_status(current_submission)
   end
 
-  def show; end
+  def show
+    return unless check_repo_already_on_github
+  end
 
   def success; end
 
