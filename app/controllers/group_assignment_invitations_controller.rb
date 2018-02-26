@@ -100,7 +100,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   helper_method :group
 
   def create_group_assignment_repo(selected_group: group, new_group_title: nil)
-    unless group_assignment.invitations_are_enabled?
+    if !group_assignment.invitations_are_enabled?
       flash[:error] = "Invitations for this assignment have been disabled."
       render :show
     else
