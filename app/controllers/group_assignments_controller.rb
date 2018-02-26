@@ -125,7 +125,7 @@ class GroupAssignmentsController < ApplicationController
     params
       .require(:group_assignment)
       .permit(:title, :slug, :public_repo, :max_members, :students_are_repo_admins, :deadline,
-         :invitations_are_enabled)
+              :invitations_are_enabled)
       .merge(starter_code_repo_id: starter_code_repo_id_param)
   end
 end
