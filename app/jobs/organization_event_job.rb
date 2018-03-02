@@ -14,7 +14,7 @@ class OrganizationEventJob < ApplicationJob
 
     return true unless user
 
+    # update assignments with creator id if assignments
     organization.users.delete(user)
-    organization.save
   end
 end
