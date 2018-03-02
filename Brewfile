@@ -2,7 +2,6 @@
 
 # Helpers
 tap "caskroom/cask"
-tap "homebrew/versions"
 tap "github/bootstrap"
 
 cask "java8"
