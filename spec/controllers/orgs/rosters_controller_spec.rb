@@ -210,11 +210,9 @@ RSpec.describe Orgs::RostersController, type: :controller do
         before do
           roster.roster_entries.destroy_all
 
-          identifiers = 24.times.map { |e| "ID-#{e}" }
-          identifiers.each do |identifier|
-            roster.roster_entries << RosterEntry.new(identifier: identifier)
+          Array.new(24) do |e|
+            roster.roster_entries << RosterEntry.new(identifier: "ID-#{e}")
           end
-
           @all_entries = roster.roster_entries
         end
 
