@@ -206,6 +206,25 @@ RSpec.describe Orgs::RostersController, type: :controller do
         end
       end
 
+      context "download roster" do
+        before do
+          roster.roster_entries.destroy_all
+
+          identifiers = 24.times.map { |e| "ID-#{e}" }
+          identifiers.each do |identifier|
+            roster.roster_entries << RosterEntry.new(identifier: identifier)
+          end
+
+          @all_entries = roster.roster_entries
+        end
+
+        it "exports CSV with all entries" do
+          roster_csv = @all_entries.to_csv
+
+          expect(roster_csv.split("\n").size - 1).to eq(@all_entries.count)
+        end
+      end
+
       after do
         GitHubClassroom.flipper[:student_identifier].disable
       end
