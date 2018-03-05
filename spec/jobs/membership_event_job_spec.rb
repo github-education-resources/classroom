@@ -15,7 +15,6 @@ RSpec.describe MembershipEventJob, type: :job do
                            grouping: group_assignment.grouping)
       repo_access = RepoAccess.find_or_create_by!(user: student, organization: organization)
 
-      # fails with the next line
       group.repo_accesses << repo_access
 
       payload["member"]["id"] = student.github_user.id
