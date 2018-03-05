@@ -11,10 +11,9 @@ class MembershipEventJob < ApplicationJob
     team_id = payload_body.dig("team", "id")
 
     user = User.find_by(uid: user_id)
-    return true if user.present?
-
     group = Group.find_by(github_team_id: team_id)
-    return true if group.present?
+
+    return true unless group.present? && user.present?
 
     repo_access = group.repo_accesses.find_by(user_id: user.id)
     repo_access&.destroy
