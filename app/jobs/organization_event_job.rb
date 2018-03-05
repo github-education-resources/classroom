@@ -19,7 +19,7 @@ class OrganizationEventJob < ApplicationJob
   end
 
   def user_owns_assignments?
-    @organization.all_assignments.map{ |a| a.creator_id }.include? @user.id
+    @organization.all_assignments.map(&:creator_id).include? @user.id
   end
 
   def transfer_assignments
