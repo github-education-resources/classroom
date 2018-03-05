@@ -8,6 +8,10 @@ RSpec.describe MembershipEventJob, type: :job do
   let(:student)      { classroom_student }
 
   context "ACTION member_removed", :vcr do
+    before do
+      Group.destroy_all
+    end
+
     it "removes user from team" do
       group_assignment = create(:group_assignment, title: "Intro to Rails #2", organization: organization)
       group = Group.create(title: "GROUP",
