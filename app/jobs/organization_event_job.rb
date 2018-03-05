@@ -14,7 +14,24 @@ class OrganizationEventJob < ApplicationJob
 
     return true unless user
 
-    # update assignments with creator id if assignments
+    # check if user is the last one
+    # what happens if the last owner leaves the org ?
+    # check if user actually owns an assignment
+    transfer_assigments(user, organization) if organization.all_assignments
     organization.users.delete(user)
+  end
+
+  def transfer_assigments(user, organization)
+    puts "==========TRANSFER============="
+    other_owner = organization.users.where.not(id: user.id).first
+    puts "other_owner is : #{other_owner.inspect}"
+    organization.all_assignments.map do |a|
+      puts "Creator id is: #{a.creator_id}"
+      puts "New creator id is: #{other_owner.id}"
+      a.creator_id = other_owner.id if a.creator_id == user.id
+    end
+    puts "==============================="
+    puts organization.all_assignments.inspect
+    puts "==========TRANSFER============="
   end
 end
