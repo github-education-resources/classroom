@@ -14,9 +14,6 @@ class OrganizationEventJob < ApplicationJob
 
     return true unless user
 
-    # check if user is the last one
-    # what happens if the last owner leaves the org ?
-    # check if user actually owns an assignment
     transfer_assigments(user, organization) if organization.all_assignments
     organization.users.delete(user)
   end
