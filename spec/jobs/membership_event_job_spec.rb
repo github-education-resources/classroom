@@ -10,7 +10,9 @@ RSpec.describe MembershipEventJob, type: :job do
   context "ACTION member_removed", :vcr do
     it "removes user from team" do
       group_assignment = create(:group_assignment, title: "Intro to Rails #2", organization: organization)
-      group = Group.create(title: "GROUP", github_team_id: payload.dig("team", "id"), grouping: group_assignment.grouping)
+      group = Group.create(title: "GROUP",
+                           github_team_id: payload.dig("team", "id"),
+                           grouping: group_assignment.grouping)
       repo_access = RepoAccess.find_or_create_by!(user: student, organization: organization)
 
       # fails with the next line
