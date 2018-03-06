@@ -4,7 +4,8 @@ class AssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
   include RepoSetup
 
-  before_action :check_user_not_previous_acceptee, :check_should_redirect_to_roster_page, only: [:show]
+  before_action :check_repository_on_github, :check_user_not_previous_acceptee,
+                :check_should_redirect_to_roster_page, only: [:show]
   before_action :ensure_submission_repository_exists, only: %i[setup setup_progress success]
   before_action :ensure_authorized_repo_setup, only: %i[setup setup_progress]
 
@@ -53,8 +54,22 @@ class AssignmentInvitationsController < ApplicationController
     create_submission
   end
 
+  # rubocop:disable Metrics/AbcSize
+  def check_repository_on_github
+    return if current_submission.nil?
+    return unless current_submission.github_repository.on_github?
+
+    if current_submission.assignment.starter_code?
+      import_status = current_submission.github_repository.import_progress.status
+      return redirect_to setup_assignment_invitation_path if import_status != "complete"
+    end
+    redirect_to success_assignment_invitation_path
+  end
+  # rubocop:enable Metrics/AbcSize
+
   def check_user_not_previous_acceptee
     return if current_submission.nil?
+
     if repo_setup_enabled? && setup_status(current_submission)[:status] != :complete
       return redirect_to setup_assignment_invitation_path
     end
