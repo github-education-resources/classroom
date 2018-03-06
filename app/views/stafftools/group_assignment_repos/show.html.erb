@@ -8,10 +8,10 @@
 
     <div class="col-10 col-md-10 d-flex flex-column">
       <h2 class="stafftools-heading">
-        Group assignment repository <%= @group_assignment_repo.id %>
+        <%= "#{t('views.stafftools.group_assignment_repos.group_assignment_repo')} #{@group_assignment_repo.id}" %>
       </h2>
 
-      <p class="assignment-type text-gray">Group assignment repository</p>
+      <p class="assignment-type text-gray"><%= t('views.stafftools.group_assignment_repos.group_assignment_repo_small') %></p>
     </div>
   </div>
 
@@ -21,27 +21,27 @@
     <div class="boxed-group-inner">
       <table>
         <tr>
-          <td class="text-emphasized">ID</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignment_repos.id') %></td>
           <td><%= @group_assignment_repo.id %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Owned by</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignment_repos.owned_by') %></td>
           <td><%= link_to @group_assignment_repo.organization.title, stafftools_organization_path(@group_assignment_repo.organization.id) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Created by</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignment_repos.created_by') %></td>
           <td><%= link_to @group_assignment_repo.creator.github_user.login, stafftools_user_path(@group_assignment_repo.creator) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Group assignment</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignment_repos.group_assignment') %></td>
           <td><%= link_to @group_assignment_repo.group_assignment.title, stafftools_group_assignment_path(@group_assignment_repo.group_assignment.id) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Group</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignment_repos.group') %></td>
           <td><%= link_to @group_assignment_repo.group.title, stafftools_group_path(@group_assignment_repo.group.id) %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Created on</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignment_repos.created_on') %></td>
           <td><%= local_time(@group_assignment_repo.created_at) %></td>
         </tr>
       </table>
@@ -49,51 +49,50 @@
   </div>
 
   <div class="boxed-group">
-    <h3>GitHub repository</h3>
+    <h3><%= t('views.stafftools.group_assignment_repos.github_repo') %></h3>
     <div class="boxed-group-inner">
       <table>
         <tr>
-          <td class="text-emphasized">Repository ID</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignment_repos.repo_id') %></td>
           <td><%= @group_assignment_repo.github_repo_id %></td>
         </tr>
         <tr>
-          <td class="text-emphasized">Source code</td>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignment_repos.source_code') %></td>
           <td><%= link_to @group_assignment_repo.github_repository.html_url, @group_assignment_repo.github_repository.html_url %></td>
+        </tr>
+        <tr>
+          <td class="text-emphasized"><%= t('views.stafftools.group_assignment_repos.import_status') %></td>
+          <td><%= @group_assignment_repo.import_status%></td>
         </tr>
       </table>
     </div>
   </div>
 
   <div class="boxed-group dangerzone">
-    <h3>Dangerzone</h3>
+    <h3><%= t('views.stafftools.group_assignment_repos.dangerzone') %></h3>
 
     <div class="boxed-group-inner">
       <p>
-        <a data-remodal-target="delete-group-assignment-repo" class="btn btn-danger">Delete this group assignment repository</a>
+        <a data-remodal-target="delete-group-assignment-repo" class="btn btn-danger"><%= t('views.stafftools.group_assignment_repos.delete_repo_title') %></a>
       </p>
 
       <div class="remodal text-left" data-remodal-id="delete-group-assignment-repo">
         <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
-        <h2 class="remodal-header">Are you ABSOLUTELY sure?</h2>
+        <h2 class="remodal-header"><%= t('views.stafftools.group_assignment_repos.delete_repo_confirmation') %></h2>
 
-        <div class="remodal-warning">
-          Unexpected things will happen if you don't read this!
-        </div>
+        <div class="remodal-warning"><%= t('views.stafftools.group_assignment_repos.delete_repo_warning') %></div>
 
         <div class="remodal-description">
-          <p>
-            This action <strong>CANNOT</strong> be undone.<br>
-            Please note this will delete the record on GitHub Classroom <strong>AND</strong> the repository on GitHub.
-          </p>
+          <p><%= raw t('views.stafftools.group_assignment_repos.delete_repo_desc') %></p>
         </div>
 
         <%= form_for @group_assignment_repo, url: stafftools_group_assignment_repo_path(@group_assignment_repo), html: { "data-name" => @group_assignment_repo.id, method: 'delete' } do |f| %>
           <dl class="form js-normalize-submit">
-            <dt>Please type the ID (<%= @group_assignment_repo.id %>) of the group assignment repository to confirm</dt>
+            <dt><%= t('views.stafftools.group_assignment_repos.repo_id_confirmation', group_assignment_repo_id: @group_assignment_repo.id) %></dt>
             <dd><input type="text" class="js-input-block form-control input-contrast input-block" autofocus></dd>
           </dl>
 
-          <%= f.submit 'Delete this group assignment repository', class: 'btn btn-danger btn-block js-submit', disabled: true %>
+          <%= f.submit t('views.stafftools.group_assignment_repos.delete_repo_link_text'), class: 'btn btn-danger btn-block js-submit', disabled: true %>
         <% end %>
       </div>
     </div>

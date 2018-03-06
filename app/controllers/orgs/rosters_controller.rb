@@ -16,6 +16,8 @@ module Orgs
                                       .page(params[:roster_entries_page])
 
       @current_unlinked_users = User.where(id: unlinked_user_ids).page(params[:unlinked_users_page])
+
+      download_roster if params.dig("format")
     end
 
     def new
@@ -105,6 +107,13 @@ module Orgs
       end
 
       redirect_to roster_path(current_organization)
+    end
+
+    def download_roster
+      @roster_entries = @current_roster.roster_entries.includes(:user).order(:identifier)
+      respond_to do |format|
+        format.csv { send_data @roster_entries.to_csv, filename: "classroom_roster.csv", disposition: "attachment" }
+      end
     end
 
     private
