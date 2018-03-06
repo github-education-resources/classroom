@@ -6,6 +6,7 @@ en:
         group_assignment: 'Group assignment'
         group_assignment_info: 'Group assignment information'
         id: 'ID'
+        public_repo: 'Public'
         owned_by: 'Owned by'
         created_by: 'Created by'
         starter_code: 'Starter code'
