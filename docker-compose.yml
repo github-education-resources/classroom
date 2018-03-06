@@ -1,0 +1,36 @@
+version: '2.1'
+services:
+  elasticsearch:
+    container_name: "classroom_elasticsearch"
+    image: elasticsearch:1.7.5
+    ports:
+      - "127.0.0.1:9337:9300"
+      - "127.0.0.1:9227:9200"
+    volumes:
+      - ~/.docker-volumes/education/classroom/elasticsearch/data/:/usr/share/elasticsearch/data
+      - ~/.docker-volumes/education/classroom/elasticsearch/logs/:/user/share/elasticsearch/logs
+  memcached:
+    container_name: "classroom_memcached"
+    image: memcached:1.4.26-alpine
+    ports:
+      - "127.0.0.1:22322:11211"
+  postgresql:
+    container_name: "classroom_postgresql"
+    image: postgres:9.4.10-alpine
+    ports:
+      - "127.0.0.1:2345:5432"
+    restart: always
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+      - ~/.docker-volumes/education/classroom/postgresql/data:/var/lib/postgresql/data
+      - ~/.docker-volumes/education/classroom/postgresql/logs:/var/log/postgresql
+  redis:
+    container_name: "classroom_redis"
+    image: redis:3.2.4-alpine
+    ports:
+      - "127.0.0.1:9736:6379"
+    volumes:
+      - ~/.docker-volumes/education/classroom/redis/data/:/var/lib/redis
+      - ~/.docker-volumes/education/classroom/redis/logs/:/var/log/redis
