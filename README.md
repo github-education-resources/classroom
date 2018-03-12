@@ -111,53 +111,44 @@ GitHub Classroom is a [Ruby on Rails](http://rubyonrails.org/) application.
 
 New to Ruby? No worries! You can follow these instructions to install a local server.
 
-#### Installing a Local Server
+#### macOS
 
-First things first, you'll need to install Ruby 2.4.0. We recommend using the excellent [rbenv](https://github.com/sstephenson/rbenv),
-and [ruby-build](https://github.com/sstephenson/ruby-build)
+If you're using macOS and running the Homebrew package manager you're all set to go! Head down to [Setup Classroom](#setup-github-classroom)
 
-```bash
-rbenv install 2.4.2
-rbenv global 2.4.2
-```
+#### Linux
 
-Next, you'll need to make sure that you have Nodejs, PostgreSQL, Redis, Memcached, and Elasticsearch installed. This can be done easily :
-* For OSX using [Homebrew](http://brew.sh) : If you already have a PostgreSQL running, please update to the latest version. If you already have Java, check if you're not in 1.9, if it's the case then uninstall it to avoid any troubles later. Then, you don't have to do anything! When you run `script/setup` later on this will be taken care of for you.
-* For Debian/Ubuntu based GNU/Linux : `apt-get install nodejs postgresql redis-server memcached`. For Elasticsearch, follow the instructions on [their website](https://www.elastic.co/guide/en/elasticsearch/reference/1.7/_installation.html).
+##### Installing Docker and Docker Compose
 
-You will want to set PostgreSQL to autostart at login via launchctl, if not already. See `brew info postgresql`. Redis and memcached may be setup similarly via launchctl or setup project wide by using foreman, described below.
+We use Docker and docker-compose so that we don't have to setup our external dependencies on our machines.
 
-Now, let's install the gems from the `Gemfile` ("Gems" are synonymous with libraries in other
-languages).
+Here is the installation guide for Ubuntu: https://docs.docker.com/install/linux/docker-ce/ubuntu/
 
-```bash
-gem install bundler && rbenv rehash
-```
+##### Installing Rbenv
+
+First things first, you'll need to install Ruby. We recommend using the excellent [rbenv](https://github.com/sstephenson/rbenv), and [ruby-build](https://github.com/sstephenson/ruby-build).
+
+##### Install PostgreSQL
+
+In order to install the `pg` gem you have to have PostgreSQL on your system, all you need to do is install it via your package manager of choice.
+
+If you're running an Debian/Ubuntu based GNU/Linux for example run: `apt-get install nodejs postgresql redis-server memcached`.
+
+#### Windows
+
+We really don't have a good story for running this on Windows, but Pull Requests are welcome :smile:
 
 ### Setup GitHub Classroom
 
-If you are using Linux, configure PostgreSQL :
-
-* Edit `/etc/postgresql/9.3/main/postgresql.conf` and uncomment `#unix_socket_permissions = 0777`
-* Create a user and give him the rights to create a database : `su postgres -s /bin/bash -c "psql -c 'CREATE USER classroom_user; ALTER USER classroom_user CREATEDB'"` (Change `classroom_user` to the username that will run the classroom server)
-
-Once bundler is installed (and PostgreSQL correctly configured for Linux users) go ahead and run the `setup` script :
+We follow the [script to rule them all](https://github.com/github/scripts-to-rule-them-all) principle, so all you need to do is run:
 
 ```
 script/setup
 ```
 
-### Production environment variables
-ENV Variable | Description |
-:-------------------|:-----------------|
-`AIRBRAKE_PROJECT_ID` | the ID for application in airbrake.io, if set Airbrake will be enabled
-`AIRBRAKE_PROJECT_KEY` | the PROJECT_KEY in airbrake.io, if set Airbrake will be enabled
-`CANONICAL_HOST` | the preferred hostname for the application, if set requests served on other hostnames will be redirected
-`GOOGLE_ANALYTICS_TRACKING_ID` | identifier for Google Analytics in the format `UA-.*`
-`PINGLISH_ENABLED` | Enable the `/_ping` endpoint with relevant health checks
-`MOTD` | Show the message of the day banner at the top of the site
+Once that's done the script will kindly remind you to fill out you `.env` file inside the repository, this is the breakdown.
 
 ### Development environment variables
+
 These values must be present in your `.env` file (created by `script/setup`).
 
 ENV Variable | Description |
@@ -174,6 +165,7 @@ After you register your OAuth application, you should fill in the homepage url w
 To obtain your GitHub User ID for the `NON_STAFF_GITHUB_ADMIN_IDS` field, go to `https://api.github.com/users/your_username`
 
 ### Testing environment variables
+
 If you want to make a functionality change to the application you will need to write tests to accompany that change. In order to do this, the test values in the .env file must be filled in.
 
 GitHub Classroom uses [VCR](https://github.com/vcr/vcr) for recording and playing back API fixtures during test runs. These cassettes (fixtures) are part of the Git project in the `spec/support/cassettes` folder. If you're not recording new cassettes you can run the specs with existing cassettes with:
@@ -216,31 +208,47 @@ Now you should have all of the values filled in, great job!
 
 ### Running the application
 
-Foreman is setup to manage redis, memcached, sidekiq, and elasticsearch in development mode. Postgresql must be running prior executing foreman.
+#### Optional
+If you'd like to receive webhooks from GitHub you can run:
 
+```bash
+script/ngrok
+```
+
+And update the `WEBHOOK_URL` in your .env file.
+
+And if you want to play with features that are still in development run:
+
+``
+./bin/rake enable_features
+``
+
+#### Necessary
 After that, you may start the rails server in a separate terminal with:
 
 ```bash
 script/server
 ```
 
-And another terminal with:
-
-```bash
-script/ngrok
-```
-
-To enable optional features, run:
-
-```rake enable_features```
-
-That's it! You should have a working instance of GitHub Classroom located [here](http://localhost:5000)
+Aaand that's it! You should have a working instance of GitHub Classroom located [here](http://localhost:5000)
 
 ## Deployment
-
 We strongly encourage you to use [https://classroom.github.com](https://classroom.github.com), but if you would like your own version GitHub Classroom can be easily deployed to Heroku.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
+There are a few environment variables you will need to know in order to get Classroom working on production.
+
+### Production environment variables
+
+ENV Variable | Description |
+:-------------------|:-----------------|
+`AIRBRAKE_PROJECT_ID` | the ID for application in airbrake.io, if set Airbrake will be enabled
+`AIRBRAKE_PROJECT_KEY` | the PROJECT_KEY in airbrake.io, if set Airbrake will be enabled
+`CANONICAL_HOST` | the preferred hostname for the application, if set requests served on other hostnames will be redirected
+`GOOGLE_ANALYTICS_TRACKING_ID` | identifier for Google Analytics in the format `UA-.*`
+`PINGLISH_ENABLED` | Enable the `/_ping` endpoint with relevant health checks
+`MOTD` | Show the message of the day banner at the top of the site
 
 ## Help wanted
 If you're interested in helping out with Classroom development and looking for a place to get started, check out the issues labeled [`help-wanted`](https://github.com/education/classroom/issues?q=is%3Aissue+is%3Aopen+label%3Ahelp-wanted) and feel free to ask any questions you have before diving into the code.
