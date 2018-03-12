@@ -1,0 +1,30 @@
+#!/bin/sh
+set -e
+
+while ! nc -z localhost 9227; do
+  echo "Waiting for elasticsearch to be available..."
+  sleep 1
+done
+
+while ! nc -z localhost 9337; do
+  echo "Waiting for elasticsearch to be available..."
+  sleep 1
+done
+
+while ! nc -z localhost 22322; do
+  echo "Waiting for memcached to be available..."
+  sleep 1
+done
+
+while ! nc -z localhost 2345; do
+  echo "Waiting for postgresql to be available..."
+  sleep 1
+done
+
+while ! nc -z localhost 9736; do
+  echo "Waiting for redis to be available..."
+  sleep 1
+done
+
+echo "Sleep for 2 seconds..."
+sleep 2
