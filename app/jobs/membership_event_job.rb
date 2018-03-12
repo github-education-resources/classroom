@@ -16,6 +16,6 @@ class MembershipEventJob < ApplicationJob
     return true unless group.present? && user.present?
 
     repo_access = group.repo_accesses.find_by(user_id: user.id)
-    repo_access&.destroy
+    group.repo_accesses.delete(repo_access)
   end
 end
