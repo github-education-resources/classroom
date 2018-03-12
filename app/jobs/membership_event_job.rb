@@ -5,7 +5,7 @@ class MembershipEventJob < ApplicationJob
   queue_as :github_event
 
   def perform(payload_body)
-    return true unless payload_body.dig("action") == "removed"
+    return true unless payload_body["action"] == "removed"
 
     user_id = payload_body.dig("member", "id")
     team_id = payload_body.dig("team", "id")
