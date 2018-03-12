@@ -23,6 +23,7 @@ class AssignmentInvitationsController < ApplicationController
   def setup; end
 
   def setup_progress
+    # replace this function with the background job
     perform_setup(current_submission, classroom_config) if configurable_submission?
 
     render json: setup_status(current_submission)
