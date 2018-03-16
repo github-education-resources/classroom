@@ -71,7 +71,11 @@ class AssignmentInvitationsController < ApplicationController
   def check_user_not_previous_acceptee
     return if current_submission.nil?
 
-    if repo_setup_enabled? && setup_status(current_submission)[:status] != :complete
+    # we want to remove the call to setup status
+    #
+    import_job = RepositorySetupJob.perform(current_submission)
+
+    if repo_setup_enabled? && import_job.finished?
       return redirect_to setup_assignment_invitation_path
     end
     redirect_to success_assignment_invitation_path

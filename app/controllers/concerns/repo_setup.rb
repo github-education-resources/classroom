@@ -3,6 +3,7 @@
 module RepoSetup
   extend ActiveSupport::Concern
 
+  # displays the status on the front-end
   def setup_status(assignment_repo)
     repo     = assignment_repo.github_repository
     progress = { status: :importing }
