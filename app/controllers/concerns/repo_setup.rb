@@ -15,6 +15,7 @@ module RepoSetup
   end
 
   def perform_setup(assignment_repo, config)
+    # move this logic into background job
     assignment_repo.configuring!
     if config.setup_repository(assignment_repo.github_repository)
       assignment_repo.configured!
