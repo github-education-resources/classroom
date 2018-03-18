@@ -9,14 +9,14 @@ class RosterEntry < ApplicationRecord
 
   def self.to_csv
     CSV.generate(headers: true, col_sep: ",", force_quotes: true) do |csv|
-      csv << %i[github_id identifier github_username name]
+      csv << %i[identifier github_username github_id name]
 
       all.sort_by(&:identifier).each do |entry|
         github_user = entry.user.try(:github_user)
         github_id = github_user.try(:id) || ""
         login = github_user.try(:login) || ""
         name = github_user.try(:name) || ""
-        csv << [github_id, entry.identifier, login, name]
+        csv << [entry.identifier, login, github_id, name]
       end
     end
   end
