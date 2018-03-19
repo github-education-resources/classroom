@@ -41,6 +41,12 @@ class AssignmentRepo < ApplicationRecord
     @github_repository ||= GitHubRepository.new(organization.github_client, github_repo_id)
   end
 
+  def import_status
+    return "No starter code provided" unless assignment.starter_code?
+
+    github_repository.import_progress.status.humanize
+  end
+
   # Public: This method is used for legacy purposes
   # until we can get the transition finally completed
   #
