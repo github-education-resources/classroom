@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require 'pry'
 RSpec.describe OrganizationEventJob, type: :job do
   let(:payload) { json_payload("webhook_events/member_removed.json") }
 
@@ -12,7 +11,6 @@ RSpec.describe OrganizationEventJob, type: :job do
 
     describe "returns false" do
       it "if user is the only member" do
-        # job = 
         expect(OrganizationEventJob.perform_now(payload)).to be_falsey
       end
     end
