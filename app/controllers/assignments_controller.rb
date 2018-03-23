@@ -84,9 +84,8 @@ class AssignmentsController < ApplicationController
 
     assignment_users = @assignment.users
 
-    roster_entries = @organization.roster.roster_entries
-    user_ids = roster_entries.map(&:user_id)
-    roster_entry_users = User.where(id: user_ids)
+    roster_entry_user_ids = @organization.roster.roster_entries.pluck(:user_id)
+    roster_entry_users = User.where(id: roster_entry_user_ids)
 
     @unlinked_users = assignment_users - roster_entry_users
   end
