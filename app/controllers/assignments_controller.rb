@@ -83,7 +83,10 @@ class AssignmentsController < ApplicationController
     return unless @organization.roster
 
     assignment_users = @assignment.users
-    roster_entry_users = @organization.roster.roster_entries.map(&:user).compact
+
+    roster_entries = @organization.roster.roster_entries
+    user_ids = roster_entries.map(&:user_id)
+    roster_entry_users = User.where(id: user_ids)
 
     @unlinked_users = assignment_users - roster_entry_users
   end
