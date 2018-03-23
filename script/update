@@ -8,6 +8,9 @@ cd "$(dirname "$0")/.."
 
 script/bootstrap
 
+# We make sure the containers are ready before any further action
+sleep 5
+
 echo "==> Updating database..."
 bin/rake db:migrate db:test:prepare
 
