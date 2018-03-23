@@ -8,7 +8,7 @@ cd "$(dirname "$0")/.."
 
 script/bootstrap
 
-# We make sure the containers are ready before any further action
+echo "===> Waiting for the containers to mount..."
 sleep 5
 
 echo "==> Updating database..."
