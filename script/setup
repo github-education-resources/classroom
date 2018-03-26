@@ -14,6 +14,9 @@ fi
 
 script/bootstrap
 
+echo "===> Waiting for the containers to mount..."
+sleep 5
+
 echo "===> Preparing database..."
 bin/rails db:setup
 
