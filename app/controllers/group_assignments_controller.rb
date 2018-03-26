@@ -29,10 +29,11 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def show
-    @group_assignment_repos = GroupAssignmentRepo.where(group_assignment: @group_assignment).page(params[:teams_page])
+    @group_assignment_repos = GroupAssignmentRepo.where(group_assignment: @group_assignment).page(params[:page])
 
     return unless @organization.roster
 
+    @group_assignment_repos = GroupAssignmentRepo.where(group_assignment: @group_assignment).page(params[:teams_page])
     @students_not_on_team = @organization.roster.roster_entries
                                          .students_not_on_team(@group_assignment)
                                          .page(params[:students_page])
