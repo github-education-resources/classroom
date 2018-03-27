@@ -1,0 +1,13 @@
+<div class="boxed-group">
+  <h3><%= t('views.organizations.administrators') %></h3>
+
+  <div class="boxed-group-inner">
+    <ul class="boxed-group-list standalone">
+      <% @current_organization.users.each do |user| %>
+        <li class="stafftools-button-li clearfix">
+          <%= render partial: 'organizations/organization_user', locals: { user: user } %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
