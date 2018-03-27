@@ -7,6 +7,7 @@ class OrganizationsController < Orgs::Controller
   before_action :set_users_github_organizations,      only: %i[index new create]
   before_action :add_current_user_to_organizations,   only: [:index]
   before_action :paginate_users_github_organizations, only: %i[new create]
+  before_action :set_removed_user, :check_owner_assignments, only: [:remove_user]
 
   skip_before_action :ensure_current_organization,                         only: %i[index new create]
   skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create]
@@ -69,6 +70,13 @@ class OrganizationsController < Orgs::Controller
     else
       render :edit
     end
+  end
+
+  def remove_user
+    @organization.users.delete(@removed_user)
+    flash[:success] = "The user has been removed from the classroom"
+
+    redirect_to settings_invitations_organization
   end
 
   def new_assignment; end
@@ -142,5 +150,24 @@ class OrganizationsController < Orgs::Controller
     params
       .require(:organization)
       .permit(:title)
+  end
+
+  def check_owner_assignments
+    user = User.find(params[:user_id])
+
+    not_found unless user && @organization.users.find_by(id: user.id)
+    return if @organization.users.count < 2
+    return unless @organization.all_assignments.map(&:creator_id).include? user.id
+
+    transfer_assignment_ownership(user)
+  end
+
+  def transfer_assignment_ownership user
+    user = @removed_user
+    new_owner = @organization.users.where.not(id: @removed_user.id).first
+    @organization.all_assignments.map do |a|
+      a.creator_id = new_owner.id if a.creator_id == @removed_user.id
+      a.save
+    end
   end
 end
