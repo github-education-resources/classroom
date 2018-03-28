@@ -30,7 +30,8 @@ class GroupAssignmentsController < ApplicationController
 
   def show
     pagination_key = @organization.roster ? :teams_page : :page
-    @group_assignment_repos = GroupAssignmentRepo.where(group_assignment: @group_assignment).page(params[pagination_key])
+    @group_assignment_repos = GroupAssignmentRepo.where(group_assignment: @group_assignment)
+                                                 .page(params[pagination_key])
 
     return unless @organization.roster
     @students_not_on_team = @organization.roster.roster_entries
