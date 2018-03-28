@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require "pry"
+
 class OrganizationsController < Orgs::Controller
   before_action :ensure_team_management_flipper_is_enabled, only: [:show_groupings]
 
