@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require "pry"
 class OrganizationsController < Orgs::Controller
   before_action :ensure_team_management_flipper_is_enabled, only: [:show_groupings]
 
@@ -73,14 +73,15 @@ class OrganizationsController < Orgs::Controller
   end
 
   def remove_user
-    if @organization.users.count < 2
+    if current_organization.users.count < 2
       flash[:error] = "The user can not be removed from the classroom"
     else
-      transfer_assignments if @removed_user.owns_assignments?(@organization)
-      @organization.users.delete(@removed_user)
+      transfer_assignments if @removed_user.owns_assignments?(current_organization)
+      current_organization.users.delete(@removed_user)
       flash[:success] = "The user has been removed from the classroom"
     end
-    redirect_to settings_invitations_organization
+
+    redirect_to settings_invitations_organization_path
   end
 
   def new_assignment; end
@@ -158,12 +159,12 @@ class OrganizationsController < Orgs::Controller
 
   def verify_organization_user
     @removed_user = User.find(params[:user_id])
-    not_found unless @removed_user && @organization.users.map(&:id).include?(@removed_user.id)
+    not_found unless @removed_user && current_organization.users.map(&:id).include?(@removed_user.id)
   end
 
   def transfer_assignments
-    new_owner = @organization.users.where.not(id: @removed_user.id).first
-    @organization.all_assignments.map do |a|
+    new_owner = current_organization.users.where.not(id: @removed_user.id).first
+    current_organization.all_assignments.map do |a|
       a.creator_id = new_owner.id if a.creator_id == @removed_user.id
       a.save
     end
