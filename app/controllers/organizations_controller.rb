@@ -7,7 +7,7 @@ class OrganizationsController < Orgs::Controller
   before_action :set_users_github_organizations,      only: %i[index new create]
   before_action :add_current_user_to_organizations,   only: [:index]
   before_action :paginate_users_github_organizations, only: %i[new create]
-  before_action :check_owner_assignments,             only: [:remove_user]
+  before_action :verify_organization_user,            only: [:remove_user]
 
   skip_before_action :ensure_current_organization,                         only: %i[index new create]
   skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create]
@@ -76,6 +76,7 @@ class OrganizationsController < Orgs::Controller
     if @organization.users.count < 2
       flash[:error] = "The user can not be removed from the classroom"
     else
+      transfer_assignments if @removed_user.owns_assignments?(@organization)
       @organization.users.delete(@removed_user)
       flash[:success] = "The user has been removed from the classroom"
     end
@@ -155,17 +156,16 @@ class OrganizationsController < Orgs::Controller
       .permit(:title)
   end
 
-  def check_owner_assignments
+  def verify_organization_user
     @removed_user = User.find(params[:user_id])
-
     not_found unless @removed_user && @organization.users.map(&:id).include?(@removed_user.id)
+  end
 
-    if @organization.all_assignments.map(&:creator_id).include?(@removed_user.id)
-      new_owner = @organization.users.where.not(id: @removed_user.id).first
-      @organization.all_assignments.map do |a|
-        a.creator_id = new_owner.id if a.creator_id == @removed_user.id
-        a.save
-      end
+  def transfer_assignments
+    new_owner = @organization.users.where.not(id: @removed_user.id).first
+    @organization.all_assignments.map do |a|
+      a.creator_id = new_owner.id if a.creator_id == @removed_user.id
+      a.save
     end
   end
 end
