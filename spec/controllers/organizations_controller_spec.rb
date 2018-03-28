@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-
+require "pry"
 RSpec.describe OrganizationsController, type: :controller do
   let(:organization)  { classroom_org     }
   let(:user)          { classroom_teacher }
@@ -162,6 +162,48 @@ RSpec.describe OrganizationsController, type: :controller do
 
       expect(response).to have_http_status(:success)
       expect(assigns(:current_organization)).to_not be_nil
+    end
+  end
+
+  describe "PATCH #remove_user", :vcr do
+    context "returns 404" do
+      it "user is not an org owner" do
+        patch :remove_user, params: { id: organization.slug, user_id: student.id }
+
+        expect(response).to have_http_status(404)
+      end
+
+      it "user does not exist" do
+        patch :remove_user, params: { id: organization.slug, user_id: 105 }
+
+        expect(response).to have_http_status(404)
+      end
+    end
+
+    context "removes user from classroom" do
+      before(:each) do
+        teacher = create(:user)
+        organization.users << teacher
+      end
+
+      it "without assignments" do
+        patch :remove_user, params: { id: organization.slug, user_id: @teacher.id }
+
+        expect(response).to redirect_to(settings_invitations_organization_path)
+        expect(flash[:success]).to be_present
+        expect{ organization.users.find(id: @teacher.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it "with assignments" do
+        assignment = create(:assignment, organization: organization, creator: @teacher)
+
+        patch :remove_user, params: { id: organization.slug, user_id: @teacher.id }
+
+        expect(assignment.reload.creator_id).not_to eq(@teacher.id)
+        expect{ organization.users.find(id: @teacher.id) }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(response).to redirect_to(settings_invitations_organization_path)
+        expect(flash[:success]).to be_present
+      end
     end
   end
 
