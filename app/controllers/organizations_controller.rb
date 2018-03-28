@@ -157,8 +157,8 @@ class OrganizationsController < Orgs::Controller
 
     @removed_user = User.find(params[:user_id])
 
-    not_found unless @removed_user && @organization.users.map(&:id).include? @removed_user.id
-    transfer_assignment_ownership if @organization.all_assignments.map(&:creator_id).include? @removed_user.id
+    not_found unless @removed_user && @organization.users.map(&:id).include?(@removed_user.id)
+    transfer_assignment_ownership if @organization.all_assignments.map(&:creator_id).include?(@removed_user.id)
   end
 
   def transfer_assignment_ownership
