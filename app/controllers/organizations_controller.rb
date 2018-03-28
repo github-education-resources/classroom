@@ -73,9 +73,12 @@ class OrganizationsController < Orgs::Controller
   end
 
   def remove_user
-    @organization.users.delete(@removed_user)
-    flash[:success] = "The user has been removed from the classroom"
-
+    if @organization.users.count < 2
+      flash[:error] = "The user can not be removed from the classroom"
+    else
+      @organization.users.delete(@removed_user)
+      flash[:success] = "The user has been removed from the classroom"
+    end
     redirect_to settings_invitations_organization
   end
 
@@ -153,8 +156,6 @@ class OrganizationsController < Orgs::Controller
   end
 
   def check_owner_assignments
-    return if @organization.users.count < 2
-
     @removed_user = User.find(params[:user_id])
 
     not_found unless @removed_user && @organization.users.map(&:id).include?(@removed_user.id)
