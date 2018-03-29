@@ -110,6 +110,7 @@ module Orgs
     end
 
     def download_roster
+      @roster_entries = @current_roster.roster_entries.includes(:user).order(:identifier)
       respond_to do |format|
         format.csv { send_data @roster_entries.to_csv, filename: "classroom_roster.csv", disposition: "attachment" }
       end

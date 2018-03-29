@@ -26,6 +26,12 @@
           </li>
 
           <li>
+            <%= link_to 'https://github.com/education/classroom/pulls?q=is%3Apr+is%3Amerged+sort%3Aupdated-desc', target: '_blank', class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.changelog') do %>
+              <%= octicon 'git-pull-request' %>
+            <% end %>
+          </li>
+
+          <li>
             <% if impersonating?(current_user, true_user) %>
               <%= link_to stop_impersonating_stafftools_user_path(current_user), class: 'tooltipped tooltipped-s', method: :delete, 'aria-label' => t('views.shared.stop_impersonating', user: current_user.github_user.login) do %>
                 <div class="avatar-parent-child left">
