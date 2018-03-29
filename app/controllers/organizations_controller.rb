@@ -76,7 +76,7 @@ class OrganizationsController < Orgs::Controller
     if current_organization.one_owner_remains?
       flash[:error] = "The user can not be removed from the classroom"
     else
-      transfer_assignments if @removed_user.owns_assignments?(current_organization)
+      transfer_assignments if @removed_user.owns_all_assignments_for?(current_organization)
       current_organization.users.delete(@removed_user)
       flash[:success] = "The user has been removed from the classroom"
     end
@@ -164,7 +164,7 @@ class OrganizationsController < Orgs::Controller
 
   def transfer_assignments
     new_owner = current_organization.users.where.not(id: @removed_user.id).first
-    current_organization.all_assignments.map do |a|
+    current_organization.all_assignments.map do |assignment|
       next unless assignment.creator_id == @removed_user.id
       assignment.update_attributes(creator_id: new_owner.id)
     end
