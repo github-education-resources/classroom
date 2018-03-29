@@ -7,7 +7,7 @@ class OrganizationsController < Orgs::Controller
   before_action :set_users_github_organizations,      only: %i[index new create]
   before_action :add_current_user_to_organizations,   only: [:index]
   before_action :paginate_users_github_organizations, only: %i[new create]
-  before_action :verify_organization_user,            only: [:remove_user]
+  before_action :verify_user_belongs_to_organization, only: [:remove_user]
 
   skip_before_action :ensure_current_organization,                         only: %i[index new create]
   skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create]
@@ -157,7 +157,7 @@ class OrganizationsController < Orgs::Controller
       .permit(:title)
   end
 
-  def verify_organization_user
+  def verify_user_belongs_to_organization
     @removed_user = User.find(params[:user_id])
     not_found unless current_organization.users.map(&:id).include?(@removed_user.id)
   end
