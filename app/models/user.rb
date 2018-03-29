@@ -54,7 +54,7 @@ class User < ApplicationRecord
     site_admin
   end
 
-  def owns_assignments?(organization)
+  def owns_all_assignments_for?(organization)
     organization.all_assignments.map(&:creator_id).include? id
   end
 
