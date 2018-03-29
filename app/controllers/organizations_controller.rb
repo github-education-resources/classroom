@@ -165,8 +165,8 @@ class OrganizationsController < Orgs::Controller
   def transfer_assignments
     new_owner = current_organization.users.where.not(id: @removed_user.id).first
     current_organization.all_assignments.map do |a|
-      a.creator_id = new_owner.id if a.creator_id == @removed_user.id
-      a.save
+      next unless assignment.creator_id == @removed_user.id
+      assignment.update_attributes(creator_id: new_owner.id)
     end
   end
 end
