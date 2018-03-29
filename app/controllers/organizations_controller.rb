@@ -73,7 +73,7 @@ class OrganizationsController < Orgs::Controller
   end
 
   def remove_user
-    if current_organization.users.count < 2
+    if current_organization.one_owner_remains?
       flash[:error] = "The user can not be removed from the classroom"
     else
       transfer_assignments if @removed_user.owns_assignments?(current_organization)
@@ -159,7 +159,7 @@ class OrganizationsController < Orgs::Controller
 
   def verify_organization_user
     @removed_user = User.find(params[:user_id])
-    not_found unless @removed_user && current_organization.users.map(&:id).include?(@removed_user.id)
+    not_found unless current_organization.users.map(&:id).include?(@removed_user.id)
   end
 
   def transfer_assignments
