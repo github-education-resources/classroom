@@ -10,6 +10,9 @@ class OrganizationEventJob < ApplicationJob
     github_user_id = payload_body.dig("membership", "user", "id")
     github_organization_id = payload_body.dig("organization", "id")
     @organization = Organization.find_by(github_id: github_organization_id)
+
+    return false if @organization.users.count == 1
+
     @user = @organization.users.find_by(uid: github_user_id)
 
     return true unless @user
