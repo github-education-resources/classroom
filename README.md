@@ -46,7 +46,7 @@ With Classroom, you can spin up your course on GitHub and move on to the good st
 
 *Works with your Learning Management System (LMS).* Students submit a link to their assignment repository to your learning management system. Give feedback through comments in GitHub, but keep grades in your LMS.
 
-*You’re not alone.* The experts on the GitHub Education team are here to answer any of your questions, and we’ve got [docs](https://github.com/education/classroom/tree/master/docs), best practices, and a strong community of educators to help you migrate to Classroom.
+*You’re not alone.* The experts on the GitHub Education team are here to answer any of your questions, and we’ve got [docs](https://github.com/education/classroom/tree/master/.docs), best practices, and a strong community of educators to help you migrate to Classroom.
 
 *Are you super-advanced?* Do you want to build your own tools? We 💖 contributions. Please check out [contributing guidelines](CONTRIBUTING.md).
 
