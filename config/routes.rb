@@ -59,6 +59,7 @@ Rails.application.routes.draw do
         patch :setup_organization
         get   "settings/invitations", to: "organizations#invitation"
         get   "settings/teams",       to: "organizations#show_groupings"
+        delete "users/:user_id",      to: "organizations#remove_user", as: "remove_user"
 
         resource :roster, only: %i[show new create], controller: "orgs/rosters" do
           patch :link
