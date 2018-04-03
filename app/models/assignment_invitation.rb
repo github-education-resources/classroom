@@ -34,11 +34,17 @@ class AssignmentInvitation < ApplicationRecord
     assignment_repo = AssignmentRepo.find_by(assignment: assignment, user: invitee)
     return AssignmentRepo::Creator::Result.success(assignment_repo) if assignment_repo.present?
 
+    return AssignmentRepo::Creator::Result.failed("Invitations for this assignment have been disabled.") unless enabled?
+
     AssignmentRepo::Creator.perform(assignment: assignment, user: invitee)
   end
 
   def to_param
     key
+  end
+
+  def enabled?
+    assignment.invitations_enabled?
   end
 
   protected
