@@ -7,11 +7,24 @@ set -e
 
 cd "$(dirname "$0")/.."
 
+if [ -f "$(which docker-compose)" ]; then
+  echo "===> Removing existing containers..."
+  docker-compose down
+fi
+
 script/bootstrap
 
-echo "===> Setting up DB..."
-# reset database to a fresh state.
-bin/rake db:reset
+echo "===> Waiting for the containers to mount..."
+sleep 5
+
+echo "===> Preparing database..."
+bin/rails db:setup
+
+echo "===> Remove old logs and tempfiles..."
+bin/rails log:clear tmp:clear
+
+echo "===> Restart application server..."
+bin/rails restart
 
 if [ -z "$RAILS_ENV" ] && [ -z "$RACK_ENV" ]; then
   # Only things for a development environment will run inside here
@@ -20,7 +33,7 @@ if [ -z "$RAILS_ENV" ] && [ -z "$RACK_ENV" ]; then
   # use experience. These things are scoped to the application's domain.
 
   if ! [ -r ".env" ]; then
-      cp .env-example .env
+    cp .env-example .env
   fi
 fi
 
