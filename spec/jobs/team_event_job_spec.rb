@@ -11,7 +11,7 @@ RSpec.describe TeamEventJob, type: :job do
     before(:each) do
       group_assignment = create(:group_assignment, title: "Intro to Go", organization: organization)
       @group = Group.create(
-        title: "Random team name",
+        title: "Random",
         github_team_id: payload.dig("team", "id"),
         grouping: group_assignment.grouping
       )

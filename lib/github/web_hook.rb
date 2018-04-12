@@ -2,7 +2,7 @@
 
 module GitHub
   class WebHook
-    ACCEPTED_EVENTS = %w[ping repository membership organization event].freeze
+    ACCEPTED_EVENTS = %w[ping repository membership organization team].freeze
 
     class << self
       # Public: Generate the [HMAC](https://tools.ietf.org/html/rfc2104)
