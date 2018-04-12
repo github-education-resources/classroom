@@ -13,7 +13,7 @@ RSpec.describe TeamEventJob, type: :job do
 
     it "deletes team" do
       group_assignment = create(:group_assignment, title: "Intro to Rails #1", organization: organization)
-      group = Group.create(title: "GROUP #1",
+      group = Group.create(title: "First group",
                            github_team_id: payload.dig("team", "id"),
                            grouping: group_assignment.grouping)
 
