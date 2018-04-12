@@ -7,12 +7,14 @@ RSpec.describe TeamEventJob, type: :job do
   let(:organization) { classroom_org }
   let(:student) { classroom_student }
 
-  context "ACTION team_removed", :vcr do
+  context "ACTION team_deleted", :vcr do
     before(:each) do
       group_assignment = create(:group_assignment, title: "Intro to Go", organization: organization)
-      @group = Group.create(title: "Random team name",
-                           github_team_id: payload.dig("team", "id"),
-                           grouping: group_assignment.grouping)
+      @group = Group.create(
+        title: "Random team name",
+        github_team_id: payload.dig("team", "id"),
+        grouping: group_assignment.grouping
+      )
     end
 
     after(:each) do
@@ -24,7 +26,7 @@ RSpec.describe TeamEventJob, type: :job do
 
       TeamEventJob.perform_now(payload)
 
-      expect{ Group.find(github_team_id: @group.github_team_id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { Group.find(github_team_id: @group.github_team_id) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it "deletes team with students" do
@@ -34,8 +36,8 @@ RSpec.describe TeamEventJob, type: :job do
 
       TeamEventJob.perform_now(payload)
 
-      expect{ Group.find(github_team_id: @group.github_team_id) }.to raise_error(ActiveRecord::RecordNotFound)
-      expect{ @group.repo_accesses.find(user_id: student.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { Group.find(github_team_id: @group.github_team_id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { @group.repo_accesses.find(user_id: student.id) }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end

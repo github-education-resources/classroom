@@ -10,7 +10,7 @@ class TeamEventJob < ApplicationJob
     team_id = payload_body.dig("team", "id")
     group = Group.find_by(github_team_id: team_id)
 
-    return true unless group.present?
+    return true if group.blank?
 
     group.destroy
   end
