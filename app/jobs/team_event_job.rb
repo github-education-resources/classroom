@@ -12,6 +12,6 @@ class TeamEventJob < ApplicationJob
 
     return true unless group.present?
 
-    group.delete
+    group.destroy
   end
 end
