@@ -12,6 +12,7 @@ if [ "$(uname -s)" = "Darwin" ]; then
   echo "==> Ensuring Homebrew macOS dependencies..."
   brew update
 
+  brew tap github/bootstrap
   brew bootstrap-rbenv-ruby
   brew bootstrap-nodenv-node
 
