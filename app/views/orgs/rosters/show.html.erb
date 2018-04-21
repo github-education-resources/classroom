@@ -17,14 +17,15 @@
           </div>
         </h3>
 
-        <div class="site-content-body tabnav-body clearfix">
+        <%= render partial: 'shared/manage_tabs_script', locals: { tab_group_id: "manage-roster-tabs" } %>
+        <div id="manage-roster-tabs" class="site-content-body tabnav-body clearfix">
           <div class="tabnav">
             <nav class="tabnav-tabs">
-              <span id='students-tab' onclick="selectTab(this)" class="tabnav-tab selected tabnav-link" aria-current="page">All students</span>
-              <span id='unlinked-tab' onclick="selectTab(this)" class="tabnav-tab tabnav-link">Unlinked GitHub accounts</span>
+              <span id='students-tab' class="tabnav-tab selected tabnav-link" aria-current="page" clTabId="0">All students</span>
+              <span id='unlinked-tab' class="tabnav-tab tabnav-link" clTabId="1">Unlinked GitHub accounts</span>
             </nav>
           </div>
-          <span id='students-span'>
+          <span id='students-span' clContentId="0">
             <div class="assignment-list-items">
               <% @roster_entries.each do |roster_entry| %>
                 <%= render 'roster_entry', roster_entry: roster_entry %>
@@ -35,7 +36,7 @@
               </div>
             </div>
           </span>
-          <span id='unlinked-span' class='hidden-tab'>
+          <span id='unlinked-span' class='hidden-tab' clContentId="1">
             <div class="assignment-list-items">
               <% if unlinked_users.empty? %>
                 <%= render 'shared/unlinked_blank_slate' %>

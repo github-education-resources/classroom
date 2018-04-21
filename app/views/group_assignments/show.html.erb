@@ -42,14 +42,15 @@
 
     <% if @organization.roster %>
       <div class="assignment-container">
-        <div class="tabnav-body clearfix ">
+        <%= render partial: 'shared/manage_tabs_script', locals: { tab_group_id: "group-teams-tabs" } %>
+        <div id="group-teams-tabs" class="tabnav-body clearfix ">
           <div class="tabnav">
             <nav class="tabnav-tabs">
-              <span id='students-tab' onclick="selectTab(this)" class="tabnav-tab selected tabnav-link" aria-current="page">Teams</span>
-              <span id='unlinked-tab' onclick="selectTab(this)" class="tabnav-tab tabnav-link">Students not on a team</span>
+              <span id='students-tab' class="tabnav-tab selected tabnav-link" aria-current="page" clTabId="0">Teams</span>
+              <span id='unlinked-tab' class="tabnav-tab tabnav-link" clTabId="1">Students not on a team</span>
             </nav>
           </div>
-          <span id='students-span'>
+          <span id='students-span' clContentId="0">
             <div class="assignment-repo-list">
               <% if @group_assignment_repos.present? %>
                 <div class="assignment-repo-list">
@@ -68,7 +69,7 @@
               <% end %>
             </div>
           </span>
-          <span id='unlinked-span' class='hidden-tab'>
+          <span id='unlinked-span' class='hidden-tab' clContentId="1">
             <div class="assignment-repo-list">
               <% if @students_not_on_team.present? %>
                 <% @students_not_on_team.each do |entry| %>
@@ -106,5 +107,3 @@
     <% end %>
   </div>
 </div>
-
-<%= render partial: "shared/roster_tab_script" %>

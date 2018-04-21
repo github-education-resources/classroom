@@ -41,14 +41,15 @@
     </div>
     <% if @organization.roster %>
       <div class="assignment-container">
-        <div class="tabnav-body clearfix ">
+        <%= render partial: 'shared/manage_tabs_script', locals: { tab_group_id: "assignment-roster-tabs" } %>
+        <div id="assignment-roster-tabs" class="tabnav-body clearfix ">
           <div class="tabnav">
             <nav class="tabnav-tabs">
-              <span id='students-tab' onclick="selectTab(this)" class="tabnav-tab selected tabnav-link" aria-current="page">All students</span>
-              <span id='unlinked-tab' onclick="selectTab(this)" class="tabnav-tab tabnav-link">Unlinked GitHub accounts</span>
+              <span id='students-tab' class="tabnav-tab selected tabnav-link" aria-current="page" clTabId="0">All students</span>
+              <span id='unlinked-tab' class="tabnav-tab tabnav-link" clTabId="1">Unlinked GitHub accounts</span>
             </nav>
           </div>
-          <span id='students-span'>
+          <span id='students-span' clContentId="0">
             <div class="assignment-repo-list">
               <% @roster_entries.each do |entry| %>
                 <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
@@ -59,7 +60,7 @@
 
             <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :students_page } %>
           </span>
-          <span id='unlinked-span' class='hidden-tab'>
+          <span id='unlinked-span' class='hidden-tab' clContentId="1">
             <span>
               <% if @unlinked_users.empty? %>
                 <%= render 'shared/unlinked_blank_slate' %>
@@ -92,5 +93,3 @@
     <% end %>
   </div>
 </div>
-
-<%= render partial: "shared/roster_tab_script" %>

@@ -1,0 +1,9 @@
+<script>
+  if (typeof manageTabGroup === "function") {
+      manageTabGroup("<%= escape_javascript(tab_group_id) %>");
+  } else {
+    document.addEventListener("DOMContentLoaded", function(_event) {
+      manageTabGroup("<%= escape_javascript(tab_group_id) %>");
+    });
+  }
+</script>
