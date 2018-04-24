@@ -9,6 +9,11 @@ class SiteController < ApplicationController
     raise "BOOM"
   end
 
+  def boom_sidekiq
+    BoomJob.perform_later
+    head :ok
+  end
+
   private
 
   def authorize_access

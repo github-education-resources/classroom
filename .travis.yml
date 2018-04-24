@@ -1,20 +1,19 @@
 language: ruby
 
 node_js:
-  - 7.7.1
+  - 7
 
 sudo: false
 
 before_install:
   - gem update --system
-  - nvm install 7.7.1
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.24.6
   - export PATH=$HOME/.yarn/bin:$PATH
 
 before_script:
   - psql -c 'create database classroom_test;' -U postgres
   - bundle exec rake db:schema:load
-  - bundle exec rake factory_girl:lint
+  - bundle exec rake factory_bot:lint
 
 script:
   - "KNAPSACK_GENERATE_REPORT=true ./bin/rake knapsack:rspec"
@@ -24,7 +23,7 @@ cache:
   yarn: true
 
 install:
-  - bundle install --without development production --deployment --jobs=3 --retry=3
+  - bundle install --local --without development production --deployment --jobs=3 --retry=3
   - yarn install
 
 services:
@@ -33,13 +32,14 @@ services:
 
 env:
   global:
+    - CI_NODE_TOTAL=2
     - CLASSROOM_WEBHOOK_URL_PREFIX="https://example.com/github/hooks"
     - GITHUB_CLIENT_ID=client_id
     - GITHUB_CLIENT_SECRET=client_secret
     - RAILS_ENV=test
     - RACK_ENV=test
+    - REDIS_URL="redis://localhost:6379/0"
     - WEBHOOK_SECRET=abcdefg
-    - CI_NODE_TOTAL=2
   matrix:
     - CI_NODE_INDEX=0
     - CI_NODE_INDEX=1

@@ -1,0 +1,10 @@
+<div class="remodal text-left" data-remodal-id="remove-user-<%= user.id %>">
+  <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
+  <h2 class="remodal-header"><%= t('views.organizations.remove_owner_header') %></h2>
+
+  <div class="remodal-description">
+    <p><%= t('views.organizations.remove_owner_desc') %></p>
+  </div>
+
+  <%= button_to t('views.organizations.remove_user_btn_text'), remove_user_organization_path(@current_organization, user.id), method: :delete, class: 'btn btn-danger btn-block js-submit' %>
+</div>

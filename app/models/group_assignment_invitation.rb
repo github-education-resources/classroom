@@ -38,6 +38,10 @@ class GroupAssignmentInvitation < ApplicationRecord
     key
   end
 
+  def enabled?
+    group_assignment.invitations_enabled?
+  end
+
   protected
 
   def assign_key

@@ -206,6 +206,25 @@ RSpec.describe Orgs::RostersController, type: :controller do
         end
       end
 
+      context "download roster button" do
+        before do
+          roster.roster_entries.destroy_all
+
+          Array.new(24) do |e|
+            roster.roster_entries << RosterEntry.new(identifier: "ID-#{e}")
+          end
+          @all_entries = roster.roster_entries
+        end
+
+        it "should exports CSV with all entries" do
+          roster_csv = @all_entries.to_csv
+          paginated_roster_csv = @all_entries.first(20).to_csv
+
+          expect(paginated_roster_csv.split("\n").size - 1).not_to eq(@all_entries.count)
+          expect(roster_csv.split("\n").size - 1).to eq(@all_entries.count)
+        end
+      end
+
       after do
         GitHubClassroom.flipper[:student_identifier].disable
       end

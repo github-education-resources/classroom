@@ -48,6 +48,10 @@ class Organization < ApplicationRecord
     self.slug = "#{github_id} #{title}".parameterize
   end
 
+  def one_owner_remains?
+    users.count == 1
+  end
+
   def silently_remove_organization_webhook
     begin
       github_organization.remove_organization_webhook(webhook_id)
