@@ -4,6 +4,10 @@ require_relative "boot"
 
 require "rails/all"
 require "csv"
+require "graphql/client/http"
+require "graphql/client/railtie"
+require 'graphql/batch'
+require_relative "../app/graphql/github_classroom_schema"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -74,4 +78,33 @@ module GitHubClassroom
       end
     end
   end
+
+  class ClassroomExecutor
+    def self.execute(document:, operation_name: nil, variables: {}, context: {})
+      #TODO: Error loudly if no current_user
+      GitHubClassroomSchema.execute(document.to_query_string, variables: variables, context: context, operation_name: operation_name)
+    end
+  end
+
+  ClassroomClient = GraphQL::Client.new(
+    schema: GitHubClassroomSchema.graphql_definition,
+    execute: ClassroomExecutor
+  )
+
+  GitHubHTTPAdapter = GraphQL::Client::HTTP.new("https://api.github.com/graphql") do
+    def headers(context)
+      {
+        "Authorization" => "Bearer #{context[:current_user].token}"
+      }
+    end
+  end
+
+  GitHubClient = GraphQL::Client.new(
+    schema: Application.root.join("db/schema.json").to_s,
+    execute: GitHubHTTPAdapter
+  )
+
+  GitHubClient.allow_dynamic_queries = true
 end
+
+Rails.application.config.graphql.client = GitHubClassroom::ClassroomClient

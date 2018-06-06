@@ -31,6 +31,12 @@ class ApplicationController < ActionController::Base
     redirect_to url
   end
 
+  def graphql_execute(query:, variables: {}, operation_name: nil, context: {})
+    Rails.backtrace_cleaner.remove_silencers!
+    context[:current_user] = current_user
+    GitHubClassroom::ClassroomClient.query(query, variables: variables, context: context)
+  end
+
   def peek_enabled?
     logged_in? && current_user.staff?
   end

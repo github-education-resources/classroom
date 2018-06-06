@@ -3,6 +3,7 @@
 class Organization < ApplicationRecord
   include Flippable
   include Sluggable
+  include Node
 
   update_index("stafftools#organization") { self }
 

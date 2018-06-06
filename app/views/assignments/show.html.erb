@@ -1,4 +1,29 @@
-<%= render 'organizations/organization_banner' %>
+<%graphql
+  fragment Root on Query {
+    ...Views::Organizations::OrganizationBannerGql::Fragment
+    assignment: node(id: $assignmentId) {
+      ... on Assignment {
+        title
+        deadlineAt
+        deadlinePassed
+        submissions(first: 20){
+          edges{
+            node{
+              ...Views::Orgs::RosterEntries::AssignmentRepos::LinkedAcceptedGql::Submission
+            }
+          }
+        }
+      }
+    }
+  }
+%>
+
+<% @data = Views::Assignments::Show::Root.new(@data) %>
+<% assignment = @data.assignment %>
+<%# byebug %>
+<%# 5 %>
+
+<%= render 'organizations/organization_banner_gql' %>
 
 <div class="site-content">
   <div class="site-content-cap d-flex flex-justify-between">
@@ -12,14 +37,14 @@
 
           <div class="col-11 d-table-cell v-align-middle">
             <h2 class="site-content-heading">
-              <%= @assignment.title %>
+              <%= assignment.title %>
             </h2>
             <p class="assignment-type text-gray">Individual assigment
-              <% if @assignment.deadline %>
-                <% if @assignment.deadline.passed? %>
+              <% if assignment.deadline_at %>
+                <% if assignment.deadline_passed? %>
                   - Deadline Passed
                 <% else %>
-                  <%= "- Deadline in #{distance_of_time_in_words(Time.zone.now, @assignment.deadline.deadline_at)}" %>
+                  <%= "- Deadline in #{distance_of_time_in_words(Time.zone.now, Time.parse(assignment.deadline_at))}" %>
                 <% end %>
               <% end %>
             </p>
@@ -40,6 +65,7 @@
       <%= render @assignment.assignment_invitation %>
     </div>
     <% if @organization.roster %>
+      <%# TODO: Roster side %>
       <div class="assignment-container">
         <div class="tabnav-body clearfix ">
           <div class="tabnav">
@@ -75,17 +101,18 @@
         </div>
       </div>
     <% else %>
-      <% if @assignment_repos.present? %>
+      <% if assignment.submissions.edges.length > 0 %>
         <div class="assignment-repo-list">
-          <% @assignment_repos.each do |assignment_repo| %>
-            <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: { url: organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo) } %>
+          <% assignment.submissions.edges.each do |submission_edge| %>
+            <% submission = submission_edge.node %>
+            <%= render partial: 'orgs/roster_entries/assignment_repos/linked_accepted_gql', locals: { assignment_repo: submission, assignment: assignment } %>
           <% end %>
         </div>
 
         <%= render partial: 'shared/pagination', locals: { collection: @assignment_repos } %>
       <% else %>
         <div class="blankslate">
-          <h3>"<%= @assignment.title %>" does not have any repositories.</h3>
+          <h3>"<%= assignment.title %>" does not have any repositories.</h3>
           <p>Share the invitation link with your students to get started.</p>
         </div>
       <% end %>

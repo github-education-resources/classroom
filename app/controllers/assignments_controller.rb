@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "graphql/client"
+
 class AssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
@@ -27,7 +29,24 @@ class AssignmentsController < ApplicationController
     end
   end
 
+  Rails.backtrace_cleaner.remove_silencers!
+
+  Views::Assignments::Show
+
+  ShowQuery = GitHubClassroom::ClassroomClient.parse <<-'GRAPHQL'
+    query($assignmentId: ID!, $organizationId: ID!) {
+      ...Views::Assignments::Show::Root
+    }
+  GRAPHQL
+
   def show
+    variables = {
+      assignmentId: @assignment.global_relay_id,
+      organizationId: @organization.global_relay_id
+    }
+    
+    @data = graphql_execute(query: ShowQuery, variables: variables).data
+
     if @organization.roster
       @roster_entries = @organization.roster.roster_entries.page(params[:students_page]).order_for_view(@assignment)
 

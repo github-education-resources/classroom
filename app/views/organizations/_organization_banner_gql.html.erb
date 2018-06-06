@@ -1,0 +1,26 @@
+<%graphql
+fragment Fragment on Query {
+  org: node(id: $organizationId){
+    ... on Classroom {
+      title
+      slug
+      organizationLogin
+      githubUrl
+      databaseId
+    }
+  }
+}
+%>
+
+<% data = Views::Organizations::OrganizationBannerGql::Fragment.new(@data) %>
+<% org = data.org %>
+
+<% content_for :organization_banner do %>
+  <div class="organization-banner" style="background-image: <%= GeoPattern.generate(org.database_id, color: "#5fb27b").to_data_uri %>">
+    <div class="container-lg">
+      <%= link_to t('views.organizations.manage_classroom'), "https://classroom.github.com/#{org.slug}/settings", class: 'btn btn-primary' %>
+      <h1 class="organization-name"><%= link_to org.title, "https://classroom.github.com/#{org.slug}" %></h1>
+      <p class="organization-login"><%= link_to "#{org.organization_login}", org.github_url %></p>
+    </div>
+  </div>
+<% end %>

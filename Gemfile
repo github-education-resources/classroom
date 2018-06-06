@@ -12,12 +12,12 @@ gem "rails", "~> 5.1", ">= 5.1.3"
 
 gem "autoprefixer-rails", "~> 7.1", ">= 7.1.3"
 
-gem "bootsnap", "~> 1.1", ">= 1.1.2", require: false
-
 gem "chewy", "~> 0.10.1"
 gem "connection_pool", "~> 2.2", ">= 2.2.1"
 
 gem "dalli", "~> 2.7", ">= 2.7.6"
+
+gem "erubis"
 
 gem "failbot_rails",      "~> 0.5.0"
 gem "faraday-http-cache", "~> 2.0"
@@ -26,6 +26,10 @@ gem "flipper-redis",      "~> 0.10.2"
 gem "flipper-ui",         "~> 0.10.2"
 
 gem "geo_pattern", "~> 1.4"
+gem "graphql", "1.8.4"
+gem "graphql-batch"
+gem 'graphql-client', git: 'https://github.com/d12/graphql-client.git', ref: '24ced5f'
+gem "graphql-remote_loader", "~>1.0.2", path: "/Users/d12/dev/graphql-remote_loader"
 
 gem "jquery-datetimepicker-rails", "~> 2.4", ">= 2.4.1.0"
 gem "jquery-turbolinks",           "~> 2.1"

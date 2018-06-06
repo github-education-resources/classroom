@@ -4,6 +4,7 @@ class Assignment < ApplicationRecord
   include Flippable
   include GitHubPlan
   include ValidatesNotReservedWord
+  include Node
 
   update_index("stafftools#assignment") { self }
 

@@ -1,0 +1,52 @@
+<%graphql
+  fragment Submission on AssignmentRepo {
+    repositoryUrl
+    commitCount
+    user{
+      avatarUrl
+      githubUrl
+      login
+    }
+    assignment{
+      deadlinePassed
+    }
+    submissionSha
+    submissionUrl
+  }
+%>
+
+<% assignment_repo = Views::Orgs::RosterEntries::AssignmentRepos::LinkedAcceptedGql::Submission.new(assignment_repo) %>
+<% user = assignment_repo.user %>
+
+<%# TODO: Add disabled logic here %>
+<div class='d-flex flex-row flex-justify-between flex-items-center assignment-repo-list-item'>
+  <div class='d-flex'>
+    <div>
+      <%# TODO: Add disabled logic %>
+      <%= link_to user.github_url, class: "tooltipped tooltipped-n", target: '_blank', 'aria-label' => user.login do %>
+        <%= image_tag user.avatar_url, height: 48, width: 48, class: 'avatar avatar-large', alt: "@#{user.login}" %>
+      <% end %>
+    </div>
+    <div class='d-flex flex-column flex-justify-around'>
+      <div>
+        <%= link_to user.github_url, class: "assignment-repo-github-url", target: '_blank' do %>
+          <h3 class="css-truncate css-truncate-target"><%= user.login %></h3>
+        <% end %>
+      </div>
+      <div class="assignment-properties">
+        <%= render 'shared/commit_repo_detail', text: pluralize(assignment_repo.commit_count, "commit"), url: "#{assignment_repo.repository_url}/commits" %>
+        <% if assignment_repo.assignment.deadline_passed? %>
+          <% if assignment_repo.submission_sha %>
+            <%= render 'shared/submission_succeeded_repo_detail', url: assignment_repo.submission_url %>
+          <% else %>
+            <%= render 'shared/submission_failed_repo_detail' %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div>
+    <%# TODO: add disabled logic %>
+    <%= link_to "View repository", assignment_repo.repository_url, class: "btn btn-outline", role: 'button', target: '_blank' %>
+  </div>
+</div>
