@@ -3,6 +3,9 @@
 Rails.application.configure do
   config.after_initialize do
     if defined? Bullet
+      Bullet.add_whitelist(type: :n_plus_one_query, class_name: "GroupAssignment", association: :deadline)
+      Bullet.add_whitelist(type: :n_plus_one_query, class_name: "Assignment", association: :deadline)
+
       Bullet.enable = true
       Bullet.bullet_logger = true
 

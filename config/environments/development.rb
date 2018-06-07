@@ -19,7 +19,7 @@ Rails.application.configure do
     config.action_controller.perform_caching = true
 
     config.public_file_server.headers = {
-      "Cache-Control" => "public, max-age=172800"
+      "Cache-Control" => "public, max-age=#{2.days.seconds.to_i}"
     }
 
     dalli_store_config = {
