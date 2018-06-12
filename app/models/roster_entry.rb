@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RosterEntry < ApplicationRecord
-  class IdentifierCreationError < StandardError ; end
+  class IdentifierCreationError < StandardError; end
   belongs_to :roster
   belongs_to :user, optional: true
 
@@ -62,6 +62,8 @@ class RosterEntry < ApplicationRecord
   # error.
   #
   # Returns the created entries.
+
+  # rubocop:disable Metrics/MethodLength
   def self.create_entries(identifiers:, roster:)
     created_entries = []
     RosterEntry.transaction do
@@ -69,7 +71,7 @@ class RosterEntry < ApplicationRecord
         roster_entry = RosterEntry.create(identifier: identifier, roster: roster)
 
         if !roster_entry.persisted?
-          unless roster_entry.errors.include?(:identifier)
+          if !roster_entry.errors.include?(:identifier)
             raise IdentifierCreationError
           end
         else
@@ -80,13 +82,14 @@ class RosterEntry < ApplicationRecord
 
     created_entries
   end
+  # rubocop:enable Metrics/MethodLength
 
   private
 
   def validate_identifiers_are_unique_to_roster
-    if RosterEntry.find_by(roster: self.roster, identifier: self.identifier)
-      self.errors[:identifier] << "Identifier must be unique in the roster."
-      throw(:abort)
-    end
+    return unless RosterEntry.find_by(roster: roster, identifier: identifier)
+
+    errors[:identifier] << "Identifier must be unique in the roster."
+    throw(:abort)
   end
 end

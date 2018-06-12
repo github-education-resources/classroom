@@ -97,13 +97,15 @@ module Orgs
       redirect_to roster_path(current_organization)
     end
 
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def add_students
       identifiers = params[:identifiers].split("\r\n").reject(&:blank?).uniq
 
       begin
         entries = RosterEntry.create_entries(identifiers: identifiers, roster: current_roster)
 
-        if entries.length == 0
+        if entries.empty?
           flash[:warning] = "No students created."
         elsif entries.length == identifiers.length
           flash[:success] = "Students created."
@@ -116,6 +118,8 @@ module Orgs
 
       redirect_to roster_path(current_organization)
     end
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     def download_roster
       @roster_entries = @current_roster.roster_entries.includes(:user).order(:identifier)
