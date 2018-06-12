@@ -130,7 +130,7 @@ RSpec.describe AssignmentsController, type: :controller do
         post :create, params: {
           organization_id: organization.slug,
           assignment:      attributes_for(:assignment, organization: organization)
-            .merge(deadline: "05/25/2018 13:17-0800")
+            .merge(deadline: "05/25/2100 13:17-0800")
         }
       end
 
@@ -139,7 +139,7 @@ RSpec.describe AssignmentsController, type: :controller do
           post :create, params: {
             organization_id: organization.slug,
             assignment:      attributes_for(:assignment, organization: organization)
-              .merge(deadline: "05/25/2018 13:17-0800")
+              .merge(deadline: "05/25/2100 13:17-0800")
           }
         end
 
