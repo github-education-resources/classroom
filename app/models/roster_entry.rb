@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 class RosterEntry < ApplicationRecord
+  class IdentifierCreationError < StandardError ; end
   belongs_to :roster
   belongs_to :user, optional: true
 
   validates :identifier, presence: true
   validates :roster,     presence: true
+
+  before_create :validate_identifiers_are_unique_to_roster
 
   def self.to_csv
     CSV.generate(headers: true, col_sep: ",", force_quotes: true) do |csv|
@@ -51,5 +54,39 @@ class RosterEntry < ApplicationRecord
       roster_entries.user_id IS NULL OR
       roster_entries.user_id NOT IN #{sql_formatted_students_on_team}
     SQL
+  end
+
+  # Takes an array of identifiers and creates a
+  # roster entry for each. Omits duplicates, and
+  # raises IdentifierCreationError if there is an
+  # error.
+  #
+  # Returns the created entries.
+  def self.create_entries(identifiers:, roster:)
+    created_entries = []
+    RosterEntry.transaction do
+      identifiers.each do |identifier|
+        roster_entry = RosterEntry.create(identifier: identifier, roster: roster)
+
+        if !roster_entry.persisted?
+          unless roster_entry.errors.include?(:identifier)
+            raise IdentifierCreationError
+          end
+        else
+          created_entries << roster_entry
+        end
+      end
+    end
+
+    created_entries
+  end
+
+  private
+
+  def validate_identifiers_are_unique_to_roster
+    if RosterEntry.find_by(roster: self.roster, identifier: self.identifier)
+      self.errors[:identifier] << "Identifier must be unique in the roster."
+      throw(:abort)
+    end
   end
 end

@@ -5,7 +5,7 @@ module Orgs
     before_action :ensure_student_identifier_flipper_is_enabled
 
     before_action :ensure_current_roster,           except: %i[new create]
-    before_action :ensure_current_roster_entry,     except: %i[show new create remove_organization add_student]
+    before_action :ensure_current_roster_entry,     except: %i[show new create remove_organization add_students]
     before_action :ensure_enough_members_in_roster, only: [:delete_entry]
 
     helper_method :current_roster, :unlinked_users
@@ -97,13 +97,21 @@ module Orgs
       redirect_to roster_path(current_organization)
     end
 
-    def add_student
-      roster_entry = RosterEntry.create(identifier: params[:identifier], roster: current_roster)
+    def add_students
+      identifiers = params[:identifiers].split("\r\n").reject(&:blank?).uniq
 
-      if roster_entry.valid?
-        flash[:success] = "Student created!"
-      else
-        flash[:error] = "An error has occured, please try again."
+      begin
+        entries = RosterEntry.create_entries(identifiers: identifiers, roster: current_roster)
+
+        if entries.length == 0
+          flash[:warning] = "No students created."
+        elsif entries.length == identifiers.length
+          flash[:success] = "Students created."
+        else
+          flash[:success] = "Students created. Some duplicates have been omitted."
+        end
+      rescue RosterEntry::IdentifierCreationError
+        flash[:error] = "An error has occured. Please try again."
       end
 
       redirect_to roster_path(current_organization)
