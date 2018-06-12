@@ -65,7 +65,7 @@ RSpec.describe RosterEntry, type: :model do
 
     context "all entries valid" do
       let(:result) do
-        RosterEntry.create_entries(identifiers: %w{1 2}], roster: roster)
+        RosterEntry.create_entries(identifiers: %w{1 2}, roster: roster)
       end
 
       it "creates two roster entries" do

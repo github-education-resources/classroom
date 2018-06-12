@@ -71,9 +71,7 @@ class RosterEntry < ApplicationRecord
         roster_entry = RosterEntry.create(identifier: identifier, roster: roster)
 
         if !roster_entry.persisted?
-          if !roster_entry.errors.include?(:identifier)
-            raise IdentifierCreationError
-          end
+          raise IdentifierCreationError unless roster_entry.errors.include?(:identifier)
         else
           created_entries << roster_entry
         end
