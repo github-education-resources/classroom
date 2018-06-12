@@ -499,7 +499,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
     context "with flipper disabled" do
       before do
-        patch :add_student, params: {
+        patch :add_students, params: {
           id:         organization.slug,
           identifier: "Hello"
         }
