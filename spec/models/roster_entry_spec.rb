@@ -65,7 +65,7 @@ RSpec.describe RosterEntry, type: :model do
 
     context "all entries valid" do
       let(:result) do
-        RosterEntry.create_entries(identifiers: %w{1 2}, roster: roster)
+        RosterEntry.create_entries(identifiers: %w[1 2], roster: roster)
       end
 
       it "creates two roster entries" do
@@ -82,7 +82,7 @@ RSpec.describe RosterEntry, type: :model do
       end
 
       let(:result) do
-        RosterEntry.create_entries(identifiers: %w{1 2}, roster: roster)
+        RosterEntry.create_entries(identifiers: %w[1 2], roster: roster)
       end
 
       it "creates one roster entries" do
@@ -99,7 +99,7 @@ RSpec.describe RosterEntry, type: :model do
       end
 
       let(:result) do
-        RosterEntry.create_entries(identifiers: %w{1 2}, roster: roster)
+        RosterEntry.create_entries(identifiers: %w[1 2], roster: roster)
       end
 
       it "creates no roster entries" do
@@ -117,7 +117,7 @@ RSpec.describe RosterEntry, type: :model do
 
       it "raises RosterEntry::IdentifierCreationError" do
         expect do
-          RosterEntry.create_entries(identifiers: %w{1}, roster: roster)
+          RosterEntry.create_entries(identifiers: %w[1], roster: roster)
         end.to raise_error(RosterEntry::IdentifierCreationError)
       end
     end
