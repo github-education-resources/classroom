@@ -5,7 +5,7 @@ class ApplicationController
 
   def current_scopes
     return [] unless logged_in?
-    session[:current_scopes] ||= current_user.github_client_scopes
+    session[:current_scopes] = current_user.github_client_scopes
   end
 
   def required_scopes
@@ -20,6 +20,7 @@ class ApplicationController
   end
 
   def authenticate_user!
+    # require 'byebug'; byebug
     return become_active if logged_in? && adequate_scopes?
     auth_redirect
   end
