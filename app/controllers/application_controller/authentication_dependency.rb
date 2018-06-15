@@ -20,7 +20,6 @@ class ApplicationController
   end
 
   def authenticate_user!
-    # require 'byebug'; byebug
     return become_active if logged_in? && adequate_scopes?
     auth_redirect
   end
