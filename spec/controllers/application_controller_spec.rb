@@ -16,7 +16,6 @@ RSpec.describe ApplicationController, type: :controller do
   end
 
   describe "user authentication tests" do
-
     context "user access token is valid", :vcr do
       it "should render action" do
         get :index
@@ -35,6 +34,5 @@ RSpec.describe ApplicationController, type: :controller do
         expect(session[:required_scopes]).to eq(GitHubClassroom::Scopes::TEACHER.join(","))
       end
     end
-
   end
 end
