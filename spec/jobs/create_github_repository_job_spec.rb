@@ -43,5 +43,14 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       expect(result.assignment).to eql(assignment)
       expect(result.user).to eql(student)
     end
+
+    it "creates an AssignmentRepo as a member" do
+      subject.perform_now(assignment, teacher)
+
+      result = assignment.assignment_repos.first
+      expect(result.nil?).to be_falsy
+      expect(result.assignment).to eql(assignment)
+      expect(result.user).to eql(teacher)
+    end
   end
 end
