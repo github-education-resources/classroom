@@ -3,6 +3,7 @@
 class AssignmentRepo
   class CreateGitHubRepositoryJob < ApplicationJob
     queue_as :create_repository
+    retry_on Creator::Result::Error
 
     # Create an AssignmentRepo.
     #
@@ -30,7 +31,7 @@ class AssignmentRepo
       # on success kick off next cascading job
     rescue Creator::Result::Error => err
       creator.delete_github_repository(assignment_repo.try(:github_repo_id))
-      Creator::Result.failed(err.message)
+      raise err
     end
     # rubocop:enable MethodLength
   end
