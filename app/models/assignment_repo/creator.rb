@@ -88,7 +88,7 @@ class AssignmentRepo
     # rubocop:enable AbcSize
     # rubocop:enable MethodLength
 
-    private
+    # private
 
     # Internal: Add the User to the GitHub repository
     # as a collaborator.
