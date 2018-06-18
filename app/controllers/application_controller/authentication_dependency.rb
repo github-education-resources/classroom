@@ -20,6 +20,7 @@ class ApplicationController
   end
 
   def authenticate_user!
+    return log_out if !current_user.authorized_access_token?
     return become_active if logged_in? && adequate_scopes?
     auth_redirect
   end
@@ -46,6 +47,11 @@ class ApplicationController
 
   def logged_in?
     !current_user.nil?
+  end
+
+  def log_out
+    reset_session
+    redirect_to root_path
   end
 
   def true_user

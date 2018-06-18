@@ -17,21 +17,25 @@ RSpec.describe ApplicationController, type: :controller do
 
   describe "user authentication tests" do
     context "user access token is valid", :vcr do
-      it "should render action" do
+      it "renders action" do
         get :index
         expect(response.status).to eq(200)
       end
     end
 
-    context "user access token is no longer valid" do
+    context "user access token is not authorized" do
       before do
-        User.any_instance.stub(:github_client_scopes).and_return([])
+        User.any_instance.stub(:authorized_access_token?).and_return(false)
       end
-      it "should logout user and delete session" do
+
+      it "redirects to home page" do
         get :index
-        expect(response).to redirect_to(login_path)
-        expect(session[:pre_login_destination]).to eq("http://test.host/anonymous")
-        expect(session[:required_scopes]).to eq(GitHubClassroom::Scopes::TEACHER.join(","))
+        expect(response).to redirect_to(root_path)
+      end
+
+      it "clears the session" do 
+        get :index
+        expect(session).to be_empty
       end
     end
   end
