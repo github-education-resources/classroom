@@ -2,7 +2,7 @@
 
 # Should this class be namespaced inside AssignmentRepo?
 class CreateGitHubRepositoryJob < ActiveJob
-  queue_as :repository_create
+  queue_as :create_repository
 
   # Create an AssignmentRepo.
   #
