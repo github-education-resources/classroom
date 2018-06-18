@@ -20,8 +20,10 @@ class ApplicationController
   end
 
   def authenticate_user!
-    return log_out if !current_user.authorized_access_token?
-    return become_active if logged_in? && adequate_scopes?
+    if logged_in?
+      return log_out unless current_user.authorized_access_token?
+      return become_active if adequate_scopes?
+    end
     auth_redirect
   end
 
