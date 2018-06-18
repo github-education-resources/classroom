@@ -20,9 +20,16 @@ class AssignmentRepo
 
       creator.add_user_to_repository!(assignment_repo.github_repo_id)
 
+      begin
+        assignment_repo.save!
+      rescue ActiveRecord::RecordInvalid
+        raise Result::Error, DEFAULT_ERROR_MESSAGE
+      end
+
       # on success kick off next cascading job
 
     rescue Creator::Result::Error => err
+      binding.pry
       creator.delete_github_repository(assignment_repo.try(:github_repo_id))
       Creator::Result.failed(err.message)
     end
