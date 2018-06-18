@@ -8,8 +8,6 @@ class AssignmentRepo
     #
     # assignment - The Assignment that will own the AssignmentRepo.
     # user       - The User that the AssignmentRepo will belong to.
-
-    # rubocop:disable AbcSize
     # rubocop:disable MethodLength
     def perform(assignment, user)
       creator = Creator.new(assignment: assignment, user: user)
@@ -34,7 +32,6 @@ class AssignmentRepo
       creator.delete_github_repository(assignment_repo.try(:github_repo_id))
       Creator::Result.failed(err.message)
     end
-    # rubocop:enable AbcSize
     # rubocop:enable MethodLength
   end
 end
