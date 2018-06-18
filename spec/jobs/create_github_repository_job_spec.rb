@@ -28,18 +28,20 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
     AssignmentRepo.destroy_all
   end
 
-  it "uses the :create_repository queue", :vcr do
-    assert_performed_with(job: subject, args: [assignment, student], queue: "create_repository") do
-      subject.perform_later(assignment, student)
+  describe "successful creation", :vcr do
+    it "uses the :create_repository queue" do
+      assert_performed_with(job: subject, args: [assignment, student], queue: "create_repository") do
+        subject.perform_later(assignment, student)
+      end
     end
-  end
 
-  it "creates an AssignmentRepo as an outside_collaborator", :vcr do
-    subject.perform_now(assignment, student)
+    it "creates an AssignmentRepo as an outside_collaborator" do
+      subject.perform_now(assignment, student)
 
-    result = assignment.assignment_repos.first
-    expect(result.nil?).to be_falsy
-    expect(result.assignment).to eql(assignment)
-    expect(result.user).to eql(student)
+      result = assignment.assignment_repos.first
+      expect(result.nil?).to be_falsy
+      expect(result.assignment).to eql(assignment)
+      expect(result.user).to eql(student)
+    end
   end
 end
