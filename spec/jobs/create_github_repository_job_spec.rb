@@ -64,7 +64,8 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
       perform_enqueued_jobs do
         expect_any_instance_of(AssignmentRepo::CreateGitHubRepositoryJob)
-          .to receive(:retry_job).with(wait: 3, queue: :create_repository, priority: nil)
+          .to receive(:retry_job)
+          .with(wait: 3, queue: :create_repository, priority: nil)
 
         subject.perform_later(assignment, student)
       end
@@ -80,11 +81,13 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
       it "fails when the user could not be added to the repo" do
         repo_invitation_regex = %r{#{github_url("/repositories/")}\d+/collaborators/.+$}
-        stub_request(:put, repo_invitation_regex).to_return(body: "{}", status: 401)
+        stub_request(:put, repo_invitation_regex)
+          .to_return(body: "{}", status: 401)
 
         perform_enqueued_jobs do
           expect_any_instance_of(AssignmentRepo::CreateGitHubRepositoryJob)
-          .to receive(:retry_job).with(wait: 3, queue: :create_repository, priority: nil)
+            .to receive(:retry_job)
+            .with(wait: 3, queue: :create_repository, priority: nil)
 
           subject.perform_later(assignment, student)
         end
@@ -93,9 +96,10 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       it "fails when the AssignmentRepo object could not be created" do
          allow_any_instance_of(AssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
 
-         perform_enqueued_jobs do
+        perform_enqueued_jobs do
           expect_any_instance_of(AssignmentRepo::CreateGitHubRepositoryJob)
-          .to receive(:retry_job).with(wait: 3, queue: :create_repository, priority: nil)
+            .to receive(:retry_job)
+            .with(wait: 3, queue: :create_repository, priority: nil)
 
           subject.perform_later(assignment, teacher)
         end
