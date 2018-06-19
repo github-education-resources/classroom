@@ -69,5 +69,37 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         subject.perform_later(assignment, student)
       end
     end
+
+    context "with successful repo creation" do
+      # Verify that we try to delete the GitHub repository
+      # if part of the process fails.
+      after(:each) do
+        regex = %r{#{github_url("/repositories")}/\d+$}
+        expect(WebMock).to have_requested(:delete, regex)
+      end
+
+      it "fails when the user could not be added to the repo" do
+        repo_invitation_regex = %r{#{github_url("/repositories/")}\d+/collaborators/.+$}
+        stub_request(:put, repo_invitation_regex).to_return(body: "{}", status: 401)
+
+        perform_enqueued_jobs do
+          expect_any_instance_of(AssignmentRepo::CreateGitHubRepositoryJob)
+          .to receive(:retry_job).with(wait: 3, queue: :create_repository, priority: nil)
+
+          subject.perform_later(assignment, student)
+        end
+      end
+
+      it "fails when the AssignmentRepo object could not be created" do
+         allow_any_instance_of(AssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
+
+         perform_enqueued_jobs do
+          expect_any_instance_of(AssignmentRepo::CreateGitHubRepositoryJob)
+          .to receive(:retry_job).with(wait: 3, queue: :create_repository, priority: nil)
+
+          subject.perform_later(assignment, teacher)
+        end
+      end
+    end
   end
 end

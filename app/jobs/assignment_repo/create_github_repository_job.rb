@@ -25,7 +25,7 @@ class AssignmentRepo
       begin
         assignment_repo.save!
       rescue ActiveRecord::RecordInvalid
-        raise Result::Error, DEFAULT_ERROR_MESSAGE
+        raise Creator::Result::Error, Creator::DEFAULT_ERROR_MESSAGE
       end
 
       # on success kick off next cascading job
