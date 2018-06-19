@@ -58,7 +58,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
   end
 
   describe "retries job", :vcr do
-    it "handles repoistory creation failure" do
+    it "fails to create repository" do
       stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
         .to_return(body: "{}", status: 401)
 
@@ -77,6 +77,20 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       after(:each) do
         regex = %r{#{github_url("/repositories")}/\d+$}
         expect(WebMock).to have_requested(:delete, regex)
+      end
+
+      it "fails when the starter code could not be imported" do
+        import_regex = %r{#{github_url("/repositories/")}\d+/import$}
+        stub_request(:put, import_regex)
+          .to_return(body: "{}", status: 401)
+
+        perform_enqueued_jobs do
+          expect_any_instance_of(AssignmentRepo::CreateGitHubRepositoryJob)
+            .to receive(:retry_job)
+            .with(wait: 3, queue: :create_repository, priority: nil)
+
+          subject.perform_later(assignment, student)
+        end
       end
 
       it "fails when the user could not be added to the repo" do

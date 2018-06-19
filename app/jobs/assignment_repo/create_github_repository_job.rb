@@ -22,13 +22,17 @@ class AssignmentRepo
 
       creator.add_user_to_repository!(assignment_repo.github_repo_id)
 
+      if assignment.starter_code?
+        creator.push_starter_code!(assignment_repo.github_repo_id)
+      end
+
       begin
         assignment_repo.save!
       rescue ActiveRecord::RecordInvalid
         raise Creator::Result::Error, Creator::DEFAULT_ERROR_MESSAGE
       end
 
-      # on success kick off next cascading job
+      # on success kick off porter polling cascading job
     rescue Creator::Result::Error => err
       creator.delete_github_repository(assignment_repo.try(:github_repo_id))
       raise err
