@@ -3,7 +3,7 @@
 class AssignmentRepo
   class CreateGitHubRepositoryJob < ApplicationJob
     queue_as :create_repository
-    retry_on Creator::Result::Error
+    retry_on Creator::Result::Error, queue: :create_repository
 
     # Create an AssignmentRepo.
     #
