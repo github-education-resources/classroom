@@ -94,7 +94,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       end
 
       it "fails when the AssignmentRepo object could not be created" do
-         allow_any_instance_of(AssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
+        allow_any_instance_of(AssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
 
         perform_enqueued_jobs do
           expect_any_instance_of(AssignmentRepo::CreateGitHubRepositoryJob)
