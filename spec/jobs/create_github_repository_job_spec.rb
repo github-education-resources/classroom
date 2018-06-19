@@ -27,11 +27,11 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
     clear_performed_jobs
   end
 
-  after(:each) do
-    AssignmentRepo.destroy_all
-  end
-
   describe "successful creation", :vcr do
+    after(:each) do
+      AssignmentRepo.destroy_all
+    end
+
     it "uses the :create_repository queue" do
       assert_performed_with(job: subject, args: [assignment, student], queue: "create_repository") do
         subject.perform_later(assignment, student)
@@ -54,6 +54,11 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       expect(result.nil?).to be_falsy
       expect(result.assignment).to eql(assignment)
       expect(result.user).to eql(teacher)
+    end
+
+    it "tracks the how long it too to be created" do
+      expect(GitHubClassroom.statsd).to receive(:timing)
+      subject.perform_now(assignment, teacher)
     end
   end
 
