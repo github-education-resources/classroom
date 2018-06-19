@@ -35,9 +35,6 @@ class AssignmentsController < ApplicationController
                                            .page(params[:unlinked_accounts_page])
     else
       @assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
-      @assignment_urls = @assignment_repos.map{ |a| a.github_repository.html_url}
-      @assignment_names = @assignment_repos.map{ |a| a.user.github_user.login}
-      # require('byebug'); byebug
     end
   end
 
@@ -65,6 +62,16 @@ class AssignmentsController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def desktop
+    assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
+    assignment_urls = assignment_repos.map{ |a| a.github_repository.html_url}
+    assignment_usernames = assignment_repos.map{ |a| a.user.github_user.login}
+    redirect_to "ghclassroom://?token=#{current_user.github_user.access_token}&"\
+                                "title=#{@assignment.title}&type=individual&"\
+                                "urls=#{assignment_urls.join(",")}&"\
+                                "usernames=#{assignment_usernames.join(',')}"
   end
 
   private
@@ -121,11 +128,5 @@ class AssignmentsController < ApplicationController
   def send_create_assignment_statsd_events
     GitHubClassroom.statsd.increment("exercise.create")
     GitHubClassroom.statsd.increment("deadline.create") if @assignment.deadline
-  end
-
-  def classroom_desktop_link
-      token.post('ghclassroom://') do |request|
-        request.params['access_token'] = session[:access]
-      end
   end
 end
