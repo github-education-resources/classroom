@@ -10,6 +10,7 @@ class AssignmentRepo
     # assignment - The Assignment that will own the AssignmentRepo.
     # user       - The User that the AssignmentRepo will belong to.
     # rubocop:disable MethodLength
+    # rubocop:disable AbcSize
     def perform(assignment, user)
       creator = Creator.new(assignment: assignment, user: user)
 
@@ -22,9 +23,7 @@ class AssignmentRepo
 
       creator.add_user_to_repository!(assignment_repo.github_repo_id)
 
-      if assignment.starter_code?
-        creator.push_starter_code!(assignment_repo.github_repo_id)
-      end
+      creator.push_starter_code!(assignment_repo.github_repo_id) if assignment.starter_code?
 
       begin
         assignment_repo.save!
@@ -38,5 +37,6 @@ class AssignmentRepo
       raise err
     end
     # rubocop:enable MethodLength
+    # rubocop:enable AbcSize
   end
 end
