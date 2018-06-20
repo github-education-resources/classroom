@@ -38,13 +38,29 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       end
     end
 
-    it "creates an AssignmentRepo as an outside_collaborator" do
-      subject.perform_now(assignment, student)
+    context "creates an AssignmentRepo as an outside_collaborator" do
 
-      result = assignment.assignment_repos.first
-      expect(result.nil?).to be_falsy
-      expect(result.assignment).to eql(assignment)
-      expect(result.user).to eql(student)
+      before do
+        subject.perform_now(assignment, student)
+      end
+
+      it "is not nil" do
+        result = assignment.assignment_repos.first
+        expect(result.nil?).to be_falsy
+      end
+
+      it "is the same assignment" do
+        result = assignment.assignment_repos.first
+        expect(result.assignment).to eql(assignment)
+      end
+
+      it "has the same user" do
+        result = assignment.assignment_repos.first
+        expect(result.user).to eql(student)
+      end
+
+      # result = assignment.assignment_repos.first
+      # expect(result.nil?).to be_falsy
     end
 
     it "creates an AssignmentRepo as a member" do
