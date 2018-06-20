@@ -39,7 +39,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
     end
 
     context "creates an AssignmentRepo as an outside_collaborator" do
-
       before do
         subject.perform_now(assignment, student)
       end
