@@ -58,18 +58,27 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         result = assignment.assignment_repos.first
         expect(result.user).to eql(student)
       end
-
-      # result = assignment.assignment_repos.first
-      # expect(result.nil?).to be_falsy
     end
 
-    it "creates an AssignmentRepo as a member" do
-      subject.perform_now(assignment, teacher)
+    context "creates an AssignmentRepo as a member" do
+      before do
+        subject.perform_now(assignment, teacher)
+      end
 
-      result = assignment.assignment_repos.first
-      expect(result.nil?).to be_falsy
-      expect(result.assignment).to eql(assignment)
-      expect(result.user).to eql(teacher)
+      it "is not nil" do
+        result = assignment.assignment_repos.first
+        expect(result.nil?).to be_falsy
+      end
+
+      it "is the same assignment" do
+        result = assignment.assignment_repos.first
+        expect(result.assignment).to eql(assignment)
+      end
+
+      it "has the same user" do
+        result = assignment.assignment_repos.first
+        expect(result.user).to eql(teacher)
+      end
     end
 
     it "tracks the how long it too to be created" do
