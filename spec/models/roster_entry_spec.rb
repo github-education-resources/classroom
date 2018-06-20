@@ -37,9 +37,9 @@ RSpec.describe RosterEntry, type: :model do
 
     let!(:assignment_repo) { create(:assignment_repo, assignment: assignment, user: student1) }
 
-    let(:linked_accepted_entry)     { create(:roster_entry, roster: roster, user: student1) }
-    let(:not_linked_entry)          { create(:roster_entry, roster: roster)                 }
-    let(:linked_not_accepted_entry) { create(:roster_entry, roster: roster, user: student2) }
+    let(:linked_accepted_entry)     { create(:roster_entry, roster: roster, user: student1, identifier: "a")  }
+    let(:not_linked_entry)          { create(:roster_entry, roster: roster, identifier: "b")                  }
+    let(:linked_not_accepted_entry) { create(:roster_entry, roster: roster, user: student2, identifier: "c")  }
 
     it "orders correctly" do
       roster.roster_entries.first.destroy # Ignore the default entry here
@@ -56,6 +56,70 @@ RSpec.describe RosterEntry, type: :model do
       expected_ordering = [linked_not_accepted_entry, not_linked_entry]
 
       expect(RosterEntry.where(roster: roster).order_for_view(assignment).to_a).to eq(expected_ordering)
+    end
+  end
+
+  describe "create_entries" do
+    let(:organization) { classroom_org   }
+    let(:roster)       { create(:roster) }
+
+    context "all entries valid" do
+      let(:result) do
+        RosterEntry.create_entries(identifiers: %w[1 2], roster: roster)
+      end
+
+      it "creates two roster entries" do
+        expect(result.length).to eq(2)
+
+        expect(result[0]).to eq(RosterEntry.find_by(identifier: "1", roster: roster))
+        expect(result[1]).to eq(RosterEntry.find_by(identifier: "2", roster: roster))
+      end
+    end
+
+    context "some entries not valid" do
+      before do
+        RosterEntry.create(identifier: "1", roster: roster)
+      end
+
+      let(:result) do
+        RosterEntry.create_entries(identifiers: %w[1 2], roster: roster)
+      end
+
+      it "creates one roster entries" do
+        expect(result.length).to eq(1)
+
+        expect(result[0]).to eq(RosterEntry.find_by(identifier: "2", roster: roster))
+      end
+    end
+
+    context "no roster entries valid" do
+      before do
+        RosterEntry.create(identifier: "1", roster: roster)
+        RosterEntry.create(identifier: "2", roster: roster)
+      end
+
+      let(:result) do
+        RosterEntry.create_entries(identifiers: %w[1 2], roster: roster)
+      end
+
+      it "creates no roster entries" do
+        expect(result.length).to eq(0)
+      end
+    end
+
+    context "some other error" do
+      before do
+        errored_entry = RosterEntry.new(roster: roster)
+        errored_entry.errors[:base] << "Something went wrong ¯\\_(ツ)_/¯ "
+
+        allow(RosterEntry).to receive(:create).and_return(errored_entry)
+      end
+
+      it "raises RosterEntry::IdentifierCreationError" do
+        expect do
+          RosterEntry.create_entries(identifiers: %w[1], roster: roster)
+        end.to raise_error(RosterEntry::IdentifierCreationError)
+      end
     end
   end
 end

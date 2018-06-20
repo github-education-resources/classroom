@@ -376,7 +376,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
     end
   end
 
-  describe "PATCH #add_student", :vcr do
+  describe "PATCH #add_students", :vcr do
     before do
       sign_in_as(user)
     end
@@ -386,11 +386,11 @@ RSpec.describe Orgs::RostersController, type: :controller do
         GitHubClassroom.flipper[:student_identifier].enable
       end
 
-      context "when identifier is valid" do
+      context "when all identifiers are valid" do
         before do
-          patch :add_student, params: {
+          patch :add_students, params: {
             id:         organization.slug,
-            identifier: "new_entry"
+            identifiers: "a\r\nb"
           }
         end
 
@@ -399,19 +399,20 @@ RSpec.describe Orgs::RostersController, type: :controller do
         end
 
         it "sets success message" do
-          expect(flash[:success]).to be_present
+          expect(flash[:success]).to eq("Students created.")
         end
 
         it "creates the student on the roster" do
-          expect(roster.reload.roster_entries).to include(RosterEntry.find_by(identifier: "new_entry"))
+          expect(roster.reload.roster_entries).to include(RosterEntry.find_by(identifier: "a"))
         end
       end
 
-      context "when identifier is invalid" do
+      context "when some identifiers get added" do
         before do
-          patch :add_student, params: {
+          create(:roster_entry, roster: roster, identifier: "a")
+          patch :add_students, params: {
             id:         organization.slug,
-            identifier: ""
+            identifiers: "a\r\nb"
           }
         end
 
@@ -419,15 +420,73 @@ RSpec.describe Orgs::RostersController, type: :controller do
           expect(response).to redirect_to(roster_url(organization))
         end
 
-        it "sets error message" do
-          expect(flash[:error]).to be_present
+        it "sets flash message" do
+          expect(flash[:success]).to eq("Students created. Some duplicates have been omitted.")
         end
 
-        it "does not create the student on the roster" do
+        it "creates only one roster entry" do
           expect do
-            patch :add_student, params: {
+            patch :add_students, params: {
               id:         organization.slug,
-              identifier: ""
+              identifiers: "a\r\nc"
+            }
+          end.to change(roster.reload.roster_entries, :count).by(1)
+        end
+      end
+
+      context "when no identifiers get added" do
+        before do
+          create(:roster_entry, roster: roster, identifier: "a")
+          create(:roster_entry, roster: roster, identifier: "b")
+          patch :add_students, params: {
+            id:         organization.slug,
+            identifiers: "a\r\nb"
+          }
+        end
+
+        it "redirects to rosters page" do
+          expect(response).to redirect_to(roster_url(organization))
+        end
+
+        it "sets flash message" do
+          expect(flash[:warning]).to eq("No students created.")
+        end
+
+        it "creates no roster entries" do
+          expect do
+            patch :add_students, params: {
+              id:         organization.slug,
+              identifiers: "a\r\nb"
+            }
+          end.to change(roster.reload.roster_entries, :count).by(0)
+        end
+      end
+
+      context "when there's an internal error" do
+        before do
+          errored_entry = RosterEntry.new(roster: roster)
+          errored_entry.errors[:base] << "Something went wrong ¯\\_(ツ)_/¯ "
+          allow(RosterEntry).to receive(:create).and_return(errored_entry)
+
+          patch :add_students, params: {
+            id:         organization.slug,
+            identifiers: "a\r\nb"
+          }
+        end
+
+        it "redirects to rosters page" do
+          expect(response).to redirect_to(roster_url(organization))
+        end
+
+        it "sets flash message" do
+          expect(flash[:error]).to eq("An error has occured. Please try again.")
+        end
+
+        it "creates no roster entries" do
+          expect do
+            patch :add_students, params: {
+              id:         organization.slug,
+              identifiers: "a\r\nb"
             }
           end.to change(roster.reload.roster_entries, :count).by(0)
         end
@@ -440,7 +499,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
     context "with flipper disabled" do
       before do
-        patch :add_student, params: {
+        patch :add_students, params: {
           id:         organization.slug,
           identifier: "Hello"
         }

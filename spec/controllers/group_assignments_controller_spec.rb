@@ -68,7 +68,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
           organization_id:  organization.slug,
           grouping:         { title: "Grouping 1" },
           group_assignment: attributes_for(:group_assignment, organization: organization)
-            .merge(deadline: "05/25/2018 13:17-0800")
+            .merge(deadline: "05/25/2118 13:17-0800")
         }
       end
 
@@ -78,7 +78,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
             organization_id:  organization.slug,
             grouping:         { title: "Grouping 1" },
             group_assignment: attributes_for(:group_assignment, organization: organization)
-              .merge(deadline: "05/25/2018 13:17-0800")
+              .merge(deadline: "05/25/2118 13:17-0800")
           }
         end
 
