@@ -3,8 +3,8 @@
 module Octopoller
   class TimeoutError < StandardError; end
 
-  # Polls until a successful
-  # Continues to poll when an error is caught
+  # Polls until success
+  # Re-runs when an error is caught
   #
   # wait - The time delay in seconds between polls (default is 1)
   # timeout - The maximum number of seconds the poller poll (default is 15)
