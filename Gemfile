@@ -59,7 +59,7 @@ gem "ruby-progressbar",    "~> 1.8", ">= 1.8.1", require: false
 
 gem "sass-rails", "~> 5.0", ">= 5.0.6"
 gem "sidekiq",    "~> 5.0", ">= 5.0.4"
-gem "sprockets",  "~> 3.7", ">= 3.7.1"
+gem "sprockets",  "~> 3.7", ">= 3.7.2"
 
 gem "turbolinks", "2.5.3.226.g37a7c29"
 gem "typhoeus",   "~> 1.3"
