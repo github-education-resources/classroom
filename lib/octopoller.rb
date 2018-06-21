@@ -21,7 +21,7 @@ module Octopoller
     while Time.now.utc < start + timeout
       begin
         return yield
-      rescue => e
+      rescue => e # rubocop:disable RescueStandardError
         error_handler&.call(e) if error_handler
         sleep wait
       end
