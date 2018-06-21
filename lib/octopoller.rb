@@ -3,14 +3,14 @@
 module Octopoller
   class TimeoutError < StandardError; end
 
-  # Polls until a sccuessfu
-  # Continues to poll when an error is caight
+  # Polls until a successful
+  # Continues to poll when an error is caught
   #
   # wait - The time delay in seconds between polls (default is 1)
   # timeout - The maximum number of seconds the poller poll (default is 15)
   # error_handler - A proc that will be passed an instance of each raised error
   # yield - A block that will execute, and if it raises an error it will re-run until success or the timeout is reached
-  # raise - Raises a Octopoller::TimeoutError if the timout is reached
+  # raise - Raises an Octopoller::TimeoutError if the timeout is reached
   #
   # rubocop:disable MethodLength
   def poll(wait: 1, timeout: 15, error_handler: nil)
