@@ -66,13 +66,8 @@ class AssignmentsController < ApplicationController
 
   def desktop
     assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
-    # assignment_urls = assignment_repos.map{ |a| a.github_repository.html_url}
-    # assignment_usernames = assignment_repos.map{ |a| a.user.github_user.login}
-    # redirect_to "ghclassroom://?token=#{current_user.github_user.access_token}&"\
-    #                             "title=#{@assignment.title}&type=individual&"\
-    #                             "urls=#{assignment_urls.join(",")}&"\
-    #                             "usernames=#{assignment_usernames.join(',')}"
-    render json: assignment_repos
+    assignment_repo_params = assignment_repos.each{|a| {username: a.github_user.access_token, repo_url: a.github_repositiory.html_url}}
+    render json: {repos: assignment_repo_params, title: @assignment.title, type: "individual"}
   end
 
   private
