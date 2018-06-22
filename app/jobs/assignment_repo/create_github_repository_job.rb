@@ -5,10 +5,11 @@ class AssignmentRepo
     queue_as :create_repository
     retry_on Creator::Result::Error, wait: :exponentially_longer, queue: :create_repository
 
-    # Create an AssignmentRepo.
+    # Create an AssignmentRepo
     #
     # assignment - The Assignment that will own the AssignmentRepo.
     # user       - The User that the AssignmentRepo will belong to.
+    #
     # rubocop:disable MethodLength
     # rubocop:disable AbcSize
     def perform(assignment, user)

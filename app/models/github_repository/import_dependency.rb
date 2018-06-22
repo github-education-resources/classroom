@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class GitHubRepository
-  IMPORT_ERRORS  = %w[auth_failed error detection_needs_auth detection_found_nothing detection_found_multiple].freeze
-  IMPORT_ONGOING = %w[detecting importing mapping pushing].freeze
+  IMPORT_ERRORS   = %w[auth_failed error detection_needs_auth detection_found_nothing detection_found_multiple].freeze
+  IMPORT_ONGOING  = %w[detecting importing mapping pushing].freeze
+  IMPORT_COMPLETE = "complete"
 
   def get_starter_code_from(source)
     GitHub::Errors.with_error_handling do
@@ -34,7 +35,7 @@ class GitHubRepository
   #
   # Returns true or false
   def imported?
-    import_progress[:status] == "complete"
+    import_progress[:status] == IMPORT_COMPLETE
   end
 
   # Public: Check if import failed
