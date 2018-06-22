@@ -7,6 +7,7 @@ class AssignmentRepo
     REPOSITORY_STARTER_CODE_IMPORT_FAILED   = "We were not able to import you the starter code to your assignment, please try again." # rubocop:disable LineLength
     REPOSITORY_COLLABORATOR_ADDITION_FAILED = "We were not able to add you to the Assignment as a collaborator, please try again." # rubocop:disable LineLength
     REPOSITORY_CREATION_COMPLETE            = "Your GitHub repositroy was created."
+    IMPORT_ONGOING                          = "Your GitHub repository is importing starter code."
 
     attr_reader :assignment, :user, :organization
 

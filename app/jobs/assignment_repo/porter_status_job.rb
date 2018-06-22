@@ -12,7 +12,7 @@ class AssignmentRepo
       result = Octopoller.poll do # TODO log errors
         case github_repository.import_progress[:status]
         when *GitHubRepository::IMPORT_ONGOING
-          raise ImportInProgress, "Import is still in progress"
+          raise ImportInProgress, Creator::IMPORT_ONGOING
         when *GitHubRepository::IMPORT_ERRORS
           return Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
         when GitHubRepository::IMPORT_COMPLETE
