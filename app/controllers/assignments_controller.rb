@@ -66,7 +66,7 @@ class AssignmentsController < ApplicationController
 
   def desktop
     assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
-    assignment_repo_params = assignment_repos.each{|a| {username: a.github_user.access_token, repo_url: a.github_repositiory.html_url}}
+    assignment_repo_params = assignment_repos.map{|a| {username: a.user.github_user.login, repo_url: a.github_repository.html_url}}
     render json: {repos: assignment_repo_params, title: @assignment.title, type: "individual"}
   end
 
