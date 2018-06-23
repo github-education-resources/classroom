@@ -76,7 +76,7 @@
       </div>
     <% else %>
       <% if @assignment_repos.present? %>
-        <%= link_to "Download Repositories", "ghclassroom://?host=#{root_url}&assignment=#{organization_assignment_path}" %>
+        <%= link_to "Download Repositories", "ghclassroom://?assignment_url=#{organization_assignment_url}" %>
         <div class="assignment-repo-list">
           <% @assignment_repos.each do |assignment_repo| %>
             <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: { url: organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo) } %>
