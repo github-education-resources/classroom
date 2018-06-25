@@ -276,4 +276,37 @@ RSpec.describe AssignmentsController, type: :controller do
       expect(response).to redirect_to(organization)
     end
   end
+
+  describe "GET #info" do
+    it "returns assignment title" do
+      get :info
+      parsed_body = JSON.parse(response.body)
+      expect(parsed_body["title"]).to equ(assignment.title)
+    end
+
+    it "returns individual assignment type" do
+      get :info
+      parsed_body = JSON.parse(response.body)
+      expect(parsed_body["type"]).to equ("individual")
+    end
+
+    it "returns current user access token" do
+      get :info
+      parsed_body = JSON.parse(response.body)
+      expect(parsed_body["access_token"]).to equ(user.token)
+    end
+  end
+
+  describe "GET #repos" do
+    context "only 1 assignment repo" do
+      before(:each) do
+        @assignment_repo = AssignmentRepo.create(assignment: assignment)
+      end
+
+      
+    end
+
+    
+  end
+
 end

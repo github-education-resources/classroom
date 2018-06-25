@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class AssignmentsController < ApplicationController
+  include Rails::Pagination
   include OrganizationAuthorization
   include StarterCode
 
@@ -64,14 +65,18 @@ class AssignmentsController < ApplicationController
     end
   end
 
-  def desktop
-    assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
+  def repos
+    assignment_repos = AssignmentRepo.where(assignment: @assignment)
     assignment_repo_params = assignment_repos.map{ |a| {
+        id: a.id,
         username: a.user.github_user.login, 
         repo_url: a.github_repository.html_url
     }}
+    paginate json: assignment_repo_params
+  end
+
+  def info
     render json: {
-      repos: assignment_repo_params,
       title: @assignment.title,
       type: "individual",
       access_token: current_user.github_user.access_token

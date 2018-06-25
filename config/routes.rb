@@ -80,7 +80,8 @@ Rails.application.routes.draw do
       end
 
       resources :assignments do
-        get :desktop, on: :member
+        get :repos, on: :member
+        get :info, on: :member
         resources :assignment_repos, only: [:show], controller: "orgs/assignment_repos"
         get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
       end
