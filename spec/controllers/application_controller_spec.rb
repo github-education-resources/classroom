@@ -27,12 +27,12 @@ RSpec.describe ApplicationController, type: :controller do
       before do
         User.any_instance.stub(:authorized_access_token?).and_return(false)
       end
-      
+
       it "redirects to home page" do
         get :index
         expect(response).to redirect_to(root_path)
       end
-      it "clears the session" do 
+      it "clears the session" do
         get :index
         expect(session).to be_empty
       end
