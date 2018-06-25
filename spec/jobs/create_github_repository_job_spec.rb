@@ -80,6 +80,13 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       end
     end
 
+    it "broadcasts status on channel" do
+      expect { subject.perform_now(assignment, teacher) }
+        .to have_broadcasted_to(RepositoryCreationStatusChannel::CHANNEL_ID)
+        .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::CREATE_REPO)
+        .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::ADDING_COLLABORATOR)
+    end
+
     it "tracks the how long it too to be created" do
       expect(GitHubClassroom.statsd).to receive(:timing)
       subject.perform_now(assignment, teacher)
