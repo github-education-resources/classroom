@@ -5,10 +5,17 @@ class AssignmentRepo
     queue_as :create_repository
     retry_on Creator::Result::Error, wait: :exponentially_longer, queue: :create_repository
 
-    # Create an AssignmentRepo.
+    class Status
+      CREATE_REPO = "Creating repository"
+      ADDING_COLLABORATOR = "Adding collaborator"
+      IMPORT_STARTER_CODE = "Importing starter code"
+    end
+
+    # Create an AssignmentRepo
     #
     # assignment - The Assignment that will own the AssignmentRepo.
     # user       - The User that the AssignmentRepo will belong to.
+    #
     # rubocop:disable MethodLength
     # rubocop:disable AbcSize
     def perform(assignment, user)
@@ -18,12 +25,18 @@ class AssignmentRepo
 
       creator.verify_organization_has_private_repos_available!
 
+      ActionCable.server.broadcast(RepositoryCreationStatusChannel::CHANNEL_ID, text: Status::CREATE_REPO)
+
       assignment_repo = assignment.assignment_repos.build(
         github_repo_id: creator.create_github_repository!,
         user: user
       )
 
+      ActionCable.server.broadcast(RepositoryCreationStatusChannel::CHANNEL_ID, text: Status::ADDING_COLLABORATOR)
+
       creator.add_user_to_repository!(assignment_repo.github_repo_id)
+
+      ActionCable.server.broadcast(RepositoryCreationStatusChannel::CHANNEL_ID, text: Status::IMPORT_STARTER_CODE)
 
       creator.push_starter_code!(assignment_repo.github_repo_id) if assignment.starter_code?
 
