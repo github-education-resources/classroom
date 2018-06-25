@@ -8,6 +8,7 @@ class AssignmentRepo
     class Status
       CREATE_REPO = "Creating repository"
       ADDING_COLLABORATOR = "Adding collaborator"
+      IMPORT_STARTER_CODE = "Importing starter code"
     end
 
     # Create an AssignmentRepo
@@ -31,9 +32,11 @@ class AssignmentRepo
         user: user
       )
 
+      ActionCable.server.broadcast(RepositoryCreationStatusChannel::CHANNEL_ID, text: Status::ADDING_COLLABORATOR)
+
       creator.add_user_to_repository!(assignment_repo.github_repo_id)
 
-      ActionCable.server.broadcast(RepositoryCreationStatusChannel::CHANNEL_ID, text: Status::ADDING_COLLABORATOR)
+      ActionCable.server.broadcast(RepositoryCreationStatusChannel::CHANNEL_ID, text: Status::IMPORT_STARTER_CODE)
 
       creator.push_starter_code!(assignment_repo.github_repo_id) if assignment.starter_code?
 

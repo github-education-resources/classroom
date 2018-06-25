@@ -85,6 +85,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         .to have_broadcasted_to(RepositoryCreationStatusChannel::CHANNEL_ID)
         .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::CREATE_REPO)
         .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::ADDING_COLLABORATOR)
+        .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::IMPORT_STARTER_CODE)
     end
 
     it "tracks the how long it too to be created" do
