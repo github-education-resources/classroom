@@ -61,6 +61,10 @@ class AssignmentRepo
       # on success kick off porter polling cascading job
     rescue Creator::Result::Error => err
       creator.delete_github_repository(assignment_repo.try(:github_repo_id))
+      ActionCable.server.broadcast(
+        RepositoryCreationStatusChannel.channel(user_id: user.id),
+        text: err
+      )
       raise err
     end
     # rubocop:enable MethodLength
