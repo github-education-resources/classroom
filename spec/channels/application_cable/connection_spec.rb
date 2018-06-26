@@ -17,5 +17,4 @@ RSpec.describe ApplicationCable::Connection, type: :channel do
   it "rejects connection" do
     expect { connect }.to have_rejected_connection
   end
-
 end
