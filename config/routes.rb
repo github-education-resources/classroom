@@ -80,8 +80,6 @@ Rails.application.routes.draw do
       end
 
       resources :assignments do
-        get :repos, on: :member
-        get :info, on: :member
         resources :assignment_repos, only: [:show], controller: "orgs/assignment_repos"
         get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
       end
@@ -131,5 +129,12 @@ Rails.application.routes.draw do
 
     resources :groupings, only: [:show]
     resources :groups,    only: [:show]
+  end
+
+  namespace :api, :defaults => {:format => :json} do 
+    scope :internal do
+      get '/classrooms/:organization_id/assignments/:id/repos', to: 'assignment_repo_info#repos'
+      get '/classrooms/:organization_id/assignments/:id/info', to: 'assignment_repo_info#info'
+    end
   end
 end
