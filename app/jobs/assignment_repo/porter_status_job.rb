@@ -3,7 +3,7 @@
 class AssignmentRepo
   class PorterStatusJob < ApplicationJob
     class ImportInProgress < StandardError; end
-
+    queue_as :porter_status
     retry_on Octopoller::TimeoutError, queue: :porter_status
 
     def perform(assignment, user)

@@ -7,9 +7,10 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
   subject { AssignmentRepo::CreateGitHubRepositoryJob }
 
-  let(:organization) { classroom_org }
-  let(:student)      { classroom_student }
-  let(:teacher)      { classroom_teacher }
+  let(:cascading_job) { AssignmentRepo::PorterStatusJob }
+  let(:organization)  { classroom_org }
+  let(:student)       { classroom_student }
+  let(:teacher)       { classroom_teacher }
 
   let(:assignment) do
     options = {
@@ -32,10 +33,14 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       AssignmentRepo.destroy_all
     end
 
-    it "uses the :create_repository queue" do
-      assert_performed_with(job: subject, args: [assignment, student], queue: "create_repository") do
-        subject.perform_later(assignment, student)
-      end
+    it "uses the create_repository queue" do
+      subject.perform_later
+      expect(subject).to have_been_enqueued.on_queue("create_repository")
+    end
+
+    it "kicks off a cascading porter status job" do
+      subject.perform_now(assignment, teacher)
+      expect(cascading_job).to have_been_enqueued.on_queue("porter_status")
     end
 
     context "creates an AssignmentRepo as an outside_collaborator" do
@@ -88,7 +93,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::IMPORT_STARTER_CODE)
     end
 
-    it "tracks the how long it too to be created" do
+    it "tracks how long it too to be created" do
       expect(GitHubClassroom.statsd).to receive(:timing)
       subject.perform_now(assignment, teacher)
     end

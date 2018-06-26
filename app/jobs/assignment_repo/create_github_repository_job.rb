@@ -58,7 +58,7 @@ class AssignmentRepo
       duration_in_millseconds = (Time.zone.now - start) * 1_000
       GitHubClassroom.statsd.timing("exercise_repo.create.time", duration_in_millseconds)
 
-      # on success kick off porter polling cascading job
+      PorterStatusJob.perform_later(assignment_repo, user)
     rescue Creator::Result::Error => err
       creator.delete_github_repository(assignment_repo.try(:github_repo_id))
       ActionCable.server.broadcast(
