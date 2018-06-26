@@ -6,7 +6,7 @@ class AssignmentRepo
 
     retry_on Octopoller::TimeoutError, queue: :porter_status
 
-    def perform(assignment)
+    def perform(assignment, user)
       github_repository = assignment.github_repository
 
       result = Octopoller.poll do # TODO log errors
@@ -23,8 +23,16 @@ class AssignmentRepo
       case result
       when Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
         # broadcast that the user should retry
+        ActionCable.server.broadcast(
+          RepositoryCreationStatusChannel.channel(user_id: user.id),
+          text: result
+        )
       when Creator::REPOSITORY_CREATION_COMPLETE
         # broadcast good vibes
+        ActionCable.server.broadcast(
+          RepositoryCreationStatusChannel.channel(user_id: user.id),
+          text: result
+        )
       end
     end
   end

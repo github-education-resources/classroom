@@ -82,7 +82,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
     it "broadcasts status on channel" do
       expect { subject.perform_now(assignment, teacher) }
-        .to have_broadcasted_to(RepositoryCreationStatusChannel::CHANNEL_ID)
+        .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: teacher.id))
         .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::CREATE_REPO)
         .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::ADDING_COLLABORATOR)
         .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::IMPORT_STARTER_CODE)
