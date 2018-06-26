@@ -3,16 +3,13 @@ module ApplicationCable
     identified_by :current_user
 
     def connect
-      puts "Hello there, are you who you say you are?"
-      # call auth logic
-      binding.pry
+      self.current_user = find_verified_user
     end
 
     protected
 
     def find_verified_user
-      # add auth logic
-      fail 'User needs to be authenticated.'
+      User.find_by(id: request.session[:user_id]) ||reject_unauthorized_connection
     end
   end
 end
