@@ -6,8 +6,7 @@ class AssignmentRepo
     queue_as :porter_status
     retry_on Octopoller::TimeoutError, queue: :porter_status
 
-    def perform(assignment, user)
-      github_repository = assignment.github_repository
+    def perform(github_repository, user)
 
       result = Octopoller.poll do # TODO log errors
         case github_repository.import_progress[:status]
