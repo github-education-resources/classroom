@@ -20,6 +20,7 @@ class GitHubRepository
 
   def import_progress(**options)
     GitHub::Errors.with_error_handling do
+      options[:accept] = "application/vnd.github.barred-rock-preview"
       @client.source_import_progress(full_name, options)
     end
   end
