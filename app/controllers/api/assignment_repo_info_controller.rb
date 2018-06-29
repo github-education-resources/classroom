@@ -20,6 +20,7 @@ class API::AssignmentRepoInfoController < ApplicationController
       render json: {
         name: @assignment.title,
         type: "individual",
+        accessToken: true_user.token,
       }
     end
 
