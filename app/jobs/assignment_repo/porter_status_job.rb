@@ -10,14 +10,16 @@ class AssignmentRepo
       github_repository = assignment_repo.github_repository
 
       result = Octopoller.poll do # TODO log errors
-        progress = github_repository.import_progress[:status]
-        case progress
-        when *GitHubRepository::IMPORT_ONGOING
-          raise ImportInProgress, Creator::IMPORT_ONGOING
-        when *GitHubRepository::IMPORT_ERRORS
+        begin
+          progress = github_repository.import_progress[:status]
+          case progress
+          when *GitHubRepository::IMPORT_ONGOING
+            raise ImportInProgress, Creator::IMPORT_ONGOING
+          when GitHubRepository::IMPORT_COMPLETE
+            Creator::REPOSITORY_CREATION_COMPLETE
+          end
+        rescue GitHub::Error
           Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
-        when GitHubRepository::IMPORT_COMPLETE
-          Creator::REPOSITORY_CREATION_COMPLETE
         end
       end
 
