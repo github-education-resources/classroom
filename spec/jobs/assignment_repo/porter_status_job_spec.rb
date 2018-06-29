@@ -76,6 +76,27 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
         subject.perform_now(@assignment_repo, student)
         expect(@assignment_repo.github_repository.imported?).to be_truthy
       end
+
+      it "broadcasts when porter status is 'complete'" do
+        stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
+          .to_return(
+            {
+              status: 201,
+              body: request_stub("importing"),
+              headers: { "Content-Type": "application/json"}
+            }
+          ).times(2).then
+          .to_return(
+            {
+              status: 200,
+              body: request_stub("complete"),
+              headers: { "Content-Type": "application/json"}
+            }
+          )
+      expect { subject.perform_now(@assignment_repo, student) }
+        .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
+        .with(text: AssignmentRepo::Creator::REPOSITORY_CREATION_COMPLETE)
+      end
     end
   end
 
