@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 class RepositoryCreationStatusChannel < ApplicationCable::Channel
-
   def self.channel(user_id:)
-    return "#{RepositoryCreationStatusChannel.channel_name}_#{user_id}"
+    "#{RepositoryCreationStatusChannel.channel_name}_#{user_id}"
   end
 
   def subscribed

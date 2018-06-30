@@ -5,7 +5,7 @@ require "staff_constraint"
 
 Rails.application.routes.draw do
   mount Peek::Railtie => "/peek"
-  mount ActionCable.server => '/cable'
+  mount ActionCable.server => "/cable"
 
   root to: "pages#home"
 

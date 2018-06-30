@@ -6,17 +6,18 @@ class AssignmentRepo
     queue_as :porter_status
     retry_on Octopoller::TimeoutError, queue: :porter_status
 
+    # rubocop:disable MethodLength
     def perform(assignment_repo, user)
       github_repository = assignment_repo.github_repository
 
-      result = Octopoller.poll do # TODO log errors
+      result = Octopoller.poll do # TODO: log errors
         begin
           progress = github_repository.import_progress[:status]
           case progress
-          when *GitHubRepository::IMPORT_ONGOING
-            raise ImportInProgress, Creator::IMPORT_ONGOING
           when GitHubRepository::IMPORT_COMPLETE
             Creator::REPOSITORY_CREATION_COMPLETE
+          when *GitHubRepository::IMPORT_ONGOING
+            raise ImportInProgress, Creator::IMPORT_ONGOING
           end
         rescue GitHub::Error
           Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
@@ -36,5 +37,6 @@ class AssignmentRepo
         )
       end
     end
+    # rubocop:enable MethodLength
   end
 end

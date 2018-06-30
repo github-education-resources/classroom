@@ -14,7 +14,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
   let(:assignment) do
     options = {
       title: "small-test-repo",
-      starter_code_repo_id: 2276615,
+      starter_code_repo_id: 2_276_615,
       organization: organization,
       students_are_repo_admins: true
     }
@@ -60,18 +60,14 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
       it "completes when porter status is 'complete'" do
         stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
           .to_return(
-            {
-              status: 201,
-              body: request_stub("importing"),
-              headers: { "Content-Type": "application/json"}
-            }
+            status: 201,
+            body: request_stub("importing"),
+            headers: { "Content-Type": "application/json" }
           ).times(2).then
           .to_return(
-            {
-              status: 200,
-              body: request_stub("complete"),
-              headers: { "Content-Type": "application/json"}
-            }
+            status: 200,
+            body: request_stub("complete"),
+            headers: { "Content-Type": "application/json" }
           ).times(2)
         subject.perform_now(@assignment_repo, student)
         expect(@assignment_repo.github_repository.imported?).to be_truthy
@@ -80,18 +76,14 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
       it "broadcasts when porter status is 'complete'" do
         stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
           .to_return(
-            {
-              status: 201,
-              body: request_stub("importing"),
-              headers: { "Content-Type": "application/json"}
-            }
+            status: 201,
+            body: request_stub("importing"),
+            headers: { "Content-Type": "application/json" }
           ).times(2).then
           .to_return(
-            {
-              status: 200,
-              body: request_stub("complete"),
-              headers: { "Content-Type": "application/json"}
-            }
+            status: 200,
+            body: request_stub("complete"),
+            headers: { "Content-Type": "application/json" }
           )
         expect { subject.perform_now(@assignment_repo, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
@@ -101,18 +93,14 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
       it "fails when porter status is 'error'" do
         stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
           .to_return(
-            {
-              status: 201,
-              body: request_stub("importing"),
-              headers: { "Content-Type": "application/json"}
-            }
+            status: 201,
+            body: request_stub("importing"),
+            headers: { "Content-Type": "application/json" }
           ).times(2).then
           .to_return(
-            {
-              status: 500,
-              body: request_stub("error"),
-              headers: { "Content-Type": "application/json"}
-            }
+            status: 500,
+            body: request_stub("error"),
+            headers: { "Content-Type": "application/json" }
           ).times(2)
         subject.perform_now(@assignment_repo, student)
         expect { @assignment_repo.github_repository.import_progress }.to raise_error(GitHub::Error)
@@ -121,18 +109,14 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
       it "broadcasts failure when porter status is 'error'" do
         stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
           .to_return(
-            {
-              status: 201,
-              body: request_stub("importing"),
-              headers: { "Content-Type": "application/json"}
-            }
+            status: 201,
+            body: request_stub("importing"),
+            headers: { "Content-Type": "application/json" }
           ).times(2).then
           .to_return(
-            {
-              status: 500,
-              body: request_stub("error"),
-              headers: { "Content-Type": "application/json"}
-            }
+            status: 500,
+            body: request_stub("error"),
+            headers: { "Content-Type": "application/json" }
           )
         expect { subject.perform_now(@assignment_repo, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
@@ -141,12 +125,13 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
     end
   end
 
+  # rubocop:disable MethodLength
   def request_stub(status)
     {
       "vcs": "git",
       "use_lfs": "undecided",
       "vcs_url": "https://github.com/rtyley/small-test-repo",
-      "status": "#{status}",
+      "status": status.to_s,
       "commit_count": nil,
       "status_text": "Importing...",
       "authors_count": 0,
@@ -157,4 +142,5 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
       "repository_url": "https://api.github.com/repos/classroom-test-org-edon/small-test-repo"
     }.to_json
   end
+  # rubocop:enable MethodLength
 end
