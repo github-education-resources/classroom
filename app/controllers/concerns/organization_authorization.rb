@@ -20,7 +20,6 @@ module OrganizationAuthorization
 
   def set_organization
     return @organization if defined?(@organization)
-
     organization_id = params[:organization_id] || params[:id]
     @organization = Organization.find_by!(slug: organization_id)
   end

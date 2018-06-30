@@ -32,6 +32,7 @@ gem "jquery-turbolinks",           "~> 2.1"
 
 gem "kaminari", "~> 1.0", ">= 1.0.1"
 gem "api-pagination", "4.7.1"
+gem 'active_model_serializers', '~> 0.10.0'
 
 gem "local_time", "~> 2.0"
 
