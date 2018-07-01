@@ -124,20 +124,23 @@ module Orgs
     def download_roster
       grouping = Grouping.find_by(id: params[:grouping])
 
-      user_to_groups = Hash.new
+      user_to_groups = {}
 
-      if !grouping.nil?
-        grouping.groups.each { | group|
-          user_ids = group.repo_accesses.map(&:user_id)
-          user_ids.each { |id|
+      unless grouping.nil?
+        grouping.groups.each do | group|
+          group.repo_accesses.map(&:user_id).each do |id|
             user_to_groups[id] = group.title
-          }
-        }
+          end
+        end
       end
 
       @roster_entries = @current_roster.roster_entries.includes(:user).order(:identifier)
       respond_to do |format|
-        format.csv { send_data @roster_entries.to_csv(user_to_groups), filename: "classroom_roster.csv", disposition: "attachment" }
+        format.csv {
+          send_data @roster_entries.to_csv(user_to_groups),
+          filename: "classroom_roster.csv",
+          disposition: "attachment"
+        }
       end
     end
 
