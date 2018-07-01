@@ -17,7 +17,9 @@ module Orgs
 
       @current_unlinked_users = User.where(id: unlinked_user_ids).page(params[:unlinked_users_page])
 
-      download_roster if params.dig("format")
+      if params.dig("format")
+        params.dig("grouping") ? download_roster_with_grouping : download_roster
+      end
     end
 
     def new
@@ -125,6 +127,29 @@ module Orgs
       @roster_entries = @current_roster.roster_entries.includes(:user).order(:identifier)
       respond_to do |format|
         format.csv { send_data @roster_entries.to_csv, filename: "classroom_roster.csv", disposition: "attachment" }
+      end
+    end
+
+    def download_roster_with_grouping
+      grouping = Grouping.find_by(id: params[:grouping])
+
+      if grouping.nil?
+        flash[:error] = "Please select a grouping and try again."
+        redirect_to roster_path(current_organization)
+      end
+
+      user_to_groups = Hash.new
+
+      grouping.groups.each { | group|
+        user_ids = group.repo_accesses.map(&:user_id)
+        user_ids.each { |id|
+          user_to_groups[id] = group.title
+        }
+      }
+
+      @roster_entries = @current_roster.roster_entries.includes(:user).order(:identifier)
+      respond_to do |format|
+        format.csv { send_data @roster_entries.to_csv(user_to_groups), filename: "classroom_roster.csv", disposition: "attachment" }
       end
     end
 

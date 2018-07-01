@@ -13,6 +13,7 @@
           </span>
           <div class='flex-justify-between'>
             <span class="btn btn-primary btn-sm", role="button" data-remodal-target="new-student-modal">New students</span>
+             <span class="btn btn-primary btn-sm", role="button" data-remodal-target="download-csv-modal">Download(New)</span>
             <%= link_to 'Download', roster_path(format: :csv), class: 'btn btn-primary btn-sm' %>
           </div>
         </h3>
@@ -74,4 +75,5 @@
 </div>
 
 <%= render partial: 'new_student_modal', locals: { roster: current_roster } %>
+<%= render partial: 'download_csv_modal', locals: { roster: current_roster, organization: current_organization } %>
 <%= render partial: 'remove_roster_modal', locals: { roster: current_roster, organization: current_organization } %>
