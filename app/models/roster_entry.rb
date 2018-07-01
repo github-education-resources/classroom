@@ -15,7 +15,14 @@ class RosterEntry < ApplicationRecord
       csv << %i[identifier github_username github_id name group_name]
 
       all.sort_by(&:identifier).each do |entry|
-        csv << format_entry(entry, user_to_group_map)
+        github_user = entry.user.try(:github_user)
+        group_name = user_to_group_map.empty? ? "" : user_to_group_map[entry.user_id]
+
+        csv << [entry.identifier,
+                github_user.try(:login) || "",
+                github_user.try(:id) || "",
+                github_user.try(:name) || "",
+                group_name]
       end
     end
   end
@@ -85,14 +92,5 @@ class RosterEntry < ApplicationRecord
 
     errors[:identifier] << "Identifier must be unique in the roster."
     throw(:abort)
-  end
-
-  def self.format_entry(entry, user_to_group_map)
-    github_user = entry.user.try(:github_user)
-    github_id = github_user.try(:id) || ""
-    login = github_user.try(:login) || ""
-    name = github_user.try(:name) || ""
-    group_name = user_to_group_map.empty? ? "" : user_to_group_map[entry.user_id]
-    return [entry.identifier, login, github_id, name, group_name]
   end
 end
