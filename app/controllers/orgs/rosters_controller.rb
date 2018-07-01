@@ -136,11 +136,11 @@ module Orgs
 
       @roster_entries = @current_roster.roster_entries.includes(:user).order(:identifier)
       respond_to do |format|
-        format.csv {
+        format.csv do
           send_data @roster_entries.to_csv(user_to_groups),
-          filename: "classroom_roster.csv",
+          filename:    "classroom_roster.csv",
           disposition: "attachment"
-        }
+        end
       end
     end
 
