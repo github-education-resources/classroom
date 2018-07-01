@@ -16,13 +16,11 @@ class RosterEntry < ApplicationRecord
 
       all.sort_by(&:identifier).each do |entry|
         github_user = entry.user.try(:github_user)
-        group_name = user_to_group_map.empty? ? "" : user_to_group_map[entry.user_id]
-
         csv << [entry.identifier,
                 github_user.try(:login) || "",
                 github_user.try(:id) || "",
                 github_user.try(:name) || "",
-                group_name]
+                user_to_group_map.empty? ? "" : user_to_group_map[entry.user_id]]
       end
     end
   end
