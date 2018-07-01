@@ -10,25 +10,23 @@ class RosterEntry < ApplicationRecord
 
   before_create :validate_identifiers_are_unique_to_roster
 
+  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
   def self.to_csv(user_to_group_map = {})
     CSV.generate(headers: true, col_sep: ",", force_quotes: true) do |csv|
       csv << %i[identifier github_username github_id name group_name]
 
       all.sort_by(&:identifier).each do |entry|
-        csv << format_csv_entry(entry, user_to_group_map)
+        github_user = entry.user.try(:github_user)
+        login = github_user.try(:login) || ""
+        github_id = github_user.try(:id) || ""
+        name = github_user.try(:name) || ""
+        group_name = user_to_group_map.empty? ? "" : user_to_group_map[entry.user_id]
+
+        csv << [entry.identifier, login, github_id, name, group_name]
       end
     end
   end
-
-  def self.format_csv_entry(entry, user_to_group_map)
-    github_user = entry.user.try(:github_user)
-    login = github_user.try(:login) || ""
-    github_id = github_user.try(:id) || ""
-    name = github_user.try(:name) || ""
-    group_name = user_to_group_map.empty? ? "" : user_to_group_map[entry.user_id]
-
-    [entry.identifier, login, github_id, name, group_name]
-  end
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
   # Orders the relation for display in a view.
   # Ordering is:
