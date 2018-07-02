@@ -25,7 +25,7 @@ class RosterEntry < ApplicationRecord
         group_name = user_to_group_map.empty? ? "" : user_to_group_map[entry.user_id]
 
         row = [entry.identifier, login, github_id, name]
-        row << group_name unless group_name.nil? || group_name.empty?
+        row << group_name unless group_name.blank?
         csv << row
       end
     end
