@@ -121,13 +121,14 @@ module Orgs
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
 
+    # rubocop:disable Metrics/MethodLength
     def download_roster
       grouping = Grouping.find_by(id: params[:grouping])
 
       user_to_groups = {}
 
       unless grouping.nil?
-        grouping.groups.each do | group|
+        grouping.groups.each do | group |
           group.repo_accesses.map(&:user_id).each do |id|
             user_to_groups[id] = group.title
           end
@@ -137,12 +138,15 @@ module Orgs
       @roster_entries = @current_roster.roster_entries.includes(:user).order(:identifier)
       respond_to do |format|
         format.csv do
-          send_data @roster_entries.to_csv(user_to_groups),
-          filename:    "classroom_roster.csv",
-          disposition: "attachment"
+          send_data(
+            @roster_entries.to_csv(user_to_groups),
+            filename:    "classroom_roster.csv",
+            disposition: "attachment"
+          )
         end
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     private
 

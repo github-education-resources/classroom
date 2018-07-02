@@ -13,7 +13,9 @@ class RosterEntry < ApplicationRecord
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
   def self.to_csv(user_to_group_map = {})
     CSV.generate(headers: true, col_sep: ",", force_quotes: true) do |csv|
-      csv << %i[identifier github_username github_id name group_name]
+      columns = %i[identifier github_username github_id name]
+      columns << :group_name unless user_to_group_map.empty?
+      csv << columns
 
       all.sort_by(&:identifier).each do |entry|
         github_user = entry.user.try(:github_user)
@@ -22,7 +24,9 @@ class RosterEntry < ApplicationRecord
         name = github_user.try(:name) || ""
         group_name = user_to_group_map.empty? ? "" : user_to_group_map[entry.user_id]
 
-        csv << [entry.identifier, login, github_id, name, group_name]
+        row = [entry.identifier, login, github_id, name]
+        row << group_name unless group_name.nil? || group_name.empty?
+        csv << row
       end
     end
   end
