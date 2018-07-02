@@ -124,16 +124,7 @@ module Orgs
     # rubocop:disable Metrics/MethodLength
     def download_roster
       grouping = Grouping.find_by(id: params[:grouping])
-
-      user_to_groups = {}
-
-      unless grouping.nil?
-        grouping.groups.each do | group |
-          group.repo_accesses.map(&:user_id).each do |id|
-            user_to_groups[id] = group.title
-          end
-        end
-      end
+      user_to_groups = get_user_to_group_hash(grouping)
 
       @roster_entries = @current_roster.roster_entries.includes(:user).order(:identifier)
       respond_to do |format|
@@ -208,6 +199,21 @@ module Orgs
       end
 
       @unlinked_users
+    end
+
+    # returns a hash of user_ids to group names, or an empty object if no grouping is specified
+    def get_user_to_group_hash(grouping)
+      mapping = {}
+
+      unless grouping.nil?
+        grouping.groups.each do |group|
+          group.repo_accesses.map(&:user_id).each do |id|
+            mapping[id] = group.title
+          end
+        end
+      end
+
+      return mapping
     end
   end
 end
