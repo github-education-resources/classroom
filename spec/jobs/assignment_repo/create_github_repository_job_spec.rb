@@ -88,9 +88,9 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
     it "broadcasts status on channel" do
       expect { subject.perform_now(assignment, teacher) }
         .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: teacher.id))
-        .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::CREATE_REPO)
-        .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::ADDING_COLLABORATOR)
-        .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::IMPORT_STARTER_CODE)
+        .with(text: AssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO)
+        .with(text: AssignmentRepo::CreateGitHubRepositoryJob::ADDING_COLLABORATOR)
+        .with(text: AssignmentRepo::CreateGitHubRepositoryJob::IMPORT_STARTER_CODE)
     end
 
     it "tracks how long it too to be created" do
@@ -119,7 +119,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
       expect { subject.perform_now(assignment, student) }
         .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
-        .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::CREATE_REPO)
+        .with(text: AssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO)
         .with(text: AssignmentRepo::Creator::REPOSITORY_CREATION_FAILED)
     end
 
@@ -152,9 +152,9 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
         expect { subject.perform_now(assignment, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
-          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::CREATE_REPO)
-          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::ADDING_COLLABORATOR)
-          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::IMPORT_STARTER_CODE)
+          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO)
+          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::ADDING_COLLABORATOR)
+          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::IMPORT_STARTER_CODE)
           .with(text: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
       end
 
@@ -179,8 +179,8 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
         expect { subject.perform_now(assignment, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
-          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::CREATE_REPO)
-          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::ADDING_COLLABORATOR)
+          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO)
+          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::ADDING_COLLABORATOR)
           .with(text: AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED)
       end
 
@@ -201,9 +201,9 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
         expect { subject.perform_now(assignment, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
-          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::CREATE_REPO)
-          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::ADDING_COLLABORATOR)
-          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::Status::IMPORT_STARTER_CODE)
+          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO)
+          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::ADDING_COLLABORATOR)
+          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::IMPORT_STARTER_CODE)
           .with(text: AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE)
       end
     end

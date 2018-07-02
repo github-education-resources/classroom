@@ -7,10 +7,13 @@ class AssignmentRepo
     retry_on Octopoller::TimeoutError, queue: :porter_status
 
     # rubocop:disable MethodLength
+    # rubocop:disable AbcSize
     def perform(assignment_repo, user)
       github_repository = assignment_repo.github_repository
 
-      result = Octopoller.poll do # TODO: log errors
+      error_handler = proc { |error| logger.warn error.to_s }
+
+      result = Octopoller.poll(error_handler: error_handler) do
         begin
           progress = github_repository.import_progress[:status]
           case progress
@@ -30,6 +33,7 @@ class AssignmentRepo
           RepositoryCreationStatusChannel.channel(user_id: user.id),
           text: result
         )
+        logger.warn result.to_s
       when Creator::REPOSITORY_CREATION_COMPLETE
         ActionCable.server.broadcast(
           RepositoryCreationStatusChannel.channel(user_id: user.id),
@@ -38,5 +42,6 @@ class AssignmentRepo
       end
     end
     # rubocop:enable MethodLength
+    # rubocop:enable AbcSize
   end
 end

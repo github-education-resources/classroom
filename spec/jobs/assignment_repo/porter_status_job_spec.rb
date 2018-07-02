@@ -90,6 +90,22 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
           .with(text: AssignmentRepo::Creator::REPOSITORY_CREATION_COMPLETE)
       end
 
+      it "logs until porter status is 'complete'" do
+        stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
+          .to_return(
+            status: 201,
+            body: request_stub("importing"),
+            headers: { "Content-Type": "application/json" }
+          ).times(2).then
+          .to_return(
+            status: 200,
+            body: request_stub("complete"),
+            headers: { "Content-Type": "application/json" }
+          )
+        expect(Rails.logger).to receive(:warn).with(AssignmentRepo::Creator::IMPORT_ONGOING).exactly(2)
+        subject.perform_now(@assignment_repo, student)
+      end
+
       it "fails when porter status is 'error'" do
         stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
           .to_return(
@@ -121,6 +137,28 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
         expect { subject.perform_now(@assignment_repo, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
           .with(text: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
+      end
+
+      it "logs failure when porter status is 'error'" do
+        stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
+          .to_return(
+            status: 201,
+            body: request_stub("importing"),
+            headers: { "Content-Type": "application/json" }
+          ).times(2).then
+          .to_return(
+            status: 500,
+            body: request_stub("error"),
+            headers: { "Content-Type": "application/json" }
+          )
+        expect(Rails.logger)
+          .to receive(:warn)
+          .with(AssignmentRepo::Creator::IMPORT_ONGOING)
+          .exactly(2)
+        expect(Rails.logger)
+          .to receive(:warn)
+          .with(AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
+        subject.perform_now(@assignment_repo, student)
       end
     end
   end

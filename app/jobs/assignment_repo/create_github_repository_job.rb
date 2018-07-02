@@ -2,14 +2,12 @@
 
 class AssignmentRepo
   class CreateGitHubRepositoryJob < ApplicationJob
+    CREATE_REPO         = "Creating repository"
+    ADDING_COLLABORATOR = "Adding collaborator"
+    IMPORT_STARTER_CODE = "Importing starter code"
+
     queue_as :create_repository
     retry_on Creator::Result::Error, wait: :exponentially_longer, queue: :create_repository
-
-    class Status
-      CREATE_REPO = "Creating repository"
-      ADDING_COLLABORATOR = "Adding collaborator"
-      IMPORT_STARTER_CODE = "Importing starter code"
-    end
 
     # Create an AssignmentRepo
     #
@@ -27,7 +25,7 @@ class AssignmentRepo
 
       ActionCable.server.broadcast(
         RepositoryCreationStatusChannel.channel(user_id: user.id),
-        text: Status::CREATE_REPO
+        text: CREATE_REPO
       )
 
       assignment_repo = assignment.assignment_repos.build(
@@ -37,14 +35,14 @@ class AssignmentRepo
 
       ActionCable.server.broadcast(
         RepositoryCreationStatusChannel.channel(user_id: user.id),
-        text: Status::ADDING_COLLABORATOR
+        text: ADDING_COLLABORATOR
       )
 
       creator.add_user_to_repository!(assignment_repo.github_repo_id)
 
       ActionCable.server.broadcast(
         RepositoryCreationStatusChannel.channel(user_id: user.id),
-        text: Status::IMPORT_STARTER_CODE
+        text: IMPORT_STARTER_CODE
       )
 
       creator.push_starter_code!(assignment_repo.github_repo_id) if assignment.starter_code?
