@@ -204,16 +204,15 @@ module Orgs
     # returns a hash of user_ids to group names, or an empty object if no grouping is specified
     def get_user_to_group_hash(grouping)
       mapping = {}
+      return mapping if grouping.nil?
 
-      unless grouping.nil?
-        grouping.groups.each do |group|
-          group.repo_accesses.map(&:user_id).each do |id|
-            mapping[id] = group.title
-          end
+      grouping.groups.each do |group|
+        group.repo_accesses.map(&:user_id).each do |id|
+          mapping[id] = group.title
         end
       end
 
-      return mapping
+      mapping
     end
   end
 end
