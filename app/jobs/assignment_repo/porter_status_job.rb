@@ -19,6 +19,8 @@ class AssignmentRepo
           case progress
           when GitHubRepository::IMPORT_COMPLETE
             Creator::REPOSITORY_CREATION_COMPLETE
+          when *GitHubRepository::IMPORT_ERRORS
+            Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
           when *GitHubRepository::IMPORT_ONGOING
             raise ImportInProgress, Creator::IMPORT_ONGOING
           end

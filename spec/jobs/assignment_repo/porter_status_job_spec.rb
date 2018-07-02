@@ -114,12 +114,12 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             headers: { "Content-Type": "application/json" }
           ).times(2).then
           .to_return(
-            status: 500,
+            status: 201,
             body: request_stub("error"),
             headers: { "Content-Type": "application/json" }
           ).times(2)
         subject.perform_now(@assignment_repo, student)
-        expect { @assignment_repo.github_repository.import_progress }.to raise_error(GitHub::Error)
+        expect(@assignment_repo.github_repository.imported?).to be_falsy
       end
 
       it "broadcasts failure when porter status is 'error'" do
@@ -130,7 +130,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             headers: { "Content-Type": "application/json" }
           ).times(2).then
           .to_return(
-            status: 500,
+            status: 201,
             body: request_stub("error"),
             headers: { "Content-Type": "application/json" }
           )
@@ -147,9 +147,58 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             headers: { "Content-Type": "application/json" }
           ).times(2).then
           .to_return(
-            status: 500,
+            status: 201,
             body: request_stub("error"),
             headers: { "Content-Type": "application/json" }
+          )
+        expect(Rails.logger)
+          .to receive(:warn)
+          .with(AssignmentRepo::Creator::IMPORT_ONGOING)
+          .exactly(2)
+        expect(Rails.logger)
+          .to receive(:warn)
+          .with(AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
+        subject.perform_now(@assignment_repo, student)
+      end
+
+      it "fails when porter API errors" do
+        stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
+          .to_return(
+            status: 201,
+            body: request_stub("importing"),
+            headers: { "Content-Type": "application/json" }
+          ).times(2).then
+          .to_return(
+            status: 500
+          ).times(2)
+        subject.perform_now(@assignment_repo, student)
+        expect { @assignment_repo.github_repository.import_progress }.to raise_error(GitHub::Error)
+      end
+
+      it "broadcasts failure when porter API errors" do
+        stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
+          .to_return(
+            status: 201,
+            body: request_stub("importing"),
+            headers: { "Content-Type": "application/json" }
+          ).times(2).then
+          .to_return(
+            status: 500
+          )
+        expect { subject.perform_now(@assignment_repo, student) }
+          .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
+          .with(text: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
+      end
+
+      it "logs failure when porter API errors" do
+        stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
+          .to_return(
+            status: 201,
+            body: request_stub("importing"),
+            headers: { "Content-Type": "application/json" }
+          ).times(2).then
+          .to_return(
+            status: 500
           )
         expect(Rails.logger)
           .to receive(:warn)
