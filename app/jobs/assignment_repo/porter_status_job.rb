@@ -8,6 +8,7 @@ class AssignmentRepo
 
     # rubocop:disable MethodLength
     # rubocop:disable AbcSize
+    # rubocop:disable CyclomaticComplexity
     def perform(assignment_repo, user)
       github_repository = assignment_repo.github_repository
 
@@ -45,5 +46,6 @@ class AssignmentRepo
     end
     # rubocop:enable MethodLength
     # rubocop:enable AbcSize
+    # rubocop:enable CyclomaticComplexity
   end
 end
