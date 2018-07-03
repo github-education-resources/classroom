@@ -43,3 +43,6 @@ spec/examples.txt
 
 # yarn
 /node_modules
+
+# mac
+.DS_Store
