@@ -9,11 +9,10 @@ class API::AssignmentRepoInfoController < ApplicationController
 
     def repos
       if type == :individual
-        individual_repos
-      elsif type == :group
-        group_repos
+        render json: AssignmentRepoSerializer.new(individual_repos)
+      else
+        render json: GroupAssignmentRepoSerializer.new(group_repos)
       end
-      render json: @assignment_repos
     end
 
     def info
@@ -27,15 +26,14 @@ class API::AssignmentRepoInfoController < ApplicationController
     private
 
     def group_repos
-      @assignment_repos = GroupAssignmentRepo.where(group_assignment: @assignment).page(params[:page])
+      paginate GroupAssignmentRepo.where(group_assignment: @assignment)
     end
 
     def individual_repos
-      @assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
+      paginate AssignmentRepo.where(assignment: @assignment)
     end
 
     def set_assignment
-      # binding.pry
       if type == :individual
         @assignment = @organization.assignments.includes(:assignment_invitation).find_by!(slug: params[:assignment_id])
       elsif type == :group
