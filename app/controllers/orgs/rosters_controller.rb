@@ -201,7 +201,8 @@ module Orgs
       @unlinked_users
     end
 
-    # returns a hash of user_ids to group names, or an empty object if no grouping is specified
+    # Maps user_ids to group names
+    # If no grouping is specified it returns an empty hash
     def get_user_to_group_hash(grouping)
       mapping = {}
       return mapping if grouping.nil?
