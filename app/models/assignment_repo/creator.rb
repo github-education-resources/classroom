@@ -6,6 +6,8 @@ class AssignmentRepo
     REPOSITORY_CREATION_FAILED              = "GitHub repository could not be created, please try again"
     REPOSITORY_STARTER_CODE_IMPORT_FAILED   = "We were not able to import you the starter code to your assignment, please try again." # rubocop:disable LineLength
     REPOSITORY_COLLABORATOR_ADDITION_FAILED = "We were not able to add you to the Assignment as a collaborator, please try again." # rubocop:disable LineLength
+    REPOSITORY_CREATION_COMPLETE            = "Your GitHub repository was created."
+    IMPORT_ONGOING                          = "Your GitHub repository is importing starter code."
 
     attr_reader :assignment, :user, :organization
 
@@ -88,9 +90,7 @@ class AssignmentRepo
     # rubocop:enable AbcSize
     # rubocop:enable MethodLength
 
-    private
-
-    # Internal: Add the User to the GitHub repository
+    # Public: Add the User to the GitHub repository
     # as a collaborator.
     #
     # Returns true if successful, otherwise raises a Result::Error
@@ -107,7 +107,7 @@ class AssignmentRepo
     end
     # rubocop:enable Metrics/AbcSize
 
-    # Internal: Create the GitHub repository for the AssignmentRepo.
+    # Public: Create the GitHub repository for the AssignmentRepo.
     #
     # Returns an Integer ID or raises a Result::Error
     def create_github_repository!
@@ -130,7 +130,7 @@ class AssignmentRepo
       true
     end
 
-    # Internal: Push starter code to the newly created GitHub
+    # Public: Push starter code to the newly created GitHub
     # repository.
     #
     # github_repo_id - The Integer id of the GitHub repository.
@@ -148,7 +148,7 @@ class AssignmentRepo
       raise Result::Error, REPOSITORY_STARTER_CODE_IMPORT_FAILED
     end
 
-    # Internal: Ensure that we can make a private repository on GitHub.
+    # Public: Ensure that we can make a private repository on GitHub.
     #
     # Returns True or raises a Result::Error with a helpful message.
     def verify_organization_has_private_repos_available!
@@ -169,6 +169,8 @@ class AssignmentRepo
 
       raise Result::Error, error_message
     end
+
+    private
 
     #####################################
     # GitHub repository name generation #
