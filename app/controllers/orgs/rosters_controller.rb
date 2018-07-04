@@ -121,12 +121,23 @@ module Orgs
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
 
+    # rubocop:disable Metrics/MethodLength
     def download_roster
+      grouping = Grouping.find_by(id: params[:grouping])
+      user_to_groups = get_user_to_group_hash(grouping)
+
       @roster_entries = @current_roster.roster_entries.includes(:user).order(:identifier)
       respond_to do |format|
-        format.csv { send_data @roster_entries.to_csv, filename: "classroom_roster.csv", disposition: "attachment" }
+        format.csv do
+          send_data(
+            @roster_entries.to_csv(user_to_groups),
+            filename:    "classroom_roster.csv",
+            disposition: "attachment"
+          )
+        end
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     private
 
@@ -188,6 +199,21 @@ module Orgs
       end
 
       @unlinked_users
+    end
+
+    # Maps user_ids to group names
+    # If no grouping is specified it returns an empty hash
+    def get_user_to_group_hash(grouping)
+      mapping = {}
+      return mapping unless grouping
+
+      grouping.groups.each do |group|
+        group.repo_accesses.map(&:user_id).each do |id|
+          mapping[id] = group.title
+        end
+      end
+
+      mapping
     end
   end
 end
