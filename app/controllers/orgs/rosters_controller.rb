@@ -205,7 +205,7 @@ module Orgs
     # If no grouping is specified it returns an empty hash
     def get_user_to_group_hash(grouping)
       mapping = {}
-      return mapping if grouping.nil?
+      return mapping unless grouping
 
       grouping.groups.each do |group|
         group.repo_accesses.map(&:user_id).each do |id|
