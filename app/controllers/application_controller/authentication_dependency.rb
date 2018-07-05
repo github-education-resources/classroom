@@ -5,7 +5,7 @@ class ApplicationController
 
   def current_scopes
     return [] unless logged_in?
-    session[:current_scopes] ||= current_user.github_client_scopes
+    session[:current_scopes] = current_user.github_client_scopes
   end
 
   def required_scopes
@@ -20,7 +20,10 @@ class ApplicationController
   end
 
   def authenticate_user!
-    return become_active if logged_in? && adequate_scopes?
+    if logged_in?
+      return log_out unless current_user.authorized_access_token?
+      return become_active if adequate_scopes?
+    end
     auth_redirect
   end
 
@@ -46,6 +49,11 @@ class ApplicationController
 
   def logged_in?
     !current_user.nil?
+  end
+
+  def log_out
+    reset_session
+    redirect_to root_path
   end
 
   def true_user

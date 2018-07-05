@@ -67,9 +67,9 @@ RSpec.describe OrganizationsController, type: :controller do
         user.update_attributes(token: "1234")
       end
 
-      it "redirects to login_path" do
+      it "logs out user" do
         get :index
-        expect(response).to redirect_to(login_path)
+        expect(response).to redirect_to(root_path)
       end
     end
   end

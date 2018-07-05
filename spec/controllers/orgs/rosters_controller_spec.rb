@@ -30,11 +30,11 @@ RSpec.describe Orgs::RostersController, type: :controller do
         expect(response).to render_template("rosters/new")
       end
 
-      it "redirects if the user doesn't belong to the organization" do
+      it "sends not found if the user doesn't belong to the organization" do
         sign_in_as(classroom_student)
 
         get :new, params: { id: organization.slug }
-        expect(response).to have_http_status(:redirect)
+        expect(response).to have_http_status(:not_found)
       end
 
       after do
