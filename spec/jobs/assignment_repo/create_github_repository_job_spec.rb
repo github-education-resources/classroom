@@ -89,7 +89,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       expect { subject.perform_now(assignment, teacher) }
         .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: teacher.id))
         .with(text: AssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO)
-        .with(text: AssignmentRepo::CreateGitHubRepositoryJob::ADDING_COLLABORATOR)
         .with(text: AssignmentRepo::CreateGitHubRepositoryJob::IMPORT_STARTER_CODE)
     end
 
@@ -153,8 +152,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         expect { subject.perform_now(assignment, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
           .with(text: AssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO)
-          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::ADDING_COLLABORATOR)
-          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::IMPORT_STARTER_CODE)
           .with(text: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
       end
 
@@ -180,7 +177,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         expect { subject.perform_now(assignment, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
           .with(text: AssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO)
-          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::ADDING_COLLABORATOR)
           .with(text: AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED)
       end
 
@@ -202,8 +198,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         expect { subject.perform_now(assignment, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
           .with(text: AssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO)
-          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::ADDING_COLLABORATOR)
-          .with(text: AssignmentRepo::CreateGitHubRepositoryJob::IMPORT_STARTER_CODE)
           .with(text: AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE)
       end
     end

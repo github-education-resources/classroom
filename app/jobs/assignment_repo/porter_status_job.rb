@@ -32,12 +32,14 @@ class AssignmentRepo
 
       case result
       when Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
+        assignment_repo.assignment.invitation&.errored!
         ActionCable.server.broadcast(
           RepositoryCreationStatusChannel.channel(user_id: user.id),
           { text: result }
         )
         logger.warn result.to_s
       when Creator::REPOSITORY_CREATION_COMPLETE
+        assignment_repo.assignment.invitation&.completed!
         ActionCable.server.broadcast(
           RepositoryCreationStatusChannel.channel(user_id: user.id),
           { text: result }

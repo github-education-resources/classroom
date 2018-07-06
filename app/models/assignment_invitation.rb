@@ -2,7 +2,8 @@
 
 class AssignmentInvitation < ApplicationRecord
   include ShortKey
-  ASSIGNMENT_INVITATION_STATUS = %w( unaccepted accepted creating_repo importing_starter_code complete errored )
+
+  enum status: %i[ unaccepted accepted creating_repo importing_starter_code completed errored ]
 
   default_scope { where(deleted_at: nil) }
 
@@ -19,8 +20,6 @@ class AssignmentInvitation < ApplicationRecord
 
   validates :short_key, uniqueness: true, allow_nil: true
 
-  validate :status_is_valid
-
   after_initialize :assign_key
 
   after_initialize :set_defaults, unless: :persisted?
@@ -31,7 +30,7 @@ class AssignmentInvitation < ApplicationRecord
   #
   # Returns a AssignmentRepo::Creator::Result.
   def redeem_for(invitee, import_resiliency: false)
-    update(status: "accepted")
+    accepted!
     if (repo_access = RepoAccess.find_by(user: invitee, organization: organization))
       assignment_repo = AssignmentRepo.find_by(assignment: assignment, repo_access: repo_access)
       return AssignmentRepo::Creator::Result.success(assignment_repo) if assignment_repo.present?
@@ -64,12 +63,6 @@ class AssignmentInvitation < ApplicationRecord
   end
 
   def set_defaults
-    self.status ||= "unaccepted"
-  end
-
-  def status_is_valid
-    unless ASSIGNMENT_INVITATION_STATUS.include?(status) || status.nil?
-      errors.add(:status, "can't be something other than #{ASSIGNMENT_INVITATION_STATUS + [nil]}")
-    end
+    self.status ||= :unaccepted
   end
 end
