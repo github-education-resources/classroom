@@ -25,7 +25,7 @@ class AssignmentRepo
 
       ActionCable.server.broadcast(
         RepositoryCreationStatusChannel.channel(user_id: user.id),
-        text: CREATE_REPO
+        { text: CREATE_REPO }
       )
 
       assignment_repo = assignment.assignment_repos.build(
@@ -35,17 +35,18 @@ class AssignmentRepo
 
       ActionCable.server.broadcast(
         RepositoryCreationStatusChannel.channel(user_id: user.id),
-        text: ADDING_COLLABORATOR
+        { text: ADDING_COLLABORATOR }
       )
 
       creator.add_user_to_repository!(assignment_repo.github_repo_id)
 
-      ActionCable.server.broadcast(
-        RepositoryCreationStatusChannel.channel(user_id: user.id),
-        text: IMPORT_STARTER_CODE
-      )
-
-      creator.push_starter_code!(assignment_repo.github_repo_id) if assignment.starter_code?
+      if assignment.starter_code?
+        ActionCable.server.broadcast(
+          RepositoryCreationStatusChannel.channel(user_id: user.id),
+          { text: IMPORT_STARTER_CODE }
+        )
+        creator.push_starter_code!(assignment_repo.github_repo_id)
+      end
 
       begin
         assignment_repo.save!
@@ -56,12 +57,19 @@ class AssignmentRepo
       duration_in_millseconds = (Time.zone.now - start) * 1_000
       GitHubClassroom.statsd.timing("exercise_repo.create.time", duration_in_millseconds)
 
-      PorterStatusJob.perform_later(assignment_repo, user)
+      if assignment.starter_code?
+        PorterStatusJob.perform_later(assignment_repo, user)
+      else
+        ActionCable.server.broadcast(
+          RepositoryCreationStatusChannel.channel(user_id: user.id),
+          { text: Creator::REPOSITORY_CREATION_COMPLETE }
+        )
+      end
     rescue Creator::Result::Error => err
       creator.delete_github_repository(assignment_repo.try(:github_repo_id))
       ActionCable.server.broadcast(
         RepositoryCreationStatusChannel.channel(user_id: user.id),
-        text: err
+        { text: err }
       )
       raise err
     end

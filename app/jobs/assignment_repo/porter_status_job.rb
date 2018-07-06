@@ -34,13 +34,13 @@ class AssignmentRepo
       when Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
         ActionCable.server.broadcast(
           RepositoryCreationStatusChannel.channel(user_id: user.id),
-          text: result
+          { text: result }
         )
         logger.warn result.to_s
       when Creator::REPOSITORY_CREATION_COMPLETE
         ActionCable.server.broadcast(
           RepositoryCreationStatusChannel.channel(user_id: user.id),
-          text: result
+          { text: result }
         )
       end
     end
