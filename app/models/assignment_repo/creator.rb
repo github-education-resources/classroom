@@ -22,7 +22,11 @@ class AssignmentRepo
         new(:failed, error: error)
       end
 
-      attr_reader :error, :assignment_repo
+      def self.pending
+        new(:pending)
+      end
+
+      attr_reader :error, :assignment_repo, :status
 
       def initialize(status, assignment_repo: nil, error: nil)
         @status          = status
@@ -36,6 +40,10 @@ class AssignmentRepo
 
       def failed?
         @status == :failed
+      end
+
+      def pending?
+        @status == :pending
       end
     end
 
