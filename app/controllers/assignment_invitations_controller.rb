@@ -9,17 +9,50 @@ class AssignmentInvitationsController < ApplicationController
   before_action :ensure_authorized_repo_setup, only: %i[setup setup_progress]
 
   def accept
-    create_submission do
-      GitHubClassroom.statsd.increment("exercise_invitation.accept")
-      if current_submission.starter_code_repo_id
-        redirect_to setup_assignment_invitation_path
-      else
-        redirect_to success_assignment_invitation_path
+    if import_resiliency_enabled?
+      result = current_invitation.redeem_for(current_user, import_resiliency: import_resiliency_enabled?)
+      case result.status
+      when :success
+        GitHubClassroom.statsd.increment("exercise_invitation.accept")
+        if current_submission.starter_code_repo_id
+          redirect_to setup_assignment_invitation_path
+        else
+          current_invitation.completed!
+          redirect_to success_assignment_invitation_path
+        end
+      when :pending
+        GitHubClassroom.statsd.increment("exercise_invitation.accept")
+        redirect_to setupv2_assignment_invitation_path
+      when :error
+        GitHubClassroom.statsd.increment("exercise_invitation.fail")
+        current_invitation.errored!
+
+        flash[:error] = result.error
+        redirect_to assignment_invitation_path(current_invitation)
+      end
+    else
+      create_submission do
+        GitHubClassroom.statsd.increment("exercise_invitation.accept")
+        if current_submission.starter_code_repo_id
+          redirect_to setup_assignment_invitation_path
+        else
+          redirect_to success_assignment_invitation_path
+        end
       end
     end
   end
 
   def setup; end
+
+  def setupv2
+    if current_invitation.accepted?
+      AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user)
+    end
+  end
+
+  def progress
+    render json: { status: current_invitation.status }
+  end
 
   def setup_progress
     perform_setup(current_submission, classroom_config) if configurable_submission?

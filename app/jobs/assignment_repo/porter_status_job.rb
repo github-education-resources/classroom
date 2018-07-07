@@ -35,14 +35,20 @@ class AssignmentRepo
         assignment_repo.assignment.invitation&.errored!
         ActionCable.server.broadcast(
           RepositoryCreationStatusChannel.channel(user_id: user.id),
-          { text: result }
+          {
+            text: result,
+            status: assignment_repo.assignment.invitation&.status
+          }
         )
         logger.warn result.to_s
       when Creator::REPOSITORY_CREATION_COMPLETE
         assignment_repo.assignment.invitation&.completed!
         ActionCable.server.broadcast(
           RepositoryCreationStatusChannel.channel(user_id: user.id),
-          { text: result }
+          {
+            text: result,
+            status: assignment_repo.assignment.invitation&.status
+          }
         )
       end
     end
