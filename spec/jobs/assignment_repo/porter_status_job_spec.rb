@@ -49,7 +49,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
 
     context "started importing starter code" do
       before do
-        AssignmentInvitation.create(status: nil, assignment: assignment)
+        AssignmentInvitation.create(assignment: assignment)
         creator = AssignmentRepo::Creator.new(assignment: assignment, user: student)
         creator.push_starter_code!(@repo.id)
         @assignment_repo = AssignmentRepo.new(assignment: assignment)
