@@ -1,7 +1,7 @@
 (function() {
   var ready, check_progress, show_success, invitation_path, progress_path, success_path, display_progress, indicate_completion, indicate_failure, indicate_in_progress;
 
-  indicate_completion = function(step_indicator){
+  indicate_completion = function(step_indicator) {
     $(step_indicator).addClass("border-green bg-green-light");
 
     var status, completion_indicator;
@@ -19,7 +19,7 @@
     $(spinner_indicator).hide();
   };
 
-  indicate_failure = function(step_indicator){
+  indicate_failure = function(step_indicator) {
     $(step_indicator).addClass("border-red bg-red-light");
 
     var status, failure_indicator;
@@ -37,7 +37,7 @@
     $(spinner_indicator).hide();
   };
 
-  indicate_in_progress = function(step_indicator){
+  indicate_in_progress = function(step_indicator) {
     let status;
     status = $(step_indicator).find(".status");
     if (status.hasClass("d-none")) {
@@ -100,7 +100,7 @@
   check_progress = function() {
     const path = progress_path();
 
-    $.ajax({type: "GET", url: path}).done(function(data){
+    $.ajax({type: "PATCH", url: path}).done(function(data) {
 
       console.log(data) // remove this
       display_progress(data);
@@ -110,7 +110,7 @@
 
   ready = (function() {
     const setup_progress = $(".setupv2");
-    if (setup_progress.length !== 0){
+    if (setup_progress.length !== 0) {
       check_progress();
     }
   });
