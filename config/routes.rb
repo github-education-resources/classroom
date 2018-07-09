@@ -33,6 +33,7 @@ Rails.application.routes.draw do
     member do
       patch :accept
       get   :setup
+      get   :setupv2
       get   :progress
       patch :setup_progress
       get   :success

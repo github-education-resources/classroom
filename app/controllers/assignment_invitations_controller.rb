@@ -44,13 +44,12 @@ class AssignmentInvitationsController < ApplicationController
 
   def setup; end
 
-  def setupv2
+  def setupv2; end
+
+  def progress
     if current_invitation.accepted?
       AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user)
     end
-  end
-
-  def progress
     render json: { status: current_invitation.status }
   end
 
