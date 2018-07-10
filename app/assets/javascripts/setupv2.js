@@ -76,7 +76,7 @@
         indicate_completion(import_repo_progress_indicator);
         setTimeout(show_success, 500);
         break;
-    };
+    }
   };
 
   success_path = function () {
@@ -88,11 +88,11 @@
   };
 
   job_path = function () {
-    return invitation_path()
+    return invitation_path();
   };
 
   invitation_path = function () {
-    const pathname = window.location.pathname
+    const pathname = window.location.pathname;
     let path_components = pathname.split("/");
     path_components.pop();
     return path_components.join("/");
