@@ -25,7 +25,7 @@ RSpec.describe AssignmentInvitation, type: :model do
 
   it "validates status can't be any symbol" do
     assignment_invitation = build(:assignment_invitation)
-    expect{ assignment_invitation.update(status: :not_a_status) }.to raise_error(ArgumentError)
+    expect { assignment_invitation.update(status: :not_a_status) }.to raise_error(ArgumentError)
   end
 
   describe "short_key" do

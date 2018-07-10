@@ -144,7 +144,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       it "redirects to setupv2 when AssignmentRepo doesn't already exist" do
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
           .with(user, import_resiliency: true)
-          .and_return(AssignmentRepo::Creator::Result.pending())
+          .and_return(AssignmentRepo::Creator::Result.pending)
 
         patch :accept, params: { id: invitation.key }
         expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
@@ -268,11 +268,11 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       sign_in_as(user)
     end
 
-    it "will bring you to the page" do
-        get :setupv2, params: { id: invitation.key }
-        expect(response.status).to eq(404)
-        expect(response.body).to be_empty
-      end
+    it "404s when feature is off" do
+      get :setupv2, params: { id: invitation.key }
+      expect(response.status).to eq(404)
+      expect(response.body).to be_empty
+    end
 
     context "with import resiliency enabled" do
       before do
@@ -312,13 +312,13 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
       it "returns the correct status" do
         get :progress, params: { id: invitation.key }
-        expect(response.body).to eq({status: invitation.status}.to_json)
+        expect(response.body).to eq({ status: invitation.status }.to_json)
       end
 
       it "returns the correct status when status is changed" do
         invitation.errored!
         get :progress, params: { id: invitation.key }
-        expect(response.body).to eq({status: invitation.status}.to_json)
+        expect(response.body).to eq({ status: invitation.status }.to_json)
       end
     end
   end

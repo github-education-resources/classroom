@@ -44,12 +44,14 @@ class AssignmentInvitationsController < ApplicationController
 
   def setup; end
 
-  def setupv2; end
+  def setupv2;
+    unless import_resiliency_enabled?
+      render status: 404
+    end
+  end
 
   def create
-    unless import_resiliency_enabled?
-      render status: 404, json: {}
-    else
+    if import_resiliency_enabled?
       job_started = false
       if current_invitation.accepted? || current_invitation.errored?
         AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user)
@@ -58,14 +60,16 @@ class AssignmentInvitationsController < ApplicationController
       render json: {
         job_started: job_started
       }
+    else
+      render status: 404, json: {}
     end
   end
 
   def progress
-    unless import_resiliency_enabled?
-      render status: 404, json: {}
-    else
+    if import_resiliency_enabled?
       render json: { status: current_invitation.status }
+    else
+      render status: 404, json: {}
     end
   end
 

@@ -89,14 +89,14 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       AssignmentInvitation.create(assignment: assignment)
       expect { subject.perform_now(assignment, teacher) }
         .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: teacher.id))
-        .with({
+        .with(
           text: AssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO,
           status: "creating_repo"
-        })
-        .with({
+        )
+        .with(
           text: AssignmentRepo::CreateGitHubRepositoryJob::IMPORT_STARTER_CODE,
           status: "importing_starter_code"
-        })
+        )
     end
 
     it "tracks how long it too to be created" do
@@ -126,14 +126,14 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
       expect { subject.perform_now(assignment, student) }
         .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
-        .with({
+        .with(
           text: AssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO,
           status: "creating_repo"
-        })
-        .with({
+        )
+        .with(
           text: AssignmentRepo::Creator::REPOSITORY_CREATION_FAILED,
           status: "errored"
-        })
+        )
     end
 
     context "with successful repo creation" do
@@ -169,14 +169,14 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
         expect { subject.perform_now(assignment, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
-          .with({
+          .with(
             text: AssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO,
             status: "creating_repo"
-          })
-          .with({
+          )
+          .with(
             text: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
             status: "errored"
-          })
+          )
       end
 
       it "fails to add the user to the repo and retries" do
@@ -200,14 +200,14 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
         expect { subject.perform_now(assignment, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
-          .with({
+          .with(
             text: AssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO,
             status: "creating_repo"
-          })
-          .with({
+          )
+          .with(
             text: AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED,
             status: "errored"
-          })
+          )
       end
 
       it "fails to save the AssignmentRepo and retries" do
@@ -227,14 +227,14 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
         expect { subject.perform_now(assignment, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
-          .with({
+          .with(
             text: AssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO,
             status: "creating_repo"
-          })
-          .with({
+          )
+          .with(
             text: AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE,
             status: "errored"
-          })
+          )
       end
     end
   end
