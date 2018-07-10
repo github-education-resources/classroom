@@ -122,6 +122,106 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         expect(response).to redirect_to(setup_assignment_invitation_url(invitation2))
       end
     end
+
+    context "with import resiliency enabled" do
+      before do
+        GitHubClassroom.flipper[:import_resiliency].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:import_resiliency].disable
+      end
+
+      it "redirects to success when AssignmentRepo already exists" do
+        allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
+          .with(user, import_resiliency: true)
+          .and_return(result)
+
+        patch :accept, params: { id: invitation.key }
+        expect(response).to redirect_to(success_assignment_invitation_url(invitation))
+      end
+
+      it "redirects to setupv2 when AssignmentRepo doesn't already exist" do
+        allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
+          .with(user, import_resiliency: true)
+          .and_return(AssignmentRepo::Creator::Result.pending)
+
+        patch :accept, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+      end
+    end
+  end
+
+  describe "POST #create", :vcr do
+    before do
+      sign_in_as(user)
+    end
+
+    it "404 when feature is off" do
+      post :create, params: { id: invitation.key }
+      expect(response.status).to eq(404)
+    end
+
+    context "with import resiliency enabled" do
+      before do
+        GitHubClassroom.flipper[:import_resiliency].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:import_resiliency].disable
+      end
+
+      context "when invitation status is accepted" do
+        before do
+          invitation.accepted!
+        end
+
+        it "enqueues a CreateRepositoryJob" do
+          assert_enqueued_jobs 1, only: AssignmentRepo::CreateGitHubRepositoryJob do
+            post :create, params: { id: invitation.key }
+          end
+        end
+
+        it "says a job was succesfully kicked off" do
+          post :create, params: { id: invitation.key }
+          expect(response.body).to eq({ job_started: true }.to_json)
+        end
+      end
+
+      context "when invitation status is errored" do
+        before do
+          invitation.errored!
+        end
+
+        it "enqueues a CreateRepositoryJob" do
+          assert_enqueued_jobs 1, only: AssignmentRepo::CreateGitHubRepositoryJob do
+            post :create, params: { id: invitation.key }
+          end
+        end
+
+        it "says a job was succesfully kicked off" do
+          post :create, params: { id: invitation.key }
+          expect(response.body).to eq({ job_started: true }.to_json)
+        end
+      end
+
+      context "when invitation status is anything else" do
+        before do
+          invitation.unaccepted!
+        end
+
+        it "does not enqueue a CreateRepositoryJob" do
+          assert_enqueued_jobs 0, only: AssignmentRepo::CreateGitHubRepositoryJob do
+            post :create, params: { id: invitation.key }
+          end
+        end
+
+        it "says a job was unsuccesfully kicked off" do
+          post :create, params: { id: invitation.key }
+          expect(response.body).to eq({ job_started: false }.to_json)
+        end
+      end
+    end
   end
 
   describe "GET #setup", :vcr do
@@ -159,6 +259,66 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         expect(request.url).to eq(setup_assignment_invitation_url(invitation))
         expect(response).to have_http_status(:success)
         expect(response).to render_template("assignment_invitations/setup")
+      end
+    end
+  end
+
+  describe "GET #setupv2", :vcr do
+    before(:each) do
+      sign_in_as(user)
+    end
+
+    it "404s when feature is off" do
+      get :setupv2, params: { id: invitation.key }
+      expect(response.status).to eq(404)
+      expect(response.body).to be_empty
+    end
+
+    context "with import resiliency enabled" do
+      before do
+        GitHubClassroom.flipper[:import_resiliency].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:import_resiliency].disable
+      end
+
+      it "will bring you to the page" do
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template("assignment_invitations/setupv2")
+      end
+    end
+  end
+
+  describe "GET #progress", :vcr do
+    before do
+      sign_in_as(user)
+    end
+
+    it "404 when feature is off" do
+      post :create, params: { id: invitation.key }
+      expect(response.status).to eq(404)
+    end
+
+    context "with import resiliency enabled" do
+      before do
+        GitHubClassroom.flipper[:import_resiliency].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:import_resiliency].disable
+      end
+
+      it "returns the correct status" do
+        get :progress, params: { id: invitation.key }
+        expect(response.body).to eq({ status: invitation.status }.to_json)
+      end
+
+      it "returns the correct status when status is changed" do
+        invitation.errored!
+        get :progress, params: { id: invitation.key }
+        expect(response.body).to eq({ status: invitation.status }.to_json)
       end
     end
   end

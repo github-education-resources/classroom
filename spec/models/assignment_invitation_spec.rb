@@ -12,6 +12,22 @@ RSpec.describe AssignmentInvitation, type: :model do
     expect(assignment_invitation.key).to_not be_nil
   end
 
+  it "should have a status after initialization" do
+    assignment_invitation = build(:assignment_invitation)
+    expect(assignment_invitation.status).to eq("unaccepted")
+  end
+
+  it "shouldn't invalidate old records" do
+    assignment_invitation = AssignmentInvitation.create(status: nil, assignment: subject.assignment)
+    expect(assignment_invitation.errors).to be_empty
+    expect(assignment_invitation.valid?).to be_truthy
+  end
+
+  it "validates status can't be any symbol" do
+    assignment_invitation = build(:assignment_invitation)
+    expect { assignment_invitation.update(status: :not_a_status) }.to raise_error(ArgumentError)
+  end
+
   describe "short_key" do
     it "allows multiple invitations with nil short_key" do
       first_inv = create(:assignment_invitation)
