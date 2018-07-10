@@ -36,7 +36,11 @@ class Organization < ApplicationRecord
   end
 
   def github_client
-    token = users.limit(1).order("RANDOM()").pluck(:token)[0]
+    if Rails.env.test?
+      token = users.first.token unless users.first.nil?
+    else
+      token = users.limit(1).order("RANDOM()").pluck(:token)[0]
+    end
     Octokit::Client.new(access_token: token)
   end
 

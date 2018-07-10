@@ -10,19 +10,27 @@ class RosterEntry < ApplicationRecord
 
   before_create :validate_identifiers_are_unique_to_roster
 
-  def self.to_csv
+  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity
+  def self.to_csv(user_to_group_map = {})
     CSV.generate(headers: true, col_sep: ",", force_quotes: true) do |csv|
-      csv << %i[identifier github_username github_id name]
+      columns = %i[identifier github_username github_id name]
+      columns << :group_name unless user_to_group_map.empty?
+      csv << columns
 
       all.sort_by(&:identifier).each do |entry|
         github_user = entry.user.try(:github_user)
-        github_id = github_user.try(:id) || ""
         login = github_user.try(:login) || ""
+        github_id = github_user.try(:id) || ""
         name = github_user.try(:name) || ""
-        csv << [entry.identifier, login, github_id, name]
+        group_name = user_to_group_map.empty? ? "" : user_to_group_map[entry.user_id]
+
+        row = [entry.identifier, login, github_id, name]
+        row << group_name if group_name.present?
+        csv << row
       end
     end
   end
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity
 
   # Orders the relation for display in a view.
   # Ordering is:
