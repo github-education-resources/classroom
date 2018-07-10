@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable ClassLength
 class AssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
   include RepoSetup
@@ -8,6 +9,10 @@ class AssignmentInvitationsController < ApplicationController
   before_action :ensure_submission_repository_exists, only: %i[setup setup_progress success]
   before_action :ensure_authorized_repo_setup, only: %i[setup setup_progress]
 
+  # rubocop:disable PerceivedComplexity
+  # rubocop:disable MethodLength
+  # rubocop:disable AbcSize
+  # rubocop:disable CyclomaticComplexity
   def accept
     if import_resiliency_enabled?
       result = current_invitation.redeem_for(current_user, import_resiliency: import_resiliency_enabled?)
@@ -41,15 +46,18 @@ class AssignmentInvitationsController < ApplicationController
       end
     end
   end
+  # rubocop:enable PerceivedComplexity
+  # rubocop:enable MethodLength
+  # rubocop:enable AbcSize
+  # rubocop:enable CyclomaticComplexity
 
   def setup; end
 
-  def setupv2;
-    unless import_resiliency_enabled?
-      render status: 404
-    end
+  def setupv2
+    render status: 404 unless import_resiliency_enabled?
   end
 
+  # rubocop:disable MethodLength
   def create
     if import_resiliency_enabled?
       job_started = false
@@ -64,6 +72,7 @@ class AssignmentInvitationsController < ApplicationController
       render status: 404, json: {}
     end
   end
+  # rubocop:enable MethodLength
 
   def progress
     if import_resiliency_enabled?
@@ -156,3 +165,4 @@ class AssignmentInvitationsController < ApplicationController
     GitHubClassroom::Scopes::ASSIGNMENT_STUDENT
   end
 end
+# rubocop:enable ClassLength

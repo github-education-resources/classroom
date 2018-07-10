@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 (function() {
   var ready, check_progress, show_success, invitation_path, progress_path, success_path, display_progress, indicate_completion, indicate_failure, indicate_in_progress;
 

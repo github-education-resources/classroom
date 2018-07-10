@@ -27,10 +27,8 @@ class AssignmentRepo
 
       ActionCable.server.broadcast(
         RepositoryCreationStatusChannel.channel(user_id: user.id),
-        {
-          text: CREATE_REPO,
-          status: assignment.invitation&.status
-        }
+        text: CREATE_REPO,
+        status: assignment.invitation&.status
       )
 
       assignment_repo = assignment.assignment_repos.build(
@@ -55,20 +53,16 @@ class AssignmentRepo
         assignment.invitation&.importing_starter_code!
         ActionCable.server.broadcast(
           RepositoryCreationStatusChannel.channel(user_id: user.id),
-          {
-            text: IMPORT_STARTER_CODE,
-            status: assignment.invitation&.status
-          }
+          text: IMPORT_STARTER_CODE,
+          status: assignment.invitation&.status
         )
         PorterStatusJob.perform_later(assignment_repo, user)
       else
         assignment.invitation&.completed!
         ActionCable.server.broadcast(
           RepositoryCreationStatusChannel.channel(user_id: user.id),
-          {
-            text: Creator::REPOSITORY_CREATION_COMPLETE,
-            status: assignment.invitation&.status
-          }
+          text: Creator::REPOSITORY_CREATION_COMPLETE,
+          status: assignment.invitation&.status
         )
       end
     rescue Creator::Result::Error => err
@@ -76,10 +70,8 @@ class AssignmentRepo
       assignment.invitation&.errored!
       ActionCable.server.broadcast(
         RepositoryCreationStatusChannel.channel(user_id: user.id),
-        {
-          text: err,
-          status: assignment.invitation&.status
-        }
+        text: err,
+        status: assignment.invitation&.status
       )
       raise err
     end

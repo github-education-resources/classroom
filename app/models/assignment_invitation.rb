@@ -3,7 +3,7 @@
 class AssignmentInvitation < ApplicationRecord
   include ShortKey
 
-  enum status: %i[ unaccepted accepted creating_repo importing_starter_code completed errored ]
+  enum status: %i[unaccepted accepted creating_repo importing_starter_code completed errored]
 
   default_scope { where(deleted_at: nil) }
 
@@ -29,6 +29,9 @@ class AssignmentInvitation < ApplicationRecord
   # Public: Redeem an AssignmentInvtiation for a User invitee.
   #
   # Returns a AssignmentRepo::Creator::Result.
+  #
+  # rubocop:disable MethodLength
+  # rubocop:disable AbcSize
   def redeem_for(invitee, import_resiliency: false)
     accepted!
     if (repo_access = RepoAccess.find_by(user: invitee, organization: organization))
@@ -42,11 +45,13 @@ class AssignmentInvitation < ApplicationRecord
     return AssignmentRepo::Creator::Result.failed("Invitations for this assignment have been disabled.") unless enabled?
 
     if import_resiliency
-      AssignmentRepo::Creator::Result.pending()
+      AssignmentRepo::Creator::Result.pending
     else
       AssignmentRepo::Creator.perform(assignment: assignment, user: invitee)
     end
   end
+  # rubocop:enable MethodLength
+  # rubocop:enable AbcSize
 
   def to_param
     key
