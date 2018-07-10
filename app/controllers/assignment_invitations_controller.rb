@@ -46,16 +46,27 @@ class AssignmentInvitationsController < ApplicationController
 
   def setupv2; end
 
-  def progress
-    did_retry = false
-    if current_invitation.accepted? || current_invitation.errored?
-      AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user)
-      did_retry = true if current_invitation.errored?
+  def create
+    unless import_resiliency_enabled?
+      render status: 404, json: {}
+    else
+      job_started = false
+      if current_invitation.accepted? || current_invitation.errored?
+        AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user)
+        job_started = true
+      end
+      render json: {
+        job_started: job_started
+      }
     end
-    render json: {
-      status: current_invitation.status,
-      retried: did_retry
-    }
+  end
+
+  def progress
+    unless import_resiliency_enabled?
+      render status: 404, json: {}
+    else
+      render json: { status: current_invitation.status }
+    end
   end
 
   def setup_progress

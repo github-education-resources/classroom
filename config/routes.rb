@@ -34,7 +34,8 @@ Rails.application.routes.draw do
       patch :accept
       get   :setup
       get   :setupv2
-      patch :progress
+      post  :create
+      get   :progress
       patch :setup_progress
       get   :success
       patch :join_roster

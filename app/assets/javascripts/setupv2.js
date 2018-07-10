@@ -86,6 +86,10 @@
     return invitation_path() + "/progress";
   };
 
+  job_path = function () {
+    return invitation_path()
+  };
+
   invitation_path = function () {
     const pathname = window.location.pathname
     let path_components = pathname.split("/");
@@ -100,9 +104,18 @@
   check_progress = function() {
     const path = progress_path();
 
-    $.ajax({type: "PATCH", url: path}).done(function(data) {
+    $.ajax({type: "GET", url: path}).done(function(data) {
 
-      console.log(data) // remove this
+      display_progress(data);
+      setTimeout(check_progress, 3000);
+    });
+  };
+
+  start_job = function() {
+    const path = job_path();
+
+    $.ajax({type: "POST", url: path}).done(function(data) {
+
       display_progress(data);
       setTimeout(check_progress, 3000);
     });
@@ -111,6 +124,7 @@
   ready = (function() {
     const setup_progress = $(".setupv2");
     if (setup_progress.length !== 0) {
+      start_job();
       check_progress();
     }
   });
