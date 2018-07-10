@@ -224,38 +224,6 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
   end
 
-  describe "GET #progress", :vcr do
-    before do
-      sign_in_as(user)
-    end
-
-    it "404 when feature is off" do
-      post :create, params: { id: invitation.key }
-      expect(response.status).to eq(404)
-    end
-
-    context "with import resiliency enabled" do
-      before do
-        GitHubClassroom.flipper[:import_resiliency].enable
-      end
-
-      after do
-        GitHubClassroom.flipper[:import_resiliency].disable
-      end
-
-      it "returns the correct status" do
-        get :progress, params: { id: invitation.key }
-        expect(response.body).to eq({status: invitation.status}.to_json)
-      end
-
-      it "returns the correct status when status is changed" do
-        invitation.errored!
-        get :progress, params: { id: invitation.key }
-        expect(response.body).to eq({status: invitation.status}.to_json)
-      end
-    end
-  end
-
   describe "GET #setup", :vcr do
     let(:assignment) do
       create(:assignment, title: "Learn Clojure", starter_code_repo_id: 1_062_897, organization: organization)
@@ -291,6 +259,66 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         expect(request.url).to eq(setup_assignment_invitation_url(invitation))
         expect(response).to have_http_status(:success)
         expect(response).to render_template("assignment_invitations/setup")
+      end
+    end
+  end
+
+  describe "GET #setupv2", :vcr do
+    before(:each) do
+      sign_in_as(user)
+    end
+
+    it "will bring you to the page" do
+        get :setupv2, params: { id: invitation.key }
+        expect(response.status).to eq(404)
+        expect(response.body).to be_empty
+      end
+
+    context "with import resiliency enabled" do
+      before do
+        GitHubClassroom.flipper[:import_resiliency].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:import_resiliency].disable
+      end
+
+      it "will bring you to the page" do
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template("assignment_invitations/setupv2")
+      end
+    end
+  end
+
+  describe "GET #progress", :vcr do
+    before do
+      sign_in_as(user)
+    end
+
+    it "404 when feature is off" do
+      post :create, params: { id: invitation.key }
+      expect(response.status).to eq(404)
+    end
+
+    context "with import resiliency enabled" do
+      before do
+        GitHubClassroom.flipper[:import_resiliency].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:import_resiliency].disable
+      end
+
+      it "returns the correct status" do
+        get :progress, params: { id: invitation.key }
+        expect(response.body).to eq({status: invitation.status}.to_json)
+      end
+
+      it "returns the correct status when status is changed" do
+        invitation.errored!
+        get :progress, params: { id: invitation.key }
+        expect(response.body).to eq({status: invitation.status}.to_json)
       end
     end
   end
