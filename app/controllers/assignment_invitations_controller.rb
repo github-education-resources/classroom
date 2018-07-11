@@ -18,7 +18,7 @@ class AssignmentInvitationsController < ApplicationController
       result = current_invitation.redeem_for(current_user, import_resiliency: import_resiliency_enabled?)
       case result.status
       when :success
-        GitHubClassroom.statsd.increment("exercise_invitation.accept")
+        GitHubClassroom.statsd.increment("v2_excercise_invitation.accept")
         if current_submission.starter_code_repo_id
           redirect_to setup_assignment_invitation_path
         else
@@ -26,10 +26,10 @@ class AssignmentInvitationsController < ApplicationController
           redirect_to success_assignment_invitation_path
         end
       when :pending
-        GitHubClassroom.statsd.increment("exercise_invitation.accept")
+        GitHubClassroom.statsd.increment("v2_excercise_invitation.accept")
         redirect_to setupv2_assignment_invitation_path
       when :error
-        GitHubClassroom.statsd.increment("exercise_invitation.fail")
+        GitHubClassroom.statsd.increment("v2_excercise_invitation.fail")
         current_invitation.errored!
 
         flash[:error] = result.error

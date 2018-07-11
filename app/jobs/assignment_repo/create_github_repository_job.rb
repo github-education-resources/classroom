@@ -47,7 +47,8 @@ class AssignmentRepo
       end
 
       duration_in_millseconds = (Time.zone.now - start) * 1_000
-      GitHubClassroom.statsd.timing("exercise_repo.create.time", duration_in_millseconds)
+      GitHubClassroom.statsd.timing("v2_exercise_repo.create.time", duration_in_millseconds)
+      GitHubClassroom.statsd.increment("v2_exercise_repo.create.success")
 
       if assignment.starter_code?
         assignment.invitation&.importing_starter_code!
@@ -73,6 +74,7 @@ class AssignmentRepo
         text: err,
         status: assignment.invitation&.status
       )
+      GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
       raise err
     end
     # rubocop:enable MethodLength

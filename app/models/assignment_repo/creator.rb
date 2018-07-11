@@ -89,10 +89,12 @@ class AssignmentRepo
 
       duration_in_millseconds = (Time.zone.now - start) * 1_000
       GitHubClassroom.statsd.timing("exercise_repo.create.time", duration_in_millseconds)
+      GitHubClassroom.statsd.increment("exercise_repo.create.success")
 
       Result.success(assignment_repo)
     rescue Result::Error => err
       delete_github_repository(assignment_repo.try(:github_repo_id))
+      GitHubClassroom.statsd.increment("exercise_repo.create.fail")
       Result.failed(err.message)
     end
     # rubocop:enable AbcSize
