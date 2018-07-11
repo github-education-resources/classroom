@@ -104,9 +104,7 @@
 
   check_progress = function() {
     const path = progress_path();
-
     $.ajax({type: "GET", url: path}).done(function(data) {
-
       display_progress(data);
       setTimeout(check_progress, 3000);
     });
@@ -114,9 +112,7 @@
 
   start_job = function() {
     const path = job_path();
-
     $.ajax({type: "POST", url: path}).done(function(data) {
-
       display_progress(data);
       setTimeout(check_progress, 3000);
     });
