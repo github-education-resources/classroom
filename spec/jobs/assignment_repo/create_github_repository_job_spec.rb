@@ -99,6 +99,11 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         )
     end
 
+    it "tracks create fail stat" do
+      expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.success")
+      subject.perform_now(assignment, teacher)
+    end
+
     it "tracks how long it too to be created" do
       expect(GitHubClassroom.statsd).to receive(:timing)
       subject.perform_now(assignment, teacher)
@@ -117,6 +122,14 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
         subject.perform_later(assignment, student)
       end
+    end
+
+    it "tracks create fail stat" do
+      stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
+        .to_return(body: "{}", status: 401)
+
+      expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.fail")
+      subject.perform_now(assignment, student)
     end
 
     it "broadcasts create repo failure" do
