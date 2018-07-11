@@ -133,14 +133,14 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it "sends an event to statsd" do
-      expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_invitation.accept")
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_invitation.accept")
 
-      allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
-        .with(user, import_resiliency: true)
-        .and_return(result)
+        allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
+          .with(user, import_resiliency: true)
+          .and_return(result)
 
-      patch :accept, params: { id: invitation.key }
-    end
+        patch :accept, params: { id: invitation.key }
+      end
 
       it "redirects to success when AssignmentRepo already exists" do
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
