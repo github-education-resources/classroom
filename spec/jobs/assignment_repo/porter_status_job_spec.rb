@@ -18,7 +18,6 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
       organization: organization,
       students_are_repo_admins: true
     }
-
     create(:assignment, options)
   end
 
@@ -50,6 +49,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
 
     context "started importing starter code" do
       before do
+        AssignmentInvitation.create(assignment: assignment)
         creator = AssignmentRepo::Creator.new(assignment: assignment, user: student)
         creator.push_starter_code!(@repo.id)
         @assignment_repo = AssignmentRepo.new(assignment: assignment)
@@ -87,7 +87,10 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
           )
         expect { subject.perform_now(@assignment_repo, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
-          .with(text: AssignmentRepo::Creator::REPOSITORY_CREATION_COMPLETE)
+          .with(
+            text: AssignmentRepo::Creator::REPOSITORY_CREATION_COMPLETE,
+            status: "completed"
+          )
       end
 
       it "logs until porter status is 'complete'" do
@@ -136,7 +139,10 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
           )
         expect { subject.perform_now(@assignment_repo, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
-          .with(text: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
+          .with(
+            text: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
+            status: "errored"
+          )
       end
 
       it "logs failure when porter status is 'error'" do
@@ -187,7 +193,10 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
           )
         expect { subject.perform_now(@assignment_repo, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
-          .with(text: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
+          .with(
+            text: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
+            status: "errored"
+          )
       end
 
       it "logs failure when porter API errors" do
