@@ -88,7 +88,7 @@
   };
 
   job_path = function () {
-    return invitation_path();
+    return invitation_path() + "/create_repo";
   };
 
   invitation_path = function () {
