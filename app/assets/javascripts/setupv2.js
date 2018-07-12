@@ -1,5 +1,6 @@
 /*jshint esversion: 6 */
 (function() {
+  const POLL_INTERVAL = 3000;
   var ready, check_progress, show_success, invitation_path, progress_path, success_path, display_progress, indicate_completion, indicate_failure, indicate_in_progress;
 
   indicate_completion = function(step_indicator) {
@@ -106,7 +107,7 @@
     const path = progress_path();
     $.ajax({type: "GET", url: path}).done(function(data) {
       display_progress(data);
-      setTimeout(check_progress, 3000);
+      setTimeout(check_progress, POLL_INTERVAL);
     });
   };
 
