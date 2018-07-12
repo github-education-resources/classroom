@@ -162,13 +162,13 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
   end
 
-  describe "POST #create", :vcr do
+  describe "POST #create_repo", :vcr do
     before do
       sign_in_as(user)
     end
 
     it "404 when feature is off" do
-      post :create, params: { id: invitation.key }
+      post :create_repo, params: { id: invitation.key }
       expect(response.status).to eq(404)
     end
 
@@ -188,12 +188,12 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
         it "enqueues a CreateRepositoryJob" do
           assert_enqueued_jobs 1, only: AssignmentRepo::CreateGitHubRepositoryJob do
-            post :create, params: { id: invitation.key }
+            post :create_repo, params: { id: invitation.key }
           end
         end
 
         it "says a job was succesfully kicked off" do
-          post :create, params: { id: invitation.key }
+          post :create_repo, params: { id: invitation.key }
           expect(response.body).to eq({ job_started: true }.to_json)
         end
       end
@@ -205,12 +205,12 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
         it "enqueues a CreateRepositoryJob" do
           assert_enqueued_jobs 1, only: AssignmentRepo::CreateGitHubRepositoryJob do
-            post :create, params: { id: invitation.key }
+            post :create_repo, params: { id: invitation.key }
           end
         end
 
         it "says a job was succesfully kicked off" do
-          post :create, params: { id: invitation.key }
+          post :create_repo, params: { id: invitation.key }
           expect(response.body).to eq({ job_started: true }.to_json)
         end
       end
@@ -222,12 +222,12 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
         it "does not enqueue a CreateRepositoryJob" do
           assert_enqueued_jobs 0, only: AssignmentRepo::CreateGitHubRepositoryJob do
-            post :create, params: { id: invitation.key }
+            post :create_repo, params: { id: invitation.key }
           end
         end
 
         it "says a job was unsuccesfully kicked off" do
-          post :create, params: { id: invitation.key }
+          post :create_repo, params: { id: invitation.key }
           expect(response.body).to eq({ job_started: false }.to_json)
         end
       end
@@ -307,7 +307,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
 
     it "404 when feature is off" do
-      post :create, params: { id: invitation.key }
+      post :create_repo, params: { id: invitation.key }
       expect(response.status).to eq(404)
     end
 

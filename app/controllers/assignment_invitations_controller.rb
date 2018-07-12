@@ -58,7 +58,7 @@ class AssignmentInvitationsController < ApplicationController
   end
 
   # rubocop:disable MethodLength
-  def create
+  def create_repo
     if import_resiliency_enabled?
       job_started = false
       if current_invitation.accepted? || current_invitation.errored?

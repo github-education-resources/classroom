@@ -34,7 +34,7 @@ Rails.application.routes.draw do
       patch :accept
       get   :setup
       get   :setupv2
-      post  :create
+      post  :create_repo
       get   :progress
       patch :setup_progress
       get   :success
