@@ -114,7 +114,6 @@
     const path = job_path();
     $.ajax({type: "POST", url: path}).done(function(data) {
       display_progress(data);
-      setTimeout(check_progress, 3000);
     });
   };
 
