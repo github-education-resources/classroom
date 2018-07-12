@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 (function() {
-  const POLL_INTERVAL = 3000;
+  var POLL_INTERVAL = 3000;
   var ready, check_progress, show_success, invitation_path, progress_path, success_path, display_progress, indicate_completion, indicate_failure, indicate_in_progress;
 
   indicate_completion = function(step_indicator) {
@@ -40,7 +40,7 @@
   };
 
   indicate_in_progress = function(step_indicator) {
-    let status;
+    var status;
     status = $(step_indicator).find(".status");
     if (status.hasClass("d-none")) {
       status.removeClass("d-none");
@@ -58,8 +58,8 @@
   };
 
   display_progress = function(progress) {
-    let create_repo_progress_indicator = $("#create-repo-progress");
-    let import_repo_progress_indicator = $("#import-repo-progress");
+    var create_repo_progress_indicator = $("#create-repo-progress");
+    var import_repo_progress_indicator = $("#import-repo-progress");
     switch(progress.status) {
       case "creating_repo":
         indicate_in_progress(create_repo_progress_indicator);
@@ -93,8 +93,8 @@
   };
 
   invitation_path = function () {
-    const pathname = window.location.pathname;
-    let path_components = pathname.split("/");
+    var pathname = window.location.pathname;
+    var path_components = pathname.split("/");
     path_components.pop();
     return path_components.join("/");
   };
@@ -104,7 +104,7 @@
   };
 
   check_progress = function() {
-    const path = progress_path();
+    var path = progress_path();
     $.ajax({type: "GET", url: path}).done(function(data) {
       display_progress(data);
       setTimeout(check_progress, POLL_INTERVAL);
@@ -112,14 +112,14 @@
   };
 
   start_job = function() {
-    const path = job_path();
+    var path = job_path();
     $.ajax({type: "POST", url: path}).done(function(data) {
       display_progress(data);
     });
   };
 
   ready = (function() {
-    const setup_progress = $(".setupv2");
+    var setup_progress = $(".setupv2");
     if (setup_progress.length !== 0) {
       start_job();
       check_progress();
