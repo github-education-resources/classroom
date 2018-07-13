@@ -3,8 +3,8 @@
 require "rails_helper"
 
 RSpec.describe AssignmentInvitationsController, type: :controller do
-  let(:organization) { classroom_org     }
-  let(:user)         { classroom_student }
+  let(:organization)  { classroom_org     }
+  let(:user)          { classroom_student }
   let(:config_branch) { ClassroomConfig::CONFIG_BRANCH }
 
   let(:invitation) { create(:assignment_invitation, organization: organization) }
@@ -143,12 +143,23 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it "redirects to success when AssignmentRepo already exists" do
+        invitation.completed!
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
           .with(user, import_resiliency: true)
           .and_return(result)
 
         patch :accept, params: { id: invitation.key }
         expect(response).to redirect_to(success_assignment_invitation_url(invitation))
+      end
+
+      it "redirects to setup when AssignmentRepo already exists but isn't completed" do
+        invitation.creating_repo!
+        allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
+          .with(user, import_resiliency: true)
+          .and_return(result)
+
+        patch :accept, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
       end
 
       it "redirects to setupv2 when AssignmentRepo doesn't already exist" do

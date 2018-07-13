@@ -33,7 +33,6 @@ class AssignmentInvitation < ApplicationRecord
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
   def redeem_for(invitee, import_resiliency: false)
-    accepted!
     if (repo_access = RepoAccess.find_by(user: invitee, organization: organization))
       assignment_repo = AssignmentRepo.find_by(assignment: assignment, repo_access: repo_access)
       return AssignmentRepo::Creator::Result.success(assignment_repo) if assignment_repo.present?
@@ -44,6 +43,7 @@ class AssignmentInvitation < ApplicationRecord
 
     return AssignmentRepo::Creator::Result.failed("Invitations for this assignment have been disabled.") unless enabled?
 
+    accepted!
     if import_resiliency
       AssignmentRepo::Creator::Result.pending
     else
