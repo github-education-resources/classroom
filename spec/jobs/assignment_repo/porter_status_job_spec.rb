@@ -93,22 +93,6 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
           )
       end
 
-      it "logs until porter status is 'complete'" do
-        stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
-          .to_return(
-            status: 201,
-            body: request_stub("importing"),
-            headers: { "Content-Type": "application/json" }
-          ).times(2).then
-          .to_return(
-            status: 200,
-            body: request_stub("complete"),
-            headers: { "Content-Type": "application/json" }
-          )
-        expect(Rails.logger).to receive(:warn).with(AssignmentRepo::Creator::IMPORT_ONGOING).exactly(2)
-        subject.perform_now(@assignment_repo, student)
-      end
-
       it "fails when porter status is 'error'" do
         stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
           .to_return(
@@ -159,10 +143,6 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
           )
         expect(Rails.logger)
           .to receive(:warn)
-          .with(AssignmentRepo::Creator::IMPORT_ONGOING)
-          .exactly(2)
-        expect(Rails.logger)
-          .to receive(:warn)
           .with(AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
         subject.perform_now(@assignment_repo, student)
       end
@@ -209,13 +189,13 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
           .to_return(
             status: 500
           )
-        expect(Rails.logger)
-          .to receive(:warn)
-          .with(AssignmentRepo::Creator::IMPORT_ONGOING)
-          .exactly(2)
+
         expect(Rails.logger)
           .to receive(:warn)
           .with(AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
+        expect(Rails.logger)
+          .to receive(:warn)
+          .with("There seems to be a problem on github.com, please try again.")
         subject.perform_now(@assignment_repo, student)
       end
     end
