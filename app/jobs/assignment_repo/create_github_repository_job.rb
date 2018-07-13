@@ -19,6 +19,9 @@ class AssignmentRepo
     def perform(assignment, user)
       start = Time.zone.now
 
+      invitation_status = assignment.invitation&.status
+      return if %w[unaccepted creating_repo importing_starter_code completed].include?(invitation_status)
+
       assignment.invitation&.creating_repo!
 
       creator = Creator.new(assignment: assignment, user: user)
