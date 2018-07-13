@@ -152,7 +152,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         expect(response).to redirect_to(success_assignment_invitation_url(invitation))
       end
 
-      it "redirects to sutup when AssignmentRepo already exists but isn't completed" do
+      it "redirects to setup when AssignmentRepo already exists but isn't completed" do
         invitation.creating_repo!
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
           .with(user, import_resiliency: true)
