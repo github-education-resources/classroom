@@ -28,6 +28,40 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
     clear_performed_jobs
   end
 
+  describe "invalid invitation statuses", :vcr do
+    before do
+      @invitation = AssignmentInvitation.create(assignment: assignment)
+    end
+
+    after do
+      AssignmentInvitation.create(assignment: assignment).accepted!
+    end
+
+    it "returns early when invitation status is unaccepted" do
+      @invitation.unaccepted!
+      expect(@invitation).not_to receive(:creating_repo!)
+      subject.perform_now(assignment, teacher)
+    end
+
+    it "returns early when invitation status is creating_repo" do
+      @invitation.creating_repo!
+      expect(@invitation).not_to receive(:creating_repo!)
+      subject.perform_now(assignment, teacher)
+    end
+
+    it "returns early when invitation status is importing_starter_code" do
+      @invitation.importing_starter_code!
+      expect(@invitation).not_to receive(:creating_repo!)
+      subject.perform_now(assignment, teacher)
+    end
+
+    it "returns early when invitation status is completed" do
+      @invitation.completed!
+      expect(@invitation).not_to receive(:creating_repo!)
+      subject.perform_now(assignment, teacher)
+    end
+  end
+
   describe "successful creation", :vcr do
     after(:each) do
       AssignmentRepo.destroy_all
@@ -86,7 +120,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
     end
 
     it "broadcasts status on channel" do
-      AssignmentInvitation.create(assignment: assignment)
+      AssignmentInvitation.create(assignment: assignment).accepted!
       expect { subject.perform_now(assignment, teacher) }
         .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: teacher.id))
         .with(
@@ -133,7 +167,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
     end
 
     it "broadcasts create repo failure" do
-      AssignmentInvitation.create(assignment: assignment)
+      AssignmentInvitation.create(assignment: assignment).accepted!
       stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
         .to_return(body: "{}", status: 401)
 
@@ -151,7 +185,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
     context "with successful repo creation" do
       before do
-        AssignmentInvitation.create(assignment: assignment)
+        AssignmentInvitation.create(assignment: assignment).accepted!
       end
 
       # Verify that we try to delete the GitHub repository
