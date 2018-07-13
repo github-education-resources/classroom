@@ -13,6 +13,6 @@ class GroupAssignmentRepoSerializer < ActiveModel::Serializer
   end
 
   def displayName
-    return object.group.repo_accesses.map(&:user).map(&:github_user).map(&:login).join(",")
+    return object.group.repo_accesses.map(&:user).map(&:github_user).map(&:login).join(", ")
   end
 end

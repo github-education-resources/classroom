@@ -9,9 +9,9 @@ class API::AssignmentRepoInfoController < ApplicationController
 
     def repos
       if type == :individual
-        render json: AssignmentRepoSerializer.new(individual_repos)
+        paginate json: individual_repos
       else
-        render json: GroupAssignmentRepoSerializer.new(group_repos)
+        paginate json: group_repos
       end
     end
 
@@ -19,18 +19,17 @@ class API::AssignmentRepoInfoController < ApplicationController
       render json: {
         name: @assignment.title,
         type: type.to_s,
-        accessToken: true_user.token,
       }
     end
 
     private
 
     def group_repos
-      paginate GroupAssignmentRepo.where(group_assignment: @assignment)
+      GroupAssignmentRepo.where(group_assignment: @assignment)
     end
 
     def individual_repos
-      paginate AssignmentRepo.where(assignment: @assignment)
+      AssignmentRepo.where(assignment: @assignment)
     end
 
     def set_assignment

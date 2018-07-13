@@ -27,7 +27,13 @@
         </div>
       </div>
 
-      <div class="text-right pl-2 settings">
+      <div class="text-right mt-3 pr-2 settings">
+        <%= link_to "x-github-classroom://?assignment_url=#{organization_assignment_url}", class: 'btn right' do %>
+          Download repositories
+        <% end %>
+      </div>
+
+      <div class="text-right mt-3 pl-2 settings">
         <%= link_to edit_organization_group_assignment_path(@organization, @group_assignment), class: 'btn right' do %>
           <%= octicon 'gear' %>
           Group assignment settings
