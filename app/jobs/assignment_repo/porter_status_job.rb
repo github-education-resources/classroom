@@ -2,9 +2,8 @@
 
 class AssignmentRepo
   class PorterStatusJob < ApplicationJob
-    class ImportInProgress < StandardError; end
     queue_as :porter_status
-    retry_on Octopoller::TimeoutError, queue: :porter_status
+    retry_on Octopoller::TimeoutError, attempts: 10, queue: :porter_status
 
     # rubocop:disable MethodLength
     # rubocop:disable AbcSize
@@ -12,9 +11,7 @@ class AssignmentRepo
     def perform(assignment_repo, user)
       github_repository = assignment_repo.github_repository
 
-      error_handler = proc { |error| logger.warn error.to_s }
-
-      result = Octopoller.poll(error_handler: error_handler) do
+      result = Octopoller.poll(timeout: 30) do
         begin
           progress = github_repository.import_progress[:status]
           case progress
@@ -23,9 +20,11 @@ class AssignmentRepo
           when *GitHubRepository::IMPORT_ERRORS
             Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
           when *GitHubRepository::IMPORT_ONGOING
-            raise ImportInProgress, Creator::IMPORT_ONGOING
+            logger.info AssignmentRepo::Creator::IMPORT_ONGOING
+            :re_poll
           end
-        rescue GitHub::Error
+        rescue GitHub::Error => error
+          logger.warn error.to_s
           Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
         end
       end
