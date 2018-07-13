@@ -3,8 +3,8 @@
 require "rails_helper"
 
 RSpec.describe AssignmentInvitationsController, type: :controller do
-  let(:organization) { classroom_org     }
-  let(:user)         { classroom_student }
+  let(:organization)  { classroom_org     }
+  let(:user)          { classroom_student }
   let(:config_branch) { ClassroomConfig::CONFIG_BRANCH }
 
   let(:invitation) { create(:assignment_invitation, organization: organization) }
@@ -143,6 +143,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it "redirects to success when AssignmentRepo already exists" do
+        invitation.completed!
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
           .with(user, import_resiliency: true)
           .and_return(result)

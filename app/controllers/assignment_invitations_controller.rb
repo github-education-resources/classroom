@@ -7,7 +7,7 @@ class AssignmentInvitationsController < ApplicationController
 
   before_action :check_user_not_previous_acceptee, :check_should_redirect_to_roster_page, only: [:show]
   before_action :ensure_submission_repository_exists, only: %i[setup setup_progress success]
-  before_action :ensure_authorized_repo_setup, only: %i[setup setup_progress]
+
 
   # rubocop:disable PerceivedComplexity
   # rubocop:disable MethodLength
@@ -19,11 +19,10 @@ class AssignmentInvitationsController < ApplicationController
       case result.status
       when :success
         GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
-        if current_submission.starter_code_repo_id
-          redirect_to setup_assignment_invitation_path
-        else
-          current_invitation.completed!
+        if current_invitation.completed?
           redirect_to success_assignment_invitation_path
+        else
+          redirect_to setupv2_assignment_invitation_path
         end
       when :pending
         GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
@@ -116,14 +115,8 @@ class AssignmentInvitationsController < ApplicationController
 
   def check_user_not_previous_acceptee
     return if current_submission.nil?
-    if repo_setup_enabled? && setup_status(current_submission)[:status] != :complete
-      return redirect_to setup_assignment_invitation_path
-    end
+    return unless current_invitation&.completed?
     redirect_to success_assignment_invitation_path
-  end
-
-  def ensure_authorized_repo_setup
-    redirect_to success_assignment_invitation_path unless repo_setup_enabled?
   end
 
   def classroom_config
