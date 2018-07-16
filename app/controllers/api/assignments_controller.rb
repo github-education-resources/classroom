@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class API::AssignmentsController < ApplicationController
+class API::AssignmentsController < API::ApplicationController
   include Rails::Pagination
   include ActionController::Serialization
   include OrganizationAuthorization
@@ -7,6 +7,7 @@ class API::AssignmentsController < ApplicationController
   before_action :add_security_headers
 
   def index
+    binding.pry
     if type == :individual
       paginate json: @organization.assignments
     elsif type == :group

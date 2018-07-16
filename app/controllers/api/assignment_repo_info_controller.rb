@@ -1,6 +1,5 @@
 # frozen_string_literal: true
-class API::AssignmentRepoInfoController < ApplicationController
-    include Rails::Pagination
+class API::AssignmentRepoInfoController < API::ApplicationController
     include ActionController::Serialization
     include OrganizationAuthorization
 
