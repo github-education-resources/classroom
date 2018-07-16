@@ -1,25 +1,84 @@
 # frozen_string_literal: true
 
+# rubocop:disable ClassLength
 class AssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
   include RepoSetup
 
   before_action :check_user_not_previous_acceptee, :check_should_redirect_to_roster_page, only: [:show]
   before_action :ensure_submission_repository_exists, only: %i[setup setup_progress success]
-  before_action :ensure_authorized_repo_setup, only: %i[setup setup_progress]
 
+  # rubocop:disable PerceivedComplexity
+  # rubocop:disable MethodLength
+  # rubocop:disable AbcSize
+  # rubocop:disable CyclomaticComplexity
   def accept
-    create_submission do
-      GitHubClassroom.statsd.increment("exercise_invitation.accept")
-      if current_submission.starter_code_repo_id
-        redirect_to setup_assignment_invitation_path
-      else
-        redirect_to success_assignment_invitation_path
+    if import_resiliency_enabled?
+      result = current_invitation.redeem_for(current_user, import_resiliency: import_resiliency_enabled?)
+      case result.status
+      when :success
+        GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
+        if current_invitation.completed?
+          redirect_to success_assignment_invitation_path
+        else
+          redirect_to setupv2_assignment_invitation_path
+        end
+      when :pending
+        GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
+        redirect_to setupv2_assignment_invitation_path
+      when :error
+        GitHubClassroom.statsd.increment("v2_exercise_invitation.fail")
+        current_invitation.errored!
+
+        flash[:error] = result.error
+        redirect_to assignment_invitation_path(current_invitation)
+      end
+    else
+      create_submission do
+        GitHubClassroom.statsd.increment("exercise_invitation.accept")
+        if current_submission.starter_code_repo_id
+          redirect_to setup_assignment_invitation_path
+        else
+          redirect_to success_assignment_invitation_path
+        end
       end
     end
   end
+  # rubocop:enable PerceivedComplexity
+  # rubocop:enable MethodLength
+  # rubocop:enable AbcSize
+  # rubocop:enable CyclomaticComplexity
 
   def setup; end
+
+  def setupv2
+    render status: 404 unless import_resiliency_enabled?
+  end
+
+  # rubocop:disable MethodLength
+  def create_repo
+    if import_resiliency_enabled?
+      job_started = false
+      if current_invitation.accepted? || current_invitation.errored?
+        AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user)
+        job_started = true
+      end
+      render json: {
+        job_started: job_started
+      }
+    else
+      render status: 404, json: {}
+    end
+  end
+  # rubocop:enable MethodLength
+
+  def progress
+    if import_resiliency_enabled?
+      render json: { status: current_invitation.status }
+    else
+      render status: 404, json: {}
+    end
+  end
 
   def setup_progress
     perform_setup(current_submission, classroom_config) if configurable_submission?
@@ -55,14 +114,8 @@ class AssignmentInvitationsController < ApplicationController
 
   def check_user_not_previous_acceptee
     return if current_submission.nil?
-    if repo_setup_enabled? && setup_status(current_submission)[:status] != :complete
-      return redirect_to setup_assignment_invitation_path
-    end
+    return unless current_invitation&.completed?
     redirect_to success_assignment_invitation_path
-  end
-
-  def ensure_authorized_repo_setup
-    redirect_to success_assignment_invitation_path unless repo_setup_enabled?
   end
 
   def classroom_config
@@ -104,3 +157,4 @@ class AssignmentInvitationsController < ApplicationController
     GitHubClassroom::Scopes::ASSIGNMENT_STUDENT
   end
 end
+# rubocop:enable ClassLength

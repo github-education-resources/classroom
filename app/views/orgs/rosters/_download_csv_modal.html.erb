@@ -1,0 +1,16 @@
+<div class="remodal text-left" data-remodal-id="download-csv-modal">
+ <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
+  <h2 class="remodal-header text-left">Select a Grouping</h2>
+
+  <div class="remodal-user-list">
+    <%= link_to 'Download without group names', roster_path(format: :csv), class: 'btn btn-primary btn-sm btn-block remodal-button' %>
+    <% organization.groupings.map do |grouping| %>
+        <%= link_to(
+            "Download #{grouping.title}",
+            roster_path(grouping: grouping.id, format: :csv),
+            class: 'btn btn-sm btn-block remodal-button'
+          )
+        %>
+    <% end %>
+  </div>
+</div>

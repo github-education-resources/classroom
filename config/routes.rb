@@ -5,6 +5,7 @@ require "staff_constraint"
 
 Rails.application.routes.draw do
   mount Peek::Railtie => "/peek"
+  mount ActionCable.server => "/cable"
 
   root to: "pages#home"
 
@@ -32,6 +33,9 @@ Rails.application.routes.draw do
     member do
       patch :accept
       get   :setup
+      get   :setupv2
+      post  :create_repo
+      get   :progress
       patch :setup_progress
       get   :success
       patch :join_roster
