@@ -60,7 +60,7 @@ class AssignmentInvitationsController < ApplicationController
       job_started = false
       if current_invitation.accepted? || current_invitation.errored?
         assignment_repo = AssignmentRepo.find_by(assignment: current_assignment, user: current_user)
-        assignment_repo.destroy if assignment_repo
+        assignment_repo&.destroy if assignment_repo
         AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user)
         job_started = true
       end

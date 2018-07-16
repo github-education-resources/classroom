@@ -3,7 +3,15 @@
 class AssignmentInvitation < ApplicationRecord
   include ShortKey
 
-  enum status: %i[unaccepted accepted creating_repo importing_starter_code completed errored_creating_repo errored_importing_starter_code]
+  enum status: %i[
+    unaccepted
+    accepted
+    creating_repo
+    importing_starter_code
+    completed
+    errored_creating_repo
+    errored_importing_starter_code
+  ]
 
   default_scope { where(deleted_at: nil) }
 

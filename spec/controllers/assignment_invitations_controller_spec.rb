@@ -215,7 +215,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         end
 
         it "deletes an assignment repo if one already exists" do
-          assignment_repo = create(:assignment_repo, assignment: invitation.assignment, github_repo_id: 8485, user: user)
+          AssignmentRepo.create(assignment: invitation.assignment, github_repo_id: 8485, user: user)
           expect_any_instance_of(AssignmentRepo).to receive(:destroy)
           post :create_repo, params: { id: invitation.key }
         end
