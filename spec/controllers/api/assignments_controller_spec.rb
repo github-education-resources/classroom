@@ -12,31 +12,19 @@ RSpec.describe API::AssignmentsController, type: :controller do
   end
 
   describe "GET #index", :vcr do
-    context "unauthenticated user" do
-      before do
-        sign_out
+
+    context "authenticated user" do
+      it "returns success" do
+        get :index, params: {organization_id: organization.slug}
+        expect(response).to have_http_status(:success)
       end
 
-      it "returns 403 forbidden" do
-        get :index, params: {
-          organization_id: organization.slug
-        }
-        expect(response).to have_http_status(:forbidden)
+      it "returns all of user's assignments" do
+        get :index, params: {organization_id: organization.slug}
+        # binding.pry
+        # expect(json)
       end
     end
-
-    # context "authenticated user" do
-    #   it "returns success" do
-    #     get api_organization_assignments_path(organization_id: organization.slug)
-    #     expect(response).to have_http_status(:success)
-    #   end
-
-    #   it "returns all of user's assignments" do
-    #     get api_organization_assignments_path(organization_id: organization.slug)
-    #     binding.pry
-    #     # expect(json)
-    #   end
-    # end
 
   end
 end
