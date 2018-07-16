@@ -44,5 +44,4 @@ RSpec.describe Octopoller do
       end
     end.to raise_error(StandardError, "An error occuered")
   end
-
 end

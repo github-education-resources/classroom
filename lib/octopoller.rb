@@ -11,8 +11,6 @@ module Octopoller
   # error_handler - A proc that will run with each instance of an error
   # yield - A block that will execute, and if it raises an error it will re-run until success or the timeout is reached
   # raise - Raises an Octopoller::TimeoutError if the timeout is reached
-  #
-  # rubocop:disable MethodLength
   def poll(wait: 1, timeout: 15)
     raise ArgumentError, "Cannot poll backwards in time" if wait.negative?
     raise ArgumentError, "Timed out without even being able to try" if timeout.negative?
@@ -20,15 +18,11 @@ module Octopoller
     start = Time.now.utc
     while Time.now.utc < start + timeout
       block_value = yield
-      if block_value == :re_poll
-        sleep wait
-      else
-        return block_value
-      end
+      return block_value unless block_value == :re_poll
+      sleep wait
     end
     raise TimeoutError, "Polling timed out paitently"
   end
-  # rubocop:enable MethodLength
 
   module_function :poll
 end
