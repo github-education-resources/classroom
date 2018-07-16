@@ -8,6 +8,7 @@
     indicate_failure,
     indicate_in_progress,
     invitation_path,
+    is_hidden,
     progress_path,
     ready,
     setup_retry_button,
@@ -15,12 +16,16 @@
     start_job,
     success_path;
 
+  is_hidden = function(element) {
+    return element.hasClass("d-none");
+  }
+
   indicate_completion = function(step_indicator) {
     $(step_indicator).addClass("border-green bg-green-light");
 
     var status, completion_indicator;
     status = $(step_indicator).find(".status");
-    if (status.hasClass("d-none")) {
+    if (is_hidden(status)) {
       status.removeClass("d-none");
     }
 
@@ -40,7 +45,7 @@
 
     var status, failure_indicator;
     status = $(step_indicator).find(".status");
-    if (status.hasClass("d-none")) {
+    if (is_hidden(status)) {
       status.removeClass("d-none");
     }
 
@@ -58,7 +63,7 @@
   indicate_in_progress = function(step_indicator) {
     var status;
     status = $(step_indicator).find(".status");
-    if (status.hasClass("d-none")) {
+    if (is_hidden(status)) {
       status.removeClass("d-none");
     }
 
@@ -77,14 +82,14 @@
 
   display_retry_button = function() {
     var retry_button = $("#retry-button");
-    if (retry_button.hasClass("d-none")) {
+    if (is_hidden(retry_button)) {
       retry_button.removeClass("d-none");
     }
   };
 
   hide_retry_button = function() {
     var retry_button = $("#retry-button");
-    if (!retry_button.hasClass("d-none")) {
+    if (!is_hidden(retry_button)) {
       retry_button.addClass("d-none");
     }
   };
