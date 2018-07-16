@@ -105,8 +105,12 @@
         indicate_completion(create_repo_progress_indicator);
         indicate_in_progress(import_repo_progress_indicator);
         break;
-      case "errored":
+      case "errored_creating_repo":
         indicate_failure(create_repo_progress_indicator);
+        indicate_failure(import_repo_progress_indicator);
+        break;
+      case "errored_importing_starter_code":
+        indicate_completion(create_repo_progress_indicator);
         indicate_failure(import_repo_progress_indicator);
         break;
       case "completed":

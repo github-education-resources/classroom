@@ -27,7 +27,7 @@ class AssignmentInvitationsController < ApplicationController
         redirect_to setupv2_assignment_invitation_path
       when :error
         GitHubClassroom.statsd.increment("v2_exercise_invitation.fail")
-        current_invitation.errored!
+        current_invitation.errored_creating_repo!
 
         flash[:error] = result.error
         redirect_to assignment_invitation_path(current_invitation)
@@ -58,7 +58,7 @@ class AssignmentInvitationsController < ApplicationController
   def create_repo
     if import_resiliency_enabled?
       job_started = false
-      if current_invitation.accepted? || current_invitation.errored?
+      if current_invitation.accepted? || current_invitation.errored_creating_repo? || current_invitation.errored_importing_starter_code?
         AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user)
         job_started = true
       end

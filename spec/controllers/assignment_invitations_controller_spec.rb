@@ -211,7 +211,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
       context "when invitation status is errored" do
         before do
-          invitation.errored!
+          invitation.errored_creating_repo!
         end
 
         it "enqueues a CreateRepositoryJob" do
@@ -337,7 +337,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it "returns the correct status when status is changed" do
-        invitation.errored!
+        invitation.creating_repo_errored!
         get :progress, params: { id: invitation.key }
         expect(response.body).to eq({ status: invitation.status }.to_json)
       end
