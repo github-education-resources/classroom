@@ -18,7 +18,7 @@
 
   is_hidden = function(element) {
     return element.hasClass("d-none");
-  }
+  };
 
   indicate_completion = function(step_indicator) {
     $(step_indicator).addClass("border-green bg-green-light");
