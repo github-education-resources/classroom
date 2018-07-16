@@ -198,6 +198,13 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
           .with("There seems to be a problem on github.com, please try again.")
         subject.perform_now(@assignment_repo, student)
       end
+
+      it "kicks off another porter status job when octopoller timesout" do
+        expect(Octopoller).to receive(:poll).with(timeout: 30).and_raise(Octopoller::TimeoutError)
+        assert_enqueued_jobs 1, only: AssignmentRepo::PorterStatusJob do
+          subject.perform_now(@assignment_repo, student)
+        end
+      end
     end
   end
 
