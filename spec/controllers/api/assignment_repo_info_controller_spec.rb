@@ -13,15 +13,32 @@ RSpec.describe API::AssignmentRepoInfoController, type: :controller do
 
   describe "GET #info", :vcr do
 
-    context "authenticated user" do
+    context "individual assignment" do
+      before do
+        get :info, params: {organization_id: organization.slug, assignment_id: assignment.slug, type: "individual"}
+      end
       it "returns success" do
-        get :info, params: {organization_id: organization.slug, assignment_id: assignment.slug}
         expect(response).to have_http_status(:success)
       end
 
       it "returns all of user's assignments" do
-        get :info, params: {organization_id: organization.slug, assignment_id: assignment.slug}
-        # binding.pry
+        binding.pry
+        # get :info, params: {organization_id: organization.slug, assignment_id: assignment.title}
+        # expect(json)
+      end
+    end
+
+    context "group assignment" do
+      before do
+        get :info, params: {organization_id: organization.slug, assignment_id: assignment.slug, type: "group"}
+      end
+      it "returns success" do
+        expect(response).to have_http_status(:success)
+      end
+
+      it "returns all of user's assignments" do
+        binding.pry
+        # get :info, params: {organization_id: organization.slug, assignment_id: assignment.title}
         # expect(json)
       end
     end

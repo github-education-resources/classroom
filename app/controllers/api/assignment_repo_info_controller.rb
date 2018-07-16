@@ -32,9 +32,10 @@ class API::AssignmentRepoInfoController < API::ApplicationController
     end
 
     def set_assignment
-      if type == :individual
+      binding.pry
+      if type == "individual"
         @assignment = @organization.assignments.includes(:assignment_invitation).find_by!(slug: params[:assignment_id])
-      elsif type == :group
+      elsif type == "group"
         @assignment = @organization.group_assignments.includes(:group_assignment_invitation).find_by!(slug: params[:group_assignment_id])
       end
     end

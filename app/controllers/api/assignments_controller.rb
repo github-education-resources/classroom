@@ -7,10 +7,9 @@ class API::AssignmentsController < API::ApplicationController
   before_action :add_security_headers
 
   def index
-    binding.pry
-    if type == :individual
+    if type == "individual"
       paginate json: @organization.assignments
-    elsif type == :group
+    elsif type == "group"
       paginate json: @organization.group_assignments
     end
   end

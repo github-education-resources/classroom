@@ -3,9 +3,10 @@
 require "rails_helper"
 
 RSpec.describe API::AssignmentsController, type: :controller do
-  let(:organization) { classroom_org                                   }
-  let(:user)         { classroom_teacher                               }
-  let(:assignment)   { create(:assignment, organization: organization) }
+  let(:organization)      { classroom_org                                   }
+  let(:user)              { classroom_teacher                               }
+  let(:assignment)        { create(:assignment, organization: organization) }
+  let(:group_assignment)  { create(:group_assignment, organization: subject) }
 
   before do
     sign_in_as(user)
@@ -13,14 +14,17 @@ RSpec.describe API::AssignmentsController, type: :controller do
 
   describe "GET #index", :vcr do
 
-    context "authenticated user" do
+    context "individual assignment repo" do
+      before do
+        get :index, params: {organization_id: organization.slug, type: "individual"}
+      end
+
       it "returns success" do
-        get :index, params: {organization_id: organization.slug}
         expect(response).to have_http_status(:success)
       end
 
       it "returns all of user's assignments" do
-        get :index, params: {organization_id: organization.slug}
+        binding.pry
         # binding.pry
         # expect(json)
       end
