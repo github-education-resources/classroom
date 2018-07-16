@@ -3,6 +3,7 @@
 require_relative "boot"
 
 require "rails/all"
+require "csv"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -12,7 +13,7 @@ ENV["FAILBOT_BACKEND"] ||= "memory"
 
 # report exceptions using Failbot
 require "failbot_rails"
-FailbotRails.setup("github-classroom#{'-staging' if Rails.env.staging?}")
+FailbotRails.setup("classroom#{'-staging' if Rails.env.staging?}")
 
 module GitHubClassroom
   class Application < Rails::Application

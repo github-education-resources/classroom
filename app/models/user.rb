@@ -54,6 +54,10 @@ class User < ApplicationRecord
     site_admin
   end
 
+  def owns_all_assignments_for?(organization)
+    organization.all_assignments.map(&:creator_id).include? id
+  end
+
   private
 
   # Internal: We need to make sure that the user

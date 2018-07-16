@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe AssignmentRepo::Creator, type: :model do
   let(:organization) { classroom_org }
   let(:student)      { classroom_student }
+  let(:teacher)      { classroom_teacher }
 
   let(:assignment) do
     options = {
@@ -23,7 +24,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
         AssignmentRepo.destroy_all
       end
 
-      it "creates an AssignmentRepo" do
+      it "creates an AssignmentRepo as an outside_collaborator" do
         result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
 
         expect(result.success?).to be_truthy
@@ -31,8 +32,21 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
         expect(result.assignment_repo.user).to eql(student)
       end
 
+      it "creates an AssignmentRepo as a member" do
+        result = AssignmentRepo::Creator.perform(assignment: assignment, user: teacher)
+
+        expect(result.success?).to be_truthy
+        expect(result.assignment_repo.assignment).to eql(assignment)
+        expect(result.assignment_repo.user).to eql(teacher)
+      end
+
       it "tracks the how long it too to be created" do
         expect(GitHubClassroom.statsd).to receive(:timing)
+        AssignmentRepo::Creator.perform(assignment: assignment, user: student)
+      end
+
+      it "tracks create success stat" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
         AssignmentRepo::Creator.perform(assignment: assignment, user: student)
       end
 
@@ -67,6 +81,14 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
 
         expect(result.failed?).to be_truthy
         expect(result.error).to eql(AssignmentRepo::Creator::REPOSITORY_CREATION_FAILED)
+      end
+
+      it "tracks create fail stat" do
+        stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
+          .to_return(body: "{}", status: 401)
+
+        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.fail")
+        AssignmentRepo::Creator.perform(assignment: assignment, user: student)
       end
 
       context "with a successful repository creation" do

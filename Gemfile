@@ -35,17 +35,17 @@ gem "kaminari", "~> 1.0", ">= 1.0.1"
 gem "local_time", "~> 2.0"
 
 gem "octicons_helper", "~> 2.1"
-gem "octokit",         "~> 4.7"
+gem "octokit", github: "octokit/octokit.rb", ref: "ffae5ddd6fd9da6f4538ca7adeb5d1768011610b"
 gem "omniauth",        "~> 1.6", ">= 1.6.1"
 gem "omniauth-github", "~> 1.3"
 
 gem "peek",                 "~> 1.0", ">= 1.0.1"
-gem "peek-dalli",           github: "peek/peek-dalli", ref: "0a68e1fc73095a421dc2cae3d23937bb1cbb027c"
+gem "peek-dalli",           "1.1.3.4.g0a68e1f"
 gem "peek-gc",              "~> 0.0.2"
 gem "peek-git",             "~> 1.0", ">= 1.0.2"
 gem "peek-performance_bar", "1.2"
-gem "peek-pg",              github: "mkcode/peek-pg",      ref: "9bbe212ed1b6b4a4ad56ded1ef4cf9179cdac0cd"
-gem "peek-sidekiq",         github: "Soliah/peek-sidekiq", ref: "261c857578ae6dc189506a35194785a4db51e54c"
+gem "peek-pg",              "~> 1.3"
+gem "peek-sidekiq",         "1.0.0.4.g261c857"
 gem "pg",                   "~> 0.21.0"
 gem "pry-byebug",           "~> 3.5"
 gem "pry-rails",            "~> 0.3.6"
@@ -59,9 +59,9 @@ gem "ruby-progressbar",    "~> 1.8", ">= 1.8.1", require: false
 
 gem "sass-rails", "~> 5.0", ">= 5.0.6"
 gem "sidekiq",    "~> 5.0", ">= 5.0.4"
-gem "sprockets",  "~> 3.7", ">= 3.7.1"
+gem "sprockets",  "~> 3.7", ">= 3.7.2"
 
-gem "turbolinks", github: "turbolinks/turbolinks-classic", ref: "37a7c296232d20a61bd1946f600da7f2009189db"
+gem "turbolinks", "2.5.3.226.g37a7c29"
 gem "typhoeus",   "~> 1.3"
 
 gem "uglifier", "~> 3.2"
@@ -98,10 +98,11 @@ group :production do
 end
 
 group :test do
-  gem "database_cleaner",   "~> 1.6", ">= 1.6.1"
-  gem "factory_bot_rails",  "~> 4.8"
-  gem "faker",              "~> 1.8", ">= 1.8.4"
-  gem "simplecov",          "~> 0.15.0", require: false
-  gem "vcr",                "~> 3.0", ">= 3.0.3"
-  gem "webmock",            "~> 3.0", ">= 3.0.1"
+  gem "action-cable-testing", "~> 0.3"
+  gem "database_cleaner",     "~> 1.6", ">= 1.6.1"
+  gem "factory_bot_rails",    "~> 4.8"
+  gem "faker",                "~> 1.8", ">= 1.8.4"
+  gem "simplecov",            "~> 0.15.0", require: false
+  gem "vcr",                  "~> 3.0", ">= 3.0.3"
+  gem "webmock",              "~> 3.0", ">= 3.0.1"
 end

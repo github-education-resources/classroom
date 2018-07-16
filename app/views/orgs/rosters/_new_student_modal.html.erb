@@ -1,12 +1,21 @@
 <div class="remodal text-left" data-remodal-id="new-student-modal">
   <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
-  <h2 class="remodal-header text-left">Add a student to your Roster</h2>
+  <h2 class="remodal-header text-left">Add students to your Roster</h2>
 
-  <%= form_tag({ controller: :rosters, action: :add_student }, method: :patch) do %>
+  <%= form_tag({ controller: :rosters, action: :add_students }, method: :patch) do %>
     <dl class="form">
-      <dt><label><%= roster.identifier_name %></label></dt>
-      <%= text_field_tag 'identifier', nil, class: "form-control input-block" %>
+      <dt><label><%= roster.identifier_name.pluralize %></label></dt>
+      <%= text_area_tag 'identifiers', '', class: "form-control input-block", id: 'entries-field' %>
     </dl>
-    <%= submit_tag 'Create student', class: "btn btn-primary" %>
+
+    <dl class="form">
+      <dt><label>OR upload a CSV or text file:</label></dt>
+      <label class='btn btn-secondary btn-sm' for="file-upload">Upload file</label>
+      <%= file_field_tag :identifiers_file, style: 'display: none', id: 'file-upload', onchange: 'onIdentifiersUploaded()' %>
+    </dl>
+
+    <div class="form-actions">
+      <%= submit_tag 'Create students', class: "btn btn-primary" %>
+    </div>
   <% end %>
 </div>

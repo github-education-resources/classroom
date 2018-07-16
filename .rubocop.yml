@@ -38,6 +38,13 @@ Rails/DynamicFindBy:
   Whitelist:
     - find_by_auth_hash
 
+Rails/UnknownEnv:
+  Environments:
+    - development
+    - test
+    - staging
+    - production
+
 Style/FileName:
   Exclude:
     - 'Gemfile'

@@ -5,6 +5,7 @@ require "staff_constraint"
 
 Rails.application.routes.draw do
   mount Peek::Railtie => "/peek"
+  mount ActionCable.server => "/cable"
 
   root to: "pages#home"
 
@@ -20,6 +21,7 @@ Rails.application.routes.draw do
   get "/autocomplete/github_repos", to: "autocomplete#github_repos"
 
   get "/boom", to: "site#boom_town"
+  get "/boom/sidekiq", to: "site#boom_sidekiq"
 
   scope "github", as: "github" do
     constraints user_agent: %r{\AGitHub-Hookshot/\w+\z}, format: "json" do
@@ -31,6 +33,9 @@ Rails.application.routes.draw do
     member do
       patch :accept
       get   :setup
+      get   :setupv2
+      post  :create_repo
+      get   :progress
       patch :setup_progress
       get   :success
       patch :join_roster
@@ -58,12 +63,13 @@ Rails.application.routes.draw do
         patch :setup_organization
         get   "settings/invitations", to: "organizations#invitation"
         get   "settings/teams",       to: "organizations#show_groupings"
+        delete "users/:user_id",      to: "organizations#remove_user", as: "remove_user"
 
         resource :roster, only: %i[show new create], controller: "orgs/rosters" do
           patch :link
           patch :unlink
           patch :delete_entry
-          patch :add_student
+          patch :add_students
           patch :remove_organization
         end
       end

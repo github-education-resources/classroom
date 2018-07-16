@@ -38,9 +38,19 @@ VCR.configure do |c|
     classroom_owner_organization_github_login
   end
 
+  # Owner token
+  c.filter_sensitive_data("<TEST_CLASSROOM_OWNER_GITHUB_TOKEN>") do
+    classroom_owner_github_token
+  end
+
   # Student
   c.filter_sensitive_data("<TEST_CLASSROOM_STUDENT_GITHUB_ID>") do
     classroom_student_github_id
+  end
+
+  # Student token
+  c.filter_sensitive_data("<TEST_CLASSROOM_STUDENT_GITHUB_TOKEN>") do
+    classroom_student_github_token
   end
 
   c.hook_into :webmock
