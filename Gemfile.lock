@@ -439,8 +439,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_model_serializers (~> 0.10.0)
   action-cable-testing (~> 0.3)
+  active_model_serializers (~> 0.10.0)
   airbrake (~> 6.2, >= 6.2.1)
   api-pagination (= 4.7.1)
   autoprefixer-rails (~> 7.1, >= 7.1.3)
