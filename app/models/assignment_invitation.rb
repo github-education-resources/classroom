@@ -61,6 +61,10 @@ class AssignmentInvitation < ApplicationRecord
     assignment.invitations_enabled?
   end
 
+  def errored?
+    errored_creating_repo? || errored_importing_starter_code?
+  end
+
   protected
 
   def assign_key

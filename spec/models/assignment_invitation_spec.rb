@@ -17,6 +17,18 @@ RSpec.describe AssignmentInvitation, type: :model do
     expect(assignment_invitation.status).to eq("unaccepted")
   end
 
+  it "is errored? when errored_creating_repo!" do
+    assignment_invitation = build(:assignment_invitation)
+    assignment_invitation.errored_creating_repo!
+    expect(assignment_invitation.errored?).to be_truthy
+  end
+
+  it "is errored? when errored_creating_repo!" do
+    assignment_invitation = build(:assignment_invitation)
+    assignment_invitation.errored_importing_starter_code!
+    expect(assignment_invitation.errored?).to be_truthy
+  end
+
   it "shouldn't invalidate old records" do
     assignment_invitation = AssignmentInvitation.create(status: nil, assignment: subject.assignment)
     expect(assignment_invitation.errors).to be_empty

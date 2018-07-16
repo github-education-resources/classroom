@@ -214,6 +214,12 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
           invitation.errored_creating_repo!
         end
 
+        it "deletes an assignment repo if one already exists" do
+          assignment_repo = create(:assignment_repo, assignment: invitation.assignment, github_repo_id: 8485, user: user)
+          expect_any_instance_of(AssignmentRepo).to receive(:destroy)
+          post :create_repo, params: { id: invitation.key }
+        end
+
         it "enqueues a CreateRepositoryJob" do
           assert_enqueued_jobs 1, only: AssignmentRepo::CreateGitHubRepositoryJob do
             post :create_repo, params: { id: invitation.key }
@@ -292,7 +298,6 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     it "404s when feature is off" do
       get :setupv2, params: { id: invitation.key }
       expect(response.status).to eq(404)
-      expect(response.body).to be_empty
     end
 
     context "with import resiliency enabled" do
@@ -337,7 +342,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it "returns the correct status when status is changed" do
-        invitation.creating_repo_errored!
+        invitation.errored_creating_repo!
         get :progress, params: { id: invitation.key }
         expect(response.body).to eq({ status: invitation.status }.to_json)
       end

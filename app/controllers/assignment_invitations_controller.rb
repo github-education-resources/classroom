@@ -51,14 +51,16 @@ class AssignmentInvitationsController < ApplicationController
   def setup; end
 
   def setupv2
-    render status: 404 unless import_resiliency_enabled?
+    return not_found unless import_resiliency_enabled?
   end
 
   # rubocop:disable MethodLength
   def create_repo
     if import_resiliency_enabled?
       job_started = false
-      if current_invitation.accepted? || current_invitation.errored_creating_repo? || current_invitation.errored_importing_starter_code?
+      if current_invitation.accepted? || current_invitation.errored?
+        assignment_repo = AssignmentRepo.find_by(assignment: current_assignment, user: current_user)
+        assignment_repo.destroy if assignment_repo
         AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user)
         job_started = true
       end
@@ -66,7 +68,7 @@ class AssignmentInvitationsController < ApplicationController
         job_started: job_started
       }
     else
-      render status: 404, json: {}
+      render status: 404, json: { error: "Not found" }
     end
   end
   # rubocop:enable MethodLength
@@ -75,7 +77,7 @@ class AssignmentInvitationsController < ApplicationController
     if import_resiliency_enabled?
       render json: { status: current_invitation.status }
     else
-      render status: 404, json: {}
+      render status: 404, json: { error: "Not found" }
     end
   end
 
