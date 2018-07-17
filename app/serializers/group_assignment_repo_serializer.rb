@@ -5,14 +5,14 @@ class GroupAssignmentRepoSerializer < ActiveModel::Serializer
   attributes :displayName
 
   def username
-    return object.group.title
+    object.group.title
   end
 
   def repoUrl
-    return object.github_repository.html_url
+    object.github_repository.html_url
   end
 
   def displayName
-    return object.group.repo_accesses.map(&:user).map(&:github_user).map(&:login).join(", ")
+    object.group.repo_accesses.map(&:user).map(&:github_user).map(&:login).join(", ")
   end
 end

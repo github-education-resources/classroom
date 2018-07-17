@@ -7,19 +7,11 @@ class API::AssignmentsController < API::ApplicationController
   before_action :add_security_headers
 
   def index
-    if type == "individual"
-      paginate json: @organization.assignments
-    elsif type == "group"
-      paginate json: @organization.group_assignments
-    end
+    paginate json: @organization.assignments + @organization.group_assignments
   end
 
   private
-
-  def type
-    params[:type]
-  end
-
+  
   def add_security_headers
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET'
