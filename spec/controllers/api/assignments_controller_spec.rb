@@ -44,6 +44,5 @@ RSpec.describe API::AssignmentsController, type: :controller do
     it "returns serialized version of individual assignment" do
       expect(json.to_json).to eq(@assignment_json)
     end
-
   end
 end

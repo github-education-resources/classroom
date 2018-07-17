@@ -284,5 +284,4 @@ RSpec.describe AssignmentsController, type: :controller do
       expect(response).to redirect_to(organization)
     end
   end
-
 end
