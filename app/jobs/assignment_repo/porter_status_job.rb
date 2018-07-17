@@ -11,7 +11,7 @@ class AssignmentRepo
       github_repository = assignment_repo.github_repository
 
       begin
-        result = Octopoller.poll(timeout: 30) do
+        result = Octopoller.poll(timeout: 30.seconds) do
           begin
             progress = github_repository.import_progress[:status]
             case progress

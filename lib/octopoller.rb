@@ -6,12 +6,12 @@ module Octopoller
   # Polls until success
   # Re-runs when an error is caught
   #
-  # wait - The time delay in seconds between polls (default is 1)
-  # timeout - The maximum number of seconds the poller will run (default is 15)
+  # wait - The time delay in seconds between polls (default is 1 second)
+  # timeout - The maximum number of seconds the poller will run (default is 15 seconds)
   # error_handler - A proc that will run with each instance of an error
   # yield - A block that will execute, and if it raises an error it will re-run until success or the timeout is reached
   # raise - Raises an Octopoller::TimeoutError if the timeout is reached
-  def poll(wait: 1, timeout: 15)
+  def poll(wait: 1.second, timeout: 15.second)
     raise ArgumentError, "Cannot poll backwards in time" if wait.negative?
     raise ArgumentError, "Timed out without even being able to try" if timeout.negative?
 

@@ -4,16 +4,16 @@ require "rails_helper"
 
 RSpec.describe Octopoller do
   it "does not accept negative wait time" do
-    expect { Octopoller.poll(wait: -1) {} }.to raise_error(ArgumentError, "Cannot poll backwards in time")
+    expect { Octopoller.poll(wait: -1.second) {} }.to raise_error(ArgumentError, "Cannot poll backwards in time")
   end
 
   it "does not accept negative timeout" do
-    expect { Octopoller.poll(timeout: -1) {} }.to raise_error(ArgumentError, "Timed out without even being able to try")
+    expect { Octopoller.poll(timeout: -1.seconds) {} }.to raise_error(ArgumentError, "Timed out without even being able to try")
   end
 
   it "polls until timeout" do
     expect do
-      Octopoller.poll(wait: 0.1, timeout: 0.5) do
+      Octopoller.poll(wait: 0.1.seconds, timeout: 0.5.seconds) do
         :re_poll
       end
     end.to raise_error(Octopoller::TimeoutError, "Polling timed out paitently")
@@ -26,7 +26,7 @@ RSpec.describe Octopoller do
 
   it "polls until successful return" do
     polled = false
-    result = Octopoller.poll(wait: 0.1) do
+    result = Octopoller.poll(wait: 0.1.seconds) do
       if polled
         "Success!"
       else
@@ -39,7 +39,7 @@ RSpec.describe Octopoller do
 
   it "doesn't swallow a raised error" do
     expect do
-      Octopoller.poll(wait: 0.1) do
+      Octopoller.poll(wait: 0.1.seconds) do
         raise StandardError, "An error occuered"
       end
     end.to raise_error(StandardError, "An error occuered")
