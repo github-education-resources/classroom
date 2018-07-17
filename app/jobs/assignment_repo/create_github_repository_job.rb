@@ -71,7 +71,7 @@ class AssignmentRepo
       end
     rescue Creator::Result::Error => err
       creator.delete_github_repository(assignment_repo.try(:github_repo_id))
-      assignment.invitation&.errored!
+      assignment.invitation&.errored_creating_repo!
       ActionCable.server.broadcast(
         RepositoryCreationStatusChannel.channel(user_id: user.id),
         text: err,
