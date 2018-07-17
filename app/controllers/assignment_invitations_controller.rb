@@ -51,7 +51,7 @@ class AssignmentInvitationsController < ApplicationController
   def setup; end
 
   def setupv2
-    return not_found unless import_resiliency_enabled?
+    not_found unless import_resiliency_enabled?
   end
 
   # rubocop:disable MethodLength
