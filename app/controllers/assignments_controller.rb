@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class AssignmentsController < ApplicationController
-  include Rails::Pagination
   include OrganizationAuthorization
   include StarterCode
 
