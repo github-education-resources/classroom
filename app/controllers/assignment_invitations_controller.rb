@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable ClassLength
 class AssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
   include RepoSetup
@@ -157,4 +156,3 @@ class AssignmentInvitationsController < ApplicationController
     GitHubClassroom::Scopes::ASSIGNMENT_STUDENT
   end
 end
-# rubocop:enable ClassLength
