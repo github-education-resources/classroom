@@ -137,14 +137,12 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: {format: :json} do 
     scope :internal do
-      resources :organizations, path: "classrooms", only: [] do
-        resources :assignments, only: [:index] do
-          get '/repos', to: 'assignment_repo_info#repos', type: "individual"
-          get '/info', to: 'assignment_repo_info#info', type: "individual"
+      resources :organizations, path: "classrooms", only: [:index] do
+        resources :assignments, only: %i[index show] do
+          resources :assignment_repos, only: [:index]
         end
-        resources :group_assignments, path: "group-assignments", only: [:index] do
-          get '/repos', to: 'assignment_repo_info#repos', type: "group"
-          get '/info', to: 'assignment_repo_info#info', type: "group"
+        resources :group_assignments, path: "group-assignments", only: %i[index show] do
+          resources :group_assignment_repos, path: "group-assignment-repos", only: [:index]
         end
       end
     end
