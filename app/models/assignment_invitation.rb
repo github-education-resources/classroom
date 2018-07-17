@@ -6,6 +6,7 @@ class AssignmentInvitation < ApplicationRecord
   enum status: %i[
     unaccepted
     accepted
+    waiting
     creating_repo
     importing_starter_code
     completed

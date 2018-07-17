@@ -205,7 +205,11 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
         it "says a job was succesfully kicked off" do
           post :create_repo, params: { id: invitation.key }
-          expect(response.body).to eq({ job_started: true }.to_json)
+          expect(response.body)
+            .to eq({
+              job_started: true,
+              status: "waiting"
+            }.to_json)
         end
       end
 
@@ -244,7 +248,11 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
         it "says a job was succesfully kicked off" do
           post :create_repo, params: { id: invitation.key }
-          expect(response.body).to eq({ job_started: true }.to_json)
+          expect(response.body)
+            .to eq({
+              job_started: true,
+              status: "waiting"
+            }.to_json)
         end
       end
 
@@ -261,7 +269,11 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
         it "says a job was unsuccesfully kicked off" do
           post :create_repo, params: { id: invitation.key }
-          expect(response.body).to eq({ job_started: false }.to_json)
+          expect(response.body)
+            .to eq({
+              job_started: false,
+              status: "unaccepted"
+            }.to_json)
         end
       end
     end

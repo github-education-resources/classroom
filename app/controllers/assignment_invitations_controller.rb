@@ -62,11 +62,13 @@ class AssignmentInvitationsController < ApplicationController
       if current_invitation.accepted? || current_invitation.errored?
         assignment_repo = AssignmentRepo.find_by(assignment: current_assignment, user: current_user)
         assignment_repo&.destroy if assignment_repo&.github_repository&.empty?
+        current_invitation.waiting!
         AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user)
         job_started = true
       end
       render json: {
-        job_started: job_started
+        job_started: job_started,
+        status: current_invitation.status
       }
     else
       render status: 404, json: { error: "Not found" }
