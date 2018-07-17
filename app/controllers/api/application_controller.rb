@@ -4,11 +4,11 @@ class API::ApplicationController < ApplicationController
   include Rails::Pagination
   
   def authenticate_user!
-    return become_active if logged_in? && adequate_scopes?
-    render_forbidden()
+    return become_active if logged_in? && adequate_scopes? && current_user.authorized_access_token?
+    return_forbidden()
   end
 
-  def render_forbidden()
+  def return_forbidden()
     render json: {
       message: "Unauthorized"
     }, status: :forbidden
