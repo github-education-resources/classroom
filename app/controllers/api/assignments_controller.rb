@@ -10,6 +10,21 @@ class API::AssignmentsController < API::ApplicationController
     paginate json: @organization.assignments + @organization.group_assignments
   end
 
+  def repos
+    if type == :individual
+      paginate json: individual_repos
+    else
+      paginate json: group_repos
+    end
+  end
+
+  def info
+    render json: {
+      name: @assignment.title,
+      type: type,
+    }
+  end
+
   private
   
   def add_security_headers

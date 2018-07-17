@@ -5,11 +5,11 @@ require "rails_helper"
 RSpec.describe API::ApplicationController, type: :controller do
   controller do
     def index
-      render body: nil, status: :ok
+      render json: {}, status: :ok
     end
   end
 
-  describe "API Application Controller Authentication Tests" do
+  describe "API Application Controller Authentication Tests", :vcr do
     context "user has adequate scopes" do
       subject { classroom_teacher }
 
@@ -21,7 +21,7 @@ RSpec.describe API::ApplicationController, type: :controller do
         context "user access token is valid" do
           it "renders action" do
             get :index
-            expect(response.status).to eq(:success)
+            expect(response).to have_http_status(:ok)
           end
         end
   
@@ -32,7 +32,7 @@ RSpec.describe API::ApplicationController, type: :controller do
 
           it "returns forbidden" do
             get :index
-            expect(response.status).to eq(:forbidden)
+            expect(response).to have_http_status(:forbidden)
           end
         end
       end
@@ -40,7 +40,7 @@ RSpec.describe API::ApplicationController, type: :controller do
       context "user is not logged in" do
         it "returns forbidden" do
           get :index
-          expect(response.status).to eq(:forbidden)
+          expect(response).to have_http_status(:forbidden)
         end
       end
     end
@@ -49,7 +49,8 @@ RSpec.describe API::ApplicationController, type: :controller do
       subject { classroom_student }
       
       it "returns forbidden" do
-        expect(response.status).to eq(:forbidden)
+        get :index
+        expect(response).to have_http_status(:forbidden)
       end
       
     end
