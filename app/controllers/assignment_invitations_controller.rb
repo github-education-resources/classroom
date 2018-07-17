@@ -27,7 +27,7 @@ class AssignmentInvitationsController < ApplicationController
         redirect_to setupv2_assignment_invitation_path
       when :error
         GitHubClassroom.statsd.increment("v2_exercise_invitation.fail")
-        current_invitation.errored!
+        current_invitation.errored_creating_repo!
 
         flash[:error] = result.error
         redirect_to assignment_invitation_path(current_invitation)
@@ -51,14 +51,17 @@ class AssignmentInvitationsController < ApplicationController
   def setup; end
 
   def setupv2
-    render status: 404 unless import_resiliency_enabled?
+    not_found unless import_resiliency_enabled?
   end
 
   # rubocop:disable MethodLength
+  # rubocop:disable AbcSize
   def create_repo
     if import_resiliency_enabled?
       job_started = false
       if current_invitation.accepted? || current_invitation.errored?
+        assignment_repo = AssignmentRepo.find_by(assignment: current_assignment, user: current_user)
+        assignment_repo&.destroy if assignment_repo&.github_repository&.empty?
         AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user)
         job_started = true
       end
@@ -66,16 +69,17 @@ class AssignmentInvitationsController < ApplicationController
         job_started: job_started
       }
     else
-      render status: 404, json: {}
+      render status: 404, json: { error: "Not found" }
     end
   end
   # rubocop:enable MethodLength
+  # rubocop:enable AbcSize
 
   def progress
     if import_resiliency_enabled?
       render json: { status: current_invitation.status }
     else
-      render status: 404, json: {}
+      render status: 404, json: { error: "Not found" }
     end
   end
 
