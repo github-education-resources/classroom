@@ -214,9 +214,25 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
           invitation.errored_creating_repo!
         end
 
-        it "deletes an assignment repo if one already exists" do
+        it "deletes an assignment repo if one already exists and is empty" do
+          Octokit.reset!
+          client = oauth_client
+
+          empty_github_repository = GitHubRepository.new(client, 141_328_892)
           AssignmentRepo.create(assignment: invitation.assignment, github_repo_id: 8485, user: user)
+          allow_any_instance_of(AssignmentRepo).to receive(:github_repository).and_return(empty_github_repository)
           expect_any_instance_of(AssignmentRepo).to receive(:destroy)
+          post :create_repo, params: { id: invitation.key }
+        end
+
+        it "doesn't delete an assignment repo when one already exists and is not empty" do
+          Octokit.reset!
+          client = oauth_client
+
+          github_repository = GitHubRepository.new(client, 35_079_964)
+          AssignmentRepo.create(assignment: invitation.assignment, github_repo_id: 8485, user: user)
+          allow_any_instance_of(AssignmentRepo).to receive(:github_repository).and_return(github_repository)
+          expect_any_instance_of(AssignmentRepo).not_to receive(:destroy)
           post :create_repo, params: { id: invitation.key }
         end
 

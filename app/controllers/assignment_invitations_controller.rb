@@ -55,12 +55,13 @@ class AssignmentInvitationsController < ApplicationController
   end
 
   # rubocop:disable MethodLength
+  # rubocop:disable AbcSize
   def create_repo
     if import_resiliency_enabled?
       job_started = false
       if current_invitation.accepted? || current_invitation.errored?
         assignment_repo = AssignmentRepo.find_by(assignment: current_assignment, user: current_user)
-        assignment_repo&.destroy if assignment_repo
+        assignment_repo&.destroy if assignment_repo&.github_repository&.empty?
         AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user)
         job_started = true
       end
@@ -72,6 +73,7 @@ class AssignmentInvitationsController < ApplicationController
     end
   end
   # rubocop:enable MethodLength
+  # rubocop:enable AbcSize
 
   def progress
     if import_resiliency_enabled?
