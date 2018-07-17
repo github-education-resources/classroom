@@ -1,13 +1,31 @@
 (function() {
   var POLL_INTERVAL = 3000;
-  var ready, check_progress, show_success, invitation_path, progress_path, success_path, display_progress, indicate_completion, indicate_failure, indicate_in_progress;
+  var check_progress,
+    display_progress,
+    display_retry_button,
+    hide_retry_button,
+    indicate_completion,
+    indicate_failure,
+    indicate_in_progress,
+    invitation_path,
+    is_hidden,
+    progress_path,
+    ready,
+    setup_retry_button,
+    show_success,
+    start_job,
+    success_path;
+
+  is_hidden = function(element) {
+    return element.hasClass("d-none");
+  };
 
   indicate_completion = function(step_indicator) {
     $(step_indicator).addClass("border-green bg-green-light");
 
     var status, completion_indicator;
     status = $(step_indicator).find(".status");
-    if (status.hasClass("d-none")) {
+    if (is_hidden(status)) {
       status.removeClass("d-none");
     }
 
@@ -18,6 +36,8 @@
     $(completion_indicator).show();
     $(failure_indicator).hide();
     $(spinner_indicator).hide();
+
+    hide_retry_button();
   };
 
   indicate_failure = function(step_indicator) {
@@ -25,7 +45,7 @@
 
     var status, failure_indicator;
     status = $(step_indicator).find(".status");
-    if (status.hasClass("d-none")) {
+    if (is_hidden(status)) {
       status.removeClass("d-none");
     }
 
@@ -36,12 +56,14 @@
     $(failure_indicator).show();
     $(completion_indicator).hide();
     $(spinner_indicator).hide();
+
+    display_retry_button();
   };
 
   indicate_in_progress = function(step_indicator) {
     var status;
     status = $(step_indicator).find(".status");
-    if (status.hasClass("d-none")) {
+    if (is_hidden(status)) {
       status.removeClass("d-none");
     }
 
@@ -54,6 +76,22 @@
     $(spinner_indicator).show();
     $(failure_indicator).hide();
     $(completion_indicator).hide();
+
+    hide_retry_button();
+  };
+
+  display_retry_button = function() {
+    var retry_button = $("#retry-button");
+    if (is_hidden(retry_button)) {
+      retry_button.removeClass("d-none");
+    }
+  };
+
+  hide_retry_button = function() {
+    var retry_button = $("#retry-button");
+    if (!is_hidden(retry_button)) {
+      retry_button.addClass("d-none");
+    }
   };
 
   display_progress = function(progress) {
@@ -117,9 +155,16 @@
     });
   };
 
+  setup_retry_button = function() {
+    $("#retry-button").click(function() {
+      location.reload();
+    });
+  };
+
   ready = (function() {
     var setup_progress = $(".setupv2");
     if (setup_progress.length !== 0) {
+      setup_retry_button();
       start_job();
       check_progress();
     }
