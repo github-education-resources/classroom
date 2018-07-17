@@ -4,11 +4,13 @@ require "rails_helper"
 
 RSpec.describe Octopoller do
   it "does not accept negative wait time" do
-    expect { Octopoller.poll(wait: -1.second) {} }.to raise_error(ArgumentError, "Cannot poll backwards in time")
+    expect { Octopoller.poll(wait: -1.second) {} }
+      .to raise_error(ArgumentError, "Cannot poll backwards in time")
   end
 
   it "does not accept negative timeout" do
-    expect { Octopoller.poll(timeout: -1.seconds) {} }.to raise_error(ArgumentError, "Timed out without even being able to try")
+    expect { Octopoller.poll(timeout: -1.second) {} }
+      .to raise_error(ArgumentError, "Timed out without even being able to try")
   end
 
   it "polls until timeout" do
