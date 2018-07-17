@@ -4,6 +4,7 @@
 class API::ApplicationController < ApplicationController
   include Rails::Pagination
 
+  before_action :ensure_download_repositories_flipper_is_enabled
   before_action :add_security_headers
 
   def authenticate_user!

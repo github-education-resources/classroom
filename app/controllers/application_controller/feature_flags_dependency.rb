@@ -9,6 +9,10 @@ class ApplicationController
     not_found unless student_identifier_enabled?
   end
 
+  def ensure_download_repositories_flipper_is_enabled
+    not_found unless download_repositories_enabled?
+  end
+
   def student_identifier_enabled?
     logged_in? && current_user.feature_enabled?(:student_identifier)
   end
@@ -28,4 +32,9 @@ class ApplicationController
     logged_in? && current_user.feature_enabled?(:import_resiliency)
   end
   helper_method :import_resiliency_enabled?
+
+  def download_repositories_enabled?
+    logged_in? && current_user.feature_enabled?(:download_repositories)
+  end
+  helper_method :download_repositories_enabled?
 end
