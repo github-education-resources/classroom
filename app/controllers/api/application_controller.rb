@@ -1,29 +1,29 @@
 # frozen_string_literal: true
 
-module API
-  class ApplicationController < ApplicationController
-    include Rails::Pagination
+# rubocop:disable ClassAndModuleChildren
+class API::ApplicationController < ApplicationController
+  include Rails::Pagination
 
-    before_action :add_security_headers
+  before_action :add_security_headers
 
-    def authenticate_user!
-      return become_active if logged_in? && adequate_scopes? && current_user.authorized_access_token?
-      render_forbidden
-    end
+  def authenticate_user!
+    return become_active if logged_in? && adequate_scopes? && current_user.authorized_access_token?
+    render_forbidden
+  end
 
-    private
+  private
 
-    def render_forbidden
-      render json: {
-        message: "Unauthorized"
-      }, status: :forbidden
-    end
+  def render_forbidden
+    render json: {
+      message: "Unauthorized"
+    }, status: :forbidden
+  end
 
-    def add_security_headers
-      response.headers["Access-Control-Allow-Origin"] = "*"
-      response.headers["Access-Control-Allow-Methods"] = "GET"
-      response.headers["Access-Control-Allow-Headers"] = "*"
-      response.headers["Access-Control-Expose-Headers"] = "Total, Link, Per-Page"
-    end
+  def add_security_headers
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "GET"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    response.headers["Access-Control-Expose-Headers"] = "Total, Link, Per-Page"
   end
 end
+# rubocop:enable ClassAndModuleChildren
