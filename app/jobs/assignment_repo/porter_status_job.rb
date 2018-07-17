@@ -31,7 +31,7 @@ class AssignmentRepo
 
         case result
         when Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
-          assignment_repo.assignment.invitation&.errored!
+          assignment_repo.assignment.invitation&.errored_importing_starter_code!
           ActionCable.server.broadcast(
             RepositoryCreationStatusChannel.channel(user_id: user.id),
             text: result,
