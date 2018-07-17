@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe API::AssignmentsController, type: :controller do
   let(:organization)          { classroom_org                                         }
   let(:user)                  { classroom_teacher                                     }
-  
+
   before do
     sign_in_as(user)
 
@@ -15,7 +15,7 @@ RSpec.describe API::AssignmentsController, type: :controller do
 
   describe "GET #index", :vcr do
     before do
-      get :index, params: {organization_id: organization.slug}
+      get :index, params: { organization_id: organization.slug }
     end
 
     it "returns success" do
@@ -29,12 +29,11 @@ RSpec.describe API::AssignmentsController, type: :controller do
     it "returns serialized versions of indivdual assignment" do
       expect(json.first.to_json).to eq(@assignment_json)
     end
-
   end
 
   describe "GET #show", :vcr do
     before do
-      get :show, params: {organization_id: organization.slug, id: @assignment.slug}
+      get :show, params: { organization_id: organization.slug, id: @assignment.slug }
     end
 
     it "returns success" do

@@ -1,14 +1,18 @@
+# frozen_string_literal: true
+
 class AssignmentSerializer < ActiveModel::Serializer
   attributes :id
   attributes :title
   attributes :type
-  attributes :organization_github_id
+  attributes :organizationGithubId
 
   def type
     :individual
   end
 
-  def organization_github_id
+  # rubocop:disable MethodName
+  def organizationGithubId
     object.organization.github_id
   end
+  # rubocop:enable MethodName
 end

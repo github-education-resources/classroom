@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupAssignmentRepoSerializer < ActiveModel::Serializer
   attributes :id
   attributes :username
@@ -8,6 +10,7 @@ class GroupAssignmentRepoSerializer < ActiveModel::Serializer
     object.group.title
   end
 
+  # rubocop:disable MethodName
   def repoUrl
     object.github_repository.html_url
   end
@@ -15,4 +18,5 @@ class GroupAssignmentRepoSerializer < ActiveModel::Serializer
   def displayName
     object.group.repo_accesses.map(&:user).map(&:github_user).map(&:login).join(", ")
   end
+  # rubocop:enable MethodName
 end

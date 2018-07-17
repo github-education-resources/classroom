@@ -135,7 +135,7 @@ Rails.application.routes.draw do
     resources :groups,    only: [:show]
   end
 
-  namespace :api, defaults: {format: :json} do 
+  namespace :api, defaults: { format: :json } do
     scope :internal do
       resources :organizations, path: "classrooms", only: [:index] do
         resources :assignments, only: %i[index show] do

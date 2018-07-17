@@ -13,10 +13,10 @@ RSpec.describe API::AssignmentReposController, type: :controller do
 
   describe "GET #index", :vcr do
     before do
-      @assignment_repo = create(:assignment_repo, assignment: assignment, github_repo_id:42, user: user)
+      @assignment_repo = create(:assignment_repo, assignment: assignment, github_repo_id: 42, user: user)
       @assignment_repo_json = AssignmentRepoSerializer.new(@assignment_repo).to_json
-      
-      get :index, params: {organization_id: organization.slug, assignment_id: assignment.slug}
+
+      get :index, params: { organization_id: organization.slug, assignment_id: assignment.slug }
     end
 
     after do
@@ -30,6 +30,5 @@ RSpec.describe API::AssignmentReposController, type: :controller do
     it "returns serialized individual assignment repo" do
       expect(json.first.to_json).to eq(@assignment_repo_json)
     end
-
   end
 end

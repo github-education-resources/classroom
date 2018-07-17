@@ -24,7 +24,7 @@ RSpec.describe API::ApplicationController, type: :controller do
             expect(response).to have_http_status(:ok)
           end
         end
-  
+
         context "user access token is invalid" do
           before do
             User.any_instance.stub(:authorized_access_token?).and_return(false)
@@ -36,7 +36,7 @@ RSpec.describe API::ApplicationController, type: :controller do
           end
         end
       end
-  
+
       context "user is not logged in" do
         it "returns forbidden" do
           get :index
@@ -47,12 +47,11 @@ RSpec.describe API::ApplicationController, type: :controller do
 
     context "user does not have adequate scopes" do
       subject { classroom_student }
-      
+
       it "returns forbidden" do
         get :index
         expect(response).to have_http_status(:forbidden)
       end
-      
     end
   end
 end

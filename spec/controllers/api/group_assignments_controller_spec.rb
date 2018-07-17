@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe API::GroupAssignmentsController, type: :controller do
   let(:organization)          { classroom_org                                         }
   let(:user)                  { classroom_teacher                                     }
-  
+
   before do
     sign_in_as(user)
 
@@ -29,7 +29,6 @@ RSpec.describe API::GroupAssignmentsController, type: :controller do
     it "returns serialized version of group assignment" do
       expect(json.first.to_json).to eq(@group_assignment_json)
     end
-
   end
 
   describe "GET #show", :vcr do

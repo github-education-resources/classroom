@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AssignmentRepoSerializer < ActiveModel::Serializer
   attributes :id
   attributes :username
@@ -8,6 +10,7 @@ class AssignmentRepoSerializer < ActiveModel::Serializer
     object.user.github_user.login
   end
 
+  # rubocop:disable MethodName
   def repoUrl
     object.github_repository.html_url
   end
@@ -15,4 +18,5 @@ class AssignmentRepoSerializer < ActiveModel::Serializer
   def displayName
     object.user.github_user.name || ""
   end
+  # rubocop:enable MethodName
 end

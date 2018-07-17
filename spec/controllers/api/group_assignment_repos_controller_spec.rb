@@ -17,7 +17,7 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
       @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
       @group_assignment_repo_json = GroupAssignmentRepoSerializer.new(@group_assignment_repo).to_json
 
-      get :index, params: {organization_id: organization.slug, group_assignment_id: group_assignment.slug}
+      get :index, params: { organization_id: organization.slug, group_assignment_id: group_assignment.slug }
     end
 
     after do
@@ -32,6 +32,5 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
     it "returns serialized group assignment repo" do
       expect(json.first.to_json).to eq(@group_assignment_repo_json)
     end
-
   end
 end
