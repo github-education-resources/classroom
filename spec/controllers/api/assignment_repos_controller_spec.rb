@@ -8,6 +8,7 @@ RSpec.describe API::AssignmentReposController, type: :controller do
   let(:assignment)        { create(:assignment, organization: organization, title: "Learn Clojure") }
 
   before do
+    GitHubClassroom.flipper[:download_repositories].enable
     sign_in_as(user)
   end
 
@@ -30,5 +31,9 @@ RSpec.describe API::AssignmentReposController, type: :controller do
     it "returns serialized individual assignment repo" do
       expect(json.first.to_json).to eq(@assignment_repo_json)
     end
+  end
+
+  after do
+    GitHubClassroom.flipper[:download_repositories].disable
   end
 end

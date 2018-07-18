@@ -9,6 +9,7 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
   let(:group)             { Group.create(title: "The Group", grouping: group_assignment.grouping)           }
 
   before do
+    GitHubClassroom.flipper[:download_repositories].enable
     sign_in_as(user)
   end
 
@@ -32,5 +33,9 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
     it "returns serialized group assignment repo" do
       expect(json.first.to_json).to eq(@group_assignment_repo_json)
     end
+  end
+
+  after do
+    GitHubClassroom.flipper[:download_repositories].disable
   end
 end

@@ -7,6 +7,7 @@ RSpec.describe API::AssignmentsController, type: :controller do
   let(:user)                  { classroom_teacher                                     }
 
   before do
+    GitHubClassroom.flipper[:download_repositories].enable
     sign_in_as(user)
 
     @assignment = create(:assignment, organization: organization)
@@ -43,5 +44,9 @@ RSpec.describe API::AssignmentsController, type: :controller do
     it "returns serialized version of individual assignment" do
       expect(json.to_json).to eq(@assignment_json)
     end
+  end
+
+  after do
+    GitHubClassroom.flipper[:download_repositories].disable
   end
 end

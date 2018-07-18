@@ -7,6 +7,7 @@ RSpec.describe API::GroupAssignmentsController, type: :controller do
   let(:user)                  { classroom_teacher                                     }
 
   before do
+    GitHubClassroom.flipper[:download_repositories].enable
     sign_in_as(user)
 
     @group_assignment = create(:group_assignment, organization: organization)
@@ -43,5 +44,9 @@ RSpec.describe API::GroupAssignmentsController, type: :controller do
     it "returns serialized version of group assignment" do
       expect(json.to_json).to eq(@group_assignment_json)
     end
+  end
+
+  after do
+    GitHubClassroom.flipper[:download_repositories].disable
   end
 end
