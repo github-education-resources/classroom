@@ -25,7 +25,7 @@ else
   # own from a `development` environment.
   export RAILS_ENV="test" RACK_ENV="test"
 
-  # script/update
+  script/update
 fi
 
 echo "===> Running tests..."
