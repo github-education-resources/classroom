@@ -94,13 +94,17 @@ class AssignmentInvitationsController < ApplicationController
   def ensure_submission_repository_exists
     return not_found unless current_submission
     return if current_submission
-              .github_repository
-              .present?(headers: GitHub::APIHeaders.no_cache_no_store)
+      .github_repository
+      .present?(headers: GitHub::APIHeaders.no_cache_no_store)
 
     current_submission.destroy
     remove_instance_variable(:@current_submission)
 
-    create_submission
+    if import_resiliency_enabled?
+      redirect_to setupv2_assignment_invitation_path
+    else
+      create_submission
+    end
   end
 
   def check_user_not_previous_acceptee

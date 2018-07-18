@@ -330,6 +330,25 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         expect(AssignmentRepo.last.id).not_to eq(@assignment_repo.id)
       end
     end
+
+    describe "import resiliency enabled", :vcr do
+      before do
+        GitHubClassroom.flipper[:import_resiliency].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:import_resiliency].disable
+      end
+
+      it "redirects to setupv2 when current_submission" do
+        expect_any_instance_of(GitHubRepository)
+          .to receive(:present?)
+          .with(headers: GitHub::APIHeaders.no_cache_no_store)
+          .and_return(false)
+        get :success, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+      end
+    end
   end
 
   describe "PATCH #join_roster", :vcr do
