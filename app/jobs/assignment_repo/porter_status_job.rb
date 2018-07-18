@@ -38,6 +38,7 @@ class AssignmentRepo
             status: assignment_repo.assignment.invitation&.status
           )
           logger.warn result.to_s
+          GitHubClassroom.statsd.increment("v2_exercise_repo.import.fail")
         when Creator::REPOSITORY_CREATION_COMPLETE
           assignment_repo.assignment.invitation&.completed!
           ActionCable.server.broadcast(
@@ -45,6 +46,7 @@ class AssignmentRepo
             text: result,
             status: assignment_repo.assignment.invitation&.status
           )
+          GitHubClassroom.statsd.increment("v2_exercise_repo.import.success")
         end
       rescue Octopoller::TimeoutError
         PorterStatusJob.perform_later(assignment_repo, user)

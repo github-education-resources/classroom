@@ -93,6 +93,22 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
           )
       end
 
+      it "reports success stat when porter status is 'complete'" do
+        stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
+          .to_return(
+            status: 201,
+            body: request_stub("importing"),
+            headers: { "Content-Type": "application/json" }
+          ).times(2).then
+          .to_return(
+            status: 200,
+            body: request_stub("complete"),
+            headers: { "Content-Type": "application/json" }
+          ).times(2)
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.import.success")
+        subject.perform_now(@assignment_repo, student)
+      end
+
       it "fails when porter status is 'error'" do
         stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
           .to_return(
@@ -144,6 +160,22 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
         expect(Rails.logger)
           .to receive(:warn)
           .with(AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
+        subject.perform_now(@assignment_repo, student)
+      end
+
+      it "reports failure stat when porter status is 'error'" do
+        stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
+          .to_return(
+            status: 201,
+            body: request_stub("importing"),
+            headers: { "Content-Type": "application/json" }
+          ).times(2).then
+          .to_return(
+            status: 201,
+            body: request_stub("error"),
+            headers: { "Content-Type": "application/json" }
+          )
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.import.fail")
         subject.perform_now(@assignment_repo, student)
       end
 
