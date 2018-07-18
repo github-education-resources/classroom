@@ -94,8 +94,8 @@ class AssignmentInvitationsController < ApplicationController
   def ensure_submission_repository_exists
     return not_found unless current_submission
     return if current_submission
-      .github_repository
-      .present?(headers: GitHub::APIHeaders.no_cache_no_store)
+              .github_repository
+              .present?(headers: GitHub::APIHeaders.no_cache_no_store)
 
     current_submission.destroy
     remove_instance_variable(:@current_submission)
