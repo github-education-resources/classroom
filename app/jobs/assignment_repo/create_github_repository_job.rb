@@ -19,7 +19,9 @@ class AssignmentRepo
     def perform(assignment, user)
       start = Time.zone.now
 
-      return unless assignment.invitation&.waiting? || assignment.invitation.status.nil?
+      return unless assignment.invitation&.waiting? \
+        || assignment.invitation&.errored_creating_repo? \
+        || assignment.invitation.status.nil?
 
       assignment.invitation&.creating_repo!
 
