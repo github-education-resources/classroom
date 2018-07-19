@@ -170,7 +170,9 @@
     var path = job_path();
     $.ajax({type: "POST", url: path}).done(function(data) {
       display_progress(data);
-      callback();
+      if (callback) {
+        callback();
+      }
     });
   };
 
