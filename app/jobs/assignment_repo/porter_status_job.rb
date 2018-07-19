@@ -49,6 +49,7 @@ class AssignmentRepo
           GitHubClassroom.statsd.increment("v2_exercise_repo.import.success")
         end
       rescue Octopoller::TimeoutError
+        GitHubClassroom.statsd.increment("v2_exercise_repo.import.timeout")
         PorterStatusJob.perform_later(assignment_repo, user)
       end
     end

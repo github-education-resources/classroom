@@ -7,9 +7,9 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
 
   subject { AssignmentRepo::PorterStatusJob }
 
-  let(:organization)  { classroom_org }
-  let(:student)       { classroom_student }
-  let(:teacher)       { classroom_teacher }
+  let(:organization) { classroom_org }
+  let(:student)      { classroom_student }
+  let(:teacher)      { classroom_teacher }
 
   let(:assignment) do
     options = {
@@ -236,6 +236,12 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
         assert_enqueued_jobs 1, only: AssignmentRepo::PorterStatusJob do
           subject.perform_now(@assignment_repo, student)
         end
+      end
+
+      it "reports timeout stat when porter status job timesout" do
+        expect(Octopoller).to receive(:poll).with(timeout: 30).and_raise(Octopoller::TimeoutError)
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.import.timeout")
+        subject.perform_now(@assignment_repo, student)
       end
     end
   end
