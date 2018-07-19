@@ -32,9 +32,15 @@ RSpec.describe ApplicationController, type: :controller do
         get :index
         expect(response).to redirect_to(root_path)
       end
-      it "clears the session" do
+
+      it "flashes correct error message" do
         get :index
-        expect(session).to be_empty
+        expect(flash[:error]).to eq("Access Token is invalid. Please login again.")
+      end
+
+      it "resets the session except flash message" do
+        get :index
+        expect(session.to_hash.except("flash")).to be_empty
       end
     end
   end
