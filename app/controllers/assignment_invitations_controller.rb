@@ -102,7 +102,11 @@ class AssignmentInvitationsController < ApplicationController
     current_submission.destroy
     remove_instance_variable(:@current_submission)
 
-    create_submission
+    if import_resiliency_enabled?
+      redirect_to setupv2_assignment_invitation_path
+    else
+      create_submission
+    end
   end
 
   def check_user_not_previous_acceptee
