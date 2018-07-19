@@ -101,6 +101,11 @@
     var create_repo_progress_indicator = $("#create-repo-progress");
     var import_repo_progress_indicator = $("#import-repo-progress");
     switch(progress.status) {
+      case "waiting":
+        indicate_waiting(create_repo_progress_indicator);
+        indicate_waiting(import_repo_progress_indicator);
+        hide_retry_button();
+        break;
       case "creating_repo":
         indicate_in_progress(create_repo_progress_indicator);
         indicate_waiting(import_repo_progress_indicator);
@@ -161,16 +166,21 @@
     });
   };
 
-  start_job = function() {
+  start_job = function(callback) {
     var path = job_path();
     $.ajax({type: "POST", url: path}).done(function(data) {
       display_progress(data);
+      callback();
     });
   };
 
   setup_retry_button = function() {
-    $("#retry-button").click(function() {
-      location.reload();
+    var retry_button = $("#retry-button");
+    retry_button.click(function() {
+      retry_button.addClass("disabled");
+      start_job(function() {
+        retry_button.removeClass("disabled");
+      });
     });
   };
 
