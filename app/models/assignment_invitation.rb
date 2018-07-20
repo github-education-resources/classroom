@@ -20,6 +20,8 @@ class AssignmentInvitation < ApplicationRecord
 
   belongs_to :assignment
 
+  has_many :invite_statuses
+  has_many :users, through: :invite_statuses
   has_one :organization, through: :assignment
 
   validates :assignment, presence: true
