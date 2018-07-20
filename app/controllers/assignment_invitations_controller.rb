@@ -5,7 +5,7 @@ class AssignmentInvitationsController < ApplicationController
   include RepoSetup
 
   before_action :check_user_not_previous_acceptee, :check_should_redirect_to_roster_page, only: [:show]
-  before_action :ensure_submission_repository_exists, only: %i[setup setup_progress success]
+  before_action :ensure_submission_repository_exists, only: :success
 
   # rubocop:disable PerceivedComplexity
   # rubocop:disable MethodLength
@@ -35,11 +35,7 @@ class AssignmentInvitationsController < ApplicationController
     else
       create_submission do
         GitHubClassroom.statsd.increment("exercise_invitation.accept")
-        if current_submission.starter_code_repo_id
-          redirect_to setup_assignment_invitation_path
-        else
-          redirect_to success_assignment_invitation_path
-        end
+        redirect_to success_assignment_invitation_path
       end
     end
   end
@@ -47,8 +43,6 @@ class AssignmentInvitationsController < ApplicationController
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize
   # rubocop:enable CyclomaticComplexity
-
-  def setup; end
 
   def setupv2
     not_found unless import_resiliency_enabled?
@@ -62,11 +56,13 @@ class AssignmentInvitationsController < ApplicationController
       if current_invitation.accepted? || current_invitation.errored?
         assignment_repo = AssignmentRepo.find_by(assignment: current_assignment, user: current_user)
         assignment_repo&.destroy if assignment_repo&.github_repository&.empty?
+        current_invitation.waiting!
         AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user)
         job_started = true
       end
       render json: {
-        job_started: job_started
+        job_started: job_started,
+        status: current_invitation.status
       }
     else
       render status: 404, json: { error: "Not found" }
@@ -81,12 +77,6 @@ class AssignmentInvitationsController < ApplicationController
     else
       render status: 404, json: { error: "Not found" }
     end
-  end
-
-  def setup_progress
-    perform_setup(current_submission, classroom_config) if configurable_submission?
-
-    render json: setup_status(current_submission)
   end
 
   def show; end
@@ -112,7 +102,11 @@ class AssignmentInvitationsController < ApplicationController
     current_submission.destroy
     remove_instance_variable(:@current_submission)
 
-    create_submission
+    if import_resiliency_enabled?
+      redirect_to setupv2_assignment_invitation_path
+    else
+      create_submission
+    end
   end
 
   def check_user_not_previous_acceptee
@@ -127,12 +121,6 @@ class AssignmentInvitationsController < ApplicationController
 
     starter_repo         = GitHubRepository.new(client, starter_code_repo_id)
     ClassroomConfig.new(starter_repo)
-  end
-
-  def configurable_submission?
-    repo             = current_submission.github_repository
-    classroom_branch = repo.branch_present? config_branch
-    repo.imported? && classroom_branch && current_submission.not_configured?
   end
 
   def create_submission

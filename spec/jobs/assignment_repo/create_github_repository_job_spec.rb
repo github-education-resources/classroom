@@ -23,16 +23,17 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
     create(:assignment, options)
   end
 
+  before do
+    @invitation = AssignmentInvitation.create(assignment: assignment)
+    @invitation.waiting!
+  end
+
   after do
     clear_enqueued_jobs
     clear_performed_jobs
   end
 
   describe "invalid invitation statuses", :vcr do
-    before do
-      @invitation = AssignmentInvitation.create(assignment: assignment)
-    end
-
     after do
       AssignmentInvitation.create(assignment: assignment).accepted!
     end
@@ -120,7 +121,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
     end
 
     it "broadcasts status on channel" do
-      AssignmentInvitation.create(assignment: assignment).accepted!
       expect { subject.perform_now(assignment, teacher) }
         .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: teacher.id))
         .with(
@@ -167,7 +167,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
     end
 
     it "broadcasts create repo failure" do
-      AssignmentInvitation.create(assignment: assignment).accepted!
       stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
         .to_return(body: "{}", status: 401)
 
@@ -184,10 +183,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
     end
 
     context "with successful repo creation" do
-      before do
-        AssignmentInvitation.create(assignment: assignment).accepted!
-      end
-
       # Verify that we try to delete the GitHub repository
       # if part of the process fails.
       after(:each) do

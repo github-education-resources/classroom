@@ -2,13 +2,13 @@
 
 <dl class="<%= view.form_class_for(:title) %>">
   <dt><%= f.label :title %></dt>
-  <dd><%= f.text_field :title, class: 'textfield form-control input-contrast input-block' %></dd>
+  <dd><%= f.text_field :title, class: 'textfield form-control input-contrast input-block', autocomplete: :off %></dd>
   <%= render('shared/form_error', errors: view.error_message_for(:title)) if view.errors_for?(:title) %>
 </dl>
 
 <dl class="<%= view.form_class_for(:slug) %>">
   <dt><%= f.label :slug %></dt>
-  <dd><%= f.text_field :slug, class: 'textfield form-control input-contrast input-block' %></dd>
+  <dd><%= f.text_field :slug, class: 'textfield form-control input-contrast input-block', autocomplete: :off %></dd>
   <%= render('shared/form_error', errors: view.error_message_for(:slug)) if view.errors_for?(:slug) %>
   <span class="note"><%= t('assignment_form.slug_note') %></span>
 </dl>
@@ -50,7 +50,7 @@
 
 <dl class="<%= view.form_class_for(:max_members) %>">
    <dt><%= f.label "Maximum number of members in each team (optional)" %></dt>
-   <dd><%= f.number_field :max_members, class: 'textfield form-control input-contrast input-block' %></dd>
+   <dd><%= f.number_field :max_members, class: 'textfield form-control input-contrast input-block', autocomplete: :off %></dd>
    <%= render 'shared/form_error', errors: view.error_message_for(:max_members) if view.errors_for?(:max_members) %>
 </dl>
 
@@ -76,7 +76,7 @@
     <dt><label><%= 'OR' if groupings_present %> Create a new set of teams</label></dt>
     <% time           = Time.zone.now %>
     <% suggested_name = Time.zone.now.strftime("Teams formed on %B #{time.day.ordinalize}, %Y") %>
-    <dd><input class="textfield form-control input-contrast input-block" type="text" value="<%= suggested_name unless groupings_present %>" placeholder="<%= suggested_name if groupings_present %>" name="grouping[title]" id="grouping_title"></dd>
+    <dd><input class="textfield form-control input-contrast input-block" type="text" value="<%= suggested_name unless groupings_present %>" placeholder="<%= suggested_name if groupings_present %>" name="grouping[title]" id="grouping_title" autocomplete="off"></dd>
     <%= render 'shared/form_error', errors: view.error_message_for(:grouping) if view.errors_for?(:grouping) %>
   </dl>
 <% end %>

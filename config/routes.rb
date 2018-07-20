@@ -32,11 +32,9 @@ Rails.application.routes.draw do
   resources :assignment_invitations, path: "assignment-invitations", only: [:show] do
     member do
       patch :accept
-      get   :setup
       get   :setupv2
       post  :create_repo
       get   :progress
-      patch :setup_progress
       get   :success
       patch :join_roster
     end
