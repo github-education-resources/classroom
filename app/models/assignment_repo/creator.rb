@@ -67,7 +67,7 @@ class AssignmentRepo
     # rubocop:disable AbcSize
     def perform
       start = Time.zone.now
-
+      
       verify_organization_has_private_repos_available!
 
       assignment_repo = assignment.assignment_repos.build(
