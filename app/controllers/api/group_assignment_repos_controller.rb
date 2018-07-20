@@ -15,9 +15,7 @@ module API
     private
 
     def set_assignment
-      @group_assignment = @organization.group_assignments
-                                       .includes(:group_assignment_invitation)
-                                       .find_by!(slug: params[:group_assignment_id])
+      @group_assignment = @organization.group_assignments.find_by!(slug: params[:group_assignment_id])
     end
   end
 end

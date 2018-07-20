@@ -40,15 +40,15 @@ RSpec.describe API::GroupAssignmentsController, type: :controller do
       it "returns assignment id" do
         expect(json["id"]).to eq(@group_assignment.id)
       end
-  
+
       it "returns assignment title" do
         expect(json["title"]).to eq(@group_assignment.title)
       end
-  
+
       it "returns assignment type" do
         expect(json["type"]).to eq("group")
       end
-  
+
       it "returns organization github id" do
         expect(json["organizationGithubId"]).to eq(organization.github_id)
       end

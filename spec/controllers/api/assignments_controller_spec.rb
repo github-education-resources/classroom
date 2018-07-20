@@ -40,15 +40,15 @@ RSpec.describe API::AssignmentsController, type: :controller do
       it "returns assignment id" do
         expect(json["id"]).to eq(@assignment.id)
       end
-  
+
       it "returns assignment title" do
         expect(json["title"]).to eq(@assignment.title)
       end
-  
+
       it "returns individual assignment type" do
         expect(json["type"]).to eq("individual")
       end
-  
+
       it "returns organization github id" do
         expect(json["organizationGithubId"]).to eq(organization.github_id)
       end

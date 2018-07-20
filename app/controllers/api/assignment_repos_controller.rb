@@ -15,7 +15,7 @@ module API
     private
 
     def set_assignment
-      @assignment = @organization.assignments.includes(:assignment_invitation).find_by!(slug: params[:assignment_id])
+      @assignment = @organization.assignments.find_by!(slug: params[:assignment_id])
     end
   end
 end

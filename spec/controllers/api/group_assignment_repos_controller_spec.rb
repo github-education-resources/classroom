@@ -33,11 +33,11 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
       it "returns group title as username" do
         expect(json.first["username"]).to eq(group.title)
       end
-  
+
       it "returns github repo url" do
         expect(json.first["repoUrl"]).to eq(@group_assignment_repo.github_repository.html_url)
       end
-  
+
       it "returns empty string as display name" do
         expect(json.first["displayName"]).to eq("")
       end

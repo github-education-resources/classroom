@@ -5,7 +5,7 @@ module API
     include ActionController::Serialization
     include OrganizationAuthorization
 
-    before_action :set_assignment, except: :index
+    before_action :set_assignment, only: :show
 
     def index
       paginate json: @organization.group_assignments
