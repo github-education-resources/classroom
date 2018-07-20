@@ -109,8 +109,14 @@ class AssignmentInvitationsController < ApplicationController
 
   def check_user_not_previous_acceptee
     return if current_submission.nil?
-    return unless current_invitation&.completed?
-    redirect_to success_assignment_invitation_path
+    if import_resiliency_enabled?
+      return if current_invitation&.status.nil?
+      return if current_invitation&.unaccepted?
+      redirect_to success_assignment_invitation_path if current_invitation&.completed?
+      redirect_to setupv2_assignment_invitation_path
+    else
+      redirect_to success_assignment_invitation_path
+    end
   end
 
   def classroom_config
