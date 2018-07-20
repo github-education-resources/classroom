@@ -3,10 +3,10 @@
 require "rails_helper"
 
 RSpec.describe API::GroupAssignmentReposController, type: :controller do
-  let(:organization)      { classroom_org                                                                   }
-  let(:user)              { classroom_teacher                                                               }
-  let(:group_assignment)  { create(:group_assignment, organization: organization, title: "Learn Clojure")   }
-  let(:group)             { Group.create(title: "The Group", grouping: group_assignment.grouping)           }
+  let(:organization)      { classroom_org }
+  let(:user)              { classroom_teacher }
+  let(:group_assignment)  { create(:group_assignment, organization: organization, title: "Learn Clojure") }
+  let(:group)             { Group.create(title: "The Group", grouping: group_assignment.grouping) }
 
   before do
     GitHubClassroom.flipper[:download_repositories].enable
