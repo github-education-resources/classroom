@@ -38,8 +38,8 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
         expect(json.first["repoUrl"]).to eq(@group_assignment_repo.github_repository.html_url)
       end
   
-      it "returns comma separated list of usernames as display name" do
-        expect(json.first["displayName"]).to eq(group.users.join(", "))
+      it "returns empty string as display name" do
+        expect(json.first["displayName"]).to eq("")
       end
     end
   end
