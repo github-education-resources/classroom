@@ -1,5 +1,5 @@
 (function() {
-  var POLL_INTERVAL = 3000;
+  var POLL_INTERVAL = 1000;
   var check_progress,
     display_progress,
     get_status,
@@ -170,7 +170,9 @@
     var path = job_path();
     $.ajax({type: "POST", url: path}).done(function(data) {
       display_progress(data);
-      callback();
+      if (callback) {
+        callback();
+      }
     });
   };
 
