@@ -11,6 +11,7 @@ module Octopoller
   # error_handler - A proc that will run with each instance of an error
   # yield - A block that will execute, and if it raises an error it will re-run until success or the timeout is reached
   # raise - Raises an Octopoller::TimeoutError if the timeout is reached
+  # rubocop:disable AbcSize
   def poll(wait: 1.second, timeout: 15.seconds)
     raise ArgumentError, "Cannot poll backwards in time" if wait.negative?
     raise ArgumentError, "Timed out without even being able to try" if timeout.negative?
@@ -23,6 +24,7 @@ module Octopoller
     end
     raise TimeoutError, "Polling timed out paitently"
   end
+  # rubocop:enable AbcSize
 
   module_function :poll
 end
