@@ -24,24 +24,19 @@ class AssignmentRepo
         || assignment.invitation.status.nil?
 
       assignment.invitation&.creating_repo!
-
-      creator = Creator.new(assignment: assignment, user: user)
-
-      creator.verify_organization_has_private_repos_available!
-
       ActionCable.server.broadcast(
         RepositoryCreationStatusChannel.channel(user_id: user.id),
         text: CREATE_REPO,
         status: assignment.invitation&.status
       )
 
+      creator = Creator.new(assignment: assignment, user: user)
+      creator.verify_organization_has_private_repos_available!
       assignment_repo = assignment.assignment_repos.build(
         github_repo_id: creator.create_github_repository!,
         user: user
       )
-
       creator.add_user_to_repository!(assignment_repo.github_repo_id)
-
       creator.push_starter_code!(assignment_repo.github_repo_id) if assignment.starter_code?
 
       begin
