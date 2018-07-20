@@ -11,7 +11,6 @@ RSpec.describe API::AssignmentsController, type: :controller do
     sign_in_as(user)
 
     @assignment = create(:assignment, organization: organization)
-    @assignment_json = AssignmentSerializer.new(@assignment).to_json
   end
 
   describe "GET #index", :vcr do
@@ -26,10 +25,6 @@ RSpec.describe API::AssignmentsController, type: :controller do
     it "returns only one assignment" do
       expect(json.length).to eql(1)
     end
-
-    it "returns serialized versions of indivdual assignment" do
-      expect(json.first.to_json).to eq(@assignment_json)
-    end
   end
 
   describe "GET #show", :vcr do
@@ -41,8 +36,22 @@ RSpec.describe API::AssignmentsController, type: :controller do
       expect(response).to have_http_status(:success)
     end
 
-    it "returns serialized version of individual assignment" do
-      expect(json.to_json).to eq(@assignment_json)
+    context "assignment serializer returns correct attributes" do
+      it "returns assignment id" do
+        expect(json["id"]).to eq(@assignment.id)
+      end
+  
+      it "returns assignment title" do
+        expect(json["title"]).to eq(@assignment.title)
+      end
+  
+      it "returns individual assignment type" do
+        expect(json["type"]).to eq("individual")
+      end
+  
+      it "returns organization github id" do
+        expect(json["organizationGithubId"]).to eq(organization.github_id)
+      end
     end
   end
 

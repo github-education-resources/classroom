@@ -16,7 +16,6 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
   describe "GET #index", :vcr do
     before do
       @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
-      @group_assignment_repo_json = GroupAssignmentRepoSerializer.new(@group_assignment_repo).to_json
 
       get :index, params: { organization_id: organization.slug, group_assignment_id: group_assignment.slug }
     end
@@ -30,8 +29,18 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
       expect(response).to have_http_status(:success)
     end
 
-    it "returns serialized group assignment repo" do
-      expect(json.first.to_json).to eq(@group_assignment_repo_json)
+    context "group assignment repos serializer returns correct attributes" do
+      it "returns group title as username" do
+        expect(json.first["username"]).to eq(group.title)
+      end
+  
+      it "returns github repo url" do
+        expect(json.first["repoUrl"]).to eq(@group_assignment_repo.github_repository.html_url)
+      end
+  
+      it "returns comma separated list of usernames as display name" do
+        expect(json.first["displayName"]).to eq(group.users.join(", "))
+      end
     end
   end
 

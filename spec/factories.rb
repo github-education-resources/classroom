@@ -37,13 +37,6 @@ FactoryBot.define do
     creator  { organization.users.first                      }
   end
 
-  factory :group_assignment_repo do
-    group_assignment
-    group
-
-    github_repo_id { rand(1..1_000_000) }
-  end
-
   factory :group_assignment_invitation do
     group_assignment
   end
@@ -53,13 +46,6 @@ FactoryBot.define do
 
     title { Faker::Company.name }
     slug  { title.parameterize  }
-  end
-
-  factory :group do
-    grouping
-
-    title          { "#{Faker::Company.name} Group" }
-    github_team_id { rand(1..1_000_000)             }
   end
 
   factory :organization do
