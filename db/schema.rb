@@ -144,7 +144,7 @@ ActiveRecord::Schema.define(version: 20180720232458) do
   end
 
   create_table "invite_statuses", force: :cascade do |t|
-    t.integer "status"
+    t.integer "status", default: 0
     t.bigint "assignment_invitation_id"
     t.bigint "user_id"
     t.datetime "created_at", null: false
