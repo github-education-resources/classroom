@@ -26,7 +26,7 @@ RSpec.describe AssignmentInvitation, type: :model do
       invitation.status(user)
     end
 
-    it "retruns a InviteStatus that belongs to the user and the invite" do
+    it "retruns the InviteStatus that belongs to the user and the invite" do
       invite_status = create(:invite_status, user_id: user.id, assignment_invitation_id: invitation.id)
       expect(invitation.status(user)).to eq(invite_status)
     end
