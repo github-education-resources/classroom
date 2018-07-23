@@ -37,7 +37,6 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
   end
 
   after(:each) do
-    @client.delete_repository(@repo.id)
     AssignmentRepo.destroy_all
   end
 
@@ -145,6 +144,39 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
           )
       end
 
+      it "destroys assignment_repo when porter status is 'error'" do
+        stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
+          .to_return(
+            status: 201,
+            body: request_stub("importing"),
+            headers: { "Content-Type": "application/json" }
+          ).times(2).then
+          .to_return(
+            status: 201,
+            body: request_stub("error"),
+            headers: { "Content-Type": "application/json" }
+          ).times(2)
+        expect(@assignment_repo).to receive(:destroy)
+        subject.perform_now(@assignment_repo, student)
+      end
+
+      it "makes DELETE request to GitHub repository associated with assignment_repo when porter status is 'error" do
+        stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
+          .to_return(
+            status: 201,
+            body: request_stub("importing"),
+            headers: { "Content-Type": "application/json" }
+          ).times(2).then
+          .to_return(
+            status: 201,
+            body: request_stub("error"),
+            headers: { "Content-Type": "application/json" }
+          ).times(2)
+        subject.perform_now(@assignment_repo, student)
+        regex = %r{#{github_url("/repositories")}/\d+$}
+        expect(WebMock).to have_requested(:delete, regex)
+      end
+
       it "logs failure when porter status is 'error'" do
         stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
           .to_return(
@@ -209,6 +241,35 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             text: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
             status: "errored_importing_starter_code"
           )
+      end
+
+      it "destroys assignment_repo when porter API errors" do
+        stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
+          .to_return(
+            status: 201,
+            body: request_stub("importing"),
+            headers: { "Content-Type": "application/json" }
+          ).times(2).then
+          .to_return(
+            status: 500
+          )
+        expect(@assignment_repo).to receive(:destroy)
+        subject.perform_now(@assignment_repo, student)
+      end
+
+      it "makes DELETE request to GitHub repository associated with assignment_repo when porter API errors" do
+        stub_request(:get, github_url("/repos/#{@repo.full_name}/import"))
+          .to_return(
+            status: 201,
+            body: request_stub("importing"),
+            headers: { "Content-Type": "application/json" }
+          ).times(2).then
+          .to_return(
+            status: 500
+          )
+        subject.perform_now(@assignment_repo, student)
+        regex = %r{#{github_url("/repositories")}/\d+$}
+        expect(WebMock).to have_requested(:delete, regex)
       end
 
       it "logs failure when porter API errors" do
