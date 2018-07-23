@@ -143,7 +143,7 @@ class AssignmentInvitationsController < ApplicationController
   end
 
   def current_invitation_status
-    current_invitation.status(current_user)
+    @current_invitation_status ||= current_invitation.status(current_user)
   end
 
   def required_scopes
