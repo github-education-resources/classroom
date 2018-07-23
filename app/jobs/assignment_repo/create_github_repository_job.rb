@@ -7,7 +7,6 @@ class AssignmentRepo
     IMPORT_STARTER_CODE = "Importing starter code"
 
     queue_as :create_repository
-    retry_on Creator::Result::Error, wait: :exponentially_longer, queue: :create_repository
 
     # Create an AssignmentRepo
     #
@@ -79,7 +78,6 @@ class AssignmentRepo
         status: assignment.invitation&.status
       )
       GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
-      raise err
     end
     # rubocop:enable MethodLength
     # rubocop:enable AbcSize
