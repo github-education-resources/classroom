@@ -9,7 +9,7 @@ class AssignmentInvitation < ApplicationRecord
 
   belongs_to :assignment
 
-  has_many :invite_statuses
+  has_many :invite_statuses, dependent: :destroy
   has_many :users, through: :invite_statuses
   has_one :organization, through: :assignment
 
