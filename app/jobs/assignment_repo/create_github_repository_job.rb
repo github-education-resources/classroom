@@ -22,18 +22,16 @@ class AssignmentRepo
 
       invite_status = assignment.invitation&.status(user)
 
-      return unless invite_status&.waiting? \
-        || invite_status&.errored_creating_repo? \
-        || invite_status&.status.nil?
+      return unless invite_status
+      return unless invite_status.waiting? || invite_status.errored_creating_repo?
+      invite_status.creating_repo!
 
-      invite_status&.creating_repo!
-      
       ActionCable.server.broadcast(
         RepositoryCreationStatusChannel.channel(user_id: user.id),
         text: CREATE_REPO,
-        status: invite_status&.status
+        status: invite_status.status
       )
-      
+
       creator = Creator.new(assignment: assignment, user: user)
       creator.verify_organization_has_private_repos_available!
       assignment_repo = assignment.assignment_repos.build(
@@ -54,28 +52,28 @@ class AssignmentRepo
       GitHubClassroom.statsd.increment("v2_exercise_repo.create.success")
 
       if assignment.starter_code?
-        invite_status&.importing_starter_code!
+        invite_status.importing_starter_code!
         ActionCable.server.broadcast(
           RepositoryCreationStatusChannel.channel(user_id: user.id),
           text: IMPORT_STARTER_CODE,
-          status: invite_status&.status
+          status: invite_status.status
         )
         PorterStatusJob.perform_later(assignment_repo, user)
       else
-        invite_status&.completed!
+        invite_status.completed!
         ActionCable.server.broadcast(
           RepositoryCreationStatusChannel.channel(user_id: user.id),
           text: Creator::REPOSITORY_CREATION_COMPLETE,
-          status: invite_status&.status
+          status: invite_status.status
         )
       end
     rescue Creator::Result::Error => err
       creator.delete_github_repository(assignment_repo.try(:github_repo_id))
-      invite_status&.errored_creating_repo!
+      invite_status.errored_creating_repo!
       ActionCable.server.broadcast(
         RepositoryCreationStatusChannel.channel(user_id: user.id),
         text: err,
-        status: invite_status&.status
+        status: invite_status.status
       )
       GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
     end
