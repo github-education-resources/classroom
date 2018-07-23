@@ -20,7 +20,7 @@ class AssignmentRepo
     def perform(assignment, user)
       start = Time.zone.now
 
-      invite_status = assignment.invitation&.status(user)
+      invite_status = assignment.invitation.status(user)
 
       return unless invite_status
       return unless invite_status.waiting? || invite_status.errored_creating_repo?
