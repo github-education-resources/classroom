@@ -89,7 +89,7 @@ RSpec.describe AssignmentInvitation, type: :model do
       expect(invitation.invite_statuses).to eq([invite_status])
     end
 
-    it "on #destroy destroys invite status and not invitation" do
+    it "on #destroy destroys invite status and not the user" do
       invite_status = create(:invite_status, user_id: user.id, assignment_invitation_id: invitation.id)
       invitation.destroy
       expect { invite_status.reload }.to raise_error(ActiveRecord::RecordNotFound)
