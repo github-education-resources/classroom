@@ -5,6 +5,8 @@ require "rails_helper"
 RSpec.describe AssignmentInvitation, type: :model do
   subject { create(:assignment_invitation) }
 
+  let(:user) { classroom_student }
+
   it_behaves_like "a default scope where deleted_at is not present"
 
   it "should have a key after initialization" do
@@ -12,32 +14,25 @@ RSpec.describe AssignmentInvitation, type: :model do
     expect(assignment_invitation.key).to_not be_nil
   end
 
-  it "should have a status after initialization" do
-    assignment_invitation = build(:assignment_invitation)
-    expect(assignment_invitation.status).to eq("unaccepted")
-  end
+  describe "#status" do
 
-  it "is errored? when errored_creating_repo!" do
-    assignment_invitation = build(:assignment_invitation)
-    assignment_invitation.errored_creating_repo!
-    expect(assignment_invitation.errored?).to be_truthy
-  end
+    it "should create an invite status for a user when one does not exist" do
+      invitation = subject
+      expect(InviteStatus).to receive(:create).with(user_id: user.id, assignment_invitation_id: invitation.id)
+      invitation.status(user)
+    end
 
-  it "is errored? when errored_creating_repo!" do
-    assignment_invitation = build(:assignment_invitation)
-    assignment_invitation.errored_importing_starter_code!
-    expect(assignment_invitation.errored?).to be_truthy
-  end
+    it "should find an invite status for a user when one does exist" do
+      invitation = subject
+      expect(invitation.invite_statuses).to receive(:find_by_user_id).with(user.id)
+      invitation.status(user)
+    end
 
-  it "shouldn't invalidate old records" do
-    assignment_invitation = AssignmentInvitation.create(status: nil, assignment: subject.assignment)
-    expect(assignment_invitation.errors).to be_empty
-    expect(assignment_invitation.valid?).to be_truthy
-  end
-
-  it "validates status can't be any symbol" do
-    assignment_invitation = build(:assignment_invitation)
-    expect { assignment_invitation.update(status: :not_a_status) }.to raise_error(ArgumentError)
+    it "retruns a InviteStatus that belongs to the user and the invite" do
+      invitation = subject
+      invite_status = InviteStatus.create(user_id: user.id, assignment_invitation_id: invitation.id)
+      expect(invitation.status(user)).to eq(invite_status)
+    end
   end
 
   describe "short_key" do

@@ -116,7 +116,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it "redirects to success when AssignmentRepo already exists" do
-        invitation.completed!
+        invitation.status(user).completed!
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
           .with(user, import_resiliency: true)
           .and_return(result)
@@ -126,7 +126,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it "redirects to setup when AssignmentRepo already exists but isn't completed" do
-        invitation.creating_repo!
+        invitation.status(user).creating_repo!
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
           .with(user, import_resiliency: true)
           .and_return(result)
@@ -167,7 +167,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
       context "when invitation status is accepted" do
         before do
-          invitation.accepted!
+          invitation.status(user).accepted!
         end
 
         it "enqueues a CreateRepositoryJob" do
@@ -188,7 +188,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
       context "when invitation status is errored" do
         before do
-          invitation.errored_creating_repo!
+          invitation.status(user).errored_creating_repo!
         end
 
         it "deletes an assignment repo if one already exists and is empty" do
@@ -231,7 +231,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
       context "when invitation status is anything else" do
         before do
-          invitation.unaccepted!
+          invitation.status(user).unaccepted!
         end
 
         it "does not enqueue a CreateRepositoryJob" do
@@ -300,13 +300,13 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
       it "returns the correct status" do
         get :progress, params: { id: invitation.key }
-        expect(response.body).to eq({ status: invitation.status }.to_json)
+        expect(response.body).to eq({ status: invitation.status(user).status }.to_json)
       end
 
       it "returns the correct status when status is changed" do
-        invitation.errored_creating_repo!
+        invitation.status(user).errored_creating_repo!
         get :progress, params: { id: invitation.key }
-        expect(response.body).to eq({ status: invitation.status }.to_json)
+        expect(response.body).to eq({ status: invitation.status(user).status }.to_json)
       end
     end
   end
