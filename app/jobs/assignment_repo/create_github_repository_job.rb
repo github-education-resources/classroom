@@ -19,11 +19,13 @@ class AssignmentRepo
     def perform(assignment, user)
       start = Time.zone.now
 
-      return unless assignment.invitation&.waiting? \
-        || assignment.invitation&.errored_creating_repo? \
-        || assignment.invitation.status.nil?
+      invite_status = assignment.invitation&.status(user)
 
-      assignment.invitation&.creating_repo!
+      return unless invite_status&.waiting? \
+        || invite_status&.errored_creating_repo? \
+        || invite_status&.status.nil?
+
+      invite_status&.creating_repo!
 
       creator = Creator.new(assignment: assignment, user: user)
 
@@ -32,7 +34,7 @@ class AssignmentRepo
       ActionCable.server.broadcast(
         RepositoryCreationStatusChannel.channel(user_id: user.id),
         text: CREATE_REPO,
-        status: assignment.invitation&.status
+        status: invite_status&.status
       )
 
       assignment_repo = assignment.assignment_repos.build(
@@ -55,28 +57,28 @@ class AssignmentRepo
       GitHubClassroom.statsd.increment("v2_exercise_repo.create.success")
 
       if assignment.starter_code?
-        assignment.invitation&.importing_starter_code!
+        invite_status&.importing_starter_code!
         ActionCable.server.broadcast(
           RepositoryCreationStatusChannel.channel(user_id: user.id),
           text: IMPORT_STARTER_CODE,
-          status: assignment.invitation&.status
+          status: invite_status&.status
         )
         PorterStatusJob.perform_later(assignment_repo, user)
       else
-        assignment.invitation&.completed!
+        invite_status&.completed!
         ActionCable.server.broadcast(
           RepositoryCreationStatusChannel.channel(user_id: user.id),
           text: Creator::REPOSITORY_CREATION_COMPLETE,
-          status: assignment.invitation&.status
+          status: invite_status&.status
         )
       end
     rescue Creator::Result::Error => err
       creator.delete_github_repository(assignment_repo.try(:github_repo_id))
-      assignment.invitation&.errored_creating_repo!
+      invite_status&.errored_creating_repo!
       ActionCable.server.broadcast(
         RepositoryCreationStatusChannel.channel(user_id: user.id),
         text: err,
-        status: assignment.invitation&.status
+        status: invite_status&.status
       )
       GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
       raise err
