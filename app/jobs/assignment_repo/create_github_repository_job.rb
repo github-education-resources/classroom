@@ -22,7 +22,6 @@ class AssignmentRepo
 
       invite_status = assignment.invitation.status(user)
 
-      return unless invite_status
       return unless invite_status.waiting? || invite_status.errored_creating_repo?
       invite_status.creating_repo!
 

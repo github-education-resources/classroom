@@ -10,7 +10,7 @@ class AssignmentRepo
     def perform(assignment_repo, user)
       github_repository = assignment_repo.github_repository
 
-      invite_status = assignment_repo.assignment.invitation&.status(user)
+      invite_status = assignment_repo.assignment.invitation.status(user)
 
       begin
         result = Octopoller.poll(timeout: 30.seconds) do
