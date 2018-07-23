@@ -7,7 +7,6 @@ class AssignmentRepo
     IMPORT_STARTER_CODE = "Importing starter code"
 
     queue_as :create_repository
-    retry_on Creator::Result::Error, wait: :exponentially_longer, queue: :create_repository
 
     # Create an AssignmentRepo
     #
@@ -28,24 +27,20 @@ class AssignmentRepo
         || invite_status&.status.nil?
 
       invite_status&.creating_repo!
-
-      creator = Creator.new(assignment: assignment, user: user)
-
-      creator.verify_organization_has_private_repos_available!
-
+      
       ActionCable.server.broadcast(
         RepositoryCreationStatusChannel.channel(user_id: user.id),
         text: CREATE_REPO,
         status: invite_status&.status
       )
-
+      
+      creator = Creator.new(assignment: assignment, user: user)
+      creator.verify_organization_has_private_repos_available!
       assignment_repo = assignment.assignment_repos.build(
         github_repo_id: creator.create_github_repository!,
         user: user
       )
-
       creator.add_user_to_repository!(assignment_repo.github_repo_id)
-
       creator.push_starter_code!(assignment_repo.github_repo_id) if assignment.starter_code?
 
       begin
@@ -83,7 +78,6 @@ class AssignmentRepo
         status: invite_status&.status
       )
       GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
-      raise err
     end
     # rubocop:enable MethodLength
     # rubocop:enable AbcSize

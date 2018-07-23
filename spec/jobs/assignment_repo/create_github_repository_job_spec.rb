@@ -144,19 +144,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
   end
 
   describe "failure", :vcr do
-    it "fails to create repo and retries" do
-      stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
-        .to_return(body: "{}", status: 401)
-
-      perform_enqueued_jobs do
-        expect_any_instance_of(AssignmentRepo::CreateGitHubRepositoryJob)
-          .to receive(:retry_job)
-          .with(wait: 3, queue: :create_repository, priority: nil)
-
-        subject.perform_later(assignment, student)
-      end
-    end
-
     it "tracks create fail stat" do
       stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
         .to_return(body: "{}", status: 401)
@@ -189,20 +176,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         expect(WebMock).to have_requested(:delete, regex)
       end
 
-      it "fails to import starter code and retries" do
-        import_regex = %r{#{github_url("/repositories/")}\d+/import$}
-        stub_request(:put, import_regex)
-          .to_return(body: "{}", status: 401)
-
-        perform_enqueued_jobs do
-          expect_any_instance_of(AssignmentRepo::CreateGitHubRepositoryJob)
-            .to receive(:retry_job)
-            .with(wait: 3, queue: :create_repository, priority: nil)
-
-          subject.perform_later(assignment, student)
-        end
-      end
-
       it "fails to import starter code and broadcasts" do
         import_regex = %r{#{github_url("/repositories/")}\d+/import$}
         stub_request(:put, import_regex)
@@ -220,20 +193,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           )
       end
 
-      it "fails to add the user to the repo and retries" do
-        repo_invitation_regex = %r{#{github_url("/repositories/")}\d+/collaborators/.+$}
-        stub_request(:put, repo_invitation_regex)
-          .to_return(body: "{}", status: 401)
-
-        perform_enqueued_jobs do
-          expect_any_instance_of(AssignmentRepo::CreateGitHubRepositoryJob)
-            .to receive(:retry_job)
-            .with(wait: 3, queue: :create_repository, priority: nil)
-
-          subject.perform_later(assignment, student)
-        end
-      end
-
       it "fails to add the user to the repo and broadcasts" do
         repo_invitation_regex = %r{#{github_url("/repositories/")}\d+/collaborators/.+$}
         stub_request(:put, repo_invitation_regex)
@@ -249,18 +208,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             text: AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED,
             status: "errored_creating_repo"
           )
-      end
-
-      it "fails to save the AssignmentRepo and retries" do
-        allow_any_instance_of(AssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
-
-        perform_enqueued_jobs do
-          expect_any_instance_of(AssignmentRepo::CreateGitHubRepositoryJob)
-            .to receive(:retry_job)
-            .with(wait: 3, queue: :create_repository, priority: nil)
-
-          subject.perform_later(assignment, teacher)
-        end
       end
 
       it "fails to save the AssignmentRepo and broadcasts" do

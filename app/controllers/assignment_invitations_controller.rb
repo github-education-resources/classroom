@@ -89,6 +89,7 @@ class AssignmentInvitationsController < ApplicationController
 
   private
 
+  # rubocop:disable MethodLength
   def ensure_submission_repository_exists
     return not_found unless current_submission
     return if current_submission
@@ -104,6 +105,7 @@ class AssignmentInvitationsController < ApplicationController
       create_submission
     end
   end
+  # rubocop:enable MethodLength
 
   def check_user_not_previous_acceptee
     return if current_submission.nil?

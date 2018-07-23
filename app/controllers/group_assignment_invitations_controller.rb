@@ -99,6 +99,8 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
   helper_method :group
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable MethodLength
   def create_group_assignment_repo(selected_group: group, new_group_title: nil)
     if !invitation.enabled?
       flash[:error] = "Invitations for this assignment have been disabled."
@@ -117,6 +119,8 @@ class GroupAssignmentInvitationsController < ApplicationController
       end
     end
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable MethodLength
 
   def group_assignment
     @group_assignment ||= invitation.group_assignment

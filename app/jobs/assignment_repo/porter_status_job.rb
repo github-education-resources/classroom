@@ -41,6 +41,7 @@ class AssignmentRepo
           )
           logger.warn result.to_s
           GitHubClassroom.statsd.increment("v2_exercise_repo.import.fail")
+          assignment_repo.destroy
         when Creator::REPOSITORY_CREATION_COMPLETE
           invite_status&.completed!
           ActionCable.server.broadcast(
