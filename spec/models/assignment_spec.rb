@@ -5,6 +5,10 @@ require "rails_helper"
 RSpec.describe Assignment, type: :model do
   it_behaves_like "a default scope where deleted_at is not present"
 
+  it "is invalid without an invitation" do
+    expect{ create(:assignment, assignment_invitation: nil) }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
   describe "invitations_enabled default" do
     it "sets invitations_enabled to true by default" do
       options = {
