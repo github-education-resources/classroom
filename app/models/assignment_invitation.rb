@@ -59,10 +59,6 @@ class AssignmentInvitation < ApplicationRecord
     assignment.invitations_enabled?
   end
 
-  def errored?
-    errored_creating_repo? || errored_importing_starter_code?
-  end
-
   def status(user)
     invite_statuses.find_by_user_id(user.id) || InviteStatus.create(user_id: user.id, assignment_invitation_id: self.id)
   end

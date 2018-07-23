@@ -14,4 +14,8 @@ class InviteStatus < ApplicationRecord
     errored_creating_repo:          6,
     errored_importing_starter_code: 7,
   }
+
+  def errored?
+    errored_creating_repo? || errored_importing_starter_code?
+  end
 end
