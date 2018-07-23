@@ -21,6 +21,7 @@ class Organization < ApplicationRecord
 
   validates :title, presence: true
   validates :title, length: { maximum: 60 }
+  validates :title, uniqueness: { scope: :github_id }
 
   validates :slug, uniqueness: true
 
