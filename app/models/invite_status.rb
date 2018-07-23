@@ -12,7 +12,7 @@ class InviteStatus < ApplicationRecord
     importing_starter_code:         4,
     completed:                      5,
     errored_creating_repo:          6,
-    errored_importing_starter_code: 7,
+    errored_importing_starter_code: 7
   }
 
   def errored?

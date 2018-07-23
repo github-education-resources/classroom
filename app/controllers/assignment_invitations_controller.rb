@@ -7,10 +7,8 @@ class AssignmentInvitationsController < ApplicationController
   before_action :check_user_not_previous_acceptee, :check_should_redirect_to_roster_page, only: [:show]
   before_action :ensure_submission_repository_exists, only: :success
 
-  # rubocop:disable PerceivedComplexity
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
-  # rubocop:disable CyclomaticComplexity
   def accept
     if import_resiliency_enabled?
       result = current_invitation.redeem_for(current_user, import_resiliency: import_resiliency_enabled?)
@@ -39,10 +37,8 @@ class AssignmentInvitationsController < ApplicationController
       end
     end
   end
-  # rubocop:enable PerceivedComplexity
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize
-  # rubocop:enable CyclomaticComplexity
 
   def setupv2
     not_found unless import_resiliency_enabled?

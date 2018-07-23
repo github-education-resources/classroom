@@ -16,6 +16,8 @@ class AssignmentRepo
     #
     # rubocop:disable MethodLength
     # rubocop:disable AbcSize
+    # rubocop:disable CyclomaticComplexity
+    # rubocop:disable PerceivedComplexity
     def perform(assignment, user)
       start = Time.zone.now
 
@@ -85,5 +87,7 @@ class AssignmentRepo
     end
     # rubocop:enable MethodLength
     # rubocop:enable AbcSize
+    # rubocop:enable CyclomaticComplexity
+    # rubocop:enable PerceivedComplexity
   end
 end
