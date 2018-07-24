@@ -5,6 +5,9 @@ require "rails_helper"
 RSpec.describe AssignmentInvitation, type: :model do
   subject { create(:assignment_invitation) }
 
+  let(:invitation)  { subject }
+  let(:user)        { classroom_student }
+
   it_behaves_like "a default scope where deleted_at is not present"
 
   it "should have a key after initialization" do
@@ -12,32 +15,21 @@ RSpec.describe AssignmentInvitation, type: :model do
     expect(assignment_invitation.key).to_not be_nil
   end
 
-  it "should have a status after initialization" do
-    assignment_invitation = build(:assignment_invitation)
-    expect(assignment_invitation.status).to eq("unaccepted")
-  end
+  describe "#status" do
+    it "should create an invite status for a user when one does not exist" do
+      expect(InviteStatus).to receive(:create).with(user_id: user.id, assignment_invitation_id: invitation.id)
+      invitation.status(user)
+    end
 
-  it "is errored? when errored_creating_repo!" do
-    assignment_invitation = build(:assignment_invitation)
-    assignment_invitation.errored_creating_repo!
-    expect(assignment_invitation.errored?).to be_truthy
-  end
+    it "should find an invite status for a user when one does exist" do
+      expect(invitation.invite_statuses).to receive(:find_by).with(user_id: user.id)
+      invitation.status(user)
+    end
 
-  it "is errored? when errored_creating_repo!" do
-    assignment_invitation = build(:assignment_invitation)
-    assignment_invitation.errored_importing_starter_code!
-    expect(assignment_invitation.errored?).to be_truthy
-  end
-
-  it "shouldn't invalidate old records" do
-    assignment_invitation = AssignmentInvitation.create(status: nil, assignment: subject.assignment)
-    expect(assignment_invitation.errors).to be_empty
-    expect(assignment_invitation.valid?).to be_truthy
-  end
-
-  it "validates status can't be any symbol" do
-    assignment_invitation = build(:assignment_invitation)
-    expect { assignment_invitation.update(status: :not_a_status) }.to raise_error(ArgumentError)
+    it "retruns the InviteStatus that belongs to the user and the invite" do
+      invite_status = create(:invite_status, user_id: user.id, assignment_invitation_id: invitation.id)
+      expect(invitation.status(user)).to eq(invite_status)
+    end
   end
 
   describe "short_key" do
@@ -61,33 +53,54 @@ RSpec.describe AssignmentInvitation, type: :model do
     end
 
     it "returns a AssignmentRepo::Creator::Result with the assignment repo" do
-      allow(subject).to receive(:redeem_for).with(student).and_return(result)
-      result = subject.redeem_for(student)
+      allow(invitation).to receive(:redeem_for).with(student).and_return(result)
+      result = invitation.redeem_for(student)
 
       expect(result.success?).to be_truthy
       expect(result.assignment_repo).to eql(AssignmentRepo.last)
     end
 
     it "fails if invitations are not enabled" do
-      assignment = subject.assignment
+      assignment = invitation.assignment
 
       assignment.invitations_enabled = false
       assignment.save
 
-      result = subject.redeem_for(student)
+      result = invitation.redeem_for(student)
       expect(result.success?).to be_falsey
     end
   end
 
   describe "#title" do
     it "returns the assignments title" do
-      expect(subject.title).to eql(subject.assignment.title)
+      expect(invitation.title).to eql(invitation.assignment.title)
     end
   end
 
   describe "#to_param" do
     it "should return the key" do
-      expect(subject.to_param).to eql(subject.key)
+      expect(invitation.to_param).to eql(invitation.key)
+    end
+  end
+
+  describe "invite_statuses" do
+    it "returns a list of invite statuses" do
+      invite_status = create(:invite_status, user_id: user.id, assignment_invitation_id: invitation.id)
+      expect(invitation.invite_statuses).to eq([invite_status])
+    end
+
+    it "on #destroy destroys invite status and not the user" do
+      invite_status = create(:invite_status, user_id: user.id, assignment_invitation_id: invitation.id)
+      invitation.destroy
+      expect { invite_status.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect(user.reload.nil?).to be_falsey
+    end
+  end
+
+  describe "users" do
+    it "returns a list of users through invite_statuses" do
+      create(:invite_status, user_id: user.id, assignment_invitation_id: invitation.id)
+      expect(invitation.users).to eq([user])
     end
   end
 end

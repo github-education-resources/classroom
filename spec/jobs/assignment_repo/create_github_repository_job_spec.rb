@@ -25,49 +25,48 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
   before do
     @invitation = AssignmentInvitation.create(assignment: assignment)
-    @invitation.waiting!
+    @teacher_invite_status = @invitation.status(teacher)
+    @student_invite_status = @invitation.status(student)
+  end
+
+  before(:each) do
+    @teacher_invite_status.waiting!
+    @student_invite_status.waiting!
   end
 
   after do
     clear_enqueued_jobs
     clear_performed_jobs
+    AssignmentRepo.destroy_all
   end
 
   describe "invalid invitation statuses", :vcr do
-    after do
-      AssignmentInvitation.create(assignment: assignment).accepted!
-    end
-
     it "returns early when invitation status is unaccepted" do
-      @invitation.unaccepted!
-      expect(@invitation).not_to receive(:creating_repo!)
+      @teacher_invite_status.unaccepted!
+      expect(@teacher_invite_status).not_to receive(:creating_repo!)
       subject.perform_now(assignment, teacher)
     end
 
     it "returns early when invitation status is creating_repo" do
-      @invitation.creating_repo!
-      expect(@invitation).not_to receive(:creating_repo!)
+      @teacher_invite_status.creating_repo!
+      expect(@teacher_invite_status).not_to receive(:creating_repo!)
       subject.perform_now(assignment, teacher)
     end
 
     it "returns early when invitation status is importing_starter_code" do
-      @invitation.importing_starter_code!
-      expect(@invitation).not_to receive(:creating_repo!)
+      @teacher_invite_status.importing_starter_code!
+      expect(@teacher_invite_status).not_to receive(:creating_repo!)
       subject.perform_now(assignment, teacher)
     end
 
     it "returns early when invitation status is completed" do
-      @invitation.completed!
-      expect(@invitation).not_to receive(:creating_repo!)
+      @teacher_invite_status.completed!
+      expect(@teacher_invite_status).not_to receive(:creating_repo!)
       subject.perform_now(assignment, teacher)
     end
   end
 
   describe "successful creation", :vcr do
-    after(:each) do
-      AssignmentRepo.destroy_all
-    end
-
     it "uses the create_repository queue" do
       subject.perform_later
       expect(subject).to have_been_enqueued.on_queue("create_repository")

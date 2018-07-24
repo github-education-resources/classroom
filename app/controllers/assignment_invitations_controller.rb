@@ -15,7 +15,7 @@ class AssignmentInvitationsController < ApplicationController
       case result.status
       when :success
         GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
-        if current_invitation.completed?
+        if current_invitation_status.completed?
           redirect_to success_assignment_invitation_path
         else
           redirect_to setupv2_assignment_invitation_path
@@ -25,7 +25,7 @@ class AssignmentInvitationsController < ApplicationController
         redirect_to setupv2_assignment_invitation_path
       when :error
         GitHubClassroom.statsd.increment("v2_exercise_invitation.fail")
-        current_invitation.errored_creating_repo!
+        current_invitation_status.errored_creating_repo!
 
         flash[:error] = result.error
         redirect_to assignment_invitation_path(current_invitation)
@@ -49,16 +49,16 @@ class AssignmentInvitationsController < ApplicationController
   def create_repo
     if import_resiliency_enabled?
       job_started = false
-      if current_invitation.accepted? || current_invitation.errored?
+      if current_invitation_status.accepted? || current_invitation_status.errored?
         assignment_repo = AssignmentRepo.find_by(assignment: current_assignment, user: current_user)
         assignment_repo&.destroy if assignment_repo&.github_repository&.empty?
-        current_invitation.waiting!
+        current_invitation_status.waiting!
         AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user)
         job_started = true
       end
       render json: {
         job_started: job_started,
-        status: current_invitation.status
+        status: current_invitation_status.status
       }
     else
       render status: 404, json: { error: "Not found" }
@@ -69,7 +69,7 @@ class AssignmentInvitationsController < ApplicationController
 
   def progress
     if import_resiliency_enabled?
-      render json: { status: current_invitation.status }
+      render json: { status: current_invitation_status.status }
     else
       render status: 404, json: { error: "Not found" }
     end
@@ -140,6 +140,10 @@ class AssignmentInvitationsController < ApplicationController
 
   def current_invitation
     @current_invitation ||= AssignmentInvitation.find_by!(key: params[:id])
+  end
+
+  def current_invitation_status
+    @current_invitation_status ||= current_invitation.status(current_user)
   end
 
   def required_scopes
