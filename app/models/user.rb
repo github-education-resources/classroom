@@ -8,6 +8,8 @@ class User < ApplicationRecord
   has_many :assignment_repos
   has_many :repo_accesses, dependent: :destroy
   has_many :roster_entries
+  has_many :invite_statuses, dependent: :destroy
+  has_many :assignment_invitations, through: :invite_statuses
 
   has_and_belongs_to_many :organizations
 
