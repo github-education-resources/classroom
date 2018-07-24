@@ -91,13 +91,13 @@ class AssignmentInvitationsController < ApplicationController
 
   # rubocop:disable MethodLength
   def ensure_submission_repository_exists
-    return not_found unless current_submission
-    return if current_submission
+    return not_found unless current_assignment_repo
+    return if current_assignment_repo
               .github_repository
               .present?(headers: GitHub::APIHeaders.no_cache_no_store)
 
-    current_submission.destroy
-    remove_instance_variable(:@current_submission)
+    current_assignment_repo.destroy
+    remove_instance_variable(:@current_assignment_repo)
 
     if import_resiliency_enabled?
       redirect_to setupv2_assignment_invitation_path
@@ -108,20 +108,25 @@ class AssignmentInvitationsController < ApplicationController
   # rubocop:enable MethodLength
 
   def check_user_not_previous_acceptee
-    return if current_submission.nil?
+    return if current_assignment_repo.nil?
     if import_resiliency_enabled?
-      return if current_invitation&.status.nil?
-      return if current_invitation&.unaccepted?
-      redirect_to success_assignment_invitation_path if current_invitation&.completed?
-      redirect_to setupv2_assignment_invitation_path
+      setup_statuses = InviteStatus.statuses.keys.reject { |status| status == "unaccepted" || status == "completed" }
+      case current_invitation_status.status
+      when "unaccepted"
+        return
+      when *setup_statuses
+        redirect_to setupv2_assignment_invitation_path
+      when "completed"
+        redirect_to success_assignment_invitation_path
+      end
     else
       redirect_to success_assignment_invitation_path
     end
   end
 
   def classroom_config
-    starter_code_repo_id = current_submission.starter_code_repo_id
-    client               = current_submission.creator.github_client
+    starter_code_repo_id = current_assignment_repo.starter_code_repo_id
+    client               = current_assignment_repo.creator.github_client
 
     starter_repo         = GitHubRepository.new(client, starter_code_repo_id)
     ClassroomConfig.new(starter_repo)
@@ -140,8 +145,8 @@ class AssignmentInvitationsController < ApplicationController
     end
   end
 
-  def current_submission
-    @current_submission ||= AssignmentRepo.find_by(assignment: current_assignment, user: current_user)
+  def current_assignment_repo
+    @current_assignment_repo ||= AssignmentRepo.find_by(assignment: current_assignment, user: current_user)
   end
 
   def current_invitation

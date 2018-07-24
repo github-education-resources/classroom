@@ -31,6 +31,50 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
           expect(response).to have_http_status(:success)
           expect(response).to render_template("assignment_invitations/show")
         end
+
+        context "previous acceptee" do
+          let(:assignment_repo) { create(:assignment_repo, user: user, assignment: invitation.assignment) }
+
+          before(:each) do
+            expect_any_instance_of(AssignmentInvitationsController)
+              .to receive(:current_assignment_repo)
+              .and_return(assignment_repo)
+          end
+
+          it "redirects to success" do
+            get :show, params: { id: invitation.key }
+            expect(response).to redirect_to(success_assignment_invitation_url(invitation))
+          end
+
+          context "with import resiliency enabled" do
+            before do
+              GitHubClassroom.flipper[:import_resiliency].enable
+            end
+
+
+            after do
+              GitHubClassroom.flipper[:import_resiliency].disable
+            end
+
+            it "renders show when invite_status is unaccepted" do
+              invitation.status(user).unaccepted!
+              get :show, params: { id: invitation.key }
+              expect(response).to render_template("assignment_invitations/show")
+            end
+
+            it "redirects to success when invite_status is completed" do
+              invitation.status(user).completed!
+              get :show, params: { id: invitation.key }
+              expect(response).to redirect_to(success_assignment_invitation_url(invitation))
+            end
+
+            it "redirects to setup when invite_status is not complete or unaccepted" do
+              invitation.status(user).importing_starter_code!
+              get :show, params: { id: invitation.key }
+              expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+            end
+          end
+        end
       end
 
       context "with a roster" do
@@ -352,7 +396,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         GitHubClassroom.flipper[:import_resiliency].disable
       end
 
-      it "redirects to setupv2 when current_submission" do
+      it "redirects to setupv2 when current_assignment_repo" do
         expect_any_instance_of(GitHubRepository)
           .to receive(:present?)
           .with(headers: GitHub::APIHeaders.no_cache_no_store)
