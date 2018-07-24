@@ -57,7 +57,14 @@ class Organization < ApplicationRecord
     users.count == 1
   end
 
+  def last_classroom_on_org?
+    binding.pry
+    return Organization.where(github_id: github_id).length <= 1
+  end
+
   def silently_remove_organization_webhook
+    return true unless last_classroom_on_org?
+
     begin
       github_organization.remove_organization_webhook(webhook_id)
     rescue GitHub::Error => err
