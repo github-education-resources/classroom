@@ -33,6 +33,8 @@ class Assignment < ApplicationRecord
   validates :slug, format: { with: /\A[-a-zA-Z0-9_]*\z/,
                              message: "should only contain letters, numbers, dashes and underscores" }
 
+  validates :assignment_invitation, presence: true
+
   validate :uniqueness_of_slug_across_organization
 
   alias_attribute :invitation, :assignment_invitation
