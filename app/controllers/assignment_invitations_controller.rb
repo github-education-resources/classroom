@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable ClassLength
 class AssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
   include RepoSetup
@@ -107,6 +108,9 @@ class AssignmentInvitationsController < ApplicationController
   end
   # rubocop:enable MethodLength
 
+  # rubocop:disable MethodLength
+  # rubocop:disable AbcSize
+  # rubocop:disable CyclomaticComplexity
   def check_user_not_previous_acceptee
     return if current_assignment_repo.nil?
     if import_resiliency_enabled?
@@ -114,15 +118,18 @@ class AssignmentInvitationsController < ApplicationController
       case current_invitation_status.status
       when "unaccepted"
         return
-      when *setup_statuses
-        redirect_to setupv2_assignment_invitation_path
       when "completed"
         redirect_to success_assignment_invitation_path
+      when *setup_statuses
+        redirect_to setupv2_assignment_invitation_path
       end
     else
       redirect_to success_assignment_invitation_path
     end
   end
+  # rubocop:enable MethodLength
+  # rubocop:enable AbcSize
+  # rubocop:enable CyclomaticComplexity
 
   def classroom_config
     starter_code_repo_id = current_assignment_repo.starter_code_repo_id
@@ -161,3 +168,4 @@ class AssignmentInvitationsController < ApplicationController
     GitHubClassroom::Scopes::ASSIGNMENT_STUDENT
   end
 end
+# rubocop:enable ClassLength

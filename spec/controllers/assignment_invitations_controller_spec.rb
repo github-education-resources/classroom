@@ -51,7 +51,6 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
               GitHubClassroom.flipper[:import_resiliency].enable
             end
 
-
             after do
               GitHubClassroom.flipper[:import_resiliency].disable
             end
