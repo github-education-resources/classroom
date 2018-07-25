@@ -109,7 +109,7 @@ class AssignmentInvitationsController < ApplicationController
 
   def check_user_not_previous_acceptee
     return if current_submission.nil?
-    return unless current_invitation&.completed?
+    return unless current_invitation_status.completed?
     redirect_to success_assignment_invitation_path
   end
 
