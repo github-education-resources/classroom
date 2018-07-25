@@ -227,6 +227,11 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
               status: "waiting"
             }.to_json)
         end
+
+        it "reports an error was retried" do
+          expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.retry")
+          post :create_repo, params: { id: invitation.key }
+        end
       end
 
       context "when invitation status is anything else" do
