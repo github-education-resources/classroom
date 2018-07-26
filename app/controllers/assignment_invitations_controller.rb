@@ -53,6 +53,11 @@ class AssignmentInvitationsController < ApplicationController
       if current_invitation_status.accepted? || current_invitation_status.errored?
         assignment_repo = AssignmentRepo.find_by(assignment: current_assignment, user: current_user)
         assignment_repo&.destroy if assignment_repo&.github_repository&.empty?
+        if current_invitation_status.errored_creating_repo?
+          GitHubClassroom.statsd.increment("v2_exercise_repo.create.retry")
+        elsif current_invitation_status.errored_importing_starter_code?
+          GitHubClassroom.statsd.increment("v2_exercise_repo.import.retry")
+        end
         current_invitation_status.waiting!
         AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user)
         job_started = true
