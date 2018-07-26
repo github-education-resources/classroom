@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class InviteStatus < ApplicationRecord
+  ERRORED_STATUSES = %w(errored_creating_repo errored_importing_starter_code)
+  SETUP_STATUSES = %(accepted waiting creating_repo importing_starter_code)
+
   belongs_to :assignment_invitation
   belongs_to :user
 
@@ -24,6 +27,10 @@ class InviteStatus < ApplicationRecord
   }
 
   def errored?
-    errored_creating_repo? || errored_importing_starter_code?
+    ERRORED_STATUSES.include?(status)
+  end
+
+  def setting_up?
+    SETUP_STATUSES.include?(status)
   end
 end
