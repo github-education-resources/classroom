@@ -42,7 +42,8 @@ class AssignmentRepo
 
       begin
         assignment_repo.save!
-      rescue ActiveRecord::RecordInvalid
+      rescue ActiveRecord::RecordInvalid => err
+        logger.warn(err.message)
         raise Creator::Result::Error, Creator::DEFAULT_ERROR_MESSAGE
       end
 
@@ -75,7 +76,16 @@ class AssignmentRepo
         status: invite_status.status
       )
       logger.warn(err.message)
-      GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
+      case err.message
+      when Creator::REPOSITORY_CREATION_FAILED
+        GitHubClassroom.statsd.increment("v2_exercise_repo.create.repo.fail")
+      when Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED
+        GitHubClassroom.statsd.increment("v2_exercise_repo.create.adding_collaborator.fail")
+      when Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
+        GitHubClassroom.statsd.increment("v2_exercise_repo.create.importing_starter_code.fail")
+      else
+        GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
+      end
     end
     # rubocop:enable MethodLength
     # rubocop:enable AbcSize

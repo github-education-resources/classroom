@@ -148,7 +148,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
         .to_return(body: "{}", status: 401)
 
-      expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.fail")
+      expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.repo.fail")
       subject.perform_now(assignment, student)
     end
 
@@ -204,6 +204,17 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         subject.perform_now(assignment, student)
       end
 
+      it "fails to import starter code and reports" do
+        import_regex = %r{#{github_url("/repositories/")}\d+/import$}
+        stub_request(:put, import_regex)
+          .to_return(body: "{}", status: 401)
+
+        expect(GitHubClassroom.statsd)
+          .to receive(:increment)
+          .with("v2_exercise_repo.create.importing_starter_code.fail")
+        subject.perform_now(assignment, student)
+      end
+
       it "fails to add the user to the repo and broadcasts" do
         repo_invitation_regex = %r{#{github_url("/repositories/")}\d+/collaborators/.+$}
         stub_request(:put, repo_invitation_regex)
@@ -232,6 +243,17 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         subject.perform_now(assignment, student)
       end
 
+      it "fails to add the user to the repo and reports" do
+        repo_invitation_regex = %r{#{github_url("/repositories/")}\d+/collaborators/.+$}
+        stub_request(:put, repo_invitation_regex)
+          .to_return(body: "{}", status: 401)
+
+        expect(GitHubClassroom.statsd)
+          .to receive(:increment)
+          .with("v2_exercise_repo.create.adding_collaborator.fail")
+        subject.perform_now(assignment, student)
+      end
+
       it "fails to save the AssignmentRepo and broadcasts" do
         allow_any_instance_of(AssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
 
@@ -247,12 +269,22 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           )
       end
 
-      it "fails to save the AssignmentRepo and broadcasts" do
+      it "fails to save the AssignmentRepo and logs" do
         allow_any_instance_of(AssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
 
         expect(Rails.logger)
           .to receive(:warn)
+          .with("Record invalid")
+        expect(Rails.logger)
+          .to receive(:warn)
           .with(AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE)
+        subject.perform_now(assignment, student)
+      end
+
+      it "fails to save the AssignmentRepo and reports" do
+        allow_any_instance_of(AssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
+
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.fail")
         subject.perform_now(assignment, student)
       end
     end
