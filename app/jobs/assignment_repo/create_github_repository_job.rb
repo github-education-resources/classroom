@@ -74,6 +74,7 @@ class AssignmentRepo
         text: err,
         status: invite_status.status
       )
+      logger.warn(err.message)
       GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
     end
     # rubocop:enable MethodLength

@@ -193,6 +193,17 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           )
       end
 
+      it "fails to import starter code and logs" do
+        import_regex = %r{#{github_url("/repositories/")}\d+/import$}
+        stub_request(:put, import_regex)
+          .to_return(body: "{}", status: 401)
+
+        expect(Rails.logger)
+          .to receive(:warn)
+          .with(AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
+        subject.perform_now(assignment, student)
+      end
+
       it "fails to add the user to the repo and broadcasts" do
         repo_invitation_regex = %r{#{github_url("/repositories/")}\d+/collaborators/.+$}
         stub_request(:put, repo_invitation_regex)
@@ -210,6 +221,17 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           )
       end
 
+      it "fails to add the user to the repo and logs" do
+        repo_invitation_regex = %r{#{github_url("/repositories/")}\d+/collaborators/.+$}
+        stub_request(:put, repo_invitation_regex)
+          .to_return(body: "{}", status: 401)
+
+        expect(Rails.logger)
+          .to receive(:warn)
+          .with(AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED)
+        subject.perform_now(assignment, student)
+      end
+
       it "fails to save the AssignmentRepo and broadcasts" do
         allow_any_instance_of(AssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
 
@@ -223,6 +245,15 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             text: AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE,
             status: "errored_creating_repo"
           )
+      end
+
+      it "fails to save the AssignmentRepo and broadcasts" do
+        allow_any_instance_of(AssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
+
+        expect(Rails.logger)
+          .to receive(:warn)
+          .with(AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE)
+        subject.perform_now(assignment, student)
       end
     end
   end
