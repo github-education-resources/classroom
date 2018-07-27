@@ -19,23 +19,37 @@ RSpec.describe InviteStatus, type: :model do
       expect(invite_status.unaccepted?).to be_truthy
     end
 
-    it "is errored? when errored_creating_repo?" do
-      invite_status.errored_creating_repo!
-      expect(invite_status.errored?).to be_truthy
-    end
-
-    it "is errored? when errored_importing_starter_code?" do
-      invite_status.errored_importing_starter_code!
-      expect(invite_status.errored?).to be_truthy
-    end
-
-    it "is errored? only when errored_creating_repo? or errored_importing_starter_code?" do
-      non_errored_statuses = subject.statuses.keys.reject do |status|
-        status == "errored_creating_repo" || status == "errored_importing_starter_code"
+    describe "errored?" do
+      it "is errored? when errored_creating_repo?" do
+        invite_status.errored_creating_repo!
+        expect(invite_status.errored?).to be_truthy
       end
-      non_errored_statuses.each do |status|
-        invite_status.update(status: status)
-        expect(invite_status.errored?).to be_falsey
+
+      it "is errored? when errored_importing_starter_code?" do
+        invite_status.errored_importing_starter_code!
+        expect(invite_status.errored?).to be_truthy
+      end
+    end
+
+    describe "setting_up?" do
+      it "is setting_up? when accepted?" do
+        invite_status.accepted!
+        expect(invite_status.setting_up?).to be_truthy
+      end
+
+      it "is setting_up? when waiting?" do
+        invite_status.waiting!
+        expect(invite_status.setting_up?).to be_truthy
+      end
+
+      it "is setting_up? when creating_repo?" do
+        invite_status.creating_repo!
+        expect(invite_status.setting_up?).to be_truthy
+      end
+
+      it "is setting_up? when errored_importing_starter_code?" do
+        invite_status.importing_starter_code!
+        expect(invite_status.setting_up?).to be_truthy
       end
     end
 
