@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable ClassLength
 class AssignmentInvitationsController < ApplicationController
   class InvalidStatusForRouteError < StandardError; end
 
@@ -44,7 +43,6 @@ class AssignmentInvitationsController < ApplicationController
 
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
-  # rubocop:disable CyclomaticComplexity
   def create_repo
     job_started = false
     if current_invitation_status.accepted? || current_invitation_status.errored?
@@ -66,7 +64,6 @@ class AssignmentInvitationsController < ApplicationController
   end
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize
-  # rubocop:enable CyclomaticComplexity
 
   def progress
     render json: { status: current_invitation_status.status }
@@ -110,6 +107,9 @@ class AssignmentInvitationsController < ApplicationController
     redirect_to success_assignment_invitation_path
   end
 
+  # rubocop:disable AbcSize
+  # rubocop:disable CyclomaticComplexity
+  # rubocop:disable MethodLength
   def route_based_on_status
     return unless import_resiliency_enabled?
     case current_invitation_status.status
@@ -123,6 +123,9 @@ class AssignmentInvitationsController < ApplicationController
       raise InvalidStatusForRouteError, "No route registered for status: #{current_invitation_status.status}"
     end
   end
+  # rubocop:enable AbcSize
+  # rubocop:enable CyclomaticComplexity
+  # rubocop:enable MethodLength
 
   def ensure_import_resiliency_enabled
     render status: 404, json: { error: "Not found" } unless import_resiliency_enabled?
@@ -157,4 +160,3 @@ class AssignmentInvitationsController < ApplicationController
     GitHubClassroom::Scopes::ASSIGNMENT_STUDENT
   end
 end
-# rubocop:enable ClassLength
