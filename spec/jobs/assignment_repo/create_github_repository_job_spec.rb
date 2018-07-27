@@ -209,7 +209,9 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         stub_request(:put, import_regex)
           .to_return(body: "{}", status: 401)
 
-        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.importing_starter_code.fail")
+        expect(GitHubClassroom.statsd)
+          .to receive(:increment)
+          .with("v2_exercise_repo.create.importing_starter_code.fail")
         subject.perform_now(assignment, student)
       end
 
