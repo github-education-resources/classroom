@@ -42,7 +42,7 @@ class AssignmentRepo
 
       begin
         assignment_repo.save!
-      rescue ActiveRecord::RecordInvalid => e
+      rescue ActiveRecord::RecordInvalid
         raise Creator::Result::Error, Creator::DEFAULT_ERROR_MESSAGE
       end
 
