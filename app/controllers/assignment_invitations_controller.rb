@@ -7,9 +7,10 @@ class AssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
   include RepoSetup
 
-  before_action :route_based_on_status, only: [:show, :setupv2, :success]
-  before_action :check_user_not_previous_acceptee, :check_should_redirect_to_roster_page, only: [:show]
+  before_action :route_based_on_status, only: %i[show setupv2 success]
+  before_action :check_user_not_previous_acceptee, :check_should_redirect_to_roster_page, only: :show
   before_action :ensure_submission_repository_exists, only: :success
+  before_action :ensure_import_resiliency_enabled, only: %i[create_repo progress]
 
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
@@ -43,38 +44,32 @@ class AssignmentInvitationsController < ApplicationController
 
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
+  # rubocop:disable CyclomaticComplexity
   def create_repo
-    if import_resiliency_enabled?
-      job_started = false
-      if current_invitation_status.accepted? || current_invitation_status.errored?
-        assignment_repo = AssignmentRepo.find_by(assignment: current_assignment, user: current_user)
-        assignment_repo&.destroy if assignment_repo&.github_repository&.empty?
-        if current_invitation_status.errored_creating_repo?
-          GitHubClassroom.statsd.increment("v2_exercise_repo.create.retry")
-        elsif current_invitation_status.errored_importing_starter_code?
-          GitHubClassroom.statsd.increment("v2_exercise_repo.import.retry")
-        end
-        current_invitation_status.waiting!
-        AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user)
-        job_started = true
+    job_started = false
+    if current_invitation_status.accepted? || current_invitation_status.errored?
+      assignment_repo = AssignmentRepo.find_by(assignment: current_assignment, user: current_user)
+      assignment_repo&.destroy if assignment_repo&.github_repository&.empty?
+      if current_invitation_status.errored_creating_repo?
+        GitHubClassroom.statsd.increment("v2_exercise_repo.create.retry")
+      elsif current_invitation_status.errored_importing_starter_code?
+        GitHubClassroom.statsd.increment("v2_exercise_repo.import.retry")
       end
-      render json: {
-        job_started: job_started,
-        status: current_invitation_status.status
-      }
-    else
-      render status: 404, json: { error: "Not found" }
+      current_invitation_status.waiting!
+      AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user)
+      job_started = true
     end
+    render json: {
+      job_started: job_started,
+      status: current_invitation_status.status
+    }
   end
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize
+  # rubocop:enable CyclomaticComplexity
 
   def progress
-    if import_resiliency_enabled?
-      render json: { status: current_invitation_status.status }
-    else
-      render status: 404, json: { error: "Not found" }
-    end
+    render json: { status: current_invitation_status.status }
   end
 
   def show; end
@@ -109,17 +104,11 @@ class AssignmentInvitationsController < ApplicationController
   end
   # rubocop:enable MethodLength
 
-  # rubocop:disable MethodLength
-  # rubocop:disable AbcSize
-  # rubocop:disable CyclomaticComplexity
   def check_user_not_previous_acceptee
     return if import_resiliency_enabled?
     return if current_assignment_repo.nil?
     redirect_to success_assignment_invitation_path
   end
-  # rubocop:enable MethodLength
-  # rubocop:enable AbcSize
-  # rubocop:enable CyclomaticComplexity
 
   def route_based_on_status
     return unless import_resiliency_enabled?
@@ -133,6 +122,10 @@ class AssignmentInvitationsController < ApplicationController
     else
       raise InvalidStatusForRouteError, "No route registered for status: #{current_invitation_status.status}"
     end
+  end
+
+  def ensure_import_resiliency_enabled
+    render status: 404, json: { error: "Not found" } unless import_resiliency_enabled?
   end
 
   def create_submission
