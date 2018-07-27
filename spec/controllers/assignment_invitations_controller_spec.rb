@@ -202,7 +202,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         context "previous acceptee" do
           before(:each) do
             expect_any_instance_of(AssignmentInvitationsController)
-              .to receive(:current_assignment_repo)
+              .to receive(:current_submission)
               .and_return(assignment_repo)
           end
 

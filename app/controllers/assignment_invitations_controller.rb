@@ -85,13 +85,13 @@ class AssignmentInvitationsController < ApplicationController
 
   # rubocop:disable MethodLength
   def ensure_submission_repository_exists
-    return not_found unless current_assignment_repo
-    return if current_assignment_repo
+    return not_found unless current_submission
+    return if current_submission
               .github_repository
               .present?(headers: GitHub::APIHeaders.no_cache_no_store)
 
-    current_assignment_repo.destroy
-    remove_instance_variable(:@current_assignment_repo)
+    current_submission.destroy
+    remove_instance_variable(:@current_submission)
 
     if import_resiliency_enabled?
       redirect_to setupv2_assignment_invitation_path
@@ -103,7 +103,7 @@ class AssignmentInvitationsController < ApplicationController
 
   def check_user_not_previous_acceptee
     return if import_resiliency_enabled?
-    return if current_assignment_repo.nil?
+    return if current_submission.nil?
     redirect_to success_assignment_invitation_path
   end
 
@@ -144,8 +144,8 @@ class AssignmentInvitationsController < ApplicationController
     end
   end
 
-  def current_assignment_repo
-    @current_assignment_repo ||= AssignmentRepo.find_by(assignment: current_assignment, user: current_user)
+  def current_submission
+    @current_submission ||= AssignmentRepo.find_by(assignment: current_assignment, user: current_user)
   end
 
   def current_invitation
