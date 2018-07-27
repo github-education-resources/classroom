@@ -7,10 +7,177 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
   let(:user)          { classroom_student }
   let(:config_branch) { ClassroomConfig::CONFIG_BRANCH }
 
-  let(:invitation) { create(:assignment_invitation, organization: organization) }
+  let(:invitation)      { create(:assignment_invitation, organization: organization) }
+  let(:invite_status)   { create(:invite_status, user: user, assignment_invitation: invitation) }
+  let(:assignment_repo) { create(:assignment_repo, user: user, assignment: invitation.assignment) }
 
   let(:unconfigured_repo) { stub_repository("template") }
   let(:configured_repo) { stub_repository("configured-repo") }
+
+  describe "route_based_on_status", :vcr do
+    before do
+      sign_in_as(user)
+      GitHubClassroom.flipper[:import_resiliency].enable
+    end
+
+    after do
+      GitHubClassroom.flipper[:import_resiliency].disable
+    end
+
+    describe "unaccepted!" do
+      it "gets #show" do
+        invite_status.unaccepted!
+        get :show, params: { id: invitation.key }
+        expect(response).to render_template(:show)
+      end
+
+      it "gets #setupv2 and redirects to #show" do
+        invite_status.unaccepted!
+        get :success, params: { id: invitation.key }
+        expect(response).to redirect_to(assignment_invitation_url(invitation))
+      end
+
+      it "gets #success and redirects to #show" do
+        invite_status.unaccepted!
+        get :success, params: { id: invitation.key }
+        expect(response).to redirect_to(assignment_invitation_url(invitation))
+      end
+    end
+
+    describe "accepted!" do
+      it "gets #setupv2" do
+        invite_status.accepted!
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to render_template(:setupv2)
+      end
+
+      it "gets #show and redirects to #setupv2" do
+        invite_status.accepted!
+        get :show, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+      end
+
+      it "gets #success and redirects to #setupv2" do
+        invite_status.accepted!
+        get :success, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+      end
+    end
+
+    describe "waiting!" do
+      it "gets #setupv2" do
+        invite_status.waiting!
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to render_template(:setupv2)
+      end
+
+      it "gets #show and redirects to #setupv2" do
+        invite_status.waiting!
+        get :show, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+      end
+
+      it "gets #success and redirects to #setupv2" do
+        invite_status.waiting!
+        get :success, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+      end
+    end
+
+    describe "creating_repo!" do
+      it "gets #setupv2" do
+        invite_status.creating_repo!
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to render_template(:setupv2)
+      end
+
+      it "gets #show and redirects to #setupv2" do
+        invite_status.creating_repo!
+        get :show, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+      end
+
+      it "gets #success and redirects to #setupv2" do
+        invite_status.creating_repo!
+        get :success, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+      end
+    end
+
+    describe "errored_creating_repo!" do
+      it "gets #setupv2" do
+        invite_status.errored_creating_repo!
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to render_template(:setupv2)
+      end
+
+      it "gets #show and redirects to #setupv2" do
+        invite_status.errored_creating_repo!
+        get :show, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+      end
+
+      it "gets #success and redirects to #setupv2" do
+        invite_status.errored_creating_repo!
+        get :success, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+      end
+    end
+
+    describe "importing_starter_code!" do
+      it "gets #setupv2" do
+        invite_status.importing_starter_code!
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to render_template(:setupv2)
+      end
+
+      it "gets #show and redirects to #setupv2" do
+        invite_status.importing_starter_code!
+        get :show, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+      end
+
+      it "gets #success and redirects to #setupv2" do
+        invite_status.importing_starter_code!
+        get :success, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+      end
+    end
+
+    describe "errored_importing_starter_code!" do
+      it "gets #setupv2" do
+        invite_status.errored_importing_starter_code!
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to render_template(:setupv2)
+      end
+
+      it "gets #show and redirects to #setupv2" do
+        invite_status.errored_importing_starter_code!
+        get :show, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+      end
+
+      it "gets #success and redirects to #setupv2" do
+        invite_status.errored_importing_starter_code!
+        get :success, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+      end
+    end
+
+    describe "completed!" do
+      it "gets #show and redirects to #success" do
+        invite_status.completed!
+        get :show, params: { id: invitation.key }
+        expect(response).to redirect_to(success_assignment_invitation_url(invitation))
+      end
+
+      it "gets #setupv2 and redirects to #success" do
+        invite_status.completed!
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to redirect_to(success_assignment_invitation_url(invitation))
+      end
+    end
+  end
 
   describe "GET #show", :vcr do
     context "unauthenticated request" do
@@ -33,8 +200,6 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         end
 
         context "previous acceptee" do
-          let(:assignment_repo) { create(:assignment_repo, user: user, assignment: invitation.assignment) }
-
           before(:each) do
             expect_any_instance_of(AssignmentInvitationsController)
               .to receive(:current_assignment_repo)
@@ -44,34 +209,6 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
           it "redirects to success" do
             get :show, params: { id: invitation.key }
             expect(response).to redirect_to(success_assignment_invitation_url(invitation))
-          end
-
-          context "with import resiliency enabled" do
-            before do
-              GitHubClassroom.flipper[:import_resiliency].enable
-            end
-
-            after do
-              GitHubClassroom.flipper[:import_resiliency].disable
-            end
-
-            it "renders show when invite_status is unaccepted" do
-              invitation.status(user).unaccepted!
-              get :show, params: { id: invitation.key }
-              expect(response).to render_template("assignment_invitations/show")
-            end
-
-            it "redirects to success when invite_status is completed" do
-              invitation.status(user).completed!
-              get :show, params: { id: invitation.key }
-              expect(response).to redirect_to(success_assignment_invitation_url(invitation))
-            end
-
-            it "redirects to setup when invite_status is not complete or unaccepted" do
-              invitation.status(user).importing_starter_code!
-              get :show, params: { id: invitation.key }
-              expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
-            end
           end
         end
       end
@@ -159,7 +296,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it "redirects to success when AssignmentRepo already exists" do
-        invitation.status(user).completed!
+        invite_status.completed!
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
           .with(user, import_resiliency: true)
           .and_return(result)
@@ -169,7 +306,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it "redirects to setup when AssignmentRepo already exists but isn't completed" do
-        invitation.status(user).creating_repo!
+        invite_status.creating_repo!
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
           .with(user, import_resiliency: true)
           .and_return(result)
@@ -179,6 +316,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it "redirects to setupv2 when AssignmentRepo doesn't already exist" do
+        invite_status.accepted!
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
           .with(user, import_resiliency: true)
           .and_return(AssignmentRepo::Creator::Result.pending)
@@ -210,7 +348,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
       context "when invitation status is accepted" do
         before do
-          invitation.status(user).accepted!
+          invite_status.accepted!
         end
 
         it "enqueues a CreateRepositoryJob" do
@@ -231,7 +369,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
       context "when invitation status is errored" do
         before do
-          invitation.status(user).errored_creating_repo!
+          invite_status.errored_creating_repo!
         end
 
         it "deletes an assignment repo if one already exists and is empty" do
@@ -277,7 +415,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         end
 
         it "reports an error importing was retried" do
-          invitation.status(user).errored_importing_starter_code!
+          invite_status.errored_importing_starter_code!
           expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.import.retry")
           post :create_repo, params: { id: invitation.key }
         end
@@ -285,7 +423,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
       context "when invitation status is anything else" do
         before do
-          invitation.status(user).unaccepted!
+          invite_status.unaccepted!
         end
 
         it "does not enqueue a CreateRepositoryJob" do
@@ -315,22 +453,6 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       get :setupv2, params: { id: invitation.key }
       expect(response.status).to eq(404)
     end
-
-    context "with import resiliency enabled" do
-      before do
-        GitHubClassroom.flipper[:import_resiliency].enable
-      end
-
-      after do
-        GitHubClassroom.flipper[:import_resiliency].disable
-      end
-
-      it "will bring you to the page" do
-        get :setupv2, params: { id: invitation.key }
-        expect(response).to have_http_status(:success)
-        expect(response).to render_template("assignment_invitations/setupv2")
-      end
-    end
   end
 
   describe "GET #progress", :vcr do
@@ -352,25 +474,21 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         GitHubClassroom.flipper[:import_resiliency].disable
       end
 
-      it "returns the correct status" do
+      it "returns the invite_status" do
+        invite_status.errored_creating_repo!
         get :progress, params: { id: invitation.key }
-        expect(response.body).to eq({ status: invitation.status(user).status }.to_json)
-      end
-
-      it "returns the correct status when status is changed" do
-        invitation.status(user).errored_creating_repo!
-        get :progress, params: { id: invitation.key }
-        expect(response.body).to eq({ status: invitation.status(user).status }.to_json)
+        expect(response.body).to eq({ status: "errored_creating_repo" }.to_json)
       end
     end
   end
 
-  describe "GET #success" do
+  describe "GET #success", :vcr do
     let(:assignment) do
       create(:assignment, title: "Learn Clojure", starter_code_repo_id: 1_062_897, organization: organization)
     end
 
     let(:invitation) { create(:assignment_invitation, assignment: assignment) }
+    let(:invite_status) { create(:invite_status, assignment_invitation: invitation, user: user) }
 
     before(:each) do
       sign_in_as(user)
@@ -382,7 +500,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       AssignmentRepo.destroy_all
     end
 
-    context "github repository deleted after accepting a invitation successfully", :vcr do
+    context "github repository deleted after accepting a invitation successfully" do
       before do
         organization.github_client.delete_repository(@assignment_repo.github_repo_id)
         get :success, params: { id: invitation.key }
@@ -397,7 +515,18 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
     end
 
-    describe "import resiliency enabled", :vcr do
+    context "creates a GitHub repo if one doesn't exist" do
+      it "renders #success when no GitHub repo present" do
+        expect_any_instance_of(GitHubRepository)
+          .to receive(:present?)
+          .with(headers: GitHub::APIHeaders.no_cache_no_store)
+          .and_return(false)
+        get :success, params: { id: invitation.key }
+        expect(response).to render_template(:success)
+      end
+    end
+
+    describe "import resiliency enabled" do
       before do
         GitHubClassroom.flipper[:import_resiliency].enable
       end
@@ -406,13 +535,24 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         GitHubClassroom.flipper[:import_resiliency].disable
       end
 
-      it "redirects to setupv2 when current_assignment_repo" do
+      it "redirects to setupv2 when no GitHub repo present" do
+        invite_status.completed!
         expect_any_instance_of(GitHubRepository)
           .to receive(:present?)
           .with(headers: GitHub::APIHeaders.no_cache_no_store)
           .and_return(false)
         get :success, params: { id: invitation.key }
         expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+      end
+
+      it "renders #success" do
+        invite_status.completed!
+        expect_any_instance_of(GitHubRepository)
+          .to receive(:present?)
+          .with(headers: GitHub::APIHeaders.no_cache_no_store)
+          .and_return(true)
+        get :success, params: { id: invitation.key }
+        expect(response).to render_template(:success)
       end
     end
   end
