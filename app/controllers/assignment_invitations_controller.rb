@@ -2,9 +2,12 @@
 
 # rubocop:disable ClassLength
 class AssignmentInvitationsController < ApplicationController
+  class InvalidStatusForRouteError < StandardError; end
+
   include InvitationsControllerMethods
   include RepoSetup
 
+  before_action :route_based_on_status, only: [:show, :setupv2, :success]
   before_action :check_user_not_previous_acceptee, :check_should_redirect_to_roster_page, only: [:show]
   before_action :ensure_submission_repository_exists, only: :success
 
@@ -16,21 +19,14 @@ class AssignmentInvitationsController < ApplicationController
       case result.status
       when :success
         GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
-        if current_invitation_status.completed?
-          redirect_to success_assignment_invitation_path
-        else
-          redirect_to setupv2_assignment_invitation_path
-        end
       when :pending
         GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
-        redirect_to setupv2_assignment_invitation_path
       when :error
         GitHubClassroom.statsd.increment("v2_exercise_invitation.fail")
         current_invitation_status.errored_creating_repo!
-
         flash[:error] = result.error
-        redirect_to assignment_invitation_path(current_invitation)
       end
+      route_based_on_status
     else
       create_submission do
         GitHubClassroom.statsd.increment("exercise_invitation.accept")
@@ -117,31 +113,26 @@ class AssignmentInvitationsController < ApplicationController
   # rubocop:disable AbcSize
   # rubocop:disable CyclomaticComplexity
   def check_user_not_previous_acceptee
+    return if import_resiliency_enabled?
     return if current_assignment_repo.nil?
-    if import_resiliency_enabled?
-      setup_statuses = InviteStatus.statuses.keys.reject { |status| status == "unaccepted" || status == "completed" }
-      case current_invitation_status.status
-      when "unaccepted"
-        return
-      when "completed"
-        redirect_to success_assignment_invitation_path
-      when *setup_statuses
-        redirect_to setupv2_assignment_invitation_path
-      end
-    else
-      redirect_to success_assignment_invitation_path
-    end
+    redirect_to success_assignment_invitation_path
   end
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize
   # rubocop:enable CyclomaticComplexity
 
-  def classroom_config
-    starter_code_repo_id = current_assignment_repo.starter_code_repo_id
-    client               = current_assignment_repo.creator.github_client
-
-    starter_repo         = GitHubRepository.new(client, starter_code_repo_id)
-    ClassroomConfig.new(starter_repo)
+  def route_based_on_status
+    return unless import_resiliency_enabled?
+    case current_invitation_status.status
+    when "unaccepted"
+      redirect_to assignment_invitation_path(current_invitation) if action_name != "show"
+    when "completed"
+      redirect_to success_assignment_invitation_path if action_name != "success"
+    when *(InviteStatus::ERRORED_STATUSES + InviteStatus::SETUP_STATUSES)
+      redirect_to setupv2_assignment_invitation_path if action_name != "setupv2"
+    else
+      raise InvalidStatusForRouteError, "No route registered for status: #{current_invitation_status.status}"
+    end
   end
 
   def create_submission
