@@ -42,7 +42,7 @@ class AssignmentRepo
 
       begin
         assignment_repo.save!
-      rescue ActiveRecord::RecordInvalid
+      rescue ActiveRecord::RecordInvalid => e
         raise Creator::Result::Error, Creator::DEFAULT_ERROR_MESSAGE
       end
 
@@ -67,7 +67,7 @@ class AssignmentRepo
         )
       end
     rescue Creator::Result::Error => err
-      creator.delete_github_repository(assignment_repo.try(:github_repo_id))
+      creator.delete_github_repository(assignment_repo&.github_repo_id)
       invite_status.errored_creating_repo!
       ActionCable.server.broadcast(
         RepositoryCreationStatusChannel.channel(user_id: user.id),
@@ -75,7 +75,12 @@ class AssignmentRepo
         status: invite_status.status
       )
       logger.warn(err.message)
-      GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
+      case err.message
+      when Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED
+        GitHubClassroom.statsd.increment("v2_exercise_repo.create.adding_collaborator.fail")
+      else
+        GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
+      end
     end
     # rubocop:enable MethodLength
     # rubocop:enable AbcSize
