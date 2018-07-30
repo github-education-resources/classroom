@@ -1,6 +1,9 @@
 (function() {
   var POLL_INTERVAL = 1000;
   var display_progress,
+    flash_error,
+    flash_progress,
+    flash_text,
     get_status,
     hide_border_and_background,
     hide_indicator_image,
@@ -133,6 +136,27 @@
         setTimeout(show_success, 500);
         break;
     }
+    flash_progress(progress);
+  };
+
+  flash_progress = function(progress) {
+    if (progress.error) {
+      flash_error(progress.error);
+    } else if (progress.text) {
+      flash_text(progress.text);
+    } else {
+      $("#flash-messages").empty();
+    }
+  };
+
+  flash_error = function(error) {
+    $("#flash-messages")
+      .html("<div class='flash-application container-lg'><div class='flash flash-error'>" + error + "</div></div>");
+  };
+
+  flash_text = function(text) {
+    $("#flash-messages")
+      .html("<div class='flash-application container-lg'><div class='flash flash-success'>" + text + "</div></div>");
   };
 
   success_path = function () {
