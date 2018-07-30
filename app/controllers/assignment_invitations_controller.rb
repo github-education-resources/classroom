@@ -92,6 +92,7 @@ class AssignmentInvitationsController < ApplicationController
 
     current_submission.destroy
     remove_instance_variable(:@current_submission)
+    current_invitation_status.accepted!
 
     if import_resiliency_enabled?
       redirect_to setupv2_assignment_invitation_path
