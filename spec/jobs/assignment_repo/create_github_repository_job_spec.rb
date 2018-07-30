@@ -163,7 +163,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           status: "creating_repo"
         )
         .with(
-          text: AssignmentRepo::Creator::REPOSITORY_CREATION_FAILED,
+          error: AssignmentRepo::Creator::REPOSITORY_CREATION_FAILED,
           status: "errored_creating_repo"
         )
     end
@@ -188,7 +188,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             status: "creating_repo"
           )
           .with(
-            text: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
+            error: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
             status: "errored_creating_repo"
           )
       end
@@ -227,7 +227,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             status: "creating_repo"
           )
           .with(
-            text: AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED,
+            error: AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED,
             status: "errored_creating_repo"
           )
       end
@@ -264,7 +264,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             status: "creating_repo"
           )
           .with(
-            text: AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE,
+            error: AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE,
             status: "errored_creating_repo"
           )
       end

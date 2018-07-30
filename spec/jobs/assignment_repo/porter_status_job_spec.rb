@@ -139,7 +139,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
         expect { subject.perform_now(@assignment_repo, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
           .with(
-            text: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
+            error: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
             status: "errored_importing_starter_code"
           )
       end
@@ -238,7 +238,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
         expect { subject.perform_now(@assignment_repo, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
           .with(
-            text: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
+            error: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
             status: "errored_importing_starter_code"
           )
       end
