@@ -36,7 +36,7 @@ class AssignmentRepo
           invite_status&.errored_importing_starter_code!
           ActionCable.server.broadcast(
             RepositoryCreationStatusChannel.channel(user_id: user.id),
-            text: result,
+            error: result,
             status: invite_status&.status
           )
           logger.warn result.to_s
