@@ -72,7 +72,7 @@ class AssignmentRepo
       invite_status.errored_creating_repo!
       ActionCable.server.broadcast(
         RepositoryCreationStatusChannel.channel(user_id: user.id),
-        text: err,
+        error: err,
         status: invite_status.status
       )
       logger.warn(err.message)
