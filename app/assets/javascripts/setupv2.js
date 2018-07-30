@@ -1,7 +1,6 @@
 (function() {
   var POLL_INTERVAL = 1000;
-  var check_progress,
-    display_progress,
+  var display_progress,
     get_status,
     hide_border_and_background,
     hide_indicator_image,
@@ -15,6 +14,7 @@
     progress_path,
     ready,
     setup_retry_button,
+    setup_cable,
     show_retry_button,
     show_success,
     start_job,
@@ -158,14 +158,6 @@
     location.href = success_path();
   };
 
-  check_progress = function() {
-    var path = progress_path();
-    $.ajax({type: "GET", url: path}).done(function(data) {
-      display_progress(data);
-      setTimeout(check_progress, POLL_INTERVAL);
-    });
-  };
-
   start_job = function(callback) {
     var path = job_path();
     $.ajax({type: "POST", url: path}).done(function(data) {
@@ -186,12 +178,29 @@
     });
   };
 
+  setup_cable = function() {
+    App.repository_creation_status = App.cable.subscriptions.create("RepositoryCreationStatusChannel", {
+      connected: function() {
+        // Called when the subscription is ready for use on the server
+        start_job();
+      },
+
+      disconnected: function() {
+        // Called when the subscription has been terminated by the server
+      },
+
+      received: function(data) {
+        display_progress(data);
+        // Called when there's incoming data on the websocket for this channel
+      }
+    });
+  };
+
   ready = (function() {
     var setup_progress = $(".setupv2");
     if (setup_progress.length !== 0) {
       setup_retry_button();
-      start_job();
-      check_progress();
+      setup_cable();
     }
   });
 
