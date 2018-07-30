@@ -1,6 +1,7 @@
 (function() {
   var POLL_INTERVAL = 1000;
   var display_progress,
+    display_text,
     flash_error,
     flash_progress,
     flash_text,
@@ -16,6 +17,9 @@
     is_hidden,
     progress_path,
     ready,
+    set_progress,
+    set_progress_green,
+    set_progress_red,
     setup_retry_button,
     setup_cable,
     show_retry_button,
@@ -53,51 +57,56 @@
     }
   };
 
-  hide_indicator_image = function(step_indicator) {
-    var status = step_indicator.find(".status");
-    status.find(".complete-indicator").hide();
-    status.find(".failure-indicator").hide();
-    status.find(".spinner").hide();
+  set_progress_green = function(step_indicator) {
+    var progress = step_indicator.find(".progress");
+    if (progress.hasClass("bg-red")) {
+      progress.removeClass("bg-red");
+    }
+    if (!progress.hasClass("bg-green")) {
+      progress.addClass("bg-green");
+    }
   };
 
-  get_status = function(step_indicator) {
-    var status = step_indicator.find(".status");
-    if (is_hidden(status)) {
-      status.removeClass("d-none");
+  set_progress_red = function(step_indicator) {
+    var progress = step_indicator.find(".progress");
+    if (progress.hasClass("bg-green")) {
+      progress.removeClass("bg-green");
     }
-    return status;
+    if (!progress.hasClass("bg-red")) {
+      progress.addClass("bg-red");
+    }
+  }
+
+  set_progress = function(step_indicator, percent) {
+    step_indicator.find(".progress").width(percent + "%");
   };
 
   indicate_waiting = function(step_indicator) {
     hide_border_and_background(step_indicator);
-    hide_indicator_image(step_indicator);
+    set_progress_green(step_indicator);
   };
 
   indicate_completion = function(step_indicator) {
     hide_border_and_background(step_indicator);
-    hide_indicator_image(step_indicator);
     step_indicator.addClass("border-green bg-green-light");
-    var status = get_status(step_indicator);
-
-    status.find(".complete-indicator").show();
+    set_progress_green(step_indicator);
   };
 
   indicate_failure = function(step_indicator) {
     hide_border_and_background(step_indicator);
-    hide_indicator_image(step_indicator);
     step_indicator.addClass("border-red bg-red-light");
-    var status = get_status(step_indicator);
-
-    status.find(".failure-indicator").show();
+    set_progress_red(step_indicator);
   };
 
   indicate_in_progress = function(step_indicator) {
     hide_border_and_background(step_indicator);
-    hide_indicator_image(step_indicator);
     step_indicator.addClass("border-green bg-white");
-    var status = get_status(step_indicator);
+    set_progress_green(step_indicator);
+  };
 
-    status.find(".spinner").show();
+  display_text = function(step_indicator, text) {
+    var paragraph = step_indicator.find(".alt-text-small");
+    paragraph.text(text);
   };
 
   display_progress = function(progress) {
@@ -107,31 +116,51 @@
       case "waiting":
         indicate_waiting(create_repo_progress_indicator);
         indicate_waiting(import_repo_progress_indicator);
+        set_progress(create_repo_progress_indicator, 0);
+        set_progress(import_repo_progress_indicator, 0);
+        display_text(create_repo_progress_indicator, "Waiting...");
+        display_text(import_repo_progress_indicator, "Waiting...");
         hide_retry_button();
         break;
       case "creating_repo":
         indicate_in_progress(create_repo_progress_indicator);
         indicate_waiting(import_repo_progress_indicator);
+        set_progress(create_repo_progress_indicator, 50);
+        set_progress(import_repo_progress_indicator, 0);
+        display_text(create_repo_progress_indicator, "Creating GitHub repository...");
+        display_text(import_repo_progress_indicator, "Waiting...");
         hide_retry_button();
         break;
       case "importing_starter_code":
         indicate_completion(create_repo_progress_indicator);
         indicate_in_progress(import_repo_progress_indicator);
+        set_progress(create_repo_progress_indicator, 100);
+        set_progress(import_repo_progress_indicator, progress.percent);
+        display_text(create_repo_progress_indicator, "Done");
+        display_text(import_repo_progress_indicator, progress.status_text);
         hide_retry_button();
         break;
       case "errored_creating_repo":
         indicate_failure(create_repo_progress_indicator);
         indicate_failure(import_repo_progress_indicator);
+        display_text(create_repo_progress_indicator, "Errored");
+        display_text(import_repo_progress_indicator, "Errored");
         show_retry_button();
         break;
       case "errored_importing_starter_code":
         indicate_completion(create_repo_progress_indicator);
         indicate_failure(import_repo_progress_indicator);
+        display_text(create_repo_progress_indicator, "Done");
+        display_text(import_repo_progress_indicator, "Errored");
         show_retry_button();
         break;
       case "completed":
         indicate_completion(create_repo_progress_indicator);
         indicate_completion(import_repo_progress_indicator);
+        set_progress(create_repo_progress_indicator, 100);
+        set_progress(import_repo_progress_indicator, 100);
+        display_text(create_repo_progress_indicator, "Done");
+        display_text(import_repo_progress_indicator, "Done");
         hide_retry_button();
         setTimeout(show_success, 500);
         break;
