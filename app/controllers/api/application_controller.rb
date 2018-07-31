@@ -8,6 +8,7 @@ class API::ApplicationController < ApplicationController
   prepend_before_action :ensure_download_repositories_flipper_is_enabled
   before_action :add_security_headers
 
+  # Skip CSRF checks for API since it's token based
   skip_before_action :verify_authenticity_token
 
   def authenticate_user!
