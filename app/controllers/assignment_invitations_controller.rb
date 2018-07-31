@@ -54,7 +54,7 @@ class AssignmentInvitationsController < ApplicationController
         GitHubClassroom.statsd.increment("v2_exercise_repo.import.retry")
       end
       current_invitation_status.waiting!
-      AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user)
+      AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user, 3)
       job_started = true
     end
     render json: {
