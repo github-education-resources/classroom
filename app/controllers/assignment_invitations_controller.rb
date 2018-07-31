@@ -85,8 +85,8 @@ class AssignmentInvitationsController < ApplicationController
 
   # rubocop:disable MethodLength
   def ensure_submission_repository_exists
-    return if current_submission && current_submission.github_repository
-      .present?(headers: GitHub::APIHeaders.no_cache_no_store)
+    return if current_submission &&
+      current_submission.github_repository.present?(headers: GitHub::APIHeaders.no_cache_no_store)
 
     current_submission&.destroy
     @current_submission = nil
