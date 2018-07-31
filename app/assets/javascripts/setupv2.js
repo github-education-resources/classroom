@@ -75,7 +75,7 @@
     if (!progress.hasClass("bg-red")) {
       progress.addClass("bg-red");
     }
-  }
+  };
 
   set_progress = function(step_indicator, percent) {
     step_indicator.find(".progress").width(percent + "%");
