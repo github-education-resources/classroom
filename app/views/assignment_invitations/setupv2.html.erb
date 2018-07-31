@@ -11,22 +11,32 @@
 </div>
 
 <div class="site-content-body ">
-  <div class="d-flex flex-justify-between text-center setupv2">
-    <div id="create-repo-progress" class="col-6 border rounded-1 mr-6 p-4">
-      <span class='status d-none'>
-        <%= octicon("check", class: 'text-green complete-indicator', height: 30) %>
-        <%= octicon("x", class: 'text-red failure-indicator', height: 30) %>
-        <%= image_tag 'octocat-spinner-64.gif', width: 30, height: 30, class: 'spinner' %>
-      </span>
-      <p class="v-align-baseline f4 mt-4">1. Creating repository</p>
+  <div class="d-flex flex-justify-between setupv2">
+    <div id="create-repo-progress" class="col-6 border rounded-1 Box box-shadow mr-6">
+      <div class="Box-row">
+        <h4 class="mb-0">Creating repository</h4>
+      </div>
+      <div class="Box-row">
+        <p class="mb-0 alt-text-small text-gray">Waiting</p>
+      </div>
+      <div class="p-3">
+        <span class="progress-bar v-align-middle">
+          <span class="progress bg-green" style="width: 0%"></span>
+        </span>
+      </div>
     </div>
-    <div id="import-repo-progress" class="col-6 border rounded-1 p-4">
-      <span class='status d-none'>
-        <%= octicon("check", class: 'text-green complete-indicator', height: 30) %>
-        <%= octicon("x", class: 'text-red failure-indicator', height: 30) %>
-        <%= image_tag 'octocat-spinner-64.gif', width: 30, height: 30, class: 'spinner' %>
-      </span>
-      <p class="v-align-baseline f4 mt-4">2. Importing starter code</p>
+    <div id="import-repo-progress" class="col-6 border rounded-1 Box box-shadow">
+      <div class="Box-row">
+        <h4 class="mb-0">Importing starter code</h4>
+      </div>
+      <div class="Box-row">
+        <p class="mb-0 alt-text-small text-gray">Waiting</p>
+      </div>
+      <div class="p-3">
+        <span class="progress-bar v-align-middle">
+          <span class="progress bg-green" style="width: 0%"></span>
+        </span>
+      </div>
     </div>
   </div>
   <center>
