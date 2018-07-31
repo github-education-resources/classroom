@@ -545,6 +545,16 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
       end
 
+      it "sets invite status to accepted when no GitHub repo present" do
+        invite_status.completed!
+        expect_any_instance_of(GitHubRepository)
+          .to receive(:present?)
+          .with(headers: GitHub::APIHeaders.no_cache_no_store)
+          .and_return(false)
+        get :success, params: { id: invitation.key }
+        expect(invite_status.reload.accepted?).to be_truthy
+      end
+
       it "renders #success" do
         invite_status.completed!
         expect_any_instance_of(GitHubRepository)
@@ -553,6 +563,26 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
           .and_return(true)
         get :success, params: { id: invitation.key }
         expect(response).to render_template(:success)
+      end
+
+      it "doesn't 404 when there is no current_submission" do
+        invite_status.completed!
+        expect_any_instance_of(AssignmentInvitationsController)
+          .to receive(:current_submission)
+          .twice
+          .and_return(nil)
+        get :success, params: { id: invitation.key }
+        expect(response.status).to_not eq(404)
+      end
+
+      it "redirects to setup when there is no current_submission" do
+        invite_status.completed!
+        expect_any_instance_of(AssignmentInvitationsController)
+          .to receive(:current_submission)
+          .twice
+          .and_return(nil)
+        get :success, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
       end
     end
   end
