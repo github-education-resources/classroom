@@ -564,6 +564,26 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         get :success, params: { id: invitation.key }
         expect(response).to render_template(:success)
       end
+
+      it "doesn't 404 when there is no current_submission" do
+        invite_status.completed!
+        expect_any_instance_of(AssignmentInvitationsController)
+          .to receive(:current_submission)
+          .twice
+          .and_return(nil)
+        get :success, params: { id: invitation.key }
+        expect(response.status).to_not eq(404)
+      end
+
+      it "redirects to setup when there is no current_submission" do
+        invite_status.completed!
+        expect_any_instance_of(AssignmentInvitationsController)
+          .to receive(:current_submission)
+          .twice
+          .and_return(nil)
+        get :success, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+      end
     end
   end
 
