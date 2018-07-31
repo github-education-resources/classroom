@@ -71,7 +71,7 @@ class AssignmentRepo
     rescue Creator::Result::Error => err
       creator.delete_github_repository(assignment_repo.try(:github_repo_id))
       logger.warn(err.message)
-      if retries > 0
+      if retries.positive?
         invite_status.waiting!
         CreateGitHubRepositoryJob.perform_later(assignment, user, retries - 1)
       else
