@@ -168,6 +168,24 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         )
     end
 
+    it "fails and automatically retries" do
+      import_regex = %r{#{github_url("/repositories/")}\d+/import$}
+      stub_request(:put, import_regex)
+        .to_return(body: "{}", status: 401)
+
+      subject.perform_now(assignment, teacher, 1)
+      expect(subject).to have_been_enqueued.on_queue("create_repository")
+    end
+
+    it "fails and puts invite status in state to retry" do
+      import_regex = %r{#{github_url("/repositories/")}\d+/import$}
+      stub_request(:put, import_regex)
+        .to_return(body: "{}", status: 401)
+
+      subject.perform_now(assignment, teacher, 1)
+      expect(@teacher_invite_status.reload.waiting?).to be_truthy
+    end
+
     context "with successful repo creation" do
       # Verify that we try to delete the GitHub repository
       # if part of the process fails.

@@ -10,14 +10,15 @@ class AssignmentRepo
 
     # Create an AssignmentRepo
     #
-    # assignment - The Assignment that will own the AssignmentRepo.
-    # user       - The User that the AssignmentRepo will belong to.
+    # assignment - The Assignment that will own the AssignmentRepo
+    # user       - The User that the AssignmentRepo will belong to
+    # retries    - The number of times the job will automatically retry
     #
     # rubocop:disable MethodLength
     # rubocop:disable AbcSize
     # rubocop:disable CyclomaticComplexity
     # rubocop:disable PerceivedComplexity
-    def perform(assignment, user)
+    def perform(assignment, user, retries = 0)
       start = Time.zone.now
 
       invite_status = assignment.invitation.status(user)
@@ -69,22 +70,27 @@ class AssignmentRepo
       end
     rescue Creator::Result::Error => err
       creator.delete_github_repository(assignment_repo.try(:github_repo_id))
-      invite_status.errored_creating_repo!
-      ActionCable.server.broadcast(
-        RepositoryCreationStatusChannel.channel(user_id: user.id),
-        error: err,
-        status: invite_status.status
-      )
       logger.warn(err.message)
-      case err.message
-      when Creator::REPOSITORY_CREATION_FAILED
-        GitHubClassroom.statsd.increment("v2_exercise_repo.create.repo.fail")
-      when Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED
-        GitHubClassroom.statsd.increment("v2_exercise_repo.create.adding_collaborator.fail")
-      when Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
-        GitHubClassroom.statsd.increment("v2_exercise_repo.create.importing_starter_code.fail")
+      if retries > 0
+        invite_status.waiting!
+        CreateGitHubRepositoryJob.perform_later(assignment, user, retries - 1)
       else
-        GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
+        invite_status.errored_creating_repo!
+        ActionCable.server.broadcast(
+          RepositoryCreationStatusChannel.channel(user_id: user.id),
+          error: err,
+          status: invite_status.status
+        )
+        case err.message
+        when Creator::REPOSITORY_CREATION_FAILED
+          GitHubClassroom.statsd.increment("v2_exercise_repo.create.repo.fail")
+        when Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED
+          GitHubClassroom.statsd.increment("v2_exercise_repo.create.adding_collaborator.fail")
+        when Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
+          GitHubClassroom.statsd.increment("v2_exercise_repo.create.importing_starter_code.fail")
+        else
+          GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
+        end
       end
     end
     # rubocop:enable MethodLength
