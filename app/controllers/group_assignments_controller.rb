@@ -65,6 +65,11 @@ class GroupAssignmentsController < ApplicationController
     end
   end
 
+  def desktop
+    code = JsonWebToken.encode(user_id: current_user.id, exp: 5.minutes.from_now)
+    redirect_to "x-github-classroom://?assignment_url=#{@group_assignment_url}&code=#{code}"
+  end
+
   private
 
   def authorize_grouping_access
