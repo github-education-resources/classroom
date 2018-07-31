@@ -29,7 +29,7 @@ class AssignmentRepo
                   RepositoryCreationStatusChannel.channel(user_id: user.id),
                   status: invite_status.status,
                   text: AssignmentRepo::Creator::IMPORT_ONGOING,
-                  percent: ((REPO_IMPORT_STEPS.index(progress[:status]) + 1) * 100) / (REPO_IMPORT_STEPS.count),
+                  percent: ((REPO_IMPORT_STEPS.index(progress[:status]) + 1) * 100) / REPO_IMPORT_STEPS.count,
                   status_text: progress[:status_text]
                 )
                 last_progress = progress[:status]
