@@ -6,7 +6,6 @@ class API::ApplicationController < ApplicationController
 
   prepend_before_action :ensure_download_repositories_flipper_is_enabled
   prepend_before_action :verify_jwt_token
-  before_action :add_security_headers
 
   # Skip CSRF checks for API since it's token based
   skip_before_action :verify_authenticity_token
@@ -32,13 +31,6 @@ class API::ApplicationController < ApplicationController
     render json: {
       message: "Unauthorized"
     }, status: :forbidden
-  end
-
-  def add_security_headers
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "GET"
-    response.headers["Access-Control-Allow-Headers"] = "*"
-    response.headers["Access-Control-Expose-Headers"] = "Total, Link, Per-Page"
   end
 end
 # rubocop:enable ClassAndModuleChildren
