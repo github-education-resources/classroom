@@ -87,7 +87,7 @@ group :development, :test do
   gem "spring",                   "~> 2.0", ">= 2.0.2"
   gem "spring-watcher-listen",    "~> 2.0", ">= 2.0.1"
   gem "terminal-notifier-guard",  "~> 1.7"
-  gem "timecop",              "~> 0.9.1"
+  gem "timecop",                  "~> 0.9.1"
 end
 
 group :production do
