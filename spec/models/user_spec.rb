@@ -69,6 +69,22 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe "#api_token", :vcr do
+    it "generates a valid api token" do
+      token = subject.api_token
+
+      data = JsonWebToken.decode(token)
+      expect(data).to_not be_nil
+    end
+
+    it "generates an api token with correct user id" do
+      token = subject.api_token
+
+      data = JsonWebToken.decode(token)
+      expect(data["user_id"]).to eql(subject.id)
+    end
+  end
+
   describe "tokens", :vcr do
     let(:student) { classroom_student }
 
