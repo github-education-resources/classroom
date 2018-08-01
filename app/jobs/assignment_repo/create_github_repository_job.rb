@@ -18,7 +18,7 @@ class AssignmentRepo
     # rubocop:disable AbcSize
     # rubocop:disable CyclomaticComplexity
     # rubocop:disable PerceivedComplexity
-    def perform(assignment, user, retries = 0)
+    def perform(assignment, user, retries: 0)
       start = Time.zone.now
 
       invite_status = assignment.invitation.status(user)
