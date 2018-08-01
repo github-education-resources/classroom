@@ -21,7 +21,7 @@ module Octopoller
   # rubocop:disable AbcSize
   def poll(wait: 1.second, timeout: nil, retries: nil)
     Octopoller.validate_arguments(wait, timeout, retries)
-    exponential_backoff = wait == :exponentially
+    exponential_backoff = (wait == :exponentially)
 
     wait = 0.5.seconds if exponential_backoff
     if timeout
