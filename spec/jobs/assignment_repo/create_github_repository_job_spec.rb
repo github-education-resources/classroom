@@ -173,7 +173,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       stub_request(:put, import_regex)
         .to_return(body: "{}", status: 401)
 
-      subject.perform_now(assignment, teacher, 1)
+      subject.perform_now(assignment, teacher, retries: 1)
       expect(subject).to have_been_enqueued.on_queue("create_repository")
     end
 
@@ -182,7 +182,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       stub_request(:put, import_regex)
         .to_return(body: "{}", status: 401)
 
-      subject.perform_now(assignment, teacher, 1)
+      subject.perform_now(assignment, teacher, retries: 1)
       expect(@teacher_invite_status.reload.waiting?).to be_truthy
     end
 
