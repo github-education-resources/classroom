@@ -4,8 +4,8 @@
 class API::ApplicationController < ApplicationController
   include Rails::Pagination
 
-  prepend_before_action :verify_jwt_token
   prepend_before_action :ensure_download_repositories_flipper_is_enabled
+  prepend_before_action :verify_jwt_token
   before_action :add_security_headers
 
   # Skip CSRF checks for API since it's token based
@@ -19,7 +19,7 @@ class API::ApplicationController < ApplicationController
   def verify_jwt_token
     if params[:access_token].present?
       data = JsonWebToken.decode(params[:access_token])
-      if !(data.nil? || data[:user_id].nil?)
+      unless data.nil? || data[:user_id].nil?
         return session[:user_id] = data[:user_id]
       end
     end

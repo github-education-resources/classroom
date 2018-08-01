@@ -36,11 +36,11 @@ gem "kaminari", "~> 1.0", ">= 1.0.1"
 
 gem "local_time", "~> 2.0"
 
+gem "jwt",             "~> 1.5.6"
 gem "octicons_helper", "~> 2.1"
 gem "octokit", github: "octokit/octokit.rb", ref: "ffae5ddd6fd9da6f4538ca7adeb5d1768011610b"
 gem "omniauth",        "~> 1.6", ">= 1.6.1"
 gem "omniauth-github", "~> 1.3"
-gem "jwt",             "~> 1.5.6"
 
 gem "peek",                 "~> 1.0", ">= 1.0.1"
 gem "peek-dalli",           "1.1.3.4.g0a68e1f"
@@ -87,7 +87,6 @@ group :development, :test do
   gem "spring",                   "~> 2.0", ">= 2.0.2"
   gem "spring-watcher-listen",    "~> 2.0", ">= 2.0.1"
   gem "terminal-notifier-guard",  "~> 1.7"
-  gem "timecop",                  "~> 0.9.1", require: false
 end
 
 group :production do
@@ -106,6 +105,7 @@ group :test do
   gem "factory_bot_rails",    "~> 4.8"
   gem "faker",                "~> 1.8", ">= 1.8.4"
   gem "simplecov",            "~> 0.15.0", require: false
+  gem "timecop",              "~> 0.9.1"
   gem "vcr",                  "~> 3.0", ">= 3.0.3"
   gem "webmock",              "~> 3.0", ">= 3.0.1"
 end

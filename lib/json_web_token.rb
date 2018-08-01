@@ -23,4 +23,4 @@ class JsonWebToken
       raise "JWT_SECRET is not set, please check you .env file"
     end
   end
- end
+end

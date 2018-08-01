@@ -58,6 +58,10 @@ class User < ApplicationRecord
     organization.all_assignments.map(&:creator_id).include? id
   end
 
+  def api_token(exp = 5.minutes.from_now)
+    JsonWebToken.encode({ user_id: id }, exp)
+  end
+
   private
 
   # Internal: We need to make sure that the user

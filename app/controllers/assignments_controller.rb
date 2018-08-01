@@ -65,7 +65,7 @@ class AssignmentsController < ApplicationController
   end
 
   def desktop
-    code = JsonWebToken.encode(user_id: current_user.id, exp: 5.minutes.from_now)
+    code = current_user.api_token
     redirect_to "x-github-classroom://?assignment_url=#{organization_assignment_url}&code=#{code}"
   end
 
