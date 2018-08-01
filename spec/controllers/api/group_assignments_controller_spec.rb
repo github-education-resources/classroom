@@ -8,14 +8,13 @@ RSpec.describe API::GroupAssignmentsController, type: :controller do
 
   before do
     GitHubClassroom.flipper[:download_repositories].enable
-    sign_in_as(user)
 
     @group_assignment = create(:group_assignment, organization: organization)
   end
 
   describe "GET #index", :vcr do
     before do
-      get :index, params: { organization_id: organization.slug }
+      get :index, params: { organization_id: organization.slug, access_token: user.api_token }
     end
 
     it "returns success" do
@@ -29,7 +28,11 @@ RSpec.describe API::GroupAssignmentsController, type: :controller do
 
   describe "GET #show", :vcr do
     before do
-      get :show, params: { organization_id: organization.slug, id: @group_assignment.slug }
+      get :show, params: {
+        organization_id: organization.slug,
+        id: @group_assignment.slug,
+        access_token: user.api_token,
+      }
     end
 
     it "returns success" do

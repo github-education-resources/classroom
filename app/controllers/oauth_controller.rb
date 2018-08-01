@@ -17,7 +17,7 @@ class OauthController < ApplicationController
   def access_token
     if params[:code].present?
       data = JsonWebToken.decode(params[:code])
-      unless data.nil? || data[:user_id].nil?
+      if !data.nil? && !data[:user_id].nil?
         access_token = JsonWebToken.encode({ user_id: data[:user_id] }, 24.hours.from_now)
         return render json: {
           access_token: access_token
@@ -27,4 +27,3 @@ class OauthController < ApplicationController
     not_found
   end
 end
-

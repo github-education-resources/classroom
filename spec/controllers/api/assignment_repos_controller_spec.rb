@@ -9,14 +9,17 @@ RSpec.describe API::AssignmentReposController, type: :controller do
 
   before do
     GitHubClassroom.flipper[:download_repositories].enable
-    sign_in_as(user)
   end
 
   describe "GET #index", :vcr do
     before do
       @assignment_repo = create(:assignment_repo, assignment: assignment, github_repo_id: 42, user: user)
 
-      get :index, params: { organization_id: organization.slug, assignment_id: assignment.slug }
+      get :index, params: {
+        organization_id: organization.slug,
+        assignment_id: assignment.slug,
+        access_token: user.api_token,
+      }
     end
 
     after do
