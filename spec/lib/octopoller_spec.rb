@@ -61,7 +61,7 @@ RSpec.describe Octopoller do
     end
 
     it "accepts 0 retries" do
-      expect { Octopoller.poll(wait: 0.01.seconds, retries: 0) { } }.to_not raise_error(ArgumentError)
+      expect { Octopoller.poll(wait: 0.01.seconds, retries: 0) {} }.to_not raise_error(ArgumentError)
     end
 
     it "poll until max retries reached" do

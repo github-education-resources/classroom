@@ -18,6 +18,7 @@ module Octopoller
   # rubocop:disable MethodLength
   # rubocop:disable CyclomaticComplexity
   # rubocop:disable PerceivedComplexity
+  # rubocop:disable AbcSize
   def poll(wait: 1.second, timeout: nil, retries: nil)
     Octopoller.validate_arguments(wait, timeout, retries)
     exponential_backoff = wait == :exponentially
@@ -45,20 +46,21 @@ module Octopoller
   # rubocop:enable MethodLength
   # rubocop:enable CyclomaticComplexity
   # rubocop:enable PerceivedComplexity
+  # rubocop:enable AbcSize
 
+  # rubocop:disable CyclomaticComplexity
+  # rubocop:disable PerceivedComplexity
   def self.validate_arguments(wait, timeout, retries)
     if (timeout.nil? && retries.nil?) || (timeout && retries)
       raise ArgumentError, "Must pass an argument to either `timeout` or `retries`"
     end
     exponential_backoff = wait == :exponentially
     raise ArgumentError, "Cannot wait backwards in time" unless exponential_backoff || wait.positive?
-    if timeout
-      raise ArgumentError, "Timed out without even being able to try" if timeout.negative?
-    end
-    if retries
-      raise ArgumentError, "Cannot retry something a negative number of times" if retries.negative?
-    end
+    raise ArgumentError, "Timed out without even being able to try" if timeout && timeout.negative?
+    raise ArgumentError, "Cannot retry something a negative number of times" if retries && retries.negative?
   end
+  # rubocop:enable CyclomaticComplexity
+  # rubocop:enable PerceivedComplexity
 
   module_function :poll
 end
