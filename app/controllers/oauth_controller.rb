@@ -16,14 +16,26 @@ class OauthController < ApplicationController
 
   def access_token
     if params[:code].present?
-      data = JsonWebToken.decode(params[:code])
-      if !data.nil? && !data[:user_id].nil?
-        access_token = JsonWebToken.encode({ user_id: data[:user_id] }, 24.hours.from_now)
+      if user_id = parse_user_id(params[:code])
         return render json: {
-          access_token: access_token
+          access_token: api_token(user_id)
         }
       end
     end
     not_found
+  end
+
+  private
+
+  def api_token(user_id)
+    JsonWebToken.encode({ user_id: user_id }, 24.hours.from_now)
+  end
+
+  def parse_user_id(code)
+    data = JsonWebToken.decode(code)
+    if !data.nil? && !data[:user_id].nil?
+      return data[:user_id]
+    end
+    nil
   end
 end

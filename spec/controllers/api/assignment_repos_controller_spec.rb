@@ -18,7 +18,7 @@ RSpec.describe API::AssignmentReposController, type: :controller do
       get :index, params: {
         organization_id: organization.slug,
         assignment_id: assignment.slug,
-        access_token: user.api_token,
+        access_token: user.api_token
       }
     end
 

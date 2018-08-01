@@ -31,7 +31,7 @@ RSpec.describe API::AssignmentsController, type: :controller do
       get :show, params: {
         organization_id: organization.slug,
         id: @assignment.slug,
-        access_token: user.api_token,
+        access_token: user.api_token
       }
     end
 
