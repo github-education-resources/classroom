@@ -85,13 +85,15 @@ class AssignmentInvitationsController < ApplicationController
 
   # rubocop:disable MethodLength
   def ensure_submission_repository_exists
-    return not_found unless current_submission
-    return if current_submission
-              .github_repository
-              .present?(headers: GitHub::APIHeaders.no_cache_no_store)
+    github_repo_exists = current_submission &&
+                         current_submission
+                         .github_repository
+                         .present?(headers: GitHub::APIHeaders.no_cache_no_store)
+    return if github_repo_exists
 
-    current_submission.destroy
-    remove_instance_variable(:@current_submission)
+    current_submission&.destroy
+    @current_submission = nil
+    current_invitation_status.accepted!
 
     if import_resiliency_enabled?
       redirect_to setupv2_assignment_invitation_path

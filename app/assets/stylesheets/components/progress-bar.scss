@@ -5,3 +5,18 @@ html.turbolinks-progress-bar::before {
   box-shadow: 0 0 10px rgba(#77b6ff, 0.7) !important;
 }
 // scss-lint:enable ImportantRule
+
+// A green progress bar on a grey background.
+.progress-bar {
+  display: block;
+  height: 5px;
+  overflow: hidden; // Crop the progress bar within for rounded corners
+  background-color: lighten($gray-200, 3%);
+  border-radius: 3px;
+
+  .progress {
+    display: block;
+    height: 100%;
+    background-color: darken($green-400, 5%);
+  }
+}

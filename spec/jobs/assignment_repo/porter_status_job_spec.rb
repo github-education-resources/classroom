@@ -87,8 +87,15 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
         expect { subject.perform_now(@assignment_repo, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
           .with(
+            text: AssignmentRepo::Creator::IMPORT_ONGOING,
+            status: "importing_starter_code",
+            percent: 40,
+            status_text: "Importing..."
+          )
+          .with(
             text: AssignmentRepo::Creator::REPOSITORY_CREATION_COMPLETE,
-            status: "completed"
+            status: "completed",
+            percent: 100
           )
       end
 
@@ -138,6 +145,12 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
           )
         expect { subject.perform_now(@assignment_repo, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
+          .with(
+            text: AssignmentRepo::Creator::IMPORT_ONGOING,
+            status: "importing_starter_code",
+            percent: 40,
+            status_text: "Importing..."
+          )
           .with(
             error: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
             status: "errored_importing_starter_code"
@@ -237,6 +250,12 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
           )
         expect { subject.perform_now(@assignment_repo, student) }
           .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
+          .with(
+            text: AssignmentRepo::Creator::IMPORT_ONGOING,
+            status: "importing_starter_code",
+            percent: 40,
+            status_text: "Importing..."
+          )
           .with(
             error: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
             status: "errored_importing_starter_code"
