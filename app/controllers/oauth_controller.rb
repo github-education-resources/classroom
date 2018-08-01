@@ -33,7 +33,7 @@ class OauthController < ApplicationController
 
   def parse_user_id(code)
     data = JsonWebToken.decode(code)
-    if !data.nil?
+    unless data.nil?
       return data[:user_id]
     end
     nil
