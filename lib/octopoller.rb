@@ -9,11 +9,12 @@ module Octopoller
   #
   # wait      - The time delay in seconds between polls (default is 1 second)
   #           - When given the argument `:exponentially` the action will be retried with exponetial backoff
-  # timeout   - The maximum number of seconds the poller will run (default is 15 seconds)
-  # attempts  - The maximum number of attempts the action will be performed (default is 15)
+  # timeout   - The maximum number of seconds the poller will execute
+  # retries   - The maximum number of times the action will be retried
   # yield     - A block that will execute, and if `:re_poll` is returned it will re-run
-  #           - Re-runs until success or the timeout is reached
+  #           - Re-runs until something is returned or the timeout/retries is reached
   # raise     - Raises an Octopoller::TimeoutError if the timeout is reached
+  # raise     - Raises an Octopoller::TooManyAttemptsError if the retries is reached
   #
   # rubocop:disable MethodLength
   # rubocop:disable CyclomaticComplexity
