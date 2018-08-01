@@ -40,6 +40,7 @@ env:
     - RACK_ENV=test
     - REDIS_URL="redis://localhost:6379/0"
     - WEBHOOK_SECRET=abcdefg
+    - JWT_SECRET=abcdefg
   matrix:
     - CI_NODE_INDEX=0
     - CI_NODE_INDEX=1
