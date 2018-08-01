@@ -16,7 +16,7 @@ class OauthController < ApplicationController
 
   def access_token
     if params[:code].present?
-      if user_id = parse_user_id(params[:code])
+      if (user_id = parse_user_id(params[:code]))
         return render json: {
           access_token: api_token(user_id)
         }
@@ -33,7 +33,7 @@ class OauthController < ApplicationController
 
   def parse_user_id(code)
     data = JsonWebToken.decode(code)
-    if !data.nil? && !data[:user_id].nil?
+    !data.nil? && !data[:user_id].nil?
       return data[:user_id]
     end
     nil

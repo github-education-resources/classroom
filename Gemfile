@@ -87,6 +87,7 @@ group :development, :test do
   gem "spring",                   "~> 2.0", ">= 2.0.2"
   gem "spring-watcher-listen",    "~> 2.0", ">= 2.0.1"
   gem "terminal-notifier-guard",  "~> 1.7"
+  gem "timecop",              "~> 0.9.1"
 end
 
 group :production do
@@ -105,7 +106,6 @@ group :test do
   gem "factory_bot_rails",    "~> 4.8"
   gem "faker",                "~> 1.8", ">= 1.8.4"
   gem "simplecov",            "~> 0.15.0", require: false
-  gem "timecop",              "~> 0.9.1"
   gem "vcr",                  "~> 3.0", ">= 3.0.3"
   gem "webmock",              "~> 3.0", ">= 3.0.1"
 end
