@@ -56,8 +56,8 @@ module Octopoller
     end
     exponential_backoff = wait == :exponentially
     raise ArgumentError, "Cannot wait backwards in time" unless exponential_backoff || wait.positive?
-    raise ArgumentError, "Timed out without even being able to try" if timeout && timeout.negative?
-    raise ArgumentError, "Cannot retry something a negative number of times" if retries && retries.negative?
+    raise ArgumentError, "Timed out without even being able to try" if timeout&.negative?
+    raise ArgumentError, "Cannot retry something a negative number of times" if retries&.negative?
   end
   # rubocop:enable CyclomaticComplexity
   # rubocop:enable PerceivedComplexity
