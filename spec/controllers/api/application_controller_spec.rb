@@ -11,79 +11,62 @@ RSpec.describe API::ApplicationController, type: :controller do
 
   let(:user) { classroom_teacher }
 
-  context "flipper is enabled" do
-    before do
-      GitHubClassroom.flipper[:download_repositories].enable
-    end
-
-    describe "token authentication tests" do
-      context "access token is present", :vcr do
-        context "valid access token" do
-          context "user id is missing" do
-            before do
-              @access_token = JsonWebToken.encode(random_value: 1)
-            end
-
-            it "renders forbidden" do
-              get :index, params: { access_token: @access_token }
-              expect(response).to have_http_status(:forbidden)
-            end
+  describe "token authentication tests" do
+    context "access token is present", :vcr do
+      context "valid access token" do
+        context "user id is missing" do
+          before do
+            @access_token = JsonWebToken.encode(random_value: 1)
           end
 
-          context "user id is present" do
-            before do
-              @access_token = JsonWebToken.encode(user_id: user.id)
-            end
-
-            it "renders ok" do
-              get :index, params: { access_token: @access_token }
-              expect(response).to have_http_status(:ok)
-            end
+          it "renders forbidden" do
+            get :index, params: { access_token: @access_token }
+            expect(response).to have_http_status(:forbidden)
           end
         end
 
-        context "invalid access token" do
-          context "token is expired" do
-            before do
-              @access_token = JsonWebToken.encode({ user_id: user.id }, 30.seconds.ago)
-            end
-
-            it "renders forbidden" do
-              get :index, params: { access_token: @access_token }
-              expect(response).to have_http_status(:forbidden)
-            end
+        context "user id is present" do
+          before do
+            @access_token = JsonWebToken.encode(user_id: user.id)
           end
 
-          context "token is malformed" do
-            before do
-              @access_token = "malformed token"
-            end
-
-            it "renders forbidden" do
-              get :index, params: { access_token: @access_token }
-              expect(response).to have_http_status(:forbidden)
-            end
+          it "renders ok" do
+            get :index, params: { access_token: @access_token }
+            expect(response).to have_http_status(:ok)
           end
         end
       end
 
-      context "access token is not present" do
-        it "renders forbidden" do
-          get :index
-          expect(response).to have_http_status(:forbidden)
+      context "invalid access token" do
+        context "token is expired" do
+          before do
+            @access_token = JsonWebToken.encode({ user_id: user.id }, 30.seconds.ago)
+          end
+
+          it "renders forbidden" do
+            get :index, params: { access_token: @access_token }
+            expect(response).to have_http_status(:forbidden)
+          end
+        end
+
+        context "token is malformed" do
+          before do
+            @access_token = "malformed token"
+          end
+
+          it "renders forbidden" do
+            get :index, params: { access_token: @access_token }
+            expect(response).to have_http_status(:forbidden)
+          end
         end
       end
     end
 
-    after do
-      GitHubClassroom.flipper[:download_repositories].disable
-    end
-  end
-
-  context "flipper is not enabled" do
-    it "renders forbidden" do
-      get :index
-      expect(response).to have_http_status(:forbidden)
+    context "access token is not present" do
+      it "renders forbidden" do
+        get :index
+        expect(response).to have_http_status(:forbidden)
+      end
     end
   end
 end

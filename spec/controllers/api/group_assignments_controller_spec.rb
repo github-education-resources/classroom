@@ -7,8 +7,6 @@ RSpec.describe API::GroupAssignmentsController, type: :controller do
   let(:user)                  { classroom_teacher }
 
   before do
-    GitHubClassroom.flipper[:download_repositories].enable
-
     @group_assignment = create(:group_assignment, organization: organization)
   end
 
@@ -56,9 +54,5 @@ RSpec.describe API::GroupAssignmentsController, type: :controller do
         expect(json["organizationGithubId"]).to eq(organization.github_id)
       end
     end
-  end
-
-  after do
-    GitHubClassroom.flipper[:download_repositories].disable
   end
 end

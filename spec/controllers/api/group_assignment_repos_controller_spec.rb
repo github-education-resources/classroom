@@ -8,10 +8,6 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
   let(:group_assignment)  { create(:group_assignment, organization: organization, title: "Learn Clojure") }
   let(:group)             { Group.create(title: "The Group", grouping: group_assignment.grouping) }
 
-  before do
-    GitHubClassroom.flipper[:download_repositories].enable
-  end
-
   describe "GET #index", :vcr do
     before do
       @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
@@ -45,9 +41,5 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
         expect(json.first["displayName"]).to eq("")
       end
     end
-  end
-
-  after do
-    GitHubClassroom.flipper[:download_repositories].disable
   end
 end
