@@ -5,10 +5,9 @@ class OauthController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :access_token
 
   def authorize
-    not_found if params[:redirect_uri].blank?
     code = current_user.api_token
     code_param = { code: code }.to_param
-    redirect_to "#{params[:redirect_uri]}?#{code_param}"
+    redirect_to "x-github-classroom://?#{code_param}"
   end
 
   def access_token

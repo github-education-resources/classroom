@@ -3,43 +3,34 @@
 require "rails_helper"
 
 RSpec.describe OauthController, type: :controller do
-  let(:user)          { classroom_teacher }
+  let(:user) { classroom_teacher }
 
   before do
     sign_in_as(user)
   end
 
   describe "GET #authorize", :vcr do
-    context "redirect url param is not present" do
-      it "renders 404" do
-        get :authorize
-        expect(response).to have_http_status(:not_found)
-      end
+    before(:each) do
+      Timecop.freeze
+      get :authorize
     end
 
-    context "redirect url param is present" do
-      before(:each) do
-        Timecop.freeze
-        get :authorize, params: { redirect_uri: "http://redirect-url-test.com" }
-      end
+    it "redirects to redirect url" do
+      expect(redirect_url_without_params).to eql("x-github-classroom://")
+    end
 
-      it "redirects to redirect url" do
-        expect(redirect_url_without_params).to eql("http://redirect-url-test.com")
-      end
+    it "generates a code that is invalid in 5 minutes" do
+      data = JsonWebToken.decode(redirect_params["code"])
+      expect(data[:exp]).to eql(5.minutes.from_now.to_i)
+    end
 
-      it "generates a code that is invalid in 5 minutes" do
-        data = JsonWebToken.decode(redirect_params["code"])
-        expect(data[:exp]).to eql(5.minutes.from_now.to_i)
-      end
+    it "generates a code that has correct user id" do
+      data = JsonWebToken.decode(redirect_params["code"])
+      expect(data[:user_id]).to eql(user.id)
+    end
 
-      it "generates a code that has correct user id" do
-        data = JsonWebToken.decode(redirect_params["code"])
-        expect(data[:user_id]).to eql(user.id)
-      end
-
-      after(:each) do
-        Timecop.return
-      end
+    after(:each) do
+      Timecop.return
     end
   end
 

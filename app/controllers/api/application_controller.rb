@@ -17,9 +17,7 @@ class API::ApplicationController < ApplicationController
   def verify_api_token
     if params[:access_token].present?
       data = JsonWebToken.decode(params[:access_token])
-      unless data.nil? || data[:user_id].nil?
-        return session[:user_id] = data[:user_id]
-      end
+      return session[:user_id] = data[:user_id] unless data.nil? || data[:user_id].nil?
     end
     render_forbidden
   end
