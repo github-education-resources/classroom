@@ -20,7 +20,7 @@ class JsonWebToken
       @jwt_secret ||= Rails.application.secrets.jwt_secret
       return @jwt_secret if @jwt_secret.present?
 
-      raise "JWT_SECRET is not set, please check you .env file"
+      raise "JWT_SECRET is not set, please check your .env file"
     end
   end
 end
