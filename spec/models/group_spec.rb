@@ -7,8 +7,6 @@ RSpec.describe Group, type: :model do
   let(:grouping)     { create(:grouping, organization: organization) }
   let(:user)         { classroom_student }
 
-
-
   describe "assocations", :vcr do
     before(:each) do
       @group = Group.create(grouping: grouping, title: "Toon Town")
@@ -44,8 +42,6 @@ RSpec.describe Group, type: :model do
     end
 
     describe "assocation callbacks" do
-
-
       before(:each) do
         @repo_access = RepoAccess.create(user: user, organization: organization)
         @group.repo_accesses << @repo_access
