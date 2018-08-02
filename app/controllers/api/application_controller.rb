@@ -4,7 +4,6 @@
 class API::ApplicationController < ApplicationController
   include Rails::Pagination
 
-  prepend_before_action :ensure_download_repositories_flipper_is_enabled
   prepend_before_action :verify_api_token
 
   # Skip CSRF checks for API since it's token based

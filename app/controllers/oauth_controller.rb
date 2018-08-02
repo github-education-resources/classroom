@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 class OauthController < ApplicationController
-  prepend_before_action :ensure_download_repositories_flipper_is_enabled, except: :access_token
-  prepend_before_action :ensure_download_repositories_flipper_is_enabled_globally, only: :access_token
-
   skip_before_action :authenticate_user!, only: :access_token
   skip_before_action :verify_authenticity_token, only: :access_token
 
