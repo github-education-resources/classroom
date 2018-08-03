@@ -54,6 +54,16 @@ FactoryBot.define do
     slug  { title.parameterize  }
   end
 
+  # Creates a GitHub team on `create` so only create a group inside a `:vcr` scope
+  # The group factory requires a `grouping` parameter
+  factory :group do
+    title    { "#{Faker::Team.name} Team" }
+  end
+
+  factory :group_invite_status do
+    group_assignment_invitation
+  end
+
   factory :organization do
     title      { "#{Faker::Company.name} Class" }
     github_id  { rand(1..1_000_000) }
