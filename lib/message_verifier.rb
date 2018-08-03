@@ -4,13 +4,13 @@ class MessageVerifier
   class << self
     def encode(payload, exp = 5.minutes.from_now)
       payload[:exp] ||= exp
-      token = verifier.generate payload
+      verifier.generate payload
     end
 
     def decode(token)
       body = verifier.verify(token)
 
-      raise ActiveSupport::MessageVerifier::InvalidSignature if Time.now > body[:exp]
+      raise ActiveSupport::MessageVerifier::InvalidSignature if Time.current > body[:exp]
       body
     rescue ActiveSupport::MessageVerifier::InvalidSignature
       nil
@@ -19,7 +19,7 @@ class MessageVerifier
     private
 
     def verifier
-      @verifier = ActiveSupport::MessageVerifier.new(api_secret, digest: 'SHA256')
+      @verifier = ActiveSupport::MessageVerifier.new(api_secret, digest: "SHA256")
     end
 
     def api_secret
