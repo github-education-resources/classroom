@@ -8,7 +8,7 @@ class GroupInviteStatus < ApplicationRecord
   belongs_to :group_assignment_invitation
 
   validates :group_id, uniqueness: {
-    scope: :agroup_assignment_invitation_id,
+    scope: :group_assignment_invitation_id,
     message: "should only have 1 invitation per group"
   }
 
