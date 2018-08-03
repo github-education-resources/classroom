@@ -81,7 +81,7 @@ RSpec.describe User, type: :model do
       token = subject.api_token
 
       data = MessageVerifier.decode(token)
-      expect(data["user_id"]).to eql(subject.id)
+      expect(data[:user_id]).to eql(subject.id)
     end
   end
 
