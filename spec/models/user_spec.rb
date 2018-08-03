@@ -73,14 +73,14 @@ RSpec.describe User, type: :model do
     it "generates a valid api token" do
       token = subject.api_token
 
-      data = JsonWebToken.decode(token)
+      data = MessageVerifier.decode(token)
       expect(data).to_not be_nil
     end
 
     it "generates an api token with correct user id" do
       token = subject.api_token
 
-      data = JsonWebToken.decode(token)
+      data = MessageVerifier.decode(token)
       expect(data["user_id"]).to eql(subject.id)
     end
   end

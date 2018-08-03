@@ -16,7 +16,7 @@ RSpec.describe API::ApplicationController, type: :controller do
       context "valid access token" do
         context "user id is missing" do
           before do
-            @access_token = JsonWebToken.encode(random_value: 1)
+            @access_token = MessageVerifier.encode(random_value: 1)
           end
 
           it "renders forbidden" do
@@ -27,7 +27,7 @@ RSpec.describe API::ApplicationController, type: :controller do
 
         context "user id is present" do
           before do
-            @access_token = JsonWebToken.encode(user_id: user.id)
+            @access_token = MessageVerifier.encode(user_id: user.id)
           end
 
           it "renders ok" do
@@ -40,7 +40,7 @@ RSpec.describe API::ApplicationController, type: :controller do
       context "invalid access token" do
         context "token is expired" do
           before do
-            @access_token = JsonWebToken.encode({ user_id: user.id }, 30.seconds.ago)
+            @access_token = MessageVerifier.encode({ user_id: user.id }, 30.seconds.ago)
           end
 
           it "renders forbidden" do

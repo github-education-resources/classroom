@@ -24,11 +24,11 @@ class OauthController < ApplicationController
   private
 
   def api_token(user_id)
-    JsonWebToken.encode({ user_id: user_id }, 24.hours.from_now)
+    MessageVerifier.encode({ user_id: user_id }, 24.hours.from_now)
   end
 
   def parse_user_id(code)
-    data = JsonWebToken.decode(code)
+    data = MessageVerifier.decode(code)
     return data[:user_id] unless data.nil?
     nil
   end

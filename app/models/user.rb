@@ -59,7 +59,7 @@ class User < ApplicationRecord
   end
 
   def api_token(exp = 5.minutes.from_now)
-    JsonWebToken.encode({ user_id: id }, exp)
+    MessageVerifier.encode(user_id: id, exp: exp)
   end
 
   private

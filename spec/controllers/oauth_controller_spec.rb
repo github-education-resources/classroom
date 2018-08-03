@@ -15,17 +15,17 @@ RSpec.describe OauthController, type: :controller do
       get :authorize
     end
 
-    it "redirects to redirect url" do
+    it "redirects to x-github-classroom" do
       expect(redirect_url_without_params).to eql("x-github-classroom://")
     end
 
     it "generates a code that is invalid in 5 minutes" do
-      data = JsonWebToken.decode(redirect_params["code"])
-      expect(data[:exp]).to eql(5.minutes.from_now.to_i)
+      data = MessageVerifier.decode(redirect_params["code"])
+      expect(data[:exp]).to eql(5.minutes.from_now)
     end
 
     it "generates a code that has correct user id" do
-      data = JsonWebToken.decode(redirect_params["code"])
+      data = MessageVerifier.decode(redirect_params["code"])
       expect(data[:user_id]).to eql(user.id)
     end
 
@@ -49,8 +49,8 @@ RSpec.describe OauthController, type: :controller do
         it "returns access token that expires in 24 hours" do
           get :access_token, params: { code: @code }
           access_token = json["access_token"]
-          data = JsonWebToken.decode(access_token)
-          expect(data[:exp]).to eql(24.hours.from_now.to_i)
+          data = MessageVerifier.decode(access_token)
+          expect(data[:exp]).to eql(24.hours.from_now)
         end
 
         after do
