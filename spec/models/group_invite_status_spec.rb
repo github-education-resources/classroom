@@ -6,12 +6,12 @@ RSpec.describe GroupInviteStatus, type: :model do
   subject { GroupInviteStatus }
   let(:organization) { classroom_org }
   let(:grouping)     { create(:grouping, organization: organization) }
-  let(:group)        { create(:group, grouping: grouping) }
+  let(:group)        { Group.create(grouping: grouping, title: "Octokittens Team") }
   let(:invitation)   { create(:group_assignment_invitation) }
 
   describe "valid", :vcr do
     let(:invite_status) do
-      create(:group_invite_status, group: group, group_assignment_invitation: invitation)
+      subject.create(group: group, group_assignment_invitation: invitation)
     end
 
     it "has a default status of unaccepted" do
@@ -75,7 +75,7 @@ RSpec.describe GroupInviteStatus, type: :model do
     end
 
     it "when the set of group_id and group_assignment_invitation_id is not unique" do
-      create(:group_invite_status, group_id: group.id, group_assignment_invitation_id: invitation.id)
+      subject.create(group_id: group.id, group_assignment_invitation_id: invitation.id)
       invite_status = subject.new(group_id: group.id, group_assignment_invitation_id: invitation.id)
       expect { invite_status.save! }
         .to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Group should only have 1 invitation per group")
