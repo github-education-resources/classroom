@@ -1,6 +1,7 @@
 (function() {
   var POLL_INTERVAL = 1000;
-  var display_progress,
+  var create_flash_container,
+    display_progress,
     display_text,
     flash_error,
     flash_progress,
@@ -170,22 +171,34 @@
 
   flash_progress = function(progress) {
     if (progress.error) {
+      create_flash_container();
       flash_error(progress.error);
     } else if (progress.text) {
+      create_flash_container();
       flash_text(progress.text);
+      if (progress.repo_url) {
+        var url_text = "Your assignment repository will be ready at: ";
+        url_text += "<a href=" + progress.repo_url + ">" + progress.repo_url + "</a>"
+        flash_text(url_text);
+      }
     } else {
       $("#flash-messages").empty();
     }
   };
 
-  flash_error = function(error) {
+  create_flash_container = function() {
     $("#flash-messages")
-      .html("<div class='flash-application container-lg'><div class='flash flash-error'>" + error + "</div></div>");
+      .html("<div class='flash-application container-lg'></div>");
+  };
+
+  flash_error = function(error) {
+    $("#flash-messages").find(".flash-application")
+      .append("<div class='flash flash-error'>" + error + "</div>");
   };
 
   flash_text = function(text) {
-    $("#flash-messages")
-      .html("<div class='flash-application container-lg'><div class='flash flash-success'>" + text + "</div></div>");
+    $("#flash-messages").find(".flash-application")
+      .append("<div class='flash flash-success'>" + text + "</div>");
   };
 
   success_path = function () {
