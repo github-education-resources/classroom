@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class MessageVerifier
+  class TokenExpired < StandardError; end
   class << self
     def encode(payload, exp = 5.minutes.from_now)
       payload[:exp] ||= exp
@@ -10,9 +11,10 @@ class MessageVerifier
     def decode(token)
       body = verifier.verify(token)
 
-      raise ActiveSupport::MessageVerifier::InvalidSignature if Time.current > body[:exp]
+      raise MessageVerifier::TokenExpired if Time.current > body[:exp]
       body
-    rescue ActiveSupport::MessageVerifier::InvalidSignature
+    rescue ActiveSupport::MessageVerifier::InvalidSignature,
+           MessageVerifier::TokenExpired
       nil
     end
 
