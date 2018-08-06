@@ -177,9 +177,9 @@
       create_flash_container();
       flash_text(progress.text);
       if (progress.repo_url) {
-        var url_text = "Your assignment repository will be ready at: ";
-        url_text += "<a href=" + progress.repo_url + ">" + progress.repo_url + "</a>"
-        flash_text(url_text);
+        var url_text = "<p>Your assignment repository will be ready at: ";
+        url_text += "<a href=" + progress.repo_url + ">" + progress.repo_url + "</a></p>";
+        $("#flash-messages").find(".flash").append(url_text);
       }
     } else {
       $("#flash-messages").empty();
@@ -193,12 +193,12 @@
 
   flash_error = function(error) {
     $("#flash-messages").find(".flash-application")
-      .append("<div class='flash flash-error'>" + error + "</div>");
+      .append("<div class='flash flash-error'><p>" + error + "</p></div>");
   };
 
   flash_text = function(text) {
     $("#flash-messages").find(".flash-application")
-      .append("<div class='flash flash-success'>" + text + "</div>");
+      .append("<div class='flash flash-success'><p>" + text + "</p></div>");
   };
 
   success_path = function () {
