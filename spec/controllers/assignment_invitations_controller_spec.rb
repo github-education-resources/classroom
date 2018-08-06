@@ -12,7 +12,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
   let(:assignment_repo) { create(:assignment_repo, user: user, assignment: invitation.assignment) }
 
   let(:unconfigured_repo) { stub_repository("template") }
-  let(:configured_repo) { stub_repository("configured-repo") }
+  let(:configured_repo)   { stub_repository("configured-repo") }
 
   describe "route_based_on_status", :vcr do
     before do
