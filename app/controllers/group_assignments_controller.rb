@@ -66,8 +66,10 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def desktop
-    code = current_user.api_token
-    redirect_to CGI.escape("x-github-classroom://?assignment_url=#{organization_group_assignment_url}&code=#{code}")
+    code_param = CGI.escape(current_user.api_token)
+    url_param = CGI.escape(organization_group_assignment_url)
+
+    redirect_to "x-github-classroom://?assignment_url=#{url_param}&code=#{code_param}"
   end
 
   private

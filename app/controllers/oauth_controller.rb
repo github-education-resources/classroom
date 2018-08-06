@@ -5,9 +5,9 @@ class OauthController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :access_token
 
   def authorize
-    code = current_user.api_token
-    code_param = { code: code }.to_param
-    redirect_to CGI.escape("x-github-classroom://?#{code_param}")
+    code_param = CGI.escape(current_user.api_token)
+
+    redirect_to "x-github-classroom://?code=#{code_param}"
   end
 
   def access_token
