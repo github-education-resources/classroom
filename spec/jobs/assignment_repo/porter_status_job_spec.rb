@@ -21,14 +21,8 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
   let(:invitation)    { create(:assignment_invitation, assignment: assignment) }
   let(:invite_status) { create(:invite_status, assignment_invitation: invitation, user: user) }
 
-  before do
-    Octokit.reset!
-    @client = oauth_client
-  end
-
   before(:each) do
-    github_organization = GitHubOrganization.new(@client, organization.github_id)
-    @repo = github_organization.create_repository(assignment.title, private: true)
+    @repo = organization.github_organization.create_repository(assignment.title, private: true)
     invite_status.importing_starter_code!
   end
 
