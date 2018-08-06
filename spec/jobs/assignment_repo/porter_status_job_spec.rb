@@ -29,7 +29,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
   before(:each) do
     github_organization = GitHubOrganization.new(@client, organization.github_id)
     @repo = github_organization.create_repository(assignment.title, private: true)
-    invite_status.creating_repo!
+    invite_status.importing_starter_code!
   end
 
   after do
