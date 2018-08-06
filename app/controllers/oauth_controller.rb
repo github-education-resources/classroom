@@ -7,7 +7,7 @@ class OauthController < ApplicationController
   def authorize
     code = current_user.api_token
     code_param = { code: code }.to_param
-    redirect_to URI.encode("x-github-classroom://?#{code_param}")
+    redirect_to CGI.escape("x-github-classroom://?#{code_param}")
   end
 
   def access_token
