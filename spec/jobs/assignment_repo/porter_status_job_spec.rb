@@ -90,12 +90,15 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             text: AssignmentRepo::Creator::IMPORT_ONGOING,
             status: "importing_starter_code",
             percent: 40,
-            status_text: "Importing..."
+            status_text: "Importing...",
+            repo_url: "https://github.com/classroom-test-org-edon/small-test-repo"
           )
           .with(
             text: AssignmentRepo::Creator::REPOSITORY_CREATION_COMPLETE,
             status: "completed",
-            percent: 100
+            percent: 100,
+            status_text: "Done",
+            repo_url: "https://github.com/classroom-test-org-edon/small-test-repo"
           )
       end
 
@@ -149,7 +152,8 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             text: AssignmentRepo::Creator::IMPORT_ONGOING,
             status: "importing_starter_code",
             percent: 40,
-            status_text: "Importing..."
+            status_text: "Importing...",
+            repo_url: "https://github.com/classroom-test-org-edon/small-test-repo"
           )
           .with(
             error: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
@@ -254,7 +258,8 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             text: AssignmentRepo::Creator::IMPORT_ONGOING,
             status: "importing_starter_code",
             percent: 40,
-            status_text: "Importing..."
+            status_text: "Importing...",
+            repo_url: "https://github.com/classroom-test-org-edon/small-test-repo"
           )
           .with(
             error: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
