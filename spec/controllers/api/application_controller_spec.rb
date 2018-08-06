@@ -9,70 +9,64 @@ RSpec.describe API::ApplicationController, type: :controller do
     end
   end
 
-  context "flipper is enabled for the user" do
-    before do
-      GitHubClassroom.flipper[:download_repositories].enable
-    end
+  let(:user) { classroom_teacher }
 
-    describe "API Application Controller Authentication Tests", :vcr do
-      context "user has adequate scopes" do
-        subject { classroom_teacher }
-
-        context "user is logged in" do
-          before(:each) do
-            sign_in_as(subject)
+  describe "token authentication tests" do
+    context "access token is present", :vcr do
+      context "valid access token" do
+        context "user id is missing" do
+          before do
+            @access_token = MessageVerifier.encode(random_value: 1)
           end
 
-          context "access token is valid" do
-            it "renders action" do
-              get :index
-              expect(response).to have_http_status(:ok)
-            end
-          end
-
-          context "access token is invalid" do
-            before do
-              User.any_instance.stub(:authorized_access_token?).and_return(false)
-            end
-
-            it "returns forbidden" do
-              get :index
-              expect(response).to have_http_status(:forbidden)
-            end
+          it "renders forbidden" do
+            get :index, params: { access_token: @access_token }
+            expect(response).to have_http_status(:forbidden)
           end
         end
 
-        context "user is not logged in" do
-          it "returns 404" do
-            get :index
-            expect(response.status).to eq(404)
+        context "user id is present" do
+          before do
+            @access_token = MessageVerifier.encode(user_id: user.id)
+          end
+
+          it "renders ok" do
+            get :index, params: { access_token: @access_token }
+            expect(response).to have_http_status(:ok)
           end
         end
       end
 
-      context "user does not have adequate scopes" do
-        subject { classroom_student }
+      context "invalid access token" do
+        context "token is expired" do
+          before do
+            @access_token = MessageVerifier.encode({ user_id: user.id }, 30.seconds.ago)
+          end
 
-        before do
-          sign_in_as(classroom_student)
+          it "renders forbidden" do
+            get :index, params: { access_token: @access_token }
+            expect(response).to have_http_status(:forbidden)
+          end
         end
 
-        it "returns forbidden" do
-          get :index
-          expect(response).to have_http_status(:forbidden)
+        context "token is malformed" do
+          before do
+            @access_token = "malformed token"
+          end
+
+          it "renders forbidden" do
+            get :index, params: { access_token: @access_token }
+            expect(response).to have_http_status(:forbidden)
+          end
         end
       end
     end
 
-    after do
-      GitHubClassroom.flipper[:download_repositories].disable
-    end
-  end
-
-  context "flipper is not enabled for the user" do
-    it "returns a 404" do
-      get :index
-      expect(response.status).to eq(404)
+    context "access token is not present" do
+      it "renders forbidden" do
+        get :index
+        expect(response).to have_http_status(:forbidden)
+      end
     end
   end
 end

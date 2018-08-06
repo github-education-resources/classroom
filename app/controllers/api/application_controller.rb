@@ -4,11 +4,21 @@
 class API::ApplicationController < ApplicationController
   include Rails::Pagination
 
-  prepend_before_action :ensure_download_repositories_flipper_is_enabled
-  before_action :add_security_headers
+  prepend_before_action :verify_api_token
+
+  # Skip CSRF checks for API since it's token based
+  skip_before_action :verify_authenticity_token
 
   def authenticate_user!
     return become_active if logged_in? && adequate_scopes? && current_user.authorized_access_token?
+    render_forbidden
+  end
+
+  def verify_api_token
+    if params[:access_token].present?
+      data = MessageVerifier.decode(params[:access_token])
+      return session[:user_id] = data[:user_id] unless data.nil? || data[:user_id].nil?
+    end
     render_forbidden
   end
 
@@ -18,13 +28,6 @@ class API::ApplicationController < ApplicationController
     render json: {
       message: "Unauthorized"
     }, status: :forbidden
-  end
-
-  def add_security_headers
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "GET"
-    response.headers["Access-Control-Allow-Headers"] = "*"
-    response.headers["Access-Control-Expose-Headers"] = "Total, Link, Per-Page"
   end
 end
 # rubocop:enable ClassAndModuleChildren

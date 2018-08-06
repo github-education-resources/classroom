@@ -64,6 +64,11 @@ class AssignmentsController < ApplicationController
     end
   end
 
+  def desktop
+    code = current_user.api_token
+    redirect_to "x-github-classroom://?assignment_url=#{organization_assignment_url}&code=#{code}"
+  end
+
   private
 
   def new_assignment_params

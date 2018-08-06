@@ -7,16 +7,15 @@ RSpec.describe API::AssignmentReposController, type: :controller do
   let(:user)              { classroom_teacher }
   let(:assignment)        { create(:assignment, organization: organization, title: "Learn Clojure") }
 
-  before do
-    GitHubClassroom.flipper[:download_repositories].enable
-    sign_in_as(user)
-  end
-
   describe "GET #index", :vcr do
     before do
       @assignment_repo = create(:assignment_repo, assignment: assignment, github_repo_id: 42, user: user)
 
-      get :index, params: { organization_id: organization.slug, assignment_id: assignment.slug }
+      get :index, params: {
+        organization_id: organization.slug,
+        assignment_id: assignment.slug,
+        access_token: user.api_token
+      }
     end
 
     after do
@@ -44,9 +43,5 @@ RSpec.describe API::AssignmentReposController, type: :controller do
         expect(json.first["displayName"]).to eq(user.github_user.name)
       end
     end
-  end
-
-  after do
-    GitHubClassroom.flipper[:download_repositories].disable
   end
 end

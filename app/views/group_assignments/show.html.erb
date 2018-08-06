@@ -26,10 +26,10 @@
           </div>
         </div>
       </div>
-      
+
       <% if download_repositories_enabled? %>
         <div class="text-right mt-3 pr-2 settings">
-          <%= link_to "x-github-classroom://?assignment_url=#{organization_group_assignment_url}", class: 'btn right' do %>
+          <%= link_to desktop_organization_group_assignment_path, class: 'btn right' do %>
             Download repositories
           <% end %>
         </div>

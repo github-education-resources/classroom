@@ -65,6 +65,11 @@ class GroupAssignmentsController < ApplicationController
     end
   end
 
+  def desktop
+    code = current_user.api_token
+    redirect_to "x-github-classroom://?assignment_url=#{organization_group_assignment_url}&code=#{code}"
+  end
+
   private
 
   def authorize_grouping_access
