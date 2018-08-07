@@ -59,7 +59,8 @@ class AssignmentInvitationsController < ApplicationController
     end
     render json: {
       job_started: job_started,
-      status: current_invitation_status.status
+      status: current_invitation_status.status,
+      repo_url: current_submission&.github_repository&.html_url
     }
   end
   # rubocop:enable MethodLength
