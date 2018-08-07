@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 module Orgs
   class RostersController < Orgs::Controller
     before_action :ensure_student_identifier_flipper_is_enabled
@@ -10,6 +11,7 @@ module Orgs
 
     helper_method :current_roster, :unlinked_users
 
+    # rubocop:disable AbcSize
     def show
       @roster_entries = current_roster.roster_entries
                                       .includes(:user).order(:identifier)
@@ -19,6 +21,7 @@ module Orgs
 
       download_roster if params.dig("format")
     end
+    # rubocop:enable AbcSize
 
     def new
       @roster = Roster.new
@@ -217,3 +220,4 @@ module Orgs
     end
   end
 end
+# rubocop:enable Metrics/ClassLength

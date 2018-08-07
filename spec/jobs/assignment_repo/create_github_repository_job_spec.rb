@@ -25,49 +25,48 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
   before do
     @invitation = AssignmentInvitation.create(assignment: assignment)
-    @invitation.waiting!
+    @teacher_invite_status = @invitation.status(teacher)
+    @student_invite_status = @invitation.status(student)
+  end
+
+  before(:each) do
+    @teacher_invite_status.waiting!
+    @student_invite_status.waiting!
   end
 
   after do
     clear_enqueued_jobs
     clear_performed_jobs
+    AssignmentRepo.destroy_all
   end
 
   describe "invalid invitation statuses", :vcr do
-    after do
-      AssignmentInvitation.create(assignment: assignment).accepted!
-    end
-
     it "returns early when invitation status is unaccepted" do
-      @invitation.unaccepted!
-      expect(@invitation).not_to receive(:creating_repo!)
+      @teacher_invite_status.unaccepted!
+      expect(@teacher_invite_status).not_to receive(:creating_repo!)
       subject.perform_now(assignment, teacher)
     end
 
     it "returns early when invitation status is creating_repo" do
-      @invitation.creating_repo!
-      expect(@invitation).not_to receive(:creating_repo!)
+      @teacher_invite_status.creating_repo!
+      expect(@teacher_invite_status).not_to receive(:creating_repo!)
       subject.perform_now(assignment, teacher)
     end
 
     it "returns early when invitation status is importing_starter_code" do
-      @invitation.importing_starter_code!
-      expect(@invitation).not_to receive(:creating_repo!)
+      @teacher_invite_status.importing_starter_code!
+      expect(@teacher_invite_status).not_to receive(:creating_repo!)
       subject.perform_now(assignment, teacher)
     end
 
     it "returns early when invitation status is completed" do
-      @invitation.completed!
-      expect(@invitation).not_to receive(:creating_repo!)
+      @teacher_invite_status.completed!
+      expect(@teacher_invite_status).not_to receive(:creating_repo!)
       subject.perform_now(assignment, teacher)
     end
   end
 
   describe "successful creation", :vcr do
-    after(:each) do
-      AssignmentRepo.destroy_all
-    end
-
     it "uses the create_repository queue" do
       subject.perform_later
       expect(subject).to have_been_enqueued.on_queue("create_repository")
@@ -145,24 +144,11 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
   end
 
   describe "failure", :vcr do
-    it "fails to create repo and retries" do
-      stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
-        .to_return(body: "{}", status: 401)
-
-      perform_enqueued_jobs do
-        expect_any_instance_of(AssignmentRepo::CreateGitHubRepositoryJob)
-          .to receive(:retry_job)
-          .with(wait: 3, queue: :create_repository, priority: nil)
-
-        subject.perform_later(assignment, student)
-      end
-    end
-
     it "tracks create fail stat" do
       stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
         .to_return(body: "{}", status: 401)
 
-      expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.fail")
+      expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.repo.fail")
       subject.perform_now(assignment, student)
     end
 
@@ -177,9 +163,27 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           status: "creating_repo"
         )
         .with(
-          text: AssignmentRepo::Creator::REPOSITORY_CREATION_FAILED,
+          error: AssignmentRepo::Creator::REPOSITORY_CREATION_FAILED,
           status: "errored_creating_repo"
         )
+    end
+
+    it "fails and automatically retries" do
+      import_regex = %r{#{github_url("/repositories/")}\d+/import$}
+      stub_request(:put, import_regex)
+        .to_return(body: "{}", status: 401)
+
+      subject.perform_now(assignment, teacher, retries: 1)
+      expect(subject).to have_been_enqueued.on_queue("create_repository")
+    end
+
+    it "fails and puts invite status in state to retry" do
+      import_regex = %r{#{github_url("/repositories/")}\d+/import$}
+      stub_request(:put, import_regex)
+        .to_return(body: "{}", status: 401)
+
+      subject.perform_now(assignment, teacher, retries: 1)
+      expect(@teacher_invite_status.reload.waiting?).to be_truthy
     end
 
     context "with successful repo creation" do
@@ -188,20 +192,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       after(:each) do
         regex = %r{#{github_url("/repositories")}/\d+$}
         expect(WebMock).to have_requested(:delete, regex)
-      end
-
-      it "fails to import starter code and retries" do
-        import_regex = %r{#{github_url("/repositories/")}\d+/import$}
-        stub_request(:put, import_regex)
-          .to_return(body: "{}", status: 401)
-
-        perform_enqueued_jobs do
-          expect_any_instance_of(AssignmentRepo::CreateGitHubRepositoryJob)
-            .to receive(:retry_job)
-            .with(wait: 3, queue: :create_repository, priority: nil)
-
-          subject.perform_later(assignment, student)
-        end
       end
 
       it "fails to import starter code and broadcasts" do
@@ -216,23 +206,31 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             status: "creating_repo"
           )
           .with(
-            text: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
+            error: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
             status: "errored_creating_repo"
           )
       end
 
-      it "fails to add the user to the repo and retries" do
-        repo_invitation_regex = %r{#{github_url("/repositories/")}\d+/collaborators/.+$}
-        stub_request(:put, repo_invitation_regex)
+      it "fails to import starter code and logs" do
+        import_regex = %r{#{github_url("/repositories/")}\d+/import$}
+        stub_request(:put, import_regex)
           .to_return(body: "{}", status: 401)
 
-        perform_enqueued_jobs do
-          expect_any_instance_of(AssignmentRepo::CreateGitHubRepositoryJob)
-            .to receive(:retry_job)
-            .with(wait: 3, queue: :create_repository, priority: nil)
+        expect(Rails.logger)
+          .to receive(:warn)
+          .with(AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
+        subject.perform_now(assignment, student)
+      end
 
-          subject.perform_later(assignment, student)
-        end
+      it "fails to import starter code and reports" do
+        import_regex = %r{#{github_url("/repositories/")}\d+/import$}
+        stub_request(:put, import_regex)
+          .to_return(body: "{}", status: 401)
+
+        expect(GitHubClassroom.statsd)
+          .to receive(:increment)
+          .with("v2_exercise_repo.create.importing_starter_code.fail")
+        subject.perform_now(assignment, student)
       end
 
       it "fails to add the user to the repo and broadcasts" do
@@ -247,21 +245,31 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             status: "creating_repo"
           )
           .with(
-            text: AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED,
+            error: AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED,
             status: "errored_creating_repo"
           )
       end
 
-      it "fails to save the AssignmentRepo and retries" do
-        allow_any_instance_of(AssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
+      it "fails to add the user to the repo and logs" do
+        repo_invitation_regex = %r{#{github_url("/repositories/")}\d+/collaborators/.+$}
+        stub_request(:put, repo_invitation_regex)
+          .to_return(body: "{}", status: 401)
 
-        perform_enqueued_jobs do
-          expect_any_instance_of(AssignmentRepo::CreateGitHubRepositoryJob)
-            .to receive(:retry_job)
-            .with(wait: 3, queue: :create_repository, priority: nil)
+        expect(Rails.logger)
+          .to receive(:warn)
+          .with(AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED)
+        subject.perform_now(assignment, student)
+      end
 
-          subject.perform_later(assignment, teacher)
-        end
+      it "fails to add the user to the repo and reports" do
+        repo_invitation_regex = %r{#{github_url("/repositories/")}\d+/collaborators/.+$}
+        stub_request(:put, repo_invitation_regex)
+          .to_return(body: "{}", status: 401)
+
+        expect(GitHubClassroom.statsd)
+          .to receive(:increment)
+          .with("v2_exercise_repo.create.adding_collaborator.fail")
+        subject.perform_now(assignment, student)
       end
 
       it "fails to save the AssignmentRepo and broadcasts" do
@@ -274,9 +282,28 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             status: "creating_repo"
           )
           .with(
-            text: AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE,
+            error: AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE,
             status: "errored_creating_repo"
           )
+      end
+
+      it "fails to save the AssignmentRepo and logs" do
+        allow_any_instance_of(AssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
+
+        expect(Rails.logger)
+          .to receive(:warn)
+          .with("Record invalid")
+        expect(Rails.logger)
+          .to receive(:warn)
+          .with(AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE)
+        subject.perform_now(assignment, student)
+      end
+
+      it "fails to save the AssignmentRepo and reports" do
+        allow_any_instance_of(AssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
+
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.fail")
+        subject.perform_now(assignment, student)
       end
     end
   end

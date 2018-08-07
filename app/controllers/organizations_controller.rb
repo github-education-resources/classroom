@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class OrganizationsController < Orgs::Controller
   before_action :ensure_team_management_flipper_is_enabled, only: [:show_groupings]
 
@@ -171,3 +172,4 @@ class OrganizationsController < Orgs::Controller
     end
   end
 end
+# rubocop:enable Metrics/ClassLength

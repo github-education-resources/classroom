@@ -27,6 +27,7 @@ class AssignmentsController < ApplicationController
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
   def show
     if @organization.roster
       @roster_entries = @organization.roster.roster_entries.page(params[:students_page]).order_for_view(@assignment)
@@ -37,6 +38,7 @@ class AssignmentsController < ApplicationController
       @assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   def edit; end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180711185234) do
+ActiveRecord::Schema.define(version: 20180723230724) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,7 +22,6 @@ ActiveRecord::Schema.define(version: 20180711185234) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.string "short_key"
-    t.integer "status"
     t.index ["assignment_id"], name: "index_assignment_invitations_on_assignment_id"
     t.index ["deleted_at"], name: "index_assignment_invitations_on_deleted_at"
     t.index ["key"], name: "index_assignment_invitations_on_key", unique: true
@@ -143,6 +142,16 @@ ActiveRecord::Schema.define(version: 20180711185234) do
     t.index ["repo_access_id"], name: "index_groups_repo_accesses_on_repo_access_id"
   end
 
+  create_table "invite_statuses", force: :cascade do |t|
+    t.integer "status", default: 0
+    t.bigint "assignment_invitation_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assignment_invitation_id"], name: "index_invite_statuses_on_assignment_invitation_id"
+    t.index ["user_id"], name: "index_invite_statuses_on_user_id"
+  end
+
   create_table "organizations", id: :serial, force: :cascade do |t|
     t.integer "github_id", null: false
     t.string "title", null: false
@@ -204,4 +213,6 @@ ActiveRecord::Schema.define(version: 20180711185234) do
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
+  add_foreign_key "invite_statuses", "assignment_invitations"
+  add_foreign_key "invite_statuses", "users"
 end

@@ -3,23 +3,14 @@
 class AssignmentInvitation < ApplicationRecord
   include ShortKey
 
-  enum status: %i[
-    unaccepted
-    accepted
-    waiting
-    creating_repo
-    importing_starter_code
-    completed
-    errored_creating_repo
-    errored_importing_starter_code
-  ]
-
   default_scope { where(deleted_at: nil) }
 
   update_index("stafftools#assignment_invitation") { self }
 
   belongs_to :assignment
 
+  has_many :invite_statuses, dependent: :destroy
+  has_many :users, through: :invite_statuses
   has_one :organization, through: :assignment
 
   validates :assignment, presence: true
@@ -30,8 +21,6 @@ class AssignmentInvitation < ApplicationRecord
   validates :short_key, uniqueness: true, allow_nil: true
 
   after_initialize :assign_key
-
-  after_initialize :set_defaults, unless: :persisted?
 
   delegate :title, to: :assignment
 
@@ -52,7 +41,7 @@ class AssignmentInvitation < ApplicationRecord
 
     return AssignmentRepo::Creator::Result.failed("Invitations for this assignment have been disabled.") unless enabled?
 
-    accepted!
+    status(invitee).accepted!
     if import_resiliency
       AssignmentRepo::Creator::Result.pending
     else
@@ -70,17 +59,14 @@ class AssignmentInvitation < ApplicationRecord
     assignment.invitations_enabled?
   end
 
-  def errored?
-    errored_creating_repo? || errored_importing_starter_code?
+  def status(user)
+    invite_statuses.find_by(user_id: user.id) ||
+      InviteStatus.create(user_id: user.id, assignment_invitation_id: id)
   end
 
   protected
 
   def assign_key
     self.key ||= SecureRandom.hex(16)
-  end
-
-  def set_defaults
-    self.status ||= :unaccepted
   end
 end
