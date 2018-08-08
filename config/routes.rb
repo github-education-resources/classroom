@@ -148,6 +148,7 @@ Rails.application.routes.draw do
           resources :group_assignment_repos, path: "group-assignment-repos", only: [:index]
         end
       end
+      get "/user", to: "users#authenticated_user"
     end
   end
 end
