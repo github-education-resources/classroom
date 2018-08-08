@@ -12,7 +12,6 @@ module Orgs
 
     helper_method :current_roster, :unlinked_users
 
-
     # rubocop:disable AbcSize
     def show
       @roster_entries = current_roster.roster_entries
