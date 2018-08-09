@@ -7,6 +7,5 @@ module API
     def authenticated_user
       render json: current_user
     end
-
   end
 end

@@ -142,10 +142,14 @@ Rails.application.routes.draw do
     scope :internal do
       resources :organizations, path: "classrooms", only: [:index] do
         resources :assignments, only: %i[index show] do
-          resources :assignment_repos, only: [:index]
+          resources :assignment_repos, only: [:index] do
+            get "/clone_url", to: "assignment_repos#clone_url"
+          end
         end
         resources :group_assignments, path: "group-assignments", only: %i[index show] do
-          resources :group_assignment_repos, path: "group-assignment-repos", only: [:index]
+          resources :group_assignment_repos, path: "group-assignment-repos", only: [:index] do
+            get "/clone_url", to: "group_assignment_repos#clone_url"
+          end
         end
       end
       get "/user", to: "users#authenticated_user"
