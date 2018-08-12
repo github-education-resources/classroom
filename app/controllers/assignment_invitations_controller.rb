@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable ClassLength
 class AssignmentInvitationsController < ApplicationController
   class InvalidStatusForRouteError < StandardError; end
 
@@ -21,9 +22,9 @@ class AssignmentInvitationsController < ApplicationController
         GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
       when :pending
         GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
-      when :error
+      when :failed
         GitHubClassroom.statsd.increment("v2_exercise_invitation.fail")
-        current_invitation_status.errored_creating_repo!
+        current_invitation_status.unaccepted!
         flash[:error] = result.error
       end
       route_based_on_status
@@ -163,3 +164,4 @@ class AssignmentInvitationsController < ApplicationController
     GitHubClassroom::Scopes::ASSIGNMENT_STUDENT
   end
 end
+# rubocop:enable ClassLength
