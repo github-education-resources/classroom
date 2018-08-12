@@ -276,6 +276,29 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       patch :accept, params: { id: invitation.key }
     end
 
+    context "redeem returns an fail" do
+      let(:result) { AssignmentRepo::Creator::Result.failed("Couldn't accept the invitation") }
+
+      before do
+        allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result)
+      end
+
+      it "records error stat" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_invitation.fail")
+        patch :accept, params: { id: invitation.key }
+      end
+
+      it "flash error" do
+        patch :accept, params: { id: invitation.key }
+        expect(flash[:error]).to be_present
+      end
+
+      it "redirects to #show" do
+        patch :accept, params: { id: invitation.key }
+        expect(response.redirect_url).to eq(assignment_invitation_url(invitation))
+      end
+    end
+
     context "with import resiliency enabled" do
       before do
         GitHubClassroom.flipper[:import_resiliency].enable
