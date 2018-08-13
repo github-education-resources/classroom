@@ -1,0 +1,20 @@
+div.desktop-bg {
+  background-color: #5fb27b;
+  color: rgba(255, 255, 255, 0.65098);
+}
+
+.desktop-logo {
+  height: 300px;
+}
+
+.desktop-subtitle {
+  color: rgba(255, 255, 255, 0.65098);
+}
+
+html.mac [data-for-os=windows] {
+  display: none !important;
+}
+
+html.windows [data-for-os=mac] {
+  display: none !important;
+}
