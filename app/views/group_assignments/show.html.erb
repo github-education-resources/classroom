@@ -28,6 +28,7 @@
       </div>
 
       <% if download_repositories_enabled? %>
+        <iframe id="hiddenIframe" src="about:blank" style="display:none"></iframe>
         <div class="text-right mt-3 pr-2 settings">
           <%= link_to desktop_organization_group_assignment_path, class: 'btn right' do %>
             Download repositories
