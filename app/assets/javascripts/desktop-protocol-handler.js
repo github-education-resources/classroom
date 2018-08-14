@@ -20,7 +20,7 @@
     var iFrame = $('#js-hidden-iframe')[0];
 
     timeIndex = setTimeout(function() {
-      window.location = "http://www.localhost:5000/desktop";
+      window.location = "http://www.classroom.github.com/desktop";
     }, 3000);
 
     // attempt to open deep link in iframe to avoid exposing link to user
