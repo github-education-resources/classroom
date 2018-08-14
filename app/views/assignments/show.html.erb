@@ -28,12 +28,9 @@
       </div>
 
       <% if download_repositories_enabled? %>
-        <iframe id="hiddenIframe" src="about:blank" style="display:none"></iframe>
-        <div class="text-right mt-3 pr-2 settings">
-          <%= link_to desktop_organization_assignment_path, class: 'btn right' do %>
-            Download repositories
-          <% end %>
-        </div>
+        <%= render partial: 'shared/open_on_desktop_modal', locals: {
+          desktop_url: desktop_organization_assignment_url
+        } %>
       <% end %>
 
       <div class="text-right mt-3 pl-2 settings">

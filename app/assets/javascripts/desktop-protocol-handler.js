@@ -1,27 +1,44 @@
 (function() {
 
-  var timeIndex, url
+  var timeIndex
 
   window.addEventListener("blur", function(e)
   {
-    console.log("Redirected to app")
-    clearTimeout(timeIndex)
-    // window.location = url
+    clearTimeout(timeIndex);
   });
 
-  $("a[href*='/desktop']").click(function(e)
+  $("#js-download-repos-btn").click(function(e)
+  {
+    displayDownloadMessage();
+  });
+
+  $("#js-desktop-open-btn").click(function(e)
   {
     e.preventDefault();
 
-    var iFrame = $('#hiddenIframe')[0];
     var el = $(this);
-    url = el.attr("href")
+    var iFrame = $('#js-hidden-iframe')[0];
 
     timeIndex = setTimeout(function() {
-      window.location = "https://desktop.github.com/";
-    }, 1000);
+      window.location = "http://www.localhost:5000/desktop";
+    }, 3000);
 
     // attempt to open deep link in iframe to avoid exposing link to user
-    iFrame.contentWindow.location.href = url
+    iFrame.contentWindow.location.href = el.attr("href");
+    displayLaunchingMessage();
   });
 }).call(this);
+
+function displayLaunchingMessage() {
+  var launchMessage = $('#js-modal-launching')[0];
+  var downloadReposMessage = $('#js-modal-download-repos')[0];
+  launchMessage.style.display = "block"
+  downloadReposMessage.style.display = "none"
+}
+
+function displayDownloadMessage() {
+  var launchMessage = $('#js-modal-launching')[0];
+  var downloadReposMessage = $('#js-modal-download-repos')[0];
+  launchMessage.style.display = "none"
+  downloadReposMessage.style.display = "block"
+}

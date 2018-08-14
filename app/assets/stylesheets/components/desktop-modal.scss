@@ -1,0 +1,27 @@
+.desktop-modal-btn {
+  border: 0;
+  border-top: $border-width $border-style $gray-200;
+  border-radius: 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 100%;
+}
+
+.desktop-modal-dropdown-menu {
+  width: 300px !important;
+  padding-bottom: 0px !important;
+}
+
+.loading:after {
+  content: "...";
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+  animation: ellipsis-dot 1s infinite 0.3s;
+}
+
+@keyframes ellipsis-dot {
+  from { width: 2px; }
+
+  to { width: 18px; }
+}
