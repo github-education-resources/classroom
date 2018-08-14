@@ -49,7 +49,7 @@ RSpec.describe API::AssignmentReposController, type: :controller do
         organization_id: organization.slug,
         assignment_id: assignment.slug,
         assignment_repo_id: @assignment_repo.id,
-        access_token: user.api_token,
+        access_token: user.api_token
       }
     end
 

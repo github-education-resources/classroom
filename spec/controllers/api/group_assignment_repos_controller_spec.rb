@@ -47,7 +47,7 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
         organization_id: organization.slug,
         group_assignment_id: group_assignment.slug,
         group_assignment_repo_id: @group_assignment_repo.id,
-        access_token: user.api_token,
+        access_token: user.api_token
       }
     end
 
