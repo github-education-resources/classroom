@@ -8,6 +8,9 @@
 
 scss_files: './app/assets/stylesheets'
 
+# primer-dropdown.css was ported from the Primer repo, already has sass linting
+exclude: './app/assets/stylesheets/components/primer-dropdown.scss'
+
 linters:
   BangFormat:
     enabled: true
