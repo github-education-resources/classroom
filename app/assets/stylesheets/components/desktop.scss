@@ -1,10 +1,14 @@
 div.desktop-bg {
   background-color: #5fb27b;
   color: rgba(255, 255, 255, 0.65098);
+
+  .btn-large {
+    border-radius: 6px;
+  }
 }
 
 .desktop-logo {
-  height: 300px;
+  height: 200px;
 }
 
 .desktop-subtitle {
@@ -17,4 +21,8 @@ html.mac [data-for-os=windows] {
 
 html.windows [data-for-os=mac] {
   display: none !important;
+}
+
+.desktop-screenshot {
+  max-width: 960px;
 }
