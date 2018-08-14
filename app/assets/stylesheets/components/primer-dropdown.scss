@@ -25,6 +25,7 @@
 
 // Requires a positioning class (e.g., `.dropdown-menu-w`) to determine which
 // way the menu should render from the element triggering it.
+// scss-lint:disable PropertyCount
 .dropdown-menu {
   position: absolute;
   top: 100%;
@@ -77,6 +78,7 @@
 // Dropdown items (can be links or buttons)
 .dropdown-item {
   display: block;
+  // scss-lint:disable ShortHand
   padding: $spacer-1 $spacer-2 $spacer-1 $spacer-3;
   overflow: hidden;
   color: $text-gray-dark;
@@ -115,6 +117,7 @@
 }
 
 .dropdown-header {
+  // scss-lint:disable ShortHand
   padding: $spacer-1 $spacer-2 $spacer-1 $spacer-3;
   font-size: $h6-size;
   color: $text-gray;

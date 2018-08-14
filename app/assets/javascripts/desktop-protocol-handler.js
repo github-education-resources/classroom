@@ -1,6 +1,6 @@
 (function() {
 
-  var timeIndex
+  var timeIndex;
 
   window.addEventListener("blur", function(e)
   {
@@ -32,13 +32,13 @@
 function displayLaunchingMessage() {
   var launchMessage = $('#js-modal-launching')[0];
   var downloadReposMessage = $('#js-modal-download-repos')[0];
-  launchMessage.style.display = "block"
-  downloadReposMessage.style.display = "none"
+  launchMessage.style.display = "block";
+  downloadReposMessage.style.display = "none";
 }
 
 function displayDownloadMessage() {
   var launchMessage = $('#js-modal-launching')[0];
   var downloadReposMessage = $('#js-modal-download-repos')[0];
-  launchMessage.style.display = "none"
-  downloadReposMessage.style.display = "block"
+  launchMessage.style.display = "none";
+  downloadReposMessage.style.display = "block";
 }
