@@ -8,9 +8,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
   subject { AssignmentRepo::PorterStatusJob }
 
   let(:organization) { classroom_org }
-  let(:student)      { classroom_student }
-  let(:teacher)      { classroom_teacher }
-
+  let(:user)         { classroom_student }
   let(:assignment) do
     options = {
       title: "small-test-repo",
@@ -20,15 +18,12 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
     }
     create(:assignment, options)
   end
-
-  before do
-    Octokit.reset!
-    @client = oauth_client
-  end
+  let(:invitation)    { create(:assignment_invitation, assignment: assignment) }
+  let(:invite_status) { create(:invite_status, assignment_invitation: invitation, user: user) }
 
   before(:each) do
-    github_organization = GitHubOrganization.new(@client, organization.github_id)
-    @repo = github_organization.create_repository(assignment.title, private: true)
+    @repo = organization.github_organization.create_repository(assignment.title, private: true)
+    invite_status.importing_starter_code!
   end
 
   after do
@@ -48,8 +43,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
 
     context "started importing starter code" do
       before do
-        AssignmentInvitation.create(assignment: assignment)
-        creator = AssignmentRepo::Creator.new(assignment: assignment, user: student)
+        creator = AssignmentRepo::Creator.new(assignment: assignment, user: user)
         creator.push_starter_code!(@repo.id)
         @assignment_repo = AssignmentRepo.new(assignment: assignment)
         @assignment_repo.github_repo_id = @repo.id
@@ -68,7 +62,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             body: request_stub("complete"),
             headers: { "Content-Type": "application/json" }
           ).times(2)
-        subject.perform_now(@assignment_repo, student)
+        subject.perform_now(@assignment_repo, user)
         expect(@assignment_repo.github_repository.imported?).to be_truthy
       end
 
@@ -84,18 +78,21 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             body: request_stub("complete"),
             headers: { "Content-Type": "application/json" }
           )
-        expect { subject.perform_now(@assignment_repo, student) }
-          .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
+        expect { subject.perform_now(@assignment_repo, user) }
+          .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: user.id))
           .with(
             text: AssignmentRepo::Creator::IMPORT_ONGOING,
             status: "importing_starter_code",
             percent: 40,
-            status_text: "Importing..."
+            status_text: "Importing...",
+            repo_url: "https://github.com/#{@repo.full_name}"
           )
           .with(
             text: AssignmentRepo::Creator::REPOSITORY_CREATION_COMPLETE,
             status: "completed",
-            percent: 100
+            percent: 100,
+            status_text: "Done",
+            repo_url: "https://github.com/#{@repo.full_name}"
           )
       end
 
@@ -112,7 +109,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             headers: { "Content-Type": "application/json" }
           ).times(2)
         expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.import.success")
-        subject.perform_now(@assignment_repo, student)
+        subject.perform_now(@assignment_repo, user)
       end
 
       it "fails when porter status is 'error'" do
@@ -127,7 +124,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             body: request_stub("error"),
             headers: { "Content-Type": "application/json" }
           ).times(2)
-        subject.perform_now(@assignment_repo, student)
+        subject.perform_now(@assignment_repo, user)
         expect(@assignment_repo.github_repository.imported?).to be_falsy
       end
 
@@ -143,13 +140,14 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             body: request_stub("error"),
             headers: { "Content-Type": "application/json" }
           )
-        expect { subject.perform_now(@assignment_repo, student) }
-          .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
+        expect { subject.perform_now(@assignment_repo, user) }
+          .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: user.id))
           .with(
             text: AssignmentRepo::Creator::IMPORT_ONGOING,
             status: "importing_starter_code",
             percent: 40,
-            status_text: "Importing..."
+            status_text: "Importing...",
+            repo_url: "https://github.com/#{@repo.full_name}"
           )
           .with(
             error: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
@@ -170,7 +168,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             headers: { "Content-Type": "application/json" }
           ).times(2)
         expect(@assignment_repo).to receive(:destroy)
-        subject.perform_now(@assignment_repo, student)
+        subject.perform_now(@assignment_repo, user)
       end
 
       it "makes DELETE request to GitHub repository associated with assignment_repo when porter status is 'error" do
@@ -185,7 +183,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             body: request_stub("error"),
             headers: { "Content-Type": "application/json" }
           ).times(2)
-        subject.perform_now(@assignment_repo, student)
+        subject.perform_now(@assignment_repo, user)
         regex = %r{#{github_url("/repositories")}/\d+$}
         expect(WebMock).to have_requested(:delete, regex)
       end
@@ -205,7 +203,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
         expect(Rails.logger)
           .to receive(:warn)
           .with(AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
-        subject.perform_now(@assignment_repo, student)
+        subject.perform_now(@assignment_repo, user)
       end
 
       it "reports failure stat when porter status is 'error'" do
@@ -221,7 +219,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             headers: { "Content-Type": "application/json" }
           )
         expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.import.fail")
-        subject.perform_now(@assignment_repo, student)
+        subject.perform_now(@assignment_repo, user)
       end
 
       it "fails when porter API errors" do
@@ -234,7 +232,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
           .to_return(
             status: 500
           ).times(2)
-        subject.perform_now(@assignment_repo, student)
+        subject.perform_now(@assignment_repo, user)
         expect { @assignment_repo.github_repository.import_progress }.to raise_error(GitHub::Error)
       end
 
@@ -248,13 +246,14 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
           .to_return(
             status: 500
           )
-        expect { subject.perform_now(@assignment_repo, student) }
-          .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
+        expect { subject.perform_now(@assignment_repo, user) }
+          .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: user.id))
           .with(
             text: AssignmentRepo::Creator::IMPORT_ONGOING,
             status: "importing_starter_code",
             percent: 40,
-            status_text: "Importing..."
+            status_text: "Importing...",
+            repo_url: "https://github.com/#{@repo.full_name}"
           )
           .with(
             error: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
@@ -273,7 +272,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             status: 500
           )
         expect(@assignment_repo).to receive(:destroy)
-        subject.perform_now(@assignment_repo, student)
+        subject.perform_now(@assignment_repo, user)
       end
 
       it "makes DELETE request to GitHub repository associated with assignment_repo when porter API errors" do
@@ -286,7 +285,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
           .to_return(
             status: 500
           )
-        subject.perform_now(@assignment_repo, student)
+        subject.perform_now(@assignment_repo, user)
         regex = %r{#{github_url("/repositories")}/\d+$}
         expect(WebMock).to have_requested(:delete, regex)
       end
@@ -308,20 +307,20 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
         expect(Rails.logger)
           .to receive(:warn)
           .with("There seems to be a problem on github.com, please try again.")
-        subject.perform_now(@assignment_repo, student)
+        subject.perform_now(@assignment_repo, user)
       end
 
       it "kicks off another porter status job when octopoller timesout" do
         expect(Octopoller).to receive(:poll).with(timeout: 30).and_raise(Octopoller::TimeoutError)
         assert_enqueued_jobs 1, only: AssignmentRepo::PorterStatusJob do
-          subject.perform_now(@assignment_repo, student)
+          subject.perform_now(@assignment_repo, user)
         end
       end
 
       it "reports timeout stat when porter status job timesout" do
         expect(Octopoller).to receive(:poll).with(timeout: 30).and_raise(Octopoller::TimeoutError)
         expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.import.timeout")
-        subject.perform_now(@assignment_repo, student)
+        subject.perform_now(@assignment_repo, user)
       end
     end
   end

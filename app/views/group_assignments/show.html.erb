@@ -27,7 +27,15 @@
         </div>
       </div>
 
-      <div class="text-right pl-2 settings">
+      <% if download_repositories_enabled? %>
+        <div class="text-right mt-3 pr-2 settings">
+          <%= link_to desktop_organization_group_assignment_path, class: 'btn right' do %>
+            Download repositories
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class="text-right mt-3 pl-2 settings">
         <%= link_to edit_organization_group_assignment_path(@organization, @group_assignment), class: 'btn right' do %>
           <%= octicon 'gear' %>
           Group assignment settings

@@ -30,7 +30,8 @@ class AssignmentRepo
                   status: invite_status.status,
                   text: AssignmentRepo::Creator::IMPORT_ONGOING,
                   percent: ((REPO_IMPORT_STEPS.index(progress[:status]) + 1) * 100) / REPO_IMPORT_STEPS.count,
-                  status_text: progress[:status_text]
+                  status_text: progress[:status_text],
+                  repo_url: github_repository.html_url
                 )
                 last_progress = progress[:status]
               end
@@ -59,7 +60,9 @@ class AssignmentRepo
             RepositoryCreationStatusChannel.channel(user_id: user.id),
             text: result,
             status: invite_status.status,
-            percent: 100
+            percent: 100,
+            status_text: "Done",
+            repo_url: github_repository.html_url
           )
           GitHubClassroom.statsd.increment("v2_exercise_repo.import.success")
         end
