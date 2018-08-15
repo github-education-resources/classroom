@@ -15,8 +15,9 @@ module Orgs
     # rubocop:disable AbcSize
     def show
       @roster_entries = current_roster.roster_entries
-                                      .includes(:user).order(:identifier)
-                                      .page(params[:roster_entries_page])
+        .includes(:user)
+        .order(:identifier)
+        .page(params[:roster_entries_page])
 
       @current_unlinked_users = User.where(id: unlinked_user_ids).page(params[:unlinked_users_page])
 
