@@ -161,10 +161,12 @@ module RepositoryFactory
   end
 
   def create_github_branch(client, repo, branch)
-    client.create_contents(repo.full_name,
-                           "README.md",
-                           "Add README.md",
-                           "Hello world GitHub Classroom",
-                           branch: branch)
+    client.create_contents(
+      repo.full_name,
+      "README.md",
+      "Add README.md",
+      "Hello world GitHub Classroom",
+      branch: branch
+    )
   end
 end
