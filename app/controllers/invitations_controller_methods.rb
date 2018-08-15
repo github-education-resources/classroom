@@ -37,8 +37,8 @@ module InvitationsControllerMethods
   # - The roster=ignore param is not set (we set this if the user chooses to "skip" joining a roster for now)
   def check_should_redirect_to_roster_page
     return if params[:roster] == "ignore" ||
-              organization.roster.blank? ||
-              user_on_roster?
+        organization.roster.blank? ||
+        user_on_roster?
 
     @roster = organization.roster
 

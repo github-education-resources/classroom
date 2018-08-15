@@ -20,9 +20,9 @@ describe GitHub::Search do
 
       returned_repo_ids = returned_repos.map(&:id).to_set
       actual_repo_ids = user
-                        .github_client
-                        .search_repos("rails user:rails fork:true")[:items]
-                        .map(&:id).to_set
+        .github_client
+        .search_repos("rails user:rails fork:true")[:items]
+        .map(&:id).to_set
 
       expect(returned_repo_ids).to be_subset(actual_repo_ids)
     end
