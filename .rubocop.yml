@@ -53,3 +53,9 @@ Style/FileName:
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
+
+Style/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Style/MultilineOperationIndentation:
+  EnforcedStyle: indented
