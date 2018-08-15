@@ -14,6 +14,8 @@ class Group < ApplicationRecord
     before_add: :add_member_to_github_team, unless: :new_record?,
     before_remove: :remove_from_github_team
 
+  has_many :users, through: :repo_accesses
+
   validates :github_team_id, presence: true
   validates :github_team_id, uniqueness: true
 
