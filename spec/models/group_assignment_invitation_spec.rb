@@ -36,7 +36,7 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
       invitation.status(group)
     end
 
-    it "retruns the GroupInviteStatus that belongs to the group and the invite" do
+    it "returns the GroupInviteStatus that belongs to the group and the invite" do
       invite_status = GroupInviteStatus.create(group: group, group_assignment_invitation: invitation)
       expect(invitation.status(group)).to eq(invite_status)
     end
