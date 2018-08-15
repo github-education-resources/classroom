@@ -12,7 +12,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
   let(:assignment_repo) { create(:assignment_repo, user: user, assignment: invitation.assignment) }
 
   let(:unconfigured_repo) { stub_repository("template") }
-  let(:configured_repo) { stub_repository("configured-repo") }
+  let(:configured_repo)   { stub_repository("configured-repo") }
 
   describe "route_based_on_status", :vcr do
     before do
@@ -276,6 +276,29 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       patch :accept, params: { id: invitation.key }
     end
 
+    context "redeem returns an fail" do
+      let(:result) { AssignmentRepo::Creator::Result.failed("Couldn't accept the invitation") }
+
+      before do
+        allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result)
+      end
+
+      it "records error stat" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_invitation.fail")
+        patch :accept, params: { id: invitation.key }
+      end
+
+      it "flash error" do
+        patch :accept, params: { id: invitation.key }
+        expect(flash[:error]).to be_present
+      end
+
+      it "redirects to #show" do
+        patch :accept, params: { id: invitation.key }
+        expect(response.redirect_url).to eq(assignment_invitation_url(invitation))
+      end
+    end
+
     context "with import resiliency enabled" do
       before do
         GitHubClassroom.flipper[:import_resiliency].enable
@@ -362,7 +385,8 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
           expect(response.body)
             .to eq({
               job_started: true,
-              status: "waiting"
+              status: "waiting",
+              repo_url: nil
             }.to_json)
         end
       end
@@ -405,7 +429,8 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
           expect(response.body)
             .to eq({
               job_started: true,
-              status: "waiting"
+              status: "waiting",
+              repo_url: nil
             }.to_json)
         end
 
@@ -437,7 +462,25 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
           expect(response.body)
             .to eq({
               job_started: false,
-              status: "unaccepted"
+              status: "unaccepted",
+              repo_url: nil
+            }.to_json)
+        end
+      end
+
+      context "when the github_repository already exists" do
+        it "has a repo_url field present" do
+          octokit_repo_id = 417_862
+          assignment_repo = AssignmentRepo.new(github_repo_id: octokit_repo_id, assignment: invitation.assignment)
+          expect_any_instance_of(AssignmentInvitationsController)
+            .to receive(:current_submission)
+            .and_return(assignment_repo)
+          post :create_repo, params: { id: invitation.key }
+          expect(response.body)
+            .to eq({
+              job_started: false,
+              status: "unaccepted",
+              repo_url: "https://github.com/octokit/octokit.rb"
             }.to_json)
         end
       end

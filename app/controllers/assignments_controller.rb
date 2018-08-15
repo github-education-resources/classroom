@@ -66,6 +66,13 @@ class AssignmentsController < ApplicationController
     end
   end
 
+  def desktop
+    code_param = CGI.escape(current_user.api_token)
+    url_param = CGI.escape(organization_assignment_url)
+
+    redirect_to "x-github-classroom://?assignment_url=#{url_param}&code=#{code_param}"
+  end
+
   private
 
   def new_assignment_params
