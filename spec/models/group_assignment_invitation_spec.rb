@@ -83,4 +83,23 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
       end
     end
   end
+
+  describe "group_invite_statuses", :vcr do
+    let(:organization) { classroom_org }
+    let(:grouping)     { create(:grouping, organization: organization) }
+    let(:group)        { Group.create(grouping: grouping, title: "#{Faker::Company.name} Team") }
+    let(:invitation)   { create(:group_assignment_invitation) }
+
+    it "returns a list of invite statuses" do
+      group_invite_status = GroupInviteStatus.create(group: group, group_assignment_invitation: invitation)
+      expect(invitation.group_invite_statuses).to eq([group_invite_status])
+    end
+
+    it "on #destroy destroys invite status and not the group" do
+      group_invite_status = GroupInviteStatus.create(group: group, group_assignment_invitation: invitation)
+      invitation.destroy
+      expect { group_invite_status.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect(group.reload.nil?).to be_falsey
+    end
+  end
 end
