@@ -73,7 +73,7 @@ class AssignmentRepo
       logger.warn(err.message)
       if retries.positive?
         invite_status.waiting!
-        CreateGitHubRepositoryJob.perform_later(assignment, user, retries - 1)
+        CreateGitHubRepositoryJob.perform_later(assignment, user, retries: retries - 1)
       else
         invite_status.errored_creating_repo!
         ActionCable.server.broadcast(

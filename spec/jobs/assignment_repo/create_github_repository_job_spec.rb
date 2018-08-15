@@ -173,8 +173,8 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       stub_request(:put, import_regex)
         .to_return(body: "{}", status: 401)
 
+      expect(subject).to receive(:perform_later).with(assignment, teacher, retries: 0)
       subject.perform_now(assignment, teacher, retries: 1)
-      expect(subject).to have_been_enqueued.on_queue("create_repository")
     end
 
     it "fails and puts invite status in state to retry" do

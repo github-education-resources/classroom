@@ -41,9 +41,9 @@ class OrganizationsController < Orgs::Controller
   def show
     # sort assignments by title
     @assignments = Kaminari
-                   .paginate_array(current_organization.all_assignments(with_invitations: true)
-                   .sort_by(&:title))
-                   .page(params[:page])
+      .paginate_array(current_organization.all_assignments(with_invitations: true)
+      .sort_by(&:title))
+      .page(params[:page])
   end
 
   def edit; end
