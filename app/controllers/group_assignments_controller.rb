@@ -31,12 +31,12 @@ class GroupAssignmentsController < ApplicationController
   def show
     pagination_key = @organization.roster ? :teams_page : :page
     @group_assignment_repos = GroupAssignmentRepo.where(group_assignment: @group_assignment)
-                                                 .page(params[pagination_key])
+      .page(params[pagination_key])
 
     return unless @organization.roster
     @students_not_on_team = @organization.roster.roster_entries
-                                         .students_not_on_team(@group_assignment)
-                                         .page(params[:students_page])
+      .students_not_on_team(@group_assignment)
+      .page(params[:students_page])
   end
 
   def edit; end
@@ -111,9 +111,9 @@ class GroupAssignmentsController < ApplicationController
 
   def set_group_assignment
     @group_assignment = @organization
-                        .group_assignments
-                        .includes(:group_assignment_invitation)
-                        .find_by!(slug: params[:id])
+      .group_assignments
+      .includes(:group_assignment_invitation)
+      .find_by!(slug: params[:id])
   end
 
   def deadline_param
