@@ -14,7 +14,7 @@ class Group < ApplicationRecord
                                           before_remove: :remove_from_github_team
 
   has_many :users, through: :repo_accesses
-  has_many :group_invite_statuses
+  has_many :group_invite_statuses, dependent: :destroy
 
   validates :github_team_id, presence: true
   validates :github_team_id, uniqueness: true

@@ -13,7 +13,7 @@ class GroupAssignmentInvitation < ApplicationRecord
   has_one :organization, through: :group_assignment
 
   has_many :groups, through: :grouping
-  has_many :group_invite_statuses
+  has_many :group_invite_statuses, dependent: :destroy
 
   validates :group_assignment, presence: true
 
