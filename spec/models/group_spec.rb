@@ -5,6 +5,24 @@ require "rails_helper"
 RSpec.describe Group, type: :model do
   let(:organization) { classroom_org }
   let(:grouping)     { create(:grouping, organization: organization) }
+  let(:user)         { classroom_student }
+
+  describe "assocations", :vcr do
+    before(:each) do
+      @group = Group.create(grouping: grouping, title: "Toon Town")
+    end
+
+    after(:each) do
+      @group.try(:destroy)
+      RepoAccess.destroy_all
+    end
+
+    it "has users" do
+      repo_access = RepoAccess.create(user: user, organization: organization)
+      @group.repo_accesses << repo_access
+      expect(@group.users).to eq([user])
+    end
+  end
 
   describe "callbacks", :vcr do
     before(:each) do
@@ -24,8 +42,6 @@ RSpec.describe Group, type: :model do
     end
 
     describe "assocation callbacks" do
-      let(:user) { classroom_student }
-
       before(:each) do
         @repo_access = RepoAccess.create(user: user, organization: organization)
         @group.repo_accesses << @repo_access
