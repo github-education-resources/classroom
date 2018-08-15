@@ -25,4 +25,8 @@ html.windows [data-for-os=mac] {
 
 .desktop-screenshot {
   max-width: 960px;
+  & img {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    margin-bottom: 50px;
+  }
 }

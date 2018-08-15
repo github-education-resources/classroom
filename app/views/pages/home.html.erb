@@ -1,25 +1,19 @@
 <div class="remodal-bg">
   <div class="signin-section">
-    <div class="container-lg text-center">
-      <ul>
-        <li><%= octicon 'book', height: 38 %></li>
-        <li><%= octicon 'pencil', height: 38 %></li>
-        <li><%= octicon 'mortar-board', height: 38 %></li>
-        <li><%= octicon 'organization', height: 38 %></li>
-        <li><%= octicon 'calendar', height: 38 %></li>
-        <li><%= octicon 'comment-discussion', height: 38 %></li>
-      </ul>
-
-      <h1 class="heading"><%= t('views.pages.banner_heading') %></h1>
-      <p class="subheading"><%= t('views.pages.banner_subheading') %></p>
-
-      <div class="d-flex flex-column flex-items-center">
-        <a class="open-video mb-3" data-remodal-target="getting-started-video"><%= image_tag('play@2x.png', class: 'play-icon', alt: 'Play') %><%= t('views.pages.see_how_it_works') %></a>
-        <%= link_to t('views.pages.sign_in_to_start'), login_path, class: 'btn btn-blue btn-large btn-blue' %>
+    <div class="container-lg clearfix d-flex flex-items-center">
+      <div class="classroom-logo col-md-4 p-3 float-left">
+        <%= image_tag('classroom-logo.png', class:"classroom-logo width-fit", alt: 'Classroom Logo') %>
+      </div>
+      <div class="col-md-8 float-right width-fit">
+          <h1 class="heading f0-light"><%= t('views.pages.banner_heading') %></h1>
+          <p class="f3-light"><%= t('views.pages.banner_subheading') %></p>
+          <div class="d-flex flex-column start-container">
+            <a class="open-video mb-3" data-remodal-target="getting-started-video"><%= image_tag('play@2x.png', class: 'play-icon', alt: 'Play') %><%= t('views.pages.see_how_it_works') %></a>
+            <%= link_to t('views.pages.sign_in_to_start'), login_path, class: 'btn btn-large btn-blue' %>
+          </div>
       </div>
     </div>
   </div>
-
   <div class="information-section">
     <div class="container-lg">
       <div class="columns">
@@ -29,14 +23,12 @@
             <%= t('views.pages.create_assignments_desc') %>
           </p>
         </div>
-
         <div class="col-md-4 float-left p-4">
           <h2><%= octicon 'organization', height: 22 %> <%= t('views.pages.invite_students') %></h2>
           <p>
             <%= t('views.pages.invite_students_desc') %>
           </p>
         </div>
-
         <div class="col-md-4 float-left p-4">
           <h2><%= octicon 'graph', height: 22 %> <%= t('views.pages.review_progress') %></h2>
           <p>
@@ -47,5 +39,23 @@
     </div>
   </div>
 
+  <div class="hero text-center desktop-bg">
+    <div class="container-new px-3">
+      <div class="pb-6">
+        <h1 class="f1-light text-white pt-5">
+          Clone all your course assignments in one click
+        </h1>
+        <p class="col-md-8 mx-auto mb-4 mt-1 f3 desktop-subtitle">
+          Classroom Desktop is a cross-platform app that lets you clone your student's assignments with the click of a button.
+        </p>
+
+        <%= render partial: 'pages/download_desktop_button' %>
+      </div>
+
+      <div class="desktop-screenshot d-block mx-auto mt-4">
+        <%= image_tag('classroom-desktop-downloading.png', class:'width-fit', alt: 'Classroom-Desktop Downloading Screenshot') %>
+      </div>
+    </div>
+  </div>
   <%= render partial: 'pages/getting_started_video_modal' %>
 </div>
