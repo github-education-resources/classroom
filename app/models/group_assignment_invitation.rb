@@ -13,6 +13,7 @@ class GroupAssignmentInvitation < ApplicationRecord
   has_one :organization, through: :group_assignment
 
   has_many :groups, through: :grouping
+  has_many :group_invite_statuses
 
   validates :group_assignment, presence: true
 
@@ -40,6 +41,11 @@ class GroupAssignmentInvitation < ApplicationRecord
 
   def enabled?
     group_assignment.invitations_enabled?
+  end
+
+  def status(group)
+    group_invite_statuses.find_by(group: group) ||
+      GroupInviteStatus.create(group: group, group_assignment_invitation: self)
   end
 
   protected
