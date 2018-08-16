@@ -80,8 +80,8 @@ RSpec.describe Group, type: :model do
     let(:organization) { classroom_org }
     let(:grouping)     { create(:grouping, organization: organization) }
     let(:group)        { Group.create(grouping: grouping, title: "#{Faker::Company.name} Team") }
-    let(:invitation1)   { create(:group_assignment_invitation) }
-    let(:invitation2)   { create(:group_assignment_invitation) }
+    let(:invitation1)  { create(:group_assignment_invitation) }
+    let(:invitation2)  { create(:group_assignment_invitation) }
 
     it "returns a list of invite statuses" do
       group_invite_status = GroupInviteStatus.create(group: group, group_assignment_invitation: invitation1)
