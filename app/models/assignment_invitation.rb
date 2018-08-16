@@ -60,8 +60,10 @@ class AssignmentInvitation < ApplicationRecord
   end
 
   def status(user)
-    invite_statuses.find_by(user_id: user.id) ||
-      InviteStatus.create(user_id: user.id, assignment_invitation_id: id)
+    invite_status = invite_statuses.find_by(user: user)
+    return invite_status if invite_status.present?
+
+    InviteStatus.create(user: user, assignment_invitation: self)
   end
 
   protected

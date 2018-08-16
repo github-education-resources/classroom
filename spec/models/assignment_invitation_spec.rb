@@ -17,12 +17,12 @@ RSpec.describe AssignmentInvitation, type: :model do
 
   describe "#status" do
     it "should create an invite status for a user when one does not exist" do
-      expect(InviteStatus).to receive(:create).with(user_id: user.id, assignment_invitation_id: invitation.id)
+      expect(InviteStatus).to receive(:create).with(user: user, assignment_invitation: invitation)
       invitation.status(user)
     end
 
     it "should find an invite status for a user when one does exist" do
-      expect(invitation.invite_statuses).to receive(:find_by).with(user_id: user.id)
+      expect(invitation.invite_statuses).to receive(:find_by).with(user: user)
       invitation.status(user)
     end
 

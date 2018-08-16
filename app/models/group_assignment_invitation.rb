@@ -44,8 +44,10 @@ class GroupAssignmentInvitation < ApplicationRecord
   end
 
   def status(group)
-    group_invite_statuses.find_by(group: group) ||
-      GroupInviteStatus.create(group: group, group_assignment_invitation: self)
+    group_invite_status = group_invite_statuses.find_by(group: group)
+    return group_invite_status if group_invite_status.present?
+
+    GroupInviteStatus.create(group: group, group_assignment_invitation: self)
   end
 
   protected
