@@ -1,9 +1,9 @@
 GIT
-  remote: https://github.com/octokit/octokit.rb.git
-  revision: ffae5ddd6fd9da6f4538ca7adeb5d1768011610b
-  ref: ffae5ddd6fd9da6f4538ca7adeb5d1768011610b
+  remote: https://github.com/BenEmdon/octokit.rb.git
+  revision: e5fa719e32e6fe543318cfae6a23da8cd9589902
+  ref: e5fa719e32e6fe543318cfae6a23da8cd9589902
   specs:
-    octokit (4.9.0)
+    octokit (4.10.0)
       sawyer (~> 0.8.0, >= 0.5.3)
 
 GEM
