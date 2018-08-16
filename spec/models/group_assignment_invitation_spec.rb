@@ -47,10 +47,12 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
     let(:organization)  { classroom_org     }
 
     let(:group_assignment) do
-      create(:group_assignment,
-             title: "JavaScript",
-             organization: organization,
-             public_repo: false)
+      create(
+        :group_assignment,
+        title: "JavaScript",
+        organization: organization,
+        public_repo: false
+      )
     end
 
     subject { create(:group_assignment_invitation, group_assignment: group_assignment) }
