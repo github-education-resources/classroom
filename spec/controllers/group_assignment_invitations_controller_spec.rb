@@ -224,6 +224,32 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     end
   end
 
+  describe "GET #setupv2", :vcr do
+    before(:each) do
+      sign_in_as(student)
+    end
+
+    it "404s when feature is off" do
+      get :setupv2, params: { id: invitation.key }
+      expect(response.status).to eq(404)
+    end
+
+    context "with group import resiliency enabled" do
+      before do
+        GitHubClassroom.flipper[:group_import_resiliency].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:group_import_resiliency].disable
+      end
+
+      it "renders setupv2" do
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to render_template(:setupv2)
+      end
+    end
+  end
+
   describe "GET #successful_invitation" do
     let(:group) { Group.create(title: "The Group", grouping: grouping) }
 
