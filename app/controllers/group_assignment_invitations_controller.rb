@@ -3,7 +3,6 @@
 # rubocop:disable Metrics/ClassLength
 class GroupAssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
-  include RepoSetup
 
   layout "layouts/invitations"
 
@@ -13,30 +12,17 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   before_action :authorize_group_access, only: [:accept_invitation]
 
-  before_action :ensure_authorized_repo_setup, only: %i[setup setup_progress]
-  before_action :ensure_github_repo_exists,    only: %i[setup setup_progress successful_invitation]
+  before_action :ensure_github_repo_exists,    only: %i[successful_invitation]
 
   def show
     @groups = invitation.groups.map { |group| [group.title, group.id] }
-  end
-
-  def setup; end
-
-  def setup_progress
-    perform_setup(group_assignment_repo, classroom_config) if configurable_submission?
-
-    render json: setup_status(group_assignment_repo)
   end
 
   def accept; end
 
   def accept_assignment
     create_group_assignment_repo do
-      if group_assignment_repo.starter_code_repo_id
-        redirect_to setup_group_assignment_invitation_path
-      else
-        redirect_to successful_invitation_group_assignment_invitation_path
-      end
+      redirect_to successful_invitation_group_assignment_invitation_path
     end
   end
 
@@ -45,11 +31,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     selected_group_title = group_params[:title]
 
     create_group_assignment_repo(selected_group: selected_group, new_group_title: selected_group_title) do
-      if group_assignment_repo.starter_code_repo_id
-        redirect_to setup_group_assignment_invitation_path
-      else
-        redirect_to successful_invitation_group_assignment_invitation_path
-      end
+      redirect_to successful_invitation_group_assignment_invitation_path
     end
   end
 
@@ -170,20 +152,12 @@ class GroupAssignmentInvitationsController < ApplicationController
   def check_group_not_previous_acceptee
     return unless group.present? && group_assignment_repo.present?
 
-    if repo_setup_enabled? && setup_status(group_assignment_repo)[:status] != :complete
-      redirect_to setup_group_assignment_invitation_path
-    else
-      redirect_to successful_invitation_group_assignment_invitation_path
-    end
+    redirect_to successful_invitation_group_assignment_invitation_path
   end
 
   def check_user_not_group_member
     return if group.blank?
     redirect_to accept_group_assignment_invitation_path
-  end
-
-  def ensure_authorized_repo_setup
-    redirect_to successful_invitation_group_assignment_invitation_path unless repo_setup_enabled?
   end
 
   def ensure_github_repo_exists
