@@ -3,21 +3,24 @@
 require "rails_helper"
 
 RSpec.describe GroupAssignmentInvitationsController, type: :controller do
-  let(:organization) { classroom_org     }
+  let(:organization) { classroom_org }
   let(:student)      { classroom_student }
-
   let(:group_assignment) do
     options = {
       title: "HTML5",
       slug: "html5",
       organization: organization
     }
-
     create(:group_assignment, options)
   end
-
-  let(:grouping)   { group_assignment.grouping                                                }
-  let(:invitation) { create(:group_assignment_invitation, group_assignment: group_assignment) }
+  let(:grouping) { group_assignment.grouping }
+  let(:group) do
+    group = Group.create(grouping: grouping, title: "#{Faker::Company.name} Team")
+    group.repo_accesses << RepoAccess.create(user: student, organization: organization)
+    group
+  end
+  let(:invitation)    { create(:group_assignment_invitation, group_assignment: group_assignment) }
+  let(:invite_status) { invitation.status(group) }
 
   describe "GET #show", :vcr do
     context "unauthenticated request" do
