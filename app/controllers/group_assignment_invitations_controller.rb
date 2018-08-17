@@ -69,6 +69,32 @@ class GroupAssignmentInvitationsController < ApplicationController
     raise NotAuthorized, "You are not permitted to select this team"
   end
 
+  def check_group_not_previous_acceptee
+    return unless group.present? && group_assignment_repo.present?
+
+    redirect_to successful_invitation_group_assignment_invitation_path
+  end
+
+  def check_user_not_group_member
+    return if group.blank?
+    redirect_to accept_group_assignment_invitation_path
+  end
+
+  def ensure_github_repo_exists
+    return not_found unless group_assignment_repo
+    return if group_assignment_repo
+        .github_repository
+        .present?(headers: GitHub::APIHeaders.no_cache_no_store)
+
+    group = group_assignment_repo.group
+
+    group_assignment_repo.destroy
+    @group_assignment_repo = nil
+    create_group_assignment_repo(selected_group: group)
+  end
+
+  ## Controller Method Helpers
+
   # rubocop:disable Metrics/AbcSize
   def validate_max_members_not_exceeded!(group)
     return unless group.present? && group_assignment.present? && group_assignment.max_members.present?
@@ -131,46 +157,5 @@ class GroupAssignmentInvitationsController < ApplicationController
     @organization ||= group_assignment.organization
   end
   helper_method :organization
-
-  def classroom_config
-    starter_code_repo_id = group_assignment_repo.starter_code_repo_id
-
-    return unless starter_code_repo_id
-
-    client       = group_assignment_repo.creator.github_client
-    starter_repo = GitHubRepository.new(client, starter_code_repo_id)
-
-    @classroom_config ||= ClassroomConfig.new(starter_repo)
-  end
-
-  def configurable_submission?
-    repo             = group_assignment_repo.github_repository
-    classroom_branch = repo.branch_present?("github-classroom")
-    repo.imported? && classroom_branch && group_assignment_repo.not_configured?
-  end
-
-  def check_group_not_previous_acceptee
-    return unless group.present? && group_assignment_repo.present?
-
-    redirect_to successful_invitation_group_assignment_invitation_path
-  end
-
-  def check_user_not_group_member
-    return if group.blank?
-    redirect_to accept_group_assignment_invitation_path
-  end
-
-  def ensure_github_repo_exists
-    return not_found unless group_assignment_repo
-    return if group_assignment_repo
-        .github_repository
-        .present?(headers: GitHub::APIHeaders.no_cache_no_store)
-
-    group = group_assignment_repo.group
-
-    group_assignment_repo.destroy
-    @group_assignment_repo = nil
-    create_group_assignment_repo(selected_group: group)
-  end
 end
 # rubocop:enable Metrics/ClassLength
