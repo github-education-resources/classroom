@@ -9,10 +9,8 @@ class GroupAssignmentInvitationsController < ApplicationController
   before_action :check_group_not_previous_acceptee,    only: [:show]
   before_action :check_user_not_group_member,          only: [:show]
   before_action :check_should_redirect_to_roster_page, only: [:show]
-
-  before_action :authorize_group_access, only: [:accept_invitation]
-
-  before_action :ensure_github_repo_exists,    only: %i[successful_invitation]
+  before_action :authorize_group_access,               only: [:accept_invitation]
+  before_action :ensure_github_repo_exists,            only: [:successful_invitation]
 
   def show
     @groups = invitation.groups.map { |group| [group.title, group.id] }
