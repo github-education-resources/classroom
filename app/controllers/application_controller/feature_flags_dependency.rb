@@ -29,6 +29,11 @@ class ApplicationController
   end
   helper_method :import_resiliency_enabled?
 
+  def group_import_resiliency_enabled?
+    logged_in? && current_user.feature_enabled?(:group_import_resiliency)
+  end
+  helper_method :group_import_resiliency_enabled?
+
   def download_repositories_enabled?
     logged_in? && current_user.feature_enabled?(:download_repositories)
   end
