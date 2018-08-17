@@ -12,12 +12,14 @@ RSpec.describe GroupAssignmentRepo, type: :model do
     let(:group)        { Group.create(title: "Group 1", grouping: grouping) }
 
     let(:group_assignment) do
-      create(:group_assignment,
-             grouping: grouping,
-             title: "Learn JavaScript",
-             organization: organization,
-             public_repo: true,
-             starter_code_repo_id: 1_062_897)
+      create(
+        :group_assignment,
+        grouping: grouping,
+        title: "Learn JavaScript",
+        organization: organization,
+        public_repo: true,
+        starter_code_repo_id: 1_062_897
+      )
     end
 
     before(:each) do

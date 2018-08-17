@@ -34,12 +34,14 @@ gem "graphql-remote_loader", "~>1.0.2", path: "/Users/d12/dev/graphql-remote_loa
 gem "jquery-datetimepicker-rails", "~> 2.4", ">= 2.4.1.0"
 gem "jquery-turbolinks",           "~> 2.1"
 
+gem "active_model_serializers", "~> 0.10.0"
+gem "api-pagination", "4.7.1"
 gem "kaminari", "~> 1.0", ">= 1.0.1"
 
 gem "local_time", "~> 2.0"
 
 gem "octicons_helper", "~> 2.1"
-gem "octokit",         "~> 4.7"
+gem "octokit", github: "octokit/octokit.rb", ref: "ffae5ddd6fd9da6f4538ca7adeb5d1768011610b"
 gem "omniauth",        "~> 1.6", ">= 1.6.1"
 gem "omniauth-github", "~> 1.3"
 
@@ -88,7 +90,7 @@ group :development, :test do
   gem "spring",                   "~> 2.0", ">= 2.0.2"
   gem "spring-watcher-listen",    "~> 2.0", ">= 2.0.1"
   gem "terminal-notifier-guard",  "~> 1.7"
-  gem "timecop",                  "~> 0.9.1", require: false
+  gem "timecop",                  "~> 0.9.1"
 end
 
 group :production do

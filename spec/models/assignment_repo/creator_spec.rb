@@ -45,6 +45,11 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
         AssignmentRepo::Creator.perform(assignment: assignment, user: student)
       end
 
+      it "tracks create success stat" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
+        AssignmentRepo::Creator.perform(assignment: assignment, user: student)
+      end
+
       context "github repository with the same name already exists" do
         before do
           result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
@@ -76,6 +81,14 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
 
         expect(result.failed?).to be_truthy
         expect(result.error).to eql(AssignmentRepo::Creator::REPOSITORY_CREATION_FAILED)
+      end
+
+      it "tracks create fail stat" do
+        stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
+          .to_return(body: "{}", status: 401)
+
+        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.fail")
+        AssignmentRepo::Creator.perform(assignment: assignment, user: student)
       end
 
       context "with a successful repository creation" do

@@ -20,7 +20,8 @@ class GitHubRepository
 
   def import_progress(**options)
     GitHub::Errors.with_error_handling do
-      options[:accept] = "application/vnd.github.barred-rock-preview"
+      options[:accept] = Octokit::Preview::PREVIEW_TYPES[:source_imports]
+      options[:headers] = GitHub::APIHeaders.no_cache_no_store
       @client.source_import_progress(full_name, options)
     end
   end

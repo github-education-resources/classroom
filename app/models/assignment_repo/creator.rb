@@ -22,7 +22,11 @@ class AssignmentRepo
         new(:failed, error: error)
       end
 
-      attr_reader :error, :assignment_repo
+      def self.pending
+        new(:pending)
+      end
+
+      attr_reader :error, :assignment_repo, :status
 
       def initialize(status, assignment_repo: nil, error: nil)
         @status          = status
@@ -36,6 +40,10 @@ class AssignmentRepo
 
       def failed?
         @status == :failed
+      end
+
+      def pending?
+        @status == :pending
       end
     end
 
@@ -59,7 +67,6 @@ class AssignmentRepo
     # rubocop:disable AbcSize
     def perform
       start = Time.zone.now
-
       verify_organization_has_private_repos_available!
 
       assignment_repo = assignment.assignment_repos.build(
@@ -81,10 +88,12 @@ class AssignmentRepo
 
       duration_in_millseconds = (Time.zone.now - start) * 1_000
       GitHubClassroom.statsd.timing("exercise_repo.create.time", duration_in_millseconds)
+      GitHubClassroom.statsd.increment("exercise_repo.create.success")
 
       Result.success(assignment_repo)
     rescue Result::Error => err
       delete_github_repository(assignment_repo.try(:github_repo_id))
+      GitHubClassroom.statsd.increment("exercise_repo.create.fail")
       Result.failed(err.message)
     end
     # rubocop:enable AbcSize
