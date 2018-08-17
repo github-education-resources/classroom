@@ -105,14 +105,6 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
   # rubocop:enable Metrics/AbcSize
 
-  def group
-    repo_access = current_user.repo_accesses.find_by(organization: organization)
-    return unless repo_access.present? && repo_access.groups.present?
-
-    @group ||= repo_access.groups.find_by(grouping: group_assignment.grouping)
-  end
-  helper_method :group
-
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
   def create_group_assignment_repo(selected_group: group, new_group_title: nil)
@@ -135,6 +127,16 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable MethodLength
+
+  ## Resource Helpers
+
+  def group
+    repo_access = current_user.repo_accesses.find_by(organization: organization)
+    return unless repo_access.present? && repo_access.groups.present?
+
+    @group ||= repo_access.groups.find_by(grouping: group_assignment.grouping)
+  end
+  helper_method :group
 
   def group_assignment
     @group_assignment ||= invitation.group_assignment
