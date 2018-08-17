@@ -250,6 +250,63 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     end
   end
 
+  describe "POST #create_repo", :vcr do
+    before(:each) do
+      sign_in_as(student)
+    end
+
+    it "404s when feature is off" do
+      post :create_repo, params: { id: invitation.key }
+      expect(response.status).to eq(404)
+    end
+
+    context "with group import resiliency enabled" do
+      before do
+        GitHubClassroom.flipper[:group_import_resiliency].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:group_import_resiliency].disable
+      end
+
+      it "raises NotImplementedError" do
+        expect { post :create_repo, params: { id: invitation.key } }.to raise_error(NotImplementedError)
+      end
+    end
+  end
+
+  describe "GET #progress", :vcr do
+    before(:each) do
+      sign_in_as(student)
+    end
+
+    after(:each) do
+      RepoAccess.destroy_all
+      Group.destroy_all
+    end
+
+    it "404s when feature is off" do
+      get :progress, params: { id: invitation.key }
+      expect(response.status).to eq(404)
+    end
+
+    context "with group import resiliency enabled" do
+      before do
+        GitHubClassroom.flipper[:group_import_resiliency].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:group_import_resiliency].disable
+      end
+
+      it "returns status" do
+        invite_status.unaccepted!
+        get :progress, params: { id: invitation.key }
+        expect(response.body).to eq({ status: "unaccepted" }.to_json)
+      end
+    end
+  end
+
   describe "GET #successful_invitation" do
     let(:group) { Group.create(title: "The Group", grouping: grouping) }
 
