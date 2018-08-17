@@ -49,6 +49,14 @@ class GroupAssignmentInvitationsController < ApplicationController
     GitHubClassroom::Scopes::GROUP_ASSIGNMENT_STUDENT
   end
 
+  def group_params
+    params
+      .require(:group)
+      .permit(:id, :title)
+  end
+
+  ## Before Actions
+
   def authorize_group_access
     group_id = group_params[:id]
 
@@ -111,12 +119,6 @@ class GroupAssignmentInvitationsController < ApplicationController
     @group_assignment_repo ||= GroupAssignmentRepo.find_by(group_assignment: group_assignment, group: group)
   end
   helper_method :group_assignment_repo
-
-  def group_params
-    params
-      .require(:group)
-      .permit(:id, :title)
-  end
 
   def invitation
     @invitation ||= GroupAssignmentInvitation
