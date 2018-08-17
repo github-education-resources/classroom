@@ -33,6 +33,10 @@ class GroupAssignmentInvitationsController < ApplicationController
     end
   end
 
+  def setupv2
+    not_found unless group_import_resiliency_enabled?
+  end
+
   def successful_invitation; end
 
   def join_roster
