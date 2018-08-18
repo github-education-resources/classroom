@@ -16,7 +16,7 @@ describe GitHub::Errors do
           GitHub::Errors.with_error_handling do
             raise Octokit::Forbidden
           end
-        rescue GitHub::Forbidden; end
+        rescue GitHub::Forbidden; end # rubocop:disable Lint/HandleExceptions
         expect(Failbot.reports.count).to eq(1)
       end
     end
