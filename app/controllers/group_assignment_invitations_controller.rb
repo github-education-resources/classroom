@@ -79,7 +79,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     return unless status.present?
     case status
     when "unaccepted"
-      redirect_to group_assignment_invitation_path(current_invitation) if action_name != "show"
+      redirect_to group_assignment_invitation_path(invitation) if action_name != "show"
     when "completed"
       redirect_to successful_invitation_group_assignment_invitation_path if action_name != "success"
     when *(GroupInviteStatus::ERRORED_STATUSES + GroupInviteStatus::SETUP_STATUSES)
