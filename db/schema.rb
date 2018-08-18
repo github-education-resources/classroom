@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180802210833) do
+ActiveRecord::Schema.define(version: 20180812172752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -225,11 +225,8 @@ ActiveRecord::Schema.define(version: 20180802210833) do
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
-<<<<<<< HEAD
-=======
   add_foreign_key "group_invite_statuses", "group_assignment_invitations"
   add_foreign_key "group_invite_statuses", "groups"
->>>>>>> master
   add_foreign_key "invite_statuses", "assignment_invitations"
   add_foreign_key "invite_statuses", "users"
 end
