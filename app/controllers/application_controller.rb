@@ -32,7 +32,6 @@ class ApplicationController < ActionController::Base
   end
 
   def graphql_execute(query:, variables: {}, operation_name: nil, context: {})
-    Rails.backtrace_cleaner.remove_silencers!
     context[:current_user] = current_user
     GitHubClassroom::ClassroomClient.query(query, variables: variables, context: context)
   end

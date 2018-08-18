@@ -1,15 +1,5 @@
 require_relative "../loaders/github_loader"
 
-def repo_query(obj, selections)
-  <<-GRAPHQL
-    node(id: "#{obj.github_global_relay_id}"){
-      ... on Repository {
-        #{selections}
-      }
-    }
-  GRAPHQL
-end
-
 class Types
   class AssignmentRepo < GraphQL::Schema::Object
     require_relative "user"
@@ -68,5 +58,15 @@ class Types
     end
 
     field :user, Types::User, description: "The user owning the assignment repo.", null: false
+
+    def repo_query(obj, selections)
+      <<-GRAPHQL
+        node(id: "#{obj.github_global_relay_id}"){
+          ... on Repository {
+            #{selections}
+          }
+        }
+      GRAPHQL
+    end
   end
 end

@@ -1,15 +1,5 @@
 require_relative "../loaders/github_loader"
 
-def user_query(obj, fields)
-  <<-GRAPHQL
-    node(id: "#{obj.github_global_relay_id}"){
-      ... on User {
-        #{fields}
-      }
-    }
-  GRAPHQL
-end
-
 class Types::User < GraphQL::Schema::Object
   field :login, String, description: "The user's GitHub login.", null: false
 
@@ -33,5 +23,15 @@ class Types::User < GraphQL::Schema::Object
     GitHubClassroom::GitHubLoader.load(user_query(object, "avatarUrl"), context: context).then do |results|
       results.dig("data", "node", "avatar_url")
     end
+  end
+
+  def user_query(obj, fields)
+    <<-GRAPHQL
+      node(id: "#{obj.github_global_relay_id}"){
+        ... on User {
+          #{fields}
+        }
+      }
+    GRAPHQL
   end
 end

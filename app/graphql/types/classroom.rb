@@ -1,15 +1,5 @@
 require_relative "../loaders/github_loader"
 
-def organization_query(obj, fields)
-  <<-GRAPHQL
-    node(id: "#{obj.github_global_relay_id}"){
-      ... on Organization {
-        #{fields}
-      }
-    }
-  GRAPHQL
-end
-
 class Types
   class Classroom < GraphQL::Schema::Object
     # To see an organization, you must be an organization owner
@@ -55,6 +45,16 @@ class Types
 
     def assignments
       assignments = object.assignments
+    end
+
+    def organization_query(obj, fields)
+      <<-GRAPHQL
+        node(id: "#{obj.github_global_relay_id}"){
+          ... on Organization {
+            #{fields}
+          }
+        }
+      GRAPHQL
     end
   end
 end

@@ -29,16 +29,13 @@ class AssignmentsController < ApplicationController
     end
   end
 
-  Rails.backtrace_cleaner.remove_silencers!
-
-  Views::Assignments::Show
-
   ShowQuery = GitHubClassroom::ClassroomClient.parse <<-'GRAPHQL'
     query($assignmentId: ID!, $organizationId: ID!) {
       ...Views::Assignments::Show::Root
     }
   GRAPHQL
 
+  # rubocop:disable Metrics/AbcSize
   def show
     variables = {
       assignmentId: @assignment.global_relay_id,

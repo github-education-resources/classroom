@@ -11,8 +11,9 @@ class Types
       context[:current_user]
     end
 
-    # I cannot explain why, but removing this field breaks everything
+    # I cannot explain why, but removing this field breaks everything.
     # So I will let it live here, it's not hurting anyone.
-    field :foo, Types::Classroom.connection_type, description: "foo", null: true, connection: true
+    # TODO: Fix this
+    field :classrooms, Types::Classroom.connection_type, null: true, connection: true
   end
 end
