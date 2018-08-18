@@ -160,6 +160,10 @@ class GitHubRepository < GitHubResource
     0
   end
 
+  def empty?
+    number_of_commits.zero?
+  end
+
   def commits_url(branch)
     html_url + "/commits/" + branch
   end

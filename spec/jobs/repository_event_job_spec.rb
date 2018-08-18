@@ -12,9 +12,11 @@ RSpec.describe RepositoryEventJob, type: :job do
     end
 
     it "deletes the matching AssignmentRepo" do
-      assignment_repo = create(:assignment_repo,
-                               assignment: create(:assignment, organization: organization),
-                               github_repo_id: payload.dig("repository", "id"))
+      assignment_repo = create(
+        :assignment_repo,
+        assignment: create(:assignment, organization: organization),
+        github_repo_id: payload.dig("repository", "id")
+      )
 
       RepositoryEventJob.perform_now(payload)
       expect { assignment_repo.reload }.to raise_error(ActiveRecord::RecordNotFound)

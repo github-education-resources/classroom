@@ -27,7 +27,13 @@
         </div>
       </div>
 
-      <div class="text-right pl-2 settings">
+      <% if download_repositories_enabled? %>
+        <%= render partial: 'shared/open_on_desktop_modal', locals: {
+          desktop_url: desktop_organization_assignment_url
+        } %>
+      <% end %>
+
+      <div class="text-right mt-3 pl-2 settings">
         <%= link_to edit_organization_assignment_path(@organization, @assignment), class: 'btn right' do %>
           <%= octicon 'gear' %>
           Assignment settings
