@@ -8,7 +8,7 @@ module GitHub
       def with_error_handling
         yield
       rescue Octokit::Error => err
-        failbot($ERROR_INFO) if Rails.env.production?
+        Failbot.report!($ERROR_INFO)
         process_octokit_error(err)
       end
 
