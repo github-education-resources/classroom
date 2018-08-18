@@ -6,6 +6,21 @@ describe GitHub::Errors do
   subject { described_class }
 
   describe "#with_error_handling" do
+    describe "failbot" do
+      before do
+        Failbot.reports.clear
+      end
+
+      it "reports 1 report after 1 failed request" do
+        begin
+          GitHub::Errors.with_error_handling do
+            raise Octokit::Forbidden
+          end
+        rescue GitHub::Forbidden; end # rubocop:disable Lint/HandleExceptions
+        expect(Failbot.reports.count).to eq(1)
+      end
+    end
+
     context "Octokit::Forbidden is raised" do
       it "raises GitHub::Forbidden" do
         error_message = "You are forbidden from performing this action on github.com"
