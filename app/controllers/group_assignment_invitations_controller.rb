@@ -81,7 +81,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     when "unaccepted"
       redirect_to group_assignment_invitation_path(invitation) if action_name != "show"
     when "completed"
-      redirect_to successful_invitation_group_assignment_invitation_path if action_name != "success"
+      redirect_to successful_invitation_group_assignment_invitation_path if action_name != "successful_invitation"
     when *(GroupInviteStatus::ERRORED_STATUSES + GroupInviteStatus::SETUP_STATUSES)
       redirect_to setupv2_group_assignment_invitation_path if action_name != "setupv2"
     else
