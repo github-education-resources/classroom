@@ -6,7 +6,7 @@ describe GitHub::Errors do
   subject { described_class }
 
   describe "#with_error_handling" do
-    describe "failbot reports" do
+    describe "failbot" do
       before do
         Failbot.reports.clear
       end
