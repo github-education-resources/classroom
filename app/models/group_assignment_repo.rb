@@ -60,6 +60,12 @@ class GroupAssignmentRepo < ApplicationRecord
     @repo_name ||= generate_github_repo_name
   end
 
+  def import_status
+    return "No starter code provided" unless group_assignment.starter_code?
+
+    github_repository.import_progress.status.humanize
+  end
+
   private
 
   delegate :slug, to: :group_assignment

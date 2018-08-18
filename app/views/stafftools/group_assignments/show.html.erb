@@ -26,6 +26,10 @@
           <td><%= @group_assignment.id %></td>
         </tr>
         <tr>
+          <td class="text-emphasized"><%= t('views.stafftools.assignments.public_repo') %></td>
+          <td><%= @group_assignment.public_repo %></td>
+        </tr>
+        <tr>
           <td class="text-emphasized"><%= t('views.stafftools.group_assignments.owned_by') %></td>
           <td><%= link_to @group_assignment.organization.title, stafftools_organization_path(@group_assignment.organization.id) %></td>
         </tr>

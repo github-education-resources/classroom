@@ -1,30 +1,74 @@
 # frozen_string_literal: true
 
+# rubocop:disable ClassLength
 class AssignmentInvitationsController < ApplicationController
+  class InvalidStatusForRouteError < StandardError; end
+
   include InvitationsControllerMethods
   include RepoSetup
 
-  before_action :check_user_not_previous_acceptee, :check_should_redirect_to_roster_page, only: [:show]
-  before_action :ensure_submission_repository_exists, only: %i[setup setup_progress success]
-  before_action :ensure_authorized_repo_setup, only: %i[setup setup_progress]
+  before_action :route_based_on_status, only: %i[show setupv2 success]
+  before_action :check_user_not_previous_acceptee, :check_should_redirect_to_roster_page, only: :show
+  before_action :ensure_submission_repository_exists, only: :success
+  before_action :ensure_import_resiliency_enabled, only: %i[create_repo progress]
 
+  # rubocop:disable MethodLength
+  # rubocop:disable AbcSize
   def accept
-    create_submission do
-      GitHubClassroom.statsd.increment("exercise_invitation.accept")
-      if current_submission.starter_code_repo_id
-        redirect_to setup_assignment_invitation_path
-      else
+    if import_resiliency_enabled?
+      result = current_invitation.redeem_for(current_user, import_resiliency: import_resiliency_enabled?)
+      case result.status
+      when :success
+        GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
+      when :pending
+        GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
+      when :failed
+        GitHubClassroom.statsd.increment("v2_exercise_invitation.fail")
+        current_invitation_status.unaccepted!
+        flash[:error] = result.error
+      end
+      route_based_on_status
+    else
+      create_submission do
+        GitHubClassroom.statsd.increment("exercise_invitation.accept")
         redirect_to success_assignment_invitation_path
       end
     end
   end
+  # rubocop:enable MethodLength
+  # rubocop:enable AbcSize
 
-  def setup; end
+  def setupv2
+    not_found unless import_resiliency_enabled?
+  end
 
-  def setup_progress
-    perform_setup(current_submission, classroom_config) if configurable_submission?
+  # rubocop:disable MethodLength
+  # rubocop:disable AbcSize
+  def create_repo
+    job_started = false
+    if current_invitation_status.accepted? || current_invitation_status.errored?
+      assignment_repo = AssignmentRepo.find_by(assignment: current_assignment, user: current_user)
+      assignment_repo&.destroy if assignment_repo&.github_repository&.empty?
+      if current_invitation_status.errored_creating_repo?
+        GitHubClassroom.statsd.increment("v2_exercise_repo.create.retry")
+      elsif current_invitation_status.errored_importing_starter_code?
+        GitHubClassroom.statsd.increment("v2_exercise_repo.import.retry")
+      end
+      current_invitation_status.waiting!
+      AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user, retries: 3)
+      job_started = true
+    end
+    render json: {
+      job_started: job_started,
+      status: current_invitation_status.status,
+      repo_url: current_submission&.github_repository&.html_url
+    }
+  end
+  # rubocop:enable MethodLength
+  # rubocop:enable AbcSize
 
-    render json: setup_status(current_submission)
+  def progress
+    render json: { status: current_invitation_status.status }
   end
 
   def show; end
@@ -41,42 +85,54 @@ class AssignmentInvitationsController < ApplicationController
 
   private
 
+  # rubocop:disable MethodLength
   def ensure_submission_repository_exists
-    return not_found unless current_submission
-    return if current_submission
-              .github_repository
-              .present?(headers: GitHub::APIHeaders.no_cache_no_store)
+    github_repo_exists = current_submission &&
+      current_submission
+        .github_repository
+        .present?(headers: GitHub::APIHeaders.no_cache_no_store)
+    return if github_repo_exists
 
-    current_submission.destroy
-    remove_instance_variable(:@current_submission)
+    current_submission&.destroy
+    @current_submission = nil
+    current_invitation_status.accepted!
 
-    create_submission
+    if import_resiliency_enabled?
+      redirect_to setupv2_assignment_invitation_path
+    else
+      create_submission
+    end
   end
+  # rubocop:enable MethodLength
 
   def check_user_not_previous_acceptee
+    return if import_resiliency_enabled?
     return if current_submission.nil?
-    if repo_setup_enabled? && setup_status(current_submission)[:status] != :complete
-      return redirect_to setup_assignment_invitation_path
-    end
     redirect_to success_assignment_invitation_path
   end
 
-  def ensure_authorized_repo_setup
-    redirect_to success_assignment_invitation_path unless repo_setup_enabled?
+  # rubocop:disable AbcSize
+  # rubocop:disable CyclomaticComplexity
+  # rubocop:disable MethodLength
+  def route_based_on_status
+    return unless import_resiliency_enabled?
+    case current_invitation_status.status
+    when "unaccepted"
+      redirect_to assignment_invitation_path(current_invitation) if action_name != "show"
+    when "completed"
+      redirect_to success_assignment_invitation_path if action_name != "success"
+    when *(InviteStatus::ERRORED_STATUSES + InviteStatus::SETUP_STATUSES)
+      redirect_to setupv2_assignment_invitation_path if action_name != "setupv2"
+    else
+      raise InvalidStatusForRouteError, "No route registered for status: #{current_invitation_status.status}"
+    end
   end
+  # rubocop:enable AbcSize
+  # rubocop:enable CyclomaticComplexity
+  # rubocop:enable MethodLength
 
-  def classroom_config
-    starter_code_repo_id = current_submission.starter_code_repo_id
-    client               = current_submission.creator.github_client
-
-    starter_repo         = GitHubRepository.new(client, starter_code_repo_id)
-    ClassroomConfig.new(starter_repo)
-  end
-
-  def configurable_submission?
-    repo             = current_submission.github_repository
-    classroom_branch = repo.branch_present? config_branch
-    repo.imported? && classroom_branch && current_submission.not_configured?
+  def ensure_import_resiliency_enabled
+    render status: 404, json: { error: "Not found" } unless import_resiliency_enabled?
   end
 
   def create_submission
@@ -100,7 +156,12 @@ class AssignmentInvitationsController < ApplicationController
     @current_invitation ||= AssignmentInvitation.find_by!(key: params[:id])
   end
 
+  def current_invitation_status
+    @current_invitation_status ||= current_invitation.status(current_user)
+  end
+
   def required_scopes
     GitHubClassroom::Scopes::ASSIGNMENT_STUDENT
   end
 end
+# rubocop:enable ClassLength

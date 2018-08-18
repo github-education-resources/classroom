@@ -13,6 +13,7 @@ class GroupAssignmentInvitation < ApplicationRecord
   has_one :organization, through: :group_assignment
 
   has_many :groups, through: :grouping
+  has_many :group_invite_statuses, dependent: :destroy
 
   validates :group_assignment, presence: true
 
@@ -36,6 +37,17 @@ class GroupAssignmentInvitation < ApplicationRecord
 
   def to_param
     key
+  end
+
+  def enabled?
+    group_assignment.invitations_enabled?
+  end
+
+  def status(group)
+    group_invite_status = group_invite_statuses.find_by(group: group)
+    return group_invite_status if group_invite_status.present?
+
+    GroupInviteStatus.create(group: group, group_assignment_invitation: self)
   end
 
   protected

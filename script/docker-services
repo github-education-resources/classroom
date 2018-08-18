@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'fileutils'
+require_relative '../lib/docker_compose.rb'
+include FileUtils
+
+# path to your application root.
+APP_ROOT = File.expand_path('..', __dir__)
+
+def system!(*args)
+  system(*args) || abort("\n== Command #{args} failed ==")
+end
+
+chdir APP_ROOT do
+  if DockerCompose.all_services_up?
+    puts "==> Docker services are loaded..."
+  else
+    puts "==> Starting Docker services..."
+    system! "docker-compose up -d"
+    system "./script/poll-for-services"
+  end
+end

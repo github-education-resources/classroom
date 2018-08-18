@@ -2,6 +2,9 @@
 
 module GitHub
   class Search
+    REPOSITORY_REGEX = /[a-zA-Z0-9\._-]+/
+    USERNAME_REGEX = /[a-zA-Z0-9_-]+/
+
     attr_accessor :search_client
 
     def initialize(access_token, options = { auto_paginate: false })
@@ -24,7 +27,7 @@ module GitHub
     private
 
     def build_github_repositories_query(query)
-      keyword = query.gsub(%r{^[a-zA-Z0-9_-]+\/}, "") + " in:name fork:true"
+      keyword = query.gsub(%r{^#{REPOSITORY_REGEX}\/}, "") + " in:name fork:true"
 
       # add namespace criteria if needed
       return keyword unless query.include?("/")

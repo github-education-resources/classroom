@@ -16,6 +16,7 @@ en:
         github_repo: 'GitHub repository'
         repo_id: 'Repository ID'
         source_code: 'Source code'
+        import_status: 'Import status'
         dangerzone: 'Dangerzone'
         delete_repo_title: 'Delete this assignment repository'
         delete_repo_confirmation: 'Are you ABSOLUTELY sure?'

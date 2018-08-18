@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180131020132) do
+ActiveRecord::Schema.define(version: 20180802210833) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,6 +56,7 @@ ActiveRecord::Schema.define(version: 20180131020132) do
     t.datetime "deleted_at"
     t.string "slug", null: false
     t.boolean "students_are_repo_admins", default: false, null: false
+    t.boolean "invitations_enabled", default: true
     t.index ["deleted_at"], name: "index_assignments_on_deleted_at"
     t.index ["organization_id"], name: "index_assignments_on_organization_id"
     t.index ["slug"], name: "index_assignments_on_slug"
@@ -108,9 +109,20 @@ ActiveRecord::Schema.define(version: 20180131020132) do
     t.string "slug", null: false
     t.integer "max_members"
     t.boolean "students_are_repo_admins", default: false, null: false
+    t.boolean "invitations_enabled", default: true
     t.index ["deleted_at"], name: "index_group_assignments_on_deleted_at"
     t.index ["organization_id"], name: "index_group_assignments_on_organization_id"
     t.index ["slug"], name: "index_group_assignments_on_slug"
+  end
+
+  create_table "group_invite_statuses", force: :cascade do |t|
+    t.integer "status", default: 0
+    t.bigint "group_id"
+    t.bigint "group_assignment_invitation_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_assignment_invitation_id"], name: "index_group_invite_statuses_on_group_assignment_invitation_id"
+    t.index ["group_id"], name: "index_group_invite_statuses_on_group_id"
   end
 
   create_table "groupings", id: :serial, force: :cascade do |t|
@@ -138,6 +150,16 @@ ActiveRecord::Schema.define(version: 20180131020132) do
     t.integer "repo_access_id"
     t.index ["group_id"], name: "index_groups_repo_accesses_on_group_id"
     t.index ["repo_access_id"], name: "index_groups_repo_accesses_on_repo_access_id"
+  end
+
+  create_table "invite_statuses", force: :cascade do |t|
+    t.integer "status", default: 0
+    t.bigint "assignment_invitation_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assignment_invitation_id"], name: "index_invite_statuses_on_assignment_invitation_id"
+    t.index ["user_id"], name: "index_invite_statuses_on_user_id"
   end
 
   create_table "organizations", id: :serial, force: :cascade do |t|
@@ -201,4 +223,8 @@ ActiveRecord::Schema.define(version: 20180131020132) do
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
+  add_foreign_key "group_invite_statuses", "group_assignment_invitations"
+  add_foreign_key "group_invite_statuses", "groups"
+  add_foreign_key "invite_statuses", "assignment_invitations"
+  add_foreign_key "invite_statuses", "users"
 end

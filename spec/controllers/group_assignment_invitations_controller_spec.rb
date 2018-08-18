@@ -130,6 +130,13 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         patch :accept_invitation, params: { id: invitation.key, group: { title: "Code Squad" } }
       end
 
+      it "fails if assignment invitations are disabled" do
+        group_assignment.update(invitations_enabled: false)
+
+        patch :accept_invitation, params: { id: invitation.key, group: { title: "Code Squad" } }
+        expect(response).to redirect_to(group_assignment_invitation_path)
+      end
+
       it "does not allow users to join a group that is not apart of the grouping" do
         other_grouping = create(:grouping, organization: organization)
         other_group    = Group.create(title: "The Group", grouping: other_grouping)
@@ -155,8 +162,10 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         end
 
         it "sends an event to statsd" do
-          expect(GitHubClassroom.statsd).to receive(:increment).with("exception.swallowed",
-                                                                     tags: [ApplicationController::NotAuthorized.to_s])
+          expect(GitHubClassroom.statsd).to receive(:increment).with(
+            "exception.swallowed",
+            tags: [ApplicationController::NotAuthorized.to_s]
+          )
           expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_invitation.fail")
 
           patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }

@@ -27,16 +27,19 @@ class AssignmentsController < ApplicationController
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
   def show
     if @organization.roster
       @roster_entries = @organization.roster.roster_entries.page(params[:students_page]).order_for_view(@assignment)
 
-      @unlinked_user_repos = AssignmentRepo.where(assignment: @assignment, user: @unlinked_users)
-                                           .page(params[:unlinked_accounts_page])
+      @unlinked_user_repos = AssignmentRepo
+        .where(assignment: @assignment, user: @unlinked_users)
+        .page(params[:unlinked_accounts_page])
     else
       @assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   def edit; end
 
@@ -64,12 +67,19 @@ class AssignmentsController < ApplicationController
     end
   end
 
+  def desktop
+    code_param = CGI.escape(current_user.api_token)
+    url_param = CGI.escape(organization_assignment_url)
+
+    redirect_to "x-github-classroom://?assignment_url=#{url_param}&code=#{code_param}"
+  end
+
   private
 
   def new_assignment_params
     params
       .require(:assignment)
-      .permit(:title, :slug, :public_repo, :students_are_repo_admins)
+      .permit(:title, :slug, :public_repo, :students_are_repo_admins, :invitations_enabled)
       .merge(creator: current_user,
              organization: @organization,
              starter_code_repo_id: starter_code_repo_id_param,
@@ -83,7 +93,9 @@ class AssignmentsController < ApplicationController
     return unless @organization.roster
 
     assignment_users = @assignment.users
-    roster_entry_users = @organization.roster.roster_entries.map(&:user).compact
+
+    roster_entry_user_ids = @organization.roster.roster_entries.pluck(:user_id)
+    roster_entry_users = User.where(id: roster_entry_user_ids)
 
     @unlinked_users = assignment_users - roster_entry_users
   end
@@ -109,7 +121,7 @@ class AssignmentsController < ApplicationController
   def update_assignment_params
     params
       .require(:assignment)
-      .permit(:title, :slug, :public_repo, :students_are_repo_admins, :deadline)
+      .permit(:title, :slug, :public_repo, :students_are_repo_admins, :deadline, :invitations_enabled)
       .merge(starter_code_repo_id: starter_code_repo_id_param)
   end
 

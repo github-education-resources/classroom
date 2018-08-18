@@ -99,19 +99,28 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
   helper_method :group
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable MethodLength
   def create_group_assignment_repo(selected_group: group, new_group_title: nil)
-    users_group_assignment_repo = invitation.redeem_for(current_user, selected_group, new_group_title)
-
-    if users_group_assignment_repo.present?
-      GitHubClassroom.statsd.increment("group_exercise_invitation.accept")
-      yield if block_given?
+    if !invitation.enabled?
+      flash[:error] = "Invitations for this assignment have been disabled."
+      redirect_to group_assignment_invitation_path
     else
-      GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
+      users_group_assignment_repo = invitation.redeem_for(current_user, selected_group, new_group_title)
 
-      flash[:error] = "An error has occurred, please refresh the page and try again."
-      redirect_to :show
+      if users_group_assignment_repo.present?
+        GitHubClassroom.statsd.increment("group_exercise_invitation.accept")
+        yield if block_given?
+      else
+        GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
+
+        flash[:error] = "An error has occurred, please refresh the page and try again."
+        redirect_to group_assignment_invitation_path
+      end
     end
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable MethodLength
 
   def group_assignment
     @group_assignment ||= invitation.group_assignment
@@ -131,8 +140,8 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   def invitation
     @invitation ||= GroupAssignmentInvitation
-                    .includes(group_assignment: :group_assignment_repos)
-                    .find_by!(key: params[:id])
+      .includes(group_assignment: :group_assignment_repos)
+      .find_by!(key: params[:id])
   end
   helper_method :invitation
 
@@ -180,8 +189,8 @@ class GroupAssignmentInvitationsController < ApplicationController
   def ensure_github_repo_exists
     return not_found unless group_assignment_repo
     return if group_assignment_repo
-              .github_repository
-              .present?(headers: GitHub::APIHeaders.no_cache_no_store)
+        .github_repository
+        .present?(headers: GitHub::APIHeaders.no_cache_no_store)
 
     group = group_assignment_repo.group
 
