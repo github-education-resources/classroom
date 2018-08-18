@@ -19,11 +19,6 @@ class ApplicationController
   end
   helper_method :team_management_enabled?
 
-  def repo_setup_enabled?
-    logged_in? && current_user.feature_enabled?(:repo_setup)
-  end
-  helper_method :repo_setup_enabled?
-
   def import_resiliency_enabled?
     logged_in? && current_user.feature_enabled?(:import_resiliency)
   end
