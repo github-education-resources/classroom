@@ -28,7 +28,7 @@ class Types
     field :github_url, String, description: "The organization's GitHub URL", null: true
 
     def github_url
-      GitHubClassroom::GitHubLoader.load(organization_query(object, "url"), context: context).then do |results|
+      GitHubLoader.load_on_relay_node(object.github_global_relay_id, "Organization", "url", context: context).then do |results|
         results.dig("data", "node", "url")
       end
     end
@@ -36,7 +36,7 @@ class Types
     field :organization_login, String, description: "The Classroom organization login.", null: false
 
     def organization_login
-      GitHubClassroom::GitHubLoader.load(organization_query(object, "login"), context: context).then do |results|
+      GitHubLoader.load_on_relay_node(object.github_global_relay_id, "Organization", "login", context: context).then do |results|
         results.dig("data", "node", "login")
       end
     end
@@ -45,16 +45,6 @@ class Types
 
     def assignments
       assignments = object.assignments
-    end
-
-    def organization_query(obj, fields)
-      <<-GRAPHQL
-        node(id: "#{obj.github_global_relay_id}"){
-          ... on Organization {
-            #{fields}
-          }
-        }
-      GRAPHQL
     end
   end
 end

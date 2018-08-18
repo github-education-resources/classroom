@@ -31,7 +31,7 @@ gem "graphql-batch"
 
 # Using fork of graphql-client which fixes a bug in graphql-client on Rails 5
 gem 'graphql-client', git: 'https://github.com/d12/graphql-client.git', ref: '24ced5f'
-gem "graphql-remote_loader", "~>1.0.2"
+gem "graphql-remote_loader", "1.0.3"
 
 gem "jquery-datetimepicker-rails", "~> 2.4", ">= 2.4.1.0"
 gem "jquery-turbolinks",           "~> 2.1"
