@@ -8,7 +8,7 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   layout "layouts/invitations"
 
-  before_action :route_based_on_status,                  only: %i[accept setupv2 successful_invitation]
+  before_action :route_based_on_status,                  only: %i[setupv2 successful_invitation]
   before_action :check_group_not_previous_acceptee,      only: :show
   before_action :check_user_not_group_member,            only: :show
   before_action :check_should_redirect_to_roster_page,   only: :show
