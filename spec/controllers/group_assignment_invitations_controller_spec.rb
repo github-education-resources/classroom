@@ -472,9 +472,9 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     end
 
     it "renders #successful_invitation" do
-        get :successful_invitation, params: { id: invitation.key }
-        expect(response).to render_template(:successful_invitation)
-      end
+      get :successful_invitation, params: { id: invitation.key }
+      expect(response).to render_template(:successful_invitation)
+    end
 
     context "delete github repository after accepting a invitation successfully" do
       before do
