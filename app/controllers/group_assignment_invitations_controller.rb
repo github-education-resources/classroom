@@ -73,13 +73,16 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   ## Before Actions
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable MethodLength
+  # rubocop:disable Metrics/CyclomaticComplexity
   def route_based_on_status
     return unless group_import_resiliency_enabled?
     status = group_invite_status&.status
-    return unless status.present?
+    return if status.blank?
     case status
     when "unaccepted"
-      redirect_to accept_group_assignment_invitation_path(invitation) if action_name != "accept" # should be accept when there is a group and show when there is not
+      redirect_to accept_group_assignment_invitation_path(invitation) if action_name != "accept"
     when "completed"
       redirect_to successful_invitation_group_assignment_invitation_path if action_name != "successful_invitation"
     when *(GroupInviteStatus::ERRORED_STATUSES + GroupInviteStatus::SETUP_STATUSES)
@@ -88,6 +91,9 @@ class GroupAssignmentInvitationsController < ApplicationController
       raise InvalidStatusForRouteError, "No route registered for status: #{status}"
     end
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable MethodLength
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def authorize_group_access
     group_id = group_params[:id]
