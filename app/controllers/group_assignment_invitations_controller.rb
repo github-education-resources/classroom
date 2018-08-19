@@ -8,7 +8,7 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   layout "layouts/invitations"
 
-  before_action :route_based_on_status,                  only: %i[show setupv2 successful_invitation]
+  before_action :route_based_on_status,                  only: %i[accept setupv2 successful_invitation]
   before_action :check_group_not_previous_acceptee,      only: :show
   before_action :check_user_not_group_member,            only: :show
   before_action :check_should_redirect_to_roster_page,   only: :show
@@ -79,7 +79,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     return unless status.present?
     case status
     when "unaccepted"
-      redirect_to group_assignment_invitation_path(invitation) if action_name != "show"
+      redirect_to accept_group_assignment_invitation_path(invitation) if action_name != "accept" # should be accept when there is a group and show when there is not
     when "completed"
       redirect_to successful_invitation_group_assignment_invitation_path if action_name != "successful_invitation"
     when *(GroupInviteStatus::ERRORED_STATUSES + GroupInviteStatus::SETUP_STATUSES)
