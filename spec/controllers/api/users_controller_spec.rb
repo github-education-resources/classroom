@@ -16,14 +16,9 @@ RSpec.describe API::UsersController, type: :controller do
       expect(response).to have_http_status(:success)
     end
 
-    context "user serializer returns correct attributes" do
-      it "returns user id" do
-        expect(json["id"]).to eq(user.id)
-      end
-
-      it "returns username" do
-        expect(json["username"]).to eq(user.github_user.login)
-      end
+    it "returns correct attributes in user serializer" do
+      expect(json["id"]).to eq(user.id)
+      expect(json["username"]).to eq(user.github_user.login)
     end
   end
 end

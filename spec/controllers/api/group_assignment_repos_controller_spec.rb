@@ -28,14 +28,9 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
       expect(response).to have_http_status(:success)
     end
 
-    context "group assignment repos serializer returns correct attributes" do
-      it "returns group title as username" do
-        expect(json.first["username"]).to eq(group.title)
-      end
-
-      it "returns empty string as display name" do
-        expect(json.first["displayName"]).to eq("")
-      end
+    it "returns correct attributes in group assignment repo serializer" do
+      expect(json.first["username"]).to eq(group.title)
+      expect(json.first["displayName"]).to eq("")
     end
   end
 

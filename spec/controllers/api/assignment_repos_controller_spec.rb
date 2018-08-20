@@ -30,14 +30,9 @@ RSpec.describe API::AssignmentReposController, type: :controller do
       expect(json.length).to eql(1)
     end
 
-    context "assignment repo serializer returns correct attributes" do
-      it "returns repo username" do
-        expect(json.first["username"]).to eq(user.github_user.login)
-      end
-
-      it "returns user display name" do
-        expect(json.first["displayName"]).to eq(user.github_user.name)
-      end
+    it "returns correct attributes in assignment repo serializer" do
+      expect(json.first["username"]).to eq(user.github_user.login)
+      expect(json.first["displayName"]).to eq(user.github_user.name)
     end
   end
 
