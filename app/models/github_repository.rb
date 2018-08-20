@@ -210,6 +210,20 @@ class GitHubRepository < GitHubResource
     end
   end
 
+  def temp_clone_url
+    GitHub::Errors.with_error_handling do
+      repository = client.repository(
+        @id,
+        accept: "application/vnd.github.daredevil-preview+json"
+      )
+      token = repository[:temp_clone_token]
+      clone_url = URI(repository[:clone_url])
+      clone_url.userinfo = "x-access-token:#{token}"
+
+      clone_url.to_s
+    end
+  end
+
   private
 
   def github_attributes

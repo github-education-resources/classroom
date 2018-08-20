@@ -28,18 +28,35 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
       expect(response).to have_http_status(:success)
     end
 
-    context "group assignment repos serializer returns correct attributes" do
-      it "returns group title as username" do
-        expect(json.first["username"]).to eq(group.title)
-      end
+    it "returns correct attributes in group assignment repo serializer" do
+      expect(json.first["username"]).to eq(group.title)
+      expect(json.first["displayName"]).to eq("")
+    end
+  end
 
-      it "returns github repo url" do
-        expect(json.first["repoUrl"]).to eq(@group_assignment_repo.github_repository.html_url)
-      end
+  describe "GET #clone_url", :vcr do
+    before do
+      @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
 
-      it "returns empty string as display name" do
-        expect(json.first["displayName"]).to eq("")
-      end
+      get :clone_url, params: {
+        organization_id: organization.slug,
+        group_assignment_id: group_assignment.slug,
+        group_assignment_repo_id: @group_assignment_repo.id,
+        access_token: user.api_token
+      }
+    end
+
+    after do
+      GroupAssignmentRepo.destroy_all
+      Grouping.destroy_all
+    end
+
+    it "returns success" do
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns json with temp clone url" do
+      expect(json["temp_clone_url"]).to_not be_nil
     end
   end
 end
