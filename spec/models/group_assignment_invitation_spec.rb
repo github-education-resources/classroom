@@ -20,15 +20,39 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
     end
   end
 
+  describe "#status", :vcr do
+    let(:organization) { classroom_org }
+    let(:grouping)     { create(:grouping, organization: organization) }
+    let(:group)        { Group.create(grouping: grouping, title: "#{Faker::Company.name} Team") }
+    let(:invitation)   { create(:group_assignment_invitation) }
+
+    it "should create an invite status for a group when one does not exist" do
+      expect(GroupInviteStatus).to receive(:create).with(group: group, group_assignment_invitation: invitation)
+      invitation.status(group)
+    end
+
+    it "should find an invite status for a group when one does exist" do
+      expect(invitation.group_invite_statuses).to receive(:find_by).with(group: group)
+      invitation.status(group)
+    end
+
+    it "returns the GroupInviteStatus that belongs to the group and the invite" do
+      invite_status = GroupInviteStatus.create(group: group, group_assignment_invitation: invitation)
+      expect(invitation.status(group)).to eq(invite_status)
+    end
+  end
+
   describe "#redeem_for", :vcr do
     let(:student)       { classroom_student }
     let(:organization)  { classroom_org     }
 
     let(:group_assignment) do
-      create(:group_assignment,
-             title: "JavaScript",
-             organization: organization,
-             public_repo: false)
+      create(
+        :group_assignment,
+        title: "JavaScript",
+        organization: organization,
+        public_repo: false
+      )
     end
 
     subject { create(:group_assignment_invitation, group_assignment: group_assignment) }
@@ -59,6 +83,25 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
       it "should return the key" do
         expect(subject.to_param).to eql(subject.key)
       end
+    end
+  end
+
+  describe "group_invite_statuses", :vcr do
+    let(:organization) { classroom_org }
+    let(:grouping)     { create(:grouping, organization: organization) }
+    let(:group)        { Group.create(grouping: grouping, title: "#{Faker::Company.name} Team") }
+    let(:invitation)   { create(:group_assignment_invitation) }
+
+    it "returns a list of invite statuses" do
+      group_invite_status = GroupInviteStatus.create(group: group, group_assignment_invitation: invitation)
+      expect(invitation.group_invite_statuses).to eq([group_invite_status])
+    end
+
+    it "on #destroy destroys invite status and not the group" do
+      group_invite_status = GroupInviteStatus.create(group: group, group_assignment_invitation: invitation)
+      invitation.destroy
+      expect { group_invite_status.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect(group.reload.nil?).to be_falsey
     end
   end
 end
