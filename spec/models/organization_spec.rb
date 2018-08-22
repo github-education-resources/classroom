@@ -58,18 +58,66 @@ RSpec.describe Organization, type: :model do
     end
   end
 
+  describe "#last_classroom_on_org?" do
+    context "only one classroom with github_id" do
+      it "returns true" do
+        expect(subject.last_classroom_on_org?).to be_truthy
+      end
+    end
+
+    context "multiple classrooms with same github_id" do
+      before do
+        secondary_classroom = create(:organization, github_id: 12_345)
+      end
+
+      it "returns false" do
+        expect(subject.last_classroom_on_org?).to_not be_truthy
+      end
+    end
+
+    context "multiple classrooms with different github_ids" do
+      before do
+        secondary_classroom = create(:organization, github_id: 00_000)
+      end
+
+      it "returns true" do
+        expect(subject.last_classroom_on_org?).to be_truthy
+      end
+    end
+  end
+
   describe "callbacks" do
     describe "before_destroy" do
       describe "#silently_remove_organization_webhook", :vcr do
-        it "deletes the webhook from GitHub" do
-          subject.update_attributes(webhook_id: 9_999_999, is_webhook_active: true)
 
-          org_id     = subject.github_id
-          webhook_id = subject.webhook_id
+        context "multiple classrooms on organization" do
+          before do
+            secondary_classroom = create(:organization, github_id: 12_345)
+          end
 
-          subject.destroy
+          it "does not delete the webhook from GitHub" do
+            subject.update_attributes(webhook_id: 9_999_999, is_webhook_active: true)
 
-          expect(WebMock).to have_requested(:delete, github_url("/organizations/#{org_id}/hooks/#{webhook_id}"))
+            org_id     = subject.github_id
+            webhook_id = subject.webhook_id
+
+            subject.destroy
+
+            expect(WebMock).to_not have_requested(:delete, github_url("/organizations/#{org_id}/hooks/#{webhook_id}"))
+          end
+        end
+
+        context "last classroom on organization" do
+          it "deletes the webhook from GitHub" do
+            subject.update_attributes(webhook_id: 9_999_999, is_webhook_active: true)
+
+            org_id     = subject.github_id
+            webhook_id = subject.webhook_id
+
+            subject.destroy
+
+            expect(WebMock).to have_requested(:delete, github_url("/organizations/#{org_id}/hooks/#{webhook_id}"))
+          end
         end
       end
     end
