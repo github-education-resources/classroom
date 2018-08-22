@@ -21,7 +21,7 @@ class ApplicationController
 
   def authenticate_user!
     if logged_in?
-      return log_out unless current_user.authorized_access_token?
+      return log_out_and_flash unless current_user.authorized_access_token?
       return become_active if adequate_scopes?
     end
     auth_redirect
@@ -45,6 +45,11 @@ class ApplicationController
                     else
                       true_user
                     end
+  end
+
+  def log_out_and_flash
+    log_out
+    flash[:error] = "Access Token is invalid. Please login again."
   end
 
   def logged_in?

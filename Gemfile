@@ -30,6 +30,8 @@ gem "geo_pattern", "~> 1.4"
 gem "jquery-datetimepicker-rails", "~> 2.4", ">= 2.4.1.0"
 gem "jquery-turbolinks",           "~> 2.1"
 
+gem "active_model_serializers", "~> 0.10.0"
+gem "api-pagination", "4.7.1"
 gem "kaminari", "~> 1.0", ">= 1.0.1"
 
 gem "local_time", "~> 2.0"
@@ -84,7 +86,7 @@ group :development, :test do
   gem "spring",                   "~> 2.0", ">= 2.0.2"
   gem "spring-watcher-listen",    "~> 2.0", ">= 2.0.1"
   gem "terminal-notifier-guard",  "~> 1.7"
-  gem "timecop",                  "~> 0.9.1", require: false
+  gem "timecop",                  "~> 0.9.1"
 end
 
 group :production do

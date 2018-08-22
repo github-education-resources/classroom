@@ -7,45 +7,44 @@ class AssignmentRepo
     IMPORT_STARTER_CODE = "Importing starter code"
 
     queue_as :create_repository
-    retry_on Creator::Result::Error, wait: :exponentially_longer, queue: :create_repository
 
     # Create an AssignmentRepo
     #
-    # assignment - The Assignment that will own the AssignmentRepo.
-    # user       - The User that the AssignmentRepo will belong to.
+    # assignment - The Assignment that will own the AssignmentRepo
+    # user       - The User that the AssignmentRepo will belong to
+    # retries    - The number of times the job will automatically retry
     #
     # rubocop:disable MethodLength
     # rubocop:disable AbcSize
-    def perform(assignment, user)
+    # rubocop:disable CyclomaticComplexity
+    # rubocop:disable PerceivedComplexity
+    def perform(assignment, user, retries: 0)
       start = Time.zone.now
 
-      invitation_status = assignment.invitation&.status
-      return if %w[unaccepted creating_repo importing_starter_code completed].include?(invitation_status)
+      invite_status = assignment.invitation.status(user)
 
-      assignment.invitation&.creating_repo!
-
-      creator = Creator.new(assignment: assignment, user: user)
-
-      creator.verify_organization_has_private_repos_available!
+      return unless invite_status.waiting? || invite_status.errored_creating_repo?
+      invite_status.creating_repo!
 
       ActionCable.server.broadcast(
         RepositoryCreationStatusChannel.channel(user_id: user.id),
         text: CREATE_REPO,
-        status: assignment.invitation&.status
+        status: invite_status.status
       )
 
+      creator = Creator.new(assignment: assignment, user: user)
+      creator.verify_organization_has_private_repos_available!
       assignment_repo = assignment.assignment_repos.build(
         github_repo_id: creator.create_github_repository!,
         user: user
       )
-
       creator.add_user_to_repository!(assignment_repo.github_repo_id)
-
       creator.push_starter_code!(assignment_repo.github_repo_id) if assignment.starter_code?
 
       begin
         assignment_repo.save!
-      rescue ActiveRecord::RecordInvalid
+      rescue ActiveRecord::RecordInvalid => err
+        logger.warn(err.message)
         raise Creator::Result::Error, Creator::DEFAULT_ERROR_MESSAGE
       end
 
@@ -54,33 +53,49 @@ class AssignmentRepo
       GitHubClassroom.statsd.increment("v2_exercise_repo.create.success")
 
       if assignment.starter_code?
-        assignment.invitation&.importing_starter_code!
+        invite_status.importing_starter_code!
         ActionCable.server.broadcast(
           RepositoryCreationStatusChannel.channel(user_id: user.id),
           text: IMPORT_STARTER_CODE,
-          status: assignment.invitation&.status
+          status: invite_status.status
         )
         PorterStatusJob.perform_later(assignment_repo, user)
       else
-        assignment.invitation&.completed!
+        invite_status.completed!
         ActionCable.server.broadcast(
           RepositoryCreationStatusChannel.channel(user_id: user.id),
           text: Creator::REPOSITORY_CREATION_COMPLETE,
-          status: assignment.invitation&.status
+          status: invite_status.status
         )
       end
     rescue Creator::Result::Error => err
       creator.delete_github_repository(assignment_repo.try(:github_repo_id))
-      assignment.invitation&.errored!
-      ActionCable.server.broadcast(
-        RepositoryCreationStatusChannel.channel(user_id: user.id),
-        text: err,
-        status: assignment.invitation&.status
-      )
-      GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
-      raise err
+      logger.warn(err.message)
+      if retries.positive?
+        invite_status.waiting!
+        CreateGitHubRepositoryJob.perform_later(assignment, user, retries: retries - 1)
+      else
+        invite_status.errored_creating_repo!
+        ActionCable.server.broadcast(
+          RepositoryCreationStatusChannel.channel(user_id: user.id),
+          error: err,
+          status: invite_status.status
+        )
+        case err.message
+        when Creator::REPOSITORY_CREATION_FAILED
+          GitHubClassroom.statsd.increment("v2_exercise_repo.create.repo.fail")
+        when Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED
+          GitHubClassroom.statsd.increment("v2_exercise_repo.create.adding_collaborator.fail")
+        when Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
+          GitHubClassroom.statsd.increment("v2_exercise_repo.create.importing_starter_code.fail")
+        else
+          GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
+        end
+      end
     end
     # rubocop:enable MethodLength
     # rubocop:enable AbcSize
+    # rubocop:enable CyclomaticComplexity
+    # rubocop:enable PerceivedComplexity
   end
 end

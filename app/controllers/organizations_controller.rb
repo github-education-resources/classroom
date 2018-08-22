@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class OrganizationsController < Orgs::Controller
   before_action :ensure_team_management_flipper_is_enabled, only: [:show_groupings]
 
@@ -40,9 +41,9 @@ class OrganizationsController < Orgs::Controller
   def show
     # sort assignments by title
     @assignments = Kaminari
-                   .paginate_array(current_organization.all_assignments(with_invitations: true)
-                   .sort_by(&:title))
-                   .page(params[:page])
+      .paginate_array(current_organization.all_assignments(with_invitations: true)
+      .sort_by(&:title))
+      .page(params[:page])
   end
 
   def edit; end
@@ -109,8 +110,10 @@ class OrganizationsController < Orgs::Controller
   end
 
   def github_organization_from_params
-    @github_organization_from_params ||= GitHubOrganization.new(current_user.github_client,
-                                                                params[:organization][:github_id].to_i)
+    @github_organization_from_params ||= GitHubOrganization.new(
+      current_user.github_client,
+      params[:organization][:github_id].to_i
+    )
   end
 
   def new_organization_params
@@ -168,3 +171,4 @@ class OrganizationsController < Orgs::Controller
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
