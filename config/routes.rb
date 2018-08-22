@@ -4,7 +4,6 @@ require "sidekiq/web"
 require "staff_constraint"
 
 Rails.application.routes.draw do
-  post "/graphql", to: "graphql#execute"
   mount Peek::Railtie => "/peek"
   mount ActionCable.server => "/cable"
 
