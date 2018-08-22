@@ -114,13 +114,6 @@ RSpec.describe OrganizationsController, type: :controller do
       end.to_not change(Organization, :count)
     end
 
-    it "will not add an organization that already exists" do
-      existing_organization_options = { github_id: organization.github_id }
-      expect do
-        post :create, params: { organization: existing_organization_options }
-      end.to_not change(Organization, :count)
-    end
-
     it "will add an organization that the user is admin of on GitHub" do
       organization_params = { github_id: organization.github_id, users: organization.users }
       organization.destroy!
