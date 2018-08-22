@@ -3,21 +3,24 @@
 require "rails_helper"
 
 RSpec.describe GroupAssignmentInvitationsController, type: :controller do
-  let(:organization) { classroom_org     }
+  let(:organization) { classroom_org }
   let(:student)      { classroom_student }
-
   let(:group_assignment) do
     options = {
       title: "HTML5",
       slug: "html5",
       organization: organization
     }
-
     create(:group_assignment, options)
   end
-
-  let(:grouping)   { group_assignment.grouping                                                }
-  let(:invitation) { create(:group_assignment_invitation, group_assignment: group_assignment) }
+  let(:grouping) { group_assignment.grouping }
+  let(:group) do
+    group = Group.create(grouping: grouping, title: "#{Faker::Company.name} Team")
+    group.repo_accesses << RepoAccess.create(user: student, organization: organization)
+    group
+  end
+  let(:invitation)    { create(:group_assignment_invitation, group_assignment: group_assignment) }
+  let(:invite_status) { invitation.status(group) }
 
   describe "GET #show", :vcr do
     context "unauthenticated request" do
@@ -217,6 +220,89 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
           GroupAssignmentRepo.destroy_all
           Group.destroy_all
         end
+      end
+    end
+  end
+
+  describe "GET #setupv2", :vcr do
+    before(:each) do
+      sign_in_as(student)
+    end
+
+    it "404s when feature is off" do
+      get :setupv2, params: { id: invitation.key }
+      expect(response.status).to eq(404)
+    end
+
+    context "with group import resiliency enabled" do
+      before do
+        GitHubClassroom.flipper[:group_import_resiliency].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:group_import_resiliency].disable
+      end
+
+      it "renders setupv2" do
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to render_template(:setupv2)
+      end
+    end
+  end
+
+  describe "POST #create_repo", :vcr do
+    before(:each) do
+      sign_in_as(student)
+    end
+
+    it "404s when feature is off" do
+      post :create_repo, params: { id: invitation.key }
+      expect(response.status).to eq(404)
+    end
+
+    context "with group import resiliency enabled" do
+      before do
+        GitHubClassroom.flipper[:group_import_resiliency].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:group_import_resiliency].disable
+      end
+
+      it "raises NotImplementedError" do
+        expect { post :create_repo, params: { id: invitation.key } }.to raise_error(NotImplementedError)
+      end
+    end
+  end
+
+  describe "GET #progress", :vcr do
+    before(:each) do
+      sign_in_as(student)
+    end
+
+    after(:each) do
+      RepoAccess.destroy_all
+      Group.destroy_all
+    end
+
+    it "404s when feature is off" do
+      get :progress, params: { id: invitation.key }
+      expect(response.status).to eq(404)
+    end
+
+    context "with group import resiliency enabled" do
+      before do
+        GitHubClassroom.flipper[:group_import_resiliency].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:group_import_resiliency].disable
+      end
+
+      it "returns status" do
+        invite_status.unaccepted!
+        get :progress, params: { id: invitation.key }
+        expect(response.body).to eq({ status: "unaccepted" }.to_json)
       end
     end
   end
