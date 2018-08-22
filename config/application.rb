@@ -80,8 +80,12 @@ module GitHubClassroom
   end
 
   class ClassroomExecutor
+    # TODO: Patch octokit in here to raise if REST API calls are made during GraphQL query resolution
     def self.execute(document:, operation_name: nil, variables: {}, context: {})
-      #TODO: Error loudly if no current_user
+      unless context[:current_user] && context[:current_user].is_a?(::User)
+        raise GitHubClassroomSchema::GraphQLError.new "A current_user must be provided to execute a GraphQL Query"
+      end
+
       GitHubClassroomSchema.execute(document.to_query_string, variables: variables, context: context, operation_name: operation_name)
     end
   end

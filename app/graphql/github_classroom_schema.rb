@@ -9,6 +9,8 @@ require_relative "types/mutation_type"
 require_relative "types/query_type"
 
 class GitHubClassroomSchema < GraphQL::Schema
+  class GraphQLError < StandardError; end
+
   mutation(Types::MutationType)
   query(Types::QueryType)
 
@@ -18,8 +20,9 @@ class GitHubClassroomSchema < GraphQL::Schema
     decoded_string = Base64.strict_decode64(id)
     gid_type, class_name, database_id = decoded_string.scan(/([0-9])([a-zA-Z]+):([0-9]+)/).first
 
-    # TODO: raise error here
-    return unless gid_type == "0"
+    unless gid_type == "0"
+      raise GraphQLError.new "Unexpected gid_type #{gid_type}"
+    end
 
     class_name.constantize.find(database_id)
   end
