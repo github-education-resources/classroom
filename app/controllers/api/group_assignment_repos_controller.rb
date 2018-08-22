@@ -12,6 +12,16 @@ module API
       paginate json: repos
     end
 
+    def clone_url
+      repo = GroupAssignmentRepo.where(
+        group_assignment: @group_assignment,
+        id: params[:group_assignment_repo_id]
+      ).first
+      render json: {
+        temp_clone_url: repo.github_repository.temp_clone_url
+      }
+    end
+
     private
 
     def set_assignment

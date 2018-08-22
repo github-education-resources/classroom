@@ -3,7 +3,6 @@
 class AssignmentRepoSerializer < ActiveModel::Serializer
   attributes :id
   attributes :username
-  attributes :repoUrl
   attributes :displayName
 
   def username
@@ -11,10 +10,6 @@ class AssignmentRepoSerializer < ActiveModel::Serializer
   end
 
   # rubocop:disable MethodName
-  def repoUrl
-    object.github_repository.html_url
-  end
-
   def displayName
     object.user.github_user.name || ""
   end
