@@ -138,9 +138,7 @@ class OrganizationsController < Orgs::Controller
       classrooms = Organization.where(github_id: organization[:github_id])
 
       classrooms.map do |classroom|
-        if !classroom.users.include?(current_user)
-          create_user_organization_access(classroom)
-        end
+        create_user_organization_access(classroom) unless classroom.users.include?(current_user)
       end
     end
   end
