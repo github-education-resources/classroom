@@ -37,22 +37,11 @@ RSpec.describe API::AssignmentsController, type: :controller do
       expect(response).to have_http_status(:success)
     end
 
-    context "assignment serializer returns correct attributes" do
-      it "returns assignment id" do
-        expect(json["id"]).to eq(@assignment.id)
-      end
-
-      it "returns assignment title" do
-        expect(json["title"]).to eq(@assignment.title)
-      end
-
-      it "returns individual assignment type" do
-        expect(json["type"]).to eq("individual")
-      end
-
-      it "returns organization github id" do
-        expect(json["organizationGithubId"]).to eq(organization.github_id)
-      end
+    it "returns correct attributes in assignment serializer" do
+      expect(json["id"]).to eq(@assignment.id)
+      expect(json["title"]).to eq(@assignment.title)
+      expect(json["type"]).to eq("individual")
+      expect(json["organizationGithubId"]).to eq(organization.github_id)
     end
   end
 end
