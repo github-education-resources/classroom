@@ -19,8 +19,6 @@ gem "connection_pool", "~> 2.2", ">= 2.2.1"
 
 gem "dalli", "~> 2.7", ">= 2.7.6"
 
-gem "erubis"
-
 gem "failbot_rails",      "~> 0.5.0"
 gem "faraday-http-cache", "~> 2.0"
 gem "flipper",            "~> 0.10.2"
