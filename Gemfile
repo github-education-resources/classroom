@@ -27,7 +27,6 @@ gem "flipper-ui",         "~> 0.10.2"
 
 gem "geo_pattern", "~> 1.4"
 gem "graphql", "1.8.4"
-gem "graphql-batch"
 
 # Using fork of graphql-client which fixes a bug in graphql-client on Rails 5
 gem 'graphql-client', git: 'https://github.com/d12/graphql-client.git', ref: '24ced5f'
