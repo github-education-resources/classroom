@@ -3,7 +3,7 @@
 class Organization < ApplicationRecord
   include Flippable
   include Sluggable
-  include Node
+  include GraphQLNode
 
   update_index("stafftools#organization") { self }
 

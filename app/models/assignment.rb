@@ -4,7 +4,7 @@ class Assignment < ApplicationRecord
   include Flippable
   include GitHubPlan
   include ValidatesNotReservedWord
-  include Node
+  include GraphQLNode
 
   update_index("stafftools#assignment") { self }
 

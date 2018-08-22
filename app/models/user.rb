@@ -2,7 +2,7 @@
 
 class User < ApplicationRecord
   include Flippable
-  include Node
+  include GraphQLNode
 
   update_index("stafftools#user") { self }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Node
+module GraphQLNode
   extend ActiveSupport::Concern
 
   def global_relay_id

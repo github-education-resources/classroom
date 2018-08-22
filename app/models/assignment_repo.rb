@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AssignmentRepo < ApplicationRecord
-  include Node
+  include GraphQLNode
 
   update_index("stafftools#assignment_repo") { self }
 
