@@ -6,11 +6,12 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   layout "layouts/invitations"
 
-  before_action :check_group_not_previous_acceptee,    only: [:show]
-  before_action :check_user_not_group_member,          only: [:show]
-  before_action :check_should_redirect_to_roster_page, only: [:show]
-  before_action :authorize_group_access,               only: [:accept_invitation]
-  before_action :ensure_github_repo_exists,            only: [:successful_invitation]
+  before_action :check_group_not_previous_acceptee,      only: [:show]
+  before_action :check_user_not_group_member,            only: [:show]
+  before_action :check_should_redirect_to_roster_page,   only: [:show]
+  before_action :authorize_group_access,                 only: [:accept_invitation]
+  before_action :ensure_github_repo_exists,              only: [:successful_invitation]
+  before_action :ensure_group_import_resiliency_enabled, only: %i[create_repo progress]
 
   def show
     @groups = invitation.groups.map { |group| [group.title, group.id] }
@@ -35,6 +36,14 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   def setupv2
     not_found unless group_import_resiliency_enabled?
+  end
+
+  def create_repo
+    raise NotImplementedError
+  end
+
+  def progress
+    render json: { status: group_invite_status&.status }
   end
 
   def successful_invitation; end
@@ -141,6 +150,11 @@ class GroupAssignmentInvitationsController < ApplicationController
     @group ||= repo_access.groups.find_by(grouping: group_assignment.grouping)
   end
   helper_method :group
+
+  def group_invite_status
+    return if group.blank?
+    @group_invite_status ||= invitation.status(group)
+  end
 
   def group_assignment
     @group_assignment ||= invitation.group_assignment
