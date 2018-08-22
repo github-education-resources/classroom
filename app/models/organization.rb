@@ -25,7 +25,7 @@ class Organization < ApplicationRecord
 
   validates :slug, uniqueness: true
 
-  validates :webhook_id, uniqueness: true, allow_nil: true
+  validates :webhook_id, presence: true
 
   before_destroy :silently_remove_organization_webhook
 
@@ -58,7 +58,6 @@ class Organization < ApplicationRecord
   end
 
   def last_classroom_on_org?
-    binding.pry
     return Organization.where(github_id: github_id).length <= 1
   end
 
