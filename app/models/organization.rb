@@ -25,8 +25,6 @@ class Organization < ApplicationRecord
 
   validates :slug, uniqueness: true
 
-  validates :webhook_id, presence: true
-
   before_destroy :silently_remove_organization_webhook
 
   def all_assignments(with_invitations: false)
