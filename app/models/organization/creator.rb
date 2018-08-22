@@ -108,7 +108,7 @@ class Organization
 
         webhook.id
       rescue GitHub::Error => e
-        github_webhook_id = process_webhook_error(e.message)
+        github_webhook_id = process_webhook_error(e.message, github_organization)
         return github_webhook_id unless github_webhook_id.nil?
 
         raise Result::Error, "Could not create WebHook, please try again."
@@ -173,7 +173,7 @@ class Organization
       github_client = users.sample.github_client
       github_org = GitHubOrganization.new(github_client, github_id)
 
-      org_identifier = github_org.name.present? ? github_org.name : github_org.login
+      org_identifier = github_org.name.presence || github_org.login
 
       find_unique_title("#{org_identifier}-classroom-1")
     end
@@ -235,7 +235,7 @@ class Organization
     # If the hook already exists get the webhook id from GitHub and return
     #
     # Returns a String for the webhook_id or nil
-    def process_webhook_error(message)
+    def process_webhook_error(message, github_organization)
       return nil unless message == "Hook: Hook already exists on this organization"
 
       get_organization_webhook_id(github_organization)
@@ -245,11 +245,11 @@ class Organization
     #
     # Returns a String for the webhook_id or nil
     def get_organization_webhook_id(github_organization)
-      webhooks = github_organization.get_organization_webhooks
+      webhooks = github_organization.organization_webhooks
 
       # There should only be one webhook that Classroom creates in production
       webhooks.first.id
-    rescue
+    rescue GitHub::Error => err
       nil
     end
 
