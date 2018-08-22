@@ -249,7 +249,7 @@ class Organization
 
       # There should only be one webhook that Classroom creates in production
       webhooks.first.id
-    rescue GitHub::Error => err
+    rescue GitHub::Error
       nil
     end
 
