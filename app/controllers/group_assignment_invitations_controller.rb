@@ -106,10 +106,6 @@ class GroupAssignmentInvitationsController < ApplicationController
     create_group_assignment_repo(selected_group: group)
   end
 
-  def ensure_group_import_resiliency_enabled
-    render status: 404, json: { error: "Not found" } unless group_import_resiliency_enabled?
-  end
-
   ## Controller Method Helpers
 
   # rubocop:disable Metrics/AbcSize
