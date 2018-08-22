@@ -2,6 +2,7 @@
 
 class User < ApplicationRecord
   include Flippable
+  include Node
 
   update_index("stafftools#user") { self }
 

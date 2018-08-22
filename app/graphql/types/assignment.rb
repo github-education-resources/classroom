@@ -11,6 +11,8 @@ class Types
 
     implements GraphQL::Relay::Node.interface
 
+    global_id_field :id
+
     field :title, String, description: "The Assignment title.", null: false
 
     field :slug, String, description: "The Assignment slug.", null: false

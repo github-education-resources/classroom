@@ -16,6 +16,10 @@ class GitHubClassroomSchema < GraphQL::Schema
 
   use GraphQL::Batch
 
+  def id_from_object(object, type, ctx)
+    object.global_relay_id
+  end
+
   def self.object_from_id(id, context)
     decoded_string = Base64.strict_decode64(id)
     gid_type, class_name, database_id = decoded_string.scan(/([0-9])([a-zA-Z]+):([0-9]+)/).first

@@ -9,6 +9,8 @@ class Types
 
     implements GraphQL::Relay::Node.interface
 
+    global_id_field :id
+
     field :database_id, Integer, description: "The Classroom database ID", null: false
 
     def database_id
