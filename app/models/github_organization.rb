@@ -114,16 +114,9 @@ class GitHubOrganization < GitHubResource
     end
   end
 
-  def get_organization_webhook(options: {})
+  def organization_webhooks
     GitHub::Errors.with_error_handling do
-      hook_options = {
-        events: ["*"],
-        active: true
-      }.merge(options)
-      web_hooks = @client.org_hooks(@id)
-
-      # Return first webhook (there should only be one for Classroom in production)
-      web_hooks.first
+      @client.org_hooks(@id)
     end
   end
 

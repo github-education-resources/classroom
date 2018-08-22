@@ -67,7 +67,7 @@ RSpec.describe Organization, type: :model do
 
     context "multiple classrooms with same github_id" do
       before do
-        secondary_classroom = create(:organization, github_id: 12_345)
+        create(:organization, github_id: 12_345)
       end
 
       it "returns false" do
@@ -77,7 +77,7 @@ RSpec.describe Organization, type: :model do
 
     context "multiple classrooms with different github_ids" do
       before do
-        secondary_classroom = create(:organization, github_id: 00_000)
+        create(:organization, github_id: 00_000)
       end
 
       it "returns true" do
@@ -89,10 +89,9 @@ RSpec.describe Organization, type: :model do
   describe "callbacks" do
     describe "before_destroy" do
       describe "#silently_remove_organization_webhook", :vcr do
-
         context "multiple classrooms on organization" do
           before do
-            secondary_classroom = create(:organization, github_id: 12_345)
+            create(:organization, github_id: 12_345)
           end
 
           it "does not delete the webhook from GitHub" do

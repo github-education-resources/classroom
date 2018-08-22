@@ -44,12 +44,14 @@ RSpec.describe Organization::Creator, type: :model do
 
       context "already created webhook on GitHub org" do
         before do
-          GitHubOrganization.any_instance.stub(:create_organization_webhook).
-            and_raise GitHub::Error, "Hook: Hook already exists on this organization"
+          GitHubOrganization
+            .any_instance.stub(:create_organization_webhook)
+            .and_raise GitHub::Error, "Hook: Hook already exists on this organization"
 
-          @dummy_webhook_id = 12345
-          Organization::Creator.any_instance.stub(:get_organization_webhook_id).
-            and_return @dummy_webhook_id
+          @dummy_webhook_id = 12_345
+          Organization::Creator
+            .any_instance.stub(:get_organization_webhook_id)
+            .and_return @dummy_webhook_id
         end
 
         it "sets webhook id to what it is already set on org" do

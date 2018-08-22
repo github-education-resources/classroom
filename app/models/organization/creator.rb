@@ -92,7 +92,9 @@ class Organization
     # Internal: Create an GitHub Organization WebHook if there
     # is a user who has the correct token scope.
     #
-    # Returns an Integer id, or raises a Result::Error
+    # Returns an Integer id, or raises a Result::Error#
+    # rubocop:disable MethodLength
+    # rubocop:disable AbcSize
     def create_organization_webhook!
       return unless (user = user_with_admin_org_hook_scope)
 
@@ -106,14 +108,14 @@ class Organization
 
         webhook.id
       rescue GitHub::Error => e
-        if e.message == "Hook: Hook already exists on this organization"
-          org_webhook_id = get_organization_webhook_id(github_organization)
-          return org_webhook_id unless org_webhook_id.nil?
-        end
+        github_webhook_id = process_webhook_error(e.message)
+        return github_webhook_id unless github_webhook_id.nil?
 
         raise Result::Error, "Could not create WebHook, please try again."
       end
     end
+    # rubocop:enable AbcSize
+    # rubocop:enable MethodLength
 
     # Internal: Make sure every user being added to the
     # Organization is an admin on GitHub.
@@ -173,8 +175,7 @@ class Organization
 
       org_identifier = github_org.name.present? ? github_org.name : github_org.login
 
-      base_title = "#{org_identifier}-classroom-1"
-      find_unique_title(base_title)
+      find_unique_title("#{org_identifier}-classroom-1")
     end
 
     # Internal: Find User that has the `admin:org_hook` scope
@@ -230,12 +231,24 @@ class Organization
       raise Result::Error, error_message
     end
 
+    # Internal: Check error from GitHub when we try to create the webhook
+    # If the hook already exists get the webhook id from GitHub and return
+    #
+    # Returns a String for the webhook_id or nil
+    def process_webhook_error(message)
+      return nil unless message == "Hook: Hook already exists on this organization"
+
+      get_organization_webhook_id(github_organization)
+    end
+
     # Internal: Get id of webhook already on GitHub
     #
     # Returns a String for the webhook_id or nil
     def get_organization_webhook_id(github_organization)
-      webhook = github_organization.get_organization_webhook
-      webhook.id
+      webhooks = github_organization.get_organization_webhooks
+
+      # There should only be one webhook that Classroom creates in production
+      webhooks.first.id
     rescue
       nil
     end
@@ -245,7 +258,7 @@ class Organization
     #
     # Returns a String for the webhook_id or nil
     def existing_webhook_id
-      classroom_with_same_org = Organization.where(github_id: github_id).first
+      classroom_with_same_org = Organization.find_by(github_id: github_id)
       classroom_with_same_org ? classroom_with_same_org.webhook_id : nil
     end
 
@@ -256,7 +269,7 @@ class Organization
     def find_unique_title(base_title)
       count = 1
 
-      until unique_title?(base_title) do
+      until unique_title?(base_title)
         base_title = base_title.gsub(/\-\d+$/, "") + "-#{count}"
         count += 1
       end
@@ -269,7 +282,7 @@ class Organization
     #
     # Returns a Boolean on whether duplicate classroom title is
     def unique_title?(base_title)
-      Organization.where(title:base_title, github_id: github_id).blank?
+      Organization.where(title: base_title, github_id: github_id).blank?
     end
   end
 end

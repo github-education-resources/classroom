@@ -58,7 +58,7 @@ class Organization < ApplicationRecord
   end
 
   def last_classroom_on_org?
-    return Organization.where(github_id: github_id).length <= 1
+    Organization.where(github_id: github_id).length <= 1
   end
 
   def silently_remove_organization_webhook
