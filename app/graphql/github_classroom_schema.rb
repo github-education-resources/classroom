@@ -5,14 +5,14 @@ require_relative "types/user"
 require_relative "types/classroom"
 require_relative "types/assignment"
 
-require_relative "types/mutation_type"
-require_relative "types/query_type"
+require_relative "types/mutation"
+require_relative "types/query"
 
 class GitHubClassroomSchema < GraphQL::Schema
   class GraphQLError < StandardError; end
 
-  mutation(Types::MutationType)
-  query(Types::QueryType)
+  mutation(Types::Mutation)
+  query(Types::Query)
 
   use GraphQL::Batch
 

@@ -2,7 +2,7 @@ require_relative "../loaders/github_loader"
 require "graphql"
 
 class Types
-  class QueryType < GraphQL::Schema::Object
+  class Query < GraphQL::Schema::Object
     field :node, field: GraphQL::Relay::Node.field
 
     field :viewer, Types::User, description: "The currently authenticated user.", null: false
