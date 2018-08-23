@@ -1,6 +1,14 @@
 require_relative "../loaders/github_loader"
 
 class Types::User < GraphQL::Schema::Object
+  # TODO: This should be:
+  # User is one of
+  # - The current_user
+  # - A student of one organization the current_user is an admin of
+  def self.authorized?(user, context)
+    super
+  end
+
   implements GraphQL::Relay::Node.interface
 
   global_id_field :id

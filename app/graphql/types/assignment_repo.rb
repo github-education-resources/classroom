@@ -10,6 +10,8 @@ class Types
       super && context[:current_user] && repo.assignment.organization.users.include?(context[:current_user])
     end
 
+    implements GraphQL::Relay::Node.interface
+
     global_id_field :id
 
     field :assignment, Types::Assignment, description: "The assignment repo assignment", null: false
