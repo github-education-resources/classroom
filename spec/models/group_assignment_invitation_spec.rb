@@ -113,7 +113,7 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
       end
 
       it "changes the invite status to accepted" do
-        result = subject.redeem_for(student, nil, group_name, group_import_resiliency: true)
+        subject.redeem_for(student, nil, group_name, group_import_resiliency: true)
         expect(subject.status(Group.all.first).accepted?).to be_truthy
       end
     end

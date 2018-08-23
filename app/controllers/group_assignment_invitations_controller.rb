@@ -158,7 +158,7 @@ class GroupAssignmentInvitationsController < ApplicationController
       GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
       flash[:error] = result.error
       redirect_to group_assignment_invitation_path
-    when *[:success, :pending]
+    when :success, :pending
       if group_import_resiliency_enabled?
         GitHubClassroom.statsd.increment("v2_group_exercise_invitation.accept")
         route_based_on_status
