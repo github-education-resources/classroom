@@ -1,6 +1,8 @@
 require_relative "../loaders/github_loader"
 
 class Types::User < GraphQL::Schema::Object
+  implements GraphQL::Relay::Node.interface
+
   global_id_field :id
 
   field :login, String, description: "The user's GitHub login.", null: false
