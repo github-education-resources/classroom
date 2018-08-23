@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe GroupAssignmentInvitation::Result, type: :model do
-  subject { described_class }
+  subject                     { described_class }
   let(:group_assignment_repo) { GroupAssignmentRepo.new }
   let(:error)                 { "Something went wrong" }
 
