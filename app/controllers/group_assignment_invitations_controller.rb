@@ -146,20 +146,25 @@ class GroupAssignmentInvitationsController < ApplicationController
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
   def create_group_assignment_repo(selected_group: group, new_group_title: nil)
-    if !invitation.enabled?
-      flash[:error] = "Invitations for this assignment have been disabled."
-      redirect_to group_assignment_invitation_path
-    else
-      users_group_assignment_repo = invitation.redeem_for(current_user, selected_group, new_group_title)
+    result = invitation.redeem_for(
+      current_user,
+      selected_group,
+      new_group_title,
+      group_import_resiliency: group_import_resiliency_enabled?
+    )
 
-      if users_group_assignment_repo.present?
+    case result.status
+    when :failed
+      GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
+      flash[:error] = result.error
+      redirect_to group_assignment_invitation_path
+    when *[:success, :pending]
+      if group_import_resiliency_enabled?
+        GitHubClassroom.statsd.increment("v2_group_exercise_invitation.accept")
+        route_based_on_status
+      else
         GitHubClassroom.statsd.increment("group_exercise_invitation.accept")
         yield if block_given?
-      else
-        GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
-
-        flash[:error] = "An error has occurred, please refresh the page and try again."
-        redirect_to group_assignment_invitation_path
       end
     end
   end
