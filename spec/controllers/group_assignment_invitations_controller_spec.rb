@@ -13,9 +13,10 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     }
     create(:group_assignment, options)
   end
-  let(:grouping) { group_assignment.grouping }
+  let(:grouping)   { group_assignment.grouping }
+  let(:group_name) { "#{Faker::Company.name} Team" }
   let(:group) do
-    group = Group.create(grouping: grouping, title: "#{Faker::Company.name} Team")
+    group = Group.create(grouping: grouping, title: group_name)
     group.repo_accesses << RepoAccess.create(user: student, organization: organization)
     group
   end
@@ -368,6 +369,72 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
           organization.github_client.delete_repository(@original_repository.id)
           GroupAssignmentRepo.destroy_all
           Group.destroy_all
+        end
+      end
+
+      context "with group import resiliency enabled" do
+        before do
+          GitHubClassroom.flipper[:group_import_resiliency].enable
+        end
+
+        after do
+          GitHubClassroom.flipper[:group_import_resiliency].disable
+        end
+
+        describe "success" do
+          it "sends an event to statsd" do
+            expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_invitation.accept")
+            patch :accept_invitation, params: { id: invitation.key, group: { title: group_name } }
+          end
+
+          it "creates a team" do
+            patch :accept_invitation, params: { id: invitation.key, group: { title: group_name } }
+            expect(student.repo_accesses.count).to eql(1)
+          end
+
+          it "does not create a repo" do
+            patch :accept_invitation, params: { id: invitation.key, group: { title: group_name } }
+            expect(group_assignment.group_assignment_repos.count).to eql(0)
+          end
+
+          it "redirects to #setupv2" do
+            patch :accept_invitation, params: { id: invitation.key, group: { title: group_name } }
+            expect(response).to redirect_to(setupv2_group_assignment_invitation_path)
+          end
+
+          it "makes the invite status accepted" do
+            patch :accept_invitation, params: { id: invitation.key, group: { title: group_name } }
+            expect(invitation.status(Group.all.first).accepted?).to be_truthy
+          end
+
+          context "joins an existing group" do
+            let(:group) { Group.create(title: "The Group", grouping: grouping) }
+
+            it "creates a repo_access" do
+              patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
+              expect(student.repo_accesses.count).to eql(1)
+            end
+
+            context "groups status is already completed" do
+              before do
+                invitation.status(group).completed!
+              end
+
+              it "redirects to #successful_invitation" do
+                patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
+                expect(response).to redirect_to(successful_invitation_group_assignment_invitation_path)
+              end
+            end
+          end
+        end
+
+        describe "failed" do
+          it "fails if assignment invitations are disabled" do
+            group_assignment.update(invitations_enabled: false)
+
+            patch :accept_invitation, params: { id: invitation.key, group: { title: group_name } }
+            expect(response).to redirect_to(group_assignment_invitation_path)
+          end
         end
       end
     end
