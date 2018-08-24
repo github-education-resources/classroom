@@ -2,11 +2,11 @@
 
 class RepositoryCreationStatusChannel < ApplicationCable::Channel
   def self.channel(user_id:)
-    "#{RepositoryCreationStatusChannel.channel_name}_#{user_id}"
+    "#{channel_name}_#{user_id}"
   end
 
   def subscribed
-    stream_from RepositoryCreationStatusChannel.channel(user_id: current_user.id)
+    stream_from self.class.channel(user_id: current_user.id)
   end
 
   def unsubscribed
