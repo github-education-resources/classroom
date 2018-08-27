@@ -36,22 +36,16 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     end
 
     describe "unaccepted!" do
-      it "gets #accept" do
-        invite_status.unaccepted!
-        get :accept, params: { id: invitation.key }
-        expect(response).to render_template(:accept)
-      end
-
-      it "gets #setupv2 and redirects to #accept" do
+      it "gets #setupv2 and redirects to #show" do
         invite_status.unaccepted!
         get :setupv2, params: { id: invitation.key }
-        expect(response).to redirect_to(accept_group_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(group_assignment_invitation_url(invitation))
       end
 
-      it "gets #successful_invitation and redirects to #accept" do
+      it "gets #successful_invitation and redirects to #show" do
         invite_status.unaccepted!
         get :successful_invitation, params: { id: invitation.key }
-        expect(response).to redirect_to(accept_group_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(group_assignment_invitation_url(invitation))
       end
     end
 
@@ -393,6 +387,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       end
 
       it "renders setupv2" do
+        invite_status.creating_repo!
         get :setupv2, params: { id: invitation.key }
         expect(response).to render_template(:setupv2)
       end
