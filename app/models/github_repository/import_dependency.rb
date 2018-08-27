@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class GitHubRepository
-  IMPORT_ERRORS     = %w[auth_failed error detection_needs_auth detection_found_nothing detection_found_multiple].freeze
-  IMPORT_ONGOING    = %w[detecting importing mapping pushing].freeze
-  IMPORT_COMPLETE   = "complete"
-  IMPORT_STEPS = IMPORT_ONGOING + [IMPORT_COMPLETE]
+  IMPORT_ERRORS   = %w[auth_failed error detection_needs_auth detection_found_nothing detection_found_multiple].freeze
+  IMPORT_ONGOING  = %w[detecting importing mapping pushing].freeze
+  IMPORT_COMPLETE = "complete"
+  IMPORT_STEPS    = IMPORT_ONGOING + [IMPORT_COMPLETE]
 
   def get_starter_code_from(source)
     GitHub::Errors.with_error_handling do
