@@ -79,10 +79,9 @@ class GroupAssignmentInvitationsController < ApplicationController
   def route_based_on_status
     return unless group_import_resiliency_enabled?
     status = group_invite_status&.status
-    return if status.blank?
     case status
-    when "unaccepted"
-      redirect_to accept_group_assignment_invitation_path(invitation) if action_name != "accept"
+    when "unaccepted", nil
+      redirect_to group_assignment_invitation_path(invitation)
     when "completed"
       redirect_to successful_invitation_group_assignment_invitation_path if action_name != "successful_invitation"
     when *(GroupInviteStatus::ERRORED_STATUSES + GroupInviteStatus::SETUP_STATUSES)
