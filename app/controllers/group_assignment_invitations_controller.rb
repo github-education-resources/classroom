@@ -2,15 +2,18 @@
 
 # rubocop:disable Metrics/ClassLength
 class GroupAssignmentInvitationsController < ApplicationController
+  class InvalidStatusForRouteError < StandardError; end
+
   include InvitationsControllerMethods
 
   layout "layouts/invitations"
 
-  before_action :check_group_not_previous_acceptee,      only: [:show]
-  before_action :check_user_not_group_member,            only: [:show]
-  before_action :check_should_redirect_to_roster_page,   only: [:show]
-  before_action :authorize_group_access,                 only: [:accept_invitation]
-  before_action :ensure_github_repo_exists,              only: [:successful_invitation]
+  before_action :route_based_on_status,                  only: %i[setupv2 successful_invitation]
+  before_action :check_group_not_previous_acceptee,      only: :show
+  before_action :check_user_not_group_member,            only: :show
+  before_action :check_should_redirect_to_roster_page,   only: :show
+  before_action :authorize_group_access,                 only: :accept_invitation
+  before_action :ensure_github_repo_exists,              only: :successful_invitation
   before_action :ensure_group_import_resiliency_enabled, only: %i[create_repo progress]
 
   def show
@@ -69,6 +72,27 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
 
   ## Before Actions
+
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable MethodLength
+  # rubocop:disable Metrics/CyclomaticComplexity
+  def route_based_on_status
+    return unless group_import_resiliency_enabled?
+    status = group_invite_status&.status
+    case status
+    when "unaccepted", nil
+      redirect_to group_assignment_invitation_path(invitation)
+    when "completed"
+      redirect_to successful_invitation_group_assignment_invitation_path if action_name != "successful_invitation"
+    when *(GroupInviteStatus::ERRORED_STATUSES + GroupInviteStatus::SETUP_STATUSES)
+      redirect_to setupv2_group_assignment_invitation_path if action_name != "setupv2"
+    else
+      raise InvalidStatusForRouteError, "No route registered for status: #{status}"
+    end
+  end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable MethodLength
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def authorize_group_access
     group_id = group_params[:id]
