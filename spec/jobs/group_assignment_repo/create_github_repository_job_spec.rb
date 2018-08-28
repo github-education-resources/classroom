@@ -5,9 +5,9 @@ require "rails_helper"
 RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
   include ActiveJob::TestHelper
 
-  context "with created objects", :vcr do
-    subject { GroupAssignmentRepo::CreateGitHubRepositoryJob }
+  subject { described_class }
 
+  context "with created objects", :vcr do
     let(:cascading_job) { GroupAssignmentRepo::PorterStatusJob }
     let(:organization)  { classroom_org }
     let(:student)       { classroom_student }
@@ -44,48 +44,40 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       expect(subject).to have_been_enqueued.on_queue("create_repository")
     end
 
-    #   it "kicks off a cascading porter status job" do
-    #     subject.perform_now(assignment, teacher)
-    #     expect(cascading_job).to have_been_enqueued.on_queue("porter_status")
-    #   end
-
-    context "invalid invitation statuses" do
+    context "invalid invitation status" do
       before(:each) do
         group.repo_accesses << repo_access
       end
 
       after(:each) do
+        expect_any_instance_of(subject).to_not receive(:broadcast_message)
         subject.perform_now(group_assignment, group)
+        expect { GroupAssignmentRepo.find_by!(group_assignment: group_assignment, group: group) }
+          .to raise_error(ActiveRecord::RecordNotFound)
       end
 
       it "returns early when invitation status is unaccepted" do
         invite_status.unaccepted!
-        expect(invite_status.updated_at).to eq(invite_status.reload.updated_at)
       end
 
       it "returns early when invitation status is accepted" do
         invite_status.accepted!
-        expect(invite_status.updated_at).to eq(invite_status.reload.updated_at)
       end
 
       it "returns early when invitation status is creating_repo" do
         invite_status.creating_repo!
-        expect(invite_status.updated_at).to eq(invite_status.reload.updated_at)
       end
 
       it "returns early when invitation status is importing_starter_code" do
         invite_status.importing_starter_code!
-        expect(invite_status.updated_at).to eq(invite_status.reload.updated_at)
       end
 
       it "returns early when invitation status is errored_creating_repo" do
         invite_status.errored_creating_repo!
-        expect(invite_status.updated_at).to eq(invite_status.reload.updated_at)
       end
 
       it "returns early when invitation status is errored_importing_starter_code" do
         invite_status.errored_importing_starter_code!
-        expect(invite_status.updated_at).to eq(invite_status.reload.updated_at)
       end
     end
 
@@ -102,7 +94,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         end
 
         it "changes the invite_status" do
-          expect(invite_status.updated_at).to_not eq(invite_status.reload.updated_at)
+          expect(invite_status.status).to_not eq(invite_status.reload.status)
         end
 
         it "group_assignment_repo not nil" do
@@ -129,6 +121,12 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           add_github_team_url = github_url("/teams/#{group.github_team_id}/repos/#{@result.github_repository.full_name}")
           expect(WebMock).to have_requested(:put, add_github_team_url)
         end
+
+        # TODO: Implement GroupAssignmentRepo::PorterStatusJob
+        #
+        # it "kicks off a cascading porter status job" do
+        #   expect(cascading_job).to have_been_enqueued.on_queue("porter_status")
+        # end
       end
     end
 
