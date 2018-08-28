@@ -19,6 +19,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
     let(:grouping)      { create(:grouping, organization: organization) }
     let(:group)         { Group.create(title: "Group 1", grouping: grouping) }
     let(:invite_status) { group_assignment.invitation.status(group) }
+    let(:channel) { group_repo_channel.channel(group_assignment_id: group_assignment.id, group_id: group.id) }
     let(:group_assignment) do
       group_assignment = create(
         :group_assignment,
@@ -134,22 +135,18 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       end
 
       describe "successful creation" do
-        it "broadcasts creating_repo" do
-          expect { subject.perform_now(group_assignment, group) }
-            .to have_broadcasted_to(group_repo_channel.channel(group_assignment_id: group_assignment.id, group_id: group.id))
-            .with(
-              text: subject::CREATE_REPO,
-              status: "creating_repo"
-            )
-        end
+        describe "broadcasts" do
+          it "creating_repo" do
+            expect { subject.perform_now(group_assignment, group) }
+              .to have_broadcasted_to(channel)
+              .with(text: subject::CREATE_REPO, status: "creating_repo")
+          end
 
-        it "broadcasts importing_starter_code" do
-          expect { subject.perform_now(group_assignment, group) }
-            .to have_broadcasted_to(group_repo_channel.channel(group_assignment_id: group_assignment.id, group_id: group.id))
-            .with(
-              text: subject::IMPORT_STARTER_CODE,
-              status: "importing_starter_code"
-            )
+          it "importing_starter_code" do
+            expect { subject.perform_now(group_assignment, group) }
+              .to have_broadcasted_to(channel)
+              .with(text: subject::IMPORT_STARTER_CODE, status: "importing_starter_code")
+          end
         end
 
         describe "datadog stats" do
