@@ -1,0 +1,366 @@
+# frozen_string_literal: true
+
+require "rails_helper"
+
+RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
+  include ActiveJob::TestHelper
+
+  context "with created objects", :vcr do
+    subject { GroupAssignmentRepo::CreateGitHubRepositoryJob }
+
+    let(:cascading_job) { GroupAssignmentRepo::PorterStatusJob }
+    let(:organization)  { classroom_org }
+    let(:student)       { classroom_student }
+    let(:repo_access)   { RepoAccess.create(user: student, organization: organization) }
+    let(:grouping)      { create(:grouping, organization: organization) }
+    let(:group)         { Group.create(title: "Group 1", grouping: grouping) }
+
+    let(:group_assignment) do
+      group_assignment = create(
+        :group_assignment,
+        grouping: grouping,
+        title: "Learn JavaScript",
+        organization: organization,
+        public_repo: true,
+        starter_code_repo_id: 1_062_897
+      )
+      group_assignment.build_group_assignment_invitation
+      group_assignment
+    end
+    let(:invite_status) { group_assignment.invitation.status(group) }
+
+    after(:each) do
+      RepoAccess.destroy_all
+      GroupAssignmentRepo.destroy_all
+      Group.destroy_all
+      GroupAssignmentInvitation.destroy_all
+      GroupAssignment.destroy_all
+      clear_enqueued_jobs
+      clear_performed_jobs
+    end
+
+    it "uses the create_repository queue" do
+      subject.perform_later
+      expect(subject).to have_been_enqueued.on_queue("create_repository")
+    end
+
+    #   it "kicks off a cascading porter status job" do
+    #     subject.perform_now(assignment, teacher)
+    #     expect(cascading_job).to have_been_enqueued.on_queue("porter_status")
+    #   end
+
+    context "invalid invitation statuses" do
+      before(:each) do
+        group.repo_accesses << repo_access
+      end
+
+      after(:each) do
+        subject.perform_now(group_assignment, group)
+      end
+
+      it "returns early when invitation status is unaccepted" do
+        invite_status.unaccepted!
+        expect(invite_status.updated_at).to eq(invite_status.reload.updated_at)
+      end
+
+      it "returns early when invitation status is accepted" do
+        invite_status.accepted!
+        expect(invite_status.updated_at).to eq(invite_status.reload.updated_at)
+      end
+
+      it "returns early when invitation status is creating_repo" do
+        invite_status.creating_repo!
+        expect(invite_status.updated_at).to eq(invite_status.reload.updated_at)
+      end
+
+      it "returns early when invitation status is importing_starter_code" do
+        invite_status.importing_starter_code!
+        expect(invite_status.updated_at).to eq(invite_status.reload.updated_at)
+      end
+
+      it "returns early when invitation status is errored_creating_repo" do
+        invite_status.errored_creating_repo!
+        expect(invite_status.updated_at).to eq(invite_status.reload.updated_at)
+      end
+
+      it "returns early when invitation status is errored_importing_starter_code" do
+        invite_status.errored_importing_starter_code!
+        expect(invite_status.updated_at).to eq(invite_status.reload.updated_at)
+      end
+    end
+
+    context "valid invitation status" do
+      before(:each) do
+        group.repo_accesses << repo_access
+        invite_status.waiting!
+      end
+
+      describe "successful creation" do
+        before do
+          subject.perform_now(group_assignment, group)
+          @result = GroupAssignmentRepo.find_by!(group_assignment: group_assignment, group: group)
+        end
+
+        it "changes the invite_status" do
+          expect(invite_status.updated_at).to_not eq(invite_status.reload.updated_at)
+        end
+
+        it "group_assignment_repo not nil" do
+          expect(@result.nil?).to be_falsy
+        end
+
+        it "is the same assignment" do
+          expect(@result.assignment).to eql(group_assignment)
+        end
+
+        it "has the same group" do
+          expect(@result.group).to eql(group)
+        end
+
+        it "created a GitHub repository" do
+          expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
+        end
+
+        it "started a source import" do
+          expect(WebMock).to have_requested(:put, github_url("/repositories/#{@result.github_repo_id}/import"))
+        end
+
+        it "added the team to the repository" do
+          add_github_team_url = github_url("/teams/#{group.github_team_id}/repos/#{@result.github_repository.full_name}")
+          expect(WebMock).to have_requested(:put, add_github_team_url)
+        end
+      end
+    end
+
+    #   context "creates an GroupAssignmentRepo as an outside_collaborator" do
+    #     before do
+    #       subject.perform_now(assignment, student)
+    #     end
+
+    #     it "is not nil" do
+    #       result = assignment.assignment_repos.first
+    #       expect(result.nil?).to be_falsy
+    #     end
+
+    #     it "is the same assignment" do
+    #       result = assignment.assignment_repos.first
+    #       expect(result.assignment).to eql(assignment)
+    #     end
+
+    #     it "has the same user" do
+    #       result = assignment.assignment_repos.first
+    #       expect(result.user).to eql(student)
+    #     end
+    #   end
+
+    #   context "creates an GroupAssignmentRepo as a member" do
+    #     before do
+    #       subject.perform_now(assignment, teacher)
+    #     end
+
+    #     it "is not nil" do
+    #       result = assignment.assignment_repos.first
+    #       expect(result.nil?).to be_falsy
+    #     end
+
+    #     it "is the same assignment" do
+    #       result = assignment.assignment_repos.first
+    #       expect(result.assignment).to eql(assignment)
+    #     end
+
+    #     it "has the same user" do
+    #       result = assignment.assignment_repos.first
+    #       expect(result.user).to eql(teacher)
+    #     end
+    #   end
+
+    #   it "broadcasts status on channel" do
+    #     expect { subject.perform_now(assignment, teacher) }
+    #       .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: teacher.id))
+    #       .with(
+    #         text: GroupAssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO,
+    #         status: "creating_repo"
+    #       )
+    #       .with(
+    #         text: GroupAssignmentRepo::CreateGitHubRepositoryJob::IMPORT_STARTER_CODE,
+    #         status: "importing_starter_code"
+    #       )
+    #   end
+
+    #   it "tracks create fail stat" do
+    #     expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.success")
+    #     subject.perform_now(assignment, teacher)
+    #   end
+
+    #   it "tracks how long it too to be created" do
+    #     expect(GitHubClassroom.statsd).to receive(:timing)
+    #     subject.perform_now(assignment, teacher)
+    #   end
+    # end
+
+    # describe "failure", :vcr do
+    #   it "tracks create fail stat" do
+    #     stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
+    #       .to_return(body: "{}", status: 401)
+
+    #     expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.repo.fail")
+    #     subject.perform_now(assignment, student)
+    #   end
+
+    #   it "broadcasts create repo failure" do
+    #     stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
+    #       .to_return(body: "{}", status: 401)
+
+    #     expect { subject.perform_now(assignment, student) }
+    #       .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
+    #       .with(
+    #         text: GroupAssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO,
+    #         status: "creating_repo"
+    #       )
+    #       .with(
+    #         error: GroupAssignmentRepo::Creator::REPOSITORY_CREATION_FAILED,
+    #         status: "errored_creating_repo"
+    #       )
+    #   end
+
+    #   it "fails and automatically retries" do
+    #     import_regex = %r{#{github_url("/repositories/")}\d+/import$}
+    #     stub_request(:put, import_regex)
+    #       .to_return(body: "{}", status: 401)
+
+    #     expect(subject).to receive(:perform_later).with(assignment, teacher, retries: 0)
+    #     subject.perform_now(assignment, teacher, retries: 1)
+    #   end
+
+    #   it "fails and puts invite status in state to retry" do
+    #     import_regex = %r{#{github_url("/repositories/")}\d+/import$}
+    #     stub_request(:put, import_regex)
+    #       .to_return(body: "{}", status: 401)
+
+    #     subject.perform_now(assignment, teacher, retries: 1)
+    #     expect(@teacher_invite_status.reload.waiting?).to be_truthy
+    #   end
+
+    #   context "with successful repo creation" do
+    #     # Verify that we try to delete the GitHub repository
+    #     # if part of the process fails.
+    #     after(:each) do
+    #       regex = %r{#{github_url("/repositories")}/\d+$}
+    #       expect(WebMock).to have_requested(:delete, regex)
+    #     end
+
+    #     it "fails to import starter code and broadcasts" do
+    #       import_regex = %r{#{github_url("/repositories/")}\d+/import$}
+    #       stub_request(:put, import_regex)
+    #         .to_return(body: "{}", status: 401)
+
+    #       expect { subject.perform_now(assignment, student) }
+    #         .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
+    #         .with(
+    #           text: GroupAssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO,
+    #           status: "creating_repo"
+    #         )
+    #         .with(
+    #           error: GroupAssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
+    #           status: "errored_creating_repo"
+    #         )
+    #     end
+
+    #     it "fails to import starter code and logs" do
+    #       import_regex = %r{#{github_url("/repositories/")}\d+/import$}
+    #       stub_request(:put, import_regex)
+    #         .to_return(body: "{}", status: 401)
+
+    #       expect(Rails.logger)
+    #         .to receive(:warn)
+    #         .with(GroupAssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
+    #       subject.perform_now(assignment, student)
+    #     end
+
+    #     it "fails to import starter code and reports" do
+    #       import_regex = %r{#{github_url("/repositories/")}\d+/import$}
+    #       stub_request(:put, import_regex)
+    #         .to_return(body: "{}", status: 401)
+
+    #       expect(GitHubClassroom.statsd)
+    #         .to receive(:increment)
+    #         .with("v2_exercise_repo.create.importing_starter_code.fail")
+    #       subject.perform_now(assignment, student)
+    #     end
+
+    #     it "fails to add the user to the repo and broadcasts" do
+    #       repo_invitation_regex = %r{#{github_url("/repositories/")}\d+/collaborators/.+$}
+    #       stub_request(:put, repo_invitation_regex)
+    #         .to_return(body: "{}", status: 401)
+
+    #       expect { subject.perform_now(assignment, student) }
+    #         .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
+    #         .with(
+    #           text: GroupAssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO,
+    #           status: "creating_repo"
+    #         )
+    #         .with(
+    #           error: GroupAssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED,
+    #           status: "errored_creating_repo"
+    #         )
+    #     end
+
+    #     it "fails to add the user to the repo and logs" do
+    #       repo_invitation_regex = %r{#{github_url("/repositories/")}\d+/collaborators/.+$}
+    #       stub_request(:put, repo_invitation_regex)
+    #         .to_return(body: "{}", status: 401)
+
+    #       expect(Rails.logger)
+    #         .to receive(:warn)
+    #         .with(GroupAssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED)
+    #       subject.perform_now(assignment, student)
+    #     end
+
+    #     it "fails to add the user to the repo and reports" do
+    #       repo_invitation_regex = %r{#{github_url("/repositories/")}\d+/collaborators/.+$}
+    #       stub_request(:put, repo_invitation_regex)
+    #         .to_return(body: "{}", status: 401)
+
+    #       expect(GitHubClassroom.statsd)
+    #         .to receive(:increment)
+    #         .with("v2_exercise_repo.create.adding_collaborator.fail")
+    #       subject.perform_now(assignment, student)
+    #     end
+
+    #     it "fails to save the GroupAssignmentRepo and broadcasts" do
+    #       allow_any_instance_of(GroupAssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
+
+    #       expect { subject.perform_now(assignment, student) }
+    #         .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
+    #         .with(
+    #           text: GroupAssignmentRepo::CreateGitHubRepositoryJob::CREATE_REPO,
+    #           status: "creating_repo"
+    #         )
+    #         .with(
+    #           error: GroupAssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE,
+    #           status: "errored_creating_repo"
+    #         )
+    #     end
+
+    #     it "fails to save the GroupAssignmentRepo and logs" do
+    #       allow_any_instance_of(GroupAssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
+
+    #       expect(Rails.logger)
+    #         .to receive(:warn)
+    #         .with("Record invalid")
+    #       expect(Rails.logger)
+    #         .to receive(:warn)
+    #         .with(GroupAssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE)
+    #       subject.perform_now(assignment, student)
+    #     end
+
+    #     it "fails to save the GroupAssignmentRepo and reports" do
+    #       allow_any_instance_of(GroupAssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
+
+    #       expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.fail")
+    #       subject.perform_now(assignment, student)
+    #     end
+    #   end
+    # end
+  end
+end
