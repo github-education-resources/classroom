@@ -27,7 +27,7 @@ class GroupAssignmentRepo
 
       broadcast_message(CREATE_REPO, invite_status, group_assignment, group)
 
-      group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
+      group_assignment_repo = GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
       report_time(start)
 
       GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.success")
@@ -39,8 +39,8 @@ class GroupAssignmentRepo
         invite_status.completed!
         broadcast_message(CREATE_COMPLETE, invite_status, group_assignment, group)
       end
-    rescue GitHub::Error, ActiveRecord::RecordInvalid => err
-      handle_error(err)
+    rescue GitHub::Error, ActiveRecord::RecordInvalid => error
+      handle_error(error, group_assignment, group, invite_status, retries)
     end
     # rubocop:enable MethodLength
     # rubocop:enable AbcSize
@@ -90,13 +90,13 @@ class GroupAssignmentRepo
     #
     def report_time(start_time)
      duration_in_millseconds = (Time.zone.now - start_time) * 1_000
-     GitHubClassroom.statsd.timing("v2_exercise_repo.create.time", duration_in_millseconds)
+     GitHubClassroom.statsd.timing("v2_group_exercise_repo.create.time", duration_in_millseconds)
     end
 
     # Maps the type of error to a Datadog error
     #
     def report_error(err)
-      GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
+      GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.fail")
     end
   end
 end
