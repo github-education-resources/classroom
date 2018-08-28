@@ -88,9 +88,10 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       end
 
       describe "successful creation" do
+        let(:assignment_repo) { GroupAssignmentRepo.find_by!(group_assignment: group_assignment, group: group) }
+
         before do
           subject.perform_now(group_assignment, group)
-          @result = GroupAssignmentRepo.find_by!(group_assignment: group_assignment, group: group)
         end
 
         it "changes the invite_status" do
@@ -98,15 +99,15 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         end
 
         it "group_assignment_repo not nil" do
-          expect(@result.nil?).to be_falsy
+          expect(assignment_repo.nil?).to be_falsy
         end
 
         it "is the same assignment" do
-          expect(@result.assignment).to eql(group_assignment)
+          expect(assignment_repo.assignment).to eql(group_assignment)
         end
 
         it "has the same group" do
-          expect(@result.group).to eql(group)
+          expect(assignment_repo.group).to eql(group)
         end
 
         it "created a GitHub repository" do
@@ -114,12 +115,12 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         end
 
         it "started a source import" do
-          expect(WebMock).to have_requested(:put, github_url("/repositories/#{@result.github_repo_id}/import"))
+          expect(WebMock).to have_requested(:put, github_url("/repositories/#{assignment_repo.github_repo_id}/import"))
         end
 
         it "added the team to the repository" do
-          add_team_url = github_url("/teams/#{group.github_team_id}/repos/#{@result.github_repository.full_name}")
-          expect(WebMock).to have_requested(:put, add_team_url)
+          repo_name = assignment_repo.github_repository.full_name
+          expect(WebMock).to have_requested(:put, github_url("/teams/#{group.github_team_id}/repos/#{repo_name}"))
         end
 
         # TODO: Implement GroupAssignmentRepo::PorterStatusJob
