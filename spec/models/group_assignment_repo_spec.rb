@@ -69,7 +69,8 @@ RSpec.describe GroupAssignmentRepo, type: :model do
                 github_repo = GitHubRepository.new(organization.github_client, @group_assignment_repo.github_repo_id)
                 add_github_team_url = github_url("/teams/#{group.github_team_id}/repos/#{github_repo.full_name}")
                 permission_param = { permission: "admin" }
-                expect(WebMock).to have_requested(:put, add_github_team_url).with(body: hash_including(permission_param))
+                expect(WebMock).to have_requested(:put, add_github_team_url)
+                  .with(body: hash_including(permission_param))
               end
             end
           end
@@ -92,7 +93,9 @@ RSpec.describe GroupAssignmentRepo, type: :model do
 
           describe "#add_team_to_github_repository" do
             it "fails to add team to the repository" do
-              regex = %r{#{github_url("/teams/#{group.github_team_id}/repos/")}#{GitHub::USERNAME_REGEX}\/#{GitHub::REPOSITORY_REGEX}$}
+              USERNAME_REGEX = GitHub::USERNAME_REGEX
+              REPOSITORY_REGEX = GitHub::REPOSITORY_REGEX
+              regex = %r{#{github_url("/teams/#{group.github_team_id}/repos/")}#{USERNAME_REGEX}\/#{REPOSITORY_REGEX}$}
               stub_request(:put, regex)
                 .to_return(status: 500)
               expect { GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group) }
