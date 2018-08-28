@@ -7,14 +7,18 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
   subject { described_class }
 
+  # TODO: Implement GroupAssignmentRepo::PorterStatusJob (follow up PR)
+  #
+  # let(:cascading_job)      { GroupAssignmentRepo::PorterStatusJob }
+  let(:group_repo_channel) { GroupRepositoryCreationStatusChannel }
+
   context "with created objects", :vcr do
-    let(:cascading_job) { GroupAssignmentRepo::PorterStatusJob }
     let(:organization)  { classroom_org }
     let(:student)       { classroom_student }
     let(:repo_access)   { RepoAccess.create(user: student, organization: organization) }
     let(:grouping)      { create(:grouping, organization: organization) }
     let(:group)         { Group.create(title: "Group 1", grouping: grouping) }
-
+    let(:invite_status) { group_assignment.invitation.status(group) }
     let(:group_assignment) do
       group_assignment = create(
         :group_assignment,
@@ -27,7 +31,6 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       group_assignment.build_group_assignment_invitation
       group_assignment
     end
-    let(:invite_status) { group_assignment.invitation.status(group) }
 
     after(:each) do
       RepoAccess.destroy_all
@@ -123,11 +126,45 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           expect(WebMock).to have_requested(:put, github_url("/teams/#{group.github_team_id}/repos/#{repo_name}"))
         end
 
-        # TODO: Implement GroupAssignmentRepo::PorterStatusJob
+        # TODO: Implement GroupAssignmentRepo::PorterStatusJob (follow up PR)
         #
         # it "kicks off a cascading porter status job" do
         #   expect(cascading_job).to have_been_enqueued.on_queue("porter_status")
         # end
+      end
+
+      describe "successful creation" do
+        it "broadcasts creating_repo" do
+          expect { subject.perform_now(group_assignment, group) }
+            .to have_broadcasted_to(group_repo_channel.channel(group_assignment_id: group_assignment.id, group_id: group.id))
+            .with(
+              text: subject::CREATE_REPO,
+              status: "creating_repo"
+            )
+        end
+
+        it "broadcasts importing_starter_code" do
+          expect { subject.perform_now(group_assignment, group) }
+            .to have_broadcasted_to(group_repo_channel.channel(group_assignment_id: group_assignment.id, group_id: group.id))
+            .with(
+              text: subject::IMPORT_STARTER_CODE,
+              status: "importing_starter_code"
+            )
+        end
+
+        describe "datadog stats" do
+          after do
+            subject.perform_now(group_assignment, group)
+          end
+
+          it "tracks create success" do
+            expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.success")
+          end
+
+          it "tracks elapsed time" do
+            expect(GitHubClassroom.statsd).to receive(:timing)
+          end
+        end
       end
     end
 

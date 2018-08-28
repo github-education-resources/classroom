@@ -30,7 +30,7 @@ class GroupAssignmentRepo
       group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
       report_time(start)
 
-      GitHubClassroom.statsd.increment("v2_exercise_repo.create.success")
+      GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.success")
       if group_assignment.starter_code?
         invite_status.importing_starter_code!
         broadcast_message(IMPORT_STARTER_CODE, invite_status, group_assignment, group)
