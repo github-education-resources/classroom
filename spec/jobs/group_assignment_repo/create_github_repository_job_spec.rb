@@ -118,8 +118,8 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         end
 
         it "added the team to the repository" do
-          add_github_team_url = github_url("/teams/#{group.github_team_id}/repos/#{@result.github_repository.full_name}")
-          expect(WebMock).to have_requested(:put, add_github_team_url)
+          add_team_url = github_url("/teams/#{group.github_team_id}/repos/#{@result.github_repository.full_name}")
+          expect(WebMock).to have_requested(:put, add_team_url)
         end
 
         # TODO: Implement GroupAssignmentRepo::PorterStatusJob
