@@ -33,8 +33,6 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       group_assignment
     end
 
-    # TODO: write context to test the retries param
-
     after(:each) do
       RepoAccess.destroy_all
       GroupAssignmentRepo.destroy_all
