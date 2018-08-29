@@ -1,5 +1,7 @@
 require_relative "../loaders/github_loader"
 
+require_relative "assignment_repo"
+
 class Types
   class Classroom < GraphQL::Schema::Object
     # To see an organization, you must be an organization owner

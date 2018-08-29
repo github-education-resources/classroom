@@ -1,10 +1,5 @@
 require "graphql"
 
-require_relative "types/assignment_repo"
-require_relative "types/user"
-require_relative "types/classroom"
-require_relative "types/assignment"
-
 require_relative "types/mutation"
 require_relative "types/query"
 
