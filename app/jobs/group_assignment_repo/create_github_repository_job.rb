@@ -58,7 +58,7 @@ class GroupAssignmentRepo
       else
         invite_status.errored_creating_repo!
         broadcast_error(error, invite_status, group_assignment, group)
-        report_error(error)
+        report_error
       end
       logger.warn(error.message)
     end
