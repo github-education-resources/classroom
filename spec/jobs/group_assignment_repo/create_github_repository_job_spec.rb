@@ -173,7 +173,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             grouping: grouping,
             title: "Empty repo",
             organization: organization,
-            public_repo: false,
+            public_repo: false
           )
           group_assignment.build_group_assignment_invitation
           group_assignment
@@ -187,8 +187,8 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           end
 
           it "changes the invite_status to completed" do
-          expect(invite_status.reload.status).to eq("completed")
-        end
+            expect(invite_status.reload.status).to eq("completed")
+          end
 
           it "group_assignment_repo not nil" do
             expect(assignment_repo.nil?).to be_falsy

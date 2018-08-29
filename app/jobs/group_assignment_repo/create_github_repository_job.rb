@@ -17,8 +17,6 @@ class GroupAssignmentRepo
     #
     # rubocop:disable MethodLength
     # rubocop:disable AbcSize
-    # rubocop:disable CyclomaticComplexity
-    # rubocop:disable PerceivedComplexity
     def perform(group_assignment, group, retries: 0)
       start = Time.zone.now
       invite_status = group_assignment.invitation.status(group)
@@ -27,13 +25,16 @@ class GroupAssignmentRepo
 
       broadcast_message(CREATE_REPO, invite_status, group_assignment, group)
 
-      group_assignment_repo = GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
+      # TODO: Implement PorterStatusJob (follow up PR)
+      # group_assignment_repo = GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
+      GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
       report_time(start)
 
       GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.success")
       if group_assignment.starter_code?
         invite_status.importing_starter_code!
         broadcast_message(IMPORT_STARTER_CODE, invite_status, group_assignment, group)
+        # TODO: Implement PorterStatusJob (follow up PR)
         # PorterStatusJob.perform_later(group_assignment_repo, group) create new PorterStatusJob for groups
       else
         invite_status.completed!
@@ -52,7 +53,6 @@ class GroupAssignmentRepo
     # Given an error, retries the job if the number of retries left is positive
     # or broadcasts a failure to the group
     #
-    # rubocop:disable MethodLength
     def handle_error(error, group_assignment, group, invite_status, retries)
       if retries.positive?
         invite_status.waiting!
@@ -64,38 +64,37 @@ class GroupAssignmentRepo
       end
       logger.warn(error.message)
     end
-    # rubocop:enable MethodLength
 
     # Broadcasts a ActionCable message with a status to the given group_assignment and group
     #
     def broadcast_message(message, invite_status, group_assignment, group)
-     ActionCable.server.broadcast(
-       GroupRepositoryCreationStatusChannel.channel(group_id: group.id, group_assignment_id: group_assignment.id),
-       text: message,
-       status: invite_status.status
-     )
+      ActionCable.server.broadcast(
+        GroupRepositoryCreationStatusChannel.channel(group_id: group.id, group_assignment_id: group_assignment.id),
+        text: message,
+        status: invite_status.status
+      )
     end
 
     # Broadcasts a ActionCable error with a status to the given group_assignment and group
     #
     def broadcast_error(error, invite_status, group_assignment, group)
-     ActionCable.server.broadcast(
-       GroupRepositoryCreationStatusChannel.channel(group_id: group.id, group_assignment_id: group_assignment.id),
-       error: error,
-       status: invite_status.status
-     )
+      ActionCable.server.broadcast(
+        GroupRepositoryCreationStatusChannel.channel(group_id: group.id, group_assignment_id: group_assignment.id),
+        error: error,
+        status: invite_status.status
+      )
     end
 
     # Reports the elapsed time to Datadog
     #
     def report_time(start_time)
-     duration_in_millseconds = (Time.zone.now - start_time) * 1_000
-     GitHubClassroom.statsd.timing("v2_group_exercise_repo.create.time", duration_in_millseconds)
+      duration_in_millseconds = (Time.zone.now - start_time) * 1_000
+      GitHubClassroom.statsd.timing("v2_group_exercise_repo.create.time", duration_in_millseconds)
     end
 
     # Maps the type of error to a Datadog error
     #
-    def report_error(err)
+    def report_error
       GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.fail")
     end
   end
