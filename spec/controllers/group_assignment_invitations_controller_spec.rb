@@ -277,11 +277,23 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         patch :accept_invitation, params: { id: invitation.key, group: { title: "Code Squad" } }
       end
 
-      it "fails if assignment invitations are disabled" do
-        group_assignment.update(invitations_enabled: false)
+      context "invitations are disabled" do
+        before do
+          group_assignment.update(invitations_enabled: false)
+          patch :accept_invitation, params: { id: invitation.key, group: { title: "Code Squad" } }
+        end
 
-        patch :accept_invitation, params: { id: invitation.key, group: { title: "Code Squad" } }
-        expect(response).to redirect_to(group_assignment_invitation_path)
+        it "redirects" do
+          expect(response).to redirect_to(group_assignment_invitation_path)
+        end
+
+        it "has errors" do
+          expect(flash[:error]).to eq("Invitations for this assignment have been disabled.")
+        end
+
+        it "doesn't record a failure" do
+          expect(GitHubClassroom.statsd).to_not receive(:increment)
+        end
       end
 
       it "does not allow users to join a group that is not apart of the grouping" do
