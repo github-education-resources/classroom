@@ -9,11 +9,12 @@ class GroupAssignmentRepo
 
     queue_as :create_repository
 
-    # Create an GroupAssignmentRepo
+    # Creates a GroupAssignmentRepo and an associated GitHub repo.
+    # Starts a source import if starter code is specified.
     #
-    # group_assignment - The Assignment that will own the GroupAssignmentRepo
-    # group       - The User that the GroupAssignmentRepo will belong to
-    # retries    - The number of times the job will automatically retry
+    # group_assignment - The assignment that will be used to create the GroupAssignmentRepo
+    # group            - The group that the GroupAssignmentRepo will belong to
+    # retries          - The number of times the job will automatically retry
     #
     # rubocop:disable MethodLength
     # rubocop:disable AbcSize
