@@ -251,6 +251,23 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       end
 
       describe "creation failure" do
+        describe "positive retries" do
+          before do
+            stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
+              .to_return(status: 500)
+          end
+
+          it "fails and automatically retries" do
+            expect(subject).to receive(:perform_later).with(group_assignment, group, retries: 0)
+            subject.perform_now(group_assignment, group, retries: 1)
+          end
+
+          it "fails and puts invite status in state to retry" do
+            subject.perform_now(group_assignment, group, retries: 1)
+            expect(invite_status.reload.status).to eq("waiting")
+          end
+        end
+
         context "fails to create a GitHub repo" do
           before do
             stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
