@@ -45,8 +45,6 @@ class GroupAssignmentRepo
     end
     # rubocop:enable MethodLength
     # rubocop:enable AbcSize
-    # rubocop:enable CyclomaticComplexity
-    # rubocop:enable PerceivedComplexity
 
     private
 
