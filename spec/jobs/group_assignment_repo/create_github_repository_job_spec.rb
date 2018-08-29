@@ -33,7 +33,6 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       group_assignment
     end
 
-    # TODO: write context with assignment that doesnt have starter code
     # TODO: write context to test the retries param
 
     after(:each) do
@@ -101,8 +100,8 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           subject.perform_now(group_assignment, group)
         end
 
-        it "changes the invite_status" do
-          expect(invite_status.status).to_not eq(invite_status.reload.status)
+        it "changes the invite_status to importing_starter_code" do
+          expect(invite_status.reload.status).to eq("importing_starter_code")
         end
 
         it "group_assignment_repo not nil" do
@@ -163,6 +162,90 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
           it "tracks elapsed time" do
             expect(GitHubClassroom.statsd).to receive(:timing)
+          end
+        end
+      end
+
+      describe "context no starter code" do
+        let(:group_assignment) do
+          group_assignment = create(
+            :group_assignment,
+            grouping: grouping,
+            title: "Empty repo",
+            organization: organization,
+            public_repo: false,
+          )
+          group_assignment.build_group_assignment_invitation
+          group_assignment
+        end
+
+        describe "successful creation" do
+          let(:assignment_repo) { GroupAssignmentRepo.find_by!(group_assignment: group_assignment, group: group) }
+
+          before do
+            subject.perform_now(group_assignment, group)
+          end
+
+          it "changes the invite_status to completed" do
+          expect(invite_status.reload.status).to eq("completed")
+        end
+
+          it "group_assignment_repo not nil" do
+            expect(assignment_repo.nil?).to be_falsy
+          end
+
+          it "is the same assignment" do
+            expect(assignment_repo.assignment).to eql(group_assignment)
+          end
+
+          it "has the same group" do
+            expect(assignment_repo.group).to eql(group)
+          end
+
+          it "created a GitHub repository" do
+            expect(WebMock)
+              .to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
+          end
+
+          it "did not start a source import" do
+            expect(WebMock)
+              .to_not have_requested(:put, github_url("/repositories/#{assignment_repo.github_repo_id}/import"))
+          end
+
+          it "added the team to the repository" do
+            repo_name = assignment_repo.github_repository.full_name
+            expect(WebMock)
+              .to have_requested(:put, github_url("/teams/#{group.github_team_id}/repos/#{repo_name}"))
+          end
+        end
+
+        describe "successful creation" do
+          describe "broadcasts" do
+            it "creating_repo" do
+              expect { subject.perform_now(group_assignment, group) }
+                .to have_broadcasted_to(channel)
+                .with(text: subject::CREATE_REPO, status: "creating_repo")
+            end
+
+            it "completed" do
+              expect { subject.perform_now(group_assignment, group) }
+                .to have_broadcasted_to(channel)
+                .with(text: subject::CREATE_COMPLETE, status: "completed")
+            end
+          end
+
+          describe "datadog stats" do
+            after do
+              subject.perform_now(group_assignment, group)
+            end
+
+            it "tracks create success" do
+              expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.success")
+            end
+
+            it "tracks elapsed time" do
+              expect(GitHubClassroom.statsd).to receive(:timing)
+            end
           end
         end
       end
