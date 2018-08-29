@@ -41,9 +41,30 @@ class GroupAssignmentInvitationsController < ApplicationController
     not_found unless group_import_resiliency_enabled?
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable MethodLength
   def create_repo
-    raise NotImplementedError
+    will_create_repo =
+      if group_invite_status.accepted? || group_invite_status.errored?
+        if group_assignment_repo&.github_repository&.empty?
+          group_assignment_repo&.destroy
+          @group_assignment_repo = nil
+        end
+        report_retry
+        group_invite_status.waiting!
+        GroupAssignmentRepo::CreateGitHubRepositoryJob.perform_later(group_assignment, group, retries: 3)
+        true
+      else
+        false
+      end
+    render json: {
+      will_create_repo: will_create_repo,
+      status: group_invite_status.status,
+      repo_url: group_assignment_repo&.github_repository&.html_url
+    }
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable MethodLength
 
   def progress
     render json: { status: group_invite_status&.status }
@@ -164,6 +185,14 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable MethodLength
+
+  def report_retry
+    if group_invite_status.errored_creating_repo?
+      GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.retry")
+    elsif group_invite_status.errored_importing_starter_code?
+      GitHubClassroom.statsd.increment("v2_group_exercise_repo.import.retry")
+    end
+  end
 
   ## Resource Helpers
 
