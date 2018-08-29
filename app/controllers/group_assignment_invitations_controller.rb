@@ -102,7 +102,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     validate_max_members_not_exceeded!(group)
     return if group_assignment.grouping.groups.find_by(id: group_id)
 
-    GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
+    report_invitation_failure
     raise NotAuthorized, "You are not permitted to select this team"
   end
 
@@ -137,7 +137,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     return unless group.present? && group_assignment.present? && group_assignment.max_members.present?
     return unless group.repo_accesses.count >= group_assignment.max_members
 
-    GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
+    report_invitation_failure
     raise NotAuthorized, "This team has reached its maximum member limit of #{group_assignment.max_members}."
   end
   # rubocop:enable Metrics/AbcSize
@@ -154,7 +154,7 @@ class GroupAssignmentInvitationsController < ApplicationController
 
     case result.status
     when :failed
-      GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
+      report_invitation_failure if invitation.enabled?
       flash[:error] = result.error
       redirect_to group_assignment_invitation_path
     when :success, :pending
@@ -169,6 +169,14 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable MethodLength
+
+  def report_invitation_failure
+    if group_import_resiliency_enabled?
+      GitHubClassroom.statsd.increment("v2_group_exercise_invitation.fail")
+    else
+      GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
+    end
+  end
 
   ## Resource Helpers
 
