@@ -8,7 +8,7 @@ module GitHub
       def with_error_handling
         yield
       rescue Octokit::Error => err
-        Failbot.report!($ERROR_INFO)
+        Failbot.report!($ERROR_INFO) unless err.class == Octokit::NotFound
         process_octokit_error(err)
       end
 
