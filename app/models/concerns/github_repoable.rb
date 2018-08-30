@@ -56,7 +56,9 @@ module GitHubRepoable
     assignment_repository   = GitHubRepository.new(client, github_repo_id)
     starter_code_repository = GitHubRepository.new(client, starter_code_repo_id)
 
-    assignment_repository.get_starter_code_from(starter_code_repository)
+    delete_github_repository_on_failure do
+      assignment_repository.get_starter_code_from(starter_code_repository)
+    end
   end
 
   # Internal
