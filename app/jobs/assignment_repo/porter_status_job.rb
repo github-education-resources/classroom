@@ -2,7 +2,7 @@
 
 class AssignmentRepo
   class PorterStatusJob < ApplicationJob
-    REPO_IMPORT_STEPS = GitHubRepository::IMPORT_ONGOING + [GitHubRepository::IMPORT_COMPLETE]
+    REPO_IMPORT_STEPS = GitHubRepository::IMPORT_STEPS
     queue_as :porter_status
 
     # rubocop:disable MethodLength
