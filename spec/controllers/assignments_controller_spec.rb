@@ -43,15 +43,23 @@ RSpec.describe AssignmentsController, type: :controller do
     end
 
     context "valid starter_code repo_name input" do
-      before do
+      it "creates a new Assignment" do
         post :create, params: {
           organization_id: organization.slug,
           assignment:      attributes_for(:assignment, organization: organization),
           repo_name:       "rails/rails"
         }
+
+        expect(Assignment.count).to eql(1)
       end
 
-      it "creates a new Assignment" do
+      it "creates a new Assignment when name has a period" do
+        post :create, params: {
+          organization_id: organization.slug,
+          assignment:      attributes_for(:assignment, organization: organization),
+          repo_name:       "rails/rails.github.com"
+        }
+
         expect(Assignment.count).to eql(1)
       end
     end

@@ -9,6 +9,10 @@ class ApplicationController
     not_found unless student_identifier_enabled?
   end
 
+  def ensure_group_import_resiliency_enabled
+    not_found unless group_import_resiliency_enabled?
+  end
+
   def student_identifier_enabled?
     logged_in? && current_user.feature_enabled?(:student_identifier)
   end
@@ -19,8 +23,18 @@ class ApplicationController
   end
   helper_method :team_management_enabled?
 
-  def repo_setup_enabled?
-    logged_in? && current_user.feature_enabled?(:repo_setup)
+  def import_resiliency_enabled?
+    logged_in? && current_user.feature_enabled?(:import_resiliency)
   end
-  helper_method :repo_setup_enabled?
+  helper_method :import_resiliency_enabled?
+
+  def group_import_resiliency_enabled?
+    logged_in? && current_user.feature_enabled?(:group_import_resiliency)
+  end
+  helper_method :group_import_resiliency_enabled?
+
+  def download_repositories_enabled?
+    logged_in? && current_user.feature_enabled?(:download_repositories)
+  end
+  helper_method :download_repositories_enabled?
 end

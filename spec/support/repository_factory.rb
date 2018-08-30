@@ -147,7 +147,7 @@ class StubRepository
 
   def head_refs
     Dir.glob(repo_path + "/.git_/refs/**/*").reject { |f| File.directory?(f) }
-       .map { |f| f.split(".git_/").second }
+      .map { |f| f.split(".git_/").second }
   end
 
   def repo_path
@@ -161,10 +161,12 @@ module RepositoryFactory
   end
 
   def create_github_branch(client, repo, branch)
-    client.create_contents(repo.full_name,
-                           "README.md",
-                           "Add README.md",
-                           "Hello world GitHub Classroom",
-                           branch: branch)
+    client.create_contents(
+      repo.full_name,
+      "README.md",
+      "Add README.md",
+      "Hello world GitHub Classroom",
+      branch: branch
+    )
   end
 end

@@ -1,24 +1,29 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 module Orgs
   class RostersController < Orgs::Controller
     before_action :ensure_student_identifier_flipper_is_enabled
 
-    before_action :ensure_current_roster,           except: %i[new create]
-    before_action :ensure_current_roster_entry,     except: %i[show new create remove_organization add_students]
-    before_action :ensure_enough_members_in_roster, only: [:delete_entry]
+    before_action :ensure_current_roster,             except: %i[new create]
+    before_action :ensure_current_roster_entry,       except: %i[show new create remove_organization add_students]
+    before_action :ensure_enough_members_in_roster,   only: [:delete_entry]
+    before_action :ensure_allowed_to_access_grouping, only: [:show]
 
     helper_method :current_roster, :unlinked_users
 
+    # rubocop:disable AbcSize
     def show
       @roster_entries = current_roster.roster_entries
-                                      .includes(:user).order(:identifier)
-                                      .page(params[:roster_entries_page])
+        .includes(:user)
+        .order(:identifier)
+        .page(params[:roster_entries_page])
 
       @current_unlinked_users = User.where(id: unlinked_user_ids).page(params[:unlinked_users_page])
 
       download_roster if params.dig("format")
     end
+    # rubocop:enable AbcSize
 
     def new
       @roster = Roster.new
@@ -121,12 +126,24 @@ module Orgs
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
 
+    # rubocop:disable Metrics/MethodLength
     def download_roster
+      grouping = current_organization.groupings.find(params[:grouping]) if params[:grouping]
+
+      user_to_groups = get_user_to_group_hash(grouping)
+
       @roster_entries = @current_roster.roster_entries.includes(:user).order(:identifier)
       respond_to do |format|
-        format.csv { send_data @roster_entries.to_csv, filename: "classroom_roster.csv", disposition: "attachment" }
+        format.csv do
+          send_data(
+            @roster_entries.to_csv(user_to_groups),
+            filename:    "classroom_roster.csv",
+            disposition: "attachment"
+          )
+        end
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     private
 
@@ -153,6 +170,12 @@ module Orgs
 
       flash[:error] = "You cannot delete the last member of your roster!"
       redirect_to roster_url(current_organization)
+    end
+
+    def ensure_allowed_to_access_grouping
+      return if params[:grouping].nil?
+
+      not_found unless Grouping.find(params[:grouping]).organization_id == current_organization.id
     end
 
     # An unlinked user is a user who:
@@ -189,5 +212,21 @@ module Orgs
 
       @unlinked_users
     end
+
+    # Maps user_ids to group names
+    # If no grouping is specified it returns an empty hash
+    def get_user_to_group_hash(grouping)
+      mapping = {}
+      return mapping unless grouping
+
+      grouping.groups.each do |group|
+        group.repo_accesses.map(&:user_id).each do |id|
+          mapping[id] = group.title
+        end
+      end
+
+      mapping
+    end
   end
 end
+# rubocop:enable Metrics/ClassLength

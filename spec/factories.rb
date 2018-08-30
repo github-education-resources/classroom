@@ -7,13 +7,19 @@ FactoryBot.define do
   factory :assignment do
     organization
 
-    title        { "#{Faker::Company.name} Assignment" }
-    slug         { title.parameterize                  }
-    creator      { organization.users.first            }
+    title                 { "#{Faker::Company.name} Assignment" }
+    slug                  { title.parameterize                  }
+    creator               { organization.users.first            }
+    assignment_invitation { build_assignment_invitation         }
   end
 
   factory :assignment_invitation do
     assignment
+  end
+
+  factory :invite_status do
+    assignment_invitation
+    user
   end
 
   factory :assignment_repo do

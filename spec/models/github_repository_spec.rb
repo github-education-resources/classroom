@@ -261,5 +261,17 @@ describe GitHubRepository do
         expect(github_repository.number_of_commits).to be > 30
       end
     end
+
+    describe "#empty?", :vcr do
+      it "returns false when there are commits" do
+        github_repository = GitHubRepository.new(@client, 35_079_964)
+        expect(github_repository.empty?).to be_falsey
+      end
+
+      it "returns true when there are no commits" do
+        github_repository = GitHubRepository.new(@client, 141_328_892)
+        expect(github_repository.empty?).to be_truthy
+      end
+    end
   end
 end

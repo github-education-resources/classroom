@@ -30,11 +30,11 @@ RSpec.describe Orgs::RostersController, type: :controller do
         expect(response).to render_template("rosters/new")
       end
 
-      it "redirects if the user doesn't belong to the organization" do
+      it "sends not found if the user doesn't belong to the organization" do
         sign_in_as(classroom_student)
 
         get :new, params: { id: organization.slug }
-        expect(response).to have_http_status(:redirect)
+        expect(response).to have_http_status(:not_found)
       end
 
       after do
@@ -208,20 +208,40 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
       context "download roster button" do
         before do
-          roster.roster_entries.destroy_all
+          organization.roster = create(:roster)
+          organization.save
 
           Array.new(24) do |e|
-            roster.roster_entries << RosterEntry.new(identifier: "ID-#{e}")
+            organization.roster.roster_entries << RosterEntry.new(identifier: "ID-#{e}")
           end
-          @all_entries = roster.roster_entries
+          @all_entries = organization.roster.roster_entries
         end
 
-        it "should exports CSV with all entries" do
-          roster_csv = @all_entries.to_csv
-          paginated_roster_csv = @all_entries.first(20).to_csv
+        it "should export CSV with all entries" do
+          get :show, params: { id: organization.slug, format: "csv" }
 
-          expect(paginated_roster_csv.split("\n").size - 1).not_to eq(@all_entries.count)
-          expect(roster_csv.split("\n").size - 1).to eq(@all_entries.count)
+          csv = response.body.split("\n")
+          csv_without_header = csv[1..-1]
+
+          expect(csv_without_header.length).to eq(@all_entries.count)
+        end
+
+        it "succeeds when accessible grouping is provided" do
+          grouping = create(:grouping, organization: organization)
+
+          get :show, params: { id: organization.slug, grouping: grouping.id, format: "csv" }
+
+          csv = response.body.split("\n")
+          csv_without_header = csv[1..-1]
+
+          expect(csv_without_header.length).to eq(@all_entries.count)
+        end
+
+        it "404s when inaccessible grouping is provided" do
+          grouping = create(:grouping)
+
+          get :show, params: { id: organization.slug, grouping: grouping.id, format: "csv" }
+          expect(response).to have_http_status(:not_found)
         end
       end
 

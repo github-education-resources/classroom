@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable ClassLength
 class GroupAssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
@@ -31,12 +32,12 @@ class GroupAssignmentsController < ApplicationController
   def show
     pagination_key = @organization.roster ? :teams_page : :page
     @group_assignment_repos = GroupAssignmentRepo.where(group_assignment: @group_assignment)
-                                                 .page(params[pagination_key])
+      .page(params[pagination_key])
 
     return unless @organization.roster
     @students_not_on_team = @organization.roster.roster_entries
-                                         .students_not_on_team(@group_assignment)
-                                         .page(params[:students_page])
+      .students_not_on_team(@group_assignment)
+      .page(params[:students_page])
   end
 
   def edit; end
@@ -65,6 +66,13 @@ class GroupAssignmentsController < ApplicationController
     end
   end
 
+  def desktop
+    code_param = CGI.escape(current_user.api_token)
+    url_param = CGI.escape(organization_group_assignment_url)
+
+    redirect_to "x-github-classroom://?assignment_url=#{url_param}&code=#{code_param}"
+  end
+
   private
 
   def authorize_grouping_access
@@ -80,16 +88,27 @@ class GroupAssignmentsController < ApplicationController
     GroupAssignmentService.new(new_group_assignment_params, new_grouping_params).build_group_assignment
   end
 
+  # rubocop:disable MethodLength
   def new_group_assignment_params
     params
       .require(:group_assignment)
-      .permit(:title, :slug, :public_repo, :grouping_id, :max_members, :students_are_repo_admins,
-              :invitations_enabled)
-      .merge(creator: current_user,
-             organization: @organization,
-             starter_code_repo_id: starter_code_repo_id_param,
-             deadline: deadline_param)
+      .permit(
+        :title,
+        :slug,
+        :public_repo,
+        :grouping_id,
+        :max_members,
+        :students_are_repo_admins,
+        :invitations_enabled
+      )
+      .merge(
+        creator: current_user,
+        organization: @organization,
+        starter_code_repo_id: starter_code_repo_id_param,
+        deadline: deadline_param
+      )
   end
+  # rubocop:enable MethodLength
 
   def new_grouping_params
     params
@@ -104,9 +123,9 @@ class GroupAssignmentsController < ApplicationController
 
   def set_group_assignment
     @group_assignment = @organization
-                        .group_assignments
-                        .includes(:group_assignment_invitation)
-                        .find_by!(slug: params[:id])
+      .group_assignments
+      .includes(:group_assignment_invitation)
+      .find_by!(slug: params[:id])
   end
 
   def deadline_param
@@ -123,11 +142,21 @@ class GroupAssignmentsController < ApplicationController
     end
   end
 
+  # rubocop:disable MethodLength
   def update_group_assignment_params
     params
       .require(:group_assignment)
-      .permit(:title, :slug, :public_repo, :max_members, :students_are_repo_admins, :deadline,
-              :invitations_enabled)
+      .permit(
+        :title,
+        :slug,
+        :public_repo,
+        :max_members,
+        :students_are_repo_admins,
+        :deadline,
+        :invitations_enabled
+      )
       .merge(starter_code_repo_id: starter_code_repo_id_param)
   end
+  # rubocop:enable MethodLength
 end
+# rubocop:enable ClassLength
