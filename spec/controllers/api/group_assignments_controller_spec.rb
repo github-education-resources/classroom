@@ -37,22 +37,11 @@ RSpec.describe API::GroupAssignmentsController, type: :controller do
       expect(response).to have_http_status(:success)
     end
 
-    context "group assignment serializer returns correct attributes" do
-      it "returns assignment id" do
-        expect(json["id"]).to eq(@group_assignment.id)
-      end
-
-      it "returns assignment title" do
-        expect(json["title"]).to eq(@group_assignment.title)
-      end
-
-      it "returns assignment type" do
-        expect(json["type"]).to eq("group")
-      end
-
-      it "returns organization github id" do
-        expect(json["organizationGithubId"]).to eq(organization.github_id)
-      end
+    it "returns correct attributes in group assignment serializer" do
+      expect(json["id"]).to eq(@group_assignment.id)
+      expect(json["title"]).to eq(@group_assignment.title)
+      expect(json["type"]).to eq("group")
+      expect(json["organizationGithubId"]).to eq(organization.github_id)
     end
   end
 end
