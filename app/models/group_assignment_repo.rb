@@ -28,10 +28,8 @@ class GroupAssignmentRepo < ApplicationRecord
   before_validation(on: :create) do
     if organization
       create_github_repository
-      delete_github_repository_on_failure do
-        push_starter_code
-        add_team_to_github_repository
-      end
+      push_starter_code
+      add_team_to_github_repository
     end
   end
 

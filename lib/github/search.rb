@@ -2,6 +2,9 @@
 
 module GitHub
   class Search
+    REPOSITORY_REGEX = /[a-zA-Z0-9\._-]+/
+    USERNAME_REGEX = /[a-zA-Z0-9_-]+/
+
     attr_accessor :search_client
 
     def initialize(access_token, options = { auto_paginate: false })
