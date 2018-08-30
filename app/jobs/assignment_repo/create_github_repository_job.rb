@@ -73,32 +73,27 @@ class AssignmentRepo
     # Given an error, retries the job if retries are positive
     # or broadcasts a failure to the user
     #
-    # rubocop:disable MethodLength
     def handle_error(err, assignment, user, invite_status, retries)
+      logger.warn(err.message)
       if retries.positive?
         invite_status.waiting!
         CreateGitHubRepositoryJob.perform_later(assignment, user, retries: retries - 1)
       else
         invite_status.errored_creating_repo!
-        ActionCable.server.broadcast(
-          RepositoryCreationStatusChannel.channel(user_id: user.id),
-          error: err,
-          status: invite_status.status
-        )
+        broadcast_message(err, invite_status, user, type: :error)
         report_error(err)
       end
-      logger.warn(err.message)
     end
-    # rubocop:enable MethodLength
 
     # Broadcasts a ActionCable message with a status to the given user
     #
-    def broadcast_message(message, invite_status, user)
-      ActionCable.server.broadcast(
-        RepositoryCreationStatusChannel.channel(user_id: user.id),
-        text: message,
+    def broadcast_message(message, invite_status, user, type: :text)
+      raise ArgumentError unless %i[text error].include?(type)
+      broadcast_args = {
         status: invite_status.status
-      )
+      }
+      broadcast_args[type] = message
+      ActionCable.server.broadcast(RepositoryCreationStatusChannel.channel(user_id: user.id), broadcast_args)
     end
 
     # Reports the elapsed time to Datadog
