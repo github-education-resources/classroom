@@ -7,7 +7,7 @@ describe GitHub::Errors do
 
   describe "#with_error_handling" do
     describe "failbot" do
-      before do
+      before(:each) do
         Failbot.reports.clear
       end
 
@@ -34,6 +34,10 @@ describe GitHub::Errors do
     end
 
     context "Octokit::NotFound is raised" do
+      before(:each) do
+        Failbot.reports.clear
+      end
+
       it "raises GitHub::NotFound" do
         error_message = "Resource could not be found on github.com"
 
@@ -42,6 +46,15 @@ describe GitHub::Errors do
             raise Octokit::NotFound
           end
         end.to raise_error(GitHub::NotFound, error_message)
+      end
+
+      it "does not report a NotFound error" do
+        begin
+          GitHub::Errors.with_error_handling do
+            raise Octokit::NotFound
+          end
+        rescue GitHub::NotFound; end # rubocop:disable Lint/HandleExceptions
+        expect(Failbot.reports.count).to eq(0)
       end
     end
 
