@@ -74,7 +74,8 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
     it "kicks off a cascading porter status job" do
       subject.perform_now(assignment, teacher)
-      expect(cascading_job).to have_been_enqueued.on_queue("porter_status")
+      assignment_repo = AssignmentRepo.find_by(assignment: assignment, user: teacher)
+      expect(cascading_job).to have_been_enqueued.on_queue("porter_status").with(assignment_repo, teacher)
     end
 
     context "creates an AssignmentRepo as an outside_collaborator" do

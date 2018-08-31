@@ -7,9 +7,9 @@ module InvitationsControllerMethods
     layout "layouts/invitations"
 
     helper_method :current_assignment,
-                  :current_invitation,
-                  :current_submission,
-                  :organization
+      :current_invitation,
+      :current_submission,
+      :organization
   end
 
   def accept

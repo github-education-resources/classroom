@@ -110,8 +110,10 @@ class OrganizationsController < Orgs::Controller
   end
 
   def github_organization_from_params
-    @github_organization_from_params ||= GitHubOrganization.new(current_user.github_client,
-                                                                params[:organization][:github_id].to_i)
+    @github_organization_from_params ||= GitHubOrganization.new(
+      current_user.github_client,
+      params[:organization][:github_id].to_i
+    )
   end
 
   def new_organization_params

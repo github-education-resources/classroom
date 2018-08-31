@@ -3,21 +3,147 @@
 require "rails_helper"
 
 RSpec.describe GroupAssignmentInvitationsController, type: :controller do
-  let(:organization) { classroom_org     }
+  let(:organization) { classroom_org }
   let(:student)      { classroom_student }
-
   let(:group_assignment) do
     options = {
       title: "HTML5",
       slug: "html5",
       organization: organization
     }
-
     create(:group_assignment, options)
   end
+  let(:grouping)   { group_assignment.grouping }
+  let(:group_name) { "#{Faker::Company.name} Team" }
+  let(:group) do
+    group = Group.create(grouping: grouping, title: group_name)
+    group.repo_accesses << RepoAccess.create(user: student, organization: organization)
+    group
+  end
+  let(:invitation)    { create(:group_assignment_invitation, group_assignment: group_assignment) }
+  let(:invite_status) { invitation.status(group) }
 
-  let(:grouping)   { group_assignment.grouping                                                }
-  let(:invitation) { create(:group_assignment_invitation, group_assignment: group_assignment) }
+  describe "route_based_on_status", :vcr do
+    before do
+      sign_in_as(student)
+      GitHubClassroom.flipper[:group_import_resiliency].enable
+    end
+
+    after do
+      GitHubClassroom.flipper[:group_import_resiliency].disable
+      RepoAccess.destroy_all
+      Group.destroy_all
+      GroupInviteStatus.destroy_all
+    end
+
+    describe "unaccepted!" do
+      it "gets #setupv2 and redirects to #show" do
+        invite_status.unaccepted!
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to redirect_to(group_assignment_invitation_url(invitation))
+      end
+
+      it "gets #successful_invitation and redirects to #show" do
+        invite_status.unaccepted!
+        get :successful_invitation, params: { id: invitation.key }
+        expect(response).to redirect_to(group_assignment_invitation_url(invitation))
+      end
+    end
+
+    describe "accepted!" do
+      it "gets #setupv2" do
+        invite_status.accepted!
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to render_template(:setupv2)
+      end
+
+      it "gets #successful_invitation and redirects to #setupv2" do
+        invite_status.accepted!
+        get :successful_invitation, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_group_assignment_invitation_url(invitation))
+      end
+    end
+
+    describe "waiting!" do
+      it "gets #setupv2" do
+        invite_status.waiting!
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to render_template(:setupv2)
+      end
+
+      it "gets #successful_invitation and redirects to #setupv2" do
+        invite_status.waiting!
+        get :successful_invitation, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_group_assignment_invitation_url(invitation))
+      end
+    end
+
+    describe "creating_repo!" do
+      it "gets #setupv2" do
+        invite_status.creating_repo!
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to render_template(:setupv2)
+      end
+
+      it "gets #successful_invitation and redirects to #setupv2" do
+        invite_status.creating_repo!
+        get :successful_invitation, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_group_assignment_invitation_url(invitation))
+      end
+    end
+
+    describe "errored_creating_repo!" do
+      it "gets #setupv2" do
+        invite_status.errored_creating_repo!
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to render_template(:setupv2)
+      end
+
+      it "gets #successful_invitation and redirects to #setupv2" do
+        invite_status.errored_creating_repo!
+        get :successful_invitation, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_group_assignment_invitation_url(invitation))
+      end
+    end
+
+    describe "importing_starter_code!" do
+      it "gets #setupv2" do
+        invite_status.importing_starter_code!
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to render_template(:setupv2)
+      end
+
+      it "gets #successful_invitation and redirects to #setupv2" do
+        invite_status.importing_starter_code!
+        get :successful_invitation, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_group_assignment_invitation_url(invitation))
+      end
+    end
+
+    describe "errored_importing_starter_code!" do
+      it "gets #setupv2" do
+        invite_status.errored_importing_starter_code!
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to render_template(:setupv2)
+      end
+
+      it "gets #successful_invitation and redirects to #setupv2" do
+        invite_status.errored_importing_starter_code!
+        get :successful_invitation, params: { id: invitation.key }
+        expect(response).to redirect_to(setupv2_group_assignment_invitation_url(invitation))
+      end
+    end
+
+    describe "completed!" do
+      it "gets #setupv2 and redirects to #successful_invitation" do
+        invite_status.completed!
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to redirect_to(successful_invitation_group_assignment_invitation_path(invitation))
+      end
+
+      # see GET #successful_invitation tests
+    end
+  end
 
   describe "GET #show", :vcr do
     context "unauthenticated request" do
@@ -98,6 +224,27 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         get :accept, params: { id: invitation.key }
         expect(response).to have_http_status(:success)
       end
+
+      it "render :accept" do
+        get :accept, params: { id: invitation.key }
+        expect(response).to render_template(:accept)
+      end
+
+      context "with group import resiliency enabled" do
+        before do
+          GitHubClassroom.flipper[:group_import_resiliency].enable
+        end
+
+        after do
+          GitHubClassroom.flipper[:group_import_resiliency].disable
+        end
+
+        it "renders accept" do
+          invite_status.unaccepted!
+          get :accept, params: { id: invitation.key }
+          expect(response).to render_template(:accept)
+        end
+      end
     end
   end
 
@@ -130,11 +277,23 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         patch :accept_invitation, params: { id: invitation.key, group: { title: "Code Squad" } }
       end
 
-      it "fails if assignment invitations are disabled" do
-        group_assignment.update(invitations_enabled: false)
+      context "invitations are disabled" do
+        before do
+          group_assignment.update(invitations_enabled: false)
+          patch :accept_invitation, params: { id: invitation.key, group: { title: "Code Squad" } }
+        end
 
-        patch :accept_invitation, params: { id: invitation.key, group: { title: "Code Squad" } }
-        expect(response).to redirect_to(group_assignment_invitation_path)
+        it "redirects" do
+          expect(response).to redirect_to(group_assignment_invitation_path)
+        end
+
+        it "has errors" do
+          expect(flash[:error]).to eq("Invitations for this assignment have been disabled.")
+        end
+
+        it "doesn't record a failure" do
+          expect(GitHubClassroom.statsd).to_not receive(:increment)
+        end
       end
 
       it "does not allow users to join a group that is not apart of the grouping" do
@@ -162,8 +321,10 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         end
 
         it "sends an event to statsd" do
-          expect(GitHubClassroom.statsd).to receive(:increment).with("exception.swallowed",
-                                                                     tags: [ApplicationController::NotAuthorized.to_s])
+          expect(GitHubClassroom.statsd).to receive(:increment).with(
+            "exception.swallowed",
+            tags: [ApplicationController::NotAuthorized.to_s]
+          )
           expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_invitation.fail")
 
           patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
@@ -216,131 +377,160 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
           Group.destroy_all
         end
       end
-    end
-  end
 
-  describe "GET #setup", :vcr do
-    let(:repo_access) { RepoAccess.create(user: student, organization: organization) }
-    let(:group)       { Group.create(title: "Group 1", grouping: grouping) }
-
-    context "repo setup enabled" do
-      before { GitHubClassroom.flipper[:repo_setup].enable }
-
-      context "unauthenticated request" do
-        it "redirects the new user to sign in with GitHub" do
-          get :setup, params: { id: invitation.key }
-          expect(response).to redirect_to(login_path)
-        end
-      end
-
-      context "authenticated request" do
-        before(:each) do
-          allow_any_instance_of(GroupAssignment).to receive(:starter_code_repo_id).and_return(1_062_897)
-
-          group.repo_accesses << repo_access
-          @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
-          sign_in_as(student)
+      context "with group import resiliency enabled" do
+        before do
+          GitHubClassroom.flipper[:group_import_resiliency].enable
         end
 
-        after(:each) do
-          group.destroy
-          repo_access.destroy
-          @group_assignment_repo.destroy if @group_assignment_repo.present?
+        after do
+          GitHubClassroom.flipper[:group_import_resiliency].disable
         end
 
-        it "shows setup" do
-          get :setup, params: { id: invitation.key }
-          expect(request.url).to eq(setup_group_assignment_invitation_url(invitation))
-          expect(response).to have_http_status(:success)
-          expect(response).to render_template("group_assignment_invitations/setup")
+        describe "success" do
+          it "sends an event to statsd" do
+            expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_invitation.accept")
+            patch :accept_invitation, params: { id: invitation.key, group: { title: group_name } }
+          end
+
+          it "creates a team" do
+            patch :accept_invitation, params: { id: invitation.key, group: { title: group_name } }
+            expect(student.repo_accesses.count).to eql(1)
+          end
+
+          it "does not create a repo" do
+            patch :accept_invitation, params: { id: invitation.key, group: { title: group_name } }
+            expect(group_assignment.group_assignment_repos.count).to eql(0)
+          end
+
+          it "redirects to #setupv2" do
+            patch :accept_invitation, params: { id: invitation.key, group: { title: group_name } }
+            expect(response).to redirect_to(setupv2_group_assignment_invitation_path)
+          end
+
+          it "makes the invite status accepted" do
+            patch :accept_invitation, params: { id: invitation.key, group: { title: group_name } }
+            expect(invitation.status(Group.all.first).accepted?).to be_truthy
+          end
+
+          context "joins an existing group" do
+            let(:group) { Group.create(title: "The Group", grouping: grouping) }
+
+            it "creates a repo_access" do
+              patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
+              expect(student.repo_accesses.count).to eql(1)
+            end
+
+            context "groups status is already completed" do
+              before do
+                invitation.status(group).completed!
+              end
+
+              it "redirects to #successful_invitation" do
+                patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
+                expect(response).to redirect_to(successful_invitation_group_assignment_invitation_path)
+              end
+            end
+          end
         end
-      end
-    end
 
-    context "repo setup disabled" do
-      before { GitHubClassroom.flipper[:repo_setup].disable }
+        describe "failed" do
+          it "fails if assignment invitations are disabled" do
+            group_assignment.update(invitations_enabled: false)
 
-      context "unauthenticated request" do
-        it "redirects the new user to sign in with GitHub" do
-          get :setup, params: { id: invitation.key }
-          expect(response).to redirect_to(login_path)
-        end
-      end
-
-      context "authenticated request" do
-        before(:each) do
-          allow_any_instance_of(GroupAssignment).to receive(:starter_code_repo_id).and_return(1_062_897)
-
-          group.repo_accesses << repo_access
-          @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
-          sign_in_as(student)
-        end
-
-        after(:each) do
-          group.destroy
-          repo_access.destroy
-          @group_assignment_repo.destroy if @group_assignment_repo.present?
-        end
-
-        it "redirects to the success page" do
-          get :setup, params: { id: invitation.key }
-          expect(request.url).to eq(setup_group_assignment_invitation_url(invitation))
-          expect(response).to have_http_status(:redirect)
-          expect(response).to redirect_to(successful_invitation_group_assignment_invitation_url)
+            patch :accept_invitation, params: { id: invitation.key, group: { title: group_name } }
+            expect(response).to redirect_to(group_assignment_invitation_path)
+          end
         end
       end
     end
   end
 
-  describe "PATCH #setup_progress", :vcr do
-    let(:unconfigured_repo) { stub_repository("template") }
-    let(:configured_repo) { stub_repository("configured-repo") }
-
-    let(:repo_access) { RepoAccess.create(user: student, organization: organization) }
-    let(:group)       { Group.create(title: "Group 1", grouping: grouping) }
-
-    before do
-      GitHubClassroom.flipper[:repo_setup].enable
-    end
-
+  describe "GET #setupv2", :vcr do
     before(:each) do
-      allow_any_instance_of(GroupAssignment).to receive(:starter_code_repo_id).and_return(1_062_897)
+      sign_in_as(student)
+    end
 
-      group.repo_accesses << repo_access
-      @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
+    it "404s when feature is off" do
+      get :setupv2, params: { id: invitation.key }
+      expect(response.status).to eq(404)
+    end
+
+    context "with group import resiliency enabled" do
+      before do
+        GitHubClassroom.flipper[:group_import_resiliency].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:group_import_resiliency].disable
+      end
+
+      it "renders setupv2" do
+        invite_status.creating_repo!
+        get :setupv2, params: { id: invitation.key }
+        expect(response).to render_template(:setupv2)
+      end
+    end
+  end
+
+  describe "POST #create_repo", :vcr do
+    before(:each) do
+      sign_in_as(student)
+    end
+
+    it "404s when feature is off" do
+      post :create_repo, params: { id: invitation.key }
+      expect(response.status).to eq(404)
+    end
+
+    context "with group import resiliency enabled" do
+      before do
+        GitHubClassroom.flipper[:group_import_resiliency].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:group_import_resiliency].disable
+      end
+
+      it "raises NotImplementedError" do
+        expect { post :create_repo, params: { id: invitation.key } }.to raise_error(NotImplementedError)
+      end
+    end
+  end
+
+  describe "GET #progress", :vcr do
+    before(:each) do
       sign_in_as(student)
     end
 
     after(:each) do
-      group.destroy
-      repo_access.destroy
-      @group_assignment_repo.destroy if @group_assignment_repo.present?
+      RepoAccess.destroy_all
+      Group.destroy_all
     end
 
-    it "gives status of complete when configured" do
-      @group_assignment_repo.configured!
-      allow_any_instance_of(GroupAssignmentRepo).to receive(:github_repository).and_return(configured_repo)
-      patch :setup_progress, params: { id: invitation.key }
-
-      expect(response).to have_http_status(:success)
-      expect(response.header["Content-Type"]).to include "application/json"
-      progress = JSON(response.body)
-      expect(progress["status"]).to eq("complete")
+    it "404s when feature is off" do
+      get :progress, params: { id: invitation.key }
+      expect(response.status).to eq(404)
     end
 
-    it "gives status of configuring when unconfigured" do
-      @group_assignment_repo.configuring!
-      allow_any_instance_of(GroupAssignmentRepo).to receive(:github_repository).and_return(unconfigured_repo)
-      patch :setup_progress, params: { id: invitation.key }
+    context "with group import resiliency enabled" do
+      before do
+        GitHubClassroom.flipper[:group_import_resiliency].enable
+      end
 
-      expect(response).to have_http_status(:success)
-      expect(response.header["Content-Type"]).to include "application/json"
-      progress = JSON(response.body)
-      expect(progress["status"]).to eq("configuring")
+      after do
+        GitHubClassroom.flipper[:group_import_resiliency].disable
+      end
+
+      it "returns status" do
+        invite_status.unaccepted!
+        get :progress, params: { id: invitation.key }
+        expect(response.body).to eq({ status: "unaccepted" }.to_json)
+      end
     end
   end
 
-  describe "GET #successful_invitation" do
+  describe "GET #successful_invitation", :vcr do
     let(:group) { Group.create(title: "The Group", grouping: grouping) }
 
     before(:each) do
@@ -355,7 +545,12 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       GroupAssignmentRepo.destroy_all
     end
 
-    context "delete github repository after accepting a invitation successfully", :vcr do
+    it "renders #successful_invitation" do
+      get :successful_invitation, params: { id: invitation.key }
+      expect(response).to render_template(:successful_invitation)
+    end
+
+    context "delete github repository after accepting a invitation successfully" do
       before do
         organization.github_client.delete_repository(@group_assignment_repo.github_repo_id)
         get :successful_invitation, params: { id: invitation.key }
@@ -367,6 +562,22 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
       it "creates a new group assignment repo for the group" do
         expect(GroupAssignmentRepo.last.id).not_to eq(@group_assignment_repo.id)
+      end
+    end
+
+    context "with group import resiliency enabled" do
+      before do
+        GitHubClassroom.flipper[:group_import_resiliency].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:group_import_resiliency].disable
+      end
+
+      it "renders #successful_invitation" do
+        invite_status.completed!
+        get :successful_invitation, params: { id: invitation.key }
+        expect(response).to render_template(:successful_invitation)
       end
     end
   end
