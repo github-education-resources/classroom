@@ -12,7 +12,6 @@
             <p class="f4 text-gray"><%= t('.signin_section.why_classroom_html') %></p>
 
             <div class="d-flex flex-column start-container">
-              <!-- <a class="open-video mb-3" data-remodal-target="getting-started-video"><%= image_tag('play@2x.png', class: 'play-icon', alt: 'Play') %><%= t('views.pages.see_how_it_works') %></a> -->
               <%= link_to t('.signin_section.sign_in_to_start'), login_path, class: 'btn btn-large btn-blue mt-1' %>
             </div>
         </div>
@@ -24,12 +23,12 @@
     <div class="container-lg clearfix p-responsive py-4">
       <h2 class="alt-h2"><%= t('.why_classroom_section.heading') %></h2>
       <div class="col-md-11 float-right mt-4">
-        <div class="col-sm-3 m-4 float-sm-right">
+        <div class="col-sm-3 mb-4 mx-4 mt-0 float-sm-right">
           <img class="width-full" src="https://via.placeholder.com/250x200"/>
         </div>
 
         <% t('.why_classroom_section.items')[0..2].each do |item| %>
-          <p class="mb-3 text-left"><b><%= item[:heading]%></b><%= " " + item[:content] %></p>
+          <p class="f4 mb-3 text-left"><b><%= item[:heading]%></b><%= " " + item[:content] %></p>
         <% end %>
     </div>
 
@@ -42,7 +41,7 @@
         </div>
 
         <% t('.why_classroom_section.items')[3..-1].each do |item| %>
-          <p class="mb-3 text-left"><b><%= item[:heading]%></b><%= " " + item[:content] %></p>
+          <p class="f4 mb-3 text-left"><b><%= item[:heading]%></b><%= " " + item[:content] %></p>
         <% end %>
     </div>
   </div>
@@ -97,7 +96,7 @@
           </div>
 
           <% t('.get_started_section.items').each do |item| %>
-            <p class="mb-3 text-left"><b><%= item[:heading]%></b><%= " " + item[:content] %></p>
+            <p class="f4 mb-3 text-left"><b><%= item[:heading]%></b><%= " " + item[:content] %></p>
           <% end %>
       </div>
     </div>

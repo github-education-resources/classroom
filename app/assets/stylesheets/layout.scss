@@ -569,6 +569,7 @@ hr {
 
   .start-container {
     align-items: flex-start;
+
     @media screen and (max-width: $width-md) {
       align-items: center;
     }
@@ -642,25 +643,6 @@ hr {
 
   .classroom-logo {
     max-height: 300px;
-  }
-}
-
-.why-classroom-section, .get-started-section {
-  padding-top: $spacer-2;
-  padding-bottom: $spacer-2;
-
-  p {
-    padding-right: 0.5rem;
-    font-size: 16px;
-  }
-
-  .octicon {
-    margin-right: 5px;
-    font-size: 21px;
-  }
-
-  .column {
-    padding: 0 20px;
   }
 }
 
