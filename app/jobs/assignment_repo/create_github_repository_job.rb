@@ -59,6 +59,7 @@ class AssignmentRepo
       creator.push_starter_code!(assignment_repo.github_repo_id) if assignment.starter_code?
 
       assignment_repo.save!
+      assignment_repo
     rescue ActiveRecord::RecordInvalid => err
       creator.delete_github_repository(assignment_repo.try(:github_repo_id))
       logger.warn(err.message)

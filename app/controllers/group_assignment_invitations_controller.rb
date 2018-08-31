@@ -123,7 +123,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     validate_max_members_not_exceeded!(group)
     return if group_assignment.grouping.groups.find_by(id: group_id)
 
-    GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
+    report_invitation_failure
     raise NotAuthorized, "You are not permitted to select this team"
   end
 
@@ -158,7 +158,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     return unless group.present? && group_assignment.present? && group_assignment.max_members.present?
     return unless group.repo_accesses.count >= group_assignment.max_members
 
-    GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
+    report_invitation_failure
     raise NotAuthorized, "This team has reached its maximum member limit of #{group_assignment.max_members}."
   end
   # rubocop:enable Metrics/AbcSize
@@ -166,31 +166,46 @@ class GroupAssignmentInvitationsController < ApplicationController
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
   def create_group_assignment_repo(selected_group: group, new_group_title: nil)
-    if !invitation.enabled?
-      flash[:error] = "Invitations for this assignment have been disabled."
-      redirect_to group_assignment_invitation_path
-    else
-      users_group_assignment_repo = invitation.redeem_for(current_user, selected_group, new_group_title)
+    result = invitation.redeem_for(
+      current_user,
+      selected_group,
+      new_group_title,
+      group_import_resiliency: group_import_resiliency_enabled?
+    )
 
-      if users_group_assignment_repo.present?
+    case result.status
+    when :failed
+      report_invitation_failure if invitation.enabled?
+      flash[:error] = result.error
+      redirect_to group_assignment_invitation_path
+    when :success, :pending
+      if group_import_resiliency_enabled?
+        GitHubClassroom.statsd.increment("v2_group_exercise_invitation.accept")
+        route_based_on_status
+      else
         GitHubClassroom.statsd.increment("group_exercise_invitation.accept")
         yield if block_given?
-      else
-        GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
-
-        flash[:error] = "An error has occurred, please refresh the page and try again."
-        redirect_to group_assignment_invitation_path
       end
     end
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable MethodLength
 
+  ## Datadog reporting convenience methods  
+  
   def report_retry
     if group_invite_status.errored_creating_repo?
       GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.retry")
     elsif group_invite_status.errored_importing_starter_code?
       GitHubClassroom.statsd.increment("v2_group_exercise_repo.import.retry")
+    end
+  end
+      
+  def report_invitation_failure
+    if group_import_resiliency_enabled?
+      GitHubClassroom.statsd.increment("v2_group_exercise_invitation.fail")
+    else
+      GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
     end
   end
 
