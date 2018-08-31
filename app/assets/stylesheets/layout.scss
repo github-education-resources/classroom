@@ -524,14 +524,7 @@ hr {
 .pages {
   &.home {
     .site-footer {
-      color: $white;
-      background-color: #5fb27b;
-    }
-    .made-with-heart {
-      a {
-        color: $white;
-        &:hover { color: #777; }
-      }
+      background-color: $gray-000;
     }
   }
   &.desktop {
@@ -567,7 +560,6 @@ hr {
 }
 
 .signin-section {
-  padding: 2em 20px 2em;
   color: $gray-900;
   background-color: $white;
 
@@ -650,22 +642,12 @@ hr {
 
   .classroom-logo {
     max-height: 300px;
-
-    @media screen and (max-width: $width-md) {
-      display: none;
-    }
   }
 }
 
-.information-section {
-  background-color: $white;
+.why-classroom-section, .get-started-section {
   padding-top: $spacer-2;
   padding-bottom: $spacer-2;
-
-  h2 {
-    font-size: 21px;
-    font-weight: normal;
-  }
 
   p {
     padding-right: 0.5rem;

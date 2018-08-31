@@ -1,59 +1,104 @@
 <div class="remodal-bg">
-  <div class="signin-section">
-    <div class="container-lg clearfix d-flex flex-items-center">
-      <div class="classroom-logo col-md-4 p-3 float-left">
-        <%= image_tag('classroom-logo.png', class:"classroom-logo width-fit", alt: 'Classroom Logo') %>
+  <div class="signin-section py-6 px-1">
+    <div class="container-lg clearfix p-responsive mt-md-4">
+      <h1 class="alt-h1 text-center"><%= t('.signin_section.banner_heading') %></h1>
+      <p class="alt-lead text-center"><%= t('.signin_section.banner_subheading') %></p>
+
+      <div class="clearfix mt-4">
+        <div class="col-md-3 p-3 float-md-left">
+          <%= image_tag('classroom-logo.png', class:"classroom-logo width-fit", alt: 'Classroom Logo') %>
+        </div>
+        <div class="col-md-8 float-left width-fit">
+            <p class="f4 text-gray"><%= t('.signin_section.why_classroom_html') %></p>
+
+            <div class="d-flex flex-column start-container">
+              <!-- <a class="open-video mb-3" data-remodal-target="getting-started-video"><%= image_tag('play@2x.png', class: 'play-icon', alt: 'Play') %><%= t('views.pages.see_how_it_works') %></a> -->
+              <%= link_to t('.signin_section.sign_in_to_start'), login_path, class: 'btn btn-large btn-blue mt-1' %>
+            </div>
+        </div>
       </div>
-      <div class="col-md-8 float-right width-fit">
-          <h1 class="heading f0-light"><%= t('views.pages.banner_heading') %></h1>
-          <p class="f3-light"><%= t('views.pages.banner_subheading') %></p>
-          <div class="d-flex flex-column start-container">
-            <a class="open-video mb-3" data-remodal-target="getting-started-video"><%= image_tag('play@2x.png', class: 'play-icon', alt: 'Play') %><%= t('views.pages.see_how_it_works') %></a>
-            <%= link_to t('views.pages.sign_in_to_start'), login_path, class: 'btn btn-large btn-blue' %>
+    </div>
+  </div>
+
+  <div class="why-classroom-section border-top border-gray-light bg-gray-light">
+    <div class="container-lg clearfix p-responsive py-4">
+      <h2 class="alt-h2"><%= t('.why_classroom_section.heading') %></h2>
+      <div class="col-md-11 float-right mt-4">
+        <div class="col-sm-3 m-4 float-sm-right">
+          <img class="width-full" src="https://via.placeholder.com/250x200"/>
+        </div>
+
+        <% t('.why_classroom_section.items')[0..2].each do |item| %>
+          <p class="mb-3 text-left"><b><%= item[:heading]%></b><%= " " + item[:content] %></p>
+        <% end %>
+    </div>
+
+    <div class="col-md-11 float-right">
+        <div class="Box col-md-4 p-3 mx-4 mb-4 mt-1 mt-sm-8 float-right">
+          <p class="mb-3 text-left f4"><b>Classroom Desktop.</b> Clone your student's assignments with the click of a button.</p>
+
+          <a class="f6 btn btn-small btn-blue" href="https://central.github.com/deployments/desktop/desktop/latest/darwin" data-for-os="mac" data-download="mac">Download for macOS</a>
+          <a class="f6 btn btn-small btn-blue" href="https://central.github.com/deployments/desktop/desktop/latest/win32" data-for-os="windows" data-download="windows">Download for Windows (64bit)</a>
+        </div>
+
+        <% t('.why_classroom_section.items')[3..-1].each do |item| %>
+          <p class="mb-3 text-left"><b><%= item[:heading]%></b><%= " " + item[:content] %></p>
+        <% end %>
+    </div>
+  </div>
+
+  <div class="what-teachers-say-section border-top border-gray-light bg-white">
+    <div class="container-lg clearfix p-responsive py-4">
+      <h2 class="alt-h2 text-center"><%= t('.what_teachers_say_section.heading') %></h2>
+
+      <div class="clearfix gutter-md">
+        <% t('.what_teachers_say_section.items').each do |item| %>
+          <div class="col-md-3 float-left my-4">
+            <div class="Box p-3">
+              <div class="mt-2">
+                <%= octicon 'quote', height: 22 %>
+              </div>
+
+              <p class="mt-3 f4"><%= item[:quote] %></p>
+
+              <span class="mt-1 text-bold f4 d-block"><%= item[:name] %></span>
+              <span class="mt-1 f4"><%= item[:school] %></span>
+            </div>
           </div>
+        <% end %>
       </div>
     </div>
   </div>
-  <div class="information-section">
-    <div class="container-lg">
-      <div class="columns">
-        <div class="col-md-4 float-left p-4">
-          <h2><%= octicon 'repo', height: 22 %> <%= t('views.pages.create_assignments') %></h2>
-          <p>
-            <%= t('views.pages.create_assignments_desc') %>
-          </p>
-        </div>
-        <div class="col-md-4 float-left p-4">
-          <h2><%= octicon 'organization', height: 22 %> <%= t('views.pages.invite_students') %></h2>
-          <p>
-            <%= t('views.pages.invite_students_desc') %>
-          </p>
-        </div>
-        <div class="col-md-4 float-left p-4">
-          <h2><%= octicon 'graph', height: 22 %> <%= t('views.pages.review_progress') %></h2>
-          <p>
-            <%= t('views.pages.review_progress_desc') %>
-          </p>
+
+  <div class="classroom-in-action-section bg-white">
+    <div class="container-lg clearfix p-responsive py-4">
+      <div class="Box col-md-10 p-3 mx-auto">
+        <h3 class="f1-light text-center"><%= t('.classroom_in_action_section.heading')%></h3>
+        <p class="mt-2 f3-light text-center"><%= t('.classroom_in_action_section.subheading') %></p>
+
+        <div class="d-flex flex-column flex-items-center">
+          <%=
+            link_to t('.classroom_in_action_section.accept_button'),
+            "https://classroom.github.com/assignment-invitations/0b543f547df75612597b9b38938bd936",
+            class: 'btn btn-large btn-blue mt-1'
+          %>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="hero text-center desktop-bg">
-    <div class="container-new px-3">
-      <div class="pb-6">
-        <h1 class="f1-light text-white pt-5">
-          Clone all your course assignments in one click
-        </h1>
-        <p class="col-md-8 mx-auto mb-4 mt-1 f3 desktop-subtitle">
-          Classroom Desktop is a cross-platform app that lets you clone your student's assignments with the click of a button.
-        </p>
+  <div class="get-started-section bg-white">
+    <div class="container-lg clearfix p-responsive py-4">
+      <h2 class="alt-h2 mt-4"><%= t('.get_started_section.heading') %></h2>
 
-        <%= render partial: 'pages/download_desktop_button' %>
-      </div>
+      <div class="col-md-11 float-right mt-4">
+          <div class="col-sm-3 m-4 mt-sm-0 float-sm-right">
+            <img class="width-full" src="https://via.placeholder.com/250x200"/>
+          </div>
 
-      <div class="desktop-screenshot d-block mx-auto mt-4">
-        <%= image_tag('classroom-desktop-downloading.png', class:'width-fit', alt: 'Classroom-Desktop Downloading Screenshot') %>
+          <% t('.get_started_section.items').each do |item| %>
+            <p class="mb-3 text-left"><b><%= item[:heading]%></b><%= " " + item[:content] %></p>
+          <% end %>
       </div>
     </div>
   </div>
