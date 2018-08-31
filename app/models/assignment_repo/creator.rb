@@ -163,17 +163,22 @@ class AssignmentRepo
     def verify_organization_has_private_repos_available!
       return true if assignment.public?
 
-      github_organization_plan = GitHubOrganization.new(organization.github_client, organization.github_id).plan
+      begin
+        github_organization_plan = GitHubOrganization.new(organization.github_client, organization.github_id).plan
+      rescue GitHub::Error => error
+        raise Result::Error, error.message
+      end
 
       owned_private_repos = github_organization_plan[:owned_private_repos]
       private_repos       = github_organization_plan[:private_repos]
 
       return true if owned_private_repos < private_repos
 
-      error_message = <<-ERROR
-      Cannot make this private assignment, your limit of #{private_repos}
-      #{'repository'.pluralize(private_repos)} has been reached. You can request
-      a larger plan for free at https://education.github.com/discount
+      error_message =
+      <<~ERROR
+        Cannot make this private assignment, your limit of #{private_repos}
+        #{'repository'.pluralize(private_repos)} has been reached. You can request
+        a larger plan for free at https://education.github.com/discount
       ERROR
 
       raise Result::Error, error_message
