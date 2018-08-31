@@ -38,7 +38,10 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
 
       it "raises a Result::Error" do
         expect { creator.verify_organization_has_private_repos_available! }
-          .to raise_error(GitHub::Error, "Cannot retrieve this organizations repo plan, please reauthenticate your token.")
+          .to raise_error(
+            GitHub::Error,
+            "Cannot retrieve this organizations repo plan, please reauthenticate your token."
+          )
       end
     end
 
@@ -46,10 +49,10 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
       before do
         expect_any_instance_of(GitHubOrganization)
           .to receive(:plan)
-          .and_return({
+          .and_return(
             owned_private_repos: 1,
             private_repos: 1
-          })
+          )
       end
 
       it "raises a Result::Error" do

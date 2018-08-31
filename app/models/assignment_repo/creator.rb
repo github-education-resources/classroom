@@ -160,6 +160,8 @@ class AssignmentRepo
     # Public: Ensure that we can make a private repository on GitHub.
     #
     # Returns True or raises a Result::Error with a helpful message.
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable MethodLength
     def verify_organization_has_private_repos_available!
       return true if assignment.public?
 
@@ -174,8 +176,7 @@ class AssignmentRepo
 
       return true if owned_private_repos < private_repos
 
-      error_message =
-      <<~ERROR
+      error_message = <<~ERROR
         Cannot make this private assignment, your limit of #{private_repos}
         #{'repository'.pluralize(private_repos)} has been reached. You can request
         a larger plan for free at https://education.github.com/discount
@@ -183,6 +184,8 @@ class AssignmentRepo
 
       raise Result::Error, error_message
     end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable MethodLength
 
     private
 
