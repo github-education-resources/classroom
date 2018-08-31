@@ -191,8 +191,8 @@ class GroupAssignmentInvitationsController < ApplicationController
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable MethodLength
 
-  ## Datadog reporting convenience methods  
-  
+  ## Datadog reporting convenience methods
+
   def report_retry
     if group_invite_status.errored_creating_repo?
       GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.retry")
@@ -200,7 +200,7 @@ class GroupAssignmentInvitationsController < ApplicationController
       GitHubClassroom.statsd.increment("v2_group_exercise_repo.import.retry")
     end
   end
-      
+
   def report_invitation_failure
     if group_import_resiliency_enabled?
       GitHubClassroom.statsd.increment("v2_group_exercise_invitation.fail")
