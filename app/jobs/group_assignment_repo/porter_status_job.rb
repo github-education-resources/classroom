@@ -5,7 +5,7 @@ class GroupAssignmentRepo
     queue_as :porter_status
 
     REPO_IMPORT_STEPS   = GitHubRepository::IMPORT_STEPS
-    IMPORT_COMPLETE     = GroupAssignmentRepo::CreateGitHubRepositoryJob::REPOSITORY_CREATION_COMPLETE
+    IMPORT_COMPLETE     = GroupAssignmentRepo::CreateGitHubRepositoryJob::CREATE_COMPLETE
     IMPORT_ONGOING      = "Your GitHub repository is importing starter code."
     IMPORT_FAILED       = "We were not able to import you the starter code to your assignment, please try again."
     IMPORT_STEP_UNKNOWN = <<~IMPORT_STEP_UNKNOWN

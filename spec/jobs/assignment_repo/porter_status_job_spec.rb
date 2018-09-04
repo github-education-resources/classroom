@@ -325,22 +325,10 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
     end
   end
 
-  # rubocop:disable MethodLength
   def request_stub(status)
     {
-      "vcs": "git",
-      "use_lfs": "undecided",
-      "vcs_url": "https://github.com/rtyley/small-test-repo",
-      "status": status.to_s,
-      "commit_count": nil,
-      "status_text": "Importing...",
-      "authors_count": 0,
-      "import_percent": nil,
-      "url": "https://api.github.com/repos/classroom-test-org-edon/small-test-repo/import",
-      "html_url": "https://github.com/classroom-test-org-edon/small-test-repo/import",
-      "authors_url": "https://api.github.com/repos/classroom-test-org-edon/small-test-repo/import/authors",
-      "repository_url": "https://api.github.com/repos/classroom-test-org-edon/small-test-repo"
+      status: status.to_s,
+      status_text: "Importing...",
     }.to_json
   end
-  # rubocop:enable MethodLength
 end
