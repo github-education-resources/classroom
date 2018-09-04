@@ -16,6 +16,7 @@ class AssignmentRepo
 
       begin
         last_progress = nil
+        # rubocop:disable BlockLength
         result = Octopoller.poll(wait: WAIT_TIME, retries: 3) do
           begin
             GitHubClassroom.statsd.increment("v2_exercise_repo.import.poll")
@@ -44,6 +45,7 @@ class AssignmentRepo
             Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
           end
         end
+        # rubocop:enable BlockLength
 
         case result
         when Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
