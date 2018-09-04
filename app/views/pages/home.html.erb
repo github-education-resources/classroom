@@ -1,105 +1,119 @@
-<div class="remodal-bg">
-  <div class="signin-section py-6 px-1">
-    <div class="container-lg clearfix p-responsive mt-md-4">
-      <h1 class="alt-h1 text-center"><%= t('.signin_section.banner_heading') %></h1>
-      <p class="alt-lead text-center"><%= t('.signin_section.banner_subheading') %></p>
-
-      <div class="clearfix mt-4">
-        <div class="col-md-3 p-3 float-md-left">
-          <%= image_tag('classroom-logo.png', class:"classroom-logo width-fit", alt: 'Classroom Logo') %>
-        </div>
-        <div class="col-md-8 float-left width-fit">
-            <p class="f4 text-gray"><%= t('.signin_section.why_classroom_html') %></p>
-
-            <div class="d-flex flex-column start-container">
-              <%= link_to t('.signin_section.sign_in_to_start'), login_path, class: 'btn btn-large btn-blue mt-1' %>
-            </div>
-        </div>
+<div class="pb-md-4" style="background: linear-gradient(#fafbfc, #ffffff);">
+  <div class="container-lg p-responsive py-5">
+    <div class="d-md-flex flex-items-center gutter-md-spacious text-center">
+      <div class="col-md-4">
+        <%= image_tag('classroom-logo.png', class:"d-none d-md-block width-fit", alt: 'Classroom Logo') %>
+      </div>
+      <div class="col-md-7 text-md-left">
+        <h1 class="d-none">GitHub Classroom</h1>
+        <%= link_to(image_tag('wordmark@2x.png', class: 'col-10 col-sm-8 width-fit mb-3 mx-auto', alt: 'GitHub Classroom'), (logged_in? ? organizations_path : root_path)) %>
+        <p class="alt-lead"><%= t('.signin_section.banner_heading') %> <%= t('.signin_section.banner_subheading') %></p>
+        <%= image_tag('classroom-logo.png', class:"d-md-none col-8 col-sm-6 width-fit my-5", alt: 'Classroom Logo') %>
       </div>
     </div>
   </div>
 
-  <div class="why-classroom-section border-top border-gray-light bg-gray-light">
-    <div class="container-lg clearfix p-responsive py-4">
-      <h2 class="alt-h2"><%= t('.why_classroom_section.heading') %></h2>
-      <div class="col-md-11 float-right mt-4">
-        <div class="col-sm-3 mb-4 mx-4 mt-0 float-sm-right">
-          <img class="width-full" src="https://via.placeholder.com/250x200"/>
-        </div>
-
-        <% t('.why_classroom_section.items')[0..2].each do |item| %>
-          <p class="f4 mb-3 text-left"><b><%= item[:heading]%></b><%= " " + item[:content] %></p>
-        <% end %>
-    </div>
-
-    <div class="col-md-11 float-right">
-        <div class="Box col-md-4 p-3 mx-4 mb-4 mt-1 mt-sm-8 float-right">
-          <p class="mb-3 text-left f4"><b>Classroom Desktop.</b> Clone your student's assignments with the click of a button.</p>
-
-          <a class="f6 btn btn-small btn-blue" href="https://central.github.com/deployments/desktop/desktop/latest/darwin" data-for-os="mac" data-download="mac">Download for macOS</a>
-          <a class="f6 btn btn-small btn-blue" href="https://central.github.com/deployments/desktop/desktop/latest/win32" data-for-os="windows" data-download="windows">Download for Windows (64bit)</a>
-        </div>
-
-        <% t('.why_classroom_section.items')[3..-1].each do |item| %>
-          <p class="f4 mb-3 text-left"><b><%= item[:heading]%></b><%= " " + item[:content] %></p>
-        <% end %>
-    </div>
+  <div class="container-md p-responsive">
+    <p class="f4 text-gray"><%= t('.signin_section.why_classroom_html') %></p>
+    <%= link_to t('.signin_section.sign_in_to_start'), login_path, class: 'btn btn-large btn-blue mt-2' %>
   </div>
-
-  <div class="what-teachers-say-section border-top border-gray-light bg-white">
-    <div class="container-lg clearfix p-responsive py-4">
-      <h2 class="alt-h2 text-center"><%= t('.what_teachers_say_section.heading') %></h2>
-
-      <div class="clearfix gutter-md">
-        <% t('.what_teachers_say_section.items').each do |item| %>
-          <div class="col-md-3 float-left my-4">
-            <div class="Box p-3">
-              <div class="mt-2">
-                <%= octicon 'quote', height: 22 %>
-              </div>
-
-              <p class="mt-3 f4"><%= item[:quote] %></p>
-
-              <span class="mt-1 text-bold f4 d-block"><%= item[:name] %></span>
-              <span class="mt-1 f4"><%= item[:school] %></span>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    </div>
-  </div>
-
-  <div class="classroom-in-action-section bg-white">
-    <div class="container-lg clearfix p-responsive py-4">
-      <div class="Box col-md-10 p-3 mx-auto">
-        <h3 class="f1-light text-center"><%= t('.classroom_in_action_section.heading')%></h3>
-        <p class="mt-2 f3-light text-center"><%= t('.classroom_in_action_section.subheading') %></p>
-
-        <div class="d-flex flex-column flex-items-center">
-          <%=
-            link_to t('.classroom_in_action_section.accept_button'),
-            "https://classroom.github.com/assignment-invitations/0b543f547df75612597b9b38938bd936",
-            class: 'btn btn-large btn-blue mt-1'
-          %>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="get-started-section bg-white">
-    <div class="container-lg clearfix p-responsive py-4">
-      <h2 class="alt-h2 mt-4"><%= t('.get_started_section.heading') %></h2>
-
-      <div class="col-md-11 float-right mt-4">
-          <div class="col-sm-3 m-4 mt-sm-0 float-sm-right">
-            <img class="width-full" src="https://via.placeholder.com/250x200"/>
-          </div>
-
-          <% t('.get_started_section.items').each do |item| %>
-            <p class="f4 mb-3 text-left"><b><%= item[:heading]%></b><%= " " + item[:content] %></p>
-          <% end %>
-      </div>
-    </div>
-  </div>
-  <%= render partial: 'pages/getting_started_video_modal' %>
 </div>
+
+<div class="why-classroom-section bg-white">
+  <div class="container-lg p-responsive py-5">
+    <h2 class="alt-h2 text-center text-md-left my-3"><%= t('.why_classroom_section.heading') %></h2>
+
+    <div class="col-md-9 f4 mx-auto">
+      <div class="col-6 col-md-4 float-md-right mb-4 mx-auto mx-md-4">
+        <img class="width-full" src="https://via.placeholder.com/250x200"/>
+      </div>
+
+      <% t('.why_classroom_section.items')[0..2].each do |item| %>
+        <h3 class="mb-1"><%= item[:heading]%></h3>
+        <p class="text-gray mb-4"><%= " " + item[:content] %></p>
+      <% end %>
+
+      <div class="Box col-md-4 float-sm-right p-3 mx-auto mx-md-4 mb-4">
+        <p class="mb-3 text-left f4"><b>Classroom Desktop.</b> Clone your student's assignments with the click of a button.</p>
+
+        <a class="f6 btn btn-small btn-blue" href="https://central.github.com/deployments/desktop/desktop/latest/darwin" data-for-os="mac" data-download="mac">Download for macOS</a>
+        <a class="f6 btn btn-small btn-blue" href="https://central.github.com/deployments/desktop/desktop/latest/win32" data-for-os="windows" data-download="windows">Download for Windows (64bit)</a>
+      </div>
+
+      <% t('.why_classroom_section.items')[3..-1].each do |item| %>
+        <h3 class="mb-1"><%= item[:heading]%></h3>
+        <p class="text-gray mb-4"><%= " " + item[:content] %></p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="what-teachers-say-section bg-white">
+  <div class="container-xl p-responsive py-4">
+    <h2 class="alt-h2 text-center mb-4"><%= t('.what_teachers_say_section.heading') %></h2>
+
+    <div class="d-sm-flex flex-wrap gutter-sm">
+      <% t('.what_teachers_say_section.items').each do |item| %>
+        <div class="col-sm-6 col-lg-3 mb-3 mb-sm-5">
+          <div class="Box height-full position-relative p-3">
+
+            <% if item[:school] %>
+              <div class="position-absolute top-0 right-0 bottom-0 left-0 overflow-hidden">
+                <div class="position-absolute top-0 right-0 bottom-0 left-0" style="background: linear-gradient(rgba(0,0,0,0.24), rgba(0,0,0,0.5));"></div>
+                <%= image_tag "schools/#{item[:school]}.png", class:"height-full", style: "min-width:100%;", alt: item[:school] %>
+              </div>
+            <% end %>
+
+            <div class="position-relative text-white" style="opacity:0.5;">
+              <%= octicon 'quote', height: 32 %>
+            </div>
+
+            <div class="position-relative">
+              <blockquote class="alt-mono-font text-white text-shadow-dark mt-3">
+                <p class="f4"><%= item[:quote] %></p>
+              </blockquote>
+              <cite class="d-block f5 text-white text-shadow-dark mb-3" style="font-style: normal;">
+                <%= item[:name] %>, <div><%= item[:school] %></div>
+              </cite>
+            </div>
+
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="classroom-in-action-section border-top border-bottom bg-gray-light py-6">
+  <div class="container-md text-center p-responsive">
+    <h3 class="h2"><%= t('.classroom_in_action_section.heading')%></h3>
+    <p class="f4 text-gray mt-2"><%= t('.classroom_in_action_section.subheading') %></p>
+
+    <div class="d-flex flex-column flex-items-center">
+      <%=
+        link_to t('.classroom_in_action_section.accept_button'),
+        "https://classroom.github.com/assignment-invitations/0b543f547df75612597b9b38938bd936",
+        class: 'btn btn-large btn-blue mt-1'
+      %>
+    </div>
+  </div>
+</div>
+
+<div class="get-started-section border-bottom bg-white">
+  <div class="container-lg p-responsive py-5">
+    <h2 class="alt-h2 text-center text-md-left my-3"><%= t('.get_started_section.heading') %></h2>
+
+    <div class="col-md-9 f4 mx-auto">
+      <div class="col-6 col-md-4 float-md-right mb-4 mx-auto mx-md-4">
+        <img class="width-full" src="https://via.placeholder.com/250x200"/>
+      </div>
+
+      <% t('.get_started_section.items').each do |item| %>
+        <h3 class="mb-1"><%= item[:heading]%></h3>
+        <p class="text-gray mb-4"><%= " " + item[:content] %></p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%= render partial: 'pages/getting_started_video_modal' %>

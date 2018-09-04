@@ -16,7 +16,15 @@
 
     <main>
       <%= render 'shared/message_of_the_day' %>
-      <%= render 'shared/header' %>
+
+      <div class="bg-gray-light">
+        <header class="container-md p-responsive">
+          <nav class="">
+            <ul class="d-flex flex-items-center flex-justify-center flex-md-justify-end f4 list-style-none pt-3">
+              <li><%= link_to t('views.shared.sign_in'), login_path, class: 'btn btn-outline' %></li>
+            </ul>
+        </header>
+      </div>
 
       <div id="flash-messages">
         <% flash.each do |type, message| %>

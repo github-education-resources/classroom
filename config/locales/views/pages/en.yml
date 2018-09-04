@@ -30,7 +30,7 @@ en:
         - heading: 'You’re not alone.'
           content: 'The experts on the GitHub Education team are here to answer any of your questions, and we’ve got docs, best practices, and a strong community of educators to help you migrate to Classroom.'
         - heading: 'Are you super-advanced?'
-          content: 'Do you want to build your own tools? GitHub Classroom is [open source](https://github.com/education/classroom), and we 💖  contributions.'
+          content: 'Do you want to build your own tools? GitHub Classroom is <a href="https://github.com/education/classroom">open source</a>, and we 💖 contributions.'
       what_teachers_say_section:
         heading: 'What teachers are saying'
         items:
