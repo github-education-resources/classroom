@@ -19,9 +19,10 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
     create(:assignment, options)
   end
   let(:invitation)    { create(:assignment_invitation, assignment: assignment) }
-  let(:invite_status) { create(:invite_status, assignment_invitation: invitation, user: user) }
+  let(:invite_status) { invitation.status(user) }
 
   before(:each) do
+    subject::WAIT_TIME = 0.001
     @repo = organization.github_organization.create_repository(assignment.title, private: true)
     invite_status.importing_starter_code!
   end
@@ -63,7 +64,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             headers: { "Content-Type": "application/json" }
           ).times(2)
         subject.perform_now(@assignment_repo, user)
-        expect(@assignment_repo.github_repository.imported?).to be_truthy
+        expect(invite_status.reload.status).to eq("completed")
       end
 
       it "broadcasts when porter status is 'complete'" do
@@ -108,6 +109,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             body: request_stub("complete"),
             headers: { "Content-Type": "application/json" }
           ).times(2)
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.import.poll").exactly(3).times
         expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.import.success")
         subject.perform_now(@assignment_repo, user)
       end
@@ -218,6 +220,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
             body: request_stub("error"),
             headers: { "Content-Type": "application/json" }
           )
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.import.poll").exactly(3).times
         expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.import.fail")
         subject.perform_now(@assignment_repo, user)
       end
@@ -311,14 +314,14 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
       end
 
       it "kicks off another porter status job when octopoller timesout" do
-        expect(Octopoller).to receive(:poll).with(timeout: 30).and_raise(Octopoller::TimeoutError)
+        expect(Octopoller).to receive(:poll).with(wait: 0.001, retries: 3).and_raise(Octopoller::TooManyAttemptsError)
         assert_enqueued_jobs 1, only: AssignmentRepo::PorterStatusJob do
           subject.perform_now(@assignment_repo, user)
         end
       end
 
       it "reports timeout stat when porter status job timesout" do
-        expect(Octopoller).to receive(:poll).with(timeout: 30).and_raise(Octopoller::TimeoutError)
+        expect(Octopoller).to receive(:poll).with(wait: 0.001, retries: 3).and_raise(Octopoller::TooManyAttemptsError)
         expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.import.timeout")
         subject.perform_now(@assignment_repo, user)
       end
