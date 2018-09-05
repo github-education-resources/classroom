@@ -3,6 +3,7 @@
 class AssignmentRepo
   class PorterStatusJob < ApplicationJob
     REPO_IMPORT_STEPS = GitHubRepository::IMPORT_STEPS
+    WAIT_TIME = 10.seconds
     queue_as :porter_status
 
     # rubocop:disable MethodLength
@@ -15,8 +16,10 @@ class AssignmentRepo
 
       begin
         last_progress = nil
-        result = Octopoller.poll(timeout: 30.seconds) do
+        # rubocop:disable BlockLength
+        result = Octopoller.poll(wait: WAIT_TIME, retries: 3) do
           begin
+            GitHubClassroom.statsd.increment("v2_exercise_repo.import.poll")
             progress = github_repository.import_progress
             case progress[:status]
             when GitHubRepository::IMPORT_COMPLETE
@@ -42,6 +45,7 @@ class AssignmentRepo
             Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
           end
         end
+        # rubocop:enable BlockLength
 
         case result
         when Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
@@ -66,7 +70,7 @@ class AssignmentRepo
           )
           GitHubClassroom.statsd.increment("v2_exercise_repo.import.success")
         end
-      rescue Octopoller::TimeoutError
+      rescue Octopoller::TooManyAttemptsError
         GitHubClassroom.statsd.increment("v2_exercise_repo.import.timeout")
         PorterStatusJob.perform_later(assignment_repo, user)
       end
