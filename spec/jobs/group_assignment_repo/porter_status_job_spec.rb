@@ -72,7 +72,7 @@ RSpec.describe GroupAssignmentRepo::PorterStatusJob, type: :job do
           expect { subject.perform_now(group_assignment_repo, group) }
             .to have_broadcasted_to(channel)
             .with(
-              text: AssignmentRepo::Creator::REPOSITORY_CREATION_COMPLETE,
+              text: GroupAssignmentRepo::CreateGitHubRepositoryJob::CREATE_COMPLETE,
               status: "completed",
               percent: 100,
               status_text: "Done",
@@ -85,7 +85,51 @@ RSpec.describe GroupAssignmentRepo::PorterStatusJob, type: :job do
           subject.perform_now(group_assignment_repo, group)
         end
       end
-      context "finishes after 2 requests"
+
+      context "finishes after 2 requests" do
+        before do
+          stub_request(:get, github_url("/repos/#{group_assignment_repo.github_repository.full_name}/import"))
+          .to_return(
+            status: 201,
+            body: request_stub("importing"),
+            headers: { "Content-Type": "application/json" }
+          ).times(2).then
+          .to_return(
+            status: 200,
+            body: request_stub("complete"),
+            headers: { "Content-Type": "application/json" }
+          )
+        end
+
+        it "sets group_invite_status to completed" do
+          subject.perform_now(group_assignment_repo, group)
+          expect(invite_status.status).to eq("completed")
+        end
+
+        it "broadcasts completion" do
+          expect { subject.perform_now(group_assignment_repo, group) }
+            .to have_broadcasted_to(channel)
+            .with(
+              text: subject::IMPORT_ONGOING,
+              status: "importing_starter_code",
+              percent: 40,
+              status_text: "Importing...",
+              repo_url: "https://github.com/#{group_assignment_repo.github_repository.full_name}"
+            )
+            .with(
+              text: GroupAssignmentRepo::CreateGitHubRepositoryJob::CREATE_COMPLETE,
+              status: "completed",
+              percent: 100,
+              status_text: "Done",
+              repo_url: "https://github.com/#{group_assignment_repo.github_repository.full_name}"
+            )
+        end
+
+        it "reports success stat" do
+          expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.import.success")
+          subject.perform_now(group_assignment_repo, group)
+        end
+      end
     end
   end
 end
