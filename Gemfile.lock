@@ -132,7 +132,7 @@ GEM
       multipart-post (>= 1.2, < 3)
     faraday-http-cache (2.0.0)
       faraday (~> 0.8)
-    ffi (1.9.18)
+    ffi (1.9.24)
     flipper (0.10.2)
     flipper-redis (0.10.2)
       flipper (~> 0.10.2)
