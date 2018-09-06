@@ -30,7 +30,9 @@ class AssignmentRepo
       if assignment.starter_code?
         invite_status.importing_starter_code!
         broadcast_message(IMPORT_STARTER_CODE, invite_status, user)
-        PorterStatusJob.perform_later(assignment_repo, user)
+        unless user.feature_enabled?(:repository_import_webhook)
+          PorterStatusJob.perform_later(assignment_repo, user)
+        end
       else
         invite_status.completed!
         broadcast_message(Creator::REPOSITORY_CREATION_COMPLETE, invite_status, user)
