@@ -5,7 +5,7 @@ class RepositoryImportEventJob < ApplicationJob
   queue_as :porter_status
 
   CREATE_COMPLETE = "Your GitHub repository was created."
-  IMPORT_FAILED = "We were not able to import you the starter code to your assignment, please try again."
+  IMPORT_FAILED = "We were not able to import starter code to your assignment, please try again."
 
   def perform(payload_body)
     github_repo_id = payload_body.dig("repository", "id")
