@@ -56,7 +56,7 @@ RSpec.describe RepositoryImportEventJob, type: :job do
             status: "completed",
             percent: 100,
             status_text: "Done",
-            repo_url: "#"
+            repo_url: "https://github.com/Codertocat/Hello-World"
           )
       end
     end
@@ -80,7 +80,7 @@ RSpec.describe RepositoryImportEventJob, type: :job do
             status: "errored_importing_starter_code",
             percent: nil,
             status_text: "Failed",
-            repo_url: "#"
+            repo_url: "https://github.com/Codertocat/Hello-World"
           )
       end
     end
