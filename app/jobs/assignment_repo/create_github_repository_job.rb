@@ -2,9 +2,8 @@
 
 class AssignmentRepo
   class CreateGitHubRepositoryJob < ApplicationJob
-    CREATE_REPO         = "Creating repository"
-    ADDING_COLLABORATOR = "Adding collaborator"
-    IMPORT_STARTER_CODE = "Importing starter code"
+    CREATE_REPO         = "Creating GitHub repository."
+    IMPORT_STARTER_CODE = "Importing starter code."
 
     queue_as :create_repository
 
@@ -27,7 +26,7 @@ class AssignmentRepo
         user: user,
         invite_status: invite_status,
         percent: 50,
-        status_text: "Creating GitHub repository"
+        status_text: CREATE_REPO.chomp(".")
       )
       assignment_repo = create_assignment_repo(assignment, user)
       report_time(start)
