@@ -114,6 +114,7 @@ class AssignmentRepo
 
     # Broadcasts a ActionCable message with a status to the given user
     #
+    # rubocop:disable ParameterLists
     def broadcast_message(type: :text, message:, user:, invite_status:, percent: nil, status_text:, repo_url: nil)
       raise ArgumentError unless %i[text error].include?(type)
       broadcast_args = {
@@ -125,6 +126,7 @@ class AssignmentRepo
       broadcast_args[type] = message
       ActionCable.server.broadcast(RepositoryCreationStatusChannel.channel(user_id: user.id), broadcast_args)
     end
+    # rubocop:enable ParameterLists
 
     # Reports the elapsed time to Datadog
     #
