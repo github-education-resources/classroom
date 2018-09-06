@@ -22,18 +22,38 @@ class AssignmentRepo
       return unless invite_status.waiting?
       invite_status.creating_repo!
 
-      broadcast_message(CREATE_REPO, invite_status, user)
+      broadcast_message(
+        message: CREATE_REPO,
+        user: user,
+        invite_status: invite_status,
+        percent: 50,
+        status_text: "Creating GitHub repository"
+      )
       assignment_repo = create_assignment_repo(assignment, user)
       report_time(start)
 
       GitHubClassroom.statsd.increment("v2_exercise_repo.create.success")
       if assignment.starter_code?
         invite_status.importing_starter_code!
-        broadcast_message(IMPORT_STARTER_CODE, invite_status, user)
+        broadcast_message(
+          message: IMPORT_STARTER_CODE,
+          user: user,
+          invite_status: invite_status,
+          percent: 50,
+          status_text: "Import started",
+          repo_url: assignment_repo.github_repository.html_url
+        )
         PorterStatusJob.perform_later(assignment_repo, user) unless user.feature_enabled?(:repository_import_webhook)
       else
         invite_status.completed!
-        broadcast_message(Creator::REPOSITORY_CREATION_COMPLETE, invite_status, user)
+        broadcast_message(
+          message: Creator::REPOSITORY_CREATION_COMPLETE,
+          user: user,
+          invite_status: invite_status,
+          percent: 0,
+          status_text: "Completed",
+          repo_url: assignment_repo.github_repository.html_url
+        )
       end
     rescue Creator::Result::Error => err
       handle_error(err, assignment, user, invite_status, retries)
@@ -81,17 +101,26 @@ class AssignmentRepo
         CreateGitHubRepositoryJob.perform_later(assignment, user, retries: retries - 1)
       else
         invite_status.errored_creating_repo!
-        broadcast_message(err, invite_status, user, type: :error)
+        broadcast_message(
+          type: :error,
+          message: err,
+          user: user,
+          invite_status: invite_status,
+          status_text: "Failed"
+        )
         report_error(err)
       end
     end
 
     # Broadcasts a ActionCable message with a status to the given user
     #
-    def broadcast_message(message, invite_status, user, type: :text)
+    def broadcast_message(type: :text, message:, user:, invite_status:, percent: nil, status_text:, repo_url: nil)
       raise ArgumentError unless %i[text error].include?(type)
       broadcast_args = {
-        status: invite_status.status
+        status: invite_status.status,
+        percent: percent,
+        status_text: status_text,
+        repo_url: repo_url
       }
       broadcast_args[type] = message
       ActionCable.server.broadcast(RepositoryCreationStatusChannel.channel(user_id: user.id), broadcast_args)
