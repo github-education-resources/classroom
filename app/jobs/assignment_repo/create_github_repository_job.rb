@@ -39,7 +39,7 @@ class AssignmentRepo
           message: IMPORT_STARTER_CODE,
           user: user,
           invite_status: invite_status,
-          percent: 50,
+          percent: user.feature_enabled?(:repository_import_webhook) ? 50 : 0,
           status_text: "Import started",
           repo_url: assignment_repo.github_repository.html_url
         )

@@ -147,7 +147,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         .with(
           text: subject::IMPORT_STARTER_CODE,
           status: "importing_starter_code",
-          percent: 50,
+          percent: 0,
           status_text: "Import started",
           repo_url: "https://github.com/classroom-test-org-edon/learn-elm-EDONTestTeacher"
         )
