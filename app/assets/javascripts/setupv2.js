@@ -103,7 +103,7 @@
         );
       }
     };
-    recursive_progress_asymptotically(recursive_progress_asymptotically, 2);
+    recursive_progress_asymptotically(recursive_progress_asymptotically, 1);
   };
 
   indicate_waiting = function(step_indicator) {
