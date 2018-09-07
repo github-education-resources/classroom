@@ -328,7 +328,7 @@ RSpec.describe AssignmentRepo::PorterStatusJob, type: :job do
   def request_stub(status)
     {
       status: status.to_s,
-      status_text: "Importing...",
+      status_text: "Importing..."
     }.to_json
   end
 end

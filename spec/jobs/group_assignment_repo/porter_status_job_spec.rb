@@ -12,7 +12,7 @@ RSpec.describe GroupAssignmentRepo::PorterStatusJob, type: :job do
   def request_stub(status)
     {
       status: status.to_s,
-      status_text: "Importing...",
+      status_text: "Importing..."
     }.to_json
   end
 
@@ -61,11 +61,11 @@ RSpec.describe GroupAssignmentRepo::PorterStatusJob, type: :job do
       context "finishes immediately" do
         before do
           stub_request(:get, github_url("/repos/#{group_assignment_repo.github_repository.full_name}/import"))
-          .to_return(
-            status: 200,
-            body: request_stub("complete"),
-            headers: { "Content-Type": "application/json" }
-          )
+            .to_return(
+              status: 200,
+              body: request_stub("complete"),
+              headers: { "Content-Type": "application/json" }
+            )
         end
 
         it "sets group_invite_status to completed" do
@@ -94,16 +94,16 @@ RSpec.describe GroupAssignmentRepo::PorterStatusJob, type: :job do
       context "finishes after 2 requests" do
         before do
           stub_request(:get, github_url("/repos/#{group_assignment_repo.github_repository.full_name}/import"))
-          .to_return(
-            status: 201,
-            body: request_stub("importing"),
-            headers: { "Content-Type": "application/json" }
-          ).times(2).then
-          .to_return(
-            status: 200,
-            body: request_stub("complete"),
-            headers: { "Content-Type": "application/json" }
-          )
+            .to_return(
+              status: 201,
+              body: request_stub("importing"),
+              headers: { "Content-Type": "application/json" }
+            ).times(2).then
+            .to_return(
+              status: 200,
+              body: request_stub("complete"),
+              headers: { "Content-Type": "application/json" }
+            )
         end
 
         it "sets group_invite_status to completed" do
@@ -186,7 +186,10 @@ RSpec.describe GroupAssignmentRepo::PorterStatusJob, type: :job do
 
     context "Octopoller times out" do
       before do
-        expect(Octopoller).to receive(:poll).with(wait: TEST_WAIT_TIME, retries: 3).and_raise(Octopoller::TooManyAttemptsError)
+        expect(Octopoller)
+          .to receive(:poll)
+          .with(wait: TEST_WAIT_TIME, retries: 3)
+          .and_raise(Octopoller::TooManyAttemptsError)
       end
 
       it "kicks off a cascading porter status job" do
