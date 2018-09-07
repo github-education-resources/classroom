@@ -26,7 +26,8 @@
     show_retry_button,
     show_success,
     start_job,
-    success_path;
+    success_path,
+    wrap_in_parapgraph;
 
   is_hidden = function(element) {
     return element.hasClass("d-none");
@@ -169,18 +170,25 @@
     flash_progress(progress);
   };
 
+  wrap_in_parapgraph = function(text) {
+    return "<p>" + text + "</p>";
+  };
+
   flash_progress = function(progress) {
+    create_flash_container();
     if (progress.error) {
-      create_flash_container();
-      flash_error(progress.error);
-    } else if (progress.text) {
-      create_flash_container();
-      flash_text(progress.text);
+      flash_error(wrap_in_parapgraph(progress.error));
+    } else if (progress.text || progress.repo_url) {
+      var flash_message = "";
+      if (progress.text) {
+        flash_message = wrap_in_parapgraph(progress.text);
+      }
       if (progress.repo_url) {
         var url_text = "<p>Your assignment repository will be ready at: ";
         url_text += "<a href=" + progress.repo_url + ">" + progress.repo_url + "</a></p>";
-        $("#flash-messages").find(".flash").append(url_text);
+        flash_message += url_text;
       }
+      flash_text(flash_message);
     } else {
       $("#flash-messages").empty();
     }
@@ -193,12 +201,12 @@
 
   flash_error = function(error) {
     $("#flash-messages").find(".flash-application")
-      .append("<div class='flash flash-error'><p>" + error + "</p></div>");
+      .append("<div class='flash flash-error'>" + error + "</div>");
   };
 
   flash_text = function(text) {
     $("#flash-messages").find(".flash-application")
-      .append("<div class='flash flash-success'><p>" + text + "</p></div>");
+      .append("<div class='flash flash-success'>" + text + "</div>");
   };
 
   success_path = function () {
