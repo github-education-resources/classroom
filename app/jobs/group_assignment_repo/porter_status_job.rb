@@ -4,6 +4,7 @@ class GroupAssignmentRepo
   class PorterStatusJob < ApplicationJob
     queue_as :porter_status
 
+    WAIT_TIME           = 10.seconds
     REPO_IMPORT_STEPS   = GitHubRepository::IMPORT_STEPS
     IMPORT_COMPLETE     = GroupAssignmentRepo::CreateGitHubRepositoryJob::CREATE_COMPLETE
     IMPORT_ONGOING      = "Your GitHub repository is importing starter code."
@@ -41,7 +42,7 @@ class GroupAssignmentRepo
       logger.warn error
       GitHubClassroom.statsd.increment("v2_group_exercise_repo.import.fail")
       group_assignment_repo.destroy
-    rescue Octopoller::TimeoutError
+    rescue Octopoller::TooManyAttemptsError
       GitHubClassroom.statsd.increment("v2_group_exercise_repo.import.timeout")
       PorterStatusJob.perform_later(group_assignment_repo, group)
     end
@@ -58,7 +59,7 @@ class GroupAssignmentRepo
     # rubocop:disable MethodLength
     def poll_import_status(github_repository, group_assignment, group, group_invite_status)
       last_progress = nil
-      Octopoller.poll(timeout: 30.seconds) do
+      Octopoller.poll(wait: WAIT_TIME, retries: 3) do
         progress = github_repository.import_progress
         handle_progress_status(progress[:status]) do
           if last_progress != progress[:status]

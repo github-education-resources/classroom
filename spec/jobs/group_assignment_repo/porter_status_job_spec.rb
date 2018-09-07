@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe GroupAssignmentRepo::PorterStatusJob, type: :job do
   include ActiveJob::TestHelper
 
+  TEST_WAIT_TIME = 0.001.seconds
   subject { described_class }
   let(:group_repo_channel) { GroupRepositoryCreationStatusChannel }
 
@@ -36,6 +37,10 @@ RSpec.describe GroupAssignmentRepo::PorterStatusJob, type: :job do
       group_assignment
     end
     let(:group_assignment_repo) { GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group) }
+
+    before(:all) do
+      described_class::WAIT_TIME = TEST_WAIT_TIME
+    end
 
     after(:each) do
       RepoAccess.destroy_all
@@ -129,6 +134,69 @@ RSpec.describe GroupAssignmentRepo::PorterStatusJob, type: :job do
           expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.import.success")
           subject.perform_now(group_assignment_repo, group)
         end
+      end
+    end
+
+    context "import fails" do
+      before do
+        stub_request(:get, github_url("/repos/#{group_assignment_repo.github_repository.full_name}/import"))
+          .to_return(
+            status: 201,
+            body: request_stub("error"),
+            headers: { "Content-Type": "application/json" }
+          )
+      end
+
+      it "sets group_invite_status to errored_importing_starter_code" do
+        subject.perform_now(group_assignment_repo, group)
+        expect(invite_status.status).to eq("errored_importing_starter_code")
+      end
+
+      it "broadcasts failure" do
+        expect { subject.perform_now(group_assignment_repo, group) }
+          .to have_broadcasted_to(channel)
+          .with(
+            error: subject::IMPORT_FAILED,
+            status: "errored_importing_starter_code",
+            status_text: "Errored"
+          )
+      end
+
+      it "records a failure stat" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.import.fail")
+        subject.perform_now(group_assignment_repo, group)
+      end
+
+      it "destroys group_assignment_repo on failure" do
+        expect(group_assignment_repo).to receive(:destroy)
+        subject.perform_now(group_assignment_repo, group)
+      end
+
+      it "makes a DELETE request to GitHub" do
+        subject.perform_now(group_assignment_repo, group)
+        regex = %r{#{github_url("/repositories")}/\d+$}
+        expect(WebMock).to have_requested(:delete, regex)
+      end
+
+      it "logs failure when porter API errors" do
+        expect(Rails.logger).to receive(:warn)
+        subject.perform_now(group_assignment_repo, group)
+      end
+    end
+
+    context "Octopoller times out" do
+      before do
+        expect(Octopoller).to receive(:poll).with(wait: TEST_WAIT_TIME, retries: 3).and_raise(Octopoller::TooManyAttemptsError)
+      end
+
+      it "kicks off a cascading porter status job" do
+        allow(subject).to receive(:perform_later)
+        subject.perform_now(group_assignment_repo, group)
+      end
+
+      it "records a timeout stat" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.import.timeout")
+        subject.perform_now(group_assignment_repo, group)
       end
     end
   end
