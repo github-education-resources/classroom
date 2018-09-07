@@ -97,7 +97,7 @@
         var progress = 100 - (100/counter);
         step_indicator.find(".progress").animate({width: progress.toFixed() + "%", duration: 2000});
         setTimeout(function() {
-            recursive_callback(recursive_callback, counter + 1)
+            recursive_callback(recursive_callback, counter + 1);
           },
           PROGRESS_HALF_LIFE * counter
         );
