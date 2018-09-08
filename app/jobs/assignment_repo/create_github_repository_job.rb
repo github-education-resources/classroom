@@ -93,6 +93,7 @@ class AssignmentRepo
     # Given an error, retries the job if retries are positive
     # or broadcasts a failure to the user
     #
+    # rubocop:disable MethodLength
     def handle_error(err, assignment, user, invite_status, retries)
       logger.warn(err.message)
       if retries.positive?
@@ -110,6 +111,7 @@ class AssignmentRepo
         report_error(err)
       end
     end
+    # rubocop:enable MethodLength
 
     # Broadcasts a ActionCable message with a status to the given user
     #
