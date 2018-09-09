@@ -28,6 +28,8 @@ class RepositoryImportEventJob < ApplicationJob
     invitation = assignment_repo.assignment.invitation
     invite_status = invitation.status(user)
 
+    return unless user.feature_enabled?(:repository_import_webhook)
+
     case status
     when "success"
       invite_status.completed!
