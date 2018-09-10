@@ -382,12 +382,11 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
         it "says a job was succesfully kicked off" do
           post :create_repo, params: { id: invitation.key }
-          expect(response.body)
-            .to eq({
-              job_started: true,
-              status: "waiting",
-              repo_url: nil
-            }.to_json)
+          expect(json)
+            .to eq(
+              "job_started" => true,
+              "status" => "waiting"
+            )
         end
       end
 
@@ -426,12 +425,11 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
         it "says a job was succesfully kicked off" do
           post :create_repo, params: { id: invitation.key }
-          expect(response.body)
-            .to eq({
-              job_started: true,
-              status: "waiting",
-              repo_url: nil
-            }.to_json)
+          expect(json)
+            .to eq(
+              "job_started" => true,
+              "status" => "waiting"
+            )
         end
 
         it "reports an error was retried" do
@@ -459,29 +457,11 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
         it "says a job was unsuccesfully kicked off" do
           post :create_repo, params: { id: invitation.key }
-          expect(response.body)
-            .to eq({
-              job_started: false,
-              status: "unaccepted",
-              repo_url: nil
-            }.to_json)
-        end
-      end
-
-      context "when the github_repository already exists" do
-        it "has a repo_url field present" do
-          octokit_repo_id = 417_862
-          assignment_repo = AssignmentRepo.new(github_repo_id: octokit_repo_id, assignment: invitation.assignment)
-          expect_any_instance_of(AssignmentInvitationsController)
-            .to receive(:current_submission)
-            .and_return(assignment_repo)
-          post :create_repo, params: { id: invitation.key }
-          expect(response.body)
-            .to eq({
-              job_started: false,
-              status: "unaccepted",
-              repo_url: "https://github.com/octokit/octokit.rb"
-            }.to_json)
+          expect(json)
+            .to eq(
+              "job_started" => false,
+              "status" => "unaccepted"
+            )
         end
       end
     end
@@ -520,7 +500,26 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       it "returns the invite_status" do
         invite_status.errored_creating_repo!
         get :progress, params: { id: invitation.key }
-        expect(response.body).to eq({ status: "errored_creating_repo" }.to_json)
+        expect(json).to eq(
+          "status" => "errored_creating_repo",
+          "repo_url" => nil
+        )
+      end
+
+      context "when the github_repository already exists" do
+        it "has a repo_url field present" do
+          octokit_repo_id = 417_862
+          assignment_repo = AssignmentRepo.new(github_repo_id: octokit_repo_id, assignment: invitation.assignment)
+          expect_any_instance_of(AssignmentInvitationsController)
+            .to receive(:current_submission)
+            .and_return(assignment_repo)
+          get :progress, params: { id: invitation.key }
+          expect(json)
+            .to eq(
+              "status" => "unaccepted",
+              "repo_url" => "https://github.com/octokit/octokit.rb"
+            )
+        end
       end
     end
   end
