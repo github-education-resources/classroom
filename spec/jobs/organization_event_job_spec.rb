@@ -4,6 +4,12 @@ require "rails_helper"
 RSpec.describe OrganizationEventJob, type: :job do
   let(:payload) { json_payload("webhook_events/member_removed.json") }
 
+  context "organization doesn't exist in classroom" do
+    it "returns false" do
+      expect(OrganizationEventJob.perform_now(payload)).to be_falsey
+    end
+  end
+
   context "ACTION member_removed", :vcr do
     before(:each) do
       @organization = create(:organization, github_id: payload.dig("organization", "id"))
