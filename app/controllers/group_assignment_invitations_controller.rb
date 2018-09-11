@@ -44,7 +44,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
   def create_repo
-    will_create_repo =
+    job_started =
       if group_invite_status.accepted? || group_invite_status.errored?
         if group_assignment_repo&.github_repository&.empty?
           group_assignment_repo&.destroy
@@ -58,7 +58,7 @@ class GroupAssignmentInvitationsController < ApplicationController
         false
       end
     render json: {
-      will_create_repo: will_create_repo,
+      job_started: job_started,
       status: group_invite_status.status,
       repo_url: group_assignment_repo&.github_repository&.html_url
     }

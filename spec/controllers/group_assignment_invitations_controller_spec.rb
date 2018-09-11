@@ -520,8 +520,8 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
               expect(response.status).to eq(200)
             end
 
-            it "has a will_create_repo of false" do
-              expect(json["will_create_repo"]).to eq(false)
+            it "has a job_started of false" do
+              expect(json["job_started"]).to eq(false)
             end
 
             it "has a status of #{status}" do
@@ -579,8 +579,8 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
               expect(response.status).to eq(200)
             end
 
-            it "has a will_create_repo of true" do
-              expect(json["will_create_repo"]).to eq(true)
+            it "has a job_started of true" do
+              expect(json["job_started"]).to eq(true)
             end
 
             it "has a status of waiting" do
