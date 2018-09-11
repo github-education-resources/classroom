@@ -175,20 +175,12 @@
   };
 
   flash_progress = function(progress) {
-    create_flash_container();
     if (progress.error) {
+      create_flash_container();
       flash_error(wrap_in_parapgraph(progress.error));
-    } else if (progress.text || progress.repo_url) {
-      var flash_message = "";
-      if (progress.text) {
-        flash_message = wrap_in_parapgraph(progress.text);
-      }
-      if (progress.repo_url) {
-        var url_text = "<p>Your assignment repository will be ready at: ";
-        url_text += "<a href=" + progress.repo_url + ">" + progress.repo_url + "</a></p>";
-        flash_message += url_text;
-      }
-      flash_text(flash_message);
+    } else if (progress.text) {
+      create_flash_container();
+      flash_text(wrap_in_parapgraph(progress.text));
     } else {
       $("#flash-messages").empty();
     }
