@@ -67,7 +67,10 @@ class GroupAssignmentInvitationsController < ApplicationController
   # rubocop:enable MethodLength
 
   def progress
-    render json: { status: group_invite_status&.status }
+    render json: {
+      status: group_invite_status&.status,
+      repo_url: group_assignment_repo&.github_repository&.html_url
+    }
   end
 
   def successful_invitation; end

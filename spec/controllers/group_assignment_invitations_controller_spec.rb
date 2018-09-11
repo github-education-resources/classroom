@@ -527,29 +527,6 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
             it "has a status of #{status}" do
               expect(json["status"]).to eq(status)
             end
-
-            it "doesn't have a repo_url" do
-              expect(json["repo_url"]).to eq(nil)
-            end
-          end
-        end
-
-        context "GroupAssignmentRepo already exists" do
-          before do
-            GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
-          end
-
-          invalid_statuses.each do |status|
-            context "when #{status}" do
-              before do
-                invite_status.update(status: status)
-                post :create_repo, params: { id: invitation.key }
-              end
-
-              it "has a repo_url" do
-                expect(json["repo_url"]).to be_present
-              end
-            end
           end
         end
       end
@@ -586,10 +563,6 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
             it "has a status of waiting" do
               expect(json["status"]).to eq("waiting")
             end
-
-            it "doesn't have a repo_url" do
-              expect(json["repo_url"]).to eq(nil)
-            end
           end
         end
       end
@@ -614,16 +587,36 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     context "with group import resiliency enabled" do
       before do
         GitHubClassroom.flipper[:group_import_resiliency].enable
+        invite_status.unaccepted!
       end
 
       after do
         GitHubClassroom.flipper[:group_import_resiliency].disable
       end
 
-      it "returns status" do
-        invite_status.unaccepted!
-        get :progress, params: { id: invitation.key }
-        expect(response.body).to eq({ status: "unaccepted" }.to_json)
+      context "GroupAssignemntRepo not present" do
+        before do
+          get :progress, params: { id: invitation.key }
+        end
+
+        it "returns status" do
+          expect(json["status"]).to eq("unaccepted")
+        end
+
+        it "doesn't have a repo_url" do
+          expect(json["repo_url"]).to eq(nil)
+        end
+      end
+
+      context "GroupAssignmentRepo already present" do
+        before do
+          GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
+          get :progress, params: { id: invitation.key }
+        end
+
+        it "has a repo_url" do
+          expect(json["repo_url"].present?).to be_truthy
+        end
       end
     end
   end
