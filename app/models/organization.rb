@@ -4,7 +4,7 @@ class Organization < ApplicationRecord
   include Flippable
   include Sluggable
 
- # update_index("stafftools#organization") { self }
+  # update_index("stafftools#organization") { self }
 
   default_scope { where(deleted_at: nil) }
 
