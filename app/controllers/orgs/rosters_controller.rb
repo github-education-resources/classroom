@@ -204,10 +204,11 @@ module Orgs
       return @unlinked_users if defined?(@unlinked_users)
       @unlinked_users = []
 
-      result = StafftoolsIndex::User.query(ids: { values: unlinked_user_ids }).order(:login)
+      result = User.where(id: unlinked_user_ids).order(:login)
+      # result = StafftoolsIndex::User.query(ids: { values: unlinked_user_ids }).order(:login)
 
-      result.total_pages.times do |page|
-        @unlinked_users.push(*result.page(page).to_a)
+      result do |user|
+        @unlinked_users.push(user)
       end
 
       @unlinked_users
