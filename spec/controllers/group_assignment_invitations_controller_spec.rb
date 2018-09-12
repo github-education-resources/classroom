@@ -24,15 +24,15 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
   let(:invite_status) { invitation.status(group) }
 
   describe "route_based_on_status", :vcr do
-    before do
+    before(:each) do
       sign_in_as(student)
       GitHubClassroom.flipper[:group_import_resiliency].enable
     end
 
-    after do
+    after(:each) do
       GitHubClassroom.flipper[:group_import_resiliency].disable
-      RepoAccess.destroy_all
       Group.destroy_all
+      RepoAccess.destroy_all
       GroupInviteStatus.destroy_all
     end
 
@@ -492,8 +492,79 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         GitHubClassroom.flipper[:group_import_resiliency].disable
       end
 
-      it "raises NotImplementedError" do
-        expect { post :create_repo, params: { id: invitation.key } }.to raise_error(NotImplementedError)
+      invalid_statuses = GroupInviteStatus::SETUP_STATUSES - ["accepted"]
+      valid_statuses = GroupInviteStatus::ERRORED_STATUSES + ["accepted"]
+
+      context "invalid statuses" do
+        invalid_statuses.each do |status|
+          context "when #{status}" do
+            before do
+              invite_status.update(status: status)
+            end
+
+            it "didn't kick off a job" do
+              expect { post :create_repo, params: { id: invitation.key } }
+                .to_not have_enqueued_job(GroupAssignmentRepo::CreateGitHubRepositoryJob)
+            end
+          end
+        end
+
+        invalid_statuses.each do |status|
+          context "when #{status}" do
+            before do
+              invite_status.update(status: status)
+              post :create_repo, params: { id: invitation.key }
+            end
+
+            it "has a successful response" do
+              expect(response.status).to eq(200)
+            end
+
+            it "has a job_started of false" do
+              expect(json["job_started"]).to eq(false)
+            end
+
+            it "has a status of #{status}" do
+              expect(json["status"]).to eq(status)
+            end
+          end
+        end
+      end
+
+      context "valid statuses" do
+        valid_statuses.each do |status|
+          context "when #{status}" do
+            before do
+              invite_status.update(status: status)
+            end
+
+            it "kick off a job" do
+              expect { post :create_repo, params: { id: invitation.key } }
+                .to have_enqueued_job(GroupAssignmentRepo::CreateGitHubRepositoryJob)
+            end
+          end
+        end
+
+        valid_statuses.each do |status|
+          context "when #{status}" do
+            before do
+              invite_status.update(status: status)
+              post :create_repo, params: { id: invitation.key }
+            end
+
+            it "has a successful response" do
+              expect(response.status).to eq(200)
+            end
+
+            it "has a job_started of true" do
+              expect(json["job_started"]).to eq(true)
+            end
+
+            it "has a status of waiting" do
+              expect(json["status"]).to eq("waiting")
+            end
+          end
+        end
       end
     end
   end
@@ -516,16 +587,36 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     context "with group import resiliency enabled" do
       before do
         GitHubClassroom.flipper[:group_import_resiliency].enable
+        invite_status.unaccepted!
       end
 
       after do
         GitHubClassroom.flipper[:group_import_resiliency].disable
       end
 
-      it "returns status" do
-        invite_status.unaccepted!
-        get :progress, params: { id: invitation.key }
-        expect(response.body).to eq({ status: "unaccepted" }.to_json)
+      context "GroupAssignemntRepo not present" do
+        before do
+          get :progress, params: { id: invitation.key }
+        end
+
+        it "returns status" do
+          expect(json["status"]).to eq("unaccepted")
+        end
+
+        it "doesn't have a repo_url" do
+          expect(json["repo_url"]).to eq(nil)
+        end
+      end
+
+      context "GroupAssignmentRepo already present" do
+        before do
+          GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
+          get :progress, params: { id: invitation.key }
+        end
+
+        it "has a repo_url" do
+          expect(json["repo_url"].present?).to be_truthy
+        end
       end
     end
   end
