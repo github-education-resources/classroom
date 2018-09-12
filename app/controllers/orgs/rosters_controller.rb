@@ -207,7 +207,7 @@ module Orgs
       result = User.where(id: unlinked_user_ids).order(:login)
       # result = StafftoolsIndex::User.query(ids: { values: unlinked_user_ids }).order(:login)
 
-      result do |user|
+      result.each do |user|
         @unlinked_users.push(user)
       end
 
