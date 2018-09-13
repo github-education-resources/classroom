@@ -30,11 +30,11 @@
 
       <% t('.why_classroom_section.items')[0..2].each do |item| %>
         <h3 class="mb-1"><%= item[:heading]%></h3>
-        <p class="text-gray mb-4"><%= " " + item[:content] %></p>
+        <p class="text-gray mb-4"><%= parse_markdown_link(item[:content]) %></p>
       <% end %>
 
-      <div class="Box col-md-4 float-sm-right p-3 mx-auto mx-md-4 mb-4">
-        <p class="mb-3 text-left f4"><b>Classroom Desktop.</b> Clone your student's assignments with the click of a button.</p>
+      <div class="Box col-md-5 float-sm-right p-3 mx-auto mx-md-4 mb-4">
+        <p class="mb-3 text-left f4"><b>Classroom Assistant</b> downloads all of your repositories with the click of a button.</p>
 
         <a class="f6 btn btn-small btn-blue" href="https://central.github.com/deployments/desktop/desktop/latest/darwin" data-for-os="mac" data-download="mac">Download for macOS</a>
         <a class="f6 btn btn-small btn-blue" href="https://central.github.com/deployments/desktop/desktop/latest/win32" data-for-os="windows" data-download="windows">Download for Windows (64bit)</a>
@@ -42,7 +42,7 @@
 
       <% t('.why_classroom_section.items')[3..-1].each do |item| %>
         <h3 class="mb-1"><%= item[:heading]%></h3>
-        <p class="text-gray mb-4"><%= " " + item[:content] %></p>
+        <p class="text-gray mb-4"><%= parse_markdown_link(item[:content]) %></p>
       <% end %>
     </div>
   </div>
@@ -59,8 +59,8 @@
 
             <% if item[:school] %>
               <div class="position-absolute top-0 right-0 bottom-0 left-0 overflow-hidden">
-                <%= image_tag "schools/#{item[:school]}.png", class:"height-full", style: "min-width:100%; filter: blur(1px);", alt: item[:school] %>
-                <div class="position-absolute top-0 right-0 bottom-0 left-0" style="background: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.5));"></div>
+                  <%= image_tag "schools/#{item[:school]}.png", class:"height-full img-card", alt: item[:school] %>
+                  <div class="position-absolute top-0 right-0 bottom-0 left-0" style="background: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.5));"></div>
               </div>
             <% end %>
 
@@ -110,7 +110,7 @@
 
       <% t('.get_started_section.items').each do |item| %>
         <h3 class="mb-1"><%= item[:heading]%></h3>
-        <p class="text-gray mb-4"><%= " " + item[:content] %></p>
+        <p class="text-gray mb-4"><%= parse_markdown_link(item[:content]) %></p>
       <% end %>
     </div>
   </div>

@@ -14,11 +14,11 @@ en:
         heading: 'Why try Classroom?'
         items:
         - heading: 'Spend more time with students, less on setup.'
-          content: 'Students accept an assignment with one link, so you can get straight to thd material.'
+          content: 'Students accept an assignment with one link, so you can get straight to the material.'
         - heading: 'Bootstrap group assignments in a snap.'
           content: 'Invite students to a shared repository, and cap the number of students per group. Use the same groups over and over again, or create new ones.'
-        - heading: 'Download all repositories with one click.'
-          content: 'When you are ready to grade, download all exercises from inside the web client, or use our desktop application.'
+        - heading: 'Download all repositories with the click of a button.'
+          content: 'When you''re ready to grade, download assignments to your machine from GitHub Classroom, or use our new desktop client, Classroom Assistant.'
         - heading: 'More insight into student work than ever before.'
           content: 'See when students accept the assignment, and access their work from the moment they start. With version control, catch when they get stuck and help them rewind.'
         - heading: 'You are in control.'
@@ -27,10 +27,8 @@ en:
           content: 'If you have a small course, Classroom will make your life easier and save you time. If you have hundreds of students, we have your covered: as many repositories as you need, and webhooks to integrate automated testing tools.'
         - heading: 'Works with your Learning Management System (LMS).'
           content: 'Students submit a link to their assignment repository to your learning management system. Give feedback through comments in GitHub, but keep grades in your LMS.'
-        - heading: 'You’re not alone.'
-          content: 'The experts on the GitHub Education team are here to answer any of your questions, and we’ve got docs, best practices, and a strong community of educators to help you migrate to Classroom.'
         - heading: 'Are you super-advanced?'
-          content: 'Do you want to build your own tools? GitHub Classroom is <a href="https://github.com/education/classroom">open source</a>, and we 💖 contributions.'
+          content: Do you want to build your own tools? GitHub Classroom is [open source](https://github.com/education/classroom), and we 💖 contributions.
       what_teachers_say_section:
         heading: 'What teachers are saying'
         items:
@@ -54,11 +52,11 @@ en:
         heading: 'Get started with your first GitHub Classroom'
         items:
         - heading: 'Create an organization for your course.'
-          content: When you [create  an organization], be sure to select the “Free Plan.” Make a new repository for each assignment.
+          content: When you [create  an organization](https://github.com/account/organizations/new), be sure to select the “Free Plan.” Make a new repository for each assignment.
         - heading: 'Apply for an Educator discount.'
-          content: 'For professors, teachers, and bootcamp instructors, we’re happy to provide a discount for free private repositories. Go ahead an apply for [an Education discount] for your organization.'
+          content: 'For professors, teachers, and bootcamp instructors, we’re happy to provide a discount for free private repositories. Go ahead an apply for [an Education discount](https://education.github.com/discount_requests/new) for your organization.'
         - heading: 'Use the GitHub Classroom application.'
-          content: 'With your discount and organization sorted, create a [new Classroom], make your first assignment and invite students.'
+          content: 'With your discount and organization sorted, create a [new Classroom](https://classroom.github.com/classrooms/new), make your first assignment and invite students.'
 
 
       create_assignments: 'Create assignments'

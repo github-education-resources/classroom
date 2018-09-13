@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PagesController < ApplicationController
+  include I18nHelper
+
   layout "layouts/pages"
 
   skip_before_action :authenticate_user!

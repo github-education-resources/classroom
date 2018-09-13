@@ -646,6 +646,14 @@ hr {
   }
 }
 
+.what-teachers-say-section {
+  .img-card {
+    -webkit-filter: blur(1px) brightness(50%); /* Safari 6.0 - 9.0 */
+    filter: blur(1px) brightness(50%);
+    min-width:100%;
+  }
+}
+
 .organization-select-target {
   float: left;
   padding: 10px;
