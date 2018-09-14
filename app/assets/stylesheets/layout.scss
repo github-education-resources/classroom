@@ -501,8 +501,8 @@ hr {
 }
 
 .site-footer {
-  margin-top: 2em;
-  margin-bottom: 2em;
+  padding-top: 2em;
+  padding-bottom: 2em;
   color: #777;
 }
 
@@ -519,6 +519,21 @@ hr {
     &:hover { color: #333; }
   }
 }
+
+
+.pages {
+  &.home {
+    .site-footer {
+      background-color: $gray-000;
+    }
+  }
+  &.desktop {
+    .site-footer {
+      background-color: #fff;
+    }
+  }
+}
+
 
 .desktop-invitation-content,
 .settings,
@@ -545,36 +560,25 @@ hr {
 }
 
 .signin-section {
-  padding: 6.154em 20px 4.103em;
-  margin-bottom: 1.5em;
-  color: #fff;
-  background-color: #5fb27b;
+  color: $gray-900;
+  background-color: $white;
+
+  @media screen and (max-width: $width-md) {
+    text-align: center;
+  }
+
+  .start-container {
+    align-items: flex-start;
+
+    @media screen and (max-width: $width-md) {
+      align-items: center;
+    }
+  }
 
   .container {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-
-  .heading {
-    margin-top: 0;
-    margin-bottom: 0;
-    font-size: 48px;
-    font-weight: normal;
-
-    @media screen and (max-width: 40em) {
-      font-size: 8vw;
-    }
-  }
-
-  .subheading {
-    margin-top: 0.5em;
-    font-size: 21px;
-
-    @media screen and (max-width: 32em) {
-      margin-bottom: 2em;
-      font-size: 4vw;
-    }
   }
 
   a {
@@ -587,7 +591,7 @@ hr {
       padding: 7.5px 15px;
       margin-bottom: 35px;
       font-size: 0.9rem;
-      color: #5fb27b;
+      color: $gray-900;
       cursor: pointer;
       background-color: #f4f5f5;
       border-radius: 50px;
@@ -636,26 +640,17 @@ hr {
       }
     }
   }
+
+  .classroom-logo {
+    max-height: 300px;
+  }
 }
 
-.information-section {
-  h2 {
-    font-size: 21px;
-    font-weight: normal;
-  }
-
-  p {
-    padding-right: 0.5rem;
-    font-size: 16px;
-  }
-
-  .octicon {
-    margin-right: 5px;
-    font-size: 21px;
-  }
-
-  .column {
-    padding: 0 20px;
+.what-teachers-say-section {
+  .img-card {
+    -webkit-filter: blur(1px) brightness(50%); /* Safari 6.0 - 9.0 */
+    filter: blur(1px) brightness(50%);
+    min-width:100%;
   }
 }
 
