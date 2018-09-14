@@ -60,15 +60,17 @@ class AssignmentInvitationsController < ApplicationController
     end
     render json: {
       job_started: job_started,
-      status: current_invitation_status.status,
-      repo_url: current_submission&.github_repository&.html_url
+      status: current_invitation_status.status
     }
   end
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize
 
   def progress
-    render json: { status: current_invitation_status.status }
+    render json: {
+      status: current_invitation_status.status,
+      repo_url: current_submission&.github_repository&.html_url
+    }
   end
 
   def show; end
