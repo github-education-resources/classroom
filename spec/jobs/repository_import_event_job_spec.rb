@@ -8,6 +8,7 @@ RSpec.describe RepositoryImportEventJob, type: :job do
   let(:individual_channel) { RepositoryCreationStatusChannel.channel(user_id: user.id) }
   let(:success_payload)    { json_payload("webhook_events/repository_import_success.json") }
   let(:failure_payload)    { json_payload("webhook_events/repository_import_failure.json") }
+  let(:cancelled_payload)  { json_payload("webhook_events/repository_import_cancelled.json") }
   let(:organization)       { classroom_org }
   let(:user)               { classroom_student }
   let(:assignment)         { create(:assignment, organization: organization) }
@@ -99,6 +100,29 @@ RSpec.describe RepositoryImportEventJob, type: :job do
             .to have_broadcasted_to(individual_channel)
             .with(
               error: subject::IMPORT_FAILED,
+              status: "errored_importing_starter_code",
+              percent: nil,
+              status_text: "Failed"
+            )
+        end
+      end
+
+      context "with source import cancelled" do
+        it "sets invite_status to errored_importing_starter_code" do
+          subject.perform_now(cancelled_payload)
+          expect(invite_status.status).to eq("errored_importing_starter_code")
+        end
+
+        it "reports cancelled stat" do
+          expect(GitHubClassroom.statsd).to receive(:increment).with("v3_exercise_repo.import.cancelled")
+          subject.perform_now(cancelled_payload)
+        end
+
+        it "broadcasts cancelled" do
+          expect { subject.perform_now(cancelled_payload) }
+            .to have_broadcasted_to(individual_channel)
+            .with(
+              error: subject::IMPORT_CANCELLED,
               status: "errored_importing_starter_code",
               percent: nil,
               status_text: "Failed"

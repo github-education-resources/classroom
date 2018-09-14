@@ -6,6 +6,7 @@ class RepositoryImportEventJob < ApplicationJob
 
   CREATE_COMPLETE = "Your GitHub repository was created."
   IMPORT_FAILED = "We were not able to import starter code to your assignment, please try again."
+  IMPORT_CANCELLED = "Youre starter code import was manually cancelled, please try again."
 
   def perform(payload_body)
     github_repo_id = payload_body.dig("repository", "id")
@@ -36,8 +37,12 @@ class RepositoryImportEventJob < ApplicationJob
       GitHubClassroom.statsd.increment("v3_exercise_repo.import.success")
     when "failure"
       invite_status.errored_importing_starter_code!
-      broadcast_assignment_repo_failure(user, invite_status)
+      broadcast_assignment_repo_failure(user, IMPORT_FAILED, invite_status)
       GitHubClassroom.statsd.increment("v3_exercise_repo.import.failure")
+    when "cancelled"
+      invite_status.errored_importing_starter_code!
+      broadcast_assignment_repo_failure(user, IMPORT_CANCELLED, invite_status)
+      GitHubClassroom.statsd.increment("v3_exercise_repo.import.cancelled")
     end
   end
   # rubocop:enable MethodLength
@@ -52,10 +57,10 @@ class RepositoryImportEventJob < ApplicationJob
     )
   end
 
-  def broadcast_assignment_repo_failure(user, invite_status)
+  def broadcast_assignment_repo_failure(user, message, invite_status)
     ActionCable.server.broadcast(
       RepositoryCreationStatusChannel.channel(user_id: user.id),
-      error: IMPORT_FAILED,
+      error: message,
       status: invite_status.status,
       percent: nil,
       status_text: "Failed"
