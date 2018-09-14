@@ -39,8 +39,7 @@ class AssignmentRepo
           user: user,
           invite_status: invite_status,
           percent: user.feature_enabled?(:repository_import_webhook) ? 50 : 0,
-          status_text: "Import started",
-          repo_url: assignment_repo.github_repository.html_url
+          status_text: "Import started"
         )
         PorterStatusJob.perform_later(assignment_repo, user) unless user.feature_enabled?(:repository_import_webhook)
       else
@@ -50,8 +49,7 @@ class AssignmentRepo
           user: user,
           invite_status: invite_status,
           percent: 0,
-          status_text: "Completed",
-          repo_url: assignment_repo.github_repository.html_url
+          status_text: "Completed"
         )
       end
     rescue Creator::Result::Error => err
@@ -116,13 +114,12 @@ class AssignmentRepo
     # Broadcasts a ActionCable message with a status to the given user
     #
     # rubocop:disable ParameterLists
-    def broadcast_message(type: :text, message:, user:, invite_status:, percent: nil, status_text:, repo_url: nil)
+    def broadcast_message(type: :text, message:, user:, invite_status:, percent: nil, status_text:)
       raise ArgumentError unless %i[text error].include?(type)
       broadcast_args = {
         status: invite_status.status,
         percent: percent,
-        status_text: status_text,
-        repo_url: repo_url
+        status_text: status_text
       }
       broadcast_args[type] = message
       ActionCable.server.broadcast(RepositoryCreationStatusChannel.channel(user_id: user.id), broadcast_args)
