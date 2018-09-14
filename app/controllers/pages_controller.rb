@@ -9,6 +9,16 @@ class PagesController < ApplicationController
 
   def home
     redirect_to organizations_path if logged_in?
+
+    ticker_stat = TickerStat.order("created_at").last
+
+    @teacher_count = ticker_stat.user_count
+    @repo_count = ticker_stat.repo_count
+
+    ## TODO: Remove before merge
+    ## Just for testing formatting with real numbers
+    @teacher_count = 19080
+    @repo_count = 28448308
   end
 
   def desktop; end
