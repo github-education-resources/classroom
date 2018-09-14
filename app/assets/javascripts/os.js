@@ -14,5 +14,5 @@
       event.preventDefault();
       htmlElement.className = target.getAttribute('data-os');
     }
-  })
+  });
 })();
