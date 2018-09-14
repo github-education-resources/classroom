@@ -17,8 +17,8 @@ class PagesController < ApplicationController
 
     ## TODO: Remove before merge
     ## Just for testing formatting with real numbers
-    @teacher_count = 19080
-    @repo_count = 28448308
+    @teacher_count = 190_80
+    @repo_count = 284_483_08
   end
 
   def desktop; end
