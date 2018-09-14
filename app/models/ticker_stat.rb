@@ -1,0 +1,2 @@
+class TickerStat < ApplicationRecord
+end
