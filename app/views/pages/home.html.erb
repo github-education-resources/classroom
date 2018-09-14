@@ -52,6 +52,18 @@
   <div class="container-xl p-responsive py-4">
     <h2 class="alt-h2 text-center mb-4"><%= t('.what_teachers_say_section.heading') %></h2>
 
+    <div class="col-md-8 d-flex border rounded-1 mx-auto text-center mb-6">
+      <div class="col-6 p-4 float-left">
+        <h1 class="alt-h2 text-bold"><%= number_to_human(@teacher_count, precision: 2) %></h1>
+        <p class="f3 mt-2">teachers use GitHub Classroom to distribute course work.</p>
+      </div>
+
+      <div class="col-6 p-4 border-left float-left">
+        <h1 class="alt-h2 text-bold"><%= number_to_human(@repo_count) %></h1>
+        <p class="f3 mt-2">repositories created by students learning to code on GitHub and GitHub Classroom.</p>
+      </div>
+    </div>
+
     <div class="d-sm-flex flex-wrap gutter-sm">
       <% t('.what_teachers_say_section.items').each do |item| %>
         <div class="col-sm-6 col-lg-3 mb-3 mb-sm-5">
