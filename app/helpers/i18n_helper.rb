@@ -11,5 +11,6 @@ module I18nHelper
 
     # rubocop:disable OutputSafety
     raw(match.pre_match + link_to(match[1], match[2], link_options) + match.post_match) if match.present?
+    # rubocop:enable OutputSafety
   end
 end
