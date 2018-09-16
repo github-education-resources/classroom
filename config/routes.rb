@@ -48,7 +48,7 @@ Rails.application.routes.draw do
       get   :accept
       patch :accept_assignment
       patch :accept_invitation
-      get   :setupv2
+      get   :setup
       post  :create_repo
       get   :progress
       get   :successful_invitation, path: :success
