@@ -263,7 +263,7 @@
   };
 
   ready = (function() {
-    var setup_progress = $(".setupv2");
+    var setup_progress = $(".setup");
     if (setup_progress.length !== 0) {
       setup_retry_button();
       setup_cable();
