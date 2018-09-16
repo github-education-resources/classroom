@@ -1,7 +1,6 @@
 (function() {
   var POLL_INTERVAL = 1000;
   var PROGRESS_HALF_LIFE = 1000;
-  var PROGRESSION_ANIMATION_DURATION = 2000;
   var progress_asymptotically,
     create_flash_container,
     display_progress,
@@ -99,7 +98,10 @@
         var progress = 100 - (100/counter);
         step_indicator
           .find(".progress")
-          .animate({width: progress.toFixed() + "%", duration: PROGRESSION_ANIMATION_DURATION});
+          .animate(
+            { width: progress.toFixed() + "%" },
+            { duration: PROGRESS_HALF_LIFE * counter }
+          );
         setTimeout(function() {
             recursive_callback(recursive_callback, counter + 1);
           },
