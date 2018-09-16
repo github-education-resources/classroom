@@ -6,7 +6,7 @@ class RepositoryImportEventJob < ApplicationJob
 
   CREATE_COMPLETE = "Your GitHub repository was created."
   IMPORT_FAILED = "We were not able to import starter code to your assignment, please try again."
-  IMPORT_CANCELLED = "Youre starter code import was manually cancelled, please try again."
+  IMPORT_CANCELLED = "Your starter code import was manually cancelled, please try again."
 
   def perform(payload_body)
     github_repo_id = payload_body.dig("repository", "id")
