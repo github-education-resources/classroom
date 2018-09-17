@@ -251,11 +251,9 @@
         // Called when the subscription is ready for use on the server
         start_job();
       },
-
       disconnected: function() {
         // Called when the subscription has been terminated by the server
       },
-
       received: function(data) {
         // Called when there's incoming data on the websocket for this channel
         display_progress(data);
@@ -272,20 +270,19 @@
         group_id: group_id,
         group_assignment_id: group_assignment_id
       }, {
-      connected: function() {
-        // Called when the subscription is ready for use on the server
-        start_job();
-      },
-
-      disconnected: function() {
-        // Called when the subscription has been terminated by the server
-      },
-
-      received: function(data) {
-        // Called when there's incoming data on the websocket for this channel
-        display_progress(data);
+        connected: function() {
+          // Called when the subscription is ready for use on the server
+          start_job();
+        },
+        disconnected: function() {
+          // Called when the subscription has been terminated by the server
+        },
+        received: function(data) {
+          // Called when there's incoming data on the websocket for this channel
+          display_progress(data);
+        }
       }
-    });
+    );
   };
 
   ready = (function() {
