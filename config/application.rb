@@ -15,6 +15,9 @@ ENV["FAILBOT_BACKEND"] ||= "memory"
 require "failbot_rails"
 FailbotRails.setup("classroom#{'-staging' if Rails.env.staging?}")
 
+# configure chewy
+require_relative "chewy"
+
 module GitHubClassroom
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
