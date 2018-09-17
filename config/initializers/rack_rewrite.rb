@@ -5,6 +5,6 @@
 RELEASE_SERVER_URL = "http://classroom-desktop-releases.herokuapp.com"
 
 Rails.application.config.middleware.insert_before(Rack::Runtime, Rack::Rewrite) do
-  r301 %r{/assistant/download(.*)},  "#{RELEASE_SERVER_URL}/download$1"
-  r301 %r{/assistant/update(.*)},  "#{RELEASE_SERVER_URL}/update$1"
+  r301 %r{/assistant/download(.*)}, "#{RELEASE_SERVER_URL}/download$1"
+  r301 %r{/assistant/update(.*)}, "#{RELEASE_SERVER_URL}/update$1"
 end
