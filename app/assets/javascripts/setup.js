@@ -22,7 +22,8 @@
     set_progress_green,
     set_progress_red,
     setup_retry_button,
-    setup_cable,
+    setup_assignment_cable,
+    setup_group_assignment_cable,
     show_retry_button,
     show_success,
     start_job,
@@ -244,29 +245,55 @@
     });
   };
 
-  setup_cable = function() {
+  setup_assignment_cable = function() {
     App.repository_creation_status = App.cable.subscriptions.create("RepositoryCreationStatusChannel", {
       connected: function() {
         // Called when the subscription is ready for use on the server
         start_job();
       },
-
       disconnected: function() {
         // Called when the subscription has been terminated by the server
       },
-
       received: function(data) {
-        display_progress(data);
         // Called when there's incoming data on the websocket for this channel
+        display_progress(data);
       }
     });
   };
 
+  setup_group_assignment_cable = function() {
+    var group_id = $("#group_id").val();
+    var group_assignment_id = $("#group_assignment_id").val();
+    App.repository_creation_status = App.cable.subscriptions.create(
+      {
+        channel: "GroupRepositoryCreationStatusChannel",
+        group_id: group_id,
+        group_assignment_id: group_assignment_id
+      }, {
+        connected: function() {
+          // Called when the subscription is ready for use on the server
+          start_job();
+        },
+        disconnected: function() {
+          // Called when the subscription has been terminated by the server
+        },
+        received: function(data) {
+          // Called when there's incoming data on the websocket for this channel
+          display_progress(data);
+        }
+      }
+    );
+  };
+
   ready = (function() {
-    var setup_progress = $(".setup");
-    if (setup_progress.length !== 0) {
+    var assignment_setup = $("#assignment_setup");
+    var group_assignment_setup = $("#group_assignment_setup");
+    if (assignment_setup.length !== 0) {
       setup_retry_button();
-      setup_cable();
+      setup_assignment_cable();
+    } else if (group_assignment_setup.length !== 0) {
+      setup_retry_button();
+      setup_group_assignment_cable();
     }
   });
 
