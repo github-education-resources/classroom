@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# configure chewy
+require "./config/chewy"
+
 # Set Chewy to log level INFO in production
 if Rails.env.production?
   Rails.application.config.after_initialize do
