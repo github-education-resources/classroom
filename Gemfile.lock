@@ -74,7 +74,7 @@ GEM
     byebug (9.1.0)
     case_transform (0.2)
       activesupport
-    chewy (0.10.1)
+    chewy (5.0.0)
       activesupport (>= 4.0)
       elasticsearch (>= 2.0.0)
       elasticsearch-dsl
@@ -103,13 +103,13 @@ GEM
     dotenv-rails (2.2.1)
       dotenv (= 2.2.1)
       railties (>= 3.2, < 5.2)
-    elasticsearch (5.0.4)
-      elasticsearch-api (= 5.0.4)
-      elasticsearch-transport (= 5.0.4)
-    elasticsearch-api (5.0.4)
+    elasticsearch (6.1.0)
+      elasticsearch-api (= 6.1.0)
+      elasticsearch-transport (= 6.1.0)
+    elasticsearch-api (6.1.0)
       multi_json
-    elasticsearch-dsl (0.1.5)
-    elasticsearch-transport (5.0.4)
+    elasticsearch-dsl (0.1.6)
+    elasticsearch-transport (6.1.0)
       faraday
       multi_json
     erubi (1.7.1)
@@ -448,7 +448,7 @@ DEPENDENCIES
   awesome_print (~> 1.8)
   bootsnap (~> 1.1, >= 1.1.2)
   bullet (~> 5.6, >= 5.6.1)
-  chewy (~> 0.10.1)
+  chewy (~> 5.0.0)
   connection_pool (~> 2.2, >= 2.2.1)
   dalli (~> 2.7, >= 2.7.6)
   database_cleaner (~> 1.6, >= 1.6.1)
