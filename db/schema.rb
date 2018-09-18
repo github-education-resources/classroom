@@ -91,7 +91,7 @@ ActiveRecord::Schema.define(version: 20180918215254) do
     t.integer "group_id", null: false
     t.string "submission_sha"
     t.integer "configuration_state", default: 0
-    t.string "global_relay_id"
+    t.string "github_global_relay_id"
     t.index ["github_repo_id"], name: "index_group_assignment_repos_on_github_repo_id", unique: true
     t.index ["group_assignment_id"], name: "index_group_assignment_repos_on_group_assignment_id"
   end
@@ -172,7 +172,7 @@ ActiveRecord::Schema.define(version: 20180918215254) do
     t.integer "webhook_id"
     t.boolean "is_webhook_active", default: false
     t.integer "roster_id"
-    t.string "global_relay_id"
+    t.string "github_global_relay_id"
     t.index ["deleted_at"], name: "index_organizations_on_deleted_at"
     t.index ["github_id"], name: "index_organizations_on_github_id"
     t.index ["roster_id"], name: "index_organizations_on_roster_id"
@@ -220,7 +220,7 @@ ActiveRecord::Schema.define(version: 20180918215254) do
     t.datetime "updated_at", null: false
     t.boolean "site_admin", default: false
     t.datetime "last_active_at", null: false
-    t.string "global_relay_id"
+    t.string "github_global_relay_id"
     t.index ["token"], name: "index_users_on_token", unique: true
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end

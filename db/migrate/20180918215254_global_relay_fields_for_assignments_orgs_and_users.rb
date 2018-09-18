@@ -4,8 +4,8 @@ class GlobalRelayFieldsForAssignmentsOrgsAndUsers < ActiveRecord::Migration[5.1]
     remove_index :assignment_repos, :global_relay_id
     rename_column :assignment_repos, :global_relay_id, :github_global_relay_id
 
-    add_column :group_assignment_repos, :global_relay_id, :string
-    add_column :organizations, :global_relay_id, :string
-    add_column :users, :global_relay_id, :string
+    add_column :group_assignment_repos, :github_global_relay_id, :string
+    add_column :organizations, :github_global_relay_id, :string
+    add_column :users, :github_global_relay_id, :string
   end
 end
