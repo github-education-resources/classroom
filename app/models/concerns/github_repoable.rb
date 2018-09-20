@@ -21,6 +21,8 @@ module GitHubRepoable
       private: private?,
       description: repo_description
     )
+
+    self.github_global_relay_id = github_repository.node_id
     self.github_repo_id = github_repository.id
   end
 

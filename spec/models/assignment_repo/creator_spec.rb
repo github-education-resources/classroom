@@ -74,6 +74,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
         expect(result.success?).to be_truthy
         expect(result.assignment_repo.assignment).to eql(assignment)
         expect(result.assignment_repo.user).to eql(student)
+        expect(result.assignment_repo.github_global_relay_id).to be_truthy
       end
 
       it "creates an AssignmentRepo as a member" do
@@ -82,6 +83,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
         expect(result.success?).to be_truthy
         expect(result.assignment_repo.assignment).to eql(assignment)
         expect(result.assignment_repo.user).to eql(teacher)
+        expect(result.assignment_repo.github_global_relay_id).to be_truthy
       end
 
       it "tracks the how long it too to be created" do
