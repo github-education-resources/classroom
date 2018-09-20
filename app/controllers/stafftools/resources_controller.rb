@@ -2,6 +2,21 @@
 
 module Stafftools
   class ResourcesController < StafftoolsController
+    ALL_INDICIES = [
+      AssignmentIndex,
+      AssignmentInvitationIndex,
+      AssignmentRepoIndex,
+      DeadlineIndex,
+      GroupAssignmentIndex,
+      GroupAssignmentInvitationIndex,
+      GroupAssignmentRepoIndex,
+      GroupIndex,
+      GroupingIndex,
+      OrganizationIndex,
+      RepoAccessIndex,
+      UserIndex
+    ]
+
     before_action :set_resources
 
     def index; end
@@ -16,11 +31,15 @@ module Stafftools
 
     def set_resources
       return @resources = nil if params[:query].blank?
-      @resources = StafftoolsIndex
+      query = Chewy::Query.new(*ALL_INDICIES)
+      @resources = query # TODO change this
         .query(match_phrase_prefix(params[:query]))
         .order(_type: :asc)
-        .page(params[:page])
-        .per(20)
+        .limit(20)
+        .offset(params[:page] || 0 * 20)
+
+        # .page(params[:page])
+        # .per(20)
     end
 
     def match_phrase_prefix(query)
