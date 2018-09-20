@@ -31,15 +31,21 @@ module Stafftools
 
     def set_resources
       return @resources = nil if params[:query].blank?
-      query = Chewy::Query.new(*ALL_INDICIES)
-      @resources = query # TODO change this
-        .query(match_phrase_prefix(params[:query]))
+      @resources = query
         .order(_type: :asc)
-        .limit(20)
-        .offset(params[:page] || 0 * 20)
+        .page(params[:page])
+        .per(20)
+    end
 
-        # .page(params[:page])
-        # .per(20)
+    def query
+      @query ||= combined_indices_query
+    end
+
+    def combined_indices_query
+      queries = ALL_INDICIES.map { |index| index.query(match_phrase_prefix(params[:query])) }
+      queries
+        .drop(1)
+        .reduce(queries.first) { |combined_query, query| combined_query.merge(query) }
     end
 
     def match_phrase_prefix(query)
