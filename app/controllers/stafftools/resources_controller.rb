@@ -2,6 +2,10 @@
 
 module Stafftools
   class ResourcesController < StafftoolsController
+    class StafftoolsRequest < Chewy::Search::Request
+      include Chewy::Search::Pagination::Kaminari
+    end
+
     ALL_INDICIES = [
       AssignmentIndex,
       AssignmentInvitationIndex,
@@ -31,21 +35,11 @@ module Stafftools
 
     def set_resources
       return @resources = nil if params[:query].blank?
-      @resources = query
+      @resources = StafftoolsRequest.new(*ALL_INDICIES)
+        .query(match_phrase_prefix(params[:query]))
         .order(_type: :asc)
         .page(params[:page])
         .per(20)
-    end
-
-    def query
-      @query ||= combined_indices_query
-    end
-
-    def combined_indices_query
-      queries = ALL_INDICIES.map { |index| index.query(match_phrase_prefix(params[:query])) }
-      queries
-        .drop(1)
-        .reduce(queries.first) { |combined_query, query| combined_query.merge(query) }
     end
 
     def match_phrase_prefix(query)
