@@ -19,7 +19,7 @@ module Stafftools
       OrganizationIndex,
       RepoAccessIndex,
       UserIndex
-    ]
+    ].freeze
 
     before_action :set_resources
 
