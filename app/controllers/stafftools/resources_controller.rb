@@ -6,7 +6,7 @@ module Stafftools
       include Chewy::Search::Pagination::Kaminari
     end
 
-    ALL_INDICIES = [
+    ALL_INDICES = [
       AssignmentIndex,
       AssignmentInvitationIndex,
       AssignmentRepoIndex,
@@ -35,7 +35,7 @@ module Stafftools
 
     def set_resources
       return @resources = nil if params[:query].blank?
-      @resources = StafftoolsRequest.new(*ALL_INDICIES)
+      @resources = StafftoolsRequest.new(*ALL_INDICES)
         .query(match_phrase_prefix(params[:query]))
         .order(_type: :asc)
         .page(params[:page])
