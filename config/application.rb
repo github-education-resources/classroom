@@ -69,11 +69,8 @@ module GitHubClassroom
           # but the replicas have not been allocated. This is okay in our instance since we don't
           # necessarily need replicas.
           # Docs: https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-health.html
-          if status == "green" || status == "yellow"
-            "ok"
-          else
-            raise "Elasticsearch status is #{status}"
-          end
+          raise "Elasticsearch status is #{status}" unless %w[green yellow].include?(status)
+          "ok"
         end
       end
     end
