@@ -13,9 +13,7 @@ class PagesController < ApplicationController
 
     redirect_to organizations_path if logged_in?
 
-    if assistant_landing_page_enabled?
-      render :homev2
-    end
+    render :homev2 if assistant_landing_page_enabled?
   end
 
   def assistant
@@ -27,6 +25,6 @@ class PagesController < ApplicationController
   def resolve_layout
     return "layouts/pagesv2" if assistant_landing_page_enabled?
 
-    return "layouts/pages"
+    "layouts/pages"
   end
 end

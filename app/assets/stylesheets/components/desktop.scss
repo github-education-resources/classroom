@@ -11,15 +11,18 @@ div.desktop-bg {
   height: 200px;
 }
 
-html.mac [data-for-os=windows], [data-for-os=linux] {
+html.mac [data-for-os=windows],
+         [data-for-os=linux] {
   display: none;
 }
 
-html.windows [data-for-os=mac], [data-for-os=linux] {
+html.windows [data-for-os=mac],
+             [data-for-os=linux] {
   display: none;
 }
 
-html.linux [data-for-os=mac], [data-for-os=windows] {
+html.linux [data-for-os=mac],
+           [data-for-os=windows] {
   display: none;
 }
 
