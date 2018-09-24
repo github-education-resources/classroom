@@ -11,15 +11,15 @@ div.desktop-bg {
   height: 200px;
 }
 
-.desktop-subtitle {
-  color: rgba(255, 255, 255, 0.65098);
-}
-
-html.mac [data-for-os=windows] {
+html.mac [data-for-os=windows], [data-for-os=linux] {
   display: none;
 }
 
-html.windows [data-for-os=mac] {
+html.windows [data-for-os=mac], [data-for-os=linux] {
+  display: none;
+}
+
+html.linux [data-for-os=mac], [data-for-os=windows] {
   display: none;
 }
 

@@ -9,7 +9,7 @@ Rails.application.routes.draw do
 
   root to: "pages#home"
 
-  get "/desktop", to: "pages#desktop"
+  get "/assistant", to: "pages#assistant"
 
   get  "/login",  to: "sessions#new",     as: "login"
   post "/logout", to: "sessions#destroy", as: "logout"

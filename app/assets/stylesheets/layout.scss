@@ -522,7 +522,7 @@ hr {
 
 
 .pages {
-  &.home {
+  &.homev2 {
     .site-footer {
       background-color: $gray-000;
     }
@@ -560,21 +560,99 @@ hr {
   }
 }
 
+// .signin-section {
+//   color: $gray-900;
+//   background-color: $white;
+
+//   @media screen and (max-width: $width-md) {
+//     text-align: center;
+//   }
+
+//   .start-container {
+//     align-items: flex-start;
+
+//     @media screen and (max-width: $width-md) {
+//       align-items: center;
+//     }
+//   }
+
+//   .container {
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//   }
+
+//   a {
+//     overflow: hidden;
+//     font-weight: normal;
+//     text-overflow: ellipsis;
+//     white-space: nowrap;
+
+//     &.open-video {
+//       padding: 7.5px 15px;
+//       margin-bottom: 35px;
+//       font-size: 0.9rem;
+//       color: $gray-900;
+//       cursor: pointer;
+//       background-color: #f4f5f5;
+//       border-radius: 50px;
+
+//       img {
+//         height: 24px;
+//         margin-right: 8px;
+//         vertical-align: middle;
+//       }
+
+//       &:hover {
+//         color: #5fb27b;
+//         background-color: darken(#f4f5f5, 5%);
+//       }
+
+//       &:active,
+//       &.selected {
+//         background-color: darken(#dfdddd, 5%);
+//       }
+
+//       &.selected:hover {
+//         background-color: darken(#dfdddd, 10%);
+//       }
+
+//       @media screen and (max-width: 40em) {
+//         margin-bottom: 20px;
+//       }
+//     }
+//   }
+
+//   .octicon {
+//     font-size: 38px;
+//   }
+
+//   ul {
+//     margin-bottom: 15px;
+//     list-style-type: none;
+
+//     li {
+//       display: inline-block;
+//       margin-left: 2rem;
+//       opacity: 0.4;
+
+//       @media screen and (max-width: 40em) {
+//         display: none;
+//       }
+//     }
+//   }
+
+//   .classroom-logo {
+//     max-height: 300px;
+//   }
+// }
+
 .signin-section {
-  color: $gray-900;
-  background-color: $white;
+  padding: 6.154em 20px 4.103em;
+  margin-bottom: 1.5em;
+  color: #fff;
+  background-color: #5fb27b;
 
-  @media screen and (max-width: $width-md) {
-    text-align: center;
-  }
-
-  .start-container {
-    align-items: flex-start;
-
-    @media screen and (max-width: $width-md) {
-      align-items: center;
-    }
-  }
 
   .container {
     display: flex;
@@ -582,20 +660,48 @@ hr {
     align-items: center;
   }
 
+
+  .heading {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 48px;
+    font-weight: normal;
+
+
+    @media screen and (max-width: 40em) {
+      font-size: 8vw;
+    }
+  }
+
+
+  .subheading {
+    margin-top: 0.5em;
+    font-size: 21px;
+
+
+    @media screen and (max-width: 32em) {
+      margin-bottom: 2em;
+      font-size: 4vw;
+    }
+  }
+
+
   a {
     overflow: hidden;
     font-weight: normal;
     text-overflow: ellipsis;
     white-space: nowrap;
 
+
     &.open-video {
       padding: 7.5px 15px;
       margin-bottom: 35px;
       font-size: 0.9rem;
-      color: $gray-900;
+      color: #5fb27b;
       cursor: pointer;
       background-color: #f4f5f5;
       border-radius: 50px;
+
 
       img {
         height: 24px;
@@ -603,19 +709,23 @@ hr {
         vertical-align: middle;
       }
 
+
       &:hover {
         color: #5fb27b;
         background-color: darken(#f4f5f5, 5%);
       }
+
 
       &:active,
       &.selected {
         background-color: darken(#dfdddd, 5%);
       }
 
+
       &.selected:hover {
         background-color: darken(#dfdddd, 10%);
       }
+
 
       @media screen and (max-width: 40em) {
         margin-bottom: 20px;
@@ -623,27 +733,52 @@ hr {
     }
   }
 
+
   .octicon {
     font-size: 38px;
   }
 
+
   ul {
     margin-bottom: 15px;
     list-style-type: none;
+
 
     li {
       display: inline-block;
       margin-left: 2rem;
       opacity: 0.4;
 
+
       @media screen and (max-width: 40em) {
         display: none;
       }
     }
   }
+}
 
-  .classroom-logo {
-    max-height: 300px;
+
+.information-section {
+  h2 {
+    font-size: 21px;
+    font-weight: normal;
+  }
+
+
+  p {
+    padding-right: 0.5rem;
+    font-size: 16px;
+  }
+
+
+  .octicon {
+    margin-right: 5px;
+    font-size: 21px;
+  }
+
+
+  .column {
+    padding: 0 20px;
   }
 }
 

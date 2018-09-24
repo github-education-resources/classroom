@@ -1,6 +1,16 @@
 en:
   pages:
-    home:
+    banner_heading: 'Your course assignments on GitHub'
+    banner_subheading: 'GitHub Classroom automates repository creation and access control, making it easy to distribute starter code and collect assignments on GitHub.'
+    see_how_it_works: 'See how it works'
+    sign_in_to_start: 'Sign in with your GitHub account to get started'
+    create_assignments: 'Create assignments'
+    create_assignments_desc: 'Distribute assignments with starter code. Students work on assignments individually or in groups using public or private GitHub repositories.'
+    invite_students: 'Invite students'
+    invite_students_desc: 'Students gain access to assignments using unique invitation URLs, eliminating the need to collect GitHub usernames in advance and manage access manually.'
+    review_progress: 'Review progress'
+    review_progress_desc: 'Teachers and teaching assistants can browse submissions by assignment, making it easy to follow along with student progress.'
+    homev2:
       signin_section:
         banner_heading: 'The workflow developers use,'
         banner_subheading: 'whether you have five students or 500.'
@@ -65,3 +75,7 @@ en:
       invite_students_desc: 'Students gain access to assignments using unique invitation URLs, eliminating the need to collect GitHub usernames in advance and manage access manually.'
       review_progress: 'Review progress'
       review_progress_desc: 'Teachers and teaching assistants can browse submissions by assignment, making it easy to follow along with student progress.'
+
+    assistant:
+      banner_heading: 'Download all of your Classroom assignments in one click.'
+      banner_subheading: 'Classroom Assistant is a desktop application to help you get student repositories for grading.'

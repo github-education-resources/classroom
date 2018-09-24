@@ -4,6 +4,8 @@
 
   if (navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i)) {
     htmlElement.className = 'mac';
+  } else if (navigator.platform.match(/Linux.*/i)) {
+    htmlElement.className = 'linux';
   } else {
     htmlElement.className = 'windows';
   }
