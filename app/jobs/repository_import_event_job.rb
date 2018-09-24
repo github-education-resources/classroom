@@ -54,16 +54,16 @@ class RepositoryImportEventJob < ApplicationJob
     invite_status = invitation.status(group)
     channel = GroupRepositoryCreationStatusChannel.channel(group_id: group.id, group_assignment_id: assignment.id)
 
-    return unless assignment.feature_enabled?(:repository_import_webhook)
+    return unless assignment.feature_enabled?(:group_import_resiliency)
 
     case status
     when "success"
       invite_status.completed!
-      broadcast_assignment_repo_success(group, invite_status)
+      broadcast_assignment_repo_success(channel, invite_status)
       GitHubClassroom.statsd.increment("v3_group_exercise_repo.import.success")
     when "failure"
       invite_status.errored_importing_starter_code!
-      broadcast_assignment_repo_failure(group, invite_status)
+      broadcast_assignment_repo_failure(channel, invite_status)
       GitHubClassroom.statsd.increment("v3_group_exercise_repo.import.failure")
     end
   end
