@@ -8,10 +8,13 @@ class PagesController < ApplicationController
   skip_before_action :authenticate_user!
 
   def home
-    @teacher_count = User.last.id
-    @repo_count = AssignmentRepo.last.id + GroupAssignmentRepo.last.id
+    @teacher_count = User.last.id if User.last
 
-    redirect_to organizations_path if logged_in?
+    assignment_repo_count = AssignmentRepo.last.id if AssignmentRepo.last
+    group_assignment_repo_count = GroupAssignmentRepo.last.id if GroupAssignmentRepo.last
+    @repo_count = assignment_repo_count + group_assignment_repo_count
+
+    return redirect_to organizations_path if logged_in?
 
     render :homev2 if assistant_landing_page_enabled?
   end
