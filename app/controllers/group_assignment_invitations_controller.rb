@@ -8,7 +8,7 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   layout "layouts/invitations"
 
-  before_action :route_based_on_status,                  only: %i[setupv2 successful_invitation]
+  before_action :route_based_on_status,                  only: %i[setup successful_invitation]
   before_action :check_group_not_previous_acceptee,      only: :show
   before_action :check_user_not_group_member,            only: :show
   before_action :check_should_redirect_to_roster_page,   only: :show
@@ -37,7 +37,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     end
   end
 
-  def setupv2
+  def setup
     not_found unless group_import_resiliency_enabled?
   end
 
@@ -109,7 +109,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     when "completed"
       redirect_to successful_invitation_group_assignment_invitation_path if action_name != "successful_invitation"
     when *(GroupInviteStatus::ERRORED_STATUSES + GroupInviteStatus::SETUP_STATUSES)
-      redirect_to setupv2_group_assignment_invitation_path if action_name != "setupv2"
+      redirect_to setup_group_assignment_invitation_path if action_name != "setup"
     else
       raise InvalidStatusForRouteError, "No route registered for status: #{status}"
     end

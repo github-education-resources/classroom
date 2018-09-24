@@ -37,7 +37,7 @@ Rails.application.routes.draw do
   resources :assignment_invitations, path: "assignment-invitations", only: [:show] do
     member do
       patch :accept
-      get   :setupv2
+      get   :setup
       post  :create_repo
       get   :progress
       get   :success
@@ -50,7 +50,7 @@ Rails.application.routes.draw do
       get   :accept
       patch :accept_assignment
       patch :accept_invitation
-      get   :setupv2
+      get   :setup
       post  :create_repo
       get   :progress
       get   :successful_invitation, path: :success
