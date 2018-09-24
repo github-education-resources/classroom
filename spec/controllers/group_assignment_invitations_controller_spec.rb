@@ -37,9 +37,9 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     end
 
     describe "unaccepted!" do
-      it "gets #setupv2 and redirects to #show" do
+      it "gets #setup and redirects to #show" do
         invite_status.unaccepted!
-        get :setupv2, params: { id: invitation.key }
+        get :setup, params: { id: invitation.key }
         expect(response).to redirect_to(group_assignment_invitation_url(invitation))
       end
 
@@ -51,93 +51,93 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     end
 
     describe "accepted!" do
-      it "gets #setupv2" do
+      it "gets #setup" do
         invite_status.accepted!
-        get :setupv2, params: { id: invitation.key }
-        expect(response).to render_template(:setupv2)
+        get :setup, params: { id: invitation.key }
+        expect(response).to render_template(:setup)
       end
 
-      it "gets #successful_invitation and redirects to #setupv2" do
+      it "gets #successful_invitation and redirects to #setup" do
         invite_status.accepted!
         get :successful_invitation, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_group_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_group_assignment_invitation_url(invitation))
       end
     end
 
     describe "waiting!" do
-      it "gets #setupv2" do
+      it "gets #setup" do
         invite_status.waiting!
-        get :setupv2, params: { id: invitation.key }
-        expect(response).to render_template(:setupv2)
+        get :setup, params: { id: invitation.key }
+        expect(response).to render_template(:setup)
       end
 
-      it "gets #successful_invitation and redirects to #setupv2" do
+      it "gets #successful_invitation and redirects to #setup" do
         invite_status.waiting!
         get :successful_invitation, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_group_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_group_assignment_invitation_url(invitation))
       end
     end
 
     describe "creating_repo!" do
-      it "gets #setupv2" do
+      it "gets #setup" do
         invite_status.creating_repo!
-        get :setupv2, params: { id: invitation.key }
-        expect(response).to render_template(:setupv2)
+        get :setup, params: { id: invitation.key }
+        expect(response).to render_template(:setup)
       end
 
-      it "gets #successful_invitation and redirects to #setupv2" do
+      it "gets #successful_invitation and redirects to #setup" do
         invite_status.creating_repo!
         get :successful_invitation, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_group_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_group_assignment_invitation_url(invitation))
       end
     end
 
     describe "errored_creating_repo!" do
-      it "gets #setupv2" do
+      it "gets #setup" do
         invite_status.errored_creating_repo!
-        get :setupv2, params: { id: invitation.key }
-        expect(response).to render_template(:setupv2)
+        get :setup, params: { id: invitation.key }
+        expect(response).to render_template(:setup)
       end
 
-      it "gets #successful_invitation and redirects to #setupv2" do
+      it "gets #successful_invitation and redirects to #setup" do
         invite_status.errored_creating_repo!
         get :successful_invitation, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_group_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_group_assignment_invitation_url(invitation))
       end
     end
 
     describe "importing_starter_code!" do
-      it "gets #setupv2" do
+      it "gets #setup" do
         invite_status.importing_starter_code!
-        get :setupv2, params: { id: invitation.key }
-        expect(response).to render_template(:setupv2)
+        get :setup, params: { id: invitation.key }
+        expect(response).to render_template(:setup)
       end
 
-      it "gets #successful_invitation and redirects to #setupv2" do
+      it "gets #successful_invitation and redirects to #setup" do
         invite_status.importing_starter_code!
         get :successful_invitation, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_group_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_group_assignment_invitation_url(invitation))
       end
     end
 
     describe "errored_importing_starter_code!" do
-      it "gets #setupv2" do
+      it "gets #setup" do
         invite_status.errored_importing_starter_code!
-        get :setupv2, params: { id: invitation.key }
-        expect(response).to render_template(:setupv2)
+        get :setup, params: { id: invitation.key }
+        expect(response).to render_template(:setup)
       end
 
-      it "gets #successful_invitation and redirects to #setupv2" do
+      it "gets #successful_invitation and redirects to #setup" do
         invite_status.errored_importing_starter_code!
         get :successful_invitation, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_group_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_group_assignment_invitation_url(invitation))
       end
     end
 
     describe "completed!" do
-      it "gets #setupv2 and redirects to #successful_invitation" do
+      it "gets #setup and redirects to #successful_invitation" do
         invite_status.completed!
-        get :setupv2, params: { id: invitation.key }
+        get :setup, params: { id: invitation.key }
         expect(response).to redirect_to(successful_invitation_group_assignment_invitation_path(invitation))
       end
 
@@ -403,9 +403,9 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
             expect(group_assignment.group_assignment_repos.count).to eql(0)
           end
 
-          it "redirects to #setupv2" do
+          it "redirects to #setup" do
             patch :accept_invitation, params: { id: invitation.key, group: { title: group_name } }
-            expect(response).to redirect_to(setupv2_group_assignment_invitation_path)
+            expect(response).to redirect_to(setup_group_assignment_invitation_path)
           end
 
           it "makes the invite status accepted" do
@@ -446,13 +446,13 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     end
   end
 
-  describe "GET #setupv2", :vcr do
+  describe "GET #setup", :vcr do
     before(:each) do
       sign_in_as(student)
     end
 
     it "404s when feature is off" do
-      get :setupv2, params: { id: invitation.key }
+      get :setup, params: { id: invitation.key }
       expect(response.status).to eq(404)
     end
 
@@ -465,10 +465,10 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         GitHubClassroom.flipper[:group_import_resiliency].disable
       end
 
-      it "renders setupv2" do
+      it "renders setup" do
         invite_status.creating_repo!
-        get :setupv2, params: { id: invitation.key }
-        expect(response).to render_template(:setupv2)
+        get :setup, params: { id: invitation.key }
+        expect(response).to render_template(:setup)
       end
     end
   end
