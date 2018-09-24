@@ -8,7 +8,7 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   layout "layouts/invitations"
 
-  before_action :route_based_on_status,                  only: %i[setupv2 successful_invitation]
+  before_action :route_based_on_status,                  only: %i[setup successful_invitation]
   before_action :check_group_not_previous_acceptee,      only: :show
   before_action :check_user_not_group_member,            only: :show
   before_action :check_should_redirect_to_roster_page,   only: :show
@@ -37,16 +37,40 @@ class GroupAssignmentInvitationsController < ApplicationController
     end
   end
 
-  def setupv2
+  def setup
     not_found unless group_import_resiliency_enabled?
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable MethodLength
   def create_repo
-    raise NotImplementedError
+    job_started =
+      if group_invite_status.accepted? || group_invite_status.errored?
+        if group_assignment_repo&.github_repository&.empty?
+          group_assignment_repo&.destroy
+          @group_assignment_repo = nil
+        end
+        report_retry
+        group_invite_status.waiting!
+        GroupAssignmentRepo::CreateGitHubRepositoryJob.perform_later(group_assignment, group, retries: 3)
+        true
+      else
+        false
+      end
+    render json: {
+      job_started: job_started,
+      status: group_invite_status.status,
+      repo_url: group_assignment_repo&.github_repository&.html_url
+    }
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable MethodLength
 
   def progress
-    render json: { status: group_invite_status&.status }
+    render json: {
+      status: group_invite_status&.status,
+      repo_url: group_assignment_repo&.github_repository&.html_url
+    }
   end
 
   def successful_invitation; end
@@ -85,7 +109,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     when "completed"
       redirect_to successful_invitation_group_assignment_invitation_path if action_name != "successful_invitation"
     when *(GroupInviteStatus::ERRORED_STATUSES + GroupInviteStatus::SETUP_STATUSES)
-      redirect_to setupv2_group_assignment_invitation_path if action_name != "setupv2"
+      redirect_to setup_group_assignment_invitation_path if action_name != "setup"
     else
       raise InvalidStatusForRouteError, "No route registered for status: #{status}"
     end
@@ -169,6 +193,16 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable MethodLength
+
+  ## Datadog reporting convenience methods
+
+  def report_retry
+    if group_invite_status.errored_creating_repo?
+      GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.retry")
+    elsif group_invite_status.errored_importing_starter_code?
+      GitHubClassroom.statsd.increment("v2_group_exercise_repo.import.retry")
+    end
+  end
 
   def report_invitation_failure
     if group_import_resiliency_enabled?

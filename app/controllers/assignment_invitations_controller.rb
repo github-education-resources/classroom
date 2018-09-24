@@ -7,7 +7,7 @@ class AssignmentInvitationsController < ApplicationController
   include InvitationsControllerMethods
   include RepoSetup
 
-  before_action :route_based_on_status, only: %i[show setupv2 success]
+  before_action :route_based_on_status, only: %i[show setup success]
   before_action :check_user_not_previous_acceptee, :check_should_redirect_to_roster_page, only: :show
   before_action :ensure_submission_repository_exists, only: :success
   before_action :ensure_import_resiliency_enabled, only: %i[create_repo progress]
@@ -38,7 +38,7 @@ class AssignmentInvitationsController < ApplicationController
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize
 
-  def setupv2
+  def setup
     not_found unless import_resiliency_enabled?
   end
 
@@ -60,15 +60,17 @@ class AssignmentInvitationsController < ApplicationController
     end
     render json: {
       job_started: job_started,
-      status: current_invitation_status.status,
-      repo_url: current_submission&.github_repository&.html_url
+      status: current_invitation_status.status
     }
   end
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize
 
   def progress
-    render json: { status: current_invitation_status.status }
+    render json: {
+      status: current_invitation_status.status,
+      repo_url: current_submission&.github_repository&.html_url
+    }
   end
 
   def show; end
@@ -98,7 +100,7 @@ class AssignmentInvitationsController < ApplicationController
     current_invitation_status.accepted!
 
     if import_resiliency_enabled?
-      redirect_to setupv2_assignment_invitation_path
+      redirect_to setup_assignment_invitation_path
     else
       create_submission
     end
@@ -122,7 +124,7 @@ class AssignmentInvitationsController < ApplicationController
     when "completed"
       redirect_to success_assignment_invitation_path if action_name != "success"
     when *(InviteStatus::ERRORED_STATUSES + InviteStatus::SETUP_STATUSES)
-      redirect_to setupv2_assignment_invitation_path if action_name != "setupv2"
+      redirect_to setup_assignment_invitation_path if action_name != "setup"
     else
       raise InvalidStatusForRouteError, "No route registered for status: #{current_invitation_status.status}"
     end
