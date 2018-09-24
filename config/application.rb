@@ -65,7 +65,11 @@ module GitHubClassroom
         ping.check :elasticsearch do
           status = Chewy.client.cluster.health["status"] || "unavailable"
 
-          if status == "green" # rubocop:disable Style/GuardClause
+          # Yellow status is when elasticsearch has allocated all of the primary shards,
+          # but the replicas have not been allocated. This is okay in our instance since we don't
+          # necessarily need replicas.
+          # Docs: https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-health.html
+          if status == "green" || status == "yellow"
             "ok"
           else
             raise "Elasticsearch status is #{status}"
