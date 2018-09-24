@@ -47,6 +47,7 @@ class RepositoryImportEventJob < ApplicationJob
   # rubocop:enable MethodLength
 
   # rubocop:disable MethodLength
+  # rubocop:disable Metrics/AbcSize
   def handle_group_assignment_repo(group_assignment_repo, status)
     group = group_assignment_repo.group
     assignment = group_assignment_repo.assignment
@@ -68,6 +69,7 @@ class RepositoryImportEventJob < ApplicationJob
     end
   end
   # rubocop:enable MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   def broadcast_assignment_repo_success(channel, invite_status)
     ActionCable.server.broadcast(
