@@ -10,9 +10,9 @@ class PagesController < ApplicationController
   def home
     @teacher_count = User.last.id if User.last
 
-    assignment_repo_count = AssignmentRepo.last.id if AssignmentRepo.last
-    group_assignment_repo_count = GroupAssignmentRepo.last.id if GroupAssignmentRepo.last
-    @repo_count = assignment_repo_count + group_assignment_repo_count
+    if AssignmentRepo.last and GroupAssignmentRepo.last.id
+      @repo_count = AssignmentRepo.last.id + GroupAssignmentRepo.last.id
+    end
 
     return redirect_to organizations_path if logged_in?
 

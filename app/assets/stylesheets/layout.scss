@@ -566,13 +566,11 @@ hr {
   color: #fff;
   background-color: #5fb27b;
 
-
   .container {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
-
 
   .heading {
     margin-top: 0;
@@ -580,17 +578,14 @@ hr {
     font-size: 48px;
     font-weight: normal;
 
-
     @media screen and (max-width: 40em) {
       font-size: 8vw;
     }
   }
 
-
   .subheading {
     margin-top: 0.5em;
     font-size: 21px;
-
 
     @media screen and (max-width: 32em) {
       margin-bottom: 2em;
@@ -598,13 +593,11 @@ hr {
     }
   }
 
-
   a {
     overflow: hidden;
     font-weight: normal;
     text-overflow: ellipsis;
     white-space: nowrap;
-
 
     &.open-video {
       padding: 7.5px 15px;
@@ -615,30 +608,25 @@ hr {
       background-color: #f4f5f5;
       border-radius: 50px;
 
-
       img {
         height: 24px;
         margin-right: 8px;
         vertical-align: middle;
       }
 
-
       &:hover {
         color: #5fb27b;
         background-color: darken(#f4f5f5, 5%);
       }
-
 
       &:active,
       &.selected {
         background-color: darken(#dfdddd, 5%);
       }
 
-
       &.selected:hover {
         background-color: darken(#dfdddd, 10%);
       }
-
 
       @media screen and (max-width: 40em) {
         margin-bottom: 20px;
@@ -646,22 +634,18 @@ hr {
     }
   }
 
-
   .octicon {
     font-size: 38px;
   }
-
 
   ul {
     margin-bottom: 15px;
     list-style-type: none;
 
-
     li {
       display: inline-block;
       margin-left: 2rem;
       opacity: 0.4;
-
 
       @media screen and (max-width: 40em) {
         display: none;
@@ -670,25 +654,21 @@ hr {
   }
 }
 
-
 .information-section {
   h2 {
     font-size: 21px;
     font-weight: normal;
   }
 
-
   p {
     padding-right: 0.5rem;
     font-size: 16px;
   }
 
-
   .octicon {
     margin-right: 5px;
     font-size: 21px;
   }
-
 
   .column {
     padding: 0 20px;
