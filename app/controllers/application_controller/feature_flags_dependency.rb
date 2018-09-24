@@ -14,9 +14,14 @@ class ApplicationController
   end
 
   def assistant_landing_page_enabled?
-    GitHubClassroom.flipper[:assistant_landing_page].enabled?
+    logged_in? && current_user.feature_enabled?(:assistant_landing_page)
   end
   helper_method :assistant_landing_page_enabled?
+
+  def home_v2_enabled?
+    logged_in? && current_user.feature_enabled?(:home_v2)
+  end
+  helper_method :home_v2_enabled?
 
   def student_identifier_enabled?
     logged_in? && current_user.feature_enabled?(:student_identifier)
