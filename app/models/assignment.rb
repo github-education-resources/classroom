@@ -5,7 +5,7 @@ class Assignment < ApplicationRecord
   include GitHubPlan
   include ValidatesNotReservedWord
 
-  update_index("assignment#assignment") { self }
+  # update_index("assignment#assignment") { self }
 
   default_scope { where(deleted_at: nil) }
 

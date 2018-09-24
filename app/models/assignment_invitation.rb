@@ -5,7 +5,7 @@ class AssignmentInvitation < ApplicationRecord
 
   default_scope { where(deleted_at: nil) }
 
-  update_index("assignment_invitation#assignment_invitation") { self }
+  # update_index("assignment_invitation#assignment_invitation") { self }
 
   belongs_to :assignment
 
