@@ -2,6 +2,21 @@
 
 module Stafftools
   class ResourcesController < StafftoolsController
+    ALL_INDICES = [
+      AssignmentIndex,
+      AssignmentInvitationIndex,
+      AssignmentRepoIndex,
+      DeadlineIndex,
+      GroupAssignmentIndex,
+      GroupAssignmentInvitationIndex,
+      GroupAssignmentRepoIndex,
+      GroupIndex,
+      GroupingIndex,
+      OrganizationIndex,
+      RepoAccessIndex,
+      UserIndex
+    ].freeze
+
     before_action :set_resources
 
     def index; end
@@ -16,7 +31,7 @@ module Stafftools
 
     def set_resources
       return @resources = nil if params[:query].blank?
-      @resources = StafftoolsIndex
+      @resources = MultiIndexSearchRequest.new(*ALL_INDICES)
         .query(match_phrase_prefix(params[:query]))
         .order(_type: :asc)
         .page(params[:page])
