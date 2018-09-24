@@ -501,8 +501,8 @@ hr {
 }
 
 .site-footer {
-  margin-top: 2em;
-  margin-bottom: 2em;
+  padding-top: 2em;
+  padding-bottom: 2em;
   color: #777;
 }
 
@@ -519,6 +519,22 @@ hr {
     &:hover { color: #333; }
   }
 }
+
+
+.pages {
+  &.homev2 {
+    .site-footer {
+      background-color: $gray-000;
+    }
+  }
+
+  &.desktop {
+    .site-footer {
+      background-color: #fff;
+    }
+  }
+}
+
 
 .desktop-invitation-content,
 .settings,
@@ -656,6 +672,13 @@ hr {
 
   .column {
     padding: 0 20px;
+  }
+}
+
+.what-teachers-say-section {
+  .img-card {
+    min-width: 100%;
+    filter: blur(1px) brightness(50%);
   }
 }
 

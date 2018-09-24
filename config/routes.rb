@@ -9,6 +9,9 @@ Rails.application.routes.draw do
 
   root to: "pages#home"
 
+  get "/assistant", to: "pages#assistant"
+  get "/home", to: "pages#homev2"
+
   get  "/login",  to: "sessions#new",     as: "login"
   post "/logout", to: "sessions#destroy", as: "logout"
 
