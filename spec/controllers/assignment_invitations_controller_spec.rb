@@ -31,7 +31,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         expect(response).to render_template(:show)
       end
 
-      it "gets #setupv2 and redirects to #show" do
+      it "gets #setup and redirects to #show" do
         invite_status.unaccepted!
         get :success, params: { id: invitation.key }
         expect(response).to redirect_to(assignment_invitation_url(invitation))
@@ -45,122 +45,122 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
 
     describe "accepted!" do
-      it "gets #setupv2" do
+      it "gets #setup" do
         invite_status.accepted!
-        get :setupv2, params: { id: invitation.key }
-        expect(response).to render_template(:setupv2)
+        get :setup, params: { id: invitation.key }
+        expect(response).to render_template(:setup)
       end
 
-      it "gets #show and redirects to #setupv2" do
+      it "gets #show and redirects to #setup" do
         invite_status.accepted!
         get :show, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
       end
 
-      it "gets #success and redirects to #setupv2" do
+      it "gets #success and redirects to #setup" do
         invite_status.accepted!
         get :success, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
       end
     end
 
     describe "waiting!" do
-      it "gets #setupv2" do
+      it "gets #setup" do
         invite_status.waiting!
-        get :setupv2, params: { id: invitation.key }
-        expect(response).to render_template(:setupv2)
+        get :setup, params: { id: invitation.key }
+        expect(response).to render_template(:setup)
       end
 
-      it "gets #show and redirects to #setupv2" do
+      it "gets #show and redirects to #setup" do
         invite_status.waiting!
         get :show, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
       end
 
-      it "gets #success and redirects to #setupv2" do
+      it "gets #success and redirects to #setup" do
         invite_status.waiting!
         get :success, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
       end
     end
 
     describe "creating_repo!" do
-      it "gets #setupv2" do
+      it "gets #setup" do
         invite_status.creating_repo!
-        get :setupv2, params: { id: invitation.key }
-        expect(response).to render_template(:setupv2)
+        get :setup, params: { id: invitation.key }
+        expect(response).to render_template(:setup)
       end
 
-      it "gets #show and redirects to #setupv2" do
+      it "gets #show and redirects to #setup" do
         invite_status.creating_repo!
         get :show, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
       end
 
-      it "gets #success and redirects to #setupv2" do
+      it "gets #success and redirects to #setup" do
         invite_status.creating_repo!
         get :success, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
       end
     end
 
     describe "errored_creating_repo!" do
-      it "gets #setupv2" do
+      it "gets #setup" do
         invite_status.errored_creating_repo!
-        get :setupv2, params: { id: invitation.key }
-        expect(response).to render_template(:setupv2)
+        get :setup, params: { id: invitation.key }
+        expect(response).to render_template(:setup)
       end
 
-      it "gets #show and redirects to #setupv2" do
+      it "gets #show and redirects to #setup" do
         invite_status.errored_creating_repo!
         get :show, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
       end
 
-      it "gets #success and redirects to #setupv2" do
+      it "gets #success and redirects to #setup" do
         invite_status.errored_creating_repo!
         get :success, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
       end
     end
 
     describe "importing_starter_code!" do
-      it "gets #setupv2" do
+      it "gets #setup" do
         invite_status.importing_starter_code!
-        get :setupv2, params: { id: invitation.key }
-        expect(response).to render_template(:setupv2)
+        get :setup, params: { id: invitation.key }
+        expect(response).to render_template(:setup)
       end
 
-      it "gets #show and redirects to #setupv2" do
+      it "gets #show and redirects to #setup" do
         invite_status.importing_starter_code!
         get :show, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
       end
 
-      it "gets #success and redirects to #setupv2" do
+      it "gets #success and redirects to #setup" do
         invite_status.importing_starter_code!
         get :success, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
       end
     end
 
     describe "errored_importing_starter_code!" do
-      it "gets #setupv2" do
+      it "gets #setup" do
         invite_status.errored_importing_starter_code!
-        get :setupv2, params: { id: invitation.key }
-        expect(response).to render_template(:setupv2)
+        get :setup, params: { id: invitation.key }
+        expect(response).to render_template(:setup)
       end
 
-      it "gets #show and redirects to #setupv2" do
+      it "gets #show and redirects to #setup" do
         invite_status.errored_importing_starter_code!
         get :show, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
       end
 
-      it "gets #success and redirects to #setupv2" do
+      it "gets #success and redirects to #setup" do
         invite_status.errored_importing_starter_code!
         get :success, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
       end
     end
 
@@ -171,9 +171,9 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         expect(response).to redirect_to(success_assignment_invitation_url(invitation))
       end
 
-      it "gets #setupv2 and redirects to #success" do
+      it "gets #setup and redirects to #success" do
         invite_status.completed!
-        get :setupv2, params: { id: invitation.key }
+        get :setup, params: { id: invitation.key }
         expect(response).to redirect_to(success_assignment_invitation_url(invitation))
       end
     end
@@ -335,17 +335,17 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
           .and_return(result)
 
         patch :accept, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
       end
 
-      it "redirects to setupv2 when AssignmentRepo doesn't already exist" do
+      it "redirects to setup when AssignmentRepo doesn't already exist" do
         invite_status.accepted!
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
           .with(user, import_resiliency: true)
           .and_return(AssignmentRepo::Creator::Result.pending)
 
         patch :accept, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
       end
     end
   end
@@ -467,13 +467,13 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
   end
 
-  describe "GET #setupv2", :vcr do
+  describe "GET #setup", :vcr do
     before(:each) do
       sign_in_as(user)
     end
 
     it "404s when feature is off" do
-      get :setupv2, params: { id: invitation.key }
+      get :setup, params: { id: invitation.key }
       expect(response.status).to eq(404)
     end
   end
@@ -577,14 +577,14 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         GitHubClassroom.flipper[:import_resiliency].disable
       end
 
-      it "redirects to setupv2 when no GitHub repo present" do
+      it "redirects to setup when no GitHub repo present" do
         invite_status.completed!
         expect_any_instance_of(GitHubRepository)
           .to receive(:present?)
           .with(headers: GitHub::APIHeaders.no_cache_no_store)
           .and_return(false)
         get :success, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
       end
 
       it "sets invite status to accepted when no GitHub repo present" do
@@ -624,7 +624,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
           .twice
           .and_return(nil)
         get :success, params: { id: invitation.key }
-        expect(response).to redirect_to(setupv2_assignment_invitation_url(invitation))
+        expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
       end
     end
   end

@@ -3,7 +3,7 @@
 class RepoAccess < ApplicationRecord
   include GitHubTeamable
 
-  # update_index("stafftools#repo_access") { self }
+  update_index("repo_access#repo_access") { self }
 
   belongs_to :user
   belongs_to(:organization, -> { unscope(where: :deleted_at) })
