@@ -25,7 +25,7 @@ class PagesController < ApplicationController
   end
 
   def assistant
-    return not_found unless assistant_landing_page_enabled?
+    return not_found unless assistant_landing_page_enabled? || public_assistant_landing_page_enabled?
     render layout: "layouts/pagesv2"
   end
 end

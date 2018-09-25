@@ -13,6 +13,11 @@ class ApplicationController
     not_found unless group_import_resiliency_enabled?
   end
 
+  def public_assistant_landing_page_enabled?
+    GitHubClassroom.flipper[:public_assistant_landing_page].enabled?
+  end
+  helper_method :public_assistant_landing_page_enabled?
+
   def assistant_landing_page_enabled?
     logged_in? && current_user.feature_enabled?(:assistant_landing_page)
   end
