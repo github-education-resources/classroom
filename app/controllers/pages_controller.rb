@@ -10,7 +10,7 @@ class PagesController < ApplicationController
   def home
     return redirect_to organizations_path if logged_in?
 
-    render :homev2 if public_home_v2_enabled?
+    render :homev2, layout: "layouts/pagesv2" if public_home_v2_enabled?
   end
 
   def homev2
