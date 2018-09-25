@@ -45,7 +45,7 @@ class RepositoryImportEventJob < ApplicationJob
       GitHubClassroom.statsd.increment("v3_exercise_repo.import.failure")
     when "cancelled"
       invite_status.errored_importing_starter_code!
-      broadcast_assignment_repo_failure(user, IMPORT_CANCELLED, invite_status)
+      broadcast_assignment_repo_failure(channel, IMPORT_CANCELLED, invite_status)
       GitHubClassroom.statsd.increment("v3_exercise_repo.import.cancelled")
     end
   end
@@ -69,8 +69,12 @@ class RepositoryImportEventJob < ApplicationJob
       GitHubClassroom.statsd.increment("v3_group_exercise_repo.import.success")
     when "failure"
       invite_status.errored_importing_starter_code!
-      broadcast_assignment_repo_failure(channel, invite_status)
+      broadcast_assignment_repo_failure(channel, IMPORT_FAILED, invite_status)
       GitHubClassroom.statsd.increment("v3_group_exercise_repo.import.failure")
+    when "cancelled"
+      invite_status.errored_importing_starter_code!
+      broadcast_assignment_repo_failure(channel, IMPORT_CANCELLED, invite_status)
+      GitHubClassroom.statsd.increment("v3_group_exercise_repo.import.cancelled")
     end
   end
   # rubocop:enable MethodLength

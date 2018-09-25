@@ -246,6 +246,29 @@ RSpec.describe RepositoryImportEventJob, type: :job do
             )
         end
       end
+
+      context "with source import cancelled" do
+        it "sets invite_status to errored_importing_starter_code" do
+          subject.perform_now(cancelled_payload)
+          expect(group_invite_status.status).to eq("errored_importing_starter_code")
+        end
+
+        it "reports cancelled stat" do
+          expect(GitHubClassroom.statsd).to receive(:increment).with("v3_group_exercise_repo.import.cancelled")
+          subject.perform_now(cancelled_payload)
+        end
+
+        it "broadcasts cancelled" do
+          expect { subject.perform_now(cancelled_payload) }
+            .to have_broadcasted_to(group_channel)
+            .with(
+              error: subject::IMPORT_CANCELLED,
+              status: "errored_importing_starter_code",
+              percent: nil,
+              status_text: "Failed"
+            )
+        end
+      end
     end
   end
 end
