@@ -1,5 +1,6 @@
 //= require jquery/dist/jquery
 //= require remodal/dist/remodal
+//= require os
 
 (function() {
   var player;
