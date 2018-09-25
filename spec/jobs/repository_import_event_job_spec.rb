@@ -15,7 +15,7 @@ RSpec.describe RepositoryImportEventJob, type: :job do
   end
   let(:success_payload)     { json_payload("webhook_events/repository_import_success.json") }
   let(:failure_payload)     { json_payload("webhook_events/repository_import_failure.json") }
-   let(:cancelled_payload)  { json_payload("webhook_events/repository_import_cancelled.json") }
+  let(:cancelled_payload)   { json_payload("webhook_events/repository_import_cancelled.json") }
   let(:organization)        { classroom_org }
   let(:user)                { classroom_student }
   let(:grouping)            { create(:grouping, organization: organization) }
