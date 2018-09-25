@@ -6,7 +6,6 @@ module Stafftools
       AssignmentIndex,
       AssignmentInvitationIndex,
       AssignmentRepoIndex,
-      DeadlineIndex,
       GroupAssignmentIndex,
       GroupAssignmentInvitationIndex,
       GroupAssignmentRepoIndex,
