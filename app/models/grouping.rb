@@ -3,7 +3,7 @@
 class Grouping < ApplicationRecord
   include Sluggable
 
-  # update_index("grouping#grouping") { self }
+  update_index("grouping#grouping") { self }
 
   has_many :groups, dependent: :destroy
   has_many :users, through: :groups, source: :repo_accesses
