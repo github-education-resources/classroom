@@ -12,7 +12,7 @@
     displayDownloadMessage();
   });
 
-  $("#js-desktop-open-btn").click(function(e)
+  $("#js-assistant-open-btn").click(function(e)
   {
     e.preventDefault();
 
@@ -20,7 +20,7 @@
     var iFrame = $('#js-hidden-iframe')[0];
 
     timeIndex = setTimeout(function() {
-      window.location = "http://www.classroom.github.com/desktop";
+      window.location = "http://www.classroom.github.com/assistant";
     }, 3000);
 
     // attempt to open deep link in iframe to avoid exposing link to user
