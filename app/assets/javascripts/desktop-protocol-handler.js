@@ -16,16 +16,21 @@
 
       $("#js-assistant-open-btn").click(function(e)
       {
-        e.preventDefault();
-
-        var el = $(this);
-        var iFrame = $('#js-hidden-iframe')[0];
-
-
-        // attempt to open deep link in iframe to avoid exposing link to user
-        iFrame.contentWindow.location.href = el.attr("href");
-        iFrame.setAttribute('src', el.attr("href"));
         displayLaunchingMessage();
+
+        var isSafari = window.safari !== undefined;
+        if(!isSafari){
+          e.preventDefault();
+          var el = $(this);
+          var iFrame = $('#js-hidden-iframe')[0];
+
+          timeIndex = setTimeout(function() {
+            window.location = "http://classroom.github.com/assistant";
+          }, 5000);
+
+          // attempt to open deep link in iframe to avoid exposing link to user
+          iFrame.contentWindow.location.href = el.attr("href");
+        }
       });
     };
     $(document).ready(ready);
