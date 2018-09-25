@@ -31,7 +31,7 @@
       });
     };
     $(document).ready(ready);
-  })
+  });
 }).call(this);
 
 function displayLaunchingMessage() {
