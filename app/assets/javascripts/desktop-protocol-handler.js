@@ -21,12 +21,10 @@
         var el = $(this);
         var iFrame = $('#js-hidden-iframe')[0];
 
-        timeIndex = setTimeout(function() {
-          window.location = "http://classroom.github.com/assistant";
-        }, 5000);
 
         // attempt to open deep link in iframe to avoid exposing link to user
         iFrame.contentWindow.location.href = el.attr("href");
+        iFrame.setAttribute('src', el.attr("href"));
         displayLaunchingMessage();
       });
     };
