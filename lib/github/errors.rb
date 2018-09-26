@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require "English"
+
 module GitHub
   module Errors
     class << self
       def with_error_handling
         yield
       rescue Octokit::Error => err
+        Failbot.report!($ERROR_INFO) unless err.class == Octokit::NotFound
         process_octokit_error(err)
       end
 

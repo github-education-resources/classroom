@@ -28,7 +28,7 @@ Set due dates, track assignments in your teacher dashboard, or integrate other t
 
 With Classroom, you can spin up your course on GitHub and move on to the good stuff.
 
-[@johndbritton](https://github.com/johndbritton), [@mozzadrella](https://github.com/mozzadrella), [@d12](https://github.com/d12), and [@tarebyte](https://github.com/tarebyte), are all maintainers.
+[@johndbritton](https://github.com/johndbritton), [@mozzadrella](https://github.com/mozzadrella), [@d12](https://github.com/d12), [@benemdon](https://github.com/benemdon), [@srinjoym](https://github.com/srinjoym), and [@tarebyte](https://github.com/tarebyte), are all maintainers.
 
 ![GitHub Classroom screenshot](https://cloud.githubusercontent.com/assets/1311594/14748352/32f677b0-0887-11e6-9ac2-8aa06e4341fa.png)
 
@@ -251,7 +251,7 @@ ENV Variable | Description |
 `MOTD` | Show the message of the day banner at the top of the site
 
 ## Help wanted
-If you're interested in helping out with Classroom development and looking for a place to get started, check out the issues labeled [`help-wanted`](https://github.com/education/classroom/issues?q=is%3Aissue+is%3Aopen+label%3Ahelp-wanted) and feel free to ask any questions you have before diving into the code.
+If you're interested in helping out with Classroom development and looking for a place to get started, check out the issues labeled [`help-wanted`](https://github.com/education/classroom/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted+%3Araised_hand_with_fingers_splayed%3A%22) and feel free to ask any questions you have before diving into the code.
 
 ## Contributors
 Classroom is developed by these [contributors](https://github.com/education/classroom/graphs/contributors).

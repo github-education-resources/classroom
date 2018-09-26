@@ -160,6 +160,10 @@ class GitHubRepository < GitHubResource
     0
   end
 
+  def empty?
+    number_of_commits.zero?
+  end
+
   def commits_url(branch)
     html_url + "/commits/" + branch
   end
@@ -203,6 +207,20 @@ class GitHubRepository < GitHubResource
     GitHub::Errors.with_error_handling do
       repository = client.repository(full_name)
       GitHubRepository.new(client, repository.id)
+    end
+  end
+
+  def temp_clone_url
+    GitHub::Errors.with_error_handling do
+      repository = client.repository(
+        @id,
+        accept: "application/vnd.github.daredevil-preview+json"
+      )
+      token = repository[:temp_clone_token]
+      clone_url = URI(repository[:clone_url])
+      clone_url.userinfo = "x-access-token:#{token}"
+
+      clone_url.to_s
     end
   end
 

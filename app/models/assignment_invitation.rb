@@ -5,10 +5,12 @@ class AssignmentInvitation < ApplicationRecord
 
   default_scope { where(deleted_at: nil) }
 
-  update_index("stafftools#assignment_invitation") { self }
+  update_index("assignment_invitation#assignment_invitation") { self }
 
   belongs_to :assignment
 
+  has_many :invite_statuses, dependent: :destroy
+  has_many :users, through: :invite_statuses
   has_one :organization, through: :assignment
 
   validates :assignment, presence: true
@@ -25,7 +27,10 @@ class AssignmentInvitation < ApplicationRecord
   # Public: Redeem an AssignmentInvtiation for a User invitee.
   #
   # Returns a AssignmentRepo::Creator::Result.
-  def redeem_for(invitee)
+  #
+  # rubocop:disable MethodLength
+  # rubocop:disable AbcSize
+  def redeem_for(invitee, import_resiliency: false)
     if (repo_access = RepoAccess.find_by(user: invitee, organization: organization))
       assignment_repo = AssignmentRepo.find_by(assignment: assignment, repo_access: repo_access)
       return AssignmentRepo::Creator::Result.success(assignment_repo) if assignment_repo.present?
@@ -36,8 +41,15 @@ class AssignmentInvitation < ApplicationRecord
 
     return AssignmentRepo::Creator::Result.failed("Invitations for this assignment have been disabled.") unless enabled?
 
-    AssignmentRepo::Creator.perform(assignment: assignment, user: invitee)
+    status(invitee).accepted!
+    if import_resiliency
+      AssignmentRepo::Creator::Result.pending
+    else
+      AssignmentRepo::Creator.perform(assignment: assignment, user: invitee)
+    end
   end
+  # rubocop:enable MethodLength
+  # rubocop:enable AbcSize
 
   def to_param
     key
@@ -45,6 +57,13 @@ class AssignmentInvitation < ApplicationRecord
 
   def enabled?
     assignment.invitations_enabled?
+  end
+
+  def status(user)
+    invite_status = invite_statuses.find_by(user: user)
+    return invite_status if invite_status.present?
+
+    InviteStatus.create(user: user, assignment_invitation: self)
   end
 
   protected

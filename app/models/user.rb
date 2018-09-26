@@ -3,11 +3,13 @@
 class User < ApplicationRecord
   include Flippable
 
-  update_index("stafftools#user") { self }
+  update_index("user#user") { self }
 
   has_many :assignment_repos
   has_many :repo_accesses, dependent: :destroy
   has_many :roster_entries
+  has_many :invite_statuses, dependent: :destroy
+  has_many :assignment_invitations, through: :invite_statuses
 
   has_and_belongs_to_many :organizations
 
@@ -56,6 +58,10 @@ class User < ApplicationRecord
 
   def owns_all_assignments_for?(organization)
     organization.all_assignments.map(&:creator_id).include? id
+  end
+
+  def api_token(exp = 5.minutes.from_now)
+    MessageVerifier.encode({ user_id: id }, exp)
   end
 
   private

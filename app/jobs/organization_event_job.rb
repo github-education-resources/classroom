@@ -4,6 +4,7 @@
 class OrganizationEventJob < ApplicationJob
   queue_as :github_event
 
+  # rubocop:disable Metrics/AbcSize
   def perform(payload_body)
     return true unless payload_body.dig("action") == "member_removed"
 
@@ -11,6 +12,7 @@ class OrganizationEventJob < ApplicationJob
     github_organization_id = payload_body.dig("organization", "id")
     @organization = Organization.find_by(github_id: github_organization_id)
 
+    return false if @organization.blank?
     return false if @organization.users.count == 1
 
     @user = @organization.users.find_by(uid: github_user_id)
@@ -20,6 +22,7 @@ class OrganizationEventJob < ApplicationJob
     transfer_assignments if user_owns_assignments?
     @organization.users.delete(@user)
   end
+  # rubocop:enable Metrics/AbcSize
 
   def user_owns_assignments?
     @organization.all_assignments.map(&:creator_id).include? @user.id

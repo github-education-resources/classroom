@@ -5,11 +5,18 @@ require "staff_constraint"
 
 Rails.application.routes.draw do
   mount Peek::Railtie => "/peek"
+  mount ActionCable.server => "/cable"
 
   root to: "pages#home"
 
+  get "/assistant", to: "pages#assistant"
+  get "/home", to: "pages#homev2"
+
   get  "/login",  to: "sessions#new",     as: "login"
   post "/logout", to: "sessions#destroy", as: "logout"
+
+  get  "/login/oauth/authorize", to: "oauth#authorize"
+  post  "/login/oauth/access_token", to: "oauth#access_token"
 
   match "/auth/:provider/callback", to: "sessions#create",  via: %i[get post]
   match "/auth/failure",            to: "sessions#failure", via: %i[get post]
@@ -32,7 +39,8 @@ Rails.application.routes.draw do
     member do
       patch :accept
       get   :setup
-      patch :setup_progress
+      post  :create_repo
+      get   :progress
       get   :success
       patch :join_roster
     end
@@ -44,7 +52,8 @@ Rails.application.routes.draw do
       patch :accept_assignment
       patch :accept_invitation
       get   :setup
-      patch :setup_progress
+      post  :create_repo
+      get   :progress
       get   :successful_invitation, path: :success
       patch :join_roster
     end
@@ -65,7 +74,7 @@ Rails.application.routes.draw do
           patch :link
           patch :unlink
           patch :delete_entry
-          patch :add_student
+          patch :add_students
           patch :remove_organization
         end
       end
@@ -82,11 +91,13 @@ Rails.application.routes.draw do
       resources :assignments do
         resources :assignment_repos, only: [:show], controller: "orgs/assignment_repos"
         get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
+        get :assistant, on: :member
       end
 
       resources :group_assignments, path: "group-assignments" do
         resources :group_assignment_repos, only: [:show], controller: "orgs/group_assignment_repos"
         get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
+        get :assistant, on: :member
       end
     end
   end
@@ -129,5 +140,23 @@ Rails.application.routes.draw do
 
     resources :groupings, only: [:show]
     resources :groups,    only: [:show]
+  end
+
+  namespace :api, defaults: { format: :json } do
+    scope :internal do
+      resources :organizations, path: "classrooms", only: [:index] do
+        resources :assignments, only: %i[index show] do
+          resources :assignment_repos, only: [:index] do
+            get "/clone_url", to: "assignment_repos#clone_url"
+          end
+        end
+        resources :group_assignments, path: "group-assignments", only: %i[index show] do
+          resources :group_assignment_repos, path: "group-assignment-repos", only: [:index] do
+            get "/clone_url", to: "group_assignment_repos#clone_url"
+          end
+        end
+      end
+      get "/user", to: "users#authenticated_user"
+    end
   end
 end
