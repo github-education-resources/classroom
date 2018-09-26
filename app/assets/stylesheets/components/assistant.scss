@@ -1,4 +1,4 @@
-div.desktop-bg {
+div.assistant-bg {
   color: rgba(255, 255, 255, 0.65098);
   background-color: #5fb27b;
 
@@ -7,7 +7,7 @@ div.desktop-bg {
   }
 }
 
-.desktop-logo {
+.assistant-logo {
   height: 200px;
 }
 
@@ -26,7 +26,7 @@ html.linux [data-for-os=mac],
   display: none;
 }
 
-.desktop-screenshot {
+.assistant-screenshot {
   max-width: 960px;
 
   img {

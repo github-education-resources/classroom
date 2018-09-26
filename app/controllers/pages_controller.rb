@@ -9,6 +9,8 @@ class PagesController < ApplicationController
 
   def home
     return redirect_to organizations_path if logged_in?
+
+    render :homev2, layout: "layouts/pagesv2" if public_home_v2_enabled?
   end
 
   def homev2
@@ -23,7 +25,7 @@ class PagesController < ApplicationController
   end
 
   def assistant
-    return not_found unless assistant_landing_page_enabled?
+    return not_found unless assistant_landing_page_enabled? || public_assistant_landing_page_enabled?
     render layout: "layouts/pagesv2"
   end
 end

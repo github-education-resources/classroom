@@ -91,13 +91,13 @@ Rails.application.routes.draw do
       resources :assignments do
         resources :assignment_repos, only: [:show], controller: "orgs/assignment_repos"
         get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
-        get :desktop, on: :member
+        get :assistant, on: :member
       end
 
       resources :group_assignments, path: "group-assignments" do
         resources :group_assignment_repos, only: [:show], controller: "orgs/group_assignment_repos"
         get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
-        get :desktop, on: :member
+        get :assistant, on: :member
       end
     end
   end
