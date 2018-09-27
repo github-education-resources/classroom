@@ -76,7 +76,7 @@ class GroupAssignmentInvitation < ApplicationRecord
 
     return Result.success(repo) if repo
 
-    if group_assignment.feature_enabled?(:group_import_resiliency)
+    if organization.feature_enabled?(:group_import_resiliency)
       invite_status = status(invitees_group)
       invite_status.accepted! if invite_status.unaccepted?
       return Result.pending
