@@ -310,6 +310,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             end
 
             it "tracks create fail" do
+              expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.InternalServerError")
               expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.fail")
             end
 
@@ -369,6 +370,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             end
 
             it "tracks create fail" do
+              expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.InternalServerError")
               expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.fail")
             end
 
@@ -431,6 +433,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             end
 
             it "tracks create fail" do
+              expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.InternalServerError")
               expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.fail")
             end
 

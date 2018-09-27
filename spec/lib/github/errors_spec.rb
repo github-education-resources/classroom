@@ -12,12 +12,12 @@ describe GitHub::Errors do
       end
 
       it "reports 1 report after 1 failed request" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.Forbidden")
         begin
           GitHub::Errors.with_error_handling do
             raise Octokit::Forbidden
           end
         rescue GitHub::Forbidden; end # rubocop:disable Lint/HandleExceptions
-        expect(Failbot.reports.count).to eq(1)
       end
     end
 

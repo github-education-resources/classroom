@@ -168,6 +168,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         .to_return(body: "{}", status: 401)
 
       expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.repo.fail")
+      expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.Unauthorized")
       subject.perform_now(assignment, student)
     end
 
@@ -256,6 +257,9 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
         expect(GitHubClassroom.statsd)
           .to receive(:increment)
+          .with("github.error.Unauthorized")
+        expect(GitHubClassroom.statsd)
+          .to receive(:increment)
           .with("v2_exercise_repo.create.importing_starter_code.fail")
         subject.perform_now(assignment, student)
       end
@@ -297,6 +301,9 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         stub_request(:put, repo_invitation_regex)
           .to_return(body: "{}", status: 401)
 
+        expect(GitHubClassroom.statsd)
+          .to receive(:increment)
+          .with("github.error.Unauthorized")
         expect(GitHubClassroom.statsd)
           .to receive(:increment)
           .with("v2_exercise_repo.create.adding_collaborator.fail")
