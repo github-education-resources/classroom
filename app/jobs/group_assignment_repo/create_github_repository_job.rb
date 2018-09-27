@@ -26,8 +26,6 @@ class GroupAssignmentRepo
 
       broadcast_message(CREATE_REPO, invite_status, group_assignment, group)
 
-      # TODO: Implement PorterStatusJob (follow up PR)
-      # group_assignment_repo = GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
       GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
       report_time(start)
 
@@ -35,8 +33,6 @@ class GroupAssignmentRepo
       if group_assignment.starter_code?
         invite_status.importing_starter_code!
         broadcast_message(IMPORT_STARTER_CODE, invite_status, group_assignment, group)
-        # TODO: Implement PorterStatusJob (follow up PR)
-        # PorterStatusJob.perform_later(group_assignment_repo, group) create new PorterStatusJob for groups
       else
         invite_status.completed!
         broadcast_message(CREATE_COMPLETE, invite_status, group_assignment, group)
