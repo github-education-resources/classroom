@@ -26,7 +26,7 @@ class GroupAssignmentInvitation < ApplicationRecord
 
   delegate :title, to: :group_assignment
 
-  def redeem_for(invitee, selected_group = nil, new_group_title = nil, group_import_resiliency: false)
+  def redeem_for(invitee, selected_group = nil, new_group_title = nil)
     return Result.failed("Invitations for this assignment have been disabled.") unless enabled?
 
     repo_access    = RepoAccess.find_or_create_by!(user: invitee, organization: organization)
@@ -34,7 +34,7 @@ class GroupAssignmentInvitation < ApplicationRecord
 
     invitees_group.repo_accesses << repo_access unless invitees_group.repo_accesses.include?(repo_access)
 
-    group_assignment_repo(invitees_group, group_import_resiliency)
+    group_assignment_repo(invitees_group)
   end
 
   def to_param
@@ -70,13 +70,13 @@ class GroupAssignmentInvitation < ApplicationRecord
   end
 
   # rubocop:disable MethodLength
-  def group_assignment_repo(invitees_group, group_import_resiliency)
+  def group_assignment_repo(invitees_group)
     group_assignment_params = { group_assignment: group_assignment, group: invitees_group }
     repo                    = GroupAssignmentRepo.find_by(group_assignment_params)
 
     return Result.success(repo) if repo
 
-    if group_import_resiliency
+    if organization.feature_enabled?(:group_import_resiliency)
       invite_status = status(invitees_group)
       invite_status.accepted! if invite_status.unaccepted?
       return Result.pending
