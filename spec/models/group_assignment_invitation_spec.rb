@@ -103,17 +103,17 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
       end
 
       it "pending?" do
-        result = subject.redeem_for(student, nil, group_name, group_import_resiliency: true)
+        result = subject.redeem_for(student, nil, group_name)
         expect(result.pending?).to be_truthy
       end
 
       it "doesn't return an GroupAssignmentRepo" do
-        result = subject.redeem_for(student, nil, group_name, group_import_resiliency: true)
+        result = subject.redeem_for(student, nil, group_name)
         expect(result.group_assignment_repo).to be_nil
       end
 
       it "changes the invite status to accepted" do
-        subject.redeem_for(student, nil, group_name, group_import_resiliency: true)
+        subject.redeem_for(student, nil, group_name)
         expect(subject.status(Group.all.first).accepted?).to be_truthy
       end
     end

@@ -38,7 +38,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
 
   def setup
-    not_found unless group_import_resiliency_enabled?
+    not_found unless organization.feature_enabled?(:group_import_resiliency)
   end
 
   # rubocop:disable Metrics/AbcSize
@@ -97,11 +97,15 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   ## Before Actions
 
+  def ensure_group_import_resiliency_enabled
+    not_found unless organization.feature_enabled?(:group_import_resiliency)
+  end
+
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
   # rubocop:disable Metrics/CyclomaticComplexity
   def route_based_on_status
-    return unless group_import_resiliency_enabled?
+    return unless organization.feature_enabled?(:group_import_resiliency)
     status = group_invite_status&.status
     case status
     when "unaccepted", nil
@@ -172,8 +176,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     result = invitation.redeem_for(
       current_user,
       selected_group,
-      new_group_title,
-      group_import_resiliency: group_import_resiliency_enabled?
+      new_group_title
     )
 
     case result.status
@@ -182,7 +185,7 @@ class GroupAssignmentInvitationsController < ApplicationController
       flash[:error] = result.error
       redirect_to group_assignment_invitation_path
     when :success, :pending
-      if group_import_resiliency_enabled?
+      if organization.feature_enabled?(:group_import_resiliency)
         GitHubClassroom.statsd.increment("v2_group_exercise_invitation.accept")
         route_based_on_status
       else
@@ -205,7 +208,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
 
   def report_invitation_failure
-    if group_import_resiliency_enabled?
+    if organization.feature_enabled?(:group_import_resiliency)
       GitHubClassroom.statsd.increment("v2_group_exercise_invitation.fail")
     else
       GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
