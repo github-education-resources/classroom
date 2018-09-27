@@ -9,6 +9,9 @@ Rails.application.routes.draw do
 
   root to: "pages#home"
 
+  get "/assistant", to: "pages#assistant"
+  get "/home", to: "pages#homev2"
+
   get  "/login",  to: "sessions#new",     as: "login"
   post "/logout", to: "sessions#destroy", as: "logout"
 
@@ -35,7 +38,7 @@ Rails.application.routes.draw do
   resources :assignment_invitations, path: "assignment-invitations", only: [:show] do
     member do
       patch :accept
-      get   :setupv2
+      get   :setup
       post  :create_repo
       get   :progress
       get   :success
@@ -48,7 +51,7 @@ Rails.application.routes.draw do
       get   :accept
       patch :accept_assignment
       patch :accept_invitation
-      get   :setupv2
+      get   :setup
       post  :create_repo
       get   :progress
       get   :successful_invitation, path: :success
@@ -88,13 +91,13 @@ Rails.application.routes.draw do
       resources :assignments do
         resources :assignment_repos, only: [:show], controller: "orgs/assignment_repos"
         get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
-        get :desktop, on: :member
+        get :assistant, on: :member
       end
 
       resources :group_assignments, path: "group-assignments" do
         resources :group_assignment_repos, only: [:show], controller: "orgs/group_assignment_repos"
         get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
-        get :desktop, on: :member
+        get :assistant, on: :member
       end
     end
   end
