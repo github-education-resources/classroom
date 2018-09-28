@@ -115,6 +115,8 @@ class Organization
     #
     # Returns nil or raises a Result::Error
     def ensure_users_are_authorized!
+      raise Result::Error, "Cannot create an organization with no users" if users.empty?
+
       users.each do |user|
         login = user.github_user.login_no_cache
         next if GitHubOrganization.new(user.github_client, github_id).admin?(login)
