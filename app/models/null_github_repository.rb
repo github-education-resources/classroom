@@ -12,4 +12,8 @@ class NullGitHubRepository < NullGitHubResource
   def html_url
     "#"
   end
+
+  def node_id
+    ""
+  end
 end

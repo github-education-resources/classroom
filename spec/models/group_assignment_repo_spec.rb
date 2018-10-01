@@ -43,6 +43,11 @@ RSpec.describe GroupAssignmentRepo, type: :model do
             it "creates the repository on GitHub" do
               expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
             end
+
+            it "sets the GitHub database id and GraphQL node_id" do
+              expect(@group_assignment_repo.id).to_not be_nil
+              expect(@group_assignment_repo.github_global_relay_id).to_not be_nil
+            end
           end
 
           describe "#push_starter_code" do
