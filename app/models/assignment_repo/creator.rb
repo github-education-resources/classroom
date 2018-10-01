@@ -69,8 +69,11 @@ class AssignmentRepo
       start = Time.zone.now
       verify_organization_has_private_repos_available!
 
+      github_repository = create_github_repository!
+
       assignment_repo = assignment.assignment_repos.build(
-        github_repo_id: create_github_repository!,
+        github_repo_id: github_repository.id,
+        github_global_relay_id: github_repository.node_id,
         user: user
       )
 
@@ -127,7 +130,7 @@ class AssignmentRepo
         description: "#{repository_name} created by GitHub Classroom"
       }
 
-      organization.github_organization.create_repository(repository_name, options).id
+      organization.github_organization.create_repository(repository_name, options)
     rescue GitHub::Error
       raise Result::Error, REPOSITORY_CREATION_FAILED
     end

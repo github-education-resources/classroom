@@ -13,7 +13,8 @@ class AuthHash
     {
       uid:        uid,
       token:      token,
-      site_admin: site_admin
+      site_admin: site_admin,
+      github_global_relay_id: node_id
     }
   end
 
@@ -32,6 +33,10 @@ class AuthHash
   def site_admin
     return true if non_staff_github_admins_ids.include?(uid)
     raw_info[:site_admin]
+  end
+
+  def node_id
+    raw_info[:node_id]
   end
 
   def non_staff_github_admins_ids

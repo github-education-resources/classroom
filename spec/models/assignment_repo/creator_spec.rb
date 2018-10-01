@@ -74,6 +74,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
         expect(result.success?).to be_truthy
         expect(result.assignment_repo.assignment).to eql(assignment)
         expect(result.assignment_repo.user).to eql(student)
+        expect(result.assignment_repo.github_global_relay_id).to be_truthy
       end
 
       it "creates an AssignmentRepo as a member" do
@@ -82,6 +83,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
         expect(result.success?).to be_truthy
         expect(result.assignment_repo.assignment).to eql(assignment)
         expect(result.assignment_repo.user).to eql(teacher)
+        expect(result.assignment_repo.github_global_relay_id).to be_truthy
       end
 
       it "tracks the how long it too to be created" do
@@ -131,6 +133,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
         stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
           .to_return(body: "{}", status: 401)
 
+        expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.Unauthorized")
         expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.fail")
         AssignmentRepo::Creator.perform(assignment: assignment, user: student)
       end

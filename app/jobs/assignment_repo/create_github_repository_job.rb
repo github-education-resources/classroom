@@ -68,8 +68,11 @@ class AssignmentRepo
     def create_assignment_repo(assignment, user)
       creator = Creator.new(assignment: assignment, user: user)
       creator.verify_organization_has_private_repos_available!
+
+      github_repository = creator.create_github_repository!
+
       assignment_repo = assignment.assignment_repos.build(
-        github_repo_id: creator.create_github_repository!,
+        github_repo_id: github_repository.id,
         user: user
       )
       creator.add_user_to_repository!(assignment_repo.github_repo_id)

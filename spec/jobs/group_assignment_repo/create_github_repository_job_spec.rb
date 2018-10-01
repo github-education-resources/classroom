@@ -7,9 +7,6 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
   subject { described_class }
 
-  # TODO: Implement GroupAssignmentRepo::PorterStatusJob (follow up PR)
-  #
-  # let(:cascading_job)      { GroupAssignmentRepo::PorterStatusJob }
   let(:group_repo_channel) { GroupRepositoryCreationStatusChannel }
 
   context "with created objects", :vcr do
@@ -126,12 +123,6 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           repo_name = assignment_repo.github_repository.full_name
           expect(WebMock).to have_requested(:put, github_url("/teams/#{group.github_team_id}/repos/#{repo_name}"))
         end
-
-        # TODO: Implement GroupAssignmentRepo::PorterStatusJob (follow up PR)
-        #
-        # it "kicks off a cascading porter status job" do
-        #   expect(cascading_job).to have_been_enqueued.on_queue("porter_status")
-        # end
       end
 
       describe "successful creation" do
@@ -310,6 +301,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             end
 
             it "tracks create fail" do
+              expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.InternalServerError")
               expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.fail")
             end
 
@@ -369,6 +361,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             end
 
             it "tracks create fail" do
+              expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.InternalServerError")
               expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.fail")
             end
 
@@ -431,6 +424,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             end
 
             it "tracks create fail" do
+              expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.InternalServerError")
               expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.fail")
             end
 

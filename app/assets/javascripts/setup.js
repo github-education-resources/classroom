@@ -1,6 +1,8 @@
 (function() {
   var POLL_INTERVAL = 1000;
-  var create_flash_container,
+  var PROGRESS_HALF_LIFE = 1000;
+  var progress_asymptotically,
+    create_flash_container,
     display_progress,
     display_text,
     flash_error,
@@ -81,7 +83,34 @@
   };
 
   set_progress = function(step_indicator, percent) {
-    step_indicator.find(".progress").width(percent + "%");
+    step_indicator.progress_asymptotically_start_time = null;
+    if (percent) {
+      step_indicator.find(".progress").animate({width: percent + "%"});
+    }
+  };
+
+  progress_asymptotically = function(step_indicator) {
+    start_time = Date.now();
+    step_indicator.progress_asymptotically_start_time = start_time;
+    recursive_progress_asymptotically = function(recursive_callback, counter) {
+      if (step_indicator.progress_asymptotically_start_time !== start_time) {
+        return;
+      } else {
+        var progress = 100 - (100/counter);
+        step_indicator
+          .find(".progress")
+          .animate(
+            { width: progress.toFixed() + "%" },
+            { duration: PROGRESS_HALF_LIFE * counter }
+          );
+        setTimeout(function() {
+            recursive_callback(recursive_callback, counter + 1);
+          },
+          PROGRESS_HALF_LIFE * counter
+        );
+      }
+    };
+    recursive_progress_asymptotically(recursive_progress_asymptotically, 1);
   };
 
   indicate_waiting = function(step_indicator) {
@@ -128,7 +157,7 @@
       case "creating_repo":
         indicate_in_progress(create_repo_progress_indicator);
         indicate_waiting(import_repo_progress_indicator);
-        set_progress(create_repo_progress_indicator, 50);
+        progress_asymptotically(create_repo_progress_indicator);
         set_progress(import_repo_progress_indicator, 0);
         display_text(create_repo_progress_indicator, "Creating GitHub repository...");
         display_text(import_repo_progress_indicator, "Waiting...");
@@ -138,9 +167,9 @@
         indicate_completion(create_repo_progress_indicator);
         indicate_in_progress(import_repo_progress_indicator);
         set_progress(create_repo_progress_indicator, 100);
-        set_progress(import_repo_progress_indicator, progress.percent);
+        progress_asymptotically(import_repo_progress_indicator);
         display_text(create_repo_progress_indicator, "Done");
-        display_text(import_repo_progress_indicator, progress.status_text);
+        display_text(import_repo_progress_indicator, "Importing starter code...");
         hide_retry_button();
         break;
       case "errored_creating_repo":
@@ -148,6 +177,8 @@
         indicate_failure(import_repo_progress_indicator);
         display_text(create_repo_progress_indicator, "Errored");
         display_text(import_repo_progress_indicator, "Errored");
+        set_progress(create_repo_progress_indicator, null);
+        set_progress(import_repo_progress_indicator, null);
         show_retry_button();
         break;
       case "errored_importing_starter_code":
@@ -155,6 +186,8 @@
         indicate_failure(import_repo_progress_indicator);
         display_text(create_repo_progress_indicator, "Done");
         display_text(import_repo_progress_indicator, "Errored");
+        set_progress(create_repo_progress_indicator, null);
+        set_progress(import_repo_progress_indicator, null);
         show_retry_button();
         break;
       case "completed":
