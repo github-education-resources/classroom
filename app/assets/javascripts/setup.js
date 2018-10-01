@@ -32,6 +32,11 @@
     success_path,
     wrap_in_parapgraph;
 
+  var asymptotic_start_times = {
+    "create-repo-progress": null,
+    "import-repo-progress": null
+  };
+
   is_hidden = function(element) {
     return element.hasClass("d-none");
   };
@@ -83,19 +88,20 @@
   };
 
   set_progress = function(step_indicator, percent) {
-    step_indicator.progress_asymptotically_start_time = null;
-    if (percent) {
+    step_indicator.find(".progress").stop(true, false);
+    asymptotic_start_times[step_indicator.attr("id")] = null;
+    if (percent === 0) {
+      step_indicator.find(".progress").css("width", 0);
+    } else if (percent) {
       step_indicator.find(".progress").animate({width: percent + "%"});
-    } else {
-      step_indicator.find(".progress").stop(true, false);
     }
   };
 
   progress_asymptotically = function(step_indicator) {
     start_time = Date.now();
-    step_indicator.progress_asymptotically_start_time = start_time;
+    asymptotic_start_times[step_indicator.attr("id")] = start_time;
     recursive_progress_asymptotically = function(recursive_callback, counter) {
-      if (step_indicator.progress_asymptotically_start_time !== start_time) {
+      if (asymptotic_start_times[step_indicator.attr("id")] !== start_time) {
         return;
       } else {
         var progress = 100 - (100/counter);
