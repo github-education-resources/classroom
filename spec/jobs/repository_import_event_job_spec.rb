@@ -72,7 +72,6 @@ RSpec.describe RepositoryImportEventJob, type: :job do
           .with(
             text: subject::CREATE_COMPLETE,
             status: "completed",
-            percent: 100,
             status_text: "Done"
           )
       end
@@ -95,7 +94,6 @@ RSpec.describe RepositoryImportEventJob, type: :job do
           .with(
             error: subject::IMPORT_FAILED,
             status: "errored_importing_starter_code",
-            percent: nil,
             status_text: "Failed"
           )
       end
@@ -118,7 +116,6 @@ RSpec.describe RepositoryImportEventJob, type: :job do
           .with(
             error: subject::IMPORT_CANCELLED,
             status: "errored_importing_starter_code",
-            percent: nil,
             status_text: "Failed"
           )
       end
@@ -192,7 +189,6 @@ RSpec.describe RepositoryImportEventJob, type: :job do
             .with(
               text: subject::CREATE_COMPLETE,
               status: "completed",
-              percent: 100,
               status_text: "Done"
             )
         end
@@ -215,7 +211,6 @@ RSpec.describe RepositoryImportEventJob, type: :job do
             .with(
               error: subject::IMPORT_FAILED,
               status: "errored_importing_starter_code",
-              percent: nil,
               status_text: "Failed"
             )
         end
@@ -238,7 +233,6 @@ RSpec.describe RepositoryImportEventJob, type: :job do
             .with(
               error: subject::IMPORT_CANCELLED,
               status: "errored_importing_starter_code",
-              percent: nil,
               status_text: "Failed"
             )
         end

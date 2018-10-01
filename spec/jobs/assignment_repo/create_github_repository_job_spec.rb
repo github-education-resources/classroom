@@ -117,13 +117,11 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         .with(
           text: subject::CREATE_REPO,
           status: "creating_repo",
-          percent: 50,
           status_text: "Creating GitHub repository"
         )
         .with(
           text: subject::IMPORT_STARTER_CODE,
           status: "importing_starter_code",
-          percent: 50,
           status_text: "Import started"
         )
     end
@@ -158,13 +156,11 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         .with(
           text: subject::CREATE_REPO,
           status: "creating_repo",
-          percent: 50,
           status_text: "Creating GitHub repository"
         )
         .with(
           error: AssignmentRepo::Creator::REPOSITORY_CREATION_FAILED,
           status: "errored_creating_repo",
-          percent: nil,
           status_text: "Failed"
         )
     end
@@ -205,13 +201,11 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           .with(
             text: subject::CREATE_REPO,
             status: "creating_repo",
-            percent: 50,
             status_text: "Creating GitHub repository"
           )
           .with(
             error: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
             status: "errored_creating_repo",
-            percent: nil,
             status_text: "Failed"
           )
       end
@@ -251,13 +245,11 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           .with(
             text: subject::CREATE_REPO,
             status: "creating_repo",
-            percent: 50,
             status_text: "Creating GitHub repository"
           )
           .with(
             error: AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED,
             status: "errored_creating_repo",
-            percent: nil,
             status_text: "Failed"
           )
       end
@@ -295,13 +287,11 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           .with(
             text: subject::CREATE_REPO,
             status: "creating_repo",
-            percent: 50,
             status_text: "Creating GitHub repository"
           )
           .with(
             error: AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE,
             status: "errored_creating_repo",
-            percent: nil,
             status_text: "Failed"
           )
       end

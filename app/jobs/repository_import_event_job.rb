@@ -84,7 +84,6 @@ class RepositoryImportEventJob < ApplicationJob
       channel,
       text: CREATE_COMPLETE,
       status: invite_status.status,
-      percent: 100,
       status_text: "Done"
     )
   end
@@ -94,7 +93,6 @@ class RepositoryImportEventJob < ApplicationJob
       channel,
       error: message,
       status: invite_status.status,
-      percent: nil,
       status_text: "Failed"
     )
   end
