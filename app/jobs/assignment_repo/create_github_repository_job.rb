@@ -41,6 +41,7 @@ class AssignmentRepo
           percent: user.feature_enabled?(:repository_import_webhook) ? 50 : 0,
           status_text: "Import started"
         )
+        GitHubClassroom.statsd.increment("exercise_repo.import.started")
         PorterStatusJob.perform_later(assignment_repo, user) unless user.feature_enabled?(:repository_import_webhook)
       else
         invite_status.completed!
