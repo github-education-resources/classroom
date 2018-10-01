@@ -1,31 +1,39 @@
 (function() {
 
-  var timeIndex;
+  $(document).ready(function () {
+    var ready = function () {
+      var timeIndex;
 
-  window.addEventListener("blur", function(e)
-  {
-    clearTimeout(timeIndex);
-  });
+      window.addEventListener("blur", function(e)
+      {
+        clearTimeout(timeIndex);
+      });
 
-  $("#js-download-repos-btn").click(function(e)
-  {
-    displayDownloadMessage();
-  });
+      $("#js-download-repos-btn").click(function(e)
+      {
+        displayDownloadMessage();
+      });
 
-  $("#js-desktop-open-btn").click(function(e)
-  {
-    e.preventDefault();
+      $("#js-assistant-open-btn").click(function(e)
+      {
+        displayLaunchingMessage();
 
-    var el = $(this);
-    var iFrame = $('#js-hidden-iframe')[0];
+        var isSafari = window.safari !== undefined;
+        if(!isSafari){
+          e.preventDefault();
+          var el = $(this);
+          var iFrame = $('#js-hidden-iframe')[0];
 
-    timeIndex = setTimeout(function() {
-      window.location = "http://www.classroom.github.com/desktop";
-    }, 3000);
+          timeIndex = setTimeout(function() {
+            window.location = "http://classroom.github.com/assistant";
+          }, 5000);
 
-    // attempt to open deep link in iframe to avoid exposing link to user
-    iFrame.contentWindow.location.href = el.attr("href");
-    displayLaunchingMessage();
+          // attempt to open deep link in iframe to avoid exposing link to user
+          iFrame.contentWindow.location.href = el.attr("href");
+        }
+      });
+    };
+    $(document).ready(ready);
   });
 }).call(this);
 
