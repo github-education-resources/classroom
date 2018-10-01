@@ -123,7 +123,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         .with(
           text: subject::IMPORT_STARTER_CODE,
           status: "importing_starter_code",
-          percent: 0,
+          percent: 50,
           status_text: "Import started"
         )
     end
