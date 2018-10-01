@@ -7,7 +7,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
   subject { described_class }
 
-  let(:cascading_job) { AssignmentRepo::PorterStatusJob }
   let(:organization)  { classroom_org }
   let(:student)       { classroom_student }
   let(:teacher)       { classroom_teacher }
@@ -70,28 +69,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
     it "uses the create_repository queue" do
       subject.perform_later
       expect(subject).to have_been_enqueued.on_queue("create_repository")
-    end
-
-    it "kicks off a cascading porter status job" do
-      subject.perform_now(assignment, teacher)
-      assignment_repo = AssignmentRepo.find_by(assignment: assignment, user: teacher)
-      expect(cascading_job).to have_been_enqueued.on_queue("porter_status").with(assignment_repo, teacher)
-    end
-
-    context "with repository_import_webhook enabled" do
-      before do
-        GitHubClassroom.flipper[:repository_import_webhook].enable
-      end
-
-      after do
-        GitHubClassroom.flipper[:repository_import_webhook].disable
-      end
-
-      it "does not kick off a cascading porter status job" do
-        subject.perform_now(assignment, teacher)
-        assignment_repo = AssignmentRepo.find_by(assignment: assignment, user: teacher)
-        expect(cascading_job).to_not have_been_enqueued.on_queue("porter_status").with(assignment_repo, teacher)
-      end
     end
 
     context "creates an AssignmentRepo as an outside_collaborator" do

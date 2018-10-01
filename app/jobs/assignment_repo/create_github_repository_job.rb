@@ -38,10 +38,9 @@ class AssignmentRepo
           message: IMPORT_STARTER_CODE,
           user: user,
           invite_status: invite_status,
-          percent: user.feature_enabled?(:repository_import_webhook) ? 50 : 0,
+          percent: 50,
           status_text: "Import started"
         )
-        PorterStatusJob.perform_later(assignment_repo, user) unless user.feature_enabled?(:repository_import_webhook)
       else
         invite_status.completed!
         broadcast_message(
