@@ -86,6 +86,8 @@
     step_indicator.progress_asymptotically_start_time = null;
     if (percent) {
       step_indicator.find(".progress").animate({width: percent + "%"});
+    } else {
+      step_indicator.find(".progress").stop(true, false);
     }
   };
 
