@@ -48,9 +48,4 @@ class ApplicationController
     logged_in? && current_user.feature_enabled?(:download_repositories)
   end
   helper_method :download_repositories_enabled?
-
-  def repository_import_webhook_enabled?
-    logged_in? && current_user.feature_enabled?(:repository_import_webhook)
-  end
-  helper_method :repository_import_webhook_enabled?
 end
