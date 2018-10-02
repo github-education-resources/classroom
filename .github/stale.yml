@@ -1,5 +1,5 @@
 daysUntilStale: 60
-daysUntilClose: 7
+daysUntilClose: false
 exemptLabels:
   - Security
   - feature request
