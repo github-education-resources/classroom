@@ -32,8 +32,6 @@ class RepositoryImportEventJob < ApplicationJob
     invite_status = invitation.status(user)
     channel = RepositoryCreationStatusChannel.channel(user_id: user.id)
 
-    return unless user.feature_enabled?(:repository_import_webhook)
-
     case status
     when "success"
       invite_status.completed!
@@ -86,7 +84,6 @@ class RepositoryImportEventJob < ApplicationJob
       channel,
       text: CREATE_COMPLETE,
       status: invite_status.status,
-      percent: 100,
       status_text: "Done"
     )
   end
@@ -96,7 +93,6 @@ class RepositoryImportEventJob < ApplicationJob
       channel,
       error: message,
       status: invite_status.status,
-      percent: nil,
       status_text: "Failed"
     )
   end
