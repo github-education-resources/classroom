@@ -20,4 +20,8 @@ class NullGitHubOrganization < NullGitHubResource
   def name
     "Deleted organization"
   end
+
+  def node_id
+    "MDQ6VXNlcjEwMTM3"
+  end
 end

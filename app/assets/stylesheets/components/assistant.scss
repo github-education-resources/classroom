@@ -11,19 +11,36 @@ div.assistant-bg {
   height: 200px;
 }
 
-html.mac [data-for-os=windows],
-         [data-for-os=linux] {
-  display: none;
+html.mac {
+  [data-for-os=windows],
+  [data-for-os=linux],
+  [data-for-os=unknownOS] {
+    display: none;
+  }
 }
 
-html.windows [data-for-os=mac],
-             [data-for-os=linux] {
-  display: none;
+html.windows {
+  [data-for-os=mac],
+  [data-for-os=linux],
+  [data-for-os=unknownOS] {
+    display: none;
+  }
 }
 
-html.linux [data-for-os=mac],
-           [data-for-os=windows] {
-  display: none;
+html.linux {
+  [data-for-os=mac],
+  [data-for-os=windows],
+  [data-for-os=unknownOS] {
+    display: none;
+  }
+}
+
+html.unknownOS {
+  [data-for-os=mac],
+  [data-for-os=windows],
+  [data-for-os=linux] {
+    display: none;
+  }
 }
 
 .assistant-screenshot {
