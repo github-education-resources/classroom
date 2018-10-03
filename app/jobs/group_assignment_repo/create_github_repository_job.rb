@@ -33,6 +33,7 @@ class GroupAssignmentRepo
       if group_assignment.starter_code?
         invite_status.importing_starter_code!
         broadcast_message(IMPORT_STARTER_CODE, invite_status, group_assignment, group)
+        GitHubClassroom.statsd.increment("group_exercise_repo.import.started")
       else
         invite_status.completed!
         broadcast_message(CREATE_COMPLETE, invite_status, group_assignment, group)
