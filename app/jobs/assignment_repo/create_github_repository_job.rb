@@ -39,6 +39,7 @@ class AssignmentRepo
           invite_status: invite_status,
           status_text: "Import started"
         )
+        GitHubClassroom.statsd.increment("exercise_repo.import.started")
       else
         invite_status.completed!
         broadcast_message(

@@ -145,8 +145,9 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             subject.perform_now(group_assignment, group)
           end
 
-          it "tracks create success" do
+          it "tracks create success and import started" do
             expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.success")
+            expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.import.started")
           end
 
           it "tracks elapsed time" do

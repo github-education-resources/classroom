@@ -126,8 +126,9 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         )
     end
 
-    it "tracks create fail stat" do
+    it "tracks create success stat" do
       expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.success")
+      expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.import.started")
       subject.perform_now(assignment, teacher)
     end
 
