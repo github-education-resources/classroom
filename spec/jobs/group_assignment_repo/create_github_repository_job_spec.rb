@@ -335,8 +335,8 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
               expect { subject.perform_now(group_assignment, group) }
                 .to have_broadcasted_to(channel)
                 .with(
-                  error: "Assignment failed to be created",
-                  status: "errored_creating_repo"
+                  status: "errored_creating_repo",
+                  error: "Assignment failed to be created: There seems to be a problem on github.com, please try again."
                 )
             end
           end
@@ -369,7 +369,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             it "logs error" do
               expect(Rails.logger)
                 .to receive(:warn)
-                .with("Assignment failed to be created")
+                .with("Assignment failed to be created: There seems to be a problem on github.com, please try again.")
             end
           end
         end
@@ -398,8 +398,8 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
               expect { subject.perform_now(group_assignment, group) }
                 .to have_broadcasted_to(channel)
                 .with(
-                  error: "Assignment failed to be created",
-                  status: "errored_creating_repo"
+                  status: "errored_creating_repo",
+                  error: "Assignment failed to be created: There seems to be a problem on github.com, please try again."
                 )
             end
           end
@@ -432,7 +432,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             it "logs error" do
               expect(Rails.logger)
                 .to receive(:warn)
-                .with("Assignment failed to be created")
+                .with("Assignment failed to be created: There seems to be a problem on github.com, please try again.")
             end
           end
         end

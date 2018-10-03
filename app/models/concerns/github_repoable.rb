@@ -36,9 +36,9 @@ module GitHubRepoable
   #
   def delete_github_repository_on_failure
     yield
-  rescue GitHub::Error
+  rescue GitHub::Error => error
     silently_destroy_github_repository
-    raise GitHub::Error, "Assignment failed to be created"
+    raise GitHub::Error, "Assignment failed to be created: #{error}"
   end
 
   # Public

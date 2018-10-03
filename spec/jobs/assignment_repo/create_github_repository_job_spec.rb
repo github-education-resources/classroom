@@ -7,7 +7,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
   subject { described_class }
 
-  let(:cascading_job) { AssignmentRepo::PorterStatusJob }
   let(:organization)  { classroom_org }
   let(:student)       { classroom_student }
   let(:teacher)       { classroom_teacher }
@@ -72,28 +71,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       expect(subject).to have_been_enqueued.on_queue("create_repository")
     end
 
-    it "kicks off a cascading porter status job" do
-      subject.perform_now(assignment, teacher)
-      assignment_repo = AssignmentRepo.find_by(assignment: assignment, user: teacher)
-      expect(cascading_job).to have_been_enqueued.on_queue("porter_status").with(assignment_repo, teacher)
-    end
-
-    context "with repository_import_webhook enabled" do
-      before do
-        GitHubClassroom.flipper[:repository_import_webhook].enable
-      end
-
-      after do
-        GitHubClassroom.flipper[:repository_import_webhook].disable
-      end
-
-      it "does not kick off a cascading porter status job" do
-        subject.perform_now(assignment, teacher)
-        assignment_repo = AssignmentRepo.find_by(assignment: assignment, user: teacher)
-        expect(cascading_job).to_not have_been_enqueued.on_queue("porter_status").with(assignment_repo, teacher)
-      end
-    end
-
     context "creates an AssignmentRepo as an outside_collaborator" do
       let(:assignment_repo) { AssignmentRepo.find_by(user: student, assignment: assignment) }
 
@@ -140,13 +117,11 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         .with(
           text: subject::CREATE_REPO,
           status: "creating_repo",
-          percent: 50,
           status_text: "Creating GitHub repository"
         )
         .with(
           text: subject::IMPORT_STARTER_CODE,
           status: "importing_starter_code",
-          percent: 0,
           status_text: "Import started"
         )
     end
@@ -182,13 +157,11 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         .with(
           text: subject::CREATE_REPO,
           status: "creating_repo",
-          percent: 50,
           status_text: "Creating GitHub repository"
         )
         .with(
           error: AssignmentRepo::Creator::REPOSITORY_CREATION_FAILED,
           status: "errored_creating_repo",
-          percent: nil,
           status_text: "Failed"
         )
     end
@@ -229,13 +202,11 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           .with(
             text: subject::CREATE_REPO,
             status: "creating_repo",
-            percent: 50,
             status_text: "Creating GitHub repository"
           )
           .with(
             error: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
             status: "errored_creating_repo",
-            percent: nil,
             status_text: "Failed"
           )
       end
@@ -275,13 +246,11 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           .with(
             text: subject::CREATE_REPO,
             status: "creating_repo",
-            percent: 50,
             status_text: "Creating GitHub repository"
           )
           .with(
             error: AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED,
             status: "errored_creating_repo",
-            percent: nil,
             status_text: "Failed"
           )
       end
@@ -319,13 +288,11 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           .with(
             text: subject::CREATE_REPO,
             status: "creating_repo",
-            percent: 50,
             status_text: "Creating GitHub repository"
           )
           .with(
             error: AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE,
             status: "errored_creating_repo",
-            percent: nil,
             status_text: "Failed"
           )
       end

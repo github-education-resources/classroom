@@ -25,7 +25,6 @@ class AssignmentRepo
         message: CREATE_REPO,
         user: user,
         invite_status: invite_status,
-        percent: 50,
         status_text: CREATE_REPO.chomp(".")
       )
       assignment_repo = create_assignment_repo(assignment, user)
@@ -38,18 +37,15 @@ class AssignmentRepo
           message: IMPORT_STARTER_CODE,
           user: user,
           invite_status: invite_status,
-          percent: user.feature_enabled?(:repository_import_webhook) ? 50 : 0,
           status_text: "Import started"
         )
         GitHubClassroom.statsd.increment("exercise_repo.import.started")
-        PorterStatusJob.perform_later(assignment_repo, user) unless user.feature_enabled?(:repository_import_webhook)
       else
         invite_status.completed!
         broadcast_message(
           message: Creator::REPOSITORY_CREATION_COMPLETE,
           user: user,
           invite_status: invite_status,
-          percent: 0,
           status_text: "Completed"
         )
       end
@@ -118,11 +114,10 @@ class AssignmentRepo
     # Broadcasts a ActionCable message with a status to the given user
     #
     # rubocop:disable ParameterLists
-    def broadcast_message(type: :text, message:, user:, invite_status:, percent: nil, status_text:)
+    def broadcast_message(type: :text, message:, user:, invite_status:, status_text:)
       raise ArgumentError unless %i[text error].include?(type)
       broadcast_args = {
         status: invite_status.status,
-        percent: percent,
         status_text: status_text
       }
       broadcast_args[type] = message
