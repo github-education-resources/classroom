@@ -16,10 +16,10 @@ task elasticsearch_reindex: :environment do
     end
   end
 
-  puts("=======================================")
-  puts("------------ Reindex Stats ------------")
-  puts("Number of reindexing jobs triggered:")
+  puts("=====================================")
+  puts("----------- Reindex Stats -----------")
+  puts("Number of reindexing jobs enqueued:")
   print("=> ")
   pp task_stats
-  puts("=======================================")
+  puts("=====================================")
 end
