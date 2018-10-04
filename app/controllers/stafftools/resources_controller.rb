@@ -16,7 +16,7 @@ module Stafftools
 
     def set_resources
       return @resources = nil if params[:query].blank?
-      @resources = MultiIndexSearchRequest.new(*ElasticSearch.indices)
+      @resources = MultiIndexSearchRequest.new(*ESIndices.indices)
         .query(match_phrase_prefix(params[:query]))
         .order(_type: :asc)
         .page(params[:page])

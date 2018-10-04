@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-module ElasticSearch
-
+module ESIndices
   def self.models
     MODEL_SYMBOL_TO_INDEX_SYMBOL.keys.map { |model_symbol| model_symbol.to_s.constantize }
   end
