@@ -71,13 +71,13 @@ RSpec.describe Organization, type: :model do
       end
 
       it "returns false" do
-        expect(subject.last_classroom_on_org?).to_not be_truthy
+        expect(subject.last_classroom_on_org?).to be_falsey
       end
     end
 
     context "multiple classrooms with different github_ids" do
       before do
-        create(:organization, github_id: 00_000)
+        create(:organization, github_id: 0)
       end
 
       it "returns true" do

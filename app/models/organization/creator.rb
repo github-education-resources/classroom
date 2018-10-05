@@ -175,7 +175,7 @@ class Organization
 
       org_identifier = github_org.name.presence || github_org.login
 
-      find_unique_title("#{org_identifier}-classroom-1")
+      find_unique_title(org_identifier)
     end
 
     # Internal: Find User that has the `admin:org_hook` scope
@@ -266,14 +266,14 @@ class Organization
     # name has already been taken
     #
     # Returns a String with an unique title
-    def find_unique_title(base_title)
+    def find_unique_title(identifier)
+      base_title = "#{identifier}-classroom"
       count = 1
-
       until unique_title?(base_title)
+        # Increments count at end of title
         base_title = base_title.gsub(/\-\d+$/, "") + "-#{count}"
         count += 1
       end
-
       base_title
     end
 

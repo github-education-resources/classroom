@@ -55,6 +55,7 @@ class Organization < ApplicationRecord
     users.count == 1
   end
 
+  # Check if we are the last Classroom on this GitHub Organization
   def last_classroom_on_org?
     Organization.where(github_id: github_id).length <= 1
   end

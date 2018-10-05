@@ -135,10 +135,10 @@ class OrganizationsController < Orgs::Controller
   # if so add the user to the corresponding classroom automatically.
   def add_current_user_to_organizations
     @users_github_organizations.each do |organization|
-      classrooms = Organization.where(github_id: organization[:github_id])
+      user_orgs = Organization.where(github_id: organization[:github_id])
 
-      classrooms.map do |classroom|
-        create_user_organization_access(classroom) unless classroom.users.include?(current_user)
+      user_orgs.map do |user_org|
+        create_user_organization_access(user_org) unless classroom.users.include?(current_user)
       end
     end
   end
