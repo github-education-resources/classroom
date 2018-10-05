@@ -3,10 +3,9 @@
 require "rails_helper"
 
 describe UnlockInviteStatusesService do
-
   describe "#each_invite_status" do
     before do
-      @invite_statuses = InviteStatus.statuses.keys.map {|status| create(:invite_status, status: status) }
+      @invite_statuses = InviteStatus.statuses.keys.map { |status| create(:invite_status, status: status) }
     end
 
     it "yeilds with each invite_status only if the status is locked?" do

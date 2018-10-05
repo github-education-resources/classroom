@@ -11,7 +11,7 @@ RSpec.describe InviteStatus, type: :model do
     described_class.destroy_all
   end
 
-  it_behaves_like 'setup_status'
+  it_behaves_like "setup_status"
 
   describe "valid" do
     let(:invite_status) { create(:invite_status, user_id: user.id, assignment_invitation_id: invitation.id) }
