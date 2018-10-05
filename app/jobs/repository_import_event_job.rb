@@ -25,12 +25,14 @@ class RepositoryImportEventJob < ApplicationJob
 
   private
 
+  # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
   def handle_assignment_repo(assignment_repo, status)
     user = assignment_repo.user
-    invitation = assignment_repo.assignment.invitation
+    assignment = assignment_repo.assignment
+    invitation = assignment.invitation
     invite_status = invitation.status(user)
-    channel = RepositoryCreationStatusChannel.channel(user_id: user.id)
+    channel = RepositoryCreationStatusChannel.channel(user_id: user.id, assignment_id: assignment_repo.assignment.id)
 
     case status
     when "success"
@@ -48,6 +50,7 @@ class RepositoryImportEventJob < ApplicationJob
     end
   end
   # rubocop:enable MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   # rubocop:disable MethodLength
   # rubocop:disable Metrics/AbcSize

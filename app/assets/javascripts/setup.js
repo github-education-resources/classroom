@@ -287,19 +287,25 @@
   };
 
   setup_assignment_cable = function() {
-    App.repository_creation_status = App.cable.subscriptions.create("RepositoryCreationStatusChannel", {
-      connected: function() {
-        // Called when the subscription is ready for use on the server
-        start_job();
-      },
-      disconnected: function() {
-        // Called when the subscription has been terminated by the server
-      },
-      received: function(data) {
-        // Called when there's incoming data on the websocket for this channel
-        display_progress(data);
+    var assignment_id = $("#assignment_id").val();
+    App.repository_creation_status = App.cable.subscriptions.create(
+      {
+        channel: "RepositoryCreationStatusChannel",
+        assignment_id: assignment_id
+      }, {
+        connected: function() {
+          // Called when the subscription is ready for use on the server
+          start_job();
+        },
+        disconnected: function() {
+          // Called when the subscription has been terminated by the server
+        },
+        received: function(data) {
+          // Called when there's incoming data on the websocket for this channel
+          display_progress(data);
+        }
       }
-    });
+    );
   };
 
   setup_group_assignment_cable = function() {

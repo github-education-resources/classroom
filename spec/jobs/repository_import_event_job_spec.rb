@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe RepositoryImportEventJob, type: :job do
   subject { described_class }
 
-  let(:individual_channel)  { RepositoryCreationStatusChannel.channel(user_id: user.id) }
+  let(:individual_channel)  { RepositoryCreationStatusChannel.channel(user_id: user.id, assignment_id: assignment.id) }
   let(:group_channel) do
     GroupRepositoryCreationStatusChannel
       .channel(
