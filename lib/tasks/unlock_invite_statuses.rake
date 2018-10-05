@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# This task is run inside Heroku Scheduler at regular intervals.
+# See Heroku Scheduler docs at: https://devcenter.heroku.com/articles/scheduler
+
 # Unlocks `InviteStatus` and `GroupInviteStatus` records that have been locked (stuck) for more than an hour.
 # This task sets locked statuses to the "unaccepted" status.
 task unlock_invite_statuses: :environment do
