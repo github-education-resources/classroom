@@ -10,7 +10,7 @@ module StarterCode
     return if repo_name.blank?
 
     # rubocop:disable Metrics/LineLength
-    raise GitHub::Error, WRONG_FORMAT unless repo_name.match?(%r{^#{GitHub::Search::USERNAME_REGEX}\/#{GitHub::Search::REPOSITORY_REGEX}$})
+    raise GitHub::Error, WRONG_FORMAT unless repo_name.match?(%r{^#{GitHub::USERNAME_REGEX}\/#{GitHub::REPOSITORY_REGEX}$})
     # rubocop:enable Metrics/LineLength
 
     begin

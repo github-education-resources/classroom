@@ -44,8 +44,9 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
 
   describe "#redeem_for", :vcr do
     let(:student)       { classroom_student }
-    let(:organization)  { classroom_org     }
-
+    let(:grouping)      { create(:grouping, organization: organization) }
+    let(:organization)  { classroom_org }
+    let(:group_name)    { "#{Faker::Company.name} Team" }
     let(:group_assignment) do
       create(
         :group_assignment,
@@ -61,11 +62,60 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
       RepoAccess.destroy_all
       Group.destroy_all
       GroupAssignmentRepo.destroy_all
+      GroupInviteStatus.destroy_all
     end
 
-    it "returns the GroupAssignmentRepo" do
-      group_assignment_repo = subject.redeem_for(student, nil, "Code Squad")
-      expect(group_assignment_repo).to eql(GroupAssignmentRepo.last)
+    context "success result" do
+      it "success?" do
+        result = subject.redeem_for(student, nil, group_name)
+        expect(result.success?).to be_truthy
+      end
+
+      it "returns the GroupAssignmentRepo" do
+        result = subject.redeem_for(student, nil, group_name)
+        expect(result.group_assignment_repo).to eql(GroupAssignmentRepo.last)
+      end
+    end
+
+    context "disabled invitation" do
+      before do
+        expect(subject).to receive(:enabled?).and_return(false)
+      end
+
+      it "failed?" do
+        result = subject.redeem_for(student, nil, group_name)
+        expect(result.failed?).to be_truthy
+      end
+
+      it "fails when the invitation is not enabled?" do
+        result = subject.redeem_for(student, nil, group_name)
+        expect(result.error).to eq("Invitations for this assignment have been disabled.")
+      end
+    end
+
+    describe "import resiliency enabled" do
+      before do
+        GitHubClassroom.flipper[:group_import_resiliency].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:group_import_resiliency].disable
+      end
+
+      it "pending?" do
+        result = subject.redeem_for(student, nil, group_name)
+        expect(result.pending?).to be_truthy
+      end
+
+      it "doesn't return an GroupAssignmentRepo" do
+        result = subject.redeem_for(student, nil, group_name)
+        expect(result.group_assignment_repo).to be_nil
+      end
+
+      it "changes the invite status to accepted" do
+        subject.redeem_for(student, nil, group_name)
+        expect(subject.status(Group.all.first).accepted?).to be_truthy
+      end
     end
   end
 

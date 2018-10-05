@@ -5,7 +5,7 @@ class GroupAssignmentInvitation < ApplicationRecord
 
   default_scope { where(deleted_at: nil) }
 
-  update_index("stafftools#group_assignment_invitation") { self }
+  update_index("group_assignment_invitation#group_assignment_invitation") { self }
 
   belongs_to :group_assignment
 
@@ -27,6 +27,8 @@ class GroupAssignmentInvitation < ApplicationRecord
   delegate :title, to: :group_assignment
 
   def redeem_for(invitee, selected_group = nil, new_group_title = nil)
+    return Result.failed("Invitations for this assignment have been disabled.") unless enabled?
+
     repo_access    = RepoAccess.find_or_create_by!(user: invitee, organization: organization)
     invitees_group = group(repo_access, selected_group, new_group_title)
 
@@ -58,8 +60,6 @@ class GroupAssignmentInvitation < ApplicationRecord
 
   private
 
-  # Internal
-  #
   def group(repo_access, selected_group, selected_group_title)
     group = Group.joins(:repo_accesses).find_by(grouping: grouping, repo_accesses: { id: repo_access.id })
 
@@ -69,14 +69,22 @@ class GroupAssignmentInvitation < ApplicationRecord
     Group.create(title: selected_group_title, grouping: grouping)
   end
 
-  # Internal
-  #
+  # rubocop:disable MethodLength
   def group_assignment_repo(invitees_group)
     group_assignment_params = { group_assignment: group_assignment, group: invitees_group }
     repo                    = GroupAssignmentRepo.find_by(group_assignment_params)
 
-    return repo if repo
+    return Result.success(repo) if repo
 
-    GroupAssignmentRepo.create(group_assignment_params)
+    if organization.feature_enabled?(:group_import_resiliency)
+      invite_status = status(invitees_group)
+      invite_status.accepted! if invite_status.unaccepted?
+      return Result.pending
+    else
+      repo = GroupAssignmentRepo.create(group_assignment_params)
+      return Result.success(repo) if repo
+      Result.failed("An error has occurred, please refresh the page and try again.")
+    end
   end
+  # rubocop:enable MethodLength
 end

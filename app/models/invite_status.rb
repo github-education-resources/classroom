@@ -3,6 +3,7 @@
 class InviteStatus < ApplicationRecord
   ERRORED_STATUSES = %w[errored_creating_repo errored_importing_starter_code].freeze
   SETUP_STATUSES = %w[accepted waiting creating_repo importing_starter_code].freeze
+  LOCKED_STATUSES = %w[waiting creating_repo importing_starter_code].freeze
 
   belongs_to :assignment_invitation
   belongs_to :user

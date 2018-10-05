@@ -14,7 +14,7 @@ gem "autoprefixer-rails", "~> 7.1", ">= 7.1.3"
 
 gem "bootsnap", "~> 1.1", ">= 1.1.2", require: false
 
-gem "chewy", "~> 0.10.1"
+gem "chewy", "~> 5.0.0"
 gem "connection_pool", "~> 2.2", ">= 2.2.1"
 
 gem "dalli", "~> 2.7", ">= 2.7.6"
@@ -38,6 +38,7 @@ gem "local_time", "~> 2.0"
 
 gem "octicons_helper", "~> 2.1"
 gem "octokit", github: "octokit/octokit.rb", ref: "ffae5ddd6fd9da6f4538ca7adeb5d1768011610b"
+gem "octopoller",      "~> 0.1"
 gem "omniauth",        "~> 1.6", ">= 1.6.1"
 gem "omniauth-github", "~> 1.3"
 
@@ -54,6 +55,7 @@ gem "pry-rails",            "~> 0.3.6"
 gem "puma",                 "~> 3.10"
 
 gem "rack-canonical-host", "~> 0.2.3"
+gem "rack-rewrite",        "~> 1.5.0"
 gem "rack-timeout",        "~> 0.4.2", require: false
 gem "rails-i18n",          "~> 5.0", ">= 5.0.1"
 gem "redis-namespace",     "~> 1.5", ">= 1.5.3"

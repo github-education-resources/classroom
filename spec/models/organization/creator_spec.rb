@@ -7,7 +7,7 @@ RSpec.describe Organization::Creator, type: :model do
   let(:user)                   { classroom_teacher                           }
 
   after(:each) do
-    @organization.try(:destroy)
+    Organization.find_each(&:destroy)
   end
 
   describe "::perform", :vcr do
@@ -17,6 +17,8 @@ RSpec.describe Organization::Creator, type: :model do
 
         expect(result.success?).to be_truthy
         expect(result.organization.github_id).to eql(github_organization_id)
+        expect(result.organization.webhook_id).to_not be_nil
+        expect(result.organization.github_global_relay_id).to_not be_nil
       end
 
       it "sends an event to statd" do
