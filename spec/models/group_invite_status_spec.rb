@@ -14,6 +14,8 @@ RSpec.describe GroupInviteStatus, type: :model do
       subject.create(group: group, group_assignment_invitation: invitation)
     end
 
+    # TODO: make Group factory so we can make GroupInviteStatus factory to test SetupStatus behavior with:
+    # it_behaves_like 'setup_status'
     it "has a default status of unaccepted" do
       expect(invite_status.unaccepted?).to be_truthy
     end
@@ -49,6 +51,52 @@ RSpec.describe GroupInviteStatus, type: :model do
       it "is setting_up? when errored_importing_starter_code?" do
         invite_status.importing_starter_code!
         expect(invite_status.setting_up?).to be_truthy
+      end
+    end
+
+    describe "#unlock_if_locked!" do
+      SetupStatus::LOCKED_STATUSES.each do |locked_status|
+        context "locked status: #{locked_status}" do
+          before do
+            model.update(status: locked_status)
+          end
+
+          context "when updated over 0 hours ago" do
+            it "returns true" do
+              expect(model.unlock_if_locked!).to eq(true)
+            end
+
+            it "updates the status to unaccepted" do
+              model.unlock_if_locked!
+              expect(model.unaccepted?).to be_truthy
+            end
+          end
+
+          context "when updated over 1 hours ago" do
+            let(:time) { 1.hour }
+
+            it "returns true" do
+              expect(model.unlock_if_locked!(time)).to eq(true)
+            end
+
+            it "updates the status to unaccepted" do
+              model.unlock_if_locked!(time)
+              expect(model.unaccepted?).to be_truthy
+            end
+          end
+        end
+      end
+
+      (InviteStatus.statuses.keys - SetupStatus::LOCKED_STATUSES).each do |unlocked_status|
+        context "unlocked status: #{unlocked_status}" do
+          before do
+            model.update(status: unlocked_status)
+          end
+
+          it "returns false" do
+            expect(model.unlock_if_locked!).to eq(false)
+          end
+        end
       end
     end
 
