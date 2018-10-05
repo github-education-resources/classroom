@@ -42,4 +42,6 @@ describe UnlockInviteStatusesService do
       end
     end
   end
+
+  describe "#unlock_invite_statuses" # TODO
 end
