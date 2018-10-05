@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
-shared_examples_for 'setup_status' do
+shared_examples_for "setup_status" do
   let(:model) { create(described_class.to_s.underscore) }
 
   it "has a default status of unaccepted" do
@@ -47,7 +47,7 @@ shared_examples_for 'setup_status' do
     SetupStatus::LOCKED_STATUSES.each do |locked_status|
       context "locked status: #{locked_status}" do
         before do
-          model.update(status: locked_status)
+          model.update!(status: locked_status)
         end
 
         context "when updated over 0 hours ago" do
@@ -64,13 +64,8 @@ shared_examples_for 'setup_status' do
         context "when updated over 1 hours ago" do
           let(:time) { 1.hour }
 
-          it "returns true" do
-            expect(model.unlock_if_locked!(time)).to eq(true)
-          end
-
-          it "updates the status to unaccepted" do
-            model.unlock_if_locked!(time)
-            expect(model.unaccepted?).to be_truthy
+          it "returns false" do
+            expect(model.unlock_if_locked!(elapsed_locked_time: time)).to eq(false)
           end
         end
       end

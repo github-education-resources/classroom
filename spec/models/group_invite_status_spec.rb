@@ -2,11 +2,11 @@
 
 require "rails_helper"
 
-RSpec.describe GroupInviteStatus, type: :model do
+RSpec.describe GroupInviteStatus, type: :invite_status do
   subject { GroupInviteStatus }
   let(:organization) { classroom_org }
   let(:grouping)     { create(:grouping, organization: organization) }
-  let(:group)        { Group.create(grouping: grouping, title: "Octokittens Team") }
+  let(:group)        { Group.create(grouping: grouping, title: "#{Faker::Company.name} Team") }
   let(:invitation)   { create(:group_assignment_invitation) }
 
   describe "valid", :vcr do
@@ -16,6 +16,7 @@ RSpec.describe GroupInviteStatus, type: :model do
 
     # TODO: make Group factory so we can make GroupInviteStatus factory to test SetupStatus behavior with:
     # it_behaves_like 'setup_status'
+
     it "has a default status of unaccepted" do
       expect(invite_status.unaccepted?).to be_truthy
     end
@@ -58,30 +59,25 @@ RSpec.describe GroupInviteStatus, type: :model do
       SetupStatus::LOCKED_STATUSES.each do |locked_status|
         context "locked status: #{locked_status}" do
           before do
-            model.update(status: locked_status)
+            invite_status.update(status: locked_status)
           end
 
           context "when updated over 0 hours ago" do
             it "returns true" do
-              expect(model.unlock_if_locked!).to eq(true)
+              expect(invite_status.unlock_if_locked!).to eq(true)
             end
 
             it "updates the status to unaccepted" do
-              model.unlock_if_locked!
-              expect(model.unaccepted?).to be_truthy
+              invite_status.unlock_if_locked!
+              expect(invite_status.unaccepted?).to be_truthy
             end
           end
 
           context "when updated over 1 hours ago" do
             let(:time) { 1.hour }
 
-            it "returns true" do
-              expect(model.unlock_if_locked!(time)).to eq(true)
-            end
-
-            it "updates the status to unaccepted" do
-              model.unlock_if_locked!(time)
-              expect(model.unaccepted?).to be_truthy
+            it "returns false" do
+              expect(invite_status.unlock_if_locked!(elapsed_locked_time: time)).to eq(false)
             end
           end
         end
@@ -90,11 +86,11 @@ RSpec.describe GroupInviteStatus, type: :model do
       (InviteStatus.statuses.keys - SetupStatus::LOCKED_STATUSES).each do |unlocked_status|
         context "unlocked status: #{unlocked_status}" do
           before do
-            model.update(status: unlocked_status)
+            invite_status.update(status: unlocked_status)
           end
 
           it "returns false" do
-            expect(model.unlock_if_locked!).to eq(false)
+            expect(invite_status.unlock_if_locked!).to eq(false)
           end
         end
       end
