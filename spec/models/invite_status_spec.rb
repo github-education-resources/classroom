@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require Rails.root.join "spec/models/concerns/setup_status_spec.rb"
+require Rails.root.join("spec", "models", "concerns", "setup_status_spec.rb")
 
 RSpec.describe InviteStatus, type: :model do
   let(:invitation)    { create(:assignment_invitation) }
