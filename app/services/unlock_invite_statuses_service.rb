@@ -8,7 +8,9 @@ module UnlockInviteStatusesService
     stat_map = create_stat_map
     each_invite_status do |invite_status_model, invite_status|
       model_name = invite_status_model.to_s.underscore
-      invite_status.unlock_if_locked!(TIME) do |old_status|
+      old_status = invite_status.status
+      last_updated_at = invite_status.updated_at
+      if invite_status.unlock_if_locked!(elapsed_locked_time: TIME)
         stat_map[model_name][old_status] += 1
         stat_map["total_#{model_name.pluralize}"] += 1
       end
