@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # rubocop:disable Rails/SkipsModelValidations
 # rubocop:disable Metrics/BlockLength
 
