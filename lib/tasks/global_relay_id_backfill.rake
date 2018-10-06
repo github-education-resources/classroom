@@ -1,7 +1,8 @@
 # frozen_string_literal: true
+# rubocop:disable Rails/SkipsModelValidations
+# rubocop:disable Metrics/BlockLength
 
 task global_relay_id_backfill: :environment do
-
   puts "Backfilling Global Relay ID's to Users, Orgs, AssignmentRepos, and GroupAssignmentRepos."
 
   users_updated = 0
@@ -54,6 +55,9 @@ task global_relay_id_backfill: :environment do
   puts "#{assignment_repos_updated} assignment repos"
   puts "#{group_assignment_repos_updated} group assignment repos"
 end
+
+# rubocop:enable Rails/SkipsModelValidations
+# rubocop:enable Metrics/BlockLength
 
 def generate_gid(type, id)
   Base64.strict_encode64(["0", type.length, ":", type, id.to_s].join)
