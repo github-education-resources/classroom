@@ -5,6 +5,8 @@ module UnlockInviteStatusesService
   TIME = 1.hour
 
   class << self
+    # rubocop:disable MethodLength
+    # rubocop:disable AbcSize
     def unlock_invite_statuses
       stat_map = create_stat_map
       each_invite_status do |invite_status_model, invite_status|
@@ -14,20 +16,12 @@ module UnlockInviteStatusesService
         next unless invite_status.unlock_if_locked!(elapsed_locked_time: TIME)
         stat_map[model_name][old_status] += 1
         stat_map["total_#{model_name.pluralize}"] += 1
-        begin
-          raise "A #{model_name} was locked for too long and needed to be unlocked"
-        rescue => error
-          other_context = {
-            model_name: model_name,
-            old_status: old_status,
-            last_updated_at: last_updated_at
-          }
-          other_context[model_name] = invite_status
-          Failbot.report!(error, other_context)
-        end
+        report_to_failbot(model_name, old_status, last_updated_at, invite_status)
       end
       stat_map
     end
+    # rubocop:enable MethodLength
+    # rubocop:enable AbcSize
 
     private
 
@@ -54,6 +48,17 @@ module UnlockInviteStatusesService
             end
           end
       end
+    end
+
+    def report_to_failbot(model_name, old_status, last_updated_at, invite_status)
+      raise "An #{model_name} was locked for too long and needed to be unlocked"
+    rescue => error
+      other_context = {
+        old_status: old_status,
+        last_updated_at: last_updated_at
+      }
+      other_context[model_name.to_sym] = invite_status
+      Failbot.report!(error, other_context)
     end
   end
 end
