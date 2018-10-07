@@ -1,6 +1,8 @@
 <%= render 'organizations/organization_invitation_banner' %>
 
 <%= hidden_field_tag "group_assignment_setup" %>
+<%= hidden_field_tag 'group_id', group.id %>
+<%= hidden_field_tag 'group_assignment_id', group_assignment.id %>
 
 <div id="flash-messages" class="flash-messages"></div>
 
@@ -11,9 +13,6 @@
     </h2>
   </div>
 </div>
-
-<%= hidden_field_tag 'group_id', group.id %>
-<%= hidden_field_tag 'group_assignment_id', group_assignment.id %>
 
 <div class="site-content-body ">
   <div class="d-flex flex-justify-between group-setup">

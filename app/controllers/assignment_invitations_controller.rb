@@ -150,6 +150,11 @@ class AssignmentInvitationsController < ApplicationController
     end
   end
 
+  def assignment
+    @assignment ||= current_invitation.assignment
+  end
+  helper_method :assignment
+
   def current_submission
     @current_submission ||= AssignmentRepo.find_by(assignment: current_assignment, user: current_user)
   end
