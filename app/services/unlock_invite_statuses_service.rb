@@ -11,10 +11,19 @@ module UnlockInviteStatusesService
         model_name = invite_status_model.to_s.underscore
         old_status = invite_status.status
         last_updated_at = invite_status.updated_at
-        if invite_status.unlock_if_locked!(elapsed_locked_time: TIME)
-          stat_map[model_name][old_status] += 1
-          stat_map["total_#{model_name.pluralize}"] += 1
-          # TODO: use last_updated_at with failbot
+        next unless invite_status.unlock_if_locked!(elapsed_locked_time: TIME)
+        stat_map[model_name][old_status] += 1
+        stat_map["total_#{model_name.pluralize}"] += 1
+        begin
+          raise "A #{model_name} was locked for too long and needed to be unlocked"
+        rescue => error
+          other_context = {
+            model_name: model_name,
+            old_status: old_status,
+            last_updated_at: last_updated_at
+          }
+          other_context[model_name] = invite_status
+          Failbot.report!(error, other_context)
         end
       end
       stat_map

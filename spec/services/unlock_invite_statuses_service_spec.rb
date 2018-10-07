@@ -75,5 +75,13 @@ describe UnlockInviteStatusesService do
           "total_group_invite_statuses" => 0
         )
     end
+
+    it "reports each unlocked invite_status to FailBot" do
+      locked_invite_statuses = @invite_statuses.select(&:locked?)
+      locked_invite_statuses.map(&:reload).each do |invite_status|
+        expect(Failbot).to receive(:report!)
+      end
+      described_class.unlock_invite_statuses
+    end
   end
 end
