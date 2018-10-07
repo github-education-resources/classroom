@@ -76,12 +76,28 @@ describe UnlockInviteStatusesService do
         )
     end
 
-    it "reports each unlocked invite_status to FailBot" do
+    it "invokes #report_to_failbot for each unlocked invite_status" do
       locked_invite_statuses = @invite_statuses.select(&:locked?)
-      locked_invite_statuses.map(&:reload).each do |invite_status|
-        expect(Failbot).to receive(:report!)
+      locked_invite_statuses.map(&:reload).each do
+        expect(described_class)
+          .to receive(:report_to_failbot)
       end
       described_class.unlock_invite_statuses
+    end
+  end
+
+  describe "#report_to_failbot" do
+    let(:invite_status) { create(:invite_status) }
+    it "reports a detailed error with context to failbot" do
+      expect(Failbot)
+        .to receive(:report!)
+      described_class.send(
+        :report_to_failbot,
+        InviteStatus.to_s.underscore,
+        "unaccepted",
+        invite_status.updated_at,
+        invite_status
+      )
     end
   end
 end
