@@ -5,6 +5,10 @@ module UnlockInviteStatusesService
   TIME = 1.hour
 
   class << self
+    # Unlocks `InviteStatus` and `GroupInviteStatus` records that have been locked (stuck) for more than `TIME`.
+    # This service sets locked statuses to the "unaccepted" status.
+    # Reports any unlocked statuses to Failbot.
+    #
     # rubocop:disable MethodLength
     def unlock_invite_statuses
       stat_map = create_stat_map
