@@ -23,11 +23,12 @@ class AssignmentRepo
 
       broadcast_message(
         message: CREATE_REPO,
+        assignment: assignment,
         user: user,
         invite_status: invite_status,
         status_text: CREATE_REPO.chomp(".")
       )
-      assignment_repo = create_assignment_repo(assignment, user)
+      create_assignment_repo(assignment, user)
       report_time(start)
 
       GitHubClassroom.statsd.increment("v2_exercise_repo.create.success")
@@ -35,6 +36,7 @@ class AssignmentRepo
         invite_status.importing_starter_code!
         broadcast_message(
           message: IMPORT_STARTER_CODE,
+          assignment: assignment,
           user: user,
           invite_status: invite_status,
           status_text: "Import started"
@@ -44,6 +46,7 @@ class AssignmentRepo
         invite_status.completed!
         broadcast_message(
           message: Creator::REPOSITORY_CREATION_COMPLETE,
+          assignment: assignment,
           user: user,
           invite_status: invite_status,
           status_text: "Completed"
@@ -102,6 +105,7 @@ class AssignmentRepo
         broadcast_message(
           type: :error,
           message: err,
+          assignment: assignment,
           user: user,
           invite_status: invite_status,
           status_text: "Failed"
@@ -114,14 +118,17 @@ class AssignmentRepo
     # Broadcasts a ActionCable message with a status to the given user
     #
     # rubocop:disable ParameterLists
-    def broadcast_message(type: :text, message:, user:, invite_status:, status_text:)
+    def broadcast_message(type: :text, message:, assignment:, user:, invite_status:, status_text:)
       raise ArgumentError unless %i[text error].include?(type)
       broadcast_args = {
         status: invite_status.status,
         status_text: status_text
       }
       broadcast_args[type] = message
-      ActionCable.server.broadcast(RepositoryCreationStatusChannel.channel(user_id: user.id), broadcast_args)
+      ActionCable.server.broadcast(
+        RepositoryCreationStatusChannel.channel(user_id: user.id, assignment_id: assignment.id),
+        broadcast_args
+      )
     end
     # rubocop:enable ParameterLists
 
