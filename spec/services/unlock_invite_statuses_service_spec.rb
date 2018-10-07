@@ -44,8 +44,11 @@ describe UnlockInviteStatusesService do
   end
 
   describe "#unlock_invite_statuses" do
-    before do
+    before(:all) do
       described_class::TIME = 0.hours
+    end
+
+    before do
       @invite_statuses = InviteStatus.statuses.keys.map { |status| create(:invite_status, status: status) }
     end
 
