@@ -89,6 +89,10 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       it "has the same user" do
         expect(assignment_repo.user).to eql(student)
       end
+
+      it "has a github_global_relay_id" do
+        expect(assignment_repo.github_global_relay_id).to_not be_nil
+      end
     end
 
     context "creates an AssignmentRepo as a member" do
@@ -108,6 +112,10 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
       it "has the same user" do
         expect(assignment_repo.user).to eql(teacher)
+      end
+
+      it "has a github_global_relay_id" do
+        expect(assignment_repo.github_global_relay_id).to_not be_nil
       end
     end
 
