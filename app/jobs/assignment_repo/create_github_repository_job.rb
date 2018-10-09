@@ -73,6 +73,7 @@ class AssignmentRepo
 
       assignment_repo = assignment.assignment_repos.build(
         github_repo_id: github_repository.id,
+        github_global_relay_id: github_repository.node_id,
         user: user
       )
       creator.add_user_to_repository!(assignment_repo.github_repo_id)
