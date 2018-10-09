@@ -27,7 +27,7 @@
         </div>
       </div>
 
-      <% if download_repositories_enabled? %>
+      <% if download_repositories_enabled? && @group_assignment_repos.present? %>
         <%= render partial: 'shared/open_on_assistant_modal', locals: {
           assistant_url: assistant_organization_group_assignment_url
         } %>
