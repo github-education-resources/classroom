@@ -90,6 +90,30 @@ class Organization
     # rubocop:enable AbcSize
     # rubocop:enable MethodLength
 
+    # Public: Get the proper webhook url prefix
+    #
+    # Rails.env.production?
+    # # => true
+    #
+    # webhook_url
+    # # => "https://classroom.github.com"
+    #
+    # Returns a String for the url or raises a Result::Error
+    def self.webhook_url
+      webhook_url_prefix = ENV["CLASSROOM_WEBHOOK_URL_PREFIX"]
+
+      error_message = if Rails.env.production?
+                        "WebHook failed to be created, please open an issue at https://github.com/education/classroom/issues/new" # rubocop:disable Metrics/LineLength
+                      else
+                        "CLASSROOM_WEBHOOK_URL_PREFIX is not set, please check your .env file"
+                      end
+
+      hooks_path = Rails.application.routes.url_helpers.github_hooks_path
+      return "#{webhook_url_prefix}#{hooks_path}" if webhook_url_prefix.present?
+
+      raise Result::Error, error_message
+    end
+
     private
 
     # Internal: Create an GitHub Organization WebHook if there
@@ -101,7 +125,7 @@ class Organization
 
       begin
         github_organization = GitHubOrganization.new(user.github_client, github_id)
-        webhook = github_organization.create_organization_webhook(config: { url: webhook_url })
+        webhook = github_organization.create_organization_webhook(config: { url: Creator.webhook_url })
 
         return webhook.id if webhook.try(:id).present?
         raise GitHub::Error
@@ -197,30 +221,6 @@ class Organization
       end
 
       @users_with_scope.sample
-    end
-
-    # Internal: Get the proper webhook url prefix
-    #
-    # Rails.env.production?
-    # # => true
-    #
-    # webhook_url
-    # # => "https://classroom.github.com"
-    #
-    # Returns a String for the url or raises a Result::Error
-    def webhook_url
-      webhook_url_prefix = ENV["CLASSROOM_WEBHOOK_URL_PREFIX"]
-
-      error_message = if Rails.env.production?
-                        "WebHook failed to be created, please open an issue at https://github.com/education/classroom/issues/new" # rubocop:disable Metrics/LineLength
-                      else
-                        "CLASSROOM_WEBHOOK_URL_PREFIX is not set, please check your .env file"
-                      end
-
-      hooks_path = Rails.application.routes.url_helpers.github_hooks_path
-      return "#{webhook_url_prefix}#{hooks_path}" if webhook_url_prefix.present?
-
-      raise Result::Error, error_message
     end
   end
 end
