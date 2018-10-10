@@ -103,4 +103,73 @@ describe UnlockInviteStatusesService do
       )
     end
   end
+
+  describe "#complete_if_assignment_repo_is_ready", :vcr do
+    let(:organization)  { classroom_org     }
+    let(:user)          { classroom_student }
+
+    context "assignment_repo doesnt exist" do
+      let(:invite_status)   { create(:invite_status) }
+
+      it "returns false if no assignment_repo exists" do
+        expect(described_class.send(:complete_if_assignment_repo_is_ready, invite_status)).to eq(false)
+      end
+    end
+
+
+    context "assignment doesnt have started code" do
+      let(:invitation)      { create(:assignment_invitation, organization: organization) }
+      let(:assignment_repo) { create(:assignment_repo, user: user, assignment: invitation.assignment, github_repo_id: 8485) }
+      let(:invite_status)   { create(:invite_status, user: user, assignment_invitation: invitation) }
+
+      before do
+        assignment_repo
+      end
+
+      it "returns true if the assignment repo exists" do
+        expect(described_class.send(:complete_if_assignment_repo_is_ready, invite_status)).to eq(true)
+      end
+
+      it "makes the invite_status completed if the assignment repo exists" do
+        described_class.send(:complete_if_assignment_repo_is_ready, invite_status)
+        expect(invite_status.reload.completed?).to eq(true)
+      end
+    end
+
+    context "assignment has started code" do
+      let(:assignment) do
+        create(:assignment, starter_code_repo_id: 1_062_897, organization: organization)
+      end
+      let(:invitation)      { create(:assignment_invitation, assignment: assignment) }
+      let(:assignment_repo) { create(:assignment_repo, user: user, assignment: assignment, github_repo_id: 8485) }
+      let(:invite_status)   { create(:invite_status, user: user, assignment_invitation: invitation) }
+
+      context "import finished" do
+        before do
+          expect_any_instance_of(GitHubRepository).to receive(:imported?).and_return(true)
+          assignment_repo
+        end
+
+        it "returns true" do
+          expect(described_class.send(:complete_if_assignment_repo_is_ready, invite_status)).to eq(true)
+        end
+
+        it "makes the invite_status completed" do
+          described_class.send(:complete_if_assignment_repo_is_ready, invite_status)
+          expect(invite_status.reload.completed?).to eq(true)
+        end
+      end
+
+      context "import isn't finished" do
+        before do
+          expect_any_instance_of(GitHubRepository).to receive(:imported?).and_return(true)
+          assignment_repo
+        end
+
+        it "returns false" do
+          expect(described_class.send(:complete_if_assignment_repo_is_ready, invite_status)).to eq(true)
+        end
+      end
+    end
+  end
 end
