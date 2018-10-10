@@ -93,9 +93,10 @@ module UnlockInviteStatusesService
 
     def complete_if_group_assignment_repo_is_ready(group_invite_status)
       group = group_invite_status.group
-      group_assignment = group_invite_status.group_assignment
+      group_assignment = group_invite_status.group_assignment_invitation.group_assignment
       group_assignment_repo = GroupAssignmentRepo.find_by(group_assignment: group_assignment, group: group)
       return false unless group_assignment_repo
+      binding.pry
       if group_assignment.starter_code?
         if group_assignment_repo&.github_repository.imported?
           group_invite_status.completed!

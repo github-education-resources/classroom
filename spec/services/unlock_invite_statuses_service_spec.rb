@@ -172,4 +172,106 @@ describe UnlockInviteStatusesService do
       end
     end
   end
+
+  describe "#complete_if_group_assignment_repo_is_ready", :vcr do
+    let(:organization)  { classroom_org     }
+    let(:user)          { classroom_student }
+
+    context "group_assignment_repo doesnt exist" do
+      let(:group_assignment) { create(:group_assignment, organization: organization) }
+      let(:grouping)   { group_assignment.grouping }
+      let(:group_name) { "#{Faker::Company.name} Team" }
+      let(:group) do
+        group = Group.create(grouping: grouping, title: group_name)
+        group.repo_accesses << RepoAccess.create(user: user, organization: organization)
+        group
+      end
+      let(:invitation)    { create(:group_assignment_invitation, group_assignment: group_assignment) }
+      let(:invite_status) { invitation.status(group) }
+
+      it "returns false if no group_assignment_repo exists" do
+        expect(described_class.send(:complete_if_group_assignment_repo_is_ready, invite_status)).to eq(false)
+      end
+    end
+
+
+    context "assignment doesnt have started code" do
+      let(:group_assignment) do
+       create(
+          :group_assignment,
+          organization: organization,
+          title: "HTML5"
+        )
+      end
+      let(:grouping)   { group_assignment.grouping }
+      let(:group_name) { "#{Faker::Company.name} Team" }
+      let(:group) do
+        group = Group.create(grouping: grouping, title: group_name)
+        group.repo_accesses << RepoAccess.create(user: user, organization: organization)
+        group
+      end
+      let(:invitation)    { create(:group_assignment_invitation, group_assignment: group_assignment) }
+      let(:invite_status) { invitation.status(group) }
+
+      before do
+        GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
+      end
+
+      it "returns true if the assignment repo exists" do
+        expect(described_class.send(:complete_if_group_assignment_repo_is_ready, invite_status)).to eq(true)
+      end
+
+      it "makes the invite_status completed if the assignment repo exists" do
+        described_class.send(:complete_if_group_assignment_repo_is_ready, invite_status)
+        expect(invite_status.reload.completed?).to eq(true)
+      end
+    end
+
+    context "assignment has started code" do
+      let(:group_assignment) do
+       create(
+          :group_assignment,
+          starter_code_repo_id: 1_062_897,
+          organization: organization,
+          title: "HTML5"
+        )
+      end
+      let(:grouping)   { group_assignment.grouping }
+      let(:group_name) { "#{Faker::Company.name} Team" }
+      let(:group) do
+        group = Group.create(grouping: grouping, title: group_name)
+        group.repo_accesses << RepoAccess.create(user: user, organization: organization)
+        group
+      end
+      let(:invitation)    { create(:group_assignment_invitation, group_assignment: group_assignment) }
+      let(:invite_status) { invitation.status(group) }
+
+      context "import finished" do
+        before do
+          expect_any_instance_of(GitHubRepository).to receive(:imported?).and_return(true)
+          GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
+        end
+
+        it "returns true" do
+          expect(described_class.send(:complete_if_group_assignment_repo_is_ready, invite_status)).to eq(true)
+        end
+
+        it "makes the invite_status completed" do
+          described_class.send(:complete_if_group_assignment_repo_is_ready, invite_status)
+          expect(invite_status.reload.completed?).to eq(true)
+        end
+      end
+
+      context "import isn't finished" do
+        before do
+          expect_any_instance_of(GitHubRepository).to receive(:imported?).and_return(true)
+          GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
+        end
+
+        it "returns false" do
+          expect(described_class.send(:complete_if_group_assignment_repo_is_ready, invite_status)).to eq(true)
+        end
+      end
+    end
+  end
 end
