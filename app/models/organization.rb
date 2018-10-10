@@ -56,13 +56,39 @@ class Organization < ApplicationRecord
     users.count == 1
   end
 
+  def organization_webhook_active?
+    return false if webhook_id.nil?
+
+    begin
+      github_client.org_hook(github_id, webhook_id).active
+    rescue Octokit::NotFound
+      false
+    end
+  end
+
+  def create_organization_webhook
+    webhook_url_prefix = ENV["CLASSROOM_WEBHOOK_URL_PREFIX"]
+    hooks_path = Rails.application.routes.url_helpers.github_hooks_path
+    config = { url: "#{webhook_url_prefix}#{hooks_path}" }
+
+    result = github_organization.create_organization_webhook(config: config)
+    update!(webhook_id: result.id)
+  end
+
+  def ensure_organization_webhook
+    return if organization_webhook_active?
+
+    silently_remove_organization_webhook if webhook_id.present?
+    update!(webhook_id: nil, is_webhook_active: false)
+    create_organization_webhook
+  end
+
   def silently_remove_organization_webhook
     begin
       github_organization.remove_organization_webhook(webhook_id)
     rescue GitHub::Error => err
       logger.info err.message
     end
-
     true
   end
 end

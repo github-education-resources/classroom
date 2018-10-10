@@ -46,6 +46,32 @@ RSpec.describe Organization, type: :model do
     end
   end
 
+  describe "#organization_webhook_active?" do
+    context "webhook does not exist" do
+      before { subject.webhook_id = nil }
+
+      it "returns false" do
+        expect(subject.organization_webhook_active?).to be(false)
+      end
+    end
+
+    context "webhook exists" do
+      before { subject.webhook_id = 1234 }
+
+      context "webhook is inactive", :vcr do
+        it "returns false" do
+          expect(subject.organization_webhook_active?).to be(false)
+        end
+      end
+
+      context "webhook is active", :vcr do
+        it "returns true" do
+          expect(subject.organization_webhook_active?).to be(true)
+        end
+      end
+    end
+  end
+
   describe "#flipper_id" do
     it "should return an id" do
       expect(subject.flipper_id).to eq("Organization:#{subject.id}")
