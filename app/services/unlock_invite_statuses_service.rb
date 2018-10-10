@@ -16,6 +16,7 @@ module UnlockInviteStatusesService
         model_name = invite_status_model.to_s.underscore
         old_status = invite_status.status
         last_updated_at = invite_status.updated_at
+        next if change_to_success_if_complete(invite_status_model, invite_status)
         next unless invite_status.unlock_if_locked!(elapsed_locked_time: TIME)
         stat_map[model_name][old_status] += 1
         stat_map["total_#{model_name.pluralize}"] += 1
@@ -61,6 +62,49 @@ module UnlockInviteStatusesService
       }
       other_context[model_name.to_sym] = invite_status
       Failbot.report!(error, other_context)
+    end
+
+    def change_to_success_if_complete(model, invite_status)
+      case model
+      when InviteStatus
+        complete_if_assignment_repo_is_ready(invite_status)
+      when GroupInviteStatus
+        complete_if_group_assignment_repo_is_ready(invite_status)
+      end
+    end
+
+    def complete_if_assignment_repo_is_ready(invite_status)
+      user = invite_status.user
+      assignment = invite_status.assignment_invitation.assignment
+      assignment_repo = AssignmentRepo.find_by(user: user, assignment: assignment)
+      if assignment.starter_code?
+        if assignment_repo.github_repo.imported?
+          invite_status.completed!
+          return true
+        else
+          return false
+        end
+      else
+        invite_status.completed!
+        return true
+      end
+    end
+
+    def complete_if_group_assignment_repo_is_ready(group_invite_status)
+      group = group_invite_status.group
+      group_assignment = group_invite_status.group_assignment
+      group_assignment_repo = GroupAssignmentRepo.find_by(group_assignment: group_assignment, group: group)
+      if group_assignment.starter_code?
+        if group_assignment_repo.github_repo.imported?
+          group_invite_status.completed!
+          return true
+        else
+          return false
+        end
+      else
+        group_invite_status.completed!
+        return true
+      end
     end
   end
 end
