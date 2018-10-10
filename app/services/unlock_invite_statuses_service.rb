@@ -80,7 +80,12 @@ module UnlockInviteStatusesService
       assignment_repo = AssignmentRepo.find_by(user: user, assignment: assignment)
       return false unless assignment_repo
       if assignment.starter_code?
-        if assignment_repo&.github_repository&.imported?
+        begin
+          imported = assignment_repo&.github_repository&.imported?
+        rescue GitHub::Error
+          imported = false
+        end
+        if imported
           invite_status.completed!
           true
         else
