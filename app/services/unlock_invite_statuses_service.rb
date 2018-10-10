@@ -78,8 +78,8 @@ module UnlockInviteStatusesService
       assignment = invite_status.assignment_invitation.assignment
       assignment_repo = AssignmentRepo.find_by(user: user, assignment: assignment)
       return false unless assignment_repo
-      if assignment&.starter_code?
-        if assignment_repo.github_repository.imported?
+      if assignment.starter_code?
+        if assignment_repo&.github_repository.imported?
           invite_status.completed!
           true
         else
@@ -95,16 +95,17 @@ module UnlockInviteStatusesService
       group = group_invite_status.group
       group_assignment = group_invite_status.group_assignment
       group_assignment_repo = GroupAssignmentRepo.find_by(group_assignment: group_assignment, group: group)
+      return false unless group_assignment_repo
       if group_assignment.starter_code?
-        if group_assignment_repo.github_repository.imported?
+        if group_assignment_repo&.github_repository.imported?
           group_invite_status.completed!
-          return true
+          true
         else
-          return false
+          false
         end
       else
         group_invite_status.completed!
-        return true
+        true
       end
     end
   end
