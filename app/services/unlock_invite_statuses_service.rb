@@ -79,10 +79,12 @@ module UnlockInviteStatusesService
       assignment = invite_status.assignment_invitation.assignment
       assignment_repo = AssignmentRepo.find_by(user: user, assignment: assignment)
       return false unless assignment_repo
+      github_repository = assignment_repo.github_repository
+      return false if github_repository.is_a?(NullGitHubRepository)
       if assignment.starter_code?
         begin
-          imported = assignment_repo&.github_repository&.imported?
-        rescue GitHub::Error
+          imported = github_repository.imported?
+        rescue GitHub::Forbidden, GitHub::NotFound
           imported = false
         end
         if imported
@@ -104,8 +106,15 @@ module UnlockInviteStatusesService
       group_assignment = group_invite_status.group_assignment_invitation.group_assignment
       group_assignment_repo = GroupAssignmentRepo.find_by(group_assignment: group_assignment, group: group)
       return false unless group_assignment_repo
+      github_repository = group_assignment_repo.github_repository
+      return false if github_repository.is_a?(NullGitHubRepository)
       if group_assignment.starter_code?
-        if group_assignment_repo&.github_repository&.imported?
+        begin
+          imported = github_repository.imported?
+        rescue GitHub::Forbidden, GitHub::NotFound
+          imported = false
+        end
+        if imported
           group_invite_status.completed!
           true
         else
