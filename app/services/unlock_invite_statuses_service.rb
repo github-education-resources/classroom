@@ -65,21 +65,22 @@ module UnlockInviteStatusesService
     end
 
     def change_to_success_if_complete(model, invite_status)
-      case model
-      when InviteStatus
+      case model.to_s
+      when InviteStatus.to_s
         complete_if_assignment_repo_is_ready(invite_status)
-      when GroupInviteStatus
+      when GroupInviteStatus.to_s
         complete_if_group_assignment_repo_is_ready(invite_status)
       end
     end
 
+    # rubocop:disable MethodLength
     def complete_if_assignment_repo_is_ready(invite_status)
       user = invite_status.user
       assignment = invite_status.assignment_invitation.assignment
       assignment_repo = AssignmentRepo.find_by(user: user, assignment: assignment)
       return false unless assignment_repo
       if assignment.starter_code?
-        if assignment_repo&.github_repository.imported?
+        if assignment_repo&.github_repository&.imported?
           invite_status.completed!
           true
         else
@@ -90,15 +91,16 @@ module UnlockInviteStatusesService
         true
       end
     end
+    # rubocop:enable MethodLength
 
+    # rubocop:disable MethodLength
     def complete_if_group_assignment_repo_is_ready(group_invite_status)
       group = group_invite_status.group
       group_assignment = group_invite_status.group_assignment_invitation.group_assignment
       group_assignment_repo = GroupAssignmentRepo.find_by(group_assignment: group_assignment, group: group)
       return false unless group_assignment_repo
-      binding.pry
       if group_assignment.starter_code?
-        if group_assignment_repo&.github_repository.imported?
+        if group_assignment_repo&.github_repository&.imported?
           group_invite_status.completed!
           true
         else
@@ -109,5 +111,6 @@ module UnlockInviteStatusesService
         true
       end
     end
+    # rubocop:enable MethodLength
   end
 end

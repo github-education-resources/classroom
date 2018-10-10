@@ -60,6 +60,13 @@ describe UnlockInviteStatusesService do
       end
     end
 
+    it "checks change_to_success_if_complete on every invite status" do
+      locked_invite_statuses = @invite_statuses.select(&:locked?)
+      number_of_times = locked_invite_statuses.map(&:reload).count
+      expect(described_class).to receive(:change_to_success_if_complete).exactly(number_of_times).times
+      described_class.unlock_invite_statuses
+    end
+
     it "returns a stat map with totals of all the locked statuses that were unlocked" do
       stat_map = described_class.unlock_invite_statuses
       expect(stat_map)
@@ -104,23 +111,38 @@ describe UnlockInviteStatusesService do
     end
   end
 
+  describe "#change_to_success_if_complete" do
+    it "calls complete_if_assignment_repo_is_ready if InviteStatus is passed" do
+      expect(described_class)
+        .to receive(:complete_if_assignment_repo_is_ready)
+      described_class.send(:change_to_success_if_complete, InviteStatus, nil)
+    end
+
+    it "calls complete_if_group_assignment_repo_is_ready if GroupInviteStatus is passed" do
+      expect(described_class)
+        .to receive(:complete_if_group_assignment_repo_is_ready)
+      described_class.send(:change_to_success_if_complete, GroupInviteStatus, nil)
+    end
+  end
+
   describe "#complete_if_assignment_repo_is_ready", :vcr do
-    let(:organization)  { classroom_org     }
-    let(:user)          { classroom_student }
+    let(:organization) { classroom_org     }
+    let(:user)         { classroom_student }
 
     context "assignment_repo doesnt exist" do
-      let(:invite_status)   { create(:invite_status) }
+      let(:invite_status) { create(:invite_status) }
 
       it "returns false if no assignment_repo exists" do
         expect(described_class.send(:complete_if_assignment_repo_is_ready, invite_status)).to eq(false)
       end
     end
 
-
     context "assignment doesnt have started code" do
-      let(:invitation)      { create(:assignment_invitation, organization: organization) }
-      let(:assignment_repo) { create(:assignment_repo, user: user, assignment: invitation.assignment, github_repo_id: 8485) }
-      let(:invite_status)   { create(:invite_status, user: user, assignment_invitation: invitation) }
+      let(:invitation)    { create(:assignment_invitation, organization: organization) }
+      let(:invite_status) { create(:invite_status, user: user, assignment_invitation: invitation) }
+      let(:assignment_repo) do
+        create(:assignment_repo, user: user, assignment: invitation.assignment, github_repo_id: 8485)
+      end
 
       before do
         assignment_repo
@@ -140,9 +162,11 @@ describe UnlockInviteStatusesService do
       let(:assignment) do
         create(:assignment, starter_code_repo_id: 1_062_897, organization: organization)
       end
-      let(:invitation)      { create(:assignment_invitation, assignment: assignment) }
-      let(:assignment_repo) { create(:assignment_repo, user: user, assignment: assignment, github_repo_id: 8485) }
-      let(:invite_status)   { create(:invite_status, user: user, assignment_invitation: invitation) }
+      let(:invitation)    { create(:assignment_invitation, assignment: assignment) }
+      let(:invite_status) { create(:invite_status, user: user, assignment_invitation: invitation) }
+      let(:assignment_repo) do
+        create(:assignment_repo, user: user, assignment: assignment, github_repo_id: 8485)
+      end
 
       context "import finished" do
         before do
@@ -194,10 +218,9 @@ describe UnlockInviteStatusesService do
       end
     end
 
-
     context "assignment doesnt have started code" do
       let(:group_assignment) do
-       create(
+        create(
           :group_assignment,
           organization: organization,
           title: "HTML5"
@@ -229,7 +252,7 @@ describe UnlockInviteStatusesService do
 
     context "assignment has started code" do
       let(:group_assignment) do
-       create(
+        create(
           :group_assignment,
           starter_code_repo_id: 1_062_897,
           organization: organization,
