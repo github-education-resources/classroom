@@ -9,6 +9,9 @@ task locked_invite_status_migration: :environment do
       invite_statuses.each do |invite_status|
         time_difference = Time.now.utc - invite_status.updated_at.utc
         if time_difference > 1.hour
+          # if invite complete and webhook was missed
+          #   update to complete state
+          # else 
           puts("=> InviteStatus id: #{invite_status.id} – \"#{invite_status.status}\" => \"unaccepted\"")
           invite_status.unaccepted!
           invite_statuses_touched += 1
