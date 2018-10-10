@@ -56,6 +56,16 @@ class Organization < ApplicationRecord
     users.count == 1
   end
 
+  def organization_webhook_active?
+    return false if webhook_id.nil?
+  
+    begin
+      github_client.org_hook(github_id, webhook_id).active
+    rescue Octokit::NotFound
+      false
+    end
+  end
+
   def silently_remove_organization_webhook
     begin
       github_organization.remove_organization_webhook(webhook_id)
