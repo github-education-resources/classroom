@@ -89,6 +89,10 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       it "has the same user" do
         expect(assignment_repo.user).to eql(student)
       end
+
+      it "has a github_global_relay_id" do
+        expect(assignment_repo.github_global_relay_id).to_not be_nil
+      end
     end
 
     context "creates an AssignmentRepo as a member" do
@@ -109,11 +113,17 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       it "has the same user" do
         expect(assignment_repo.user).to eql(teacher)
       end
+
+      it "has a github_global_relay_id" do
+        expect(assignment_repo.github_global_relay_id).to_not be_nil
+      end
     end
 
     it "broadcasts status on channel" do
       expect { subject.perform_now(assignment, teacher) }
-        .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: teacher.id))
+        .to have_broadcasted_to(
+          RepositoryCreationStatusChannel.channel(user_id: teacher.id, assignment_id: assignment.id)
+        )
         .with(
           text: subject::CREATE_REPO,
           status: "creating_repo",
@@ -153,7 +163,9 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         .to_return(body: "{}", status: 401)
 
       expect { subject.perform_now(assignment, student) }
-        .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
+        .to have_broadcasted_to(
+          RepositoryCreationStatusChannel.channel(user_id: student.id, assignment_id: assignment.id)
+        )
         .with(
           text: subject::CREATE_REPO,
           status: "creating_repo",
@@ -198,7 +210,9 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           .to_return(body: "{}", status: 401)
 
         expect { subject.perform_now(assignment, student) }
-          .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
+          .to have_broadcasted_to(
+            RepositoryCreationStatusChannel.channel(user_id: student.id, assignment_id: assignment.id)
+          )
           .with(
             text: subject::CREATE_REPO,
             status: "creating_repo",
@@ -242,7 +256,9 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           .to_return(body: "{}", status: 401)
 
         expect { subject.perform_now(assignment, student) }
-          .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
+          .to have_broadcasted_to(
+            RepositoryCreationStatusChannel.channel(user_id: student.id, assignment_id: assignment.id)
+          )
           .with(
             text: subject::CREATE_REPO,
             status: "creating_repo",
@@ -284,7 +300,9 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         allow_any_instance_of(AssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
 
         expect { subject.perform_now(assignment, student) }
-          .to have_broadcasted_to(RepositoryCreationStatusChannel.channel(user_id: student.id))
+          .to have_broadcasted_to(
+            RepositoryCreationStatusChannel.channel(user_id: student.id, assignment_id: assignment.id)
+          )
           .with(
             text: subject::CREATE_REPO,
             status: "creating_repo",
