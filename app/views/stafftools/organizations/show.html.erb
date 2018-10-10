@@ -61,6 +61,10 @@
             <td class="text-emphasized"><%= t('views.stafftools.organizations.webhook_enabled_check') %></td>
             <td><%= @organization.is_webhook_active? %></td>
           </tr>
+          <tr>
+            <td class="text-emphasized"><%= t('views.stafftools.organizations.webhook_active_check') %></td>
+            <td><%= @organization.organization_webhook_active? %></td>
+          </tr>
         <% end %>
       </table>
     </div>
