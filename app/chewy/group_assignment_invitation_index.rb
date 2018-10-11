@@ -7,8 +7,7 @@ class GroupAssignmentInvitationIndex < Chewy::Index
     field :created_at
     field :updated_at
 
-    field :group_assignment_title, value: (lambda do |group_assignment_invitation|
-      group_assignment_invitation.group_assignment.title
-    end)
+    field :group_assignment_title,
+      value: ->(group_assignment_invitation) { group_assignment_invitation&.group_assignment&.title }
   end
 end

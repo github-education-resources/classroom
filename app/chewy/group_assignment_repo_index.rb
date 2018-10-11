@@ -7,7 +7,7 @@ class GroupAssignmentRepoIndex < Chewy::Index
     field :created_at
     field :updated_at
 
-    field :group_assignment_title, value: ->(group_assignment_repo) { group_assignment_repo.group_assignment.title }
-    field :group_title,            value: ->(group_assignment_repo) { group_assignment_repo.group.title            }
+    field :group_assignment_title, value: ->(group_assignment_repo) { group_assignment_repo&.group_assignment&.title }
+    field :group_title,            value: ->(group_assignment_repo) { group_assignment_repo&.group&.title            }
   end
 end
