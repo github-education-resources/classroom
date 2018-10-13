@@ -7,6 +7,6 @@ class AssignmentInvitationIndex < Chewy::Index
     field :created_at
     field :updated_at
 
-    field :assignment_title, value: ->(assignment_invitation) { assignment_invitation.assignment.title }
+    field :assignment_title, value: ->(assignment_invitation) { assignment_invitation&.assignment&.title }
   end
 end

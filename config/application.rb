@@ -76,6 +76,21 @@ module GitHubClassroom
           raise "Elasticsearch status is #{status}" unless %w[green yellow].include?(status)
           "ok"
         end
+
+        ping.check :github do
+          uri = URI("https://status.github.com/api/status.json")
+          status = JSON.parse(Net::HTTP.get(uri))["status"]
+          raise "GitHub status is #{status}" unless status == "good"
+          "ok"
+        end
+
+        ping.check :github_api do
+          client = Octokit::Client.new
+          client.rate_limit
+          status = client.last_response.status
+          raise "GitHub API status is #{status}" unless status == 200
+          "ok"
+        end
       end
     end
   end
