@@ -8,6 +8,6 @@ class GroupIndex < Chewy::Index
     field :created_at
     field :updated_at
 
-    field :organization_login, value: ->(group) { group.organization.github_organization.login }
+    field :organization_login, value: ->(group) { group&.organization&.github_organization&.login }
   end
 end
