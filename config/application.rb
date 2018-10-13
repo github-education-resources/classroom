@@ -6,7 +6,7 @@ require "rails/all"
 require "csv"
 require "graphql/client/http"
 require "graphql/client/railtie"
-require 'graphql/batch'
+require "graphql/batch"
 require_relative "../app/graphql/github_classroom_schema"
 
 # Require the gems listed in Gemfile, including any gems
@@ -84,10 +84,13 @@ module GitHubClassroom
     # TODO: Monkeypatch octokit to raise if REST API calls are made during GraphQL query resolution
     def self.execute(document:, operation_name: nil, variables: {}, context: {})
       unless context[:current_user] && context[:current_user].is_a?(::User)
-        raise GitHubClassroomSchema::GraphQLError.new "A current_user must be provided to execute a GraphQL Query"
+        raise GitHubClassroomSchema::GraphQLError, "A current_user must be provided to execute a GraphQL Query"
       end
 
-      GitHubClassroomSchema.execute(document.to_query_string, variables: variables, context: context, operation_name: operation_name)
+      GitHubClassroomSchema.execute(document.to_query_string,
+        variables: variables,
+        context: context,
+        operation_name: operation_name)
     end
   end
 
