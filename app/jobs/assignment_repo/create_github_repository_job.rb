@@ -81,13 +81,13 @@ class AssignmentRepo
 
       assignment_repo.save!
       assignment_repo
-    rescue ActiveRecord::RecordInvalid => err
-      creator.delete_github_repository(assignment_repo.try(:github_repo_id))
-      logger.warn(err.message)
+    rescue ActiveRecord::RecordInvalid => error
+      creator.delete_github_repository(github_repository&.id)
+      logger.warn(error.message)
       raise Creator::Result::Error, Creator::DEFAULT_ERROR_MESSAGE
-    rescue Creator::Result::Error => err
-      creator.delete_github_repository(assignment_repo.try(:github_repo_id))
-      raise err
+    rescue Creator::Result::Error => error
+      creator.delete_github_repository(github_repository&.id)
+      raise error
     end
     # rubocop:enable AbcSize
     # rubocop:enable MethodLength
