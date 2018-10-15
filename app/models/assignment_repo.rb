@@ -80,7 +80,7 @@ class AssignmentRepo < ApplicationRecord
   end
 
   # Internal: Validate uniqueness of <user, assignment> key.
-  # Does not invalidate pre-existing invalid records.
+  # Only runs the validation on new records.
   #
   def assignment_user_key_uniqueness
     return if persisted?
