@@ -73,7 +73,11 @@ RSpec.describe AssignmentRepo, type: :model do
     context "invalid but already exists" do
       it "passes validation" do
         assignment_repo = subject
-        non_unique_assignment_repo = build(:assignment_repo, assignment: assignment_repo.assignment, user: assignment_repo.user)
+        non_unique_assignment_repo = build(
+          :assignment_repo,
+          assignment: assignment_repo.assignment,
+          user: assignment_repo.user
+        )
         non_unique_assignment_repo.save!(validate: false)
         expect(non_unique_assignment_repo.valid?).to be_truthy
       end

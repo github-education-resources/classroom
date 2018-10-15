@@ -78,12 +78,12 @@ class AssignmentRepo < ApplicationRecord
     true
   end
 
-  # Validate that the set of <user, assignment> is unique to each AssignmentRepo
-  # Only validate on new models (to preserve old models)
+  # Internal: Validate uniqueness of <user, assignment> key.
+  # Does not invalidate pre-existing invalid records.
+  #
   def assignment_user_key_uniqueness
     return if persisted?
-    if AssignmentRepo.find_by(user: user, assignment: assignment)
-      errors.add(:assignment, "Should only have one assignment repository for each user-assignment combination")
-    end
+    return unless AssignmentRepo.find_by(user: user, assignment: assignment)
+    errors.add(:assignment, "Should only have one assignment repository for each user-assignment combination")
   end
 end
