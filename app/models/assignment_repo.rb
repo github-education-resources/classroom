@@ -16,6 +16,8 @@ class AssignmentRepo < ApplicationRecord
   validates :github_repo_id, presence:   true
   validates :github_repo_id, uniqueness: true
 
+  validate :assignment_user_key_uniqueness
+
   # TODO: Remove this dependency from the model.
   before_destroy :silently_destroy_github_repository
 
@@ -74,5 +76,14 @@ class AssignmentRepo < ApplicationRecord
     true
   rescue GitHub::Error
     true
+  end
+
+  # Validate that the set of <user, assignment> is unique to each AssignmentRepo
+  # Only validate on new models (to preserve old models)
+  def assignment_user_key_uniqueness
+    return if persisted?
+    if AssignmentRepo.find_by(user: user, assignment: assignment)
+      errors.add(:assignment, "Should only have one assignment repository for each user-assignment combination")
+    end
   end
 end
