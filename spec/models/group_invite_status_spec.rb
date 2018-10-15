@@ -2,17 +2,20 @@
 
 require "rails_helper"
 
-RSpec.describe GroupInviteStatus, type: :model do
+RSpec.describe GroupInviteStatus, type: :invite_status do
   subject { GroupInviteStatus }
   let(:organization) { classroom_org }
   let(:grouping)     { create(:grouping, organization: organization) }
-  let(:group)        { Group.create(grouping: grouping, title: "Octokittens Team") }
+  let(:group)        { Group.create(grouping: grouping, title: "#{Faker::Company.name} Team") }
   let(:invitation)   { create(:group_assignment_invitation) }
 
   describe "valid", :vcr do
     let(:invite_status) do
       subject.create(group: group, group_assignment_invitation: invitation)
     end
+
+    # TODO: make Group factory so we can make GroupInviteStatus factory to test SetupStatus behavior with:
+    # it_behaves_like 'setup_status'
 
     it "has a default status of unaccepted" do
       expect(invite_status.unaccepted?).to be_truthy
@@ -49,6 +52,47 @@ RSpec.describe GroupInviteStatus, type: :model do
       it "is setting_up? when errored_importing_starter_code?" do
         invite_status.importing_starter_code!
         expect(invite_status.setting_up?).to be_truthy
+      end
+    end
+
+    describe "#unlock_if_locked!" do
+      SetupStatus::LOCKED_STATUSES.each do |locked_status|
+        context "locked status: #{locked_status}" do
+          before do
+            invite_status.update(status: locked_status)
+          end
+
+          context "when updated over 0 hours ago" do
+            it "returns true" do
+              expect(invite_status.unlock_if_locked!).to eq(true)
+            end
+
+            it "updates the status to unaccepted" do
+              invite_status.unlock_if_locked!
+              expect(invite_status.unaccepted?).to be_truthy
+            end
+          end
+
+          context "when updated over 1 hours ago" do
+            let(:time) { 1.hour }
+
+            it "returns false" do
+              expect(invite_status.unlock_if_locked!(elapsed_locked_time: time)).to eq(false)
+            end
+          end
+        end
+      end
+
+      (InviteStatus.statuses.keys - SetupStatus::LOCKED_STATUSES).each do |unlocked_status|
+        context "unlocked status: #{unlocked_status}" do
+          before do
+            invite_status.update(status: unlocked_status)
+          end
+
+          it "returns false" do
+            expect(invite_status.unlock_if_locked!).to eq(false)
+          end
+        end
       end
     end
 
