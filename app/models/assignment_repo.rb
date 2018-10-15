@@ -3,6 +3,7 @@
 class AssignmentRepo < ApplicationRecord
   update_index("assignment_repo#assignment_repo") { self }
 
+  # TODO: remove this enum (dead code)
   enum configuration_state: %i[not_configured configuring configured]
 
   belongs_to :assignment
