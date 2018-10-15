@@ -52,10 +52,15 @@ RSpec.describe Organization, type: :model do
     end
   end
 
-  describe "#github_client" do
-    it "selects a users github_client at random" do
-      expect(subject.github_client.class).to eql(Octokit::Client)
+  describe "#github_client",:vcr do
+    context "random token disabled" do
+      it "returns first user token" do
+        client = subject.github_client(random_token: false)
+        expect(client.access_token).to eql(subject.users.first.token)
+      end
     end
+
+    # TODO: Add randomness check for token
   end
 
   describe "callbacks" do

@@ -35,13 +35,12 @@ class Organization < ApplicationRecord
       group_assignments.includes(:group_assignment_invitation)
   end
 
-  def github_client(random_token = !Rails.env.test?)
+  def github_client(random_token: !Rails.env.test?)
     if random_token
       org_tokens = users.order("RANDOM()").pluck(:token)
-      
       org_tokens.each do |token|
         client = Octokit::Client.new(access_token: token)
-        org = GitHubOrganization.new(client. github_id)
+        org = GitHubOrganization.new(client, github_id)
         return client if org.admin?
       end
     else
