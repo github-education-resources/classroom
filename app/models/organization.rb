@@ -38,12 +38,8 @@ class Organization < ApplicationRecord
 
   def github_client(random_token: !Rails.env.test?)
     if random_token
-      org_admins = users.order("RANDOM()")
-      org_admins.each do |admin|
-        client = Octokit::Client.new(access_token: admin.token)
-        org = GitHubOrganization.new(client, github_id)
-        return client if org.admin?(admin.github_user.login)
-      end
+      client = find_valid_client
+      return client unless client.nil?
     else
       # Return first token
       token = users.first.token unless users.first.nil?
@@ -72,5 +68,20 @@ class Organization < ApplicationRecord
     end
 
     true
+  end
+
+  private
+
+  # Returns client with random token from admins in Organization
+  # to use for GitHub API Calls
+  # returns nil if all tokens are invalid
+  def find_valid_client
+    org_admins = users.order("RANDOM()")
+    org_admins.each do |admin|
+      client = Octokit::Client.new(access_token: admin.token)
+      org = GitHubOrganization.new(client, github_id)
+      return client if org.admin?(admin.github_user.login)
+    end
+    nil
   end
 end

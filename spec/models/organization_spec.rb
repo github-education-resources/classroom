@@ -52,7 +52,7 @@ RSpec.describe Organization, type: :model do
     end
   end
 
-  describe "#github_client",:vcr do
+  describe "#github_client", :vcr do
     context "random token disabled" do
       it "returns first user token" do
         client = subject.github_client(random_token: false)
@@ -60,7 +60,6 @@ RSpec.describe Organization, type: :model do
       end
     end
 
-    # TODO: Add randomness check for token
     context "random token enabled" do
       before do
         @users = subject.users
