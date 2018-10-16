@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Organization < ApplicationRecord
+  class NoValidTokensError < StandardError; end
   include Flippable
   include Sluggable
 
@@ -37,18 +38,18 @@ class Organization < ApplicationRecord
 
   def github_client(random_token: !Rails.env.test?)
     if random_token
-      org_tokens = users.order("RANDOM()").pluck(:token)
-      org_tokens.each do |token|
-        client = Octokit::Client.new(access_token: token)
+      org_admins = users.order("RANDOM()")
+      org_admins.each do |admin|
+        client = Octokit::Client.new(access_token: admin.token)
         org = GitHubOrganization.new(client, github_id)
-        return client if org.admin?
+        return client if org.admin?(admin.github_user.login)
       end
     else
       # Return first token
       token = users.first.token unless users.first.nil?
       return Octokit::Client.new(access_token: token)
     end
-    nil
+    raise NoValidTokensError, "No valid tokens found. Please reauthorize GitHub Classroom."
   end
 
   def github_organization
