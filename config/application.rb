@@ -46,6 +46,8 @@ module GitHubClassroom
 
     # Health checks endpoint for monitoring
     if ENV["PINGLISH_ENABLED"] == "true"
+
+      # rubocop:disable Metrics/BlockLength
       config.middleware.use Pinglish do |ping|
         ping.check :db do
           ActiveRecord::Base.connection.tables.size
@@ -91,6 +93,7 @@ module GitHubClassroom
           "ok"
         end
       end
+      # rubocop:enable Metrics/BlockLength
     end
   end
 end
