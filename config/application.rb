@@ -81,10 +81,13 @@ module GitHubClassroom
         end
 
         ping.check :github_api do
-          client = Octokit::Client.new
-          client.rate_limit
+          client = GitHubClassroom.github_client
+          rate_limit = client.rate_limit
           status = client.last_response.status
           raise "GitHub API status is #{status}" unless status == 200
+          if rate_limit.remaining < 2_000
+            raise "Low rate limit. #{rate_limit.remaining} remaining, resets in #{rate_limit.resets_in}"
+          end
           "ok"
         end
       end
