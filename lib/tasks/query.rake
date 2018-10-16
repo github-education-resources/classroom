@@ -8,7 +8,7 @@ task query: :environment do
 
   QUERY = ARGV[1]
   variables = if ARGV[2]
-                eval(ARGV[2])
+                eval(ARGV[2]) # rubocop:disable Security/Eval
               else
                 {}
               end
