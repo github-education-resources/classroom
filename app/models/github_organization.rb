@@ -136,7 +136,7 @@ class GitHubOrganization < GitHubResource
   private
 
   def github_attributes
-    %w[login avatar_url html_url name]
+    %w[login avatar_url html_url name node_id]
   end
 
   def github_repo_default_options

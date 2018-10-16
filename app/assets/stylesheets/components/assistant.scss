@@ -1,0 +1,53 @@
+div.assistant-bg {
+  color: rgba(255, 255, 255, 0.65098);
+  background-color: #5fb27b;
+
+  .btn-large {
+    border-radius: 6px;
+  }
+}
+
+.assistant-logo {
+  height: 200px;
+}
+
+html.mac {
+  [data-for-os=windows],
+  [data-for-os=linux],
+  [data-for-os=unknownOS] {
+    display: none;
+  }
+}
+
+html.windows {
+  [data-for-os=mac],
+  [data-for-os=linux],
+  [data-for-os=unknownOS] {
+    display: none;
+  }
+}
+
+html.linux {
+  [data-for-os=mac],
+  [data-for-os=windows],
+  [data-for-os=unknownOS] {
+    display: none;
+  }
+}
+
+html.unknownOS {
+  [data-for-os=mac],
+  [data-for-os=windows],
+  [data-for-os=linux] {
+    display: none;
+  }
+}
+
+.assistant-screenshot {
+  max-width: 960px;
+
+  img {
+    margin-bottom: 50px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  }
+}

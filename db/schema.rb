@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180812172752) do
+ActiveRecord::Schema.define(version: 20180918215254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,6 +92,7 @@ ActiveRecord::Schema.define(version: 20180812172752) do
     t.integer "group_id", null: false
     t.string "submission_sha"
     t.integer "configuration_state", default: 0
+    t.string "github_global_relay_id"
     t.index ["github_repo_id"], name: "index_group_assignment_repos_on_github_repo_id", unique: true
     t.index ["group_assignment_id"], name: "index_group_assignment_repos_on_group_assignment_id"
   end
@@ -209,6 +210,13 @@ ActiveRecord::Schema.define(version: 20180812172752) do
 
   create_table "rosters", force: :cascade do |t|
     t.string "identifier_name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "ticker_stats", force: :cascade do |t|
+    t.integer "user_count"
+    t.integer "repo_count"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

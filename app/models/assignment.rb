@@ -6,7 +6,7 @@ class Assignment < ApplicationRecord
   include ValidatesNotReservedWord
   include GraphQLNode
 
-  update_index("stafftools#assignment") { self }
+  update_index("assignment#assignment") { self }
 
   default_scope { where(deleted_at: nil) }
 

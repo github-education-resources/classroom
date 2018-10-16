@@ -5,7 +5,7 @@ class Organization < ApplicationRecord
   include Sluggable
   include GraphQLNode
 
-  update_index("stafftools#organization") { self }
+  update_index("organization#organization") { self }
 
   default_scope { where(deleted_at: nil) }
 

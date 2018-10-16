@@ -82,7 +82,7 @@ class AssignmentsController < ApplicationController
     end
   end
 
-  def desktop
+  def assistant
     code_param = CGI.escape(current_user.api_token)
     url_param = CGI.escape(organization_assignment_url)
 

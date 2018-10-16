@@ -123,10 +123,7 @@ module Orgs
 
       redirect_to roster_path(current_organization)
     end
-    # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/AbcSize
 
-    # rubocop:disable Metrics/MethodLength
     def download_roster
       grouping = current_organization.groupings.find(params[:grouping]) if params[:grouping]
 
@@ -144,6 +141,7 @@ module Orgs
       end
     end
     # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     private
 
@@ -204,10 +202,10 @@ module Orgs
       return @unlinked_users if defined?(@unlinked_users)
       @unlinked_users = []
 
-      result = StafftoolsIndex::User.query(ids: { values: unlinked_user_ids }).order(:login)
+      result = User.where(id: unlinked_user_ids)
 
-      result.total_pages.times do |page|
-        @unlinked_users.push(*result.page(page).to_a)
+      result.each do |user|
+        @unlinked_users.push(user)
       end
 
       @unlinked_users

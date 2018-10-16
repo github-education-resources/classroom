@@ -21,6 +21,8 @@ module GitHubRepoable
       private: private?,
       description: repo_description
     )
+
+    self.github_global_relay_id = github_repository.node_id
     self.github_repo_id = github_repository.id
   end
 
@@ -34,9 +36,9 @@ module GitHubRepoable
   #
   def delete_github_repository_on_failure
     yield
-  rescue GitHub::Error
+  rescue GitHub::Error => error
     silently_destroy_github_repository
-    raise GitHub::Error, "Assignment failed to be created"
+    raise GitHub::Error, "Assignment failed to be created: #{error}"
   end
 
   # Public

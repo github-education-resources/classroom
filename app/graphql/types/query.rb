@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../loaders/github_loader"
 require "graphql"
 
@@ -14,6 +16,12 @@ class Types
 
     def viewer
       context[:current_user]
+    end
+
+    field :test, String, null: false
+
+    def test
+      "I am working!"
     end
 
     # I cannot explain why, but removing this field breaks everything.
