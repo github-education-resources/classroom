@@ -54,4 +54,33 @@ RSpec.describe AssignmentRepo, type: :model do
       expect(repo.valid?).to be_truthy
     end
   end
+
+  describe "#assignment_user_key_uniqueness" do
+    context "valid" do
+      it "passes validation" do
+        expect(subject.valid?).to be_truthy
+      end
+    end
+
+    context "invalid" do
+      it "fails validation" do
+        assignment_repo = subject
+        expect { create(:assignment_repo, assignment: assignment_repo.assignment, user: assignment_repo.user) }
+          .to raise_error(ActiveRecord::RecordInvalid)
+      end
+    end
+
+    context "invalid but already exists" do
+      it "passes validation" do
+        assignment_repo = subject
+        non_unique_assignment_repo = build(
+          :assignment_repo,
+          assignment: assignment_repo.assignment,
+          user: assignment_repo.user
+        )
+        non_unique_assignment_repo.save!(validate: false)
+        expect(non_unique_assignment_repo.valid?).to be_truthy
+      end
+    end
+  end
 end
