@@ -55,47 +55,6 @@ RSpec.describe GroupInviteStatus, type: :invite_status do
       end
     end
 
-    describe "#unlock_if_locked!" do
-      SetupStatus::LOCKED_STATUSES.each do |locked_status|
-        context "locked status: #{locked_status}" do
-          before do
-            invite_status.update(status: locked_status)
-          end
-
-          context "when updated over 0 hours ago" do
-            it "returns true" do
-              expect(invite_status.unlock_if_locked!).to eq(true)
-            end
-
-            it "updates the status to unaccepted" do
-              invite_status.unlock_if_locked!
-              expect(invite_status.unaccepted?).to be_truthy
-            end
-          end
-
-          context "when updated over 1 hours ago" do
-            let(:time) { 1.hour }
-
-            it "returns false" do
-              expect(invite_status.unlock_if_locked!(elapsed_locked_time: time)).to eq(false)
-            end
-          end
-        end
-      end
-
-      (InviteStatus.statuses.keys - SetupStatus::LOCKED_STATUSES).each do |unlocked_status|
-        context "unlocked status: #{unlocked_status}" do
-          before do
-            invite_status.update(status: unlocked_status)
-          end
-
-          it "returns false" do
-            expect(invite_status.unlock_if_locked!).to eq(false)
-          end
-        end
-      end
-    end
-
     describe "relationships" do
       it "has a group" do
         expect(invite_status.group).to eq(group)
