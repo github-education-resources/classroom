@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 # frozen_string_literal: true
 
->>>>>>> master
 require "graphql"
 
 require_relative "types/mutation"
