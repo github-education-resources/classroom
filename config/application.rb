@@ -6,11 +6,7 @@ require "rails/all"
 require "csv"
 require "graphql/client/http"
 require "graphql/client/railtie"
-<<<<<<< HEAD
-require 'graphql/batch'
-=======
 require "graphql/batch"
->>>>>>> master
 require_relative "../app/graphql/github_classroom_schema"
 
 # Require the gems listed in Gemfile, including any gems
