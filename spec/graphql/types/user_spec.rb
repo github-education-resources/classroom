@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-RSpec.describe Types::User do
+RSpec.describe Types::User, :vcr do
   let(:user) { classroom_teacher }
 
   it "returns fields" do
@@ -18,13 +20,13 @@ RSpec.describe Types::User do
     GRAPHQL
 
     data = graphql_query(query, variables: { id: user.global_relay_id }, as: user)
-    user = data["data"]["node"]
+    returned_user = data["data"]["node"]
 
     expect(data["errors"]).to be_nil
 
-    expect(user["id"]).to eq(user.global_relay_id)
-    expect(user["login"]).to_not be_nil
-    expect(user["githubUrl"]).to match(/github\.com/)
-    expect(user["avatarUrl"]).to match(/github\.com/)
+    expect(returned_user["id"]).to eq(user.global_relay_id)
+    expect(returned_user["login"]).to_not be_nil
+    expect(returned_user["githubUrl"]).to match(/http/)
+    expect(returned_user["avatarUrl"]).to match(/http/)
   end
 end

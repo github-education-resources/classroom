@@ -10,7 +10,6 @@ class GitHubLoader < GraphQL::RemoteLoader::Loader
     # - The external query
     # - The parse time
     # - The query time
-
     GitHubClassroom::GitHubClient.query(parsed_query, variables: {}, context: context)
   end
 end
