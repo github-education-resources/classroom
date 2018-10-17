@@ -27,6 +27,8 @@ class User < ApplicationRecord
 
   delegate :authorized_access_token?, to: :github_user
 
+  alias_attribute :github_node_id, :github_global_relay_id
+
   def assign_from_auth_hash(hash)
     user_attributes = AuthHash.new(hash).user_info
     update_attributes(user_attributes)

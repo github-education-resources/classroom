@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "graphql/remote_loader"
 
 class GitHubLoader < GraphQL::RemoteLoader::Loader
@@ -8,10 +10,6 @@ class GitHubLoader < GraphQL::RemoteLoader::Loader
     # - The external query
     # - The parse time
     # - The query time
-    puts "** External GraphQL Query **"
-    puts query_string.gsub(/\n/, " ")
-    puts
-
     GitHubClassroom::GitHubClient.query(parsed_query, variables: {}, context: context)
   end
 end
