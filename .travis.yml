@@ -16,7 +16,7 @@ before_script:
   - bundle exec rake factory_bot:lint
 
 script:
-  - "KNAPSACK_GENERATE_REPORT=true ./bin/rake knapsack:rspec"
+  - "KNAPSACK_GENERATE_REPORT=true ./bin/rake knapsack:rspec && ./bin/rubocop -D"
 
 cache:
   bundler: true
