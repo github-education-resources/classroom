@@ -39,7 +39,6 @@ ActiveRecord::Schema.define(version: 20180918215254) do
     t.string "github_global_relay_id"
     t.integer "configuration_state", default: 0
     t.index ["assignment_id"], name: "index_assignment_repos_on_assignment_id"
-    t.index ["github_global_relay_id"], name: "index_assignment_repos_on_github_global_relay_id"
     t.index ["github_repo_id"], name: "index_assignment_repos_on_github_repo_id", unique: true
     t.index ["repo_access_id"], name: "index_assignment_repos_on_repo_access_id"
     t.index ["user_id"], name: "index_assignment_repos_on_user_id"
