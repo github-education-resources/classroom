@@ -2,8 +2,16 @@
 
 require "graphql"
 
+require_relative "user"
+
 class Types
   class Query < GraphQL::Schema::Object
+    field :viewer, Types::User, description: "The currently authenticated user.", null: false
+
+    def viewer
+      context[:current_user]
+    end
+
     field :test, String, null: false
 
     def test

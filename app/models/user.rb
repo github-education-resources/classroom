@@ -2,6 +2,7 @@
 
 class User < ApplicationRecord
   include Flippable
+  include GraphQLNode
 
   update_index("user#user") { self }
 
