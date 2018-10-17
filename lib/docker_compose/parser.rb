@@ -47,7 +47,7 @@ module DockerCompose
       # Grab everything that starts with a number
       # which I'm going to assume is a port.
       ports = []
-      while attributes[-1][0].match?(/\d/)
+      while attributes[-1] && attributes[-1][0].match?(/\d/)
         ports.unshift(attributes[-1])
         attributes.pop
       end

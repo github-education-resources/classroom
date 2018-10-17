@@ -2,17 +2,20 @@
 
 require "rails_helper"
 
-RSpec.describe GroupInviteStatus, type: :model do
+RSpec.describe GroupInviteStatus, type: :invite_status do
   subject { GroupInviteStatus }
   let(:organization) { classroom_org }
   let(:grouping)     { create(:grouping, organization: organization) }
-  let(:group)        { Group.create(grouping: grouping, title: "Octokittens Team") }
+  let(:group)        { Group.create(grouping: grouping, title: "#{Faker::Company.name} Team") }
   let(:invitation)   { create(:group_assignment_invitation) }
 
   describe "valid", :vcr do
     let(:invite_status) do
       subject.create(group: group, group_assignment_invitation: invitation)
     end
+
+    # TODO: make Group factory so we can make GroupInviteStatus factory to test SetupStatus behavior with:
+    # it_behaves_like 'setup_status'
 
     it "has a default status of unaccepted" do
       expect(invite_status.unaccepted?).to be_truthy

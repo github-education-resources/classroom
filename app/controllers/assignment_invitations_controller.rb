@@ -19,8 +19,10 @@ class AssignmentInvitationsController < ApplicationController
       result = current_invitation.redeem_for(current_user, import_resiliency: import_resiliency_enabled?)
       case result.status
       when :success
+        current_invitation_status.completed! if current_invitation_status.unaccepted?
         GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
       when :pending
+        current_invitation_status.accepted!
         GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
       when :failed
         GitHubClassroom.statsd.increment("v2_exercise_invitation.fail")
