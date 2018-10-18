@@ -17,7 +17,8 @@ class ApplicationController < ActionController::Base
   rescue_from GitHub::Error,
     GitHub::Forbidden,
     GitHub::NotFound,
-    NotAuthorized, with: :flash_and_redirect_back_with_message
+    NotAuthorized,
+    Organization::NoValidTokensError with: :flash_and_redirect_back_with_message
   rescue_from ActionController::RoutingError, ActiveRecord::RecordNotFound, with: :render_404
 
   rescue_from ActionController::InvalidAuthenticityToken do
