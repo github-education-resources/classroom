@@ -37,8 +37,8 @@ class AssignmentsController < ApplicationController
         .order_for_view(@assignment)
 
       @unlinked_user_repos = AssignmentRepo
-        .order(:id)
         .where(assignment: @assignment, user: @unlinked_users)
+        .order(:id)
         .page(params[:unlinked_accounts_page])
     else
       @assignment_repos = AssignmentRepo
