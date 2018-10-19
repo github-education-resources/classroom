@@ -2,6 +2,7 @@
 
 class User < ApplicationRecord
   include Flippable
+  include GraphQLNode
 
   update_index("user#user") { self }
 
@@ -25,6 +26,8 @@ class User < ApplicationRecord
   before_validation(on: :create) { ensure_last_active_at_presence }
 
   delegate :authorized_access_token?, to: :github_user
+
+  alias_attribute :github_node_id, :github_global_relay_id
 
   def assign_from_auth_hash(hash)
     user_attributes = AuthHash.new(hash).user_info
