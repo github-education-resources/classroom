@@ -41,7 +41,6 @@ class AssignmentInvitation < ApplicationRecord
 
     return AssignmentRepo::Creator::Result.failed("Invitations for this assignment have been disabled.") unless enabled?
 
-    status(invitee).accepted!
     if import_resiliency
       AssignmentRepo::Creator::Result.pending
     else

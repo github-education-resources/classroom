@@ -26,6 +26,11 @@ gem "flipper-redis",      "~> 0.10.2"
 gem "flipper-ui",         "~> 0.10.2"
 
 gem "geo_pattern", "~> 1.4"
+gem "graphql", "1.8.4"
+
+# Using fork of graphql-client which fixes a bug in graphql-client on Rails 5
+gem "graphql-client", git: "https://github.com/d12/graphql-client.git", ref: "24ced5f"
+gem "graphql-remote_loader", "1.0.3"
 
 gem "jquery-datetimepicker-rails", "~> 2.4", ">= 2.4.1.0"
 gem "jquery-turbolinks",           "~> 2.1"

@@ -1,4 +1,13 @@
 GIT
+  remote: https://github.com/d12/graphql-client.git
+  revision: 24ced5ff8b4ff401aa7da927d7d1df19e1607fbf
+  ref: 24ced5f
+  specs:
+    graphql-client (0.13.0)
+      activesupport (>= 3.0, < 6.0)
+      graphql (~> 1.6)
+
+GIT
   remote: https://github.com/octokit/octokit.rb.git
   revision: ffae5ddd6fd9da6f4538ca7adeb5d1768011610b
   ref: ffae5ddd6fd9da6f4538ca7adeb5d1768011610b
@@ -154,6 +163,13 @@ GEM
     get_process_mem (0.2.1)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
+    graphql (1.8.4)
+    graphql-batch (0.3.10)
+      graphql (>= 0.8, < 2)
+      promise.rb (~> 0.7.2)
+    graphql-remote_loader (1.0.3)
+      graphql (~> 1.6)
+      graphql-batch (~> 0.3)
     guard (2.14.1)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
@@ -279,6 +295,7 @@ GEM
     pinglish (0.2.1)
       rack
     powerpack (0.1.1)
+    promise.rb (0.7.4)
     pry (0.10.4)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -473,6 +490,9 @@ DEPENDENCIES
   flipper-ui (~> 0.10.2)
   foreman (~> 0.84.0)
   geo_pattern (~> 1.4)
+  graphql (= 1.8.4)
+  graphql-client!
+  graphql-remote_loader (= 1.0.3)
   guard-rspec (~> 4.7, >= 4.7.3)
   jquery-datetimepicker-rails (~> 2.4, >= 2.4.1.0)
   jquery-turbolinks (~> 2.1)
