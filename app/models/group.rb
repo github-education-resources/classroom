@@ -27,9 +27,9 @@ class Group < ApplicationRecord
 
   validates :slug, uniqueness: { scope: :grouping }
 
-  before_validation(on: :create) do
-    create_github_team if organization
-  end
+  # before_validation(on: :create) do
+  #   create_github_team if organization
+  # end
 
   before_destroy :silently_destroy_github_team
 
