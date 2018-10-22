@@ -5,11 +5,12 @@ class MessageVerifier
   class << self
     def encode(payload, exp = 5.minutes.from_now)
       payload[:exp] ||= exp
-      verifier.generate payload
+      raw_token = verifier.generate payload
+      CGI.escape(raw_token)
     end
 
     def decode(token)
-      body = verifier.verify(token)
+      body = verifier.verify(CGI.unescape(token))
 
       raise MessageVerifier::TokenExpired if Time.current > body[:exp]
       body

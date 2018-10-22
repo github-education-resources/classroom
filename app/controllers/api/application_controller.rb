@@ -16,7 +16,7 @@ class API::ApplicationController < ApplicationController
 
   def verify_api_token
     if params[:access_token].present?
-      data = MessageVerifier.decode(CGI.unescape(params[:access_token]))
+      data = MessageVerifier.decode(params[:access_token])
       return session[:user_id] = data[:user_id] unless data.nil? || data[:user_id].nil?
     end
     render_forbidden

@@ -15,21 +15,17 @@ RSpec.describe OauthController, type: :controller do
       get :authorize
     end
 
-    it "generates url encoded code" do
-      expect(redirect_params["code"]).to eql(CGI.escape(redirect_params["code"]))
-    end
-
     it "redirects to x-github-classroom" do
       expect(redirect_url_without_params).to eql("x-github-classroom://")
     end
 
     it "generates a code that is invalid in 5 minutes" do
-      data = MessageVerifier.decode(CGI.unescape(redirect_params["code"]))
+      data = MessageVerifier.decode(redirect_params["code"])
       expect(data[:exp]).to eql(5.minutes.from_now)
     end
 
     it "generates a code that has correct user id" do
-      data = MessageVerifier.decode(CGI.unescape(redirect_params["code"]))
+      data = MessageVerifier.decode(redirect_params["code"])
       expect(data[:user_id]).to eql(user.id)
     end
 
@@ -50,18 +46,11 @@ RSpec.describe OauthController, type: :controller do
           @code = user.api_token
         end
 
-        it "returns url encoded access token" do
-          get :access_token, params: { code: @code }
-          access_token = json["access_token"]
-
-          expect(access_token).to eql(CGI.escape(access_token))
-        end
-
         it "returns access token that expires in 24 hours" do
           get :access_token, params: { code: @code }
           access_token = json["access_token"]
 
-          data = MessageVerifier.decode(CGI.unescape(access_token))
+          data = MessageVerifier.decode(access_token)
           expect(data[:exp]).to eql(24.hours.from_now)
         end
 
