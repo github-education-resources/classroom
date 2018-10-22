@@ -35,6 +35,7 @@ class AssignmentsController < ApplicationController
     }
   GRAPHQL
 
+  # rubocop:disable MethodLength
   # rubocop:disable Metrics/AbcSize
   def show
     variables = {
@@ -45,15 +46,23 @@ class AssignmentsController < ApplicationController
     @data = graphql_execute(query: ShowQuery, variables: variables).data
 
     if @organization.roster
-      @roster_entries = @organization.roster.roster_entries.page(params[:students_page]).order_for_view(@assignment)
+      @roster_entries = @organization.roster.roster_entries
+        .order(:id)
+        .page(params[:students_page])
+        .order_for_view(@assignment)
 
       @unlinked_user_repos = AssignmentRepo
+        .order(:id)
         .where(assignment: @assignment, user: @unlinked_users)
         .page(params[:unlinked_accounts_page])
     else
-      @assignment_repos = AssignmentRepo.where(assignment: @assignment).page(params[:page])
+      @assignment_repos = AssignmentRepo
+        .where(assignment: @assignment)
+        .order(:id)
+        .page(params[:page])
     end
   end
+  # rubocop:enable MethodLength
   # rubocop:enable Metrics/AbcSize
 
   def edit; end
