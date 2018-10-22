@@ -49,7 +49,6 @@ RSpec.describe OauthController, type: :controller do
         it "returns access token that expires in 24 hours" do
           get :access_token, params: { code: @code }
           access_token = json["access_token"]
-
           data = MessageVerifier.decode(access_token)
           expect(data[:exp]).to eql(24.hours.from_now)
         end
