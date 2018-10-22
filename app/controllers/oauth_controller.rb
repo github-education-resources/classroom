@@ -24,11 +24,12 @@ class OauthController < ApplicationController
   private
 
   def api_token(user_id)
-    MessageVerifier.encode({ user_id: user_id }, 24.hours.from_now)
+    token = MessageVerifier.encode({ user_id: user_id }, 24.hours.from_now)
+    CGI.escape(token)
   end
 
   def parse_user_id(code)
-    data = MessageVerifier.decode(code)
+    data = MessageVerifier.decode(CGI.unescape(code))
     return data[:user_id] unless data.nil?
     nil
   end
