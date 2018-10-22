@@ -54,6 +54,13 @@ FactoryBot.define do
     slug  { title.parameterize  }
   end
 
+  factory :group do
+    grouping
+
+    title          { "#{Faker::Company.name} Team" }
+    github_team_id { rand(1..1_000_000) }
+  end
+
   factory :organization do
     title      { "#{Faker::Company.name} Class" }
     github_id  { rand(1..1_000_000) }
