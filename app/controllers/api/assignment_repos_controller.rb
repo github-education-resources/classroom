@@ -8,7 +8,7 @@ module API
     before_action :set_assignment
 
     def index
-      repos = AssignmentRepo.where(assignment: @assignment)
+      repos = AssignmentRepo.where(assignment: @assignment).order(:id)
       paginate json: repos
     end
 
