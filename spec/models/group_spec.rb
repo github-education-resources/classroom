@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 require "rails_helper"
+require Rails.root.join("spec", "models", "concerns", "github_teamable_spec.rb")
 
 RSpec.describe Group, type: :model do
   let(:organization) { classroom_org }
   let(:grouping)     { create(:grouping, organization: organization) }
   let(:user)         { classroom_student }
+
+  it_behaves_like "github_teamable"
 
   describe "assocations", :vcr do
     before(:each) do
@@ -31,14 +34,6 @@ RSpec.describe Group, type: :model do
 
     after(:each) do
       @group.try(:destroy)
-    end
-
-    describe "before_validation" do
-      describe "#create_github_team" do
-        it "creates the team on GitHub" do
-          expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/teams"))
-        end
-      end
     end
 
     describe "assocation callbacks" do
