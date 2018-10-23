@@ -109,6 +109,5 @@ RSpec.describe Group, type: :model do
         expect { group_invite_status2.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
-
   end
 end

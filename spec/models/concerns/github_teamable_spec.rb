@@ -5,8 +5,8 @@ require "rails_helper"
 class MockGitHubTeam
   attr_reader :id
 
-  def initialize(_, id)
-    @id
+  def initialize(id)
+    @id = id
   end
 end
 
@@ -18,7 +18,7 @@ shared_examples_for "github_teamable" do
       expect_any_instance_of(GitHubOrganization)
         .to receive(:create_team)
         .with(model.title)
-        .and_return(MockGitHubTeam.new(nil, rand(1..1_000_000)))
+        .and_return(MockGitHubTeam.new(rand(1..1_000_000)))
     end
 
     it "updates the github_team_id" do
@@ -37,9 +37,9 @@ shared_examples_for "github_teamable" do
 
     context "with a github_team_id" do
       before do
-       expect_any_instance_of(GitHubOrganization)
-        .to receive(:delete_team)
-        .and_return(nil)
+        expect_any_instance_of(GitHubOrganization)
+          .to receive(:delete_team)
+          .and_return(nil)
       end
 
       it "updates the github_team_id" do
@@ -74,8 +74,8 @@ shared_examples_for "github_teamable" do
     context "when #destroy_github_team returns true" do
       before do
         expect(model)
-        .to receive(:destroy_github_team)
-        .and_return(true)
+          .to receive(:destroy_github_team)
+          .and_return(true)
       end
 
       it "returns true" do
@@ -86,8 +86,8 @@ shared_examples_for "github_teamable" do
     context "when #destroy_github_team returns false" do
       before do
         expect(model)
-        .to receive(:destroy_github_team)
-        .and_return(false)
+          .to receive(:destroy_github_team)
+          .and_return(false)
       end
 
       it "returns true" do

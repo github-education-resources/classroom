@@ -45,7 +45,7 @@ class Group
     #   Group::Creator.perform(title "Octokittens", grouping: Grouping.first)
     #
     # Returns a Group::Creator::Result.
-    def perform(title:, grouping:)
+    def self.perform(title:, grouping:)
       new(title: title, grouping: grouping).perform
     end
 
