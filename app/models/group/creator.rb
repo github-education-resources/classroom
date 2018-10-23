@@ -49,8 +49,6 @@ class Group
       new(title: title, grouping: grouping).perform
     end
 
-    private
-
     # Internal: Creates a Group and an associated GitHub team.
     #
     # Returns a Group::Creator::Result.

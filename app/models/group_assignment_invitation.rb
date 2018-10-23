@@ -29,9 +29,11 @@ class GroupAssignmentInvitation < ApplicationRecord
   def redeem_for(invitee, selected_group = nil, new_group_title = nil)
     return Result.failed("Invitations for this assignment have been disabled.") unless enabled?
 
-    repo_access    = RepoAccess.find_or_create_by!(user: invitee, organization: organization)
-    invitees_group = group(repo_access, selected_group, new_group_title)
+    repo_access = RepoAccess.find_or_create_by!(user: invitee, organization: organization)
+    group_creator_result = group(repo_access, selected_group, new_group_title)
+    return Result.failed(group_creator_result.error) if group_creator_result.failed?
 
+    invitees_group = group_creator_result.group
     invitees_group.repo_accesses << repo_access unless invitees_group.repo_accesses.include?(repo_access)
 
     group_assignment_repo(invitees_group)
@@ -63,10 +65,10 @@ class GroupAssignmentInvitation < ApplicationRecord
   def group(repo_access, selected_group, selected_group_title)
     group = Group.joins(:repo_accesses).find_by(grouping: grouping, repo_accesses: { id: repo_access.id })
 
-    return group if group.present?
-    return selected_group if selected_group
+    return Group::Creator::Result.success(group) if group.present?
+    return Group::Creator::Result.success(selected_group) if selected_group
 
-    Group.create(title: selected_group_title, grouping: grouping)
+    Group::Creator.perform(title: selected_group_title, grouping: grouping)
   end
 
   # rubocop:disable MethodLength
