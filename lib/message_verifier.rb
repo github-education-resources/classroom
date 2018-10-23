@@ -17,7 +17,7 @@ class MessageVerifier
       body
     rescue ActiveSupport::MessageVerifier::InvalidSignature,
            ArgumentError,
-           MessageVerifier::TokenExpired,
+           MessageVerifier::TokenExpired
       nil
     end
 
