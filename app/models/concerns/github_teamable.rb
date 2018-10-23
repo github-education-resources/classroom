@@ -11,6 +11,8 @@ module GitHubTeamable
   def destroy_github_team
     return true if github_team_id.blank?
     organization.github_organization.delete_team(github_team_id)
+    self.github_team_id = nil
+    true
   end
 
   def silently_destroy_github_team
