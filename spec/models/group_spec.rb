@@ -12,7 +12,9 @@ RSpec.describe Group, type: :model do
 
   describe "assocations", :vcr do
     before(:each) do
-      @group = Group.create(grouping: grouping, title: "Toon Town")
+      @group = create(:group, grouping: grouping, title: "Toon Town")
+      @group.create_github_team
+      @group.save!
     end
 
     after(:each) do
@@ -29,7 +31,9 @@ RSpec.describe Group, type: :model do
 
   describe "callbacks", :vcr do
     before(:each) do
-      @group = Group.create(grouping: grouping, title: "Toon Town")
+      @group = create(:group, grouping: grouping, title: "Toon Town")
+      @group.create_github_team
+      @group.save!
     end
 
     after(:each) do
@@ -74,7 +78,7 @@ RSpec.describe Group, type: :model do
   describe "group_invite_statuses", :vcr do
     let(:organization) { classroom_org }
     let(:grouping)     { create(:grouping, organization: organization) }
-    let(:group)        { Group.create(grouping: grouping, title: "#{Faker::Company.name} Team") }
+    let(:group)        { create(:group, grouping: grouping, title: "#{Faker::Company.name} Team") }
     let(:invitation1)  { create(:group_assignment_invitation) }
     let(:invitation2)  { create(:group_assignment_invitation) }
 
@@ -83,19 +87,28 @@ RSpec.describe Group, type: :model do
       expect(group.group_invite_statuses).to eq([group_invite_status])
     end
 
-    it "on #destroy destroys invite status and not the invitation" do
-      group_invite_status = GroupInviteStatus.create(group: group, group_assignment_invitation: invitation1)
-      group.destroy
-      expect { group_invite_status.reload }.to raise_error(ActiveRecord::RecordNotFound)
-      expect(invitation1.reload.nil?).to be_falsey
+    context "on #destroy" do
+      before do
+        expect(group)
+          .to receive(:silently_destroy_github_team)
+          .and_return(true)
+      end
+
+      it "on #destroy destroys invite status and not the invitation" do
+        group_invite_status = GroupInviteStatus.create(group: group, group_assignment_invitation: invitation1)
+        group.destroy
+        expect { group_invite_status.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(invitation1.reload.nil?).to be_falsey
+      end
+
+      it "on #destroy destroys all invite statuses" do
+        group_invite_status1 = GroupInviteStatus.create(group: group, group_assignment_invitation: invitation1)
+        group_invite_status2 = GroupInviteStatus.create(group: group, group_assignment_invitation: invitation2)
+        group.destroy
+        expect { group_invite_status1.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { group_invite_status2.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
 
-    it "on #destroy destroys all invite statuses" do
-      group_invite_status1 = GroupInviteStatus.create(group: group, group_assignment_invitation: invitation1)
-      group_invite_status2 = GroupInviteStatus.create(group: group, group_assignment_invitation: invitation2)
-      group.destroy
-      expect { group_invite_status1.reload }.to raise_error(ActiveRecord::RecordNotFound)
-      expect { group_invite_status2.reload }.to raise_error(ActiveRecord::RecordNotFound)
-    end
   end
 end
