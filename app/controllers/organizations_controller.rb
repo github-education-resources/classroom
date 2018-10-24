@@ -14,7 +14,7 @@ class OrganizationsController < Orgs::Controller
   skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create]
 
   def index
-    @organizations = current_user.organizations.page(params[:page])
+    @organizations = current_user.organizations.order(:id).page(params[:page])
   end
 
   def new

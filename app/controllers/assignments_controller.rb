@@ -52,8 +52,8 @@ class AssignmentsController < ApplicationController
         .order_for_view(@assignment)
 
       @unlinked_user_repos = AssignmentRepo
-        .order(:id)
         .where(assignment: @assignment, user: @unlinked_users)
+        .order(:id)
         .page(params[:unlinked_accounts_page])
     else
       @assignment_repos = AssignmentRepo
@@ -92,7 +92,7 @@ class AssignmentsController < ApplicationController
   end
 
   def assistant
-    code_param = CGI.escape(current_user.api_token)
+    code_param = current_user.api_token
     url_param = CGI.escape(organization_assignment_url)
 
     redirect_to "x-github-classroom://?assignment_url=#{url_param}&code=#{code_param}"
