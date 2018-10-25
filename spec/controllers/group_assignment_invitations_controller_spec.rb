@@ -251,7 +251,6 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       end
 
       it "sends an event to statsd" do
-        group
         expect(GitHubClassroom.statsd)
           .to receive(:increment)
           .with("group_exercise_invitation.accept")
@@ -280,8 +279,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
       it "does not allow users to join a group that is not apart of the grouping" do
         other_grouping = create(:grouping, organization: organization)
-        other_group    = create(:group, grouping: other_grouping)
-        other_group.create_github_team
+        other_group    = create(:group, title: "The Group", grouping: other_grouping, github_team_id: 2_976_595)
 
         patch :accept_invitation, params: { id: invitation.key, group: { id: other_group.id } }
 
