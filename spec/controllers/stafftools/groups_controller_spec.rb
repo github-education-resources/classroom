@@ -6,7 +6,7 @@ RSpec.describe Stafftools::GroupsController, type: :controller do
   let(:user)         { classroom_teacher }
   let(:organization) { classroom_org     }
 
-  let(:grouping) { create(:grouping, organization: organization)         }
+  let(:grouping) { create(:grouping, organization: organization) }
   let(:group)    { create(:group, title: "The Group", grouping: grouping, github_team_id: 2_976_595) }
 
   before(:each) do
@@ -16,7 +16,6 @@ RSpec.describe Stafftools::GroupsController, type: :controller do
   describe "GET #show", :vcr do
     context "as an unauthorized user" do
       it "returns a 404" do
-        binding.pry
         get :show, params: { id: group.id }
         expect(response.status).to eq(404)
       end
