@@ -22,6 +22,11 @@ FactoryBot.define do
     user
   end
 
+  factory :group_invite_status do
+    group_assignment_invitation
+    group
+  end
+
   factory :assignment_repo do
     assignment
     user
