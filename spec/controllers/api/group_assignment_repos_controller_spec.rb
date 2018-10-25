@@ -6,7 +6,8 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
   let(:organization)      { classroom_org }
   let(:user)              { classroom_teacher }
   let(:group_assignment)  { create(:group_assignment, organization: organization, title: "Learn Clojure") }
-  let(:group)             { Group.create(title: "The Group", grouping: group_assignment.grouping) }
+  let(:grouping)          { group_assignment.grouping }
+  let(:group)             { create(:group, title: "The Group", grouping: grouping, github_team_id: 2_976_561) }
 
   describe "GET #index", :vcr do
     before do
@@ -21,7 +22,6 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
 
     after do
       GroupAssignmentRepo.destroy_all
-      Grouping.destroy_all
     end
 
     it "returns success" do
@@ -48,7 +48,6 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
 
     after do
       GroupAssignmentRepo.destroy_all
-      Grouping.destroy_all
     end
 
     it "returns success" do
