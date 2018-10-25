@@ -6,15 +6,11 @@ RSpec.describe Stafftools::GroupAssignmentReposController, type: :controller do
   let(:user)         { classroom_teacher }
   let(:organization) { classroom_org     }
   let(:student)      { classroom_student }
-
   let(:repo_access)  { RepoAccess.create(user: student, organization: organization) }
-
   let(:group_assignment) do
     create(:group_assignment, title: "Learn Ruby", organization: organization, public_repo: false)
   end
-
-  let(:group) { Group.create(title: Time.zone.now, grouping: group_assignment.grouping) }
-
+  let(:group) { create(:group, title: "The Group", grouping: group_assignment.grouping, github_team_id: 2_976_561) }
   let(:group_assignment_repo) do
     GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
   end
@@ -25,7 +21,6 @@ RSpec.describe Stafftools::GroupAssignmentReposController, type: :controller do
 
   after do
     GroupAssignmentRepo.destroy_all
-    Grouping.destroy_all
   end
 
   describe "GET #show", :vcr do
