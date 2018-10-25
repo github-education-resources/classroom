@@ -8,12 +8,11 @@ RSpec.describe MembershipEventJob, type: :job do
   let(:student)      { classroom_student }
 
   context "ACTION member_removed", :vcr do
-
     it "removes user from team" do
       group_assignment = create(:group_assignment, title: "Intro to Rails #2", organization: organization)
       group = create(
         :group,
-        title: "The Group",
+
         grouping: group_assignment.grouping,
         github_team_id: payload.dig("team", "id")
       )

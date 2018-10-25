@@ -8,7 +8,7 @@ RSpec.describe GroupAssignmentRepo, type: :model do
     let(:student)      { classroom_student }
     let(:repo_access)  { RepoAccess.create(user: student, organization: organization) }
     let(:grouping)     { create(:grouping, organization: organization) }
-    let(:group)        { create(:group, title: "The Group", grouping: grouping, github_team_id: 2_977_000) }
+    let(:group)        { create(:group, grouping: grouping, github_team_id: 2_977_000) }
 
     let(:group_assignment) do
       create(
@@ -35,7 +35,6 @@ RSpec.describe GroupAssignmentRepo, type: :model do
         context "success" do
           before(:each) do
             @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
-
           end
 
           describe "#create_github_repository" do

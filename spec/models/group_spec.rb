@@ -7,43 +7,27 @@ RSpec.describe Group, type: :model do
   let(:organization) { classroom_org }
   let(:grouping)     { create(:grouping, organization: organization) }
   let(:user)         { classroom_student }
+  let(:group)        { create(:group, grouping: grouping, github_team_id: 2_977_000) }
 
   it_behaves_like "github_teamable"
 
   describe "assocations", :vcr do
-    before(:each) do
-      @group = create(:group, grouping: grouping, title: "Toon Town")
-      @group.create_github_team
-      @group.save!
-    end
-
     after(:each) do
-      @group.try(:destroy)
       RepoAccess.destroy_all
     end
 
     it "has users" do
       repo_access = RepoAccess.create(user: user, organization: organization)
-      @group.repo_accesses << repo_access
-      expect(@group.users).to eq([user])
+      group.repo_accesses << repo_access
+      expect(group.users).to eq([user])
     end
   end
 
   describe "callbacks", :vcr do
-    before(:each) do
-      @group = create(:group, grouping: grouping, title: "Toon Town")
-      @group.create_github_team
-      @group.save!
-    end
-
-    after(:each) do
-      @group.try(:destroy)
-    end
-
     describe "assocation callbacks" do
       before(:each) do
         @repo_access = RepoAccess.create(user: user, organization: organization)
-        @group.repo_accesses << @repo_access
+        group.repo_accesses << @repo_access
       end
 
       after(:each) do
@@ -54,7 +38,7 @@ RSpec.describe Group, type: :model do
         describe "#add_member_to_github_team" do
           it "adds the user to the GitHub team" do
             github_user     = GitHubUser.new(@repo_access.user.github_client, @repo_access.user.uid)
-            memberships_url = "teams/#{@group.github_team_id}/memberships/#{github_user.login}"
+            memberships_url = "teams/#{group.github_team_id}/memberships/#{github_user.login}"
 
             expect(WebMock).to have_requested(:put, github_url(memberships_url))
           end
@@ -66,8 +50,8 @@ RSpec.describe Group, type: :model do
           it "removes the user from the GitHub team" do
             github_user = GitHubUser.new(@repo_access.user.github_client, @repo_access.user.github_client)
 
-            @group.repo_accesses.delete(@repo_access)
-            rmv_from_team_github_url = github_url("/teams/#{@group.github_team_id}/memberships/#{github_user.login}")
+            group.repo_accesses.delete(@repo_access)
+            rmv_from_team_github_url = github_url("/teams/#{group.github_team_id}/memberships/#{github_user.login}")
             expect(WebMock).to have_requested(:delete, rmv_from_team_github_url)
           end
         end

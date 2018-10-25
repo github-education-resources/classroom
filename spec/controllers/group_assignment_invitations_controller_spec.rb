@@ -279,7 +279,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
       it "does not allow users to join a group that is not apart of the grouping" do
         other_grouping = create(:grouping, organization: organization)
-        other_group    = create(:group, title: "The Group", grouping: other_grouping, github_team_id: 2_976_595)
+        other_group    = create(:group, grouping: other_grouping, github_team_id: 2_976_595)
 
         patch :accept_invitation, params: { id: invitation.key, group: { id: other_group.id } }
 
@@ -332,7 +332,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       end
 
       context "github repository with the same name already exists" do
-        let(:group) { create(:group, title: "The Group", grouping: grouping, github_team_id: 2_973_107) }
+        let(:group) { create(:group, grouping: grouping, github_team_id: 2_973_107) }
 
         before do
           group_assignment_repo = GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
@@ -388,7 +388,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
           end
 
           context "joins an existing group" do
-            let(:group) { create(:group, title: "The Group", grouping: grouping, github_team_id: 2_973_107) }
+            let(:group) { create(:group, grouping: grouping, github_team_id: 2_973_107) }
 
             it "creates a repo_access" do
               patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
@@ -592,7 +592,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
   describe "GET #successful_invitation", :vcr do
     let(:group) do
-      group = create(:group, title: "The Group", grouping: grouping, github_team_id: 2_973_107)
+      group = create(:group, grouping: grouping, github_team_id: 2_973_107)
       group.repo_accesses << RepoAccess.create(user: student, organization: organization)
       group
     end

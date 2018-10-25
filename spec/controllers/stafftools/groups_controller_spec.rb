@@ -7,7 +7,7 @@ RSpec.describe Stafftools::GroupsController, type: :controller do
   let(:organization) { classroom_org     }
 
   let(:grouping) { create(:grouping, organization: organization) }
-  let(:group)    { create(:group, title: "The Group", grouping: grouping, github_team_id: 2_976_595) }
+  let(:group)    { create(:group, grouping: grouping, github_team_id: 2_976_595) }
 
   before(:each) do
     sign_in_as(user)

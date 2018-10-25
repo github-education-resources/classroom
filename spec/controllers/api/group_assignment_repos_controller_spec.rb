@@ -7,7 +7,7 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
   let(:user)              { classroom_teacher }
   let(:group_assignment)  { create(:group_assignment, organization: organization, title: "Learn Clojure") }
   let(:grouping)          { group_assignment.grouping }
-  let(:group)             { create(:group, title: "The Group", grouping: grouping, github_team_id: 2_976_561) }
+  let(:group)             { create(:group, grouping: grouping, github_team_id: 2_976_561) }
 
   describe "GET #index", :vcr do
     before do

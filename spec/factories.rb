@@ -62,7 +62,7 @@ FactoryBot.define do
   factory :group do
     grouping
 
-    title          { "#{Faker::Company.name} Team" }
+    title          { Faker::Team.name[0..39] }
     github_team_id { rand(1..1_000_000) }
   end
 

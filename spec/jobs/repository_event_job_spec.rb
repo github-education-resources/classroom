@@ -22,7 +22,7 @@ RSpec.describe RepositoryEventJob, type: :job do
     # This is kind of ridiculous.
     it "deletes the matching GroupAssignmentRepo" do
       group_assignment = create(:group_assignment, title: "Intro to Rails", organization: organization)
-      group            = create(:group, title: "Group 1", grouping: group_assignment.grouping, github_team_id: 2_977_000)
+      group            = create(:group, grouping: group_assignment.grouping, github_team_id: 2_977_000)
 
       group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
 

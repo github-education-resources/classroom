@@ -6,8 +6,8 @@ RSpec.describe GroupsController, type: :controller do
   let(:organization)  { classroom_org     }
   let(:user)          { classroom_teacher }
 
-  let(:grouping) { create(:grouping, organization: organization)         }
-  let(:group)    { create(:group, title: "The Group", grouping: grouping, github_team_id: 2_976_595)  }
+  let(:grouping) { create(:grouping, organization: organization) }
+  let(:group)    { create(:group, grouping: grouping, github_team_id: 2_976_595) }
 
   before do
     sign_in_as(user)
