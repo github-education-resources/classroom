@@ -312,10 +312,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       end
 
       context "group has not reached maximum number of members" do
-        let(:group) do
-          group = create(:group, grouping: grouping, github_team_id: 2_973_107)
-          group
-        end
+        let(:group) { create(:group, grouping: grouping, github_team_id: 2_973_107) }
 
         before(:each) do
           group_assignment.update(max_members: 1)
@@ -327,10 +324,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       end
 
       context "group does not have maximum number of members" do
-        let(:group) do
-          group = create(:group, grouping: grouping, github_team_id: 2_973_107)
-          group
-        end
+        let(:group) { create(:group, grouping: grouping, github_team_id: 2_973_107) }
 
         it "allows user to join" do
           patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
@@ -340,10 +334,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       end
 
       context "github repository with the same name already exists" do
-        let(:group) do
-          group = create(:group, title: "The Group", grouping: grouping, github_team_id: 2_973_107)
-          group
-        end
+        let(:group) { create(:group, title: "The Group", grouping: grouping, github_team_id: 2_973_107) }
 
         before do
           group_assignment_repo = GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
@@ -399,10 +390,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
           end
 
           context "joins an existing group" do
-            let(:group) do
-              group = create(:group, title: "The Group", grouping: grouping, github_team_id: 2_973_107)
-              group
-            end
+            let(:group) { create(:group, title: "The Group", grouping: grouping, github_team_id: 2_973_107) }
 
             it "creates a repo_access" do
               patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }

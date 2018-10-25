@@ -14,7 +14,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
     let(:student)       { classroom_student }
     let(:repo_access)   { RepoAccess.create(user: student, organization: organization) }
     let(:grouping)      { create(:grouping, organization: organization) }
-    let(:group)         { Group.create(title: "Group 1", grouping: grouping) }
+    let(:group)         { create(:group, title: "The Group", grouping: grouping, github_team_id: 2_976_561) }
     let(:invite_status) { group_assignment.invitation.status(group) }
     let(:channel)       { group_repo_channel.channel(group_assignment_id: group_assignment.id, group_id: group.id) }
     let(:group_assignment) do
@@ -31,11 +31,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
     end
 
     after(:each) do
-      RepoAccess.destroy_all
       GroupAssignmentRepo.destroy_all
-      Group.destroy_all
-      GroupAssignmentInvitation.destroy_all
-      GroupAssignment.destroy_all
       clear_enqueued_jobs
       clear_performed_jobs
     end
