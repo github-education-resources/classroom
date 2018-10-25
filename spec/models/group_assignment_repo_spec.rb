@@ -7,9 +7,8 @@ RSpec.describe GroupAssignmentRepo, type: :model do
     let(:organization) { classroom_org }
     let(:student)      { classroom_student }
     let(:repo_access)  { RepoAccess.create(user: student, organization: organization) }
-
     let(:grouping)     { create(:grouping, organization: organization) }
-    let(:group)        { Group.create(title: "Group 1", grouping: grouping) }
+    let(:group)        { create(:group, title: "The Group", grouping: grouping, github_team_id: 2_977_000) }
 
     let(:group_assignment) do
       create(
@@ -27,7 +26,6 @@ RSpec.describe GroupAssignmentRepo, type: :model do
     end
 
     after(:each) do
-      group.destroy
       repo_access.destroy
       @group_assignment_repo.destroy if @group_assignment_repo.present?
     end
@@ -37,6 +35,7 @@ RSpec.describe GroupAssignmentRepo, type: :model do
         context "success" do
           before(:each) do
             @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
+
           end
 
           describe "#create_github_repository" do
