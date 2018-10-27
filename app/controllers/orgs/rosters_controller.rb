@@ -19,7 +19,10 @@ module Orgs
         .order(:identifier)
         .page(params[:roster_entries_page])
 
-      @current_unlinked_users = User.where(id: unlinked_user_ids).page(params[:unlinked_users_page])
+      @current_unlinked_users = User
+        .where(id: unlinked_user_ids)
+        .order(:id)
+        .page(params[:unlinked_users_page])
 
       download_roster if params.dig("format")
     end
@@ -123,10 +126,7 @@ module Orgs
 
       redirect_to roster_path(current_organization)
     end
-    # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/AbcSize
 
-    # rubocop:disable Metrics/MethodLength
     def download_roster
       grouping = current_organization.groupings.find(params[:grouping]) if params[:grouping]
 
@@ -144,6 +144,7 @@ module Orgs
       end
     end
     # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     private
 

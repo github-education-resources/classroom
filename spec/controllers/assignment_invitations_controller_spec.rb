@@ -319,7 +319,6 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it "redirects to success when AssignmentRepo already exists" do
-        invite_status.completed!
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
           .with(user, import_resiliency: true)
           .and_return(result)
@@ -329,7 +328,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it "redirects to setup when AssignmentRepo already exists but isn't completed" do
-        invite_status.creating_repo!
+        invite_status.waiting!
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
           .with(user, import_resiliency: true)
           .and_return(result)

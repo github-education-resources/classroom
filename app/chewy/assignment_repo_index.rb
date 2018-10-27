@@ -7,7 +7,7 @@ class AssignmentRepoIndex < Chewy::Index
     field :created_at
     field :updated_at
 
-    field :assignment_title, value: ->(assignment_repo) { assignment_repo.assignment.title }
-    field :user_login,       value: ->(assignment_repo) { assignment_repo.user.github_user.login }
+    field :assignment_title, value: ->(assignment_repo) { assignment_repo&.assignment&.title        }
+    field :user_login,       value: ->(assignment_repo) { assignment_repo&.user&.github_user&.login }
   end
 end

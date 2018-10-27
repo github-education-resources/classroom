@@ -1,19 +1,22 @@
 # frozen_string_literal: true
 
+require "base64"
+
 class MessageVerifier
   class TokenExpired < StandardError; end
   class << self
     def encode(payload, exp = 5.minutes.from_now)
       payload[:exp] ||= exp
-      verifier.generate payload
+      Base64.urlsafe_encode64(verifier.generate(payload))
     end
 
     def decode(token)
-      body = verifier.verify(token)
+      body = verifier.verify(Base64.urlsafe_decode64(token))
 
       raise MessageVerifier::TokenExpired if Time.current > body[:exp]
       body
     rescue ActiveSupport::MessageVerifier::InvalidSignature,
+           ArgumentError,
            MessageVerifier::TokenExpired
       nil
     end
