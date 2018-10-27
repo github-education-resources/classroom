@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class Organization
   class Creator
     include Rails.application.routes.url_helpers
@@ -294,3 +295,4 @@ class Organization
     end
   end
 end
+# rubocop:enable Metrics/ClassLength

@@ -127,7 +127,7 @@ RSpec.describe OrganizationsController, type: :controller do
         GitHubClassroom.flipper[:multiple_classrooms_per_org].disable
       end
 
-      it "will add an organization with identical id" do
+      it "will add a classroom on same organization" do
         existing_organization_options = { github_id: organization.github_id }
         expect do
           post :create, params: { organization: existing_organization_options }
