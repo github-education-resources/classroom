@@ -95,7 +95,7 @@ class Organization
     # Internal: Create an GitHub Organization WebHook if there
     # is a user who has the correct token scope.
     #
-    # Returns an Integer id, or raises a Result::Error#
+    # Returns an Integer id, or raises a Result::Error
     # rubocop:disable MethodLength
     # rubocop:disable AbcSize
     def create_organization_webhook!

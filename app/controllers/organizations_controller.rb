@@ -23,6 +23,8 @@ class OrganizationsController < Orgs::Controller
 
   # rubocop:disable MethodLength
   def create
+    return unless validate_multiple_classrooms_on_org
+
     result = Organization::Creator.perform(
       github_id: new_organization_params[:github_id],
       users: new_organization_params[:users]
@@ -123,6 +125,9 @@ class OrganizationsController < Orgs::Controller
   def set_users_github_organizations
     @users_github_organizations = current_user.github_user.organization_memberships.map do |membership|
       {
+        # TODO: Remove `classroom` field after we turn off the feature flag
+        # for multiple classrooms in one org
+        classroom:   Organization.unscoped.find_by(github_id: membership.organization.id),
         github_id:   membership.organization.id,
         login:       membership.organization.login,
         owner_login: membership.user.login,
@@ -134,11 +139,12 @@ class OrganizationsController < Orgs::Controller
   # Check if the current user has any organizations with admin privilege,
   # if so add the user to the corresponding classroom automatically.
   def add_current_user_to_organizations
-    @users_github_organizations.each do |organization|
-      user_orgs = Organization.where(github_id: organization[:github_id])
+    @users_github_organizations.each do |github_org|
+      user_classrooms = Organization.where(github_id: github_org[:github_id])
 
-      user_orgs.map do |user_org|
-        create_user_organization_access(user_org) unless user_org.users.include?(current_user)
+      # Iterate over each classroom associate with this github organization
+      user_classrooms.map do |classroom|
+        create_user_organization_access(classroom) unless classroom.users.include?(current_user)
       end
     end
   end
@@ -170,6 +176,16 @@ class OrganizationsController < Orgs::Controller
       next unless assignment.creator_id == @removed_user.id
       assignment.update_attributes(creator_id: new_owner.id)
     end
+  end
+
+  def validate_multiple_classrooms_on_org
+    classroom_exists_on_org = Organization.unscoped.find_by(github_id: new_organization_params[:github_id])
+    if classroom_exists_on_org && !multiple_classrooms_per_org_enabled?
+      flash[:error] = "Validation failed: GitHub ID has already been taken"
+      redirect_to new_organization_path
+      return false
+    end
+    true
   end
 end
 # rubocop:enable Metrics/ClassLength

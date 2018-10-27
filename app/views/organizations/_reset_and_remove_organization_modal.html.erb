@@ -8,7 +8,11 @@
 
   <div class="remodal-description">
     <p>
-      <%= t('views.organizations.delete_consequences_html', organization: sanitize(current_organization.github_organization.login)) %>
+      <% if multiple_classrooms_per_org_enabled? %>
+        <%= t('views.organizations.delete_classroom_consequences_html', organization: sanitize(current_organization.github_organization.login)) %>
+      <% else %>
+        <%= t('views.organizations.delete_org_consequences_html', organization: sanitize(current_organization.github_organization.login)) %>
+      <% end %>
     </p>
   </div>
 
