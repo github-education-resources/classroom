@@ -7,7 +7,7 @@ RSpec.describe Organization::Creator, type: :model do
   let(:user)                   { classroom_teacher                           }
 
   after(:each) do
-    @organization.try(:destroy)
+    Organization.find_each(&:destroy)
   end
 
   describe "::perform", :vcr do
@@ -25,6 +25,41 @@ RSpec.describe Organization::Creator, type: :model do
         expect(GitHubClassroom.statsd).to receive(:increment).with("classroom.created")
 
         Organization::Creator.perform(github_id: github_organization_id, users: [user])
+      end
+
+      context "multiple classrooms on same organization" do
+        before do
+          result = Organization::Creator.perform(github_id: github_organization_id, users: [user])
+          @org = result.organization
+        end
+
+        it "creates a classroom with the same webhook id as the existing one" do
+          result = Organization::Creator.perform(github_id: github_organization_id, users: [user])
+          expect(result.organization.webhook_id).to eql(@org.webhook_id)
+        end
+
+        it "creates a classroom with the default title but incremented id" do
+          result = Organization::Creator.perform(github_id: github_organization_id, users: [user])
+          expect(result.organization.title).to eql("#{@org.title[0...-2]}-2")
+        end
+      end
+
+      context "already created webhook on GitHub org" do
+        before do
+          GitHubOrganization
+            .any_instance.stub(:create_organization_webhook)
+            .and_raise GitHub::Error, "Hook: Hook already exists on this organization"
+
+          @dummy_webhook_id = 12_345
+          Organization::Creator
+            .any_instance.stub(:get_organization_webhook_id)
+            .and_return @dummy_webhook_id
+        end
+
+        it "sets webhook id to what it is already set on org" do
+          result = Organization::Creator.perform(github_id: github_organization_id, users: [user])
+          expect(result.organization.webhook_id).to eql(@dummy_webhook_id)
+        end
       end
     end
 
