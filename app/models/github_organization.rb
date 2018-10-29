@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class GitHubOrganization < GitHubResource
   def accept_membership(user_github_login)
     return if organization_member?(user_github_login)
@@ -116,6 +117,12 @@ class GitHubOrganization < GitHubResource
     end
   end
 
+  def organization_webhooks
+    GitHub::Errors.with_error_handling do
+      @client.org_hooks(@id)
+    end
+  end
+
   def remove_organization_webhook(webhook_id)
     return if webhook_id.blank?
     GitHub::Errors.with_error_handling do
@@ -152,3 +159,4 @@ class GitHubOrganization < GitHubResource
     Rails.application.secrets.webhook_secret
   end
 end
+# rubocop:enable Metrics/ClassLength

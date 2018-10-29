@@ -105,19 +105,42 @@ RSpec.describe OrganizationsController, type: :controller do
       organization.destroy!
     end
 
+    context "multiple_classrooms_per_org flag not enabled" do
+      before do
+        GitHubClassroom.flipper[:multiple_classrooms_per_org].disable
+      end
+
+      it "will not add an organization that already exists" do
+        existing_organization_options = { github_id: organization.github_id }
+        expect do
+          post :create, params: { organization: existing_organization_options }
+        end.to_not change(Organization, :count)
+      end
+    end
+
+    context "multiple_classrooms_per_org flag is enabled" do
+      before do
+        GitHubClassroom.flipper[:multiple_classrooms_per_org].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:multiple_classrooms_per_org].disable
+      end
+
+      it "will add a classroom on same organization" do
+        existing_organization_options = { github_id: organization.github_id }
+        expect do
+          post :create, params: { organization: existing_organization_options }
+        end.to change(Organization, :count)
+      end
+    end
+
     it "will fail to add an organization the user is not an admin of" do
       new_organization = build(:organization, github_id: 90)
       new_organization_options = { github_id: new_organization.github_id }
 
       expect do
         post :create, params: { organization: new_organization_options }
-      end.to_not change(Organization, :count)
-    end
-
-    it "will not add an organization that already exists" do
-      existing_organization_options = { github_id: organization.github_id }
-      expect do
-        post :create, params: { organization: existing_organization_options }
       end.to_not change(Organization, :count)
     end
 
