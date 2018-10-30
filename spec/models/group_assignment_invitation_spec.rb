@@ -23,7 +23,7 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
   describe "#status", :vcr do
     let(:organization) { classroom_org }
     let(:grouping)     { create(:grouping, organization: organization) }
-    let(:group)        { Group.create(grouping: grouping, title: "#{Faker::Company.name} Team") }
+    let(:group)        { create(:group, grouping: grouping) }
     let(:invitation)   { create(:group_assignment_invitation) }
 
     it "should create an invite status for a group when one does not exist" do
@@ -139,7 +139,7 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
   describe "group_invite_statuses", :vcr do
     let(:organization) { classroom_org }
     let(:grouping)     { create(:grouping, organization: organization) }
-    let(:group)        { Group.create(grouping: grouping, title: "#{Faker::Company.name} Team") }
+    let(:group)        { create(:group, grouping: grouping) }
     let(:invitation)   { create(:group_assignment_invitation) }
 
     it "returns a list of invite statuses" do

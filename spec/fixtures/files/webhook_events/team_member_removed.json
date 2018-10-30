@@ -41,7 +41,7 @@
   },
   "team": {
     "name": "Contractors",
-    "id": 123456,
+    "id": 2977000,
     "slug": "contractors",
     "permission": "admin",
     "url": "https://api.github.com/teams/123456",

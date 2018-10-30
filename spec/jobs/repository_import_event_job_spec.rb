@@ -19,7 +19,7 @@ RSpec.describe RepositoryImportEventJob, type: :job do
   let(:organization)        { classroom_org }
   let(:user)                { classroom_student }
   let(:grouping)            { create(:grouping, organization: organization) }
-  let(:group)               { Group.create(title: "#{Faker::Company.name} team", grouping: grouping) }
+  let(:group)               { create(:group, grouping: grouping, github_team_id: 2_977_000) }
   let(:assignment)          { create(:assignment, organization: organization) }
   let(:group_assignment) do
     group_assignment = create(
