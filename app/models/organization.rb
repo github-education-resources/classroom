@@ -17,14 +17,13 @@ class Organization < ApplicationRecord
 
   has_and_belongs_to_many :users
 
-  validates :github_id, presence: true, uniqueness: true
+  validates :github_id, presence: true
 
   validates :title, presence: true
   validates :title, length: { maximum: 60 }
+  validates :title, uniqueness: { scope: :github_id }
 
   validates :slug, uniqueness: true
-
-  validates :webhook_id, uniqueness: true, allow_nil: true
 
   before_destroy :silently_remove_organization_webhook
 
@@ -48,15 +47,22 @@ class Organization < ApplicationRecord
     @github_organization ||= GitHubOrganization.new(github_client, github_id)
   end
 
-  def slugify
-    self.slug = "#{github_id} #{title}".parameterize
+  def name_for_slug
+    "#{github_id} #{title}"
   end
 
   def one_owner_remains?
     users.count == 1
   end
 
+  # Check if we are the last Classroom on this GitHub Organization
+  def last_classroom_on_org?
+    Organization.where(github_id: github_id).length <= 1
+  end
+
   def silently_remove_organization_webhook
+    return true unless last_classroom_on_org?
+
     begin
       github_organization.remove_organization_webhook(webhook_id)
     rescue GitHub::Error => err
