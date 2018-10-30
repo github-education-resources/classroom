@@ -17,7 +17,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   before_action :ensure_group_import_resiliency_enabled, only: %i[create_repo progress]
 
   def show
-    @groups = invitation.groups.map { |group| [group.title, group.id] }
+    @groups = invitation.groups.order(:title).page(params[:page])
   end
 
   def accept; end
