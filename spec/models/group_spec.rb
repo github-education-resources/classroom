@@ -23,6 +23,14 @@ RSpec.describe Group, type: :model do
     end
   end
 
+  describe "validations" do
+    context "when title has an emoji" do
+      it "is invalid" do
+        expect { create(:group, title: "Cool cats 🐈") }.to raise_error(ActiveRecord::RecordInvalid)
+      end
+    end
+  end
+
   describe "callbacks", :vcr do
     describe "assocation callbacks" do
       before(:each) do
