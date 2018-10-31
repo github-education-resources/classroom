@@ -24,9 +24,18 @@ RSpec.describe Group, type: :model do
   end
 
   describe "validations" do
+    context "when a pre-existing record has an emoji" do
+      it "is valid" do
+        pre_existing_record = build(:group, title: "Cool cats 🐈")
+        pre_existing_record.slugify
+        pre_existing_record.save(validate: false)
+        expect(pre_existing_record.valid?).to be_truthy
+      end
+    end
+
     context "when title has an emoji" do
       it "is invalid" do
-        expect { create(:group, title: "Cool cats 🐈") }.to raise_error(ActiveRecord::RecordInvalid)
+        expect(build(:group, title: "Cool cats 🐈").valid?).to be_falsey
       end
     end
   end
