@@ -23,6 +23,29 @@ RSpec.describe Group, type: :model do
     end
   end
 
+  describe "validations" do
+    context "when a pre-existing record has an emoji in its title" do
+      let(:group) do
+        group = build(:group, title: "Cool cats 🐈")
+        group.slugify
+        group.save!(validate: false)
+        group
+      end
+
+      it "is valid" do
+        expect(group.valid?).to be_truthy
+      end
+    end
+
+    context "when title has an emoji" do
+      let(:group) { build(:group, title: "Cool cats 🐈") }
+
+      it "is invalid" do
+        expect(group.valid?).to be_falsey
+      end
+    end
+  end
+
   describe "callbacks", :vcr do
     describe "assocation callbacks" do
       before(:each) do

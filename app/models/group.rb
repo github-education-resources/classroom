@@ -24,6 +24,7 @@ class Group < ApplicationRecord
 
   validates :title, presence: true
   validates :title, length: { maximum: 39 }
+  validates :title, no_emoji: true, on: :create
 
   validates :slug, uniqueness: { scope: :grouping }
 
