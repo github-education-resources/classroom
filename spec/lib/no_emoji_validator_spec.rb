@@ -33,7 +33,7 @@ RSpec.describe NoEmojiValidator do
       expect(test_object.valid?).to eq(false)
       expect(test_object.errors.count).to eq(1)
       expect(test_object.errors.details[:title])
-        .to eq([{ error: "title is not allowed to have emojis." }])
+        .to eq([{ error: "title cannot contain emojis." }])
     end
   end
 end
