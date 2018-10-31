@@ -47,6 +47,8 @@ RSpec.describe Group::Creator, type: :model do
           expect(group)
             .to receive(:save!)
             .and_raise(ActiveRecord::RecordInvalid)
+          expect(group)
+            .to receive(:silently_destroy_github_team)
         end
 
         it "returns failed" do
@@ -64,6 +66,8 @@ RSpec.describe Group::Creator, type: :model do
         expect(group)
           .to receive(:create_github_team)
           .and_raise(GitHub::Error)
+        expect(group)
+          .to receive(:silently_destroy_github_team)
       end
 
       it "returns failed" do
