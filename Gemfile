@@ -73,7 +73,8 @@ gem "sprockets",  "~> 3.7", ">= 3.7.2"
 gem "turbolinks", "2.5.3.226.g37a7c29"
 gem "typhoeus",   "~> 1.3"
 
-gem "uglifier", "~> 3.2"
+gem "uglifier",      "~> 3.2"
+gem "unicode-emoji", "~> 1.1"
 
 group :development do
   gem "foreman",     "~> 0.84.0"
