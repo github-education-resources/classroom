@@ -85,7 +85,7 @@ RSpec.describe Group, type: :model do
   describe "group_invite_statuses", :vcr do
     let(:organization) { classroom_org }
     let(:grouping)     { create(:grouping, organization: organization) }
-    let(:group)        { create(:group, grouping: grouping, title: "#{Faker::Company.name} Team") }
+    let(:group)        { create(:group, grouping: grouping) }
     let(:invitation1)  { create(:group_assignment_invitation) }
     let(:invitation2)  { create(:group_assignment_invitation) }
 
