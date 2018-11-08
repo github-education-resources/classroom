@@ -58,6 +58,7 @@ class Group
       group.save!
       Result.success(group)
     rescue ActiveRecord::RecordInvalid, GitHub::Error => error
+      group.silently_destroy_github_team
       Result.failed(error.message)
     end
   end
