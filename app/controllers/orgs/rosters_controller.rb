@@ -19,7 +19,10 @@ module Orgs
         .order(:identifier)
         .page(params[:roster_entries_page])
 
-      @current_unlinked_users = User.where(id: unlinked_user_ids).page(params[:unlinked_users_page])
+      @current_unlinked_users = User
+        .where(id: unlinked_user_ids)
+        .order(:id)
+        .page(params[:unlinked_users_page])
 
       download_roster if params.dig("format")
     end

@@ -22,6 +22,11 @@ FactoryBot.define do
     user
   end
 
+  factory :group_invite_status do
+    group_assignment_invitation
+    group
+  end
+
   factory :assignment_repo do
     assignment
     user
@@ -52,6 +57,13 @@ FactoryBot.define do
 
     title { Faker::Company.name }
     slug  { title.parameterize  }
+  end
+
+  factory :group do
+    grouping
+
+    title          { Faker::Team.name[0..39] }
+    github_team_id { rand(1..1_000_000) }
   end
 
   factory :organization do

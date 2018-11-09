@@ -6,8 +6,8 @@ RSpec.describe GroupsController, type: :controller do
   let(:organization)  { classroom_org     }
   let(:user)          { classroom_teacher }
 
-  let(:grouping) { create(:grouping, organization: organization)         }
-  let(:group)    { Group.create(title: "The Group", grouping: grouping)  }
+  let(:grouping) { create(:grouping, organization: organization) }
+  let(:group)    { create(:group, grouping: grouping, github_team_id: 2_976_595) }
 
   before do
     sign_in_as(user)
@@ -15,7 +15,6 @@ RSpec.describe GroupsController, type: :controller do
 
   after(:each) do
     RepoAccess.destroy_all
-    Group.destroy_all
   end
 
   context "flipper is enabled for the user" do

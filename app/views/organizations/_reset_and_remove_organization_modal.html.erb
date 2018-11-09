@@ -8,11 +8,15 @@
 
   <div class="remodal-description">
     <p>
-      <%= t('views.organizations.delete_consequences_html', organization: sanitize(current_organization.github_organization.login)) %>
+      <% if multiple_classrooms_per_org_enabled? %>
+        <%= t('views.organizations.delete_classroom_consequences_html', organization: sanitize(current_organization.github_organization.login)) %>
+      <% else %>
+        <%= t('views.organizations.delete_org_consequences_html', organization: sanitize(current_organization.github_organization.login)) %>
+      <% end %>
     </p>
   </div>
 
-  <%= form_for current_organization, html: { "data-name" => current_organization.github_organization.login, method: 'delete' } do |f| %>
+  <%= form_for current_organization, html: { "data-name" => current_organization.title, method: 'delete' } do |f| %>
     <dl class="form js-normalize-submit">
       <dt><%= t('views.organizations.delete_confirm') %></dt>
       <dd><input type="text" class="js-input-block form-control input-contrast input-block" autofocus></dd>

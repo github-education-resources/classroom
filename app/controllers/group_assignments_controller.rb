@@ -31,12 +31,15 @@ class GroupAssignmentsController < ApplicationController
 
   def show
     pagination_key = @organization.roster ? :teams_page : :page
-    @group_assignment_repos = GroupAssignmentRepo.where(group_assignment: @group_assignment)
+    @group_assignment_repos = GroupAssignmentRepo
+      .where(group_assignment: @group_assignment)
+      .order(:id)
       .page(params[pagination_key])
 
     return unless @organization.roster
     @students_not_on_team = @organization.roster.roster_entries
       .students_not_on_team(@group_assignment)
+      .order(:id)
       .page(params[:students_page])
   end
 
@@ -67,7 +70,7 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def assistant
-    code_param = CGI.escape(current_user.api_token)
+    code_param = current_user.api_token
     url_param = CGI.escape(organization_group_assignment_url)
 
     redirect_to "x-github-classroom://?assignment_url=#{url_param}&code=#{code_param}"

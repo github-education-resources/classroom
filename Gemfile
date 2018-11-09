@@ -73,7 +73,8 @@ gem "sprockets",  "~> 3.7", ">= 3.7.2"
 gem "turbolinks", "2.5.3.226.g37a7c29"
 gem "typhoeus",   "~> 1.3"
 
-gem "uglifier", "~> 3.2"
+gem "uglifier",      "~> 3.2"
+gem "unicode-emoji", "~> 1.1"
 
 group :development do
   gem "foreman",     "~> 0.84.0"
@@ -111,6 +112,7 @@ group :test do
   gem "database_cleaner",     "~> 1.6", ">= 1.6.1"
   gem "factory_bot_rails",    "~> 4.8"
   gem "faker",                "~> 1.8", ">= 1.8.4"
+  gem "shoulda-matchers",     "4.0.0.rc1"
   gem "simplecov",            "~> 0.15.0", require: false
   gem "vcr",                  "~> 3.0", ">= 3.0.3"
   gem "webmock",              "~> 3.0", ">= 3.0.1"
