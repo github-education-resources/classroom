@@ -9,6 +9,6 @@ class OrganizationWebhook < ApplicationRecord
   validates :github_organization_id, uniqueness: true
 
   def github_organization
-    @github_organization ||= GitHubOrganization.new(organizations.first.github_client, github_organization_id)
+    @github_organization ||= organizations.first.github_organization
   end
 end

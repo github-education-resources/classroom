@@ -4,7 +4,29 @@ require "rails_helper"
 
 RSpec.describe OrganizationWebhook, type: :model do
   let(:organization) { classroom_org }
-  subject { create(:organization, github_organization_id: organization.github_id) }
+  subject do
+    organization_webhook = create(:organization_webhook, github_organization_id: organization.github_id)
+    organization_webhook.organizations << organization
+    organization_webhook
+  end
 
+  it { should have_many(:organizations) }
 
+  it { should validate_uniqueness_of(:github_id) }
+
+  it { should validate_presence_of(:github_organization_id) }
+  it { should validate_uniqueness_of(:github_organization_id) }
+
+  describe "#github_organization" do
+    it "requests a GitHubOrganization" do
+      # expect_any_instance_of(Organization)
+      #   .to receive(:github_organization)
+      #   .and_return(true)
+
+      # expect(GitHubOrganization)
+      #   .to receive(:new)
+      #   .with(organization.github_client, organization.github_id)
+      # subject.github_organization
+    end
+  end
 end
