@@ -8,7 +8,7 @@ task organization_webhook_backfill: :environment do
 
   puts "Updating Organizations..."
 
-  Organizations.where(organization_webhook_id: nil).find_in_batches(batch_size: 250) do |organizations|
+  Organization.where(organization_webhook_id: nil).find_in_batches(batch_size: 250) do |organizations|
     organizations_updated += organizations.length
     organizations.each do |organization|
       organization_webhook = OrganizationWebhook.find_or_initialize_by(github_organization_id: organization.github_id)
