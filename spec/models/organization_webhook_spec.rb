@@ -19,14 +19,17 @@ RSpec.describe OrganizationWebhook, type: :model do
 
   describe "#github_organization" do
     it "requests a GitHubOrganization" do
-      # expect_any_instance_of(Organization)
-      #   .to receive(:github_organization)
-      #   .and_return(true)
+      expect_any_instance_of(Organization).to receive(:github_organization)
+      subject.github_organization
+    end
 
-      # expect(GitHubOrganization)
-      #   .to receive(:new)
-      #   .with(organization.github_client, organization.github_id)
-      # subject.github_organization
+    context "has no organizations" do
+      it "returns nil" do
+        expect(subject)
+          .to receive(:organizations)
+          .and_return([])
+        expect(subject.github_organization).to be_nil
+      end
     end
   end
 end
