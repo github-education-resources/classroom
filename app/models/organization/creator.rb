@@ -66,12 +66,17 @@ class Organization
       begin
         github_organization = GitHubOrganization.new(users.first.github_client, github_id)
 
+        org_webhook = OrganizationWebhook.find_or_create_by(github_organization_id: github_id)
+        webhook_id = create_organization_webhook!
+
+        org_webhook.update!(github_id: webhook_id)
         organization.update_attributes!(
           github_id: github_id,
           title: title,
           users: users,
-          webhook_id: create_organization_webhook!,
-          github_global_relay_id: github_organization.node_id
+          webhook_id: webhook_id,
+          github_global_relay_id: github_organization.node_id,
+          organization_webhook: org_webhook
         )
       rescue ActiveRecord::RecordInvalid => err
         raise Result::Error, err.message
