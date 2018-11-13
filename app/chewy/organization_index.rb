@@ -9,7 +9,9 @@ class OrganizationIndex < Chewy::Index
     field :created_at
     field :updated_at
 
-    field :login, value: ->(organization) { organization&.github_organization&.login }
-    field :name,  value: ->(organization) { organization&.github_organization&.name  }
+    field :login,                 value: ->(organization) { organization&.github_organization&.login }
+    field :name,                  value: ->(organization) { organization&.github_organization&.name  }
+    field :webhook_id,            value: ->(organization) { organization&.organization_webhook&.github_id }
+    field :last_webhook_recieved, value: ->(organization) { organization&.organization_webhook&.last_webhook_recieved }
   end
 end
