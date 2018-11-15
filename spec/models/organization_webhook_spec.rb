@@ -12,7 +12,7 @@ RSpec.describe OrganizationWebhook, type: :model do
 
   it { should have_many(:organizations) }
 
-  it { should validate_uniqueness_of(:github_id) }
+  it { should validate_uniqueness_of(:github_id).allow_nil }
 
   it { should validate_presence_of(:github_organization_id) }
   it { should validate_uniqueness_of(:github_organization_id) }
