@@ -3,7 +3,7 @@
 class OrganizationWebhook < ApplicationRecord
   has_many :organizations
 
-  validates :github_id, uniqueness: true
+  validates :github_id, uniqueness: true, allow_nil: true
 
   validates :github_organization_id, presence:   true
   validates :github_organization_id, uniqueness: true
