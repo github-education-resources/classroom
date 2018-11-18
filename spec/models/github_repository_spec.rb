@@ -23,7 +23,7 @@ describe GitHubRepository do
     gh_repo = @client.repository(@github_repository.id)
 
     @github_repository.attributes.each do |attribute, value|
-      next if %i[client access_token].include?(attribute)
+      next if %i[id_attributes client access_token].include?(attribute)
       expect(@github_repository).to respond_to(attribute)
       expect(value).to eql(gh_repo.send(attribute))
     end
@@ -33,7 +33,7 @@ describe GitHubRepository do
 
   it "responds to all *_no_cache methods", :vcr do
     @github_repository.attributes.each do |attribute, _|
-      next if %i[id client access_token].include?(attribute)
+      next if %i[id id_attributes client access_token].include?(attribute)
       expect(@github_repository).to respond_to("#{attribute}_no_cache")
     end
   end

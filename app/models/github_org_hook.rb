@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-class GitHubOrgHook < GitHubResource
-
+class GitHubOrgHook < GitHubOrgResource
   private
 
   def github_attributes

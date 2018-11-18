@@ -20,25 +20,28 @@ class GitHubModel
   end
 
   # Internal: The attributes used to initialize this instance.
-  attr_reader :attributes
+  attr_reader :attributes, :client, :access_token, :id_attributes
 
   # Public: Create a new instance, optionally providing a `Hash` of
   # `attributes`. Any attributes with the same name as an
   # `attr_reader` will be set as instance variables.
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
-  def initialize(client, id, org_id: nil)
+  def initialize(client, id_attributes)
     attributes = {}.tap do |attr|
-      attr[:id]           = id
-      attr[:org_id]       = org_id
-      attr[:client]       = client
-      attr[:access_token] = client.access_token
+      attr[:client]        = client
+      attr[:access_token]  = client.access_token
+      attr[:id_attributes] = id_attributes
+
+      id_attributes.each do |attr_name, attr_value|
+        attr[attr_name] = attr_value
+      end
 
       # Get all of the attributes, set their attr_reader
       # and set their value.
       github_attributes.each do |gh_attr|
         self.class.class_eval { attr_reader gh_attr.to_sym }
-        attr[gh_attr.to_sym] = github_response(client, [org_id, id].compact).send(gh_attr)
+        attr[gh_attr.to_sym] = github_response(client, id_attributes.values.compact).send(gh_attr)
       end
 
       remove_instance_variable("@response")
@@ -47,7 +50,7 @@ class GitHubModel
     update(attributes || {})
 
     # Create our *_no_cache methods for each GitHubModel
-    set_github_no_cache_methods(client, [org_id, id].compact)
+    set_github_no_cache_methods(client, id_attributes.values.compact)
 
     after_initialize if respond_to? :after_initialize
   end
@@ -74,8 +77,15 @@ class GitHubModel
   #
   # Returns true if the resource is found, otherwise false.
   def on_github?
-    response = github_client_request(client, id, headers: GitHub::APIHeaders.no_cache_no_store)
-    response ||= github_classroom_request(id, headers: GitHub::APIHeaders.no_cache_no_store)
+    response = github_client_request(
+      client,
+      id_attributes.values.compact,
+      headers: GitHub::APIHeaders.no_cache_no_store
+    )
+    response ||= github_classroom_request(
+      id_attributes.values.compact,
+      headers: GitHub::APIHeaders.no_cache_no_store
+    )
     response.present?
   end
 
