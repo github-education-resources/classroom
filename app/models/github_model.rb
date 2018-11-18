@@ -27,7 +27,7 @@ class GitHubModel
   # `attr_reader` will be set as instance variables.
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
-  def initialize(client, id, org_id = nil)
+  def initialize(client, id, org_id: nil)
     attributes = {}.tap do |attr|
       attr[:id]           = id
       attr[:org_id]       = org_id
@@ -38,7 +38,7 @@ class GitHubModel
       # and set their value.
       github_attributes.each do |gh_attr|
         self.class.class_eval { attr_reader gh_attr.to_sym }
-        attr[gh_attr.to_sym] = github_response(client, id, org_id).send(gh_attr)
+        attr[gh_attr.to_sym] = github_response(client, [org_id, id].compact).send(gh_attr)
       end
 
       remove_instance_variable("@response")
@@ -47,7 +47,7 @@ class GitHubModel
     update(attributes || {})
 
     # Create our *_no_cache methods for each GitHubModel
-    set_github_no_cache_methods(client, id, org_id)
+    set_github_no_cache_methods(client, [org_id, id].compact)
 
     after_initialize if respond_to? :after_initialize
   end
@@ -81,22 +81,17 @@ class GitHubModel
 
   private
 
-  # Internal: Define specified *_no_cache methods
+  # Internal: Define specified *_no_cache methods.
   #
-  # client - The Octokit::Client making the request
-  # id     - The Interger id for the resource
+  # client  - The Octokit::Client making the request.
+  # id_args - The Interger ids for the resource.
   #
   # Returns an Sawyer::Resource or a Null:GitHubObject
-  def set_github_no_cache_methods(client, id, org_id = nil)
+  def set_github_no_cache_methods(client, id_args)
     github_attributes.each do |gh_no_cache_attr|
       define_singleton_method("#{gh_no_cache_attr}_no_cache") do
-        if org_id
-          response = github_client_org_request(client, org_id, id, headers: GitHub::APIHeaders.no_cache_no_store)
-          response ||= github_classroom_org_request(org_id, id, headers: GitHub::APIHeaders.no_cache_no_store)
-        else
-          response = github_client_request(client, id, headers: GitHub::APIHeaders.no_cache_no_store)
-          response ||= github_classroom_request(id, headers: GitHub::APIHeaders.no_cache_no_store)
-        end
+        response = github_client_request(client, id_args, headers: GitHub::APIHeaders.no_cache_no_store)
+        response ||= github_classroom_request(id_args, headers: GitHub::APIHeaders.no_cache_no_store)
         response.present? ? response.send(gh_no_cache_attr) : null_github_object.send(gh_no_cache_attr)
       end
     end
@@ -104,77 +99,44 @@ class GitHubModel
 
   # Internal: Return a GitHub API Response for an resource.
   #
-  # client - The Octokit::Client making the request.
-  # id     - The Interger id for the resource.
+  # client  - The Octokit::Client making the request.
+  # id_args - The Interger ids for the resource.
   #
   # Returns an Sawyer::Resource or a Null:GitHubObject.
-  def github_response(client, id, org_id = nil)
+  def github_response(client, id_args)
     return @response if defined?(@response)
-    if org_id
-      @response = github_client_org_request(client, org_id, id) || github_classroom_request(org_id, id)
-    else
-      @response = github_client_request(client, id) || github_classroom_request(id)
-    end
+    @response = github_client_request(client, id_args) || github_classroom_request(id_args)
     @response ||= null_github_object
   end
 
   # Internal: Make a GitHub API request for a resource.
   #
   # client  - The Octokit::Client making the request.
-  # id      - The Interger id of the resource on GitHub.
+  # id_args - The Interger ids for the resource.
   # options - A Hash of options to pass (optional).
   #
   # Returns a Sawyer::Resource or raises and error.
-  def github_client_request(client, id, **options)
-    GitHub::Errors.with_error_handling { client.send(github_type, id, options) }
-  rescue GitHub::Error
-    nil
-  end
-
-  # Internal: Make a GitHub API request for a resource.
-  #
-  # client  - The Octokit::Client making the request.
-  # org_id  - The Integer id of the organization on GitHub.
-  # id      - The Integer id of the resource on GitHub.
-  # options - A Hash of options to pass (optional).
-  #
-  # Returns a Sawyer::Resource or raises and error.
-  def github_client_org_request(client, org_id, id, **options)
-    GitHub::Errors.with_error_handling { client.send(github_type, org_id, id, options) }
+  def github_client_request(client, id_args, **options)
+    GitHub::Errors.with_error_handling { client.send(github_type, *id_args, options) }
   rescue GitHub::Error
     nil
   end
 
   # Internal: Make a GitHub API request for a resource
   #
-  # id      - The Interger id of the resource on GitHub
+  # id_args - The Interger ids for the resource.
   # options - A Hash of options to pass (optional).
   #
   # Returns a Sawyer::Resource or nil if an error occured.
-  def github_classroom_request(id, **options)
+  def github_classroom_request(id_args, **options)
     GitHub::Errors.with_error_handling do
-      GitHubClassroom.github_client.send(github_type, id, options)
+      GitHubClassroom.github_client.send(github_type, *id_args, options)
     end
   rescue GitHub::Error
     nil
   end
 
-  # Internal: Make a GitHub API request for a resource
-  #
-  # org_id  - The Integer id of the organization on GitHub.
-  # id      - The Interger id of the resource on GitHub
-  # options - A Hash of options to pass (optional).
-  #
-  # Returns a Sawyer::Resource or nil if an error occured.
-  def github_classroom_org_request(org_id, id, **options)
-    GitHub::Errors.with_error_handling do
-      GitHubClassroom.github_client.send(github_type, org_id, id, options)
-    end
-  rescue GitHub::Error
-    nil
-  end
-
-  # Internal: Get the resource type for the model
+  # Internal: Get the resource type for the model.
   #
   # Example:
   #
