@@ -118,6 +118,14 @@ class GitHubModel
   # Returns a Sawyer::Resource or raises and error.
   def github_client_request(client, id, **options)
     GitHub::Errors.with_error_handling { client.send(github_type, id, options) }
+  rescue GitHub::TooManyRequests
+    retries ||= 0
+    if retries < 1
+      retries +=1
+      sleep client.rate_limit.resets_in + 1
+      retry
+    end
+    nil
   rescue GitHub::Error
     nil
   end
@@ -132,6 +140,14 @@ class GitHubModel
     GitHub::Errors.with_error_handling do
       GitHubClassroom.github_client.send(github_type, id, options)
     end
+  rescue GitHub::TooManyRequests
+    retries ||= 0
+    if retries < 1
+      retries +=1
+      sleep client.rate_limit.resets_in + 1
+      retry
+    end
+    nil
   rescue GitHub::Error
     nil
   end
