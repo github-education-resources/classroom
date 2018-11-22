@@ -11,6 +11,7 @@ RSpec.describe OrganizationWebhook, type: :model do
   end
 
   it { should have_many(:organizations) }
+  it { should have_many(:users).through(:organizations) }
 
   it { should validate_uniqueness_of(:github_id).allow_nil }
 
