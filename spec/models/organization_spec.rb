@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe Organization, type: :model do
   subject { create(:organization, github_id: 12_345) }
 
-  it { should belong_to(:organization_webhook).optional }
+  it { should belong_to(:organization_webhook) }
   it { should belong_to(:roster).optional }
 
   describe "roster association" do
