@@ -3,10 +3,6 @@
 require "rails_helper"
 
 RSpec.describe HooksController, type: :controller do
-  before do
-    set_http_header("HTTP_X_HUB_SIGNATURE", "sha1=#{GitHub::WebHook.generate_hmac('{"foo":"bar"}')}")
-  end
-
   describe "invalid webhook request" do
     it "responds with a 400 if there is not payload" do
       send_webhook(nil)
@@ -18,9 +14,22 @@ RSpec.describe HooksController, type: :controller do
       send_webhook(foo: "bar")
       expect(response).to have_http_status(:forbidden)
     end
+
+    context "OrganizationWebhook doesn't exist" do
+      let(:payload) { { "organization" => { "id" => 0 } } }
+      it "responds with :not_found if the OrganizationWebhook record cannot be found" do
+        set_http_header("HTTP_X_HUB_SIGNATURE", "sha1=#{GitHub::WebHook.generate_hmac(payload.to_json)}")
+        send_webhook(payload)
+        expect(response).to have_http_status(:not_found)
+      end
+    end
   end
 
   describe "valid webhook request" do
+    before do
+      set_http_header("HTTP_X_HUB_SIGNATURE", "sha1=#{GitHub::WebHook.generate_hmac('{"foo":"bar"}')}")
+    end
+
     it "responds :ok for a valid request" do
       send_webhook(foo: "bar")
       expect(response).to have_http_status(:ok)
@@ -34,6 +43,38 @@ RSpec.describe HooksController, type: :controller do
         expect do
           send_webhook(foo: "bar")
         end.to have_enqueued_job(job_class)
+      end
+    end
+  end
+
+  describe "#update_last_webhook_recieved" do
+    context "payload[organization][id] exists" do
+      let(:payload) { { "organization" => { "id" => 0 } } }
+      subject { HooksController.new.send(:update_last_webhook_recieved, payload) }
+
+      context "OrganizationWebhook exists" do
+        before do
+          create(:organization_webhook, github_organization_id: 0)
+        end
+
+        it "returns true" do
+          expect(subject).to be_truthy
+        end
+      end
+
+      context "OrganizationWebhook doesn't exist" do
+        it "raises an RecordNotFound" do
+          expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+      end
+    end
+
+    context "payload[organization][id] does not exist" do
+      let(:payload) { {} }
+      subject { HooksController.new.send(:update_last_webhook_recieved, payload) }
+
+      it "returns false" do
+        expect(subject).to be_falsy
       end
     end
   end
