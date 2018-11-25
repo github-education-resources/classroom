@@ -1,0 +1,14 @@
+<% if view.display_badge? %>
+  <span
+    class="tooltipped tooltipped-multiline tooltipped-s text-bold pt-0 rounded-1"
+    aria-label="The <%= view.public_name %> feature is part of the pre-release program. Leave feedback on the feature by clicking this label."
+  >
+    <% if view.feedback_url %>
+      <a href="<%= view.feedback_url %>">
+        <%= octicon 'beaker', height: 15, class: "mr-1" %>Pre-release
+      </a>
+    <% else %>
+      <%= octicon 'beaker', height: 15, class: "mr-1" %>Pre-release
+    <% end %>
+  </span>
+<% end %>
