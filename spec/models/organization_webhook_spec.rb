@@ -18,7 +18,6 @@ RSpec.describe OrganizationWebhook, type: :model do
   it { should validate_presence_of(:github_organization_id) }
   it { should validate_uniqueness_of(:github_organization_id) }
 
-
   describe "#admin_org_hook_scoped_github_client" do
     context "token is present" do
       before do
