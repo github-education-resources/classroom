@@ -18,18 +18,26 @@ RSpec.describe OrganizationWebhook, type: :model do
   it { should validate_presence_of(:github_organization_id) }
   it { should validate_uniqueness_of(:github_organization_id) }
 
-  describe "#github_organization" do
-    it "requests a GitHubOrganization" do
-      expect_any_instance_of(Organization).to receive(:github_organization)
-      subject.github_organization
+  describe "#users_with_admin_org_hook_scope" do
+    context "user with admin_org hook scope exists doesn't exist" do
+      before do
+        User.any_instance.stub(:github_client_scopes)
+          .and_return([])
+      end
+
+      it "returns an empty list" do
+        expect(subject.send(:users_with_admin_org_hook_scope)).to be_empty
+      end
     end
 
-    context "has no organizations" do
-      it "returns nil" do
-        expect(subject)
-          .to receive(:organizations)
-          .and_return([])
-        expect(subject.github_organization).to be_nil
+    context "user with admin_org hook scope exists" do
+      before do
+        User.any_instance.stub(:github_client_scopes)
+          .and_return(["admin:org_hook"])
+      end
+
+      it "returns a list with the user" do
+        expect(subject.send(:users_with_admin_org_hook_scope)).to_not be_empty
       end
     end
   end
