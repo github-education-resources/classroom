@@ -24,10 +24,10 @@ class OrganizationWebhook < ApplicationRecord
   # Warning: This could potentially take very long for organizations
   # of a large size, so invoke cautiously.
   def admin_org_hook_scoped_github_client
-    if Rails.env.test?
-      token = users.first.token unless users.first.nil?
+    token = if Rails.env.test?
+      users.first&.token
     else
-      token = user_with_admin_org_hook_scope.sample&.token
+      user_with_admin_org_hook_scope.sample&.token
     end
     raise NoValidTokenError, "No valid token with the `admin:org` hook scope." if token.nil?
     Octokit::Client.new(access_token: token)

@@ -18,6 +18,29 @@ RSpec.describe OrganizationWebhook, type: :model do
   it { should validate_presence_of(:github_organization_id) }
   it { should validate_uniqueness_of(:github_organization_id) }
 
+
+  describe "#admin_org_hook_scoped_github_client" do
+    context "token is present" do
+      before do
+        allow(subject).to receive_message_chain(:users, :first, :token) { "token" }
+      end
+
+      it "raises a NoValidTokenError" do
+        expect(subject.admin_org_hook_scoped_github_client).to be_a(Octokit::Client)
+      end
+    end
+
+    context "token is nil" do
+      before do
+        allow(subject).to receive_message_chain(:users, :first) { nil }
+      end
+
+      it "raises a NoValidTokenError" do
+        expect { subject.admin_org_hook_scoped_github_client }.to raise_error(described_class::NoValidTokenError)
+      end
+    end
+  end
+
   describe "#users_with_admin_org_hook_scope" do
     context "user with admin_org hook scope exists doesn't exist" do
       before do
