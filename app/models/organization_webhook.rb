@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class OrganizationWebhook < ApplicationRecord
+  class NoValidTokenError < StandardError; end
+
   has_many :organizations
   has_many :users, through: :organizations
 
@@ -9,12 +11,25 @@ class OrganizationWebhook < ApplicationRecord
   validates :github_organization_id, presence:   true
   validates :github_organization_id, uniqueness: true
 
-  def admin_org_hook_scope_github_client
+  # External: Finds a User's token that has the `admin:org_hook` scope
+  # for creating the organization webhook.
+  #
+  # Example:
+  #
+  #   admin_org_hook_scoped_github_client
+  #   # => {token_string}
+  #
+  # Returns a User's token or raises a NoValidTokenError if one could not be found.
+  #
+  # Warning: This could potentially take very long for organizations
+  # of a large size, so invoke cautiously.
+  def admin_org_hook_scoped_github_client
     if Rails.env.test?
       token = users.first.token unless users.first.nil?
     else
-      token = user_with_admin_org_hook_scope.sample
+      token = user_with_admin_org_hook_scope.sample&.token
     end
+    raise NoValidTokenError, "No valid token with the `admin:org` hook scope." if token.nil?
     Octokit::Client.new(access_token: token)
   end
 
@@ -35,7 +50,8 @@ class OrganizationWebhook < ApplicationRecord
   #      site_admin: true,
   #      last_active_at: Fri, 25 Nov 2016 03:39:54 UTC +00:00>]
   #
-  # Returns a User or nil if one could not be found.
+  # Returns a list of Users with the `admin:org` scope token
+  # or an empty list if none could be found.
   #
   # Warning: This could potentially take very long for organizations
   # of a large size, so invoke cautiously.
