@@ -12,14 +12,14 @@ module FeaturesHelper
   #   additional_classes - string of additional CSS classes to add to the badge
   #
   # Returns the rendered badge (which must be outputted with <%='s)
-  def prerelease_badge(feature_flag, public_name: nil, feedback_url: nil, additional_classes:nil)
+  def prerelease_badge(feature_flag, public_name: nil, feedback_url: nil, additional_classes: nil)
     name = public_name ? public_name : feature_flag
     render partial: "prerelease/badge", locals: {
-           feature_flag: feature_flag,
-           public_name: name.to_s,
-           feedback_url: feedback_url,
-           additional_classes: additional_classes,
-           display_badge: logged_in? && current_user.feature_enabled?(feature_flag),
+      feature_flag: feature_flag,
+      public_name: name.to_s,
+      feedback_url: feedback_url,
+      additional_classes: additional_classes,
+      display_badge: logged_in? && current_user.feature_enabled?(feature_flag)
     }
   end
 end
