@@ -2,6 +2,7 @@
 
 class OrganizationWebhook < ApplicationRecord
   has_many :organizations
+  has_many :users, through: :organizations
 
   validates :github_id, uniqueness: true, allow_nil: true
 
