@@ -41,7 +41,7 @@ RSpec.describe OrganizationWebhook, type: :model do
   end
 
   describe "#users_with_admin_org_hook_scope" do
-    context "user with admin_org hook scope exists doesn't exist" do
+    context "user with admin_org hook scope doesn't exist" do
       before do
         User.any_instance.stub(:github_client_scopes)
           .and_return([])
