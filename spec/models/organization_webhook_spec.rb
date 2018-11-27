@@ -24,7 +24,7 @@ RSpec.describe OrganizationWebhook, type: :model do
         allow(subject).to receive_message_chain(:users, :first, :token) { "token" }
       end
 
-      it "raises a NoValidTokenError" do
+      it "returns a Octokit::Client" do
         expect(subject.admin_org_hook_scoped_github_client).to be_a(Octokit::Client)
       end
     end
