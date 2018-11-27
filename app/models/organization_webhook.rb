@@ -27,7 +27,7 @@ class OrganizationWebhook < ApplicationRecord
     token = if Rails.env.test?
               users.first&.token
             else
-              user_with_admin_org_hook_scope.sample&.token
+              users_with_admin_org_hook_scope.sample&.token
             end
     raise NoValidTokenError, "No valid token with the `admin:org` hook scope." if token.nil?
     Octokit::Client.new(access_token: token)
