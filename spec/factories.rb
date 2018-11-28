@@ -66,6 +66,10 @@ FactoryBot.define do
     github_team_id { rand(1..1_000_000) }
   end
 
+  factory :organization_webhook do
+    github_organization_id { rand(1..1_000_000) }
+  end
+
   factory :organization do
     title      { "#{Faker::Company.name} Class" }
     github_id  { rand(1..1_000_000) }

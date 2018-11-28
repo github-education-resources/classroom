@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180918215254) do
+ActiveRecord::Schema.define(version: 20181101185917) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -162,6 +162,15 @@ ActiveRecord::Schema.define(version: 20180918215254) do
     t.index ["user_id"], name: "index_invite_statuses_on_user_id"
   end
 
+  create_table "organization_webhooks", force: :cascade do |t|
+    t.integer "github_id"
+    t.integer "github_organization_id", null: false
+    t.datetime "last_webhook_recieved"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["github_id"], name: "index_organization_webhooks_on_github_id", unique: true
+  end
+
   create_table "organizations", id: :serial, force: :cascade do |t|
     t.integer "github_id", null: false
     t.string "title", null: false
@@ -173,8 +182,10 @@ ActiveRecord::Schema.define(version: 20180918215254) do
     t.boolean "is_webhook_active", default: false
     t.integer "roster_id"
     t.string "github_global_relay_id"
+    t.bigint "organization_webhook_id"
     t.index ["deleted_at"], name: "index_organizations_on_deleted_at"
     t.index ["github_id"], name: "index_organizations_on_github_id"
+    t.index ["organization_webhook_id"], name: "index_organizations_on_organization_webhook_id"
     t.index ["roster_id"], name: "index_organizations_on_roster_id"
     t.index ["slug"], name: "index_organizations_on_slug"
   end
@@ -236,4 +247,5 @@ ActiveRecord::Schema.define(version: 20180918215254) do
   add_foreign_key "group_invite_statuses", "groups"
   add_foreign_key "invite_statuses", "assignment_invitations"
   add_foreign_key "invite_statuses", "users"
+  add_foreign_key "organizations", "organization_webhooks"
 end

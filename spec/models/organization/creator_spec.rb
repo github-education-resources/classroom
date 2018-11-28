@@ -27,6 +27,49 @@ RSpec.describe Organization::Creator, type: :model do
         Organization::Creator.perform(github_id: github_organization_id, users: [user])
       end
 
+      describe "organization_webhook model with same github_organization_id does not exist" do
+        let(:organization) do
+          Organization::Creator.perform(github_id: github_organization_id, users: [user]).organization
+        end
+
+        it "belongs to a new organization webhook" do
+          expect(organization.organization_webhook).to be_truthy
+        end
+
+        it "has an organization webhook with a github_id" do
+          expect(organization.organization_webhook.github_id).to be_truthy
+        end
+
+        it "has an organization webhook with a github_organization_id" do
+          expect(organization.organization_webhook.github_organization_id).to be_truthy
+        end
+      end
+
+      context "organization_webhook model with same github_organization_id exists" do
+        let(:organization_webhook) { create(:organization_webhook, github_organization_id: github_organization_id) }
+        let(:organization) do
+          Organization::Creator.perform(github_id: github_organization_id, users: [user]).organization
+        end
+
+        before do
+          organization_webhook
+        end
+
+        it "belongs to the pre existing organization webhook" do
+          expect(organization.organization_webhook_id).to eq(organization_webhook.id)
+        end
+
+        it "updates the organization webhook's github_id with a more up to date github_id" do
+          expected_new_webhook_id = 1_000_000
+          expect_any_instance_of(Organization::Creator)
+            .to receive(:create_organization_webhook!)
+            .and_return(expected_new_webhook_id)
+
+          expect(organization.organization_webhook.github_id).to eq(expected_new_webhook_id)
+          expect(organization_webhook.reload.github_id).to eq(expected_new_webhook_id)
+        end
+      end
+
       context "multiple classrooms on same organization" do
         before do
           result = Organization::Creator.perform(github_id: github_organization_id, users: [user])
