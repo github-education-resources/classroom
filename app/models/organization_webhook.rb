@@ -14,6 +14,8 @@ class OrganizationWebhook < ApplicationRecord
   # External: Finds a User's token that has the `admin:org_hook` scope
   # for creating the organization webhook.
   #
+  # organization - the organization to search for users in.
+  #
   # Example:
   #
   #   admin_org_hook_scoped_github_client
@@ -23,11 +25,12 @@ class OrganizationWebhook < ApplicationRecord
   #
   # Warning: This could potentially take very long for organizations
   # of a large size, so invoke cautiously.
-  def admin_org_hook_scoped_github_client
+  # Pass an organization argument to shrink the search scope for newly created classrooms.
+  def admin_org_hook_scoped_github_client(organization: nil)
     token = if Rails.env.test?
               users.first&.token
             else
-              users_with_admin_org_hook_scope.sample&.token
+              users_with_admin_org_hook_scope(organization).sample&.token
             end
     raise NoValidTokenError, "No valid token with the `admin:org` hook scope." if token.nil?
     Octokit::Client.new(access_token: token)
@@ -37,6 +40,8 @@ class OrganizationWebhook < ApplicationRecord
 
   # Internal: Find Users that has the `admin:org_hook` scope
   # for creating the organization webhook.
+  #
+  # organization - the organization to search for users in.
   #
   # Example:
   #
@@ -55,12 +60,15 @@ class OrganizationWebhook < ApplicationRecord
   #
   # Warning: This could potentially take very long for organizations
   # of a large size, so invoke cautiously.
-  def users_with_admin_org_hook_scope
+  # Pass an organization argument to shrink the search scope for newly created classrooms.
+  def users_with_admin_org_hook_scope(organization = nil)
     return @users_with_scope if defined?(@users_with_scope)
 
     @users_with_scope = []
 
-    users.find_in_batches(batch_size: 100) do |users|
+    search_scope = organization.present? ? organization : self
+
+    search_scope.users.find_in_batches(batch_size: 100) do |users|
       users.each do |user|
         next unless user.github_client_scopes.include?("admin:org_hook")
         @users_with_scope << user

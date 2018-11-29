@@ -41,6 +41,32 @@ RSpec.describe OrganizationWebhook, type: :model do
   end
 
   describe "#users_with_admin_org_hook_scope" do
+    context "search scope is OrganizationWebhook" do
+      context "user with admin_org hook scope doesn't exist" do
+        before do
+          User.any_instance.stub(:github_client_scopes)
+            .and_return([])
+        end
+
+        it "returns an empty list" do
+          expect(subject.send(:users_with_admin_org_hook_scope)).to be_empty
+        end
+      end
+
+      context "user with admin_org hook scope exists" do
+        before do
+          User.any_instance.stub(:github_client_scopes)
+            .and_return(["admin:org_hook"])
+        end
+
+        it "returns a list with the user" do
+          expect(subject.send(:users_with_admin_org_hook_scope)).to_not be_empty
+        end
+      end
+    end
+  end
+
+  context "search scope is specific organization" do
     context "user with admin_org hook scope doesn't exist" do
       before do
         User.any_instance.stub(:github_client_scopes)
@@ -48,7 +74,7 @@ RSpec.describe OrganizationWebhook, type: :model do
       end
 
       it "returns an empty list" do
-        expect(subject.send(:users_with_admin_org_hook_scope)).to be_empty
+        expect(subject.send(:users_with_admin_org_hook_scope, organization)).to be_empty
       end
     end
 
@@ -59,7 +85,7 @@ RSpec.describe OrganizationWebhook, type: :model do
       end
 
       it "returns a list with the user" do
-        expect(subject.send(:users_with_admin_org_hook_scope)).to_not be_empty
+        expect(subject.send(:users_with_admin_org_hook_scope, organization)).to_not be_empty
       end
     end
   end
