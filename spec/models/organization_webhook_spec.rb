@@ -42,7 +42,7 @@ RSpec.describe OrganizationWebhook, type: :model do
 
   describe "#users_with_admin_org_hook_scope" do
     context "search scope is OrganizationWebhook" do
-      context "user with admin_org hook scope doesn't exist" do
+      context "user with `admin:org_hook` scope doesn't exist" do
         before do
           User.any_instance.stub(:github_client_scopes)
             .and_return([])
@@ -53,7 +53,7 @@ RSpec.describe OrganizationWebhook, type: :model do
         end
       end
 
-      context "user with admin_org hook scope exists" do
+      context "user with `admin:org_hook` scope exists" do
         before do
           User.any_instance.stub(:github_client_scopes)
             .and_return(["admin:org_hook"])
@@ -67,7 +67,7 @@ RSpec.describe OrganizationWebhook, type: :model do
   end
 
   context "search scope is specific organization" do
-    context "user with admin_org hook scope doesn't exist" do
+    context "user with `admin:org_hook` scope doesn't exist" do
       before do
         User.any_instance.stub(:github_client_scopes)
           .and_return([])
@@ -78,7 +78,7 @@ RSpec.describe OrganizationWebhook, type: :model do
       end
     end
 
-    context "user with admin_org hook scope exists" do
+    context "user with `admin:org_hook` scope exists" do
       before do
         User.any_instance.stub(:github_client_scopes)
           .and_return(["admin:org_hook"])
