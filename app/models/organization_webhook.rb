@@ -11,8 +11,8 @@ class OrganizationWebhook < ApplicationRecord
   validates :github_organization_id, presence:   true
   validates :github_organization_id, uniqueness: true
 
-  # External: Finds a User's token that has the `admin:org_hook` scope
-  # for creating the organization webhook.
+  # External: Finds a User token in the same GitHub organization
+  # that has the `admin:org_hook` scope. Used for creating webhooks.
   #
   # organization - the organization to search for users in.
   #
@@ -38,8 +38,8 @@ class OrganizationWebhook < ApplicationRecord
 
   private
 
-  # Internal: Find Users that has the `admin:org_hook` scope
-  # for creating the organization webhook.
+  # Internal: Finds Users in the same GitHub organization
+  # that have the `admin:org_hook` scope.
   #
   # organization - the organization to search for users in.
   #
