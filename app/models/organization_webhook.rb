@@ -33,6 +33,21 @@ class OrganizationWebhook < ApplicationRecord
     Octokit::Client.new(access_token: token)
   end
 
+  # External: Creates an organization webhook, and saves it's ID.
+  #
+  # client - the client that used to create the organization webhook
+  #          (Note: client must have the `admin:org_hook` scope).
+  #
+  # Returns true if successful, otherwise raises a GitHub::Error or ActiveRecord::RecordInvalid.
+  def create_org_hook!(client:)
+    github_organization = GitHubOrganization.new(client, github_organization_id)
+    github_id = github_organization.create_organization_webhook(config: { url: webhook_url }).id
+    save!
+  rescue ActiveRecord::RecordInvalid => err
+    github_organization.remove_organization_webhook(github_id)
+    raise err
+  end
+
   private
 
   # Internal: Find Users that has the `admin:org_hook` scope
@@ -68,5 +83,28 @@ class OrganizationWebhook < ApplicationRecord
     end
 
     @users_with_scope
+  end
+
+  # Internal: Get the proper webhook url.
+  #
+  # Rails.env.production?
+  # # => true
+  #
+  # webhook_url
+  # # => "https://classroom.github.com"
+  #
+  # Returns a String for the url or raises an error.
+  def webhook_url
+    webhook_url_prefix = ENV["CLASSROOM_WEBHOOK_URL_PREFIX"]
+
+    error_message = if Rails.env.production?
+                      "WebHook failed to be created, please open an issue at https://github.com/education/classroom/issues/new" # rubocop:disable Metrics/LineLength
+                    else
+                      "CLASSROOM_WEBHOOK_URL_PREFIX is not set, please check your .env file"
+                    end
+
+    raise error_message if webhook_url_prefix.blank?
+    hooks_path = Rails.application.routes.url_helpers.github_hooks_path
+    "#{webhook_url_prefix}#{hooks_path}"
   end
 end
