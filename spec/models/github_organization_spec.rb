@@ -96,6 +96,21 @@ describe GitHubOrganization do
     end
   end
 
+  describe "#activate_organization_webhook", :vcr do
+    before do
+      @org_hook = @github_organization.create_organization_webhook(config: { url: "http://localhost" })
+    end
+
+    after do
+      @client.remove_org_hook(organization.github_id, @org_hook.id)
+    end
+
+    it "successfully creates a GitHub organization webhook" do
+      @github_organization.activate_organization_webhook(@org_hook.id, config: { url: "http://localhost" })
+      expect(WebMock).to have_requested(:patch, github_url("/organizations/#{organization.github_id}/hooks/#{@org_hook.id}"))
+    end
+  end
+
   describe "#remove_organization_webhook", :vcr do
     before do
       @org_hook = @github_organization.create_organization_webhook(config: { url: "http://localhost" })
