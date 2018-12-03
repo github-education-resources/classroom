@@ -24,6 +24,10 @@ class OrganizationWebhook < ApplicationRecord
     )
   end
 
+  def github_organization(client)
+    @github_organization ||= GitHubOrganization.new(client, github_organization_id)
+  end
+
   # External: Finds a User's token that has the `admin:org_hook` scope
   # for creating the organization webhook.
   #
@@ -53,12 +57,22 @@ class OrganizationWebhook < ApplicationRecord
   #
   # Returns true if successful, otherwise raises a GitHub::Error or ActiveRecord::RecordInvalid.
   def create_org_hook!(client)
-    github_organization = GitHubOrganization.new(client, github_organization_id)
-    github_id = github_organization.create_organization_webhook(config: { url: webhook_url }).id
+    github_organization(client).create_organization_webhook(config: { url: webhook_url }).id
     save!
   rescue ActiveRecord::RecordInvalid => err
-    github_organization.remove_organization_webhook(github_id)
+    github_organization(client).remove_organization_webhook(github_id)
     raise err
+  end
+
+  # External: Activates an organization webhook.
+  #
+  # client - The client that used to edit the organization webhook
+  #          (Note: client must have the `admin:org_hook` scope).
+  #
+  # Returns true if successful, otherwise raises a GitHub::Error
+  def activate_org_hook(client)
+    github_organization(client).activate_organization_webhook(github_id, config: { url: webhook_url })
+    true
   end
 
   # External: Checks if an org hook exists and is active,
@@ -76,7 +90,10 @@ class OrganizationWebhook < ApplicationRecord
   # of a large size. Invoke cautiously.
   def ensure_webhook_is_active!(client: nil)
     client ||= admin_org_hook_scoped_github_client
-    create_org_hook!(client) unless github_id.present? && github_org_hook(client).active?
+    return create_org_hook!(client) if github_id.blank?
+    github_org_hook_is_active = github_org_hook(client).active?
+    return create_org_hook!(client) if github_org_hook_is_active.nil?
+    return activate_org_hook(client) unless github_org_hook_is_active
     true
   end
 

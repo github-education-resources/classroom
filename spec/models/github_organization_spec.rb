@@ -107,7 +107,11 @@ describe GitHubOrganization do
 
     it "successfully creates a GitHub organization webhook" do
       @github_organization.activate_organization_webhook(@org_hook.id, config: { url: "http://localhost" })
-      expect(WebMock).to have_requested(:patch, github_url("/organizations/#{organization.github_id}/hooks/#{@org_hook.id}"))
+      expect(WebMock)
+        .to have_requested(
+          :patch,
+          github_url("/organizations/#{organization.github_id}/hooks/#{@org_hook.id}")
+        )
     end
   end
 
