@@ -2,7 +2,7 @@
 
 class NullGitHubOrgHook < NullGitHubResource
   def active
-    false
+    nil
   end
 
   def active?

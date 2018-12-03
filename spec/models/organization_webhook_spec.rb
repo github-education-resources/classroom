@@ -39,7 +39,7 @@ RSpec.describe OrganizationWebhook, type: :model do
     end
   end
 
-  describe "#ensure_webhook_is_active!" do
+  describe "#ensure_webhook_is_active!", :vcr do
     context "client is nil" do
       before do
         expect(subject)
@@ -49,7 +49,41 @@ RSpec.describe OrganizationWebhook, type: :model do
 
       context "github_id is not present" do
         before do
-          expect(subject).to receive_message_chain(:github_id, :present?) { false }
+          expect(subject).to receive_message_chain(:github_id, :blank?) { true }
+        end
+
+        it "invokes create_org_hook!" do
+          expect(subject).to receive(:create_org_hook!).and_return(true)
+          subject.ensure_webhook_is_active!
+        end
+
+        it "returns true" do
+          expect(subject).to receive(:create_org_hook!).and_return(true)
+          expect(subject.ensure_webhook_is_active!).to be_truthy
+        end
+      end
+
+      context "github_org_hook is not found" do
+        before do
+          expect(subject).to receive_message_chain(:github_id, :blank?) { false }
+          expect(subject).to receive_message_chain(:github_org_hook, :active?) { nil }
+        end
+
+        it "invokes create_org_hook!" do
+          expect(subject).to receive(:create_org_hook!).and_return(true)
+          subject.ensure_webhook_is_active!
+        end
+
+        it "returns true" do
+          expect(subject).to receive(:create_org_hook!).and_return(true)
+          expect(subject.ensure_webhook_is_active!).to be_truthy
+        end
+      end
+
+      context "github_org_hook was NotFound" do
+        before do
+          expect(subject).to receive_message_chain(:github_id, :blank?) { false }
+          expect(subject).to receive_message_chain(:github_org_hook, :active?) { nil }
         end
 
         it "invokes create_org_hook!" do
@@ -65,24 +99,24 @@ RSpec.describe OrganizationWebhook, type: :model do
 
       context "github_org_hook is not active" do
         before do
-          expect(subject).to receive_message_chain(:github_id, :present?) { true }
+          expect(subject).to receive_message_chain(:github_id, :blank?) { false }
           expect(subject).to receive_message_chain(:github_org_hook, :active?) { false }
         end
 
-        it "invokes create_org_hook!" do
-          expect(subject).to receive(:create_org_hook!).and_return(true)
+        it "invokes activate_org_hook!" do
+          expect(subject).to receive(:activate_org_hook).and_return(true)
           subject.ensure_webhook_is_active!
         end
 
         it "returns true" do
-          expect(subject).to receive(:create_org_hook!).and_return(true)
+          expect(subject).to receive(:activate_org_hook).and_return(true)
           expect(subject.ensure_webhook_is_active!).to be_truthy
         end
       end
 
       context "github_org_hook is active" do
         before do
-          expect(subject).to receive_message_chain(:github_id, :present?) { true }
+          expect(subject).to receive_message_chain(:github_id, :blank?) { false }
           expect(subject).to receive_message_chain(:github_org_hook, :active?) { true }
         end
 
@@ -100,7 +134,24 @@ RSpec.describe OrganizationWebhook, type: :model do
     context "client is present" do
       context "github_id is not present" do
         before do
-          expect(subject).to receive_message_chain(:github_id, :present?) { false }
+          expect(subject).to receive_message_chain(:github_id, :blank?) { true }
+        end
+
+        it "invokes create_org_hook!" do
+          expect(subject).to receive(:create_org_hook!).and_return(true)
+          subject.ensure_webhook_is_active!(client: client)
+        end
+
+        it "returns true" do
+          expect(subject).to receive(:create_org_hook!).and_return(true)
+          expect(subject.ensure_webhook_is_active!(client: client)).to be_truthy
+        end
+      end
+
+      context "github_org_hook was NotFound" do
+        before do
+          expect(subject).to receive_message_chain(:github_id, :blank?) { false }
+          expect(subject).to receive_message_chain(:github_org_hook, :active?) { nil }
         end
 
         it "invokes create_org_hook!" do
@@ -116,24 +167,24 @@ RSpec.describe OrganizationWebhook, type: :model do
 
       context "github_org_hook is not active" do
         before do
-          expect(subject).to receive_message_chain(:github_id, :present?) { true }
+          expect(subject).to receive_message_chain(:github_id, :blank?) { false }
           expect(subject).to receive_message_chain(:github_org_hook, :active?) { false }
         end
 
-        it "invokes create_org_hook!" do
-          expect(subject).to receive(:create_org_hook!).and_return(true)
+        it "invokes activate_org_hook!" do
+          expect(subject).to receive(:activate_org_hook).and_return(true)
           subject.ensure_webhook_is_active!(client: client)
         end
 
         it "returns true" do
-          expect(subject).to receive(:create_org_hook!).and_return(true)
+          expect(subject).to receive(:activate_org_hook).and_return(true)
           expect(subject.ensure_webhook_is_active!(client: client)).to be_truthy
         end
       end
 
       context "github_org_hook is active" do
         before do
-          expect(subject).to receive_message_chain(:github_id, :present?) { true }
+          expect(subject).to receive_message_chain(:github_id, :blank?) { false }
           expect(subject).to receive_message_chain(:github_org_hook, :active?) { true }
         end
 
@@ -186,6 +237,32 @@ RSpec.describe OrganizationWebhook, type: :model do
 
       it "returns true" do
         expect(subject.create_org_hook!(client)).to be_truthy
+      end
+    end
+  end
+
+  describe "#activate_org_hook!", :vcr do
+    context "GitHub::Error is raised" do
+      before do
+        expect_any_instance_of(GitHubOrganization)
+          .to receive(:activate_organization_webhook)
+          .and_raise(GitHub::Error)
+      end
+
+      it "raises a GitHub::Error" do
+        expect { subject.activate_org_hook(client) }
+          .to raise_error(GitHub::Error)
+      end
+    end
+
+    context "org hook is successfully activated" do
+      before do
+        expect_any_instance_of(GitHubOrganization)
+          .to receive_message_chain(:activate_organization_webhook) { 0 }
+      end
+
+      it "returns true" do
+        expect(subject.activate_org_hook(client)).to be_truthy
       end
     end
   end
