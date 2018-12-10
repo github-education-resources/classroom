@@ -177,12 +177,12 @@ RSpec.describe OrganizationWebhook, type: :model do
           end
 
           it "invokes retrieve_org_hook_id!" do
-            expect(subject).to receive(:retrieve_org_hook_id!).and_return(1)
+            expect(subject).to receive(:retrieve_org_hook_id!).and_return(0)
             subject.ensure_webhook_is_active!(client: client)
           end
 
           it "returns true" do
-            expect(subject).to receive(:retrieve_org_hook_id!).and_return(1)
+            expect(subject).to receive(:retrieve_org_hook_id!).and_return(0)
             expect(subject.ensure_webhook_is_active!(client: client)).to be_truthy
           end
         end
@@ -245,16 +245,17 @@ RSpec.describe OrganizationWebhook, type: :model do
       before do
         expect_any_instance_of(GitHubOrganization)
           .to receive(:organization_webhooks)
-          .and_return([double("Classroom webhook", id: 1)])
+          .and_return([double("Classroom webhook", id: 0)])
       end
 
       context "saves successfully" do
-        before do
-          expect(subject).to receive(:save!).and_return(1)
+        it "returns the expected id" do
+          expect(subject.send(:retrieve_org_hook_id!, client)).to eq(0)
         end
 
-        it "returns a truthy id" do
-          expect(subject.send(:retrieve_org_hook_id!, client)).to be_truthy
+        it "saves the new id" do
+          subject.send(:retrieve_org_hook_id!, client)
+          expect(subject.reload.github_id).to eq(0)
         end
       end
 
@@ -331,6 +332,11 @@ RSpec.describe OrganizationWebhook, type: :model do
 
       it "returns true" do
         expect(subject.create_org_hook!(client)).to be_truthy
+      end
+
+      it "saves the new id" do
+        subject.create_org_hook!(client)
+        expect(subject.github_id).to eq(0)
       end
     end
   end

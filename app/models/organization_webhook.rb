@@ -57,7 +57,7 @@ class OrganizationWebhook < ApplicationRecord
   #
   # Returns true if successful, otherwise raises a GitHub::Error or ActiveRecord::RecordInvalid.
   def create_org_hook!(client)
-    github_id = github_organization(client).create_organization_webhook(config: { url: webhook_url }).id
+    self.github_id = github_organization(client).create_organization_webhook(config: { url: webhook_url }).id
     save!
   rescue ActiveRecord::RecordInvalid => err
     github_organization(client).remove_organization_webhook(github_id)
@@ -110,7 +110,7 @@ class OrganizationWebhook < ApplicationRecord
     return nil if webhooks.empty?
 
     # There should only be one webhook that Classroom creates in production
-    github_id = webhooks.first.id
+    self.github_id = webhooks.first.id
     save!
     github_id
   rescue GitHub::Error, ActiveRecord::RecordInvalid
