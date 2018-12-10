@@ -57,7 +57,7 @@ class OrganizationWebhook < ApplicationRecord
   #
   # Returns true if successful, otherwise raises a GitHub::Error or ActiveRecord::RecordInvalid.
   def create_org_hook!(client)
-    github_organization(client).create_organization_webhook(config: { url: webhook_url }).id
+    github_id = github_organization(client).create_organization_webhook(config: { url: webhook_url }).id
     save!
   rescue ActiveRecord::RecordInvalid => err
     github_organization(client).remove_organization_webhook(github_id)
@@ -104,7 +104,7 @@ class OrganizationWebhook < ApplicationRecord
   #
   # This is possible assuming that classroom only creates one webhook in production.
   #
-  # Returns true if the webhook id could be saved and retrieved or nil.
+  # Returns the webhook id if the webhook id could be retrieved and saved or nil.
   def retrieve_org_hook_id!(client)
     webhooks = github_organization(client).organization_webhooks
     return nil if webhooks.empty?
@@ -112,6 +112,7 @@ class OrganizationWebhook < ApplicationRecord
     # There should only be one webhook that Classroom creates in production
     github_id = webhooks.first.id
     save!
+    github_id
   rescue GitHub::Error, ActiveRecord::RecordInvalid
     nil
   end

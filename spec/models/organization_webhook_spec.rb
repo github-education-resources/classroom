@@ -177,12 +177,12 @@ RSpec.describe OrganizationWebhook, type: :model do
           end
 
           it "invokes retrieve_org_hook_id!" do
-            expect(subject).to receive(:retrieve_org_hook_id!).and_return(true)
+            expect(subject).to receive(:retrieve_org_hook_id!).and_return(1)
             subject.ensure_webhook_is_active!(client: client)
           end
 
           it "returns true" do
-            expect(subject).to receive(:retrieve_org_hook_id!).and_return(true)
+            expect(subject).to receive(:retrieve_org_hook_id!).and_return(1)
             expect(subject.ensure_webhook_is_active!(client: client)).to be_truthy
           end
         end
@@ -250,10 +250,10 @@ RSpec.describe OrganizationWebhook, type: :model do
 
       context "saves successfully" do
         before do
-          expect(subject).to receive(:save!).and_return(true)
+          expect(subject).to receive(:save!).and_return(1)
         end
 
-        it "returns true" do
+        it "returns a truthy id" do
           expect(subject.send(:retrieve_org_hook_id!, client)).to be_truthy
         end
       end
