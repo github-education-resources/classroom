@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 class Organization
   class Creator
     include Rails.application.routes.url_helpers
@@ -35,6 +34,8 @@ class Organization
       end
     end
 
+    attr_reader :users
+
     # Public: Create an Organization.
     #
     # users     - An Array of Users that will own the organization.
@@ -65,17 +66,13 @@ class Organization
 
       begin
         github_organization = GitHubOrganization.new(users.first.github_client, github_id)
+        organization_webhook = ensure_organization_webhook_exists!
 
-        organization_webhook = OrganizationWebhook.find_or_initialize_by(github_organization_id: github_id)
-        webhook_id = create_organization_webhook!
-
-        organization_webhook.github_id = webhook_id
-        organization_webhook.save!
         organization.update_attributes!(
           github_id: github_id,
           title: title,
           users: users,
-          webhook_id: webhook_id,
+          webhook_id: organization_webhook.github_id,
           github_global_relay_id: github_organization.node_id,
           organization_webhook: organization_webhook
         )
@@ -89,7 +86,6 @@ class Organization
 
       Result.success(organization)
     rescue Result::Error => err
-      silently_destroy_organization_webhook(organization)
       destroy_organization(organization)
 
       Result.failed(err.message)
@@ -99,33 +95,20 @@ class Organization
 
     private
 
-    # Internal: Create an GitHub Organization WebHook if there
-    # is a user who has the correct token scope.
+    # Internal: Creates a OrganizationWebhook if one does not exist yet,
+    # then creates an GitHubOrgHook if one does not exist, or activates the GitHubOrgHook if it is inactive.
     #
-    # Returns an Integer id, or raises a Result::Error
-    # rubocop:disable MethodLength
-    # rubocop:disable AbcSize
-    def create_organization_webhook!
-      return unless (user = user_with_admin_org_hook_scope)
+    # Returns the OrganizationWebhook, or raises an Result::Error
+    def ensure_organization_webhook_exists!
+      client = user_with_admin_org_hook_scope&.github_client
+      raise Result::Error, "No user has the `admin:org_hook` scope on their token." if client.nil?
 
-      begin
-        return existing_webhook_id unless existing_webhook_id.nil?
-
-        github_organization = GitHubOrganization.new(user.github_client, github_id)
-        webhook = github_organization.create_organization_webhook(config: { url: webhook_url })
-
-        raise GitHub::Error if webhook.try(:id).nil?
-
-        webhook.id
-      rescue GitHub::Error => e
-        github_webhook_id = process_webhook_error(e.message, github_organization)
-        return github_webhook_id unless github_webhook_id.nil?
-
-        raise Result::Error, "Could not create WebHook, please try again."
-      end
+      organization_webhook = OrganizationWebhook.find_or_initialize_by(github_organization_id: github_id)
+      organization_webhook.ensure_webhook_is_active!(client: client)
+      organization_webhook
+    rescue ActiveRecord::RecordInvalid, GitHub::Error => error
+      raise Result::Error, error.message
     end
-    # rubocop:enable AbcSize
-    # rubocop:enable MethodLength
 
     # Internal: Make sure every user being added to the
     # Organization is an admin on GitHub.
@@ -156,19 +139,6 @@ class Organization
     # Returns true or raises an ActiveRecord::Error.
     def destroy_organization(organization)
       organization.destroy!
-    end
-
-    # Internal: Remove the Organization WebHook is possible.
-    #
-    # Returns true.
-    def silently_destroy_organization_webhook(organization)
-      return true if organization.webhook_id.nil?
-      return true unless (user = user_with_admin_org_hook_scope)
-
-      github_organization = GitHubOrganization.new(user.github_client, github_id)
-      github_organization.remove_organization_webhook(organization.webhook_id)
-
-      true
     end
 
     # Internal: Get the default title for the Organization.
@@ -219,40 +189,6 @@ class Organization
       @users_with_scope.sample
     end
 
-    # Internal: Get the proper webhook url prefix
-    #
-    # Rails.env.production?
-    # # => true
-    #
-    # webhook_url
-    # # => "https://classroom.github.com"
-    #
-    # Returns a String for the url or raises a Result::Error
-    def webhook_url
-      webhook_url_prefix = ENV["CLASSROOM_WEBHOOK_URL_PREFIX"]
-
-      error_message = if Rails.env.production?
-                        "WebHook failed to be created, please open an issue at https://github.com/education/classroom/issues/new" # rubocop:disable Metrics/LineLength
-                      else
-                        "CLASSROOM_WEBHOOK_URL_PREFIX is not set, please check your .env file"
-                      end
-
-      hooks_path = Rails.application.routes.url_helpers.github_hooks_path
-      return "#{webhook_url_prefix}#{hooks_path}" if webhook_url_prefix.present?
-
-      raise Result::Error, error_message
-    end
-
-    # Internal: Check error from GitHub when we try to create the webhook
-    # If the hook already exists get the webhook id from GitHub and return
-    #
-    # Returns a String for the webhook_id or nil
-    def process_webhook_error(message, github_organization)
-      return nil unless message == "Hook: Hook already exists on this organization"
-
-      get_organization_webhook_id(github_organization)
-    end
-
     # Internal: Get id of webhook already on GitHub
     #
     # Returns a String for the webhook_id or nil
@@ -301,4 +237,3 @@ class Organization
     end
   end
 end
-# rubocop:enable Metrics/ClassLength
