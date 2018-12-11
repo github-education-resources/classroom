@@ -34,6 +34,8 @@ class Organization
       end
     end
 
+    NO_ADMIN_ORG_TOKEN_ERROR = "No user has the `admin:org_hook` scope on their token."
+
     attr_reader :users
 
     # Public: Create an Organization.
@@ -101,7 +103,7 @@ class Organization
     # Returns the OrganizationWebhook, or raises an Result::Error
     def ensure_organization_webhook_exists!
       client = user_with_admin_org_hook_scope&.github_client
-      raise Result::Error, "No user has the `admin:org_hook` scope on their token." if client.nil?
+      raise Result::Error, NO_ADMIN_ORG_TOKEN_ERROR if client.nil?
 
       organization_webhook = OrganizationWebhook.find_or_initialize_by(github_organization_id: github_id)
       organization_webhook.ensure_webhook_is_active!(client: client)

@@ -110,6 +110,12 @@ RSpec.describe Organization::Creator, type: :model do
       end
 
       context "deletes the organization if the repository permissions cannot be set to none" do
+        before do
+          expect(subject)
+            .to receive(:ensure_organization_webhook_exists!)
+            .and_return(organization_webhook)
+        end
+
         it "fails" do
           stub_request(:patch, github_url("/organizations/#{github_organization_id}"))
             .to_return(body: "{}", status: 401)
@@ -118,6 +124,76 @@ RSpec.describe Organization::Creator, type: :model do
 
           expect(result.failed?).to be_truthy
           expect(Organization.count).to eql(0)
+        end
+      end
+
+      context "ensure_organization_webhook_exists! fails" do
+        context "raises a Result::Error" do
+          before do
+            expect(subject)
+              .to receive(:ensure_organization_webhook_exists!)
+              .and_raise(described_class::Result::Error)
+          end
+
+          it "fails" do
+            expect(subject.perform.failed?).to be_truthy
+          end
+        end
+      end
+    end
+  end
+
+  describe "#ensure_organization_webhook_exists!", :vcr do
+    context "#user_with_admin_org_hook_scope returns nil" do
+      before do
+        expect(subject)
+          .to receive(:user_with_admin_org_hook_scope)
+          .and_return(nil)
+      end
+
+      it "raises a Result::Error" do
+        expect { subject.send(:ensure_organization_webhook_exists!) }
+          .to raise_error(described_class::Result::Error, described_class::NO_ADMIN_ORG_TOKEN_ERROR)
+      end
+    end
+
+    context "#user_with_admin_org_hook_scope returns a user" do
+      context "ensure_webhook_is_active! raises a ActiveRecord::RecordInvalid" do
+        before do
+          expect_any_instance_of(OrganizationWebhook)
+            .to receive(:ensure_webhook_is_active!)
+            .and_raise(ActiveRecord::RecordInvalid)
+        end
+
+        it "raises a Result::Error" do
+          expect { subject.send(:ensure_organization_webhook_exists!) }
+            .to raise_error(described_class::Result::Error)
+        end
+      end
+
+      context "ensure_webhook_is_active! raises a GitHub::Error" do
+        before do
+          expect_any_instance_of(OrganizationWebhook)
+            .to receive(:ensure_webhook_is_active!)
+            .and_raise(GitHub::Error)
+        end
+
+        it "raises a Result::Error" do
+          expect { subject.send(:ensure_organization_webhook_exists!) }
+            .to raise_error(described_class::Result::Error)
+        end
+      end
+
+      context "ensure_organization_webhook_exists! returns true" do
+        before do
+          expect_any_instance_of(OrganizationWebhook)
+            .to receive(:ensure_webhook_is_active!)
+            .and_return(true)
+          organization_webhook
+        end
+
+        it "returns the organization_webhook" do
+          expect(subject.send(:ensure_organization_webhook_exists!).id).to eq(organization_webhook.id)
         end
       end
     end
