@@ -191,27 +191,6 @@ class Organization
       @users_with_scope.sample
     end
 
-    # Internal: Get id of webhook already on GitHub
-    #
-    # Returns a String for the webhook_id or nil
-    def get_organization_webhook_id(github_organization)
-      webhooks = github_organization.organization_webhooks
-
-      # There should only be one webhook that Classroom creates in production
-      webhooks.first.id
-    rescue GitHub::Error
-      nil
-    end
-
-    # Internal: Find webhook_id of any existing classrooms with
-    # same github id
-    #
-    # Returns a String for the webhook_id or nil
-    def existing_webhook_id
-      classroom_with_same_org = Organization.find_by(github_id: github_id)
-      classroom_with_same_org ? classroom_with_same_org.webhook_id : nil
-    end
-
     # Internal: Generates unique name for classroom if default
     # name has already been taken
     #
