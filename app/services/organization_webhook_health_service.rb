@@ -36,7 +36,7 @@ class OrganizationWebhookHealthService
   # all_organizations - Flag that specifies whether to iterate all OrganizationWebhooks,
   #                     or just the ones with a blank github_id.
   #
-  # Returns a result object with the schema:
+  # Returns a result hash with the schema:
   #  {
   #    success: #{array of ensured IDs},
   #    failed: {
@@ -49,20 +49,20 @@ class OrganizationWebhookHealthService
 
   # Public: Iterates through OrganizationWebhook records and ensures
   # that each record has an active and working webhook. This method also
-  # prints the results in a human readable way.
+  # logs the results in a human readable way.
   #
   # all_organizations - Flag that specifies whether to iterate all OrganizationWebhooks,
   #                     or just the ones with a blank github_id.
   #
-  # Returns a result object with the schema:
+  # Returns a result hash with the schema:
   #  {
   #    success: #{array of ensured IDs},
   #    failed: {
   #      "#{error_class_name}": #{array of failed IDs}
   #    }
   #  }
-  def self.perform_and_print(all_organizations: false)
-    results = perform(all_organizations: false)
+  def self.perform_and_log(all_organizations: false)
+    results = perform(all_organizations: all_organizations)
     print_results(results)
     results
   end
@@ -70,13 +70,16 @@ class OrganizationWebhookHealthService
   # Public: Iterates through OrganizationWebhook records and ensures
   # that each record has an active and working webhook.
   #
-  # Returns a result object with the schema:
+  # Returns a result hash with the schema:
   #  {
   #    success: #{array of ensured IDs},
   #    failed: {
   #      "#{error_class_name}": #{array of failed IDs}
   #    }
   #  }
+  #
+  # rubocop:disable MethodLength
+  # rubocop:disable AbcSize
   def perform
     success_org_webhooks = []
     failed_org_webhooks = {}
@@ -98,6 +101,8 @@ class OrganizationWebhookHealthService
       failed: failed_org_webhooks
     }
   end
+  # rubocop:enable MethodLength
+  # rubocop:enable AbcSize
 
   private
 
@@ -114,9 +119,9 @@ class OrganizationWebhookHealthService
     Result.failed(error)
   end
 
-  # Internal: Prints results from #perform in a human readable way.
+  # Internal: Logs results from #perform in a human readable way.
   #
-  # results - the result object from #perform with the schema:
+  # results - the result hash from #perform with the schema:
   #           {
   #             success: #{array of ensured IDs},
   #             failed: {
@@ -126,12 +131,15 @@ class OrganizationWebhookHealthService
   #
   # Returns nothing.
   private_class_method def self.print_results(results)
-    puts "\n"
-    puts "Organization Webhook Health Service Results"
-    puts "==========================================="
-    puts "Success count: #{results[success].count}"
-    puts "Errored organzations:"
-    pp results[failed]
-    puts "\n"
+    result_string = <<~HEREDOC
+
+      Organization Webhook Health Service Results
+      ===========================================
+      Success count: #{results[:success].count}
+      Errored organzations:
+      #{results[:failed].to_json}
+
+    HEREDOC
+    Rails.logger.info result_string
   end
 end
