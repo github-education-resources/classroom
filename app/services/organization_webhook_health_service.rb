@@ -137,7 +137,7 @@ class OrganizationWebhookHealthService
       Organization Webhook Health Service Results
       ===========================================
       Success count: #{results[:success].count}
-      Errored organzations:
+      Errored organization webhooks:
       #{results[:failed].to_json}
 
     HEREDOC
