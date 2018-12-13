@@ -61,7 +61,7 @@ class OrganizationWebhookHealthService
   #      "#{error_class_name}": #{array of failed IDs}
   #    }
   #  }
-  def self.perform_and_log(all_organizations: false)
+  def self.perform_and_print(all_organizations: false)
     results = perform(all_organizations: all_organizations)
     print_results(results)
     results
@@ -119,7 +119,7 @@ class OrganizationWebhookHealthService
     Result.failed(error)
   end
 
-  # Internal: Logs results from #perform in a human readable way.
+  # Internal: Prints results from #perform in a human readable way.
   #
   # results - the result hash from #perform with the schema:
   #           {
@@ -128,6 +128,7 @@ class OrganizationWebhookHealthService
   #               "#{error_class_name}": #{array of failed IDs}
   #             }
   #           }
+  #
   #
   # Returns nothing.
   private_class_method def self.print_results(results)
@@ -140,6 +141,6 @@ class OrganizationWebhookHealthService
       #{results[:failed].to_json}
 
     HEREDOC
-    Rails.logger.info result_string
+    puts result_string # rubocop:disable Output
   end
 end

@@ -21,11 +21,11 @@ describe OrganizationWebhookHealthService do
     end
   end
 
-  describe "class#perform_and_log" do
+  describe "class#perform_and_print" do
     it "invokes class#perform and class#print_results" do
       expect(described_class).to receive(:perform)
       expect(described_class).to receive(:print_results)
-      described_class.perform_and_log
+      described_class.perform_and_print
     end
   end
 
