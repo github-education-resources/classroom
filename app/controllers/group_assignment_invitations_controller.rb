@@ -249,7 +249,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   helper_method :organization
 
   def repo_ready?
-    return false unless group_assignment_repo.present?
+    return false if group_assignment_repo.blank?
     return false if group_assignment.starter_code? && !group_assignment_repo.github_repository.imported?
     true
   end
