@@ -9,7 +9,6 @@ class GroupAssignmentInvitationsController < ApplicationController
   layout "layouts/invitations"
 
   before_action :route_based_on_status,                  only: %i[setup successful_invitation]
-  before_action :check_group_not_previous_acceptee,      only: :show
   before_action :check_user_not_group_member,            only: :show
   before_action :check_should_redirect_to_roster_page,   only: :show
   before_action :authorize_group_access,                 only: :accept_invitation
@@ -132,12 +131,6 @@ class GroupAssignmentInvitationsController < ApplicationController
 
     report_invitation_failure
     raise NotAuthorized, "You are not permitted to select this team"
-  end
-
-  def check_group_not_previous_acceptee
-    return unless group.present? && group_assignment_repo.present?
-
-    redirect_to successful_invitation_group_assignment_invitation_path
   end
 
   def check_user_not_group_member
