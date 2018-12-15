@@ -71,7 +71,6 @@ class GroupAssignmentInvitation < ApplicationRecord
     Group::Creator.perform(title: selected_group_title, grouping: grouping)
   end
 
-  # rubocop:disable MethodLength
   def group_assignment_repo(invitees_group)
     group_assignment_params = { group_assignment: group_assignment, group: invitees_group }
     repo                    = GroupAssignmentRepo.find_by(group_assignment_params)
@@ -84,5 +83,4 @@ class GroupAssignmentInvitation < ApplicationRecord
       Result.pending
     end
   end
-  # rubocop:enable MethodLength
 end
