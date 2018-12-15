@@ -45,14 +45,17 @@ class GroupAssignmentInvitationsController < ApplicationController
   def create_repo
     job_started =
       if group_invite_status.accepted? || group_invite_status.errored?
-        if group_assignment_repo&.github_repository&.empty?
+        if repo_ready?
+          group_invite_status.completed!
+          false
+        else
           group_assignment_repo&.destroy
           @group_assignment_repo = nil
+          report_retry
+          group_invite_status.waiting!
+          GroupAssignmentRepo::CreateGitHubRepositoryJob.perform_later(group_assignment, group, retries: 3)
+          true
         end
-        report_retry
-        group_invite_status.waiting!
-        GroupAssignmentRepo::CreateGitHubRepositoryJob.perform_later(group_assignment, group, retries: 3)
-        true
       else
         false
       end
@@ -244,5 +247,11 @@ class GroupAssignmentInvitationsController < ApplicationController
     @organization ||= group_assignment.organization
   end
   helper_method :organization
+
+  def repo_ready?
+    return false unless group_assignment_repo.present?
+    return false if group_assignment.starter_code? && !group_assignment_repo.github_repository.imported?
+    true
+  end
 end
 # rubocop:enable Metrics/ClassLength
