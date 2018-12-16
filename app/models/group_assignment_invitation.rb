@@ -71,22 +71,16 @@ class GroupAssignmentInvitation < ApplicationRecord
     Group::Creator.perform(title: selected_group_title, grouping: grouping)
   end
 
-  # rubocop:disable MethodLength
   def group_assignment_repo(invitees_group)
     group_assignment_params = { group_assignment: group_assignment, group: invitees_group }
     repo                    = GroupAssignmentRepo.find_by(group_assignment_params)
+    invite_status           = status(invitees_group)
 
-    return Result.success(repo) if repo
-
-    if organization.feature_enabled?(:group_import_resiliency)
-      invite_status = status(invitees_group)
-      invite_status.accepted! if invite_status.unaccepted?
-      return Result.pending
+    invite_status.accepted! if invite_status.unaccepted?
+    if repo
+      Result.success(repo)
     else
-      repo = GroupAssignmentRepo.create(group_assignment_params)
-      return Result.success(repo) if repo
-      Result.failed("An error has occurred, please refresh the page and try again.")
+      Result.pending
     end
   end
-  # rubocop:enable MethodLength
 end
