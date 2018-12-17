@@ -58,19 +58,7 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
 
     subject { create(:group_assignment_invitation, group_assignment: group_assignment) }
 
-    after(:each) do
-      RepoAccess.destroy_all
-      Group.destroy_all
-      GroupAssignmentRepo.destroy_all
-      GroupInviteStatus.destroy_all
-    end
-
     context "success result" do
-      it "success?" do
-        result = subject.redeem_for(student, nil, group_name)
-        expect(result.success?).to be_truthy
-      end
-
       it "returns the GroupAssignmentRepo" do
         result = subject.redeem_for(student, nil, group_name)
         expect(result.group_assignment_repo).to eql(GroupAssignmentRepo.last)
@@ -143,12 +131,12 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
     let(:invitation)   { create(:group_assignment_invitation) }
 
     it "returns a list of invite statuses" do
-      group_invite_status = GroupInviteStatus.create(group: group, group_assignment_invitation: invitation)
+      group_invite_status = create(:group_invite_status, group: group, group_assignment_invitation: invitation)
       expect(invitation.group_invite_statuses).to eq([group_invite_status])
     end
 
     it "on #destroy destroys invite status and not the group" do
-      group_invite_status = GroupInviteStatus.create(group: group, group_assignment_invitation: invitation)
+      group_invite_status = create(:group_invite_status, group: group, group_assignment_invitation: invitation)
       invitation.destroy
       expect { group_invite_status.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect(group.reload.nil?).to be_falsey
