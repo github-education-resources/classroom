@@ -326,29 +326,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
         it "allows user to join" do
           patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
-          expect(group_assignment.group_assignment_repos.count).to eql(1)
           expect(student.repo_accesses.count).to eql(1)
-        end
-      end
-
-      context "github repository with the same name already exists" do
-        let(:group) { create(:group, grouping: grouping, github_team_id: 2_973_107) }
-
-        before do
-          group_assignment_repo = GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
-          @original_repository = organization.github_client.repository(group_assignment_repo.github_repo_id)
-          group_assignment_repo.delete
-          patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
-        end
-
-        it "creates a new group assignment repo" do
-          expect(group_assignment.group_assignment_repos.count).to eql(1)
-        end
-
-        it "new repository name has expected suffix" do
-          expect(WebMock)
-            .to have_requested(:post, %r{#{github_url("/organizations/")}\d+/repos$})
-            .with(body: /^.*#{@original_repository.name}-1.*$/)
         end
       end
 

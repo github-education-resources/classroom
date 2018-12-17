@@ -2,6 +2,10 @@
 
 class OrganizationWebhook < ApplicationRecord
   class NoValidTokenError < StandardError; end
+  WEBHOOK_URL_PRODUCTION_ERROR = "WebHook failed to be created,"\
+    " please open an issue at https://github.com/education/classroom/issues/new"
+  WEBHOOK_URL_DEVELOPMENT_ERROR = "CLASSROOM_WEBHOOK_URL_PREFIX is not set,"\
+    " please check your .env file."
 
   has_many :organizations
   has_many :users, through: :organizations
@@ -10,6 +14,19 @@ class OrganizationWebhook < ApplicationRecord
 
   validates :github_organization_id, presence:   true
   validates :github_organization_id, uniqueness: true
+
+  def github_org_hook(client)
+    @github_org_hook ||= GitHubOrgHook.new(
+      client,
+      github_organization_id,
+      github_id,
+      headers: GitHub::APIHeaders.no_cache_no_store
+    )
+  end
+
+  def github_organization(client)
+    @github_organization ||= GitHubOrganization.new(client, github_organization_id)
+  end
 
   # External: Finds a User's token that has the `admin:org_hook` scope
   # for creating the organization webhook.
@@ -31,6 +48,53 @@ class OrganizationWebhook < ApplicationRecord
             end
     raise NoValidTokenError, "No valid token with the `admin:org` hook scope." if token.nil?
     Octokit::Client.new(access_token: token)
+  end
+
+  # External: Creates an organization webhook, and saves it's ID.
+  #
+  # client - The client that used to create the organization webhook
+  #          (Note: client must have the `admin:org_hook` scope).
+  #
+  # Returns true if successful, otherwise raises a GitHub::Error or ActiveRecord::RecordInvalid.
+  def create_org_hook!(client)
+    github_organization(client).create_organization_webhook(config: { url: webhook_url }).id
+    save!
+  rescue ActiveRecord::RecordInvalid => err
+    github_organization(client).remove_organization_webhook(github_id)
+    raise err
+  end
+
+  # External: Activates an organization webhook.
+  #
+  # client - The client that used to edit the organization webhook
+  #          (Note: client must have the `admin:org_hook` scope).
+  #
+  # Returns true if successful, otherwise raises a GitHub::Error
+  def activate_org_hook(client)
+    github_organization(client).activate_organization_webhook(github_id, config: { url: webhook_url })
+    true
+  end
+
+  # External: Checks if an org hook exists and is active,
+  # otherwise creates one and saves.
+  #
+  # client - The client that used to create the organization webhook
+  #          (Note: client must have the `admin:org_hook` scope).
+  #          If not provided, searches for Users with `admin:org_hook` scoped token.
+  #
+  # Returns true if successful. Raises a GitHub::Error or ActiveRecord::RecordInvalid if
+  # something goes wrong creating the org hook. Raises a NoValidTokenError if no client was passed
+  # and no User token with the `admin:org_hook` scope could be found.
+  #
+  # Warning: If no client argument is passed, this could potentially take very long for organizations
+  # of a large size. Invoke cautiously.
+  def ensure_webhook_is_active!(client: nil)
+    client ||= admin_org_hook_scoped_github_client
+    return create_org_hook!(client) if github_id.blank?
+    github_org_hook_is_active = github_org_hook(client).active?
+    return create_org_hook!(client) if github_org_hook_is_active.nil?
+    return activate_org_hook(client) unless github_org_hook_is_active
+    true
   end
 
   private
@@ -68,5 +132,28 @@ class OrganizationWebhook < ApplicationRecord
     end
 
     @users_with_scope
+  end
+
+  # Internal: Get the proper webhook url.
+  #
+  # Rails.env.production?
+  # # => true
+  #
+  # webhook_url
+  # # => "https://classroom.github.com"
+  #
+  # Returns a String for the url or raises an error.
+  def webhook_url
+    webhook_url_prefix = ENV["CLASSROOM_WEBHOOK_URL_PREFIX"]
+
+    error_message = if Rails.env.production?
+                      WEBHOOK_URL_PRODUCTION_ERROR
+                    else
+                      WEBHOOK_URL_DEVELOPMENT_ERROR
+                    end
+
+    raise error_message if webhook_url_prefix.blank?
+    hooks_path = Rails.application.routes.url_helpers.github_hooks_path
+    "#{webhook_url_prefix}#{hooks_path}"
   end
 end

@@ -25,9 +25,14 @@ class GitHubModel
   # Public: Create a new instance, optionally providing a `Hash` of
   # `attributes`. Any attributes with the same name as an
   # `attr_reader` will be set as instance variables.
+  #
+  # client  - The Octokit::Client making the request.
+  # id_args - The Interger ids for the resource.
+  # options - A Hash of options to pass (optional).
+  #
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
-  def initialize(client, id_attributes)
+  def initialize(client, id_attributes, **options)
     attributes = {}.tap do |attr|
       attr[:client]        = client
       attr[:access_token]  = client.access_token
@@ -41,7 +46,7 @@ class GitHubModel
       # and set their value.
       github_attributes.each do |gh_attr|
         self.class.class_eval { attr_reader gh_attr.to_sym }
-        attr[gh_attr.to_sym] = github_response(client, id_attributes.values.compact).send(gh_attr)
+        attr[gh_attr.to_sym] = github_response(client, id_attributes.values.compact, options).send(gh_attr)
       end
 
       remove_instance_variable("@response")
@@ -111,11 +116,12 @@ class GitHubModel
   #
   # client  - The Octokit::Client making the request.
   # id_args - The Interger ids for the resource.
+  # options - A Hash of options to pass (optional).
   #
   # Returns an Sawyer::Resource or a Null:GitHubObject.
-  def github_response(client, id_args)
+  def github_response(client, id_args, **options)
     return @response if defined?(@response)
-    @response = github_client_request(client, id_args) || github_classroom_request(id_args)
+    @response = github_client_request(client, id_args, options) || github_classroom_request(id_args, options)
     @response ||= null_github_object
   end
 
