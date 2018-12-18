@@ -14,7 +14,8 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
       starter_code_repo_id: 1_062_897,
       organization: organization,
       students_are_repo_admins: true,
-      public_repo: false
+      public_repo: false,
+      use_roster_id: false
     }
 
     create(:assignment, options)

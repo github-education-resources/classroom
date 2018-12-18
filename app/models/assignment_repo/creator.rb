@@ -197,11 +197,18 @@ class AssignmentRepo
     #####################################
 
     # rubocop:disable AbcSize
+    # rubocop:disable MethodLength
     def generate_github_repository_name
       suffix_count = 0
 
-      owner           = organization.github_organization.login_no_cache
-      repository_name = "#{assignment.slug}-#{user.github_user.login_no_cache}"
+      owner = organization.github_organization.login_no_cache
+
+      entry = RosterEntry.find_by(roster: organization.roster, user: user)
+      repository_name = if assignment.use_roster_id && entry.present?
+                          "#{assignment.slug}-#{entry.identifier}"
+                        else
+                          "#{assignment.slug}-#{user.github_user.login_no_cache}"
+                        end
 
       loop do
         name = "#{owner}/#{suffixed_repo_name(repository_name, suffix_count)}"
@@ -213,6 +220,7 @@ class AssignmentRepo
       suffixed_repo_name(repository_name, suffix_count)
     end
     # rubocop:enable AbcSize
+    # rubocop:enable MethodLength
 
     def suffixed_repo_name(repository_name, suffix_count)
       return repository_name if suffix_count.zero?
