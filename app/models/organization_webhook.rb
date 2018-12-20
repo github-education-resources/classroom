@@ -57,7 +57,7 @@ class OrganizationWebhook < ApplicationRecord
   #
   # Returns true if successful, otherwise raises a GitHub::Error or ActiveRecord::RecordInvalid.
   def create_org_hook!(client)
-    github_organization(client).create_organization_webhook(config: { url: webhook_url }).id
+    self.github_id = github_organization(client).create_organization_webhook(config: { url: webhook_url }).id
     save!
   rescue ActiveRecord::RecordInvalid => err
     github_organization(client).remove_organization_webhook(github_id)
@@ -69,7 +69,7 @@ class OrganizationWebhook < ApplicationRecord
   # client - The client that used to edit the organization webhook
   #          (Note: client must have the `admin:org_hook` scope).
   #
-  # Returns true if successful, otherwise raises a GitHub::Error
+  # Returns true if successful, otherwise raises a GitHub::Error.
   def activate_org_hook(client)
     github_organization(client).activate_organization_webhook(github_id, config: { url: webhook_url })
     true
@@ -90,6 +90,7 @@ class OrganizationWebhook < ApplicationRecord
   # of a large size. Invoke cautiously.
   def ensure_webhook_is_active!(client: nil)
     client ||= admin_org_hook_scoped_github_client
+    retrieve_org_hook_id!(client) if github_id.blank?
     return create_org_hook!(client) if github_id.blank?
     github_org_hook_is_active = github_org_hook(client).active?
     return create_org_hook!(client) if github_org_hook_is_active.nil?
@@ -98,6 +99,23 @@ class OrganizationWebhook < ApplicationRecord
   end
 
   private
+
+  # Internal: Retrieves the classroom webhook id on GitHub if it exists and saves it.
+  #
+  # This is possible assuming that classroom only creates one webhook in production.
+  #
+  # Returns the webhook id if the webhook id could be retrieved and saved or nil.
+  def retrieve_org_hook_id!(client)
+    webhooks = github_organization(client).organization_webhooks
+    return nil if webhooks.empty?
+
+    # There should only be one webhook that Classroom creates in production
+    self.github_id = webhooks.first.id
+    save!
+    github_id
+  rescue GitHub::Error, ActiveRecord::RecordInvalid
+    nil
+  end
 
   # Internal: Find Users that has the `admin:org_hook` scope
   # for creating the organization webhook.
