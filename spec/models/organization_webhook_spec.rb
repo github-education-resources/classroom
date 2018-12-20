@@ -48,24 +48,44 @@ RSpec.describe OrganizationWebhook, type: :model do
       end
 
       context "github_id is not present" do
-        before do
-          expect(subject).to receive_message_chain(:github_id, :blank?) { true }
+        context "there isn't an org hook on github" do
+          before do
+            expect(subject).to receive(:github_id).and_return(nil).twice
+            expect(subject).to receive(:retrieve_org_hook_id!).and_return(nil)
+          end
+
+          it "invokes create_org_hook!" do
+            expect(subject).to receive(:create_org_hook!).and_return(true)
+            subject.ensure_webhook_is_active!
+          end
+
+          it "returns true" do
+            expect(subject).to receive(:create_org_hook!).and_return(true)
+            expect(subject.ensure_webhook_is_active!).to be_truthy
+          end
         end
 
-        it "invokes create_org_hook!" do
-          expect(subject).to receive(:create_org_hook!).and_return(true)
-          subject.ensure_webhook_is_active!
-        end
+        context "hook exists on github" do
+          before do
+            expect(subject).to receive(:github_id).and_return(nil, true)
+            expect(subject).to receive_message_chain(:github_org_hook, :active?) { true }
+          end
 
-        it "returns true" do
-          expect(subject).to receive(:create_org_hook!).and_return(true)
-          expect(subject.ensure_webhook_is_active!).to be_truthy
+          it "invokes retrieve_org_hook_id!" do
+            expect(subject).to receive(:retrieve_org_hook_id!).and_return(true)
+            subject.ensure_webhook_is_active!
+          end
+
+          it "returns true" do
+            expect(subject).to receive(:retrieve_org_hook_id!).and_return(true)
+            expect(subject.ensure_webhook_is_active!).to be_truthy
+          end
         end
       end
 
       context "github_org_hook is not found" do
         before do
-          expect(subject).to receive_message_chain(:github_id, :blank?) { false }
+          expect(subject).to receive(:github_id).and_return(true).twice
           expect(subject).to receive_message_chain(:github_org_hook, :active?) { nil }
         end
 
@@ -82,7 +102,7 @@ RSpec.describe OrganizationWebhook, type: :model do
 
       context "github_org_hook was NotFound" do
         before do
-          expect(subject).to receive_message_chain(:github_id, :blank?) { false }
+          expect(subject).to receive(:github_id).and_return(true).twice
           expect(subject).to receive_message_chain(:github_org_hook, :active?) { nil }
         end
 
@@ -99,7 +119,7 @@ RSpec.describe OrganizationWebhook, type: :model do
 
       context "github_org_hook is not active" do
         before do
-          expect(subject).to receive_message_chain(:github_id, :blank?) { false }
+          expect(subject).to receive(:github_id).and_return(true).twice
           expect(subject).to receive_message_chain(:github_org_hook, :active?) { false }
         end
 
@@ -116,7 +136,7 @@ RSpec.describe OrganizationWebhook, type: :model do
 
       context "github_org_hook is active" do
         before do
-          expect(subject).to receive_message_chain(:github_id, :blank?) { false }
+          expect(subject).to receive(:github_id).and_return(true).twice
           expect(subject).to receive_message_chain(:github_org_hook, :active?) { true }
         end
 
@@ -133,24 +153,44 @@ RSpec.describe OrganizationWebhook, type: :model do
 
     context "client is present" do
       context "github_id is not present" do
-        before do
-          expect(subject).to receive_message_chain(:github_id, :blank?) { true }
+        context "there isn't an org hook on github" do
+          before do
+            expect(subject).to receive(:github_id).and_return(nil).twice
+            expect(subject).to receive(:retrieve_org_hook_id!).and_return(nil)
+          end
+
+          it "invokes create_org_hook!" do
+            expect(subject).to receive(:create_org_hook!).and_return(true)
+            subject.ensure_webhook_is_active!(client: client)
+          end
+
+          it "returns true" do
+            expect(subject).to receive(:create_org_hook!).and_return(true)
+            expect(subject.ensure_webhook_is_active!(client: client)).to be_truthy
+          end
         end
 
-        it "invokes create_org_hook!" do
-          expect(subject).to receive(:create_org_hook!).and_return(true)
-          subject.ensure_webhook_is_active!(client: client)
-        end
+        context "hook exists on github" do
+          before do
+            expect(subject).to receive(:github_id).and_return(nil, true)
+            expect(subject).to receive_message_chain(:github_org_hook, :active?) { true }
+          end
 
-        it "returns true" do
-          expect(subject).to receive(:create_org_hook!).and_return(true)
-          expect(subject.ensure_webhook_is_active!(client: client)).to be_truthy
+          it "invokes retrieve_org_hook_id!" do
+            expect(subject).to receive(:retrieve_org_hook_id!).and_return(0)
+            subject.ensure_webhook_is_active!(client: client)
+          end
+
+          it "returns true" do
+            expect(subject).to receive(:retrieve_org_hook_id!).and_return(0)
+            expect(subject.ensure_webhook_is_active!(client: client)).to be_truthy
+          end
         end
       end
 
       context "github_org_hook was NotFound" do
         before do
-          expect(subject).to receive_message_chain(:github_id, :blank?) { false }
+          expect(subject).to receive(:github_id).and_return(true).twice
           expect(subject).to receive_message_chain(:github_org_hook, :active?) { nil }
         end
 
@@ -167,7 +207,7 @@ RSpec.describe OrganizationWebhook, type: :model do
 
       context "github_org_hook is not active" do
         before do
-          expect(subject).to receive_message_chain(:github_id, :blank?) { false }
+          expect(subject).to receive(:github_id).and_return(true).twice
           expect(subject).to receive_message_chain(:github_org_hook, :active?) { false }
         end
 
@@ -184,7 +224,7 @@ RSpec.describe OrganizationWebhook, type: :model do
 
       context "github_org_hook is active" do
         before do
-          expect(subject).to receive_message_chain(:github_id, :blank?) { false }
+          expect(subject).to receive(:github_id).and_return(true).twice
           expect(subject).to receive_message_chain(:github_org_hook, :active?) { true }
         end
 
@@ -196,6 +236,61 @@ RSpec.describe OrganizationWebhook, type: :model do
         it "returns true" do
           expect(subject.ensure_webhook_is_active!(client: client)).to be_truthy
         end
+      end
+    end
+  end
+
+  describe "#retrieve_org_hook_id!", :vcr do
+    context "org hook exists" do
+      before do
+        expect_any_instance_of(GitHubOrganization)
+          .to receive(:organization_webhooks)
+          .and_return([double("Classroom webhook", id: 0)])
+      end
+
+      context "saves successfully" do
+        it "returns the expected id" do
+          expect(subject.send(:retrieve_org_hook_id!, client)).to eq(0)
+        end
+
+        it "saves the new id" do
+          subject.send(:retrieve_org_hook_id!, client)
+          expect(subject.reload.github_id).to eq(0)
+        end
+      end
+
+      context "raises a ActiveRecord::RecordInvalid" do
+        before do
+          expect(subject).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
+        end
+
+        it "returns nil" do
+          expect(subject.send(:retrieve_org_hook_id!, client)).to be_nil
+        end
+      end
+    end
+
+    context "org hook does not exist" do
+      before do
+        expect_any_instance_of(GitHubOrganization)
+          .to receive(:organization_webhooks)
+          .and_return([])
+      end
+
+      it "retruns nil" do
+        expect(subject.send(:retrieve_org_hook_id!, client)).to be_nil
+      end
+    end
+
+    context "raises a GitHub::Error" do
+      before do
+        expect_any_instance_of(GitHubOrganization)
+          .to receive(:organization_webhooks)
+          .and_raise(GitHub::Error)
+      end
+
+      it "returns nil" do
+        expect(subject.send(:retrieve_org_hook_id!, client)).to be_nil
       end
     end
   end
@@ -237,6 +332,11 @@ RSpec.describe OrganizationWebhook, type: :model do
 
       it "returns true" do
         expect(subject.create_org_hook!(client)).to be_truthy
+      end
+
+      it "saves the new id" do
+        subject.create_org_hook!(client)
+        expect(subject.github_id).to eq(0)
       end
     end
   end
