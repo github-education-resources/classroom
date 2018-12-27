@@ -3,129 +3,198 @@
 require "rails_helper"
 
 RSpec.describe Organization::Creator, type: :model do
+  subject                      { described_class.new(github_id: github_organization_id, users: [user]) }
   let(:github_organization_id) { classroom_owner_organization_github_id.to_i }
-  let(:user)                   { classroom_teacher                           }
-
-  after(:each) do
-    Organization.find_each(&:destroy)
+  let(:user)                   { classroom_teacher }
+  let(:organization_webhook) do
+    create(
+      :organization_webhook,
+      github_organization_id: github_organization_id,
+      github_id: 1
+    )
   end
 
   describe "::perform", :vcr do
     describe "successful creation" do
-      it "creates an Organization with a webhook_id" do
-        result = Organization::Creator.perform(github_id: github_organization_id, users: [user])
-
-        expect(result.success?).to be_truthy
-        expect(result.organization.github_id).to eql(github_organization_id)
-        expect(result.organization.webhook_id).to_not be_nil
-        expect(result.organization.github_global_relay_id).to_not be_nil
-      end
-
-      it "sends an event to statd" do
-        expect(GitHubClassroom.statsd).to receive(:increment).with("classroom.created")
-
-        Organization::Creator.perform(github_id: github_organization_id, users: [user])
-      end
-
-      describe "organization_webhook model with same github_organization_id does not exist" do
-        let(:organization) do
-          Organization::Creator.perform(github_id: github_organization_id, users: [user]).organization
-        end
-
-        it "belongs to a new organization webhook" do
-          expect(organization.organization_webhook).to be_truthy
-        end
-
-        it "has an organization webhook with a github_id" do
-          expect(organization.organization_webhook.github_id).to be_truthy
-        end
-
-        it "has an organization webhook with a github_organization_id" do
-          expect(organization.organization_webhook.github_organization_id).to be_truthy
-        end
-      end
-
-      context "organization_webhook model with same github_organization_id exists" do
-        let(:organization_webhook) { create(:organization_webhook, github_organization_id: github_organization_id) }
-        let(:organization) do
-          Organization::Creator.perform(github_id: github_organization_id, users: [user]).organization
-        end
-
+      context "no classrooms already exist on the same organization" do
         before do
-          organization_webhook
+          expect(subject)
+            .to receive(:ensure_organization_webhook_exists!)
+            .and_return(organization_webhook)
         end
 
-        it "belongs to the pre existing organization webhook" do
-          expect(organization.organization_webhook_id).to eq(organization_webhook.id)
+        it "creates an Organization with a webhook_id" do
+          result = subject.perform
+
+          expect(result.success?).to be_truthy
+          expect(result.organization.github_id).to eql(github_organization_id)
+          expect(result.organization.webhook_id).to_not be_nil
+          expect(result.organization.github_global_relay_id).to_not be_nil
         end
 
-        it "updates the organization webhook's github_id with a more up to date github_id" do
-          expected_new_webhook_id = 1_000_000
-          expect_any_instance_of(Organization::Creator)
-            .to receive(:create_organization_webhook!)
-            .and_return(expected_new_webhook_id)
+        it "sends an event to statd" do
+          expect(GitHubClassroom.statsd).to receive(:increment).with("classroom.created")
 
-          expect(organization.organization_webhook.github_id).to eq(expected_new_webhook_id)
-          expect(organization_webhook.reload.github_id).to eq(expected_new_webhook_id)
+          subject.perform
+        end
+
+        context "organization_webhook model with same github_organization_id does not exist" do
+          let(:organization) do
+            subject.perform.organization
+          end
+
+          it "belongs to a new organization webhook" do
+            expect(organization.organization_webhook).to be_truthy
+          end
+
+          it "has an organization webhook with a github_id" do
+            expect(organization.organization_webhook.github_id).to be_truthy
+          end
+
+          it "has an organization webhook with a github_organization_id" do
+            expect(organization.organization_webhook.github_organization_id).to be_truthy
+          end
+        end
+
+        context "organization_webhook model with same github_organization_id exists" do
+          let(:organization) do
+            subject.perform.organization
+          end
+
+          before do
+            organization_webhook
+          end
+
+          it "belongs to the pre existing organization webhook" do
+            expect(organization.organization_webhook_id).to eq(organization_webhook.id)
+          end
+
+          it "invokes ensure_organization_webhook_exists!" do
+            organization
+          end
         end
       end
 
       context "multiple classrooms on same organization" do
         before do
-          result = Organization::Creator.perform(github_id: github_organization_id, users: [user])
+          expect(subject)
+            .to receive(:ensure_organization_webhook_exists!)
+            .and_return(organization_webhook, organization_webhook)
+          result = subject.perform
           @org = result.organization
         end
 
         it "creates a classroom with the same webhook id as the existing one" do
-          result = Organization::Creator.perform(github_id: github_organization_id, users: [user])
+          result = subject.perform
           expect(result.organization.webhook_id).to eql(@org.webhook_id)
         end
 
         it "creates a classroom with the default title but incremented id" do
-          result = Organization::Creator.perform(github_id: github_organization_id, users: [user])
+          result = subject.perform
           expect(result.organization.title).to eql("#{@org.title[0...-2]}-2")
-        end
-      end
-
-      context "already created webhook on GitHub org" do
-        before do
-          GitHubOrganization
-            .any_instance.stub(:create_organization_webhook)
-            .and_raise GitHub::Error, "Hook: Hook already exists on this organization"
-
-          @dummy_webhook_id = 12_345
-          Organization::Creator
-            .any_instance.stub(:get_organization_webhook_id)
-            .and_return @dummy_webhook_id
-        end
-
-        it "sets webhook id to what it is already set on org" do
-          result = Organization::Creator.perform(github_id: github_organization_id, users: [user])
-          expect(result.organization.webhook_id).to eql(@dummy_webhook_id)
         end
       end
     end
 
     describe "unsucessful creation" do
-      it "does not allow non admins to be added" do
-        non_admin_user = create(:user, uid: 1)
-        result = Organization::Creator.perform(github_id: github_organization_id, users: [non_admin_user])
-        expect(result.failed?).to be_truthy
+      context "does not allow non admins to be added" do
+        subject do
+          non_admin_user = create(:user, uid: 1)
+          described_class.new(github_id: github_organization_id, users: [non_admin_user])
+        end
+
+        it "fails" do
+          result = subject.perform
+          expect(result.failed?).to be_truthy
+        end
       end
 
-      it "deletes the webhook if the process could not be completed" do
-        result = Organization::Creator.perform(github_id: github_organization_id, users: [])
-        expect(result.failed?).to be_truthy
+      context "deletes the organization if the repository permissions cannot be set to none" do
+        before do
+          expect(subject)
+            .to receive(:ensure_organization_webhook_exists!)
+            .and_return(organization_webhook)
+        end
+
+        it "fails" do
+          stub_request(:patch, github_url("/organizations/#{github_organization_id}"))
+            .to_return(body: "{}", status: 401)
+
+          result = subject.perform
+
+          expect(result.failed?).to be_truthy
+          expect(Organization.count).to eql(0)
+        end
       end
 
-      it "deletes the organization if the repository permissions cannot be set to none" do
-        stub_request(:patch, github_url("/organizations/#{github_organization_id}"))
-          .to_return(body: "{}", status: 401)
+      context "ensure_organization_webhook_exists! fails" do
+        context "raises a Result::Error" do
+          before do
+            expect(subject)
+              .to receive(:ensure_organization_webhook_exists!)
+              .and_raise(described_class::Result::Error)
+          end
 
-        result = Organization::Creator.perform(github_id: github_organization_id, users: [user])
+          it "fails" do
+            expect(subject.perform.failed?).to be_truthy
+          end
+        end
+      end
+    end
+  end
 
-        expect(result.failed?).to be_truthy
-        expect(Organization.count).to eql(0)
+  describe "#ensure_organization_webhook_exists!", :vcr do
+    context "#user_with_admin_org_hook_scope returns nil" do
+      before do
+        expect(subject)
+          .to receive(:user_with_admin_org_hook_scope)
+          .and_return(nil)
+      end
+
+      it "raises a Result::Error" do
+        expect { subject.send(:ensure_organization_webhook_exists!) }
+          .to raise_error(described_class::Result::Error, described_class::NO_ADMIN_ORG_TOKEN_ERROR)
+      end
+    end
+
+    context "#user_with_admin_org_hook_scope returns a user" do
+      context "ensure_webhook_is_active! raises a ActiveRecord::RecordInvalid" do
+        before do
+          expect_any_instance_of(OrganizationWebhook)
+            .to receive(:ensure_webhook_is_active!)
+            .and_raise(ActiveRecord::RecordInvalid)
+        end
+
+        it "raises a Result::Error" do
+          expect { subject.send(:ensure_organization_webhook_exists!) }
+            .to raise_error(described_class::Result::Error)
+        end
+      end
+
+      context "ensure_webhook_is_active! raises a GitHub::Error" do
+        before do
+          expect_any_instance_of(OrganizationWebhook)
+            .to receive(:ensure_webhook_is_active!)
+            .and_raise(GitHub::Error)
+        end
+
+        it "raises a Result::Error" do
+          expect { subject.send(:ensure_organization_webhook_exists!) }
+            .to raise_error(described_class::Result::Error)
+        end
+      end
+
+      context "ensure_organization_webhook_exists! returns true" do
+        before do
+          expect_any_instance_of(OrganizationWebhook)
+            .to receive(:ensure_webhook_is_active!)
+            .and_return(true)
+          organization_webhook
+        end
+
+        it "returns the organization_webhook" do
+          expect(subject.send(:ensure_organization_webhook_exists!).id).to eq(organization_webhook.id)
+        end
       end
     end
   end
