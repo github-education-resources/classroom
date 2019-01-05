@@ -2,7 +2,7 @@
 
 module Stafftools
   class OrganizationsController < StafftoolsController
-    before_action :set_organization
+    before_action :set_organization_and_webhook
 
     def show; end
 
@@ -21,8 +21,9 @@ module Stafftools
 
     private
 
-    def set_organization
+    def set_organization_and_webhook
       @organization = Organization.includes(:users).find_by!(id: params[:id])
+      @organization_webhook = @organization.organization_webhook
     end
   end
 end
