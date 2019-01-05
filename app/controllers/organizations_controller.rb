@@ -193,9 +193,7 @@ class OrganizationsController < Orgs::Controller
 
   def warn_classroom_if_in_bad_health(organization = nil)
     organization ||= current_organization
-    unless organization.in_good_health?
-      flash[:error] = classroom_webhook_error(organization.title)
-    end
+    flash[:error] = classroom_webhook_error(organization.title) unless organization.in_good_health?
   end
 
   # TODO: Add link to page describing how to fix the problem.
