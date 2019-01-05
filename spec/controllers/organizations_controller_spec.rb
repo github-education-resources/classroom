@@ -165,11 +165,44 @@ RSpec.describe OrganizationsController, type: :controller do
   end
 
   describe "GET #show", :vcr do
-    it "returns success and sets the organization" do
-      get :show, params: { id: organization.slug }
+    context "organization is in good health" do
+      before do
+        expect_any_instance_of(Organization).to receive(:in_good_health?).and_return(true)
+      end
 
-      expect(response.status).to eq(200)
-      expect(assigns(:current_organization)).to_not be_nil
+      it "returns success and sets the organization" do
+        get :show, params: { id: organization.slug }
+
+        expect(response.status).to eq(200)
+        expect(assigns(:current_organization)).to_not be_nil
+      end
+
+      it "does not flash an error" do
+        get :show, params: { id: organization.slug }
+
+        expect(response.status).to eq(200)
+        expect(flash[:error]).to be_blank
+      end
+    end
+
+    context "organization is not in good health" do
+      before do
+        expect_any_instance_of(Organization).to receive(:in_good_health?).and_return(false)
+      end
+
+      it "returns success and sets the organization" do
+        get :show, params: { id: organization.slug }
+
+        expect(response.status).to eq(200)
+        expect(assigns(:current_organization)).to_not be_nil
+      end
+
+      it "flashes an error" do
+        get :show, params: { id: organization.slug }
+
+        expect(response.status).to eq(200)
+        expect(flash[:error]).to be_present
+      end
     end
   end
 

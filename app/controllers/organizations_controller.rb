@@ -9,6 +9,7 @@ class OrganizationsController < Orgs::Controller
   before_action :add_current_user_to_organizations,   only: [:index]
   before_action :paginate_users_github_organizations, only: %i[new create]
   before_action :verify_user_belongs_to_organization, only: [:remove_user]
+  before_action :warn_classroom_if_in_bad_health,     only: :show
 
   skip_before_action :ensure_current_organization,                         only: %i[index new create]
   skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create]
@@ -188,6 +189,19 @@ class OrganizationsController < Orgs::Controller
       return false
     end
     true
+  end
+
+  def warn_classroom_if_in_bad_health(organization = nil)
+    organization ||= current_organization
+    unless organization.in_good_health?
+      flash[:error] = classroom_webhook_error(organization.title)
+    end
+  end
+
+  # TODO: Add link to page describing how to fix the problem.
+  def classroom_webhook_error(classroom_title)
+    "#{classroom_title} is missing webhooks. " \
+    "Webhooks allow classroom to import starter code during assignment creation."
   end
 end
 # rubocop:enable Metrics/ClassLength
