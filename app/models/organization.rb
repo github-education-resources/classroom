@@ -61,7 +61,7 @@ class Organization < ApplicationRecord
   end
 
   def geo_pattern_data_uri
-    @geo_pattern_data_uri ||= GeoPattern.generate(id, color: "#5fb27b").to_data_uri
+    @geo_pattern_data_uri ||= GeoPattern.generate(id, base_color: "#28a745", patterns:[:chevrons, :hexagons]).to_data_uri
   end
 
   # Check if we are the last Classroom on this GitHub Organization
@@ -79,5 +79,9 @@ class Organization < ApplicationRecord
     end
 
     true
+  end
+
+  def self.search(search)
+    where("title LIKE ?", "%#{search}%")
   end
 end

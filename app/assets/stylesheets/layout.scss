@@ -185,6 +185,10 @@ main {
   }
 }
 
+body.index {
+  background: linear-gradient(#ffffff, #fafafa);
+}
+
 .site-content,
 .menu {
   margin-top: 1rem;
@@ -196,10 +200,6 @@ main {
   border: solid 1px #e3e3e3;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
-
-  .btn {
-    margin-top: -5px;
-  }
 
   @media screen and (max-width: 40em) {
     padding: 1.5rem 1rem;
@@ -498,6 +498,42 @@ hr {
       display: none;
     }
   }
+}
+
+.organization-card {
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  transition: 0.3s;
+
+  .organization-card-header {
+    position: relative;
+
+    .organization-card-title {
+      // text-overflow: ellipsis;
+      // /* Needed to make it work */
+      // overflow: hidden;
+      // white-space: nowrap;
+    }
+
+    .organization-card-image {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+  }
+
+  .Box-body {
+    height: 140px;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+}
+
+.organization-card:hover {
+  box-shadow: 0 0 11px rgba(33,33,33,.2);
 }
 
 .site-footer {

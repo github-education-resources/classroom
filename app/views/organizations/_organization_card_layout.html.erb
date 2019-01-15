@@ -1,0 +1,38 @@
+<div class="container-lg clearfix">
+  <% organizations.each do |organization| %>
+    <div class="col-4 float-left px-2">
+      <div class="organization-card d-block bg-white rounded-1 height-full no-underline border position-relative overflow-hidden mb-4">
+          <div class="organization-card-header">
+            <div class="organization-card-image" style="background-image: <%= organization.geo_pattern_data_uri %>"></div>
+            <div class="organization-card-title px-3 pt-4">
+              <a href="<%= organization_path(organization) %>" class="d-inline-block h2 text-white position-relative">
+                <%= organization.title %>
+              </a>
+            </div>
+            <p class="f4 text-white px-3 position-relative pb-4">@<%= organization.github_organization.login %></p>
+          </div>
+
+        <div class = "Box-body text-gray-dark pt-1">
+          <%= octicon 'person', :class => "mr-1" %><%= organization.assignments.count %>
+          <%= octicon 'organization', :class => "ml-1 mr-1" %><%= organization.group_assignments.count %>
+
+          <% if organization.assignments.present? %>
+            <p class="h4 mt-2 mb-1">Latest Assignments</p>
+
+            <% organization.assignments.order(created_at: :desc).limit(2).each do |assignment| %>
+              <%= link_to(assignment.title, organization_assignment_path(organization, assignment), class: "d-block") %>
+            <% end %>
+
+            <% organization.group_assignments.order(created_at: :desc).limit(2).each do |group_assignment| %>
+              <%= link_to(group_assignment.title, organization_group_assignment_path(organization, group_assignment), class: "d-block") %>
+            <% end %>
+          <% else %>
+            <p class="f5 mt-2 mb-1">No Assignments Created</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%= render partial: 'shared/pagination', locals: { collection: organizations } %>
+</div>

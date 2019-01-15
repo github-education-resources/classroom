@@ -10,8 +10,8 @@ class OrganizationsController < Orgs::Controller
   before_action :paginate_users_github_organizations, only: %i[new create]
   before_action :verify_user_belongs_to_organization, only: [:remove_user]
 
-  skip_before_action :ensure_current_organization,                         only: %i[index new create]
-  skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create]
+  skip_before_action :ensure_current_organization,                         only: %i[index new create search]
+  skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create search]
 
   def index
     @organizations = current_user.organizations.order(:id).page(params[:page])
@@ -99,6 +99,16 @@ class OrganizationsController < Orgs::Controller
       redirect_to invite_organization_path(current_organization)
     else
       render :setup
+    end
+  end
+
+  def search
+    # binding.pry
+    respond_to do |format|
+      format.html {
+        render partial: "organizations/organization_card_layout",
+        locals: { organizations: current_user.organizations.order(:id).where("title LIKE ?", "%#{params[:query]}%").page(params[:page])}
+      }
     end
   end
 

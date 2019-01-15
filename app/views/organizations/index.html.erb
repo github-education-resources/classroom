@@ -1,19 +1,33 @@
 <div class="site-content">
 
-  <div class="site-content-cap clearfix">
+  <div class="site-content-cap clearfix <%= 'mx-2' if dashboard_search_enabled? %>">
     <% if @organizations.present? %>
+      <% if dashboard_search_enabled? %>
+        <%= form_tag search_organizations_path, id: 'js-search-form', class: 'd-inline-block form-block col-6', method: :get, remote: true do %>
+          <%= text_field_tag :query, params[:query], class: 'form-control width-full', placeholder: 'Search Classrooms...', autofocus: true, autocomplete: :off %>
+        <% end %>
+      <% else %>
+        <h2 class="site-content-heading float-left"><%= t('views.organizations.classrooms') %></h2>
+      <% end %>
+
       <%= link_to new_organization_path, class: 'btn btn-primary float-right', role: 'button' do %>
         <%= t('views.organizations.new_classroom') %>
       <% end %>
     <% end %>
-    <h2 class="site-content-heading float-left"><%= t('views.organizations.classrooms') %></h2>
   </div>
 
-  <div class="site-content-body organization-list-items">
-    <% if @organizations.present? %>
-      <%= render @organizations %>
-      <%= render partial: 'shared/pagination', locals: { collection: @organizations } %>
+  <% if @organizations.present? %>
+    <% if dashboard_search_enabled? %>
+      <div class="mt-4" id="js-search-results">
+          <%= render partial: 'organization_card_layout', locals: {organizations: @organizations} %>
+      </div>
     <% else %>
+      <div class="site-content-body organization-list-items">
+        <%= render @organizations %>
+        <%= render partial: 'shared/pagination', locals: { collection: @organizations } %>
+      </div>
+    <% end %>
+  <% else %>
       <div class="blankslate large-format spacious clean-background">
         <h3><%= t('views.organizations.no_classrooms') %></h3>
         <p><%= t('views.organizations.no_classrooms_desc') %></p>
@@ -22,6 +36,5 @@
           <%= t('views.organizations.create_first_classroom') %>
         <% end %>
       </div>
-    <% end %>
-  </div>
+  <% end %>
 </div>
