@@ -56,6 +56,10 @@ class Organization < ApplicationRecord
     users.count == 1
   end
 
+  def geo_pattern_data_uri
+    @geo_pattern_data_uri ||= GeoPattern.generate(id, color: "#5fb27b").to_data_uri
+  end
+
   # Check if we are the last Classroom on this GitHub Organization
   def last_classroom_on_org?
     Organization.where(github_id: github_id).length <= 1
