@@ -56,8 +56,8 @@ class Organization < ApplicationRecord
     users.count == 1
   end
 
-  def in_good_health?
-    organization_webhook.github_id.present?
+  def geo_pattern_data_uri
+    @geo_pattern_data_uri ||= GeoPattern.generate(id, color: "#5fb27b").to_data_uri
   end
 
   # Check if we are the last Classroom on this GitHub Organization

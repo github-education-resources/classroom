@@ -14,6 +14,7 @@ en:
         homepage: 'Homepage'
         webhook_url: 'WebHook URL'
         webhook_enabled_check: 'WebHook Enabled?'
+        webhook_last_receieved: 'Last webhook received'
         owners: 'Owners'
         assignments: 'Assignments'
         groupings: 'Groupings'
