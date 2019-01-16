@@ -2,15 +2,17 @@
   <% organizations.each do |organization| %>
     <div class="col-4 float-left px-2">
       <div class="organization-card d-block bg-white rounded-1 height-full no-underline border position-relative overflow-hidden mb-4">
-          <div class="organization-card-header">
-            <div class="organization-card-image" style="background-image: <%= organization.geo_pattern_data_uri %>"></div>
-            <div class="organization-card-title px-3 pt-4">
-              <a href="<%= organization_path(organization) %>" class="d-inline-block h2 text-white position-relative">
-                <%= organization.title %>
+        <div class="organization-card-header">
+          <div class="organization-card-image" style="background-image: <%= organization.geo_pattern_data_uri %>"></div>
+          <div class="pt-4 pb-4 mx-3">
+              <a href="<%= organization_path(organization) %>" class="d-inline-block h2 text-white position-relative width-fit">
+                <div class="organization-card-title">
+                  <%= organization.title %>
+                </div>
               </a>
-            </div>
-            <p class="f4 text-white px-3 position-relative pb-4">@<%= organization.github_organization.login %></p>
+              <p class="f4 text-white position-relative">@<%= organization.github_organization.login %></p>
           </div>
+        </div>
 
         <div class = "Box-body text-gray-dark pt-1">
           <%= octicon 'person', :class => "mr-1" %><%= organization.assignments.count %>

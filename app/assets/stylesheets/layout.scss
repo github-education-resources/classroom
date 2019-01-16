@@ -508,10 +508,11 @@ hr {
     position: relative;
 
     .organization-card-title {
-      // text-overflow: ellipsis;
-      // /* Needed to make it work */
-      // overflow: hidden;
-      // white-space: nowrap;
+      text-overflow: ellipsis;
+      /* Needed to make it work */
+      overflow: hidden;
+      white-space: nowrap;
+      display: block;
     }
 
     .organization-card-image {
