@@ -56,7 +56,7 @@ class OrganizationWebhook < ApplicationRecord
   #          (Note: client must have the `admin:org_hook` scope).
   #
   # Returns true if successful, otherwise raises a GitHub::Error or ActiveRecord::RecordInvalid.
-  def create_org_hook!(client)
+  def create_org_hook!(client = GitHubClassroom.github_client)
     self.github_id = github_organization(client).create_organization_webhook(config: { url: webhook_url }).id
     save!
   rescue ActiveRecord::RecordInvalid => err
@@ -91,9 +91,9 @@ class OrganizationWebhook < ApplicationRecord
   def ensure_webhook_is_active!(client: nil)
     client ||= admin_org_hook_scoped_github_client
     retrieve_org_hook_id!(client) if github_id.blank?
-    return create_org_hook!(client) if github_id.blank?
+    return create_org_hook! if github_id.blank?
     github_org_hook_is_active = github_org_hook(client).active?
-    return create_org_hook!(client) if github_org_hook_is_active.nil?
+    return create_org_hook! if github_org_hook_is_active.nil?
     return activate_org_hook(client) unless github_org_hook_is_active
     true
   end
