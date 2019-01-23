@@ -69,7 +69,7 @@ class OrganizationsController < Orgs::Controller
     if current_organization.update_attributes(deleted_at: Time.zone.now)
       DestroyResourceJob.perform_later(current_organization)
 
-      flash[:success] = "Your organization, @#{current_organization.github_organization.login} is being reset"
+      flash[:success] = "Your classroom, @#{current_organization.title} is being deleted"
       redirect_to organizations_path
     else
       render :edit
