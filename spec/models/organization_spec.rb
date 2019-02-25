@@ -113,7 +113,6 @@ RSpec.describe Organization, type: :model do
           it "deletes the webhook from GitHub" do
             subject.update(webhook_id: 9_999_999, is_webhook_active: true)
 
-            org_id     = subject.github_id
             webhook_id = subject.webhook_id
 
             subject.destroy
