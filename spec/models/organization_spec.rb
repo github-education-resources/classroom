@@ -118,7 +118,7 @@ RSpec.describe Organization, type: :model do
 
             subject.destroy
 
-            expect(WebMock).to have_requested(:delete, github_url("/organizations/#{org_id}/hooks/#{webhook_id}"))
+            expect(WebMock).to have_requested(:delete, github_url("/orgs/ghost/hooks/#{webhook_id}"))
           end
         end
       end
