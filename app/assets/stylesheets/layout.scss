@@ -67,8 +67,6 @@ main {
 }
 
 .site-header {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
   color: #ccc;
   background-color: #2f3232;
 }
@@ -76,64 +74,15 @@ main {
 .site-logo {
   width: 188px;
   height: 20px;
-  margin-top: 0.3rem;
-
-  @media screen and (max-width: 40em) {
-    display: block;
-    float: none;
-    margin-right: auto;
-    margin-bottom: 1rem;
-    margin-left: auto;
-  }
 }
 
 .site-nav {
-  float: right;
-  margin-top: 0.1rem;
-  font-size: 0.9rem;
-
-  ul {
-    display: inline-block;
-    list-style-type: none;
-
-    li {
-      display: block;
-      float: left;
-      margin-left: 2rem;
-
-      @media screen and (max-width: 40em) {
-        margin-left: 0;
-      }
-
-      .octicon {
-        font-size: 18px;
-      }
-    }
-  }
-
   a {
-    display: block;
-    height: 28px;
-    padding-top: 4px;
-    padding-bottom: 4px;
     color: rgba(255, 255, 255, 0.5);
-
-    @media screen and (max-width: 40em) {
-      margin-right: 1rem;
-      margin-left: 1rem;
-    }
   }
 
   a:hover {
     color: rgba(255, 255, 255, 1);
-  }
-
-  @media screen and (max-width: 40em) {
-    width: 100%;
-    padding-top: 1rem;
-    margin-bottom: 0.8rem;
-    text-align: center;
-    border-top: 0.075rem solid rgba(255, 255, 255, 0.25);
   }
 }
 
@@ -448,93 +397,6 @@ hr {
   @media screen and (max-width: 40em) {
     margin-left: 15px;
   }
-}
-
-.organization-list-items {
-  .organization-list-item:not(:first-child) {
-    padding-top: 2rem;
-    margin-top: 2rem;
-    border-top: 1px solid #e3e3e3;
-
-    @media screen and (max-width: 40em) {
-      padding-top: 1rem;
-      margin-top: 1rem;
-    }
-  }
-}
-
-.organization-list-item {
-  font-size: 16px;
-
-  .avatar {
-    margin-right: 10px;
-  }
-
-  .organization-title {
-    display: block;
-    padding-top: 0.4em;
-
-    &:hover {
-      color: $blue;
-    }
-  }
-
-  .organization-stats {
-    padding-top: 0.5em;
-    font-size: 14px;
-    font-weight: bold;
-    vertical-align: inherit;
-
-    .organization-stat-item {
-      margin-right: 0.6em;
-
-      .octicon {
-        margin-right: 4px;
-        font-size: 16px;
-      }
-    }
-
-    @media screen and (max-width: 40em) {
-      display: none;
-    }
-  }
-}
-
-.organization-card {
-  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
-  transition: 0.3s;
-
-  .organization-card-header {
-    position: relative;
-
-    .organization-card-title {
-      text-overflow: ellipsis;
-      /* Needed to make it work */
-      overflow: hidden;
-      white-space: nowrap;
-      display: block;
-    }
-
-    .organization-card-image {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-    }
-  }
-
-  .Box-body {
-    height: 140px;
-  }
-
-  a:hover {
-    text-decoration: underline;
-  }
-}
-
-.organization-card:hover {
-  box-shadow: 0 0 11px rgba(33,33,33,.2);
 }
 
 .site-footer {
