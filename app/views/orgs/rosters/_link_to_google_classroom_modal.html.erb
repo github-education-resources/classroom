@@ -1,0 +1,17 @@
+<div class="remodal text-left" data-remodal-id="link-to-google-classroom-modal">
+  <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
+  <h2 class="remodal-header text-left">Select Google Classroom</h2>
+    <% courses_array = @courses.map { |course| [course.name, course.id] } %>
+    <%# <%= select_tag :course_id, options_for_select(courses_array) %>
+    <div class="overflow-auto">
+      <div class="Box-body overflow-auto">
+        <ul>
+          <% @courses.each do |course| %>
+            <li class="Box-row">
+              <%= link_to course.name, {controller: "rosters", action: :import_from_google_classroom, course_id: course.id}, method: :patch %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+</div>

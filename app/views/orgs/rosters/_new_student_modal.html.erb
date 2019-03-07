@@ -2,6 +2,14 @@
   <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
   <h2 class="remodal-header text-left">Add students to your Roster</h2>
 
+  <nav class="UnderlineNav">
+    <div class="UnderlineNav-body">
+      <a href="#url" role="tab" title="Add Students" class="UnderlineNav-item">Add Students</a>
+      <a href="#url" role="tab" title="Import from Google Classroom" class="UnderlineNav-item selected">Import from Google Classroom</a>
+    </div>
+  </nav>
+
+<% if false %>
   <%= form_tag({ controller: :rosters, action: :add_students }, method: :patch) do %>
     <dl class="form">
       <dt><label><%= roster.identifier_name.pluralize %></label></dt>
@@ -18,4 +26,20 @@
       <%= submit_tag 'Create students', class: "btn btn-primary" %>
     </div>
   <% end %>
+<% end %>
+
+    <% courses_array = @courses.map { |course| [course.name, course.id] } %>
+    <%# <%= select_tag :course_id, options_for_select(courses_array) %>
+
+    <div class="overflow-auto">
+      <div class="Box-body overflow-auto">
+        <ul>
+          <% @courses.each do |course| %>
+            <li class="Box-row">
+              <%= link_to course.name, {controller: "rosters", action: :import_from_google_classroom, course_id: course.id}, method: :patch %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
 </div>

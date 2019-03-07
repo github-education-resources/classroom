@@ -38,6 +38,10 @@
           <%= file_field_tag :identifiers_file, style: 'display: none', id: 'file-upload', onchange: 'onIdentifiersUploaded()' %>
         </dl>
 
+        <dl class="form">
+          <dt><label>OR Import from Google Classroom:</label></dt>
+          <a data-remodal-target="link-to-google-classroom-modal"  class="btn btn-secondary btn-sm">Import from Google Classroom</a>
+        </dl>
         <div class="form-actions">
           <%= submit_tag 'Create roster', class: 'btn btn-primary right' %>
           <%= link_to 'Skip', organization_path(current_organization), class: 'btn btn-secondary right' %>
@@ -46,3 +50,4 @@
     </div>
   </div>
 </div>
+<%# <%= render partial: 'orgs/rosters/link_to_google_classroom_modal' %> 
