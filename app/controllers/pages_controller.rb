@@ -28,4 +28,14 @@ class PagesController < ApplicationController
     return not_found unless assistant_landing_page_enabled? || public_assistant_landing_page_enabled?
     render layout: "layouts/pagesv2"
   end
+
+  def help
+    begin
+      file_name = params[:article_name] ? params[:article_name] : "help"
+      @file = File.read("#{Rails.root}/docs/#{file_name}.md")
+      render layout: "layouts/pagesv2"
+    rescue Errno::ENOENT
+      return not_found
+    end
+  end
 end

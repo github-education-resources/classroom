@@ -63,6 +63,7 @@ gem "rack-rewrite",        "~> 1.5.0"
 gem "rack-timeout",        "~> 0.4.2", require: false
 gem "rails-i18n",          "~> 5.0", ">= 5.0.1"
 gem "redis-namespace",     "~> 1.5", ">= 1.5.3"
+gem "redcarpet", "~> 3.4"
 gem "ruby-progressbar",    "~> 1.8", ">= 1.8.1", require: false
 
 gem "sass-rails", "~> 5.0", ">= 5.0.6"
