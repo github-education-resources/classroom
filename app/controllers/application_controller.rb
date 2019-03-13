@@ -60,9 +60,11 @@ class ApplicationController < ActionController::Base
 
     case exception
     when ActionController::RoutingError
-      render file: Rails.root.join("public", "404.html"), layout: false, status: :not_found
+      render file: Rails.root.join("public", "404.html"), layout: false,
+             status: :not_found, formats: [:html]
     when ActiveRecord::RecordNotFound
-      render file: Rails.root.join("public", "invalid_link_error.html"), layout: false, status: :not_found
+      render file: Rails.root.join("public", "invalid_link_error.html"), layout: false,
+             status: :not_found, formats: [:html]
     end
   end
 end
