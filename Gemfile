@@ -7,8 +7,8 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-ruby File.read(File.expand_path("../.ruby-version", __FILE__)).chomp
-gem "rails", "~> 5.1", ">= 5.1.3"
+ruby File.read(File.expand_path(".ruby-version", __dir__)).chomp
+gem "rails", "~> 5.2", ">= 5.2.2.1"
 
 gem "autoprefixer-rails", "~> 7.1", ">= 7.1.3"
 
@@ -84,7 +84,7 @@ end
 group :development, :test do
   gem "awesome_print",            "~> 1.8", require: "ap"
   gem "bullet",                   "~> 5.6", ">= 5.6.1"
-  gem "dotenv-rails",             "~> 2.2", ">= 2.2.1"
+  gem "dotenv-rails",             "~> 2.7", ">= 2.7.1"
   gem "guard-rspec",              "~> 4.7", ">= 4.7.3", require: false
   gem "knapsack",                 "~> 1.14", ">= 1.14.1"
   gem "rails-controller-testing", "~> 1.0", ">= 1.0.2"
@@ -100,7 +100,7 @@ end
 group :production do
   gem "airbrake",           "~> 6.2", ">= 6.2.1"
   gem "dogstatsd-ruby",     "~> 3.0"
-  gem "lograge",            "~> 0.6.0"
+  gem "lograge",            "~> 0.10.0"
   gem "newrelic_rpm",       "~> 4.4", ">= 4.4.0.336"
   gem "pinglish",           "~> 0.2.1"
   gem "puma_worker_killer", "~> 0.1.0"
