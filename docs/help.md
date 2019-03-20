@@ -3,8 +3,8 @@
 ### Guides
 
 * [Video tutorials](https://classroom.github.com/videos)
-* [Controlling assignment repo settings with the Probot Settings app](help/probot-settings)
-* [Creating group assignments](help/create-group-assignments)
+* [Controlling assignment repo settings with the Probot Settings app](probot-settings)
+* [Creating group assignments](create-group-assignments)
 
 ### Workflows, case studies, best practices, and more from the GitHub blog
 
