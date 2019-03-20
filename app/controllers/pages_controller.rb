@@ -30,12 +30,10 @@ class PagesController < ApplicationController
   end
 
   def help
-    begin
-      file_name = params[:article_name] ? params[:article_name] : "help"
-      @file = File.read("#{Rails.root}/docs/#{file_name}.md")
-      render layout: "layouts/pagesv2"
-    rescue Errno::ENOENT
-      return not_found
-    end
+    file_name = params[:article_name] ? params[:article_name] : "help"
+    @file = File.read(Rails.root.join("docs", "#{file_name}.md"))
+    render layout: "layouts/pagesv2"
+  rescue Errno::ENOENT
+    return not_found
   end
 end

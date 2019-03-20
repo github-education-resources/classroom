@@ -3,6 +3,6 @@
 module MarkdownRenderHelper
   def markdown(text)
     doc = Kramdown::Document.new(text)
-    return doc.to_html.html_safe
+    doc.to_html
   end
 end
