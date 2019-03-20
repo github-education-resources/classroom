@@ -5,6 +5,16 @@
     <b>GitHub</b> Classroom Help
   </h1>
   <div class="markdown-body">
+      <nav aria-label="Breadcrumb">
+        <ol>
+          <% @breadcrumbs.each do |breadcrumb| %>
+            <% @last = breadcrumb == @breadcrumbs.last ? ' breadcrumb-item-selected' : '' %>
+            <li class="breadcrumb-item<%= @last %>">
+              <a href="<%= breadcrumb[0] %>"><%= breadcrumb[1] %></a>
+            </li>
+          <% end %>
+        </ol>
+      </nav>
     <%= (markdown @file).html_safe %>
   </div>
 </div>

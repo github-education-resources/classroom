@@ -32,6 +32,12 @@ class PagesController < ApplicationController
   def help
     file_name = params[:article_name] ? params[:article_name] : "help"
     @file = File.read(Rails.root.join("docs", "#{file_name}.md"))
+
+    @breadcrumbs = if file_name == "help"
+                     []
+                   else
+                     [["/help", "Help"], ["", file_name]] # TODO: derive name from frontmatter
+                   end
     render layout: "layouts/pagesv2"
   rescue Errno::ENOENT
     return not_found
