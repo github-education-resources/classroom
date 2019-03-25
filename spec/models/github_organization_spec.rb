@@ -124,7 +124,7 @@ describe GitHubOrganization do
       @github_organization.remove_organization_webhook(@org_hook.id)
       expect(WebMock).to have_requested(
         :delete,
-        github_url("/organizations/#{organization.github_id}/hooks/#{@org_hook.id}")
+        github_url("/orgs/#{@github_organization.login}/hooks/#{@org_hook.id}")
       )
     end
   end
