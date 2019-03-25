@@ -1,13 +1,16 @@
 <div class="remodal text-left" data-remodal-id="new-student-modal">
   <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
-  <h2 class="remodal-header text-left">Add students to your Roster</h2>
+  <h2 class="remodal-header f2-light text-left">Add students to your Roster</h2>
 
-  <nav class="UnderlineNav">
-    <div class="UnderlineNav-body">
-      <a href="#url" role="tab" title="Add Students" class="UnderlineNav-item">Add Students</a>
-      <a href="#url" role="tab" title="Import from Google Classroom" class="UnderlineNav-item selected">Import from Google Classroom</a>
-    </div>
-  </nav>
+  <h3 class="f3 py-2"> Import from </h3>
+
+  <dl class="form">
+    <a data-remodal-target="link-to-google-classroom-modal"  class="btn btn-secondary btn-sm">
+      <%= image_tag('google-classroom-logo.png') %>
+      Import from Google Classroom
+    </a>
+    <%# <%= link_to(image_tag('logo@2x.png', class: 'site-logo', alt: 'GitHub for Classrooms'), (logged_in? ? organizations_path : root_path)) %>
+  </dl>
 
 <% if false %>
   <%= form_tag({ controller: :rosters, action: :add_students }, method: :patch) do %>
