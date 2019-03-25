@@ -2,17 +2,14 @@
   <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
   <h2 class="remodal-header f2-light text-left">Add students to your Roster</h2>
 
-  <h3 class="f3 py-2"> Import from </h3>
+  <h4 class="py-1"> Import from </h4>
 
-  <dl class="form">
-    <a data-remodal-target="link-to-google-classroom-modal"  class="btn btn-secondary btn-sm">
-      <%= image_tag('google-classroom-logo.png') %>
-      Import from Google Classroom
-    </a>
-    <%# <%= link_to(image_tag('logo@2x.png', class: 'site-logo', alt: 'GitHub for Classrooms'), (logged_in? ? organizations_path : root_path)) %>
-  </dl>
+  <a data-remodal-target="link-to-google-classroom-modal"  class="btn btn-secondary d-inline-flex flex-items-center mb-3  ">
+    <%= image_tag('google-classroom-logo.png', size: "25", class:"mr-2") %> Google Classroom
+  </a>
 
-<% if false %>
+  <h4 class="py-2 border-top"> Or manually add new students </h4>
+
   <%= form_tag({ controller: :rosters, action: :add_students }, method: :patch) do %>
     <dl class="form">
       <dt><label><%= roster.identifier_name.pluralize %></label></dt>
@@ -20,29 +17,15 @@
     </dl>
 
     <dl class="form">
-      <dt><label>OR upload a CSV or text file:</label></dt>
+      <dt><label>Upload a CSV or text file:</label></dt>
       <label class='btn btn-secondary btn-sm' for="file-upload">Upload file</label>
       <%= file_field_tag :identifiers_file, style: 'display: none', id: 'file-upload', onchange: 'onIdentifiersUploaded()' %>
     </dl>
 
-    <div class="form-actions">
+    <div class="form-actions border-top-0 pt-0 mt-4">
       <%= submit_tag 'Create students', class: "btn btn-primary" %>
     </div>
   <% end %>
-<% end %>
-
-    <% courses_array = @courses.map { |course| [course.name, course.id] } %>
-    <%# <%= select_tag :course_id, options_for_select(courses_array) %>
-
-    <div class="overflow-auto">
-      <div class="Box-body overflow-auto">
-        <ul>
-          <% @courses.each do |course| %>
-            <li class="Box-row">
-              <%= link_to course.name, {controller: "rosters", action: :import_from_google_classroom, course_id: course.id}, method: :patch %>
-            </li>
-          <% end %>
-        </ul>
-      </div>
-    </div>
 </div>
+
+<%= render partial: 'orgs/rosters/link_to_google_classroom_modal'%>
