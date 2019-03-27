@@ -1,0 +1,18 @@
+<div class="site-content">
+  <div class="site-content-cap">
+    <h2 class="site-content-heading">Select Google Classroom</h2>
+  </div>
+  <div class="site-content-body">
+    <div class="overflow-auto">
+      <div class="Box-body overflow-auto">
+        <ul>
+          <% @google_classroom_courses.each do |course| %>
+            <li class="Box-row">
+              <%= link_to course.name, {controller: "rosters", action: :import_from_google_classroom, course_id: course.id}, method: :patch %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

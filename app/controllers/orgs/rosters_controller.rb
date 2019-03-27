@@ -1,20 +1,17 @@
 # frozen_string_literal: true
 
 require 'google/apis/classroom_v1'
-require 'googleauth'
-require 'googleauth/stores/redis_token_store'
-require 'google/api_client/client_secrets'
 
 # rubocop:disable Metrics/ClassLength
 module Orgs
   class RostersController < Orgs::Controller
     before_action :ensure_student_identifier_flipper_is_enabled
 
-    before_action :ensure_current_roster,             except: %i[new create]
-    before_action :ensure_current_roster_entry,       except: %i[show new create remove_organization add_students import_from_google_classroom]
+    before_action :ensure_current_roster,             except: %i[new create select_google_classroom import_from_google_classroom]
+    before_action :ensure_current_roster_entry,       except: %i[show new create remove_organization add_students select_google_classroom import_from_google_classroom]
     before_action :ensure_enough_members_in_roster,   only: [:delete_entry]
     before_action :ensure_allowed_to_access_grouping, only: [:show]
-    before_action :authorize_google_classroom, only: %i[import_from_google_classroom new show]
+    before_action :authorize_google_classroom,        only: %i[import_from_google_classroom select_google_classroom]
 
     helper_method :current_roster, :unlinked_users, :authorize_google_classroom
 
@@ -30,8 +27,6 @@ module Orgs
         .order(:id)
         .page(params[:unlinked_users_page])
 
-        @courses = @service.list_courses(page_size: 10).courses
-
       download_roster if params.dig("format")
     end
     # rubocop:enable AbcSize
@@ -44,7 +39,7 @@ module Orgs
     def create
       result = Roster::Creator.perform(
         organization: current_organization,
-        identifier_name: params[:identifier_name],
+        identifier_name: "Identifiers",
         identifiers: params[:identifiers]
       )
 
@@ -154,12 +149,16 @@ module Orgs
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
 
+    def select_google_classroom
+      @google_classroom_courses = @google_classroom_service.list_courses(page_size: 10).courses rescue nil
+    end
+
     def import_from_google_classroom
       google_course_id = params[:course_id]
-      students = @service.list_course_students(google_course_id).students
+      students = @google_classroom_service.list_course_students(google_course_id).students
       names = students.map {|s| s.profile.name.full_name }
       params[:identifiers] = names.join("\r\n")
-      add_students()
+      create()
     end
 
     private
@@ -246,24 +245,22 @@ module Orgs
     end
 
     def authorize_google_classroom
-      scope = [Google::Apis::ClassroomV1::AUTH_CLASSROOM_COURSES_READONLY, Google::Apis::ClassroomV1::AUTH_CLASSROOM_ROSTERS_READONLY]
-      client_id = Google::Auth::ClientId.new("421659922438-rri2uuv71jj3aaeh2bkfj3906npmv5n2.apps.googleusercontent.com", "toXhuU9fg7-d2K45Xb_j3Jk5")
-      token_store = Google::Auth::Stores::RedisTokenStore.new(redis: GitHubClassroom.redis)
-      authorizer = Google::Auth::WebUserAuthorizer.new(client_id, scope, token_store, '/google_classroom/oauth2_callback')
+      google_classroom_client = GitHubClassroom.google_classroom_client
 
-      user_id = current_user.github_user.login + current_user.id.to_s
-
-      credentials = authorizer.get_credentials(user_id, request) rescue nil
-
-      if credentials.nil?
-        redirect_to authorizer.get_authorization_url(login_hint: user_id, request: request)
-      else
-        # credentials.expires_in = Time.now + 1_000_000
-        # binding.pry
-        @service = Google::Apis::ClassroomV1::ClassroomService.new
-        @service.client_options.application_name = "GitHub Classroom"
-        @service.authorization = credentials
+      if user_google_classroom_credentials.nil?
+        redirect_to google_classroom_client.get_authorization_url(login_hint: current_user.github_user.login, request: request)
       end
+
+      @google_classroom_service = Google::Apis::ClassroomV1::ClassroomService.new
+      @google_classroom_service.client_options.application_name = "GitHub Classroom"
+      @google_classroom_service.authorization = user_google_classroom_credentials
+    end
+
+    def user_google_classroom_credentials
+      google_classroom_client = GitHubClassroom.google_classroom_client
+      user_id = current_user.github_user.login
+
+      google_classroom_client.get_credentials(user_id, request) rescue nil
     end
   end
 end
