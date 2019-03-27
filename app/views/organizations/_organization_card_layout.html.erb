@@ -16,7 +16,7 @@
             <li class="d-flex flex-items-center"><%= octicon 'organization', :class => "mr-1" %><%= organization.group_assignments.count %></li>
           </ul>
 
-          <% if organization.assignments.present? %>
+          <% if organization.assignments.present? || organization.group_assignments.present? %>
             <h2 class="h6 text-uppercase border-bottom pb-2">Latest Assignments</h2>
 
             <ul>
@@ -29,7 +29,12 @@
                 </li>
               <% end %>
               <% organization.group_assignments.order(created_at: :desc).limit(2).each do |group_assignment| %>
-                <li><%= link_to(group_assignment.title, organization_group_assignment_path(organization, group_assignment), class: "d-block") %></li>
+                <li class="d-flex flex-items-center my-2">
+                  <span class="d-inline-block text-center text-gray mr-2" style="background-color:#d1d5da;border-radius: 50%;width:18px;height:18px;">
+                    <%= octicon 'organization', height: 9, class: 'v-align-middle' %>
+                  </span>
+                  <%= link_to(group_assignment.title, organization_group_assignment_path(organization, group_assignment), class: "") %>
+                </li>
               <% end %>
             </ul>
           <% else %>
@@ -41,11 +46,13 @@
       </div>
     </article>
   <% end %>
+  <% if organizations.next_page.nil? %>
     <article class="col-sm-6 col-md-4 mb-3 mb-sm-5">
       <%= link_to new_organization_path, class: 'd-flex flex-column flex-justify-center flex-items-center rounded-1 height-full no-underline border p-5', role: 'button' do %>
         <span class="d-none f4"><%= t('views.organizations.new_classroom') %></span>
         <%= octicon 'plus', :class => "col-4 col-md-6 text-gray-light hover-grow", :width => "40", :height => "40" %>
       <% end %>
     </article>
+  <% end %>
 </div>
 <%= render partial: 'shared/pagination', locals: { collection: organizations } %>

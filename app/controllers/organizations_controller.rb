@@ -14,7 +14,7 @@ class OrganizationsController < Orgs::Controller
   skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create search]
 
   def index
-    @organizations = current_user.organizations.order(:id).page(params[:page])
+    @organizations = current_user.organizations.order(:id).page(params[:page]).per(12)
   end
 
   def new
@@ -103,11 +103,10 @@ class OrganizationsController < Orgs::Controller
   end
 
   def search
-    # binding.pry
     respond_to do |format|
       format.html {
         render partial: "organizations/organization_card_layout",
-        locals: { organizations: current_user.organizations.order(:id).where("title LIKE ?", "%#{params[:query]}%").page(params[:page])}
+        locals: { organizations: current_user.organizations.order(:id).where("title LIKE ?", "%#{params[:query]}%").page(params[:page]).per(12)}
       }
     end
   end
