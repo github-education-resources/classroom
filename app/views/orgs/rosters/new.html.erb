@@ -6,26 +6,20 @@
   </div>
   <div class="site-content-body">
     <div class="markdown-body">
-      <p> Next, let's set up a "roster", so you can easily track student progress on your dashboard.
-      <p> To create your roster, you'll need to share a way to identify your students. These "identifiers" can be:</p>
-
-      <ul>
-        <li>Student last names</li>
-        <li>Student email addresses</li>
-        <li>Any other unique piece of information</li>
-      </ul>
-
-      <p>You can always come back and complete this step later.</p>
+      <p> Let's set up a roster so you can easily track student progress on your dashboard. You can always come back and complete this step later.</p>
     </div>
-    </br>
+    <br />
+
+    <h4 class="py-2"> Import from </h4>
+
+    <a data-remodal-target="link-to-google-classroom-modal"  class="btn btn-secondary d-inline-flex flex-items-center mb-3  ">
+      <%= image_tag('google-classroom-logo.png', size: "25", class:"mr-2") %> Google Classroom
+    </a>
+
+    <h4 class="py-2 border-top"> Or manually add new students </h4>
+
     <div>
       <%= form_tag roster_path(current_organization), method: :post do |f| %>
-        <dl class="<%= view.form_class_for(:identifier_name) %> short-field">
-          <dt><label>What information would you like to use to identify your students?</br> (emails, student ID #, etc.)</label></dt>
-          <dd><%= text_field_tag(:identifier_name, '', class: 'form-control input-block', required: true) %></dd>
-          <%= render('shared/form_error', errors: view.error_message_for(:identifier_name)) if view.errors_for?(:identifier_name) %>
-        </dl>
-
         <dl class="<%= view.form_class_for(:roster_entries) %> short-field">
           <dt><label>Paste your list of identifiers below (one per line, please!):</label></dt>
           <dd><%= text_area_tag(:identifiers, '', class: 'form-control input-block', id: 'entries-field', required: true) %></dd>
@@ -33,15 +27,16 @@
         </dl>
 
         <dl class="form">
-          <dt><label>OR upload a CSV or text file:</label></dt>
+          <dt><label>pload a CSV or text file:</label></dt>
           <label class='btn btn-secondary btn-sm' for="file-upload">Upload file</label>
           <%= file_field_tag :identifiers_file, style: 'display: none', id: 'file-upload', onchange: 'onIdentifiersUploaded()' %>
         </dl>
 
         <dl class="form">
           <dt><label>OR Import from Google Classroom:</label></dt>
-          <a data-remodal-target="link-to-google-classroom-modal"  class="btn btn-secondary btn-sm">Import from Google Classroom</a>
+          <a data-remodal-target="link-to-google-classroom-modal"  class="btn btn-secondary btn-sm" id="js-google-auth-btn">Import from Google Classroom</a>
         </dl>
+
         <div class="form-actions">
           <%= submit_tag 'Create roster', class: 'btn btn-primary right' %>
           <%= link_to 'Skip', organization_path(current_organization), class: 'btn btn-secondary right' %>
@@ -50,4 +45,4 @@
     </div>
   </div>
 </div>
-<%# <%= render partial: 'orgs/rosters/link_to_google_classroom_modal' %> 
+<%= render partial: 'orgs/rosters/link_to_google_classroom_modal' %>
