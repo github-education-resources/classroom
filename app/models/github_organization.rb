@@ -139,7 +139,7 @@ class GitHubOrganization < GitHubResource
   def remove_organization_webhook(webhook_id)
     return if webhook_id.blank?
     GitHub::Errors.with_error_handling do
-      @client.remove_org_hook(@id, webhook_id)
+      @client.remove_org_hook(@login, webhook_id)
     end
   end
 
