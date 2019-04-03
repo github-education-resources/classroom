@@ -316,6 +316,8 @@ RSpec.describe OrganizationWebhook, type: :model do
         expect(subject)
           .to receive(:save!)
           .and_raise(ActiveRecord::RecordInvalid)
+        expect_any_instance_of(GitHubOrganization)
+          .to receive(:remove_organization_webhook).and_return(true)
       end
 
       it "raises a ActiveRecord::RecordInvalid" do
