@@ -20,20 +20,14 @@
             <h2 class="h6 text-uppercase border-bottom pb-2">Latest Assignments</h2>
 
             <ul>
-              <% organization.assignments.order(created_at: :desc).limit(2).each do |assignment| %>
+              <% organization.all_assignments.sort_by(&:created_at).take(4).each do |assignment| %>
                 <li class="d-flex flex-items-center my-2">
                   <span class="d-inline-block text-center text-gray mr-2" style="background-color:#d1d5da;border-radius: 50%;width:18px;height:18px;">
-                    <%= octicon 'person', height: 9, class: 'v-align-middle' %>
+                    <%= octicon 'person', height: 9, class: 'v-align-middle' if assignment.is_a? Assignment %>
+                    <%= octicon 'organization', height: 9, class: 'v-align-middle' if assignment.is_a? GroupAssignment %>
                   </span>
-                  <%= link_to(assignment.title, organization_assignment_path(organization, assignment), class: "") %>
-                </li>
-              <% end %>
-              <% organization.group_assignments.order(created_at: :desc).limit(2).each do |group_assignment| %>
-                <li class="d-flex flex-items-center my-2">
-                  <span class="d-inline-block text-center text-gray mr-2" style="background-color:#d1d5da;border-radius: 50%;width:18px;height:18px;">
-                    <%= octicon 'organization', height: 9, class: 'v-align-middle' %>
-                  </span>
-                  <%= link_to(group_assignment.title, organization_group_assignment_path(organization, group_assignment), class: "") %>
+                  <%= link_to(assignment.title, organization_assignment_path(organization, assignment), class: "") if assignment.is_a? Assignment %>
+                  <%= link_to(assignment.title, organization_group_assignment_path(organization, assignment), class: "") if assignment.is_a? GroupAssignment %>
                 </li>
               <% end %>
             </ul>
