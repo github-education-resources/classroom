@@ -11,6 +11,10 @@ body {
     min-height: 100vh;
     flex-direction: column;
   }
+
+  &.index {
+    background: linear-gradient(#fff, #fafafa);
+  }
 }
 
 a {
@@ -132,10 +136,6 @@ main {
   a {
     color: inherit;
   }
-}
-
-body.index {
-  background: linear-gradient(#ffffff, #fafafa);
 }
 
 .site-content,
