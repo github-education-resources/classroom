@@ -121,21 +121,26 @@ If you're using macOS and running the Homebrew package manager you're all set to
 
 We use Docker and docker-compose so that we don't have to setup our external dependencies on our machines.
 
-Here is the installation guide for Ubuntu: https://docs.docker.com/install/linux/docker-ce/ubuntu/
+Here is the [installation guide for docker on Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/) and [docker compose is here](https://docs.docker.com/compose/install/) . Make sure to configure docker to run as your main (non-root) user as shown [here](https://docs.docker.com/install/linux/linux-postinstall/)
 
-##### Installing Rbenv
+##### Installing Ruby using rbenv
 
 First things first, you'll need to install Ruby. We recommend using the excellent [rbenv](https://github.com/sstephenson/rbenv), and [ruby-build](https://github.com/sstephenson/ruby-build).
+
+After installing you will need to use `rbenv install <version>` to install the version of ruby specified in the ".ruby-version' file in the classroom directory (2.4.2 as of this writing) then use `gem install bundler` and `gem install bundler -v "<2.0"` before continuing. You may also need to use `rbenv init` in the classroom directory and follow the instructions. If you still run into errors later you may need to run the two gem commands above using `sudo`.
+
+##### Installing Yarn
+You will also need to install yarn, see [Yarn Documentation](https://yarnpkg.com/en/docs/install)
 
 ##### Install PostgreSQL
 
 In order to install the `pg` gem you have to have PostgreSQL on your system, all you need to do is install it via your package manager of choice.
 
-If you're running an Debian/Ubuntu based GNU/Linux for example run: `apt-get install nodejs postgresql redis-server memcached`.
+If you're running an Debian/Ubuntu based GNU/Linux for example run: `apt-get install nodejs postgresql redis-server memcached libpq-dev`.
 
 #### Windows
 
-We really don't have a good story for running this on Windows, but Pull Requests are welcome :smile:
+At this point, the best option for developing this on Windows is probably to create a virtual linux machine in VirtualBox or VMWare then follow the linux instructions above. We really don't have a good story for running this on Windows natively, but Pull Requests are welcome :smile:
 
 ### Setup GitHub Classroom
 
