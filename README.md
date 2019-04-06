@@ -163,11 +163,13 @@ ENV Variable | Description |
 `GITHUB_CLIENT_SECRET`| the GitHub Application Client Secret.
 `NON_STAFF_GITHUB_ADMIN_IDS` | GitHub `user_ids` of users to be granted staff level access.
 
+If nothing is in the CLASSROOM_WEBHOOK_URL_PREFIX you will get an error doing some actions in your test server. However, filling it in with a filler like `http://http://f379f5a1.ngrok.io` should work to test most things. if you need real webhooks, see the instructions further down this readme.
+
 To obtain your `GitHub Client ID/Secret` you need to [register a new OAuth application](https://github.com/settings/applications/new).
 
 After you register your OAuth application, you should fill in the homepage url with `http://localhost:5000` and the authorization url with `http://localhost:5000/auth/github/callback`.
 
-To obtain your GitHub User ID for the `NON_STAFF_GITHUB_ADMIN_IDS` field, go to `https://api.github.com/users/your_username`
+To obtain your GitHub User ID for the `NON_STAFF_GITHUB_ADMIN_IDS` field, go to [https://api.github.com/users/your_username] and look under `id`
 
 ### Testing environment variables
 
