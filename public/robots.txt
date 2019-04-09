@@ -1,7 +1,4 @@
 User-Agent: *
-Disallow: /
-
-User-Agent: Googlebot
 Allow: /
 Disallow: /stafftools/
 Disallow: /classrooms
