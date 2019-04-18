@@ -1,18 +1,40 @@
+<% view = FormView.new(subject: @roster) %>
+
 <div class="site-content">
   <div class="site-content-cap">
     <h2 class="site-content-heading">Select Google Classroom</h2>
   </div>
+
   <div class="site-content-body">
-    <div class="overflow-auto">
-      <div class="Box-body overflow-auto">
-        <ul>
-          <% @google_classroom_courses.each do |course| %>
-            <li class="Box-row">
-              <%= link_to course.name, {controller: "rosters", action: :import_from_google_classroom, course_id: course.id}, method: :patch %>
-            </li>
-          <% end %>
-        </ul>
+    <div class="markdown-body">
+      <p> Let's set up a roster so you can easily track student progress on your dashboard. You can always come back and complete this step later.</p>
+    </div>
+    <br />
+
+    <h4 class="py-2"> Select Google Classroom </h4>
+
+    <div class="Box mx-4">
+      <div class="overflow-auto">
+        <div class="Box-body overflow-auto">
+          <ul>
+            <% @google_classroom_courses.each do |course| %>
+              <li class="Box-row" class="py-0">
+                <input type="checkbox" class="mr-2" checked="checked" aria-describedby="help-text-for-checkbox">
+                <%= course.name %>
+                <%# <%= link_to course.name, {controller: "rosters", action: :import_from_google_classroom, course_id: course.id}, method: :patch %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
       </div>
     </div>
+
+    <a class="btn btn-secondary mt-4"> Manually add students</a>
+
+    <div class="form-actions border-top-0">
+          <%= submit_tag 'Create roster', class: 'btn btn-primary right' %>
+          <%= link_to 'Skip', organization_path(current_organization), class: 'btn btn-secondary right' %>
+        </div>
   </div>
 </div>
+

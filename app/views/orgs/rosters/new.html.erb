@@ -17,6 +17,9 @@
                 class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
     %>
 
+    <%# <a data-remodal-target="select_google_classroom_modal" class="btn">Import Test</a> %>
+
+
     <h4 class="py-2 border-top"> Or manually add new students </h4>
 
     <div>
@@ -41,3 +44,5 @@
     </div>
   </div>
 </div>
+
+<%= render partial: 'select_google_classroom_modal', locals: { courses: google_classroom_courses || [] } %>

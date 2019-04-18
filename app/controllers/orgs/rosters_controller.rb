@@ -150,6 +150,7 @@ module Orgs
     # rubocop:enable Metrics/AbcSize
 
     def select_google_classroom
+      @roster = Roster.new
       @google_classroom_courses = @google_classroom_service.list_courses(page_size: 10).courses rescue nil
     end
 
