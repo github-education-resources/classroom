@@ -83,7 +83,7 @@ end
 
 group :development, :test do
   gem "awesome_print",            "~> 1.8", require: "ap"
-  gem "bullet",                   "~> 5.9"
+  gem "bullet",                   "~> 5.6", ">= 5.6.1"
   gem "dotenv-rails",             "~> 2.7", ">= 2.7.1"
   gem "guard-rspec",              "~> 4.7", ">= 4.7.3", require: false
   gem "knapsack",                 "~> 1.14", ">= 1.14.1"
