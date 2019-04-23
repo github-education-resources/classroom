@@ -33,10 +33,9 @@ class PagesController < ApplicationController
     file_name = params[:article_name] ? params[:article_name] : "help"
     @file = File.read(Rails.root.join("docs", "#{file_name}.md"))
 
-    @breadcrumbs = [['/', "Classroom"], ["/help", "Help"]]
-    if file_name != "help"
-      @breadcrumbs.push(["", file_name])
-    end
+    @breadcrumbs = [["/", "Classroom"], ["/help", "Help"]]
+    @breadcrumbs.push(["", file_name]) if file_name != "help"
+
     render layout: "layouts/pagesv2"
   rescue Errno::ENOENT
     return not_found
