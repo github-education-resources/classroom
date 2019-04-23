@@ -17,3 +17,18 @@ RSpec.describe PagesController, type: :controller do
     end
   end
 end
+
+RSpec.describe PagesController, type: :controller do
+  describe "GET #help" do
+    it "returns success", :focus => true do
+      expected_pages = [
+        "create-group-assignments",
+        "probot-settings",
+      ]
+      expected_pages.each do |help_page|
+        get :help, :params => { :article_name => help_page }
+        expect(response).to have_http_status(:success)
+      end
+    end
+  end
+end
