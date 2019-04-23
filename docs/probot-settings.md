@@ -1,5 +1,3 @@
-doc_header("Controlling assignment repo settings with the Probot Settings app")
-
 ## Controlling assignment repo settings with the Probot Settings app
 
 You may want to provide default settings for your assignment repos. For example, you may want to turn off issues, predefine pull request labels, or protect a branch. When Classroom imports and copies your starter repo, it does not copy your repo's settings. Instead, use the Probot [Settings app](https://probot.github.io/apps/settings/).
