@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# script/setup: Set up application for the first time after building
+# the docker network.
+
+# This should be run from the shell that comes up after `docker-compose up`
+# Since the .env file will not have been made, not doing a check.
+set -e
+
+cd "$(dirname "$0")/.."
+
+echo "===> Checking to make sure everything is available"
+script/poll-for-services
+
+echo "===> Preparing database..."
+bin/rails db:setup
+
+echo "===> Remove old logs and tempfiles..."
+bin/rails log:clear tmp:clear
+
+echo "===> Restart application server..."
+bin/rails restart
+
+if [ -z "$RAILS_ENV" ] && [ -z "$RACK_ENV" ]; then
+  # Only things for a development environment will run inside here
+  # Do things that need to be done to the application to set up for the first
+  # time. Or things needed to be run to to reset the application back to first
+  # use experience. These things are scoped to the application's domain.
+
+  if ! [ -r ".env" ]; then
+    cp .env-example .env
+  fi
+fi
+
+echo "==> Your app is almost ready! Please make sure you fill out your .env file."
