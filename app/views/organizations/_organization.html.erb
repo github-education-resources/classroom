@@ -1,21 +1,16 @@
-<div class="clearfix organization-list-item">
-  <div class="float-left mr-2">
-    <%= image_tag organization.github_organization.github_avatar_url(120), class: 'avatar left', height: 60, width: 60, alt: "@#{organization.github_organization.login}" %>
+<article class="d-sm-flex flex-items-center flex-justify-between border-bottom p-3">
+  <div class="d-flex flex-items-center mb-3 mb-sm-0">
+    <div class="mr-3">
+      <%= image_tag organization.github_organization.github_avatar_url(120), class: 'avatar left', height: 60, width: 60, alt: "@#{organization.github_organization.login}" %>
+    </div>
+    <div class="overflow-hidden d-flex flex-column">
+      <h1 class="h2"><%= link_to organization, class: 'd-block css-truncate-target' do %><%= organization.title %><% end %></h1>
+      <p class="f4 text-gray css-truncate-target mb-0">@<%= organization.github_organization.login %></p>
+    </div>
   </div>
-  <div class="float-right pt-2">
-    <span class="p-1 organization-stat-item text-gray tooltipped tooltipped-s" aria-label="<%= t('views.organizations.individual_assignments') %>">
-      <%= octicon 'person', :class => "mr-1" %><%= organization.assignments.count %>
-    </span>
 
-    <span class="p-1 organization-stat-item text-gray tooltipped tooltipped-s" aria-label="<%= t('views.organizations.group_assignments') %>">
-      <%= octicon 'organization', :class => "mr-1" %><%= organization.group_assignments.count %>
-    </span>
-  </div>
-  <div class="overflow-hidden d-flex flex-column ">
-    <%= link_to organization, class: 'organization-title' do %>
-      <strong class="f4 css-truncate-target"><%= organization.title %></strong>
-    <% end %>
-
-    <span class="f4 text-gray css-truncate-target">@<%= organization.github_organization.login %></span>
-  </div>
-</div>
+  <ul class="list-style-none d-flex flex-items-center">
+    <li class="text-gray tooltipped tooltipped-s mr-3" aria-label="<%= t('views.organizations.individual_assignments') %>"><%= octicon 'person', :class => "mr-1" %><%= organization.assignments.count %></li>
+    <li class="text-gray tooltipped tooltipped-s" aria-label="<%= t('views.organizations.group_assignments') %>"><%= octicon 'organization', :class => "mr-1" %><%= organization.group_assignments.count %></li>
+  </ul>
+</article>
