@@ -2,45 +2,49 @@
 
 <div class="site-content">
   <div class="site-content-cap">
-    <h2 class="site-content-heading">Add students</h2>
+    <h1 class="site-content-heading">Add students</h1>
   </div>
   <div class="site-content-body">
     <div class="markdown-body">
       <p> Let's set up a roster so you can easily track student progress on your dashboard. You can always come back and complete this step later.</p>
     </div>
-    <br />
 
-    <h4 class="py-2"> Import from </h4>
+    <div class="my-3">
+      <h2 class="h3 mb-2">Import from</h2>
 
-    <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Google Classroom",
-                select_google_classroom_roster_path,
-                class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
-    %>
+      <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Google Classroom",
+                  select_google_classroom_roster_path,
+                  class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+      %>
 
-    <%# <a data-remodal-target="select_google_classroom_modal" class="btn">Import Test</a> %>
+      <%# <a data-remodal-target="select_google_classroom_modal" class="btn">Import Test</a> %>
+    </div>
 
+    <div class="f4 text-gray text-italic">or...</div>
 
-    <h4 class="py-2 border-top"> Or manually add new students </h4>
+    <div class="my-3">
+      <h2 class="h3 mb-2">Manually add students</h2>
 
-    <div>
-      <%= form_tag roster_path(current_organization), method: :post do |f| %>
-        <dl class="<%= view.form_class_for(:roster_entries) %> short-field">
-          <dt><label>Paste your list of identifiers below (one per line, please!):</label></dt>
-          <dd><%= text_area_tag(:identifiers, '', class: 'form-control input-block', id: 'entries-field', required: true) %></dd>
-          <%= render('shared/form_error', errors: view.error_message_for(:roster_entries)) if view.errors_for?(:roster_entries) %>
-        </dl>
+      <div>
+        <%= form_tag roster_path(current_organization), method: :post do |f| %>
+          <dl class="<%= view.form_class_for(:roster_entries) %> short-field">
+            <dt class="note mb-1">Enter your list of students' identifiers, <strong>one per line</strong></dt>
+            <dd><%= text_area_tag(:identifiers, '', class: 'form-control input-block', id: 'entries-field', required: true) %></dd>
+            <%= render('shared/form_error', errors: view.error_message_for(:roster_entries)) if view.errors_for?(:roster_entries) %>
+          </dl>
 
-        <dl class="form">
-          <dt><label>Upload a CSV or text file:</label></dt>
-          <label class='btn btn-secondary btn-sm' for="file-upload">Upload file</label>
-          <%= file_field_tag :identifiers_file, style: 'display: none', id: 'file-upload', onchange: 'onIdentifiersUploaded()' %>
-        </dl>
+          <dl class="form">
+            <dt><label>Upload a CSV or text file:</label></dt>
+            <label class='btn btn-secondary btn-sm' for="file-upload">Upload file</label>
+            <%= file_field_tag :identifiers_file, style: 'display: none', id: 'file-upload', onchange: 'onIdentifiersUploaded()' %>
+          </dl>
 
-        <div class="form-actions border-top-0">
-          <%= submit_tag 'Create roster', class: 'btn btn-primary right' %>
-          <%= link_to 'Skip', organization_path(current_organization), class: 'btn btn-secondary right' %>
-        </div>
-      <% end %>
+          <div class="form-actions border-top-0">
+            <%= submit_tag 'Create roster', class: 'btn btn-primary right' %>
+            <%= link_to 'Skip', organization_path(current_organization), class: 'btn btn-secondary right' %>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>
