@@ -6,7 +6,7 @@
   </div>
   <div class="site-content-body">
     <div class="markdown-body">
-      <p> Let's set up a roster so you can easily track student progress on your dashboard. You can always come back and complete this step later.</p>
+      <p>Let's set up a roster so you can easily track student progress on your dashboard. You can always come back and complete this step later.</p>
     </div>
 
     <div class="my-3">
@@ -27,21 +27,22 @@
 
       <div>
         <%= form_tag roster_path(current_organization), method: :post do |f| %>
-          <dl class="<%= view.form_class_for(:roster_entries) %> short-field">
-            <dt class="note mb-1">Enter your list of students' identifiers, <strong>one per line</strong></dt>
-            <dd><%= text_area_tag(:identifiers, '', class: 'form-control input-block', id: 'entries-field', required: true) %></dd>
-            <%= render('shared/form_error', errors: view.error_message_for(:roster_entries)) if view.errors_for?(:roster_entries) %>
-          </dl>
+          <div class="Box">
+            <dl class="Box-body <%= view.form_class_for(:roster_entries) %> mb-0">
+              <dt class="text-gray mb-1">Enter your list of students' identifiers, <strong>one per line</strong>.</dt>
+              <dd><%= text_area_tag(:identifiers, '', class: 'form-control input-block', id: 'entries-field', required: true) %></dd>
+              <%= render('shared/form_error', errors: view.error_message_for(:roster_entries)) if view.errors_for?(:roster_entries) %>
+            </dl>
 
-          <dl class="form">
-            <dt><label>Upload a CSV or text file:</label></dt>
-            <label class='btn btn-secondary btn-sm' for="file-upload">Upload file</label>
-            <%= file_field_tag :identifiers_file, style: 'display: none', id: 'file-upload', onchange: 'onIdentifiersUploaded()' %>
-          </dl>
+            <div class="Box-footer bg-gray">
+              <label class='btn btn-secondary btn-sm' for="file-upload">Upload a CSV or text file</label>
+              <%= file_field_tag :identifiers_file, style: 'display: none', id: 'file-upload', onchange: 'onIdentifiersUploaded()' %>
+            </div>
+          </div>
 
-          <div class="form-actions border-top-0">
-            <%= submit_tag 'Create roster', class: 'btn btn-primary right' %>
-            <%= link_to 'Skip', organization_path(current_organization), class: 'btn btn-secondary right' %>
+          <div class="d-flex flex-items-center border-top pt-5">
+            <%= submit_tag 'Create roster', class: 'btn btn-primary mr-3' %>
+            <%= link_to 'Skip', organization_path(current_organization), class: 'btn-link' %>
           </div>
         <% end %>
       </div>
