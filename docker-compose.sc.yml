@@ -5,13 +5,13 @@ services:
     network_mode: host
     build: 
       context: .
-      dockerfile: Dockerfile-selfcontained
+      dockerfile: Dockerfile-sc
     volumes: 
       - .:/usr/src/app
       - /usr/src/app/.bundle
       - /usr/src/app/vendor
     ports: 
-      - 80:80
+      - 5000:5000
     entrypoint: bash
     tty: true
     stdin_open: true

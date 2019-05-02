@@ -1,10 +1,16 @@
 #!/bin/sh
 
-# script/setup: Set up application for the first time after building
-# the docker network.
+# Usage: To use in the self-contained image, either use
+  # `docker-compose -f docker-compose.sc.yaml run rubyrails script/setup-sc`
+  # OR attach to the container with
+  # `docker attach classroom_rubyrails` and then do script/setup-sc manually
+  # OR
+  # `docker exec -it classroom_rubyrails bash`
+  # OR (if for some reason the container has exited)
+  # `docker-compose -f docker-compose.sc.yaml run rubyrails bash` 
+  # and then run it manually.
 
-# This should be run from the shell that comes up after `docker-compose up`
-# Since the .env file will not have been made, not doing a check.
+# This sets up the database for the first time and makes the .env file
 set -e
 
 cd "$(dirname "$0")/.."
@@ -31,5 +37,9 @@ if [ -z "$RAILS_ENV" ] && [ -z "$RACK_ENV" ]; then
     cp .env-example .env
   fi
 fi
+
+#Since this should only be run in a selfcontained container, set
+# the SELFCONTAINED env variable in the .env file
+sed -n -e '/^SELFCONTAINED=/!p' -e '$aSELFCONTAINED=TRUE' .env
 
 echo "==> Your app is almost ready! Please make sure you fill out your .env file."

@@ -15,7 +15,14 @@ RUN wget -q https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-instal
 
 #install yarn and node and other dependencies
 RUN wget -q https://deb.nodesource.com/setup_10.x -O- | bash -
+
 RUN wget -q https://dl.yarnpkg.com/debian/pubkey.gpg -O- | apt-key add -
+# Sometimes the yarn server has issues in the image.
+# if that happens and stops your build, download the pubkey.gpg file manually,
+# put in the project directory, then comment above and uncomment below.
+#COPY pubkey.gpg .
+#RUN apt-key add pubkey.gpg
+
 RUN echo "deb http://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 RUN apt-get update && apt-get install -y yarn nodejs
 
@@ -27,9 +34,9 @@ ADD package.json .
 ADD yarn.lock .
 ADD .ruby-version .
 ADD bin .
-ADD script/bootstrap-selfcontained.sh .
+ADD script/bootstrap-sc .
 COPY vendor ./vendor
 
-RUN bash bootstrap-selfcontained.sh
+RUN bash bootstrap-sc
 
 CMD bash

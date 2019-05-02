@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Usage: script/setup-selfcontained.sh
+# Usage: script/bootstrap-sc.sh
 # Runs bootstrap for the self-contained docker profile, where
 #   ruby itself is also part of the docker-compose stack
 
@@ -10,15 +10,18 @@
 set -e
 
 # install ruby with rbenv if necessary (should not be if dockerfile is correctly updated)
-RUBYVERSION=$(cat .ruby-version)
-RUBYVERSION_INSTALLED=$(ruby -v)
-if [ $RUBYVERSION_INSTALLED != $RUBYVERSION ]; then
+rubyversion=$(cat .ruby-version)
+rubyinstalled=$(ruby -v)
+
+if [[ $rubyinstalled != *$rubyversion* ]]; then
   rbenv install $(cat .ruby-version)
   rbenv global $(cat .ruby-version)
 fi
 #install updated bundler
-gem install bundler -v "<2.0"
+gem install bundler
 
+#I don't like this but the docker image has issues otherwise
+unset BUNDLER_VERSION
 # install gems
 bundle check 2>&1 || {
   echo "==> Installing gem dependencies..."

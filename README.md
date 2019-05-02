@@ -111,11 +111,31 @@ GitHub Classroom is a [Ruby on Rails](http://rubyonrails.org/) application.
 
 New to Ruby? No worries! You can follow these instructions to install a local server.
 
-#### macOS
+#### Cross-platform option - Self-contained Docker Development Environment
+
+If you do not want to install and maintain ruby on your local machine directly, you can run it all in a self-contained virtual machine by following these instructions.
+
+##### Install Docker and Docker Compose
+
+Every platform does this differently, so Google is your friend. On Windows you can use Docker Windows or Docker Toolbox, for example, depending on various preferences and software specs.
+
+##### Building the docker images
+
+Open a command prompt or terminal window in the project folder, then type `docker-compose -f docker-compose.sc.yaml up --build` to build all of the developent environment. This might take a while! Go get some coffee.
+
+##### Setting up the environment
+
+If all went well up above, you should be able to type `docker-compose -f docker-compose.sc.yaml ps` and see 5 different services running on your computer. The dev environment is called `classroom_rubyrails`. The easiest way to launch that environment is with `docker attach classroom_rubyrails` and then press enter (sometimes twice) at which point you should get a command prompt. Type 'script/setup-sc' or `bash script/setup-sc` to run the setup script. After the script has run, press Ctrl-P then Ctrl-Q to detach from the development environment (on a Mac it might be Cmd-P then Cmd-Q)
+
+After this point, you should be able to follow the steps below, starting with `Development environment variables`. For any other scripts you want to run, you will need to use `docker attach classroom_ruby` before running them
+
+
+
+#### macOS (Native installation)
 
 If you're using macOS and running the Homebrew package manager you're all set to go! Head down to [Setup Classroom](#setup-github-classroom)
 
-#### Linux
+#### Linux (Native installation)
 
 ##### Installing Docker and Docker Compose
 
@@ -133,11 +153,13 @@ In order to install the `pg` gem you have to have PostgreSQL on your system, all
 
 If you're running an Debian/Ubuntu based GNU/Linux for example run: `apt-get install nodejs postgresql redis-server memcached`.
 
-#### Windows
+#### Windows (Natively)
 
-We really don't have a good story for running this on Windows, but Pull Requests are welcome :smile:
+Running Ruby natively on Windows is hard if not impossible. The best bet on Windows is to use the self-contained environment described above.
 
 ### Setup GitHub Classroom
+
+If you are using the self-contained docker image, you already did the setup up above. Otherwise, follow these instructions.
 
 We follow the [script to rule them all](https://github.com/github/scripts-to-rule-them-all) principle, so all you need to do is run:
 
@@ -207,6 +229,8 @@ To obtain the `OWNER_ORGANIZATION_GITHUB_ID/LOGIN` you can go to `https://api.gi
 Now you should have all of the values filled in, great job!
 
 ### Running the application
+
+If you are using the docker development environment, you will need to run `docker attach classroom_rubyrails` before running any of these. If for some reason that doesn't work, try `docker-compose run -f docker-compose.sc.yaml rubyrails`.
 
 #### Optional
 If you'd like to receive webhooks from GitHub you can run:
