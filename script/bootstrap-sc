@@ -20,8 +20,6 @@ fi
 #install updated bundler
 gem install bundler
 
-#I don't like this but the docker image has issues otherwise
-unset BUNDLER_VERSION
 # install gems
 bundle check 2>&1 || {
   echo "==> Installing gem dependencies..."

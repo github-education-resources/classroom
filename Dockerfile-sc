@@ -37,6 +37,10 @@ ADD bin .
 ADD script/bootstrap-sc .
 COPY vendor ./vendor
 
+ENV BASH_ENV "/etc/bash.env"
+RUN echo "unset BUNDLER_VERSION" >> /etc/bash.env
+RUN echo "unset BUNDLER_VERSION" >> /etc/profile
+RUN echo "unset BUNDLER_VERSION" >> /etc/bash.bashrc
 RUN bash bootstrap-sc
 
 CMD bash
