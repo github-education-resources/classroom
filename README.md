@@ -117,7 +117,9 @@ If you do not want to install and maintain ruby on your local machine directly, 
 
 ##### Install Docker and Docker Compose
 
-Every platform does this differently, so Google is your friend. On Windows you can use Docker Windows or Docker Toolbox, for example, depending on various preferences and software specs.
+Every platform does this differently, so Google is your friend. On Windows you can use Docker Windows or Docker Toolbox, for example, depending on various preferences and software specs. 
+
+**Special Instructions for some Windows users** If you are using a verison of docker that runs on a virtual machine (Docker Toolbox on Windows, older versions of Docker for Mac) make sure the virtual machine has access to at least 2-3 GB of RAM and, ideally, 2 CPUs. You will also, in that case, need to run `docker-machine ssh` and type `sudo sysctl -w vm.max_map_count=262144` at that prompt to avoid errors. Finally, you may want to use NAT port forwarding to forward the docker machiné's port 5000 to your host machine's 5000, so that you can access the server at localhost:5000 rather than using the docker machine's IP.
 
 ##### Building the docker images
 

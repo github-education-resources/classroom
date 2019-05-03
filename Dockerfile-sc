@@ -26,7 +26,8 @@ RUN wget -q https://dl.yarnpkg.com/debian/pubkey.gpg -O- | apt-key add -
 RUN echo "deb http://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 RUN apt-get update && apt-get install -y yarn nodejs
 
-RUN apt-get install -y netcat libpq-dev
+RUN apt-get install -y netcat libpq-dev rinetd 
+
 #adding files needed to get the bootstrap script to run
 # Add files we need to build dependencies
 ADD Gemfil* ./
@@ -36,11 +37,9 @@ ADD .ruby-version .
 ADD bin .
 ADD script/bootstrap-sc .
 COPY vendor ./vendor
-
-ENV BASH_ENV "/etc/bash.env"
-RUN echo "unset BUNDLER_VERSION" >> /etc/bash.env
-RUN echo "unset BUNDLER_VERSION" >> /etc/profile
-RUN echo "unset BUNDLER_VERSION" >> /etc/bash.bashrc
 RUN bash bootstrap-sc
 
-CMD bash
+#Startup script and port forwarding
+COPY config/rinetd.conf /etc/rinetd.conf
+
+ENTRYPOINT bash

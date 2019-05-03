@@ -2,7 +2,6 @@ version: '2.1'
 services:
   rubyrails:
     container_name: "classroom_rubyrails"
-    network_mode: host
     build: 
       context: .
       dockerfile: Dockerfile-sc
@@ -11,7 +10,7 @@ services:
       - /usr/src/app/.bundle
       - /usr/src/app/vendor
     ports: 
-      - 5000:5000
+      - "5000:5000"
     entrypoint: bash
     tty: true
     stdin_open: true

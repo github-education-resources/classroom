@@ -12,6 +12,7 @@ set -e
 # install ruby with rbenv if necessary (should not be if dockerfile is correctly updated)
 rubyversion=$(cat .ruby-version)
 rubyinstalled=$(ruby -v)
+unset BUNDLER_VERSION
 
 if [[ $rubyinstalled != *$rubyversion* ]]; then
   rbenv install $(cat .ruby-version)

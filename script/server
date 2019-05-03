@@ -7,9 +7,18 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-if [ -f "$(which docker-compose)" ]; then
+if [ "$SELFCONTAINED" != "true" ] && [ -f "$(which docker-compose)" ]; then
   echo "===> Stopping existing containers..."
   docker-compose stop
+fi
+
+if [ "$SELFCONTAINED" = "true" ]; then
+  unset BUNDLER_VERSION
+  # Set up port forwarding
+  if ! pgrep -x 'rinetd' > /dev/null
+  then
+    rinetd
+  fi
 fi
 
 # ensure everything in the app is up to date.
@@ -19,4 +28,8 @@ test -z "$RACK_ENV" &&
   RACK_ENV='development'
 
 # boot the app and any other necessary processes.
-bundle exec foreman start -f Procfile.dev
+if [ "$SELFCONTAINED" != "true" ]; then
+  bundle exec foreman start -f Procfile.dev
+else
+  bundle exec foreman start -f Procfile.dev.sc
+fi

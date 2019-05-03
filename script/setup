@@ -21,8 +21,13 @@ if [ "$SELFCONTAINED" != "true" ]; then
 
   echo "===> Waiting for the containers to mount..."
   sleep 5
+else
+  unset BUNDLER_VERSION
+  if ! pgrep -x 'rinetd' > /dev/null
+  then
+    rinetd
+  fi
 fi
-
 
 echo "===> Preparing database..."
 bin/rails db:setup
