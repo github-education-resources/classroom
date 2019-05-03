@@ -111,7 +111,7 @@ GitHub Classroom is a [Ruby on Rails](http://rubyonrails.org/) application.
 
 New to Ruby? No worries! You can follow these instructions to install a local server.
 
-### Cross-platform option - Self-contained Docker Development Environment
+#### Cross-platform option - Self-contained Docker Development Environment
 
 If you do not want to install and maintain ruby on your local machine directly, you can run it all in a self-contained virtual machine by following these instructions.
 
@@ -127,17 +127,17 @@ Open a command prompt or terminal window in the project folder, then type `docke
 
 ##### Setting up the environment
 
-If all went well up above, you should be ready! Type `docker attach classroom_ruby` to attach to your new, virual linux environment that is all ready to go, then follow the setup instructions that start in the next section. You can edit all of the files in the project directly on your regular machine with the editor of your choice - the dev environment will see them internally and adjust accordingly!
+If all went well up above, you should be ready! Type `docker attach classroom_ruby` to attach to your new, virtual linux environment that is all ready to go, then follow the setup instructions that starts at [Setup Classroom](#setup-github-classroom). You can edit all of the files in the project directly on your regular machine with the editor of your choice - the dev environment will see them internally and adjust accordingly!
 
 ##### Shutting the environment down and restarting
 
 If you are done working on the code and want to shutdown the envrionment, use `docker-compose -f docker-compose.sc.yml down` to take it down. Later, use `docker-compose -f docker-compose.sc.yml up -d` to bring it back up, followed by `docker attach classroom_ruby` to get back in.
 
-### macOS (Native installation)
+#### macOS (Native installation)
 
 If you're using macOS and running the Homebrew package manager you're all set to go! Head down to [Setup Classroom](#setup-github-classroom)
 
-### Linux (Native installation)
+#### Linux (Native installation)
 
 ##### Installing Docker and Docker Compose
 
@@ -160,8 +160,6 @@ If you're running an Debian/Ubuntu based GNU/Linux for example run: `apt-get ins
 Running Ruby natively on Windows is hard if not impossible. The best bet on Windows is to use the self-contained environment described above.
 
 ### Setup GitHub Classroom
-
-If you are using the self-contained docker image, you already did the setup up above. Otherwise, follow these instructions.
 
 We follow the [script to rule them all](https://github.com/github/scripts-to-rule-them-all) principle, so all you need to do is run:
 
