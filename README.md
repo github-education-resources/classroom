@@ -155,7 +155,7 @@ In order to install the `pg` gem you have to have PostgreSQL on your system, all
 
 If you're running an Debian/Ubuntu based GNU/Linux for example run: `apt-get install nodejs postgresql redis-server memcached`.
 
-### Windows (Native installation)
+#### Windows (Native installation)
 
 Running Ruby natively on Windows is hard if not impossible. The best bet on Windows is to use the self-contained environment described above.
 
