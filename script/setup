@@ -9,9 +9,8 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-# If using the docker selfcontained image, make sure the .env file
-# has SELFCONTAINED=TRUE or this will fail
 if [ "$SELFCONTAINED" != "true" ]; then
+  # If not self contained, set up docker and dependencies
   if [-f "$(which docker-compose)" ]; then
     echo "===> Removing existing containers..."
     docker-compose down
@@ -22,6 +21,8 @@ if [ "$SELFCONTAINED" != "true" ]; then
   echo "===> Waiting for the containers to mount..."
   sleep 5
 else
+  # If we are self-contained, docker and dependencies are done, so check
+  # on the port forwarding.
   unset BUNDLER_VERSION
   if ! pgrep -x 'rinetd' > /dev/null
   then
