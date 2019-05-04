@@ -16,9 +16,7 @@ RSpec.describe PagesController, type: :controller do
       expect(response).to redirect_to(organizations_path)
     end
   end
-end
 
-RSpec.describe PagesController, type: :controller do
   describe "GET #help" do
     it "returns success" do
       expected_pages = [
