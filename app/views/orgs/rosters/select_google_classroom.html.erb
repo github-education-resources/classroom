@@ -18,9 +18,8 @@
           <% @google_classroom_courses.each do |course| %>
             <li class="Box-row">
               <label>
-                <input type="checkbox" class="mr-2" checked="checked" aria-describedby="help-text-for-checkbox">
+                <input type="radio" class="mr-2" aria-describedby="help-text-for-checkbox">
                 <%= course.name %>
-                <%# <%= link_to course.name, {controller: "rosters", action: :import_from_google_classroom, course_id: course.id}, method: :patch %>
               </label>
             </li>
           <% end %>
@@ -28,7 +27,13 @@
       </div>
     </div>
 
-    <div class="f4 text-gray text-italic my-3">or <a href="" class="btn-link">manually add students</a></div>
+    <div class="f4 text-gray text-italic my-3">
+      or
+      <%= link_to "manually add students",
+                  new_roster_path,
+                  class: "btn-link"
+      %>
+    </div>
 
     <div class="d-flex flex-items-center border-top pt-5">
       <%= submit_tag 'Import roster', class: 'btn btn-primary mr-3' %>

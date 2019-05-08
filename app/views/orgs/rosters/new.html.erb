@@ -16,8 +16,6 @@
                   select_google_classroom_roster_path,
                   class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
       %>
-
-      <%# <a data-remodal-target="select_google_classroom_modal" class="btn">Import Test</a> %>
     </div>
 
     <div class="f4 text-gray text-italic">or...</div>
@@ -49,5 +47,3 @@
     </div>
   </div>
 </div>
-
-<%= render partial: 'select_google_classroom_modal', locals: { courses: google_classroom_courses || [] } %>
