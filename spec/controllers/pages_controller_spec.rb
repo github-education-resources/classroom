@@ -21,7 +21,8 @@ RSpec.describe PagesController, type: :controller do
     it "returns success" do
       expected_pages = [
         "create-group-assignments",
-        "probot-settings"
+        "probot-settings",
+        "upgrade-your-organization"
       ]
       expected_pages.each do |help_page|
         get :help, params: { article_name: help_page }

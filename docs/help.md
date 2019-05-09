@@ -5,6 +5,7 @@
 * [Video tutorials](/videos)
 * [Controlling assignment repo settings with the Probot Settings app](/help/probot-settings)
 * [Creating group assignments](/help/create-group-assignments)
+* [Upgrading your organization](/help/upgrade-your-organization)
 
 ### Workflows, case studies, best practices, and more from the GitHub blog
 
