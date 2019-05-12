@@ -179,9 +179,14 @@ module Orgs
     def import_from_google_classroom
       google_course_id = params[:course_id]
       students = @google_classroom_service.list_course_students(google_course_id).students
-      names = students.map {|s| s.profile.name.full_name }
-      params[:identifiers] = names.join("\r\n")
-      create()
+      if students.nil?
+        flash[:warning] = "No new students were found in your Google Classroom."
+        redirect_to organization_path(current_organization)
+      else
+        names = students.map {|s| s.profile.name.full_name }
+        params[:identifiers] = names.join("\r\n")
+        create()
+      end
     end
 
     private
