@@ -62,7 +62,12 @@ class Roster
 
       ActiveRecord::Base.transaction do
         @roster = Roster.new(identifier_name: @identifier_name)
-        add_identifiers_to_roster(@options[:identifiers]) if @options.key?(:identifiers)
+
+        if @options.key?(:identifiers)
+          add_identifiers_to_roster(@options[:identifiers], google_user_ids: @options[:google_user_ids]) if @options.key?(:google_user_ids)
+        else
+          add_identifiers_to_roster(@options[:identifiers]) if @options.key?(:google_user_ids)
+        end
 
         @roster.save!
         @organization.update_attributes!(roster: @roster)
@@ -75,10 +80,11 @@ class Roster
 
     private
 
-    def add_identifiers_to_roster(raw_identifiers_string)
+    def add_identifiers_to_roster(raw_identifiers_string, google_user_ids: [])
       identifiers = raw_identifiers_string.split("\r\n").reject(&:blank?).uniq
-      identifiers.each do |identifier|
-        @roster.roster_entries << RosterEntry.new(identifier: identifier)
+
+      identifiers.zip(google_user_ids).each do |identifier, google_user_id|
+        @roster.roster_entries << RosterEntry.new(identifier: identifier, google_user_id: google_user_id)
       end
     end
 

@@ -40,7 +40,8 @@ module Orgs
       result = Roster::Creator.perform(
         organization: current_organization,
         identifier_name: "Identifiers",
-        identifiers: params[:identifiers]
+        identifiers: params[:identifiers],
+        google_user_ids: params[:google_user_ids],
       )
 
       # Set the object so that we can see errors when rendering :new
@@ -184,7 +185,11 @@ module Orgs
         redirect_to organization_path(current_organization)
       else
         names = students.map {|s| s.profile.name.full_name }
+        user_ids = students.map {|s| s.user_id }
         params[:identifiers] = names.join("\r\n")
+        params[:google_user_ids] = user_ids
+
+        current_organization.google_course_id = google_course_id
         create()
       end
     end
