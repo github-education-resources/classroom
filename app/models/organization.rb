@@ -56,6 +56,11 @@ class Organization < ApplicationRecord
     users.count == 1
   end
 
+  def geo_pattern_data_uri
+    patterns = %i[chevrons hexagons octagons plus_signs triangles squares diamonds]
+    @geo_pattern_data_uri ||= GeoPattern.generate(id, base_color: "#28a745", patterns: patterns).to_data_uri
+  end
+
   # Check if we are the last Classroom on this GitHub Organization
   def last_classroom_on_org?
     Organization.where(github_id: github_id).length <= 1
@@ -71,5 +76,9 @@ class Organization < ApplicationRecord
     end
 
     true
+  end
+
+  def self.search(search)
+    where("title LIKE ?", "%#{search}%")
   end
 end

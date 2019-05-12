@@ -65,6 +65,10 @@ Rails.application.routes.draw do
 
   scope path_names: { edit: "settings" } do
     resources :organizations, path: "classrooms" do
+      collection do
+        get :search
+      end
+
       member do
         get   :invite
         get   :new_assignment, path: "new-assignment"

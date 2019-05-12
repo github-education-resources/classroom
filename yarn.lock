@@ -180,9 +180,10 @@ isexe@^2.0.0:
   version "2.1.0"
   resolved "git+https://git@github.com/kossnocorp/jquery.turbolinks#6f336f1d3acceef95f9289129b64b00edc5709e7"
 
-jquery@*, jquery@>=1.8.0, jquery@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
+jquery@*, jquery@>=1.8.0, jquery@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.4.1.tgz#714f1f8d9dde4bdfa55764ba37ef214630d80ef2"
+  integrity sha512-36+AdBzCL+y6qjw5Tx7HgzeGCzC81MDDgaUP8ld2zhx58HdqXGoBd+tHdrBMiyjGQs0Hxs/MLZTu/eHNJJuWPw==
 
 lcid@^1.0.0:
   version "1.0.0"
@@ -619,6 +620,7 @@ read-pkg@^2.0.0:
 remodal@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/remodal/-/remodal-1.1.1.tgz#00f580b09417b2b7e7a425b17327ec10f3d596c3"
+  integrity sha1-APWAsJQXsrfnpCWxcyfsEPPVlsM=
   dependencies:
     jquery "*"
 

@@ -10,11 +10,11 @@ class OrganizationsController < Orgs::Controller
   before_action :paginate_users_github_organizations, only: %i[new create]
   before_action :verify_user_belongs_to_organization, only: [:remove_user]
 
-  skip_before_action :ensure_current_organization,                         only: %i[index new create]
-  skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create]
+  skip_before_action :ensure_current_organization,                         only: %i[index new create search]
+  skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create search]
 
   def index
-    @organizations = current_user.organizations.order(:id).page(params[:page])
+    @organizations = current_user.organizations.order(:id).page(params[:page]).per(12)
   end
 
   def new
@@ -69,7 +69,7 @@ class OrganizationsController < Orgs::Controller
     if current_organization.update_attributes(deleted_at: Time.zone.now)
       DestroyResourceJob.perform_later(current_organization)
 
-      flash[:success] = "Your organization, @#{current_organization.github_organization.login} is being reset"
+      flash[:success] = "Your classroom, @#{current_organization.title} is being deleted"
       redirect_to organizations_path
     else
       render :edit
@@ -99,6 +99,16 @@ class OrganizationsController < Orgs::Controller
       redirect_to invite_organization_path(current_organization)
     else
       render :setup
+    end
+  end
+
+  def search
+    orgs_found = current_user.organizations.order(:id).where("title LIKE ?", "%#{params[:query]}%")
+    respond_to do |format|
+      format.html do
+        render partial: "organizations/organization_card_layout",
+               locals: { organizations: orgs_found.page(params[:page]).per(12) }
+      end
     end
   end
 

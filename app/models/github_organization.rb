@@ -62,10 +62,6 @@ class GitHubOrganization < GitHubResource
     end
   end
 
-  def geo_pattern_data_uri
-    @geo_pattern_data_uri ||= GeoPattern.generate(id, color: "#5fb27b").to_data_uri
-  end
-
   def github_avatar_url(size = 40)
     "#{avatar_url}&size=#{size}"
   end
@@ -143,7 +139,7 @@ class GitHubOrganization < GitHubResource
   def remove_organization_webhook(webhook_id)
     return if webhook_id.blank?
     GitHub::Errors.with_error_handling do
-      @client.remove_org_hook(@id, webhook_id)
+      @client.remove_org_hook(@login, webhook_id)
     end
   end
 

@@ -64,7 +64,7 @@ en:
         - heading: 'Create an organization for your course.'
           content: When you [create  an organization](https://github.com/account/organizations/new), be sure to select the “Free Plan.” Make a new repository for each assignment.
         - heading: 'Apply for an Educator discount.'
-          content: 'For professors, teachers, and bootcamp instructors, we’re happy to provide a discount for free private repositories. Go ahead an apply for [an Education discount](https://education.github.com/discount_requests/new) for your organization.'
+          content: 'For professors, teachers, and bootcamp instructors, we’re happy to provide a discount for free private repositories. Go ahead and apply for [an Education discount](https://education.github.com/discount_requests/new) for your organization.'
         - heading: 'Use the GitHub Classroom application.'
           content: 'With your discount and organization sorted, create a [new Classroom](https://classroom.github.com/classrooms/new), make your first assignment and invite students.'
 
