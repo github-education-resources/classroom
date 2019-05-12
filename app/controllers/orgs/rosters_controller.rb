@@ -7,11 +7,11 @@ module Orgs
   class RostersController < Orgs::Controller
     before_action :ensure_student_identifier_flipper_is_enabled
 
-    before_action :ensure_current_roster,             except: %i[new create select_google_classroom import_from_google_classroom]
-    before_action :ensure_current_roster_entry,       except: %i[show new create remove_organization add_students select_google_classroom import_from_google_classroom]
+    before_action :ensure_current_roster,             except: %i[new create select_google_classroom import_from_google_classroom search_google_classroom]
+    before_action :ensure_current_roster_entry,       except: %i[show new create remove_organization add_students select_google_classroom import_from_google_classroom search_google_classroom]
     before_action :ensure_enough_members_in_roster,   only: [:delete_entry]
     before_action :ensure_allowed_to_access_grouping, only: [:show]
-    before_action :authorize_google_classroom,        only: %i[import_from_google_classroom select_google_classroom]
+    before_action :authorize_google_classroom,        only: %i[import_from_google_classroom select_google_classroom search_google_classroom]
 
     helper_method :current_roster, :unlinked_users, :authorize_google_classroom
 
@@ -151,7 +151,29 @@ module Orgs
 
     def select_google_classroom
       @roster = Roster.new
-      @google_classroom_courses = @google_classroom_service.list_courses(page_size: 10).courses rescue nil
+
+      @google_classroom_courses = Kaminari
+      .paginate_array(fetch_all_google_classrooms)
+      .page(params[:page])
+      .per(10)
+    end
+
+    def search_google_classroom
+      courses_found = fetch_all_google_classrooms.select { |course|
+        course.name.downcase.include? params[:query].downcase
+      }
+
+      response = Kaminari
+      .paginate_array(courses_found)
+      .page(params[:page])
+      .per(10)
+
+      respond_to do |format|
+        format.html do
+          render partial: "orgs/rosters/google_classroom_collection",
+                 locals: { courses: response }
+        end
+      end
     end
 
     def import_from_google_classroom
@@ -243,6 +265,19 @@ module Orgs
       end
 
       mapping
+    end
+
+    def fetch_all_google_classrooms
+      next_page = nil
+      courses = []
+      begin
+        response = @google_classroom_service.list_courses(page_size: 20, page_token: next_page)
+        courses.push(*response.courses)
+
+        next_page = response.next_page_token
+      end while next_page
+
+      return courses
     end
 
     def authorize_google_classroom
