@@ -20,7 +20,7 @@
             <h2 class="h6 text-uppercase border-bottom pb-2">Latest Assignments</h2>
 
             <ul>
-              <% organization.all_assignments.sort_by(&:created_at).take(4).each do |assignment| %>
+              <% organization.all_assignments.sort_by(&:created_at).reverse.take(4).each do |assignment| %>
                 <li class="d-flex flex-items-center my-2">
                   <span class="d-inline-block text-center text-gray mr-2" style="background-color:#d1d5da;border-radius: 50%;width:18px;height:18px;">
                     <%= octicon 'person', height: 9, class: 'v-align-middle' if assignment.is_a? Assignment %>
