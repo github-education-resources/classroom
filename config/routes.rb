@@ -85,6 +85,8 @@ Rails.application.routes.draw do
           patch :add_students
           patch :remove_organization
           patch :import_from_google_classroom
+          patch :sync_google_classroom
+          patch :unlink_google_classroom
           get   :select_google_classroom,    as: "select_google_classroom"
           get   :search_google_classroom
         end

@@ -8,15 +8,21 @@ module Orgs
     before_action :ensure_student_identifier_flipper_is_enabled
 
     before_action :ensure_current_roster,             except: %i[new create select_google_classroom import_from_google_classroom search_google_classroom]
-    before_action :ensure_current_roster_entry,       except: %i[show new create remove_organization add_students select_google_classroom import_from_google_classroom search_google_classroom]
+    before_action :ensure_current_roster_entry,       except: %i[show new create remove_organization add_students select_google_classroom import_from_google_classroom search_google_classroom sync_google_classroom unlink_google_classroom]
     before_action :ensure_enough_members_in_roster,   only: [:delete_entry]
     before_action :ensure_allowed_to_access_grouping, only: [:show]
-    before_action :authorize_google_classroom,        only: %i[import_from_google_classroom select_google_classroom search_google_classroom]
+    before_action :authorize_google_classroom,        only: %i[import_from_google_classroom select_google_classroom search_google_classroom sync_google_classroom unlink_google_classroom]
 
     helper_method :current_roster, :unlinked_users, :authorize_google_classroom
 
     # rubocop:disable AbcSize
     def show
+      unless current_organization.google_course_id.nil?
+        authorize_google_classroom()
+        course = @google_classroom_service.get_course(current_organization.google_course_id) rescue nil
+        @google_course_name = course.name unless course.nil?
+      end
+
       @roster_entries = current_roster.roster_entries
         .includes(:user)
         .order(:identifier)
@@ -113,9 +119,10 @@ module Orgs
     # rubocop:disable Metrics/AbcSize
     def add_students
       identifiers = params[:identifiers].split("\r\n").reject(&:blank?).uniq
+      google_user_ids = params[:google_user_ids] ? params[:google_user_ids] : []
 
       begin
-        entries = RosterEntry.create_entries(identifiers: identifiers, roster: current_roster)
+        entries = RosterEntry.create_entries(identifiers: identifiers, roster: current_roster, google_user_ids: google_user_ids)
 
         if entries.empty?
           flash[:warning] = "No students created."
@@ -189,9 +196,40 @@ module Orgs
         params[:identifiers] = names.join("\r\n")
         params[:google_user_ids] = user_ids
 
-        current_organization.google_course_id = google_course_id
-        create()
+        current_organization.update_column(:google_course_id, google_course_id)
+
+        if current_roster.nil?
+          create
+        else
+          add_students
+        end
       end
+    end
+
+    def sync_google_classroom
+      return if current_organization.google_course_id.nil?
+
+      latest_students = @google_classroom_service.list_course_students(current_organization.google_course_id).students
+      latest_student_ids = latest_students.collect(&:user_id)
+      current_student_ids = current_roster.roster_entries.collect(&:google_user_id)
+
+      new_student_ids = latest_student_ids - current_student_ids
+      new_students = latest_students.select { |s| new_student_ids.include? s.user_id }
+
+      new_student_names = new_students.map {|s| s.profile.name.full_name }
+      user_ids = new_students.map {|s| s.user_id }
+
+      params[:identifiers] = new_student_names.join("\r\n")
+      params[:google_user_ids] = user_ids
+
+      add_students()
+    end
+
+    def unlink_google_classroom
+      current_organization.update_column(:google_course_id, nil)
+      flash[:success] = "Removed link to Google Classroom"
+
+      redirect_to roster_path(current_organization)
     end
 
     private
