@@ -72,7 +72,7 @@ class RosterEntry < ApplicationRecord
   # Returns the created entries.
 
   # rubocop:disable Metrics/MethodLength
-  def self.create_entries(identifiers:, roster:, google_user_ids:[])
+  def self.create_entries(identifiers:, roster:, google_user_ids: [])
     created_entries = []
     RosterEntry.transaction do
       identifiers.zip(google_user_ids).each do |identifier, google_user_id|

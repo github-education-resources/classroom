@@ -1,27 +1,34 @@
 # frozen_string_literal: true
 
-require 'google/apis/classroom_v1'
+require "google/apis/classroom_v1"
 
 # rubocop:disable Metrics/ClassLength
 module Orgs
   class RostersController < Orgs::Controller
     before_action :ensure_student_identifier_flipper_is_enabled
-
-    before_action :ensure_current_roster,             except: %i[new create select_google_classroom import_from_google_classroom search_google_classroom]
-    before_action :ensure_current_roster_entry,       except: %i[show new create remove_organization add_students select_google_classroom import_from_google_classroom search_google_classroom sync_google_classroom unlink_google_classroom]
-    before_action :ensure_enough_members_in_roster,   only: [:delete_entry]
-    before_action :ensure_allowed_to_access_grouping, only: [:show]
-    before_action :authorize_google_classroom,        only: %i[import_from_google_classroom select_google_classroom search_google_classroom sync_google_classroom unlink_google_classroom]
+    before_action :ensure_current_roster, except: %i[
+      new
+      create
+      select_google_classroom
+      import_from_google_classroom
+      search_google_classroom
+    ]
+    before_action :ensure_current_roster_entry,       only:   %i[link unlink delete_entry download_roster]
+    before_action :ensure_enough_members_in_roster,   only:   [:delete_entry]
+    before_action :ensure_allowed_to_access_grouping, only:   [:show]
+    before_action :authorize_google_classroom, only:   %i[
+      import_from_google_classroom
+      select_google_classroom
+      search_google_classroom
+      sync_google_classroom
+      unlink_google_classroom
+    ]
 
     helper_method :current_roster, :unlinked_users, :authorize_google_classroom
 
     # rubocop:disable AbcSize
     def show
-      unless current_organization.google_course_id.nil?
-        authorize_google_classroom()
-        course = @google_classroom_service.get_course(current_organization.google_course_id) rescue nil
-        @google_course_name = course.name unless course.nil?
-      end
+      @google_course_name = current_organization_google_course_name
 
       @roster_entries = current_roster.roster_entries
         .includes(:user)
@@ -47,7 +54,7 @@ module Orgs
         organization: current_organization,
         identifier_name: "Identifiers",
         identifiers: params[:identifiers],
-        google_user_ids: params[:google_user_ids],
+        google_user_ids: params[:google_user_ids]
       )
 
       # Set the object so that we can see errors when rendering :new
@@ -119,10 +126,14 @@ module Orgs
     # rubocop:disable Metrics/AbcSize
     def add_students
       identifiers = params[:identifiers].split("\r\n").reject(&:blank?).uniq
-      google_user_ids = params[:google_user_ids] ? params[:google_user_ids] : []
+      google_ids = params[:google_user_ids] ? params[:google_user_ids] : []
 
       begin
-        entries = RosterEntry.create_entries(identifiers: identifiers, roster: current_roster, google_user_ids: google_user_ids)
+        entries = RosterEntry.create_entries(
+          identifiers: identifiers,
+          roster: current_roster,
+          google_user_ids: google_ids
+        )
 
         if entries.empty?
           flash[:warning] = "No students created."
@@ -160,22 +171,17 @@ module Orgs
     def select_google_classroom
       @roster = Roster.new
 
-      @google_classroom_courses = Kaminari
-      .paginate_array(fetch_all_google_classrooms)
-      .page(params[:page])
-      .per(10)
+      all_classroooms = fetch_all_google_classrooms
+      @google_classroom_courses = Kaminari.paginate_array(all_classroooms).page(params[:page]).per(10)
     end
 
+    # rubocop:disable Metrics/AbcSize
     def search_google_classroom
-      courses_found = fetch_all_google_classrooms.select { |course|
+      courses_found = fetch_all_google_classrooms.select do |course|
         course.name.downcase.include? params[:query].downcase
-      }
+      end
 
-      response = Kaminari
-      .paginate_array(courses_found)
-      .page(params[:page])
-      .per(10)
-
+      response = Kaminari.paginate_array(courses_found).page(params[:page]).per(10)
       respond_to do |format|
         format.html do
           render partial: "orgs/rosters/google_classroom_collection",
@@ -183,6 +189,7 @@ module Orgs
         end
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     def import_from_google_classroom
       google_course_id = params[:course_id]
@@ -191,21 +198,12 @@ module Orgs
         flash[:warning] = "No new students were found in your Google Classroom."
         redirect_to organization_path(current_organization)
       else
-        names = students.map {|s| s.profile.name.full_name }
-        user_ids = students.map {|s| s.user_id }
-        params[:identifiers] = names.join("\r\n")
-        params[:google_user_ids] = user_ids
-
-        current_organization.update_column(:google_course_id, google_course_id)
-
-        if current_roster.nil?
-          create
-        else
-          add_students
-        end
+        current_organization.update_attributes!(:google_course_id, google_course_id)
+        add_google_classroom_students(students)
       end
     end
 
+    # rubocop:disable Metrics/AbcSize
     def sync_google_classroom
       return if current_organization.google_course_id.nil?
 
@@ -216,18 +214,13 @@ module Orgs
       new_student_ids = latest_student_ids - current_student_ids
       new_students = latest_students.select { |s| new_student_ids.include? s.user_id }
 
-      new_student_names = new_students.map {|s| s.profile.name.full_name }
-      user_ids = new_students.map {|s| s.user_id }
-
-      params[:identifiers] = new_student_names.join("\r\n")
-      params[:google_user_ids] = user_ids
-
-      add_students()
+      add_google_classroom_students(new_students)
     end
+    # rubocop:enable Metrics/AbcSize
 
     def unlink_google_classroom
-      current_organization.update_column(:google_course_id, nil)
-      flash[:success] = "Removed link to Google Classroom"
+      current_organization.update_attributes!(google_course_id: nil)
+      flash[:success] = "Removed link to u Classroom"
 
       redirect_to roster_path(current_organization)
     end
@@ -315,24 +308,48 @@ module Orgs
       mapping
     end
 
+    def current_organization_google_course_name
+      return nil if current_organization.google_course_id.nil?
+
+      authorize_google_classroom
+      course = @google_classroom_service.get_course(current_organization.google_course_id) rescue nil
+      return course.name unless course.nil?
+      nil
+    end
+
+    def add_google_classroom_students(students)
+      names = students.map(&:profile.name.full_name)
+      user_ids = students.map(&:user_id)
+      params[:identifiers] = names.join("\r\n")
+      params[:google_user_ids] = user_ids
+
+      if current_roster.nil?
+        create
+      else
+        add_students
+      end
+    end
+
     def fetch_all_google_classrooms
       next_page = nil
       courses = []
-      begin
+      loop do
         response = @google_classroom_service.list_courses(page_size: 20, page_token: next_page)
         courses.push(*response.courses)
 
         next_page = response.next_page_token
-      end while next_page
+        break unless next_page
+      end
 
-      return courses
+      courses
     end
 
     def authorize_google_classroom
       google_classroom_client = GitHubClassroom.google_classroom_client
 
       if user_google_classroom_credentials.nil?
-        redirect_to google_classroom_client.get_authorization_url(login_hint: current_user.github_user.login, request: request)
+        login_hint = current_user.github_user.login
+        redirect_to google_classroom_client.get_authorization_url(login_hint: login_hint, request: request)
       end
 
       @google_classroom_service = Google::Apis::ClassroomV1::ClassroomService.new

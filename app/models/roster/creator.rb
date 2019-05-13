@@ -57,17 +57,15 @@ class Roster
 
     # Internal: Create create a Roster.
     #
+    # rubocop:disable Metrics/MethodLength
     def perform
       ensure_organization_does_not_have_roster!
 
       ActiveRecord::Base.transaction do
         @roster = Roster.new(identifier_name: @identifier_name)
 
-        if @options.key?(:identifiers)
-          add_identifiers_to_roster(@options[:identifiers], google_user_ids: @options[:google_user_ids]) if @options.key?(:google_user_ids)
-        else
-          add_identifiers_to_roster(@options[:identifiers]) if @options.key?(:google_user_ids)
-        end
+        google_ids = @options[:google_user_ids]
+        add_identifiers_to_roster(@options[:identifiers], google_ids: google_ids) if @options.key?(:identfiers)
 
         @roster.save!
         @organization.update_attributes!(roster: @roster)
@@ -77,13 +75,14 @@ class Roster
     rescue Result::Error, ActiveRecord::ActiveRecordError => err
       Result.failed(@roster, err.message)
     end
+    # rubocop:enable Metrics/MethodLength
 
     private
 
-    def add_identifiers_to_roster(raw_identifiers_string, google_user_ids: [])
+    def add_identifiers_to_roster(raw_identifiers_string, google_ids: [])
       identifiers = raw_identifiers_string.split("\r\n").reject(&:blank?).uniq
 
-      identifiers.zip(google_user_ids).each do |identifier, google_user_id|
+      identifiers.zip(google_ids).each do |identifier, google_user_id|
         @roster.roster_entries << RosterEntry.new(identifier: identifier, google_user_id: google_user_id)
       end
     end
