@@ -198,7 +198,7 @@ module Orgs
         flash[:warning] = "No new students were found in your Google Classroom."
         redirect_to organization_path(current_organization)
       else
-        current_organization.update_attributes!(:google_course_id, google_course_id)
+        current_organization.update_attributes!(google_course_id: google_course_id)
         add_google_classroom_students(students)
       end
     end
@@ -318,7 +318,7 @@ module Orgs
     end
 
     def add_google_classroom_students(students)
-      names = students.map(&:profile.name.full_name)
+      names = students.map { |s| s.profile.name.full_name }
       user_ids = students.map(&:user_id)
       params[:identifiers] = names.join("\r\n")
       params[:google_user_ids] = user_ids
