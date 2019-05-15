@@ -3,3 +3,5 @@ Allow: /
 Disallow: /stafftools/
 Disallow: /classrooms
 Disallow: /logout
+Disallow: /assignment-invitations/
+Disallow: /group-assignment-invitations/
