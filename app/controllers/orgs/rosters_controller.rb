@@ -169,10 +169,7 @@ module Orgs
     # rubocop:enable Metrics/AbcSize
 
     def select_google_classroom
-      @roster = Roster.new
-
-      all_classroooms = fetch_all_google_classrooms
-      @google_classroom_courses = Kaminari.paginate_array(all_classroooms).page(params[:page]).per(10)
+      @google_classroom_courses = fetch_all_google_classrooms
     end
 
     # rubocop:disable Metrics/AbcSize

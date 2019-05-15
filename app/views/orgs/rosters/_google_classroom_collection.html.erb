@@ -1,5 +1,5 @@
 <%= form_tag import_from_google_classroom_roster_path, method: :patch do |f| %>
-  <div class="Box overflow-auto">
+  <div class="Box overflow-scroll">
     <ul>
       <% courses.each_with_index do |course, i| %>
         <li class="Box-row">
@@ -11,12 +11,6 @@
       <% end %>
     </ul>
   </div>
-
-  <% if courses.next_page || courses.prev_page %>
-    <div class="paginate-container container mt-3">
-      <%= paginate courses, param_name: (local_assigns[:param_name] || :page) %>
-    </div>
-  <% end %>
 
   <div class="f4 text-gray text-italic my-3">
     or
