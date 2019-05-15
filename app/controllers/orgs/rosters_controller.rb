@@ -200,7 +200,7 @@ module Orgs
         flash[:error] = "Failed to fetch students from Google Classroom. Please try again."
         redirect_to roster_path(current_organization)
       else
-        current_organization.update_attributes!(google_course_id: google_course_id)
+        current_organization.update_attributes!(google_course_id: params[:course_id])
         if students.any?
           add_google_classroom_students(students)
         else
@@ -373,7 +373,6 @@ module Orgs
     # Used as a before_action before routes which require Google authorization
     def authorize_google_classroom
       google_classroom_client = GitHubClassroom.google_classroom_client
-
       if user_google_classroom_credentials.nil?
         login_hint = current_user.github_user.login
         redirect_to google_classroom_client.get_authorization_url(login_hint: login_hint, request: request)

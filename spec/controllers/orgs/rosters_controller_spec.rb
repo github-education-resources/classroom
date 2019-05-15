@@ -677,10 +677,31 @@ RSpec.describe Orgs::RostersController, type: :controller do
         GitHubClassroom.flipper[:student_identifier].enable
       end
 
+      context "when user is not authorized with google" do
+        before do
+          allow_any_instance_of(Orgs::RostersController).to receive(:user_google_classroom_credentials).and_return(nil)
+          patch :import_from_google_classroom, params: {
+            id: organization.slug,
+            course_id: "1234"
+          }
+        end
+
+        it "redirects to authorization url" do
+          expect(response).to redirect_to %r(\Ahttps://accounts.google.com/o/oauth2)
+        end
+
+        after do
+          # Stub google authentication again
+          client = Signet::OAuth2::Client.new
+          allow_any_instance_of(Orgs::RostersController).to receive(:user_google_classroom_credentials).and_return(client)
+        end
+      end
+
       context "when user is authorized with google" do
         before do
+          # Stub google authentication
           client = Signet::OAuth2::Client.new
-          Orgs::RostersController.any_instance.stub(:user_google_classroom_credentials).and_return(client)
+          allow_any_instance_of(Orgs::RostersController).to receive(:user_google_classroom_credentials).and_return(client)
         end
 
         context "when course id is not valid" do
@@ -701,72 +722,12 @@ RSpec.describe Orgs::RostersController, type: :controller do
             expect(organization.google_course_id).to_not eq("1234")
           end
         end
-      end
 
-      context "when course has no students" do
-        before do
-          empty_response = GoogleAPI::ListStudentsResponse.new
-          empty_response.students = []
-          GoogleAPI::ClassroomService.any_instance.stub(:list_course_students).and_return(empty_response)
-
-          patch :import_from_google_classroom, params: {
-            id: organization.slug,
-            course_id: "1234"
-          }
-        end
-
-        it "sets warning message" do
-          expect(flash[:warning]).to eq("No new students were found in your Google Classroom.")
-        end
-
-        it "links the google classroom to the organization" do
-          expect(organization.reload.google_course_id).to eq("1234")
-        end
-      end
-
-      context "when course has multiple students" do
-        before do
-          valid_response = GoogleAPI::ListStudentsResponse.new
-
-          student_names = ["Student 1", "Student 2"]
-          student_profiles = student_names.map do |name|
-            GoogleAPI::UserProfile.new(name: GoogleAPI::Name.new(full_name: name))
-          end
-          students = student_profiles.map { |prof| GoogleAPI::Student.new(profile: prof) }
-
-          valid_response.students = students
-          GoogleAPI::ClassroomService.any_instance.stub(:list_course_students).and_return(valid_response)
-        end
-
-        context "when organization already has roster" do
+        context "when course has no students" do
           before do
-            patch :import_from_google_classroom, params: {
-              id: organization.slug,
-              course_id: "1234"
-            }
-          end
-
-          it "sets success message" do
-            expect(flash[:success]).to eq("Students created.")
-          end
-
-          it "has correct number of students" do
-            expect(organization.roster.roster_entries.count).to eq(3)
-          end
-
-          it "has students with correct names" do
-            expect(organization.roster.roster_entries[1]).to have_attributes(identifier: "Student 1")
-            expect(organization.roster.roster_entries[2]).to have_attributes(identifier: "Student 2")
-          end
-
-          it "links the google classroom to the organization" do
-            expect(organization.reload.google_course_id).to eq("1234")
-          end
-        end
-
-        context "when organization has no roster" do
-          before do
-            organization.update_attributes(roster_id: nil)
+            empty_response = GoogleAPI::ListStudentsResponse.new
+            empty_response.students = []
+            GoogleAPI::ClassroomService.any_instance.stub(:list_course_students).and_return(empty_response)
 
             patch :import_from_google_classroom, params: {
               id: organization.slug,
@@ -774,24 +735,84 @@ RSpec.describe Orgs::RostersController, type: :controller do
             }
           end
 
-          it "sets success message" do
-            expect(flash[:success]).to start_with("Your classroom roster has been saved! Manage it")
-          end
-
-          it "has correct number of students" do
-            expect(organization.reload.roster.roster_entries.count).to eq(2)
-          end
-
-          it "has students with correct names" do
-            expect(organization.reload.roster.roster_entries[0]).to have_attributes(identifier: "Student 1")
-            expect(organization.reload.roster.roster_entries[1]).to have_attributes(identifier: "Student 2")
+          it "sets warning message" do
+            expect(flash[:warning]).to eq("No new students were found in your Google Classroom.")
           end
 
           it "links the google classroom to the organization" do
             expect(organization.reload.google_course_id).to eq("1234")
           end
         end
+
+        context "when course has multiple students" do
+          before do
+            valid_response = GoogleAPI::ListStudentsResponse.new
+
+            student_names = ["Student 1", "Student 2"]
+            student_profiles = student_names.map do |name|
+              GoogleAPI::UserProfile.new(name: GoogleAPI::Name.new(full_name: name))
+            end
+            students = student_profiles.map { |prof| GoogleAPI::Student.new(profile: prof) }
+
+            valid_response.students = students
+            GoogleAPI::ClassroomService.any_instance.stub(:list_course_students).and_return(valid_response)
+          end
+
+          context "when organization already has roster" do
+            before do
+              patch :import_from_google_classroom, params: {
+                id: organization.slug,
+                course_id: "1234"
+              }
+            end
+
+            it "sets success message" do
+              expect(flash[:success]).to eq("Students created.")
+            end
+
+            it "has correct number of students" do
+              expect(organization.roster.roster_entries.count).to eq(3)
+            end
+
+            it "has students with correct names" do
+              expect(organization.roster.roster_entries[1]).to have_attributes(identifier: "Student 1")
+              expect(organization.roster.roster_entries[2]).to have_attributes(identifier: "Student 2")
+            end
+
+            it "links the google classroom to the organization" do
+              expect(organization.reload.google_course_id).to eq("1234")
+            end
+          end
+
+          context "when organization has no roster" do
+            before do
+              organization.update_attributes(roster_id: nil)
+
+              patch :import_from_google_classroom, params: {
+                id: organization.slug,
+                course_id: "1234"
+              }
+            end
+
+            it "sets success message" do
+              expect(flash[:success]).to start_with("Your classroom roster has been saved! Manage it")
+            end
+
+            it "has correct number of students" do
+              expect(organization.reload.roster.roster_entries.count).to eq(2)
+            end
+
+            it "has students with correct names" do
+              expect(organization.reload.roster.roster_entries[0]).to have_attributes(identifier: "Student 1")
+              expect(organization.reload.roster.roster_entries[1]).to have_attributes(identifier: "Student 2")
+            end
+
+            it "links the google classroom to the organization" do
+              expect(organization.reload.google_course_id).to eq("1234")
+            end
+          end
       end
+    end
 
       after do
         GitHubClassroom.flipper[:student_identifier].disable
