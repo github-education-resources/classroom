@@ -679,7 +679,10 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
       context "when user is not authorized with google" do
         before do
-          allow_any_instance_of(Orgs::RostersController).to receive(:user_google_classroom_credentials).and_return(nil)
+          allow_any_instance_of(Orgs::RostersController)
+            .to receive(:user_google_classroom_credentials)
+            .and_return(nil)
+
           patch :import_from_google_classroom, params: {
             id: organization.slug,
             course_id: "1234"
@@ -687,13 +690,15 @@ RSpec.describe Orgs::RostersController, type: :controller do
         end
 
         it "redirects to authorization url" do
-          expect(response).to redirect_to %r(\Ahttps://accounts.google.com/o/oauth2)
+          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
         end
 
         after do
           # Stub google authentication again
           client = Signet::OAuth2::Client.new
-          allow_any_instance_of(Orgs::RostersController).to receive(:user_google_classroom_credentials).and_return(client)
+          allow_any_instance_of(Orgs::RostersController)
+            .to receive(:user_google_classroom_credentials)
+            .and_return(client)
         end
       end
 
@@ -701,13 +706,18 @@ RSpec.describe Orgs::RostersController, type: :controller do
         before do
           # Stub google authentication
           client = Signet::OAuth2::Client.new
-          allow_any_instance_of(Orgs::RostersController).to receive(:user_google_classroom_credentials).and_return(client)
+          allow_any_instance_of(Orgs::RostersController)
+            .to receive(:user_google_classroom_credentials)
+            .and_return(client)
         end
 
         context "when course id is not valid" do
           before do
             invalid_response = GoogleAPI::ListStudentsResponse.new
-            GoogleAPI::ClassroomService.any_instance.stub(:list_course_students).and_return(invalid_response)
+            allow_any_instance_of(GoogleAPI::ClassroomService)
+              .to receive(:list_course_students)
+              .and_return(invalid_response)
+
             patch :import_from_google_classroom, params: {
               id: organization.slug,
               course_id: "1234"
@@ -727,7 +737,9 @@ RSpec.describe Orgs::RostersController, type: :controller do
           before do
             empty_response = GoogleAPI::ListStudentsResponse.new
             empty_response.students = []
-            GoogleAPI::ClassroomService.any_instance.stub(:list_course_students).and_return(empty_response)
+            allow_any_instance_of(GoogleAPI::ClassroomService)
+              .to receive(:list_course_students)
+              .and_return(empty_response)
 
             patch :import_from_google_classroom, params: {
               id: organization.slug,
@@ -755,7 +767,9 @@ RSpec.describe Orgs::RostersController, type: :controller do
             students = student_profiles.map { |prof| GoogleAPI::Student.new(profile: prof) }
 
             valid_response.students = students
-            GoogleAPI::ClassroomService.any_instance.stub(:list_course_students).and_return(valid_response)
+            allow_any_instance_of(GoogleAPI::ClassroomService)
+              .to receive(:list_course_students)
+              .and_return(valid_response)
           end
 
           context "when organization already has roster" do
@@ -811,8 +825,8 @@ RSpec.describe Orgs::RostersController, type: :controller do
               expect(organization.reload.google_course_id).to eq("1234")
             end
           end
+        end
       end
-    end
 
       after do
         GitHubClassroom.flipper[:student_identifier].disable
