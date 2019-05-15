@@ -191,23 +191,32 @@ module Orgs
     end
     # rubocop:enable Metrics/AbcSize
 
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def import_from_google_classroom
-      google_course_id = params[:course_id]
-      students = @google_classroom_service.list_course_students(google_course_id).students
+      students = list_google_classroom_students(params[:course_id])
+
       if students.nil?
-        flash[:warning] = "No new students were found in your Google Classroom."
-        redirect_to organization_path(current_organization)
+        flash[:error] = "Failed to fetch students from Google Classroom. Please try again."
+        redirect_to roster_path(current_organization)
       else
         current_organization.update_attributes!(google_course_id: google_course_id)
-        add_google_classroom_students(students)
+        if students.any?
+          add_google_classroom_students(students)
+        else
+          flash[:warning] = "No new students were found in your Google Classroom."
+          redirect_to organization_path(current_organization)
+        end
       end
     end
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     # rubocop:disable Metrics/AbcSize
     def sync_google_classroom
       return if current_organization.google_course_id.nil?
 
-      latest_students = @google_classroom_service.list_course_students(current_organization.google_course_id).students
+      latest_students = list_google_classroom_students(current_organization.google_course_id)
       latest_student_ids = latest_students.collect(&:user_id)
       current_student_ids = current_roster.roster_entries.collect(&:google_user_id)
 
@@ -308,15 +317,30 @@ module Orgs
       mapping
     end
 
+    # Returns name of the linked google course to current organization (for syncing rosters)
     def current_organization_google_course_name
       return nil if current_organization.google_course_id.nil?
-
       authorize_google_classroom
-      course = @google_classroom_service.get_course(current_organization.google_course_id) rescue nil
+      course = @google_classroom_service.get_course(current_organization.google_course_id)
       return course.name unless course.nil?
+      nil
+    rescue Google::Apis::Error
       nil
     end
 
+    # Returns list of students in a google classroom with error checking
+    def list_google_classroom_students(course_id)
+      response = @google_classroom_service.list_course_students(course_id)
+      return response.students
+    rescue Google::Apis::AuthorizationError
+      google_classroom_client = GitHubClassroom.google_classroom_client
+      login_hint = current_user.github_user.login
+      redirect_to google_classroom_client.get_authorization_url(login_hint: login_hint, request: request)
+    rescue Google::Apis::ServerError, Google::Apis::ClientError
+      nil
+    end
+
+    # Add Google Classroom students to roster
     def add_google_classroom_students(students)
       names = students.map { |s| s.profile.name.full_name }
       user_ids = students.map(&:user_id)
@@ -330,6 +354,7 @@ module Orgs
       end
     end
 
+    # Fetches all courses for a Google Account
     def fetch_all_google_classrooms
       next_page = nil
       courses = []
@@ -344,6 +369,8 @@ module Orgs
       courses
     end
 
+    # Authorizes current user through Google and sets google_classroom_service
+    # Used as a before_action before routes which require Google authorization
     def authorize_google_classroom
       google_classroom_client = GitHubClassroom.google_classroom_client
 
@@ -357,11 +384,15 @@ module Orgs
       @google_classroom_service.authorization = user_google_classroom_credentials
     end
 
+    # Helper method for getting current user's google classroom credentials
     def user_google_classroom_credentials
       google_classroom_client = GitHubClassroom.google_classroom_client
       user_id = current_user.github_user.login
 
-      google_classroom_client.get_credentials(user_id, request) rescue nil
+      google_classroom_client.get_credentials(user_id, request)
+    rescue Signet::AuthorizationError
+      # Will reauthorize upstream
+      nil
     end
   end
 end

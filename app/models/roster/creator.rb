@@ -64,8 +64,8 @@ class Roster
       ActiveRecord::Base.transaction do
         @roster = Roster.new(identifier_name: @identifier_name)
 
-        google_ids = @options[:google_user_ids]
-        add_identifiers_to_roster(@options[:identifiers], google_ids: google_ids) if @options.key?(:identfiers)
+        google_ids = @options[:google_user_ids].nil? ? [] : @options[:google_user_ids]
+        add_identifiers_to_roster(@options[:identifiers], google_ids: google_ids) if @options.key?(:identifiers)
 
         @roster.save!
         @organization.update_attributes!(roster: @roster)
