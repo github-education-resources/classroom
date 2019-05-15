@@ -16,7 +16,8 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       title: "Learn Elm",
       starter_code_repo_id: 1_062_897,
       organization: organization,
-      students_are_repo_admins: true
+      students_are_repo_admins: true,
+      use_roster_id: false
     }
 
     create(:assignment, options)
