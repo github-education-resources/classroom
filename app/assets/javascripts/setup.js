@@ -1,6 +1,7 @@
 (function() {
   var POLL_INTERVAL = 1000;
   var PROGRESS_HALF_LIFE = 1000;
+  var contact_support_message = "\nIf importing starter code takes a very long time, please <a href=\"https://github.com/contact\">contact GitHub support</a>.";
   var progress_asymptotically,
     create_flash_container,
     display_progress,
@@ -150,7 +151,6 @@
   };
 
   display_progress = function(progress) {
-    flash_progress(progress);
     var create_repo_progress_indicator = $("#create-repo-progress");
     var import_repo_progress_indicator = $("#import-repo-progress");
     switch(progress.status) {
@@ -173,7 +173,7 @@
         hide_retry_button();
         break;
       case "importing_starter_code":
-        flash_text("If importing starter code takes a very long time, please <a href=\"https://github.com/contact\">contact GitHub support</a>.");
+        progress.text = progress.text ? progress.text + contact_support_message : contact_support_message;
         indicate_completion(create_repo_progress_indicator);
         indicate_in_progress(import_repo_progress_indicator);
         set_progress(create_repo_progress_indicator, 100);
@@ -211,6 +211,7 @@
         setTimeout(show_success, 500);
         break;
     }
+    flash_progress(progress);
   };
 
   wrap_in_parapgraph = function(text) {
