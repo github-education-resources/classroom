@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+#
 require "rails_helper"
 
 RSpec.describe AssignmentInvitationsController, type: :controller do
@@ -198,19 +198,6 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
           expect(response).to have_http_status(:success)
           expect(response).to render_template("assignment_invitations/show")
         end
-
-        context "previous acceptee" do
-          before(:each) do
-            expect_any_instance_of(AssignmentInvitationsController)
-              .to receive(:current_submission)
-              .and_return(assignment_repo)
-          end
-
-          it "redirects to success" do
-            get :show, params: { id: invitation.key }
-            expect(response).to redirect_to(success_assignment_invitation_url(invitation))
-          end
-        end
       end
 
       context "with a roster" do
@@ -354,114 +341,99 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       sign_in_as(user)
     end
 
-    it "404 when feature is off" do
-      post :create_repo, params: { id: invitation.key }
-      expect(response.status).to eq(404)
+    context "when invitation status is accepted" do
+      before do
+        invite_status.accepted!
+      end
+
+      it "enqueues a CreateRepositoryJob" do
+        assert_enqueued_jobs 1, only: AssignmentRepo::CreateGitHubRepositoryJob do
+          post :create_repo, params: { id: invitation.key }
+        end
+      end
+
+      it "says a job was succesfully kicked off" do
+        post :create_repo, params: { id: invitation.key }
+        expect(json)
+          .to eq(
+            "job_started" => true,
+            "status" => "waiting"
+          )
+      end
     end
 
-    context "with import resiliency enabled" do
+    context "when invitation status is errored" do
       before do
-        GitHubClassroom.flipper[:import_resiliency].enable
+        invite_status.errored_creating_repo!
       end
 
-      after do
-        GitHubClassroom.flipper[:import_resiliency].disable
+      it "deletes an assignment repo if one already exists and is empty" do
+        Octokit.reset!
+        client = oauth_client
+
+        empty_github_repository = GitHubRepository.new(client, 141_328_892)
+        AssignmentRepo.create(assignment: invitation.assignment, github_repo_id: 8485, user: user)
+        allow_any_instance_of(AssignmentRepo).to receive(:github_repository).and_return(empty_github_repository)
+        expect_any_instance_of(AssignmentRepo).to receive(:destroy)
+        post :create_repo, params: { id: invitation.key }
       end
 
-      context "when invitation status is accepted" do
-        before do
-          invite_status.accepted!
-        end
+      it "doesn't delete an assignment repo when one already exists and is not empty" do
+        Octokit.reset!
+        client = oauth_client
 
-        it "enqueues a CreateRepositoryJob" do
-          assert_enqueued_jobs 1, only: AssignmentRepo::CreateGitHubRepositoryJob do
-            post :create_repo, params: { id: invitation.key }
-          end
-        end
-
-        it "says a job was succesfully kicked off" do
-          post :create_repo, params: { id: invitation.key }
-          expect(json)
-            .to eq(
-              "job_started" => true,
-              "status" => "waiting"
-            )
-        end
+        github_repository = GitHubRepository.new(client, 35_079_964)
+        AssignmentRepo.create(assignment: invitation.assignment, github_repo_id: 8485, user: user)
+        allow_any_instance_of(AssignmentRepo).to receive(:github_repository).and_return(github_repository)
+        expect_any_instance_of(AssignmentRepo).not_to receive(:destroy)
+        post :create_repo, params: { id: invitation.key }
       end
 
-      context "when invitation status is errored" do
-        before do
-          invite_status.errored_creating_repo!
-        end
-
-        it "deletes an assignment repo if one already exists and is empty" do
-          Octokit.reset!
-          client = oauth_client
-
-          empty_github_repository = GitHubRepository.new(client, 141_328_892)
-          AssignmentRepo.create(assignment: invitation.assignment, github_repo_id: 8485, user: user)
-          allow_any_instance_of(AssignmentRepo).to receive(:github_repository).and_return(empty_github_repository)
-          expect_any_instance_of(AssignmentRepo).to receive(:destroy)
-          post :create_repo, params: { id: invitation.key }
-        end
-
-        it "doesn't delete an assignment repo when one already exists and is not empty" do
-          Octokit.reset!
-          client = oauth_client
-
-          github_repository = GitHubRepository.new(client, 35_079_964)
-          AssignmentRepo.create(assignment: invitation.assignment, github_repo_id: 8485, user: user)
-          allow_any_instance_of(AssignmentRepo).to receive(:github_repository).and_return(github_repository)
-          expect_any_instance_of(AssignmentRepo).not_to receive(:destroy)
-          post :create_repo, params: { id: invitation.key }
-        end
-
-        it "enqueues a CreateRepositoryJob" do
-          assert_enqueued_jobs 1, only: AssignmentRepo::CreateGitHubRepositoryJob do
-            post :create_repo, params: { id: invitation.key }
-          end
-        end
-
-        it "says a job was succesfully kicked off" do
-          post :create_repo, params: { id: invitation.key }
-          expect(json)
-            .to eq(
-              "job_started" => true,
-              "status" => "waiting"
-            )
-        end
-
-        it "reports an error was retried" do
-          expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.retry")
-          post :create_repo, params: { id: invitation.key }
-        end
-
-        it "reports an error importing was retried" do
-          invite_status.errored_importing_starter_code!
-          expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.import.retry")
+      it "enqueues a CreateRepositoryJob" do
+        assert_enqueued_jobs 1, only: AssignmentRepo::CreateGitHubRepositoryJob do
           post :create_repo, params: { id: invitation.key }
         end
       end
 
-      context "when invitation status is anything else" do
-        before do
-          invite_status.unaccepted!
-        end
+      it "says a job was succesfully kicked off" do
+        post :create_repo, params: { id: invitation.key }
+        expect(json)
+          .to eq(
+            "job_started" => true,
+            "status" => "waiting"
+          )
+      end
 
-        it "does not enqueue a CreateRepositoryJob" do
-          assert_enqueued_jobs 0, only: AssignmentRepo::CreateGitHubRepositoryJob do
-            post :create_repo, params: { id: invitation.key }
-          end
-        end
+      it "reports an error was retried" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.retry")
+        post :create_repo, params: { id: invitation.key }
+      end
 
-        it "says a job was unsuccesfully kicked off" do
+      it "reports an error importing was retried" do
+        invite_status.errored_importing_starter_code!
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.import.retry")
+        post :create_repo, params: { id: invitation.key }
+      end
+    end
+
+    context "when invitation status is anything else" do
+      before do
+        invite_status.unaccepted!
+      end
+
+      it "does not enqueue a CreateRepositoryJob" do
+        assert_enqueued_jobs 0, only: AssignmentRepo::CreateGitHubRepositoryJob do
           post :create_repo, params: { id: invitation.key }
-          expect(json)
-            .to eq(
-              "job_started" => false,
-              "status" => "unaccepted"
-            )
         end
+      end
+
+      it "says a job was unsuccesfully kicked off" do
+        post :create_repo, params: { id: invitation.key }
+        expect(json)
+          .to eq(
+            "job_started" => false,
+            "status" => "unaccepted"
+          )
       end
     end
   end
