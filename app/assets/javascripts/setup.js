@@ -146,10 +146,11 @@
 
   display_text = function(step_indicator, text) {
     var paragraph = step_indicator.find(".alt-text-small");
-    paragraph.text(text);
+    paragraph.html(text);
   };
 
   display_progress = function(progress) {
+    console.log(progress);
     var create_repo_progress_indicator = $("#create-repo-progress");
     var import_repo_progress_indicator = $("#import-repo-progress");
     switch(progress.status) {
@@ -176,7 +177,11 @@
         indicate_in_progress(import_repo_progress_indicator);
         set_progress(create_repo_progress_indicator, 100);
         progress_asymptotically(import_repo_progress_indicator);
-        display_text(create_repo_progress_indicator, "Done");
+        if (progress.repo_url) {
+          display_text(create_repo_progress_indicator, "Done: <a href=\"" + progress.repo_url + "\">" + progress.repo_url + "</a>");
+        } else {
+          display_text(create_repo_progress_indicator, "Done");
+        }
         display_text(import_repo_progress_indicator, "Importing starter code...");
         hide_retry_button();
         break;
