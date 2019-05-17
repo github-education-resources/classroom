@@ -1,0 +1,32 @@
+<% organization = @organization || current_organization %>
+<% assignment = @assignment %>
+
+<div class="container-lg p-responsive mt-4">
+  <div class="d-flex flex-auto mb-3">
+    <span class="assignment-icon assignment-icon-individual mt-1 mr-3">
+      <%= octicon 'person', height: 22 %>
+    </span>
+    <div>
+      <h2 class="f1 text-normal lh-condensed">
+        <%= assignment.title %>
+      </h2>
+      <p class="text-gray">Individual assigment
+        <% if assignment.deadline %>
+          <% if assignment.deadline.passed? %>
+            - Deadline Passed
+          <% else %>
+            <%= "- Deadline in #{distance_of_time_in_words(Time.zone.now, assignment.deadline.deadline_at)}" %>
+          <% end %>
+        <% end %>
+      </p>
+    </div>
+  </div>
+
+  <% if download_repositories_enabled? %>
+    <%= render partial: 'shared/open_on_assistant_modal', locals: {
+      assistant_url: assistant_organization_assignment_url
+    } %>
+  <% end %>
+
+  <%= render 'assignments/navigation', organization: organization, assignment: assignment %>
+</div>

@@ -1,22 +1,45 @@
-<div class="site-content">
-  <div class="site-content-cap">
-    <h1 class="site-content-heading">Add students</h1>
-  </div>
+<% organization = @organization || current_organization %>
+<%= render 'organizations/organization_banner', settings: true %>
 
-  <div class="site-content-body">
-    <div class="markdown-body">
-      <p>Let's set up a roster so you can easily track student progress on your dashboard. You can always come back and complete this step later.</p>
+<div class="d-md-flex gutter-md">
+  <div class="col-md-3">
+    <div class="my-3 my-md-5">
+      <%= render partial: 'organizations/side_menu' %>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <div class="Subhead Subhead--spacious">
+      <h1 class="Subhead-heading">Add students</h1>
     </div>
 
+    <p>Let's set up a roster of students so you can easily track their progress within your dashboard. You can always come back and complete this step later.</p>
+
     <div class="my-3">
-      <h2 class="h3 mb-2">Select the Google Classroom roster you want to link</h2>
+      <h2 class="h3 mb-2">Select the Google Classroom <span class="text-normal text-gray">that you want to connect to <%= organization.title %></span></h2>
 
-      <%= form_tag search_google_classroom_roster_path, id: 'js-search-form', class: 'form-block col-md-4 py-2', method: :get, remote: true do %>
-        <%= text_field_tag :query, params[:query], class: 'form-control width-full', placeholder: 'Search Google Classrooms...', autofocus: true, autocomplete: :off %>
-      <% end %>
-
-      <div class="mt-2" id="js-search-results">
-        <%= render partial: 'google_classroom_collection', locals: {courses: @google_classroom_courses} %>
+      <div class="Box">
+        <div class="Box-header">
+          <%= form_tag search_google_classroom_roster_path, id: 'js-search-form', class: 'form-block col-md-4', method: :get, remote: true do %>
+            <%= text_field_tag :query, params[:query], class: 'form-control width-full', placeholder: 'Search your Google Classrooms...', autofocus: true, autocomplete: :off %>
+          <% end %>
+        </div>
+        <ul id="js-search-results" class="overflow-scroll" style="max-height:275px;">
+          <%= render partial: 'google_classroom_collection', locals: {courses: @google_classroom_courses} %>
+        </ul>
       </div>
+
+      <div class="f4 text-gray text-italic my-3">
+        or
+        <%= link_to "manually add students",
+                    new_roster_path,
+                    class: "btn-link"
+        %>
+      </div>
+    </div>
+
+    <div class="d-flex flex-items-center border-top pt-5">
+      <%= submit_tag 'Import roster', class: 'btn btn-primary mr-3' %>
+      <%= link_to 'Skip', organization_path(current_organization), class: 'btn-link' %>
+    </div>
   </div>
 </div>

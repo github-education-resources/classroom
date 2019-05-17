@@ -1,8 +1,8 @@
 <% view = RosterEntry::ShowView.new(roster_entry: roster_entry) %>
 
-<div class="assignment-list-item d-flex col-12">
-  <div class="col-6 d-flex fixed-height-row">
-    <div class="d-flex flex-column flex-justify-center flex-items-center flex-md-items-start">
+<div class="Box-row d-md-flex flex-items-center flex-justify-between">
+  <div class="flex-auto">
+    <div class="d-flex flex-items-center">
       <span class="assignment-icon assignment-icon-individual left">
         <% if view.linked? %>
           <%= image_tag view.github_avatar_url, height: 46, width: 46, class: 'avatar left' %>
@@ -10,27 +10,25 @@
           <%= octicon 'person', height: 22 %>
           <% end %>
       </span>
-    </div>
-
-    <div class="flex-column">
-      <h4 class="assignment-name-link">
-        <%= view.identifier %>
-      </h4>
-
-      <p class="assignment-type text-gray">
-        <% if view.linked? %>
-          <a class="" href='<%= view.github_profile_url %>'>
-            <%= view.github_handle_text %>
-          </a>
-        <% else %>
-          Unlinked user
-        <% end %>
-      </p>
+      <div>
+        <h4 class="assignment-name-link">
+          <%= view.identifier %>
+        </h4>
+        <p class="assignment-type text-gray mb-0">
+          <% if view.linked? %>
+            <a class="" href='<%= view.github_profile_url %>'>
+              <%= view.github_handle_text %>
+            </a>
+          <% else %>
+            Unlinked user
+          <% end %>
+        </p>
+      </div>
     </div>
   </div>
 
-  <div class="d-flex right-button">
-    <div class="flex-self-center input-group ">
+  <div class="d-flex flex-items-center">
+    <div class="input-group">
       <% if view.linked? %>
         <%= form_tag({ controller: :rosters, action: :unlink }, method: :patch, class: "d-inline") do %>
           <%= hidden_field_tag 'roster_entry_id', roster_entry.id %>

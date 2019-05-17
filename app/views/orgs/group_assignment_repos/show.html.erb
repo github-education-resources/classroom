@@ -1,6 +1,6 @@
 <% view = GroupAssignmentRepoView::ShowView.new(assignment_repo: @group_assignment_repo) %>
 
-<div class='d-flex flex-row flex-justify-between flex-items-center assignment-repo-list-item <%= view.disabled_class %>'>
+<div class='Box-row d-flex flex-row flex-justify-between flex-items-center <%= view.disabled_class %>'>
   <div class='d-flex flex-column flex-content-around'>
     <div>
       <%= link_to view.github_team_url, class: "assignment-repo-github-url #{view.disabled_class}", target: '_blank' do %>

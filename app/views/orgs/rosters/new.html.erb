@@ -1,13 +1,19 @@
 <% view = FormView.new(subject: @roster) %>
 
-<div class="site-content">
-  <div class="site-content-cap">
-    <h1 class="site-content-heading">Add students</h1>
-  </div>
-  <div class="site-content-body">
-    <div class="markdown-body">
-      <p>Let's set up a roster so you can easily track student progress on your dashboard. You can always come back and complete this step later.</p>
+<%= render 'organizations/organization_banner', settings: true %>
+
+<div class="d-md-flex gutter-md">
+  <div class="col-md-3">
+    <div class="my-3 my-md-5">
+      <%= render partial: 'organizations/side_menu' %>
     </div>
+  </div>
+  <div class="col-md-9">
+    <div class="Subhead Subhead--spacious">
+      <h1 class="Subhead-heading">Add students</h1>
+    </div>
+
+    <p>Let's set up a roster of students so you can easily track their progress within your dashboard. You can always come back and complete this step later.</p>
 
     <div class="my-3">
       <h2 class="h3 mb-2">Import from</h2>

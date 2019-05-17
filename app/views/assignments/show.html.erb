@@ -1,70 +1,33 @@
 <%= render 'organizations/organization_banner' %>
 
-<div class="site-content">
-  <div class="site-content-cap d-flex flex-justify-between">
-      <div class="pr-2">
-        <div class="d-table col-12">
-          <div class="col-1 d-table-cell v-align-middle">
-            <span class="assignment-icon assignment-icon-individual left">
-              <%= octicon 'person', height: 22 %>
-            </span>
-          </div>
+<%= render 'assignments/banner' %>
 
-          <div class="col-11 d-table-cell v-align-middle">
-            <h2 class="site-content-heading">
-              <%= @assignment.title %>
-            </h2>
-            <p class="assignment-type text-gray">Individual assigment
-              <% if @assignment.deadline %>
-                <% if @assignment.deadline.passed? %>
-                  - Deadline Passed
-                <% else %>
-                  <%= "- Deadline in #{distance_of_time_in_words(Time.zone.now, @assignment.deadline.deadline_at)}" %>
-                <% end %>
-              <% end %>
-            </p>
-          </div>
-        </div>
+<div class="border-top border-bottom bg-white">
+  <div class="container-lg p-responsive py-5">
+    <div class="d-md-flex flex-md-row-reverse gutter-md">
+      <div class="col-md-4">
+        <%= render @assignment.assignment_invitation %>
       </div>
-
-      <% if download_repositories_enabled? %>
-        <%= render partial: 'shared/open_on_assistant_modal', locals: {
-          assistant_url: assistant_organization_assignment_url
-        } %>
-      <% end %>
-
-      <div class="text-right mt-3 pl-2 settings">
-        <%= link_to edit_organization_assignment_path(@organization, @assignment), class: 'btn right' do %>
-          <%= octicon 'gear' %>
-          Assignment settings
-        <% end %>
-      </div>
-  </div>
-
-  <div class="site-content-body">
-    <div class="invitation-content">
-      <%= render @assignment.assignment_invitation %>
-    </div>
-    <% if @organization.roster %>
-      <div class="assignment-container">
-        <div class="tabnav-body clearfix ">
-          <div class="tabnav">
-            <nav class="tabnav-tabs">
-              <span id='students-tab' onclick="selectTab(this)" class="tabnav-tab selected tabnav-link" aria-current="page">All students</span>
-              <span id='unlinked-tab' onclick="selectTab(this)" class="tabnav-tab tabnav-link">Unlinked GitHub accounts</span>
-            </nav>
-          </div>
-          <span id='students-span'>
-            <div class="assignment-repo-list">
-              <% @roster_entries.each do |entry| %>
-                <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
-                  url: organization_assignment_roster_entry_path(@organization, @assignment, entry)
-                } %>
-              <% end %>
+      <div class="col-md-8">
+        <% if @organization.roster %>
+          <div class="Box">
+            <div class="Box-header text-gray">
+              <span id='students-tab' onclick="selectTab(this)" class="cursor selected mr-3" aria-current="page">All students</span>
+              <span id='unlinked-tab' onclick="selectTab(this)" class="cursor">Unlinked GitHub accounts</span>
             </div>
 
-            <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :students_page } %>
-          </span>
+            <span id='students-span'>
+              <div class="assignment-repo-list">
+                <% @roster_entries.each do |entry| %>
+                  <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
+                    url: organization_assignment_roster_entry_path(@organization, @assignment, entry)
+                  } %>
+                <% end %>
+              </div>
+
+              <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :students_page } %>
+            </span>
+
           <span id='unlinked-span' class='hidden-tab'>
             <span>
               <% if @unlinked_users.empty? %>
@@ -78,24 +41,24 @@
             </span>
             <%= render partial: 'shared/pagination', locals: { collection: @unlinked_user_repos, param_name: :unlinked_accounts_page } %>
           </span>
-        </div>
-      </div>
-    <% else %>
-      <% if @assignment_repos.present? %>
-        <div class="assignment-repo-list">
-          <% @assignment_repos.each do |assignment_repo| %>
-            <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: { url: organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo) } %>
-          <% end %>
-        </div>
+        <% else %>
+          <% if @assignment_repos.present? %>
+            <div class="assignment-repo-list">
+              <% @assignment_repos.each do |assignment_repo| %>
+                <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: { url: organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo) } %>
+              <% end %>
+            </div>
 
-        <%= render partial: 'shared/pagination', locals: { collection: @assignment_repos } %>
-      <% else %>
-        <div class="blankslate">
-          <h3>"<%= @assignment.title %>" does not have any repositories.</h3>
-          <p>Share the invitation link with your students to get started.</p>
-        </div>
-      <% end %>
-    <% end %>
+            <%= render partial: 'shared/pagination', locals: { collection: @assignment_repos } %>
+          <% else %>
+            <div class="blankslate">
+              <h3>"<%= @assignment.title %>" does not have any repositories.</h3>
+              <p class="mb-0">Share the invitation link with your students to get started.</p>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
 

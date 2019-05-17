@@ -1,8 +1,6 @@
 <% organization = @organization || current_organization %>
 
 <nav class="menu">
-  <span class="menu-heading"><%= t('views.organizations.classroom_settings') %></span>
-
   <%= link_to t('views.organizations.classroom_profile'), edit_organization_path(organization),
               class: "menu-item #{'selected' if current_page?(edit_organization_path(organization))}" %>
 
@@ -16,7 +14,7 @@
               class: "menu-item #{'selected' if current_page?(settings_invitations_organization_path(organization))}" %>
 
   <% if student_identifier_enabled? %>
-    <%= link_to 'Roster management', roster_path(organization),
-                class: "menu-item #{'selected' if current_page?(roster_path(organization))}" %>
+    <%= link_to 'Students', roster_path(organization),
+                class: "menu-item #{'selected' if current_page?(roster_path(organization)) || current_page?(new_roster_path(organization)) || current_page?(select_google_classroom_roster_path(organization))}" %>
   <% end %>
 </nav>

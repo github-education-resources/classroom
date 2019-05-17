@@ -1,6 +1,6 @@
 <% view = AssignmentRepoView::ShowView.new(assignment_repo: assignment_repo) %>
 
-<div class='d-flex flex-row flex-justify-between flex-items-center assignment-repo-list-item <%= view.disabled_class %>'>
+<div class='Box-row d-flex flex-row flex-justify-between flex-items-center <%= view.disabled_class %>'>
   <div class='d-flex'>
     <div>
       <%= link_to view.github_user_url, class: "tooltipped tooltipped-n #{view.disabled_class}", target: '_blank', 'aria-label' => view.github_user_login do %>

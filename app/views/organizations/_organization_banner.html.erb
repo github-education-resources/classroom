@@ -2,10 +2,14 @@
 
 <% content_for :organization_banner do %>
   <div class="organization-banner" style="background-image: <%= organization.geo_pattern_data_uri %>">
-    <div class="container-lg">
-      <%= link_to t('views.organizations.manage_classroom'), edit_organization_path(organization), class: 'btn' %>
-      <h1 class="organization-name"><%= link_to organization.title, organization %></h1>
-      <p class="organization-login"><%= link_to "#{organization.github_organization.login}", organization.github_organization.html_url %></p>
+    <div class="container-lg p-responsive">
+      <div class="pt-3 pt-md-4">
+        <h1><%= link_to organization.title, organization, class: "text-white no-underline" %></h1>
+        <p class="f5 mb-0"><%= link_to "#{organization.github_organization.login}", organization.github_organization.html_url, class: "text-white no-underline" %></p>
+        <div class="mt-3">
+          <%= render 'organizations/navigation', organization: organization, settings_view: local_assigns[:settings] %>
+        </div>
+      </div>
     </div>
   </div>
 <% end %>

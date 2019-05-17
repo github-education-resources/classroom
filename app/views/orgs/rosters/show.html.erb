@@ -1,72 +1,67 @@
 <div class="remodal-bg">
-  <%= render 'organizations/organization_banner' %>
+  <%= render 'organizations/organization_banner', settings: true %>
 
-  <div class="columns">
-    <div class="one-fourth column">
-      <%= render partial: 'organizations/side_menu' %>
-    </div>
-    <div class="three-fourths column">
-      <div class="boxed-group">
-        <h3 class='d-flex flex-justify-between flex-items-center'>
-          <span>
-            Classroom roster
-          </span>
-          <div class='flex-justify-between'>
-            <span class="btn btn-primary btn-sm", role="button" data-remodal-target="new-student-modal">Update students</span>
-             <span class="btn btn-primary btn-sm", role="button" data-remodal-target="download-csv-modal">Download</span>
+  <div class="container-lg p-responsive">
+    <div class="d-md-flex gutter-md">
+      <div class="col-md-3">
+        <div class="my-3">
+          <%= render partial: 'organizations/side_menu' %>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="Subhead mt-3">
+          <h1 class="Subhead-heading">Students</h1>
+          <div class="Subhead-actions">
+            <span class="btn btn-sm mr-2" role="button" data-remodal-target="download-csv-modal"><%= octicon "desktop-download" %><span class="d-none">Download</span></span>
+            <span class="btn btn-primary btn-sm" role="button" data-remodal-target="new-student-modal">Add students</span>
           </div>
-        </h3>
+        </div>
 
-        <div class="site-content-body tabnav-body clearfix">
-          <div class="tabnav">
-            <nav class="tabnav-tabs">
-              <span id='students-tab' onclick="selectTab(this)" class="tabnav-tab selected tabnav-link" aria-current="page">All students</span>
-              <span id='unlinked-tab' onclick="selectTab(this)" class="tabnav-tab tabnav-link">Unlinked GitHub accounts</span>
-            </nav>
+        <div class="Box">
+          <div class="Box-header text-gray">
+            <span id='students-tab' onclick="selectTab(this)" class="cursor selected mr-3" aria-current="page">All students</span>
+            <span id='unlinked-tab' onclick="selectTab(this)" class="cursor">Unlinked GitHub accounts</span>
           </div>
+
           <span id='students-span'>
-            <div class="assignment-list-items">
-              <% @roster_entries.each do |roster_entry| %>
-                <%= render 'roster_entry', roster_entry: roster_entry %>
-              <% end %>
+            <% @roster_entries.each do |roster_entry| %>
+              <%= render 'roster_entry', roster_entry: roster_entry %>
+            <% end %>
 
-              <div class="d-flex col-12">
-                <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :roster_entries_page } %>
-              </div>
+            <div class="d-flex col-12">
+              <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :roster_entries_page } %>
             </div>
           </span>
           <span id='unlinked-span' class='hidden-tab'>
-            <div class="assignment-list-items">
-              <% if unlinked_users.empty? %>
-                <%= render 'shared/unlinked_blank_slate' %>
-              <% else %>
-                <% @current_unlinked_users.each do |user| %>
-                  <%= render 'unlinked_user', unlinked_user: user %>
-                <% end %>
-
-                <div class="d-flex col-12">
-                  <%= render partial: 'shared/pagination', locals: { collection: @current_unlinked_users, param_name: :unlinked_users_page } %>
-                </div>
+            <% if unlinked_users.empty? %>
+              <%= render 'shared/unlinked_blank_slate' %>
+            <% else %>
+              <% @current_unlinked_users.each do |user| %>
+                <%= render 'unlinked_user', unlinked_user: user %>
               <% end %>
-            </div>
+
+              <div class="d-flex col-12">
+                <%= render partial: 'shared/pagination', locals: { collection: @current_unlinked_users, param_name: :unlinked_users_page } %>
+              </div>
+            <% end %>
           </span>
         </div>
-      </div>
 
-      <div class="boxed-group dangerzone">
-        <h3>Delete this roster</h3>
-        <div class="boxed-group-inner pt-2 clearfix">
-          <p>
-            Deleting the roster will delete all students.
-          </p>
-          <p>
-            This will not delete assignments, assignment repos, or submissions.
-          </p>
-            After deleting your roster, repos and submissions will be identified by GitHub handle instead of your roster identifier.
-          </p>
-          <p>
-            <a data-remodal-target="remove-roster" class="btn btn-danger">Delete roster</a>
-          </p>
+        <div class="Box Box--condensed mt-5">
+          <div class="Box-header bg-red">
+            <h2 class="Box-title text-white">Delete all students</h2>
+          </div>
+          <div class="Box-body">
+            <p>
+              This will not delete assignments, assignment repos, or submissions.
+            </p>
+            <p>
+              After deleting your roster, repos and submissions will be identified by GitHub handle instead of your roster identifier.
+            </p>
+            <p>
+              <a data-remodal-target="remove-roster" class="btn btn-danger">Delete roster</a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
