@@ -28,7 +28,7 @@ class AssignmentRepo
         invite_status: invite_status,
         status_text: CREATE_REPO.chomp(".")
       )
-      create_assignment_repo(assignment, user)
+      assignment_repo = create_assignment_repo(assignment, user)
       report_time(start)
 
       GitHubClassroom.statsd.increment("v2_exercise_repo.create.success")
@@ -39,7 +39,8 @@ class AssignmentRepo
           assignment: assignment,
           user: user,
           invite_status: invite_status,
-          status_text: "Import started"
+          status_text: "Import started",
+          repo_url: assignment_repo.github_repository.html_url
         )
         GitHubClassroom.statsd.increment("exercise_repo.import.started")
       else
@@ -119,11 +120,13 @@ class AssignmentRepo
     # Broadcasts a ActionCable message with a status to the given user
     #
     # rubocop:disable ParameterLists
-    def broadcast_message(type: :text, message:, assignment:, user:, invite_status:, status_text:)
+    # rubocop:disable MethodLength
+    def broadcast_message(type: :text, message:, assignment:, user:, invite_status:, status_text:, repo_url: nil)
       raise ArgumentError unless %i[text error].include?(type)
       broadcast_args = {
         status: invite_status.status,
-        status_text: status_text
+        status_text: status_text,
+        repo_url: repo_url
       }
       broadcast_args[type] = message
       ActionCable.server.broadcast(
@@ -132,6 +135,7 @@ class AssignmentRepo
       )
     end
     # rubocop:enable ParameterLists
+    # rubocop:enable MethodLength
 
     # Reports the elapsed time to Datadog
     #
