@@ -150,7 +150,6 @@
   };
 
   display_progress = function(progress) {
-    console.log(progress);
     var create_repo_progress_indicator = $("#create-repo-progress");
     var import_repo_progress_indicator = $("#import-repo-progress");
     switch(progress.status) {
