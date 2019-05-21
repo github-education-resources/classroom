@@ -1,16 +1,16 @@
-<% unless disabled %>
+<% unless enabled %>
   <iframe id="js-hidden-iframe" src="about:blank" style="display:none"></iframe>
 <% end %>
 <div class="mt-3 pr-2">
   <details class="dropdown details-reset details-overlay d-inline-block">
-    <summary id="<%=  disabled ? "" : "js-download-repos-btn" %>" class="btn <%= disabled ? "disabled" : "" %>" aria-haspopup="true">
+    <summary id="<%=  enabled ? "js-download-repos-btn" : "" %>" class="btn <%= enabled ? "" : "disabled" %>" aria-haspopup="true">
       Download Repositories
-      <% unless disabled %>
+      <% if enabled %>
         <div class="dropdown-caret"></div>
       <% end %>
     </summary>
 
-    <% unless disabled %>
+    <% if enabled %>
     <div class="dropdown-menu dropdown-menu-sw assistant-modal-dropdown-menu ">
       <div id="js-modal-download-repos">
         <div class="py-2 px-3">
