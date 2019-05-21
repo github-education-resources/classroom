@@ -14,7 +14,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
     let(:student)       { classroom_student }
     let(:repo_access)   { RepoAccess.create(user: student, organization: organization) }
     let(:grouping)      { create(:grouping, organization: organization) }
-    let(:group)         { create(:group, grouping: grouping, github_team_id: 2_976_561) }
+    let(:group)         { create(:group, grouping: grouping, github_team_id: 3_260_555) }
     let(:invite_status) { group_assignment.invitation.status(group) }
     let(:channel)       { group_repo_channel.channel(group_assignment_id: group_assignment.id, group_id: group.id) }
     let(:group_assignment) do
@@ -126,13 +126,17 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           it "creating_repo" do
             expect { subject.perform_now(group_assignment, group) }
               .to have_broadcasted_to(channel)
-              .with(text: subject::CREATE_REPO, status: "creating_repo")
+              .with(text: subject::CREATE_REPO, status: "creating_repo", repo_url: nil)
           end
 
           it "importing_starter_code" do
             expect { subject.perform_now(group_assignment, group) }
               .to have_broadcasted_to(channel)
-              .with(text: subject::IMPORT_STARTER_CODE, status: "importing_starter_code")
+              .with(
+                text: subject::IMPORT_STARTER_CODE,
+                status: "importing_starter_code",
+                repo_url: "https://github.com/#{organization.github_organization.login}/learn-javascript-big_data_team"
+              )
           end
         end
 
@@ -210,13 +214,13 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             it "creating_repo" do
               expect { subject.perform_now(group_assignment, group) }
                 .to have_broadcasted_to(channel)
-                .with(text: subject::CREATE_REPO, status: "creating_repo")
+                .with(text: subject::CREATE_REPO, status: "creating_repo", repo_url: nil)
             end
 
             it "completed" do
               expect { subject.perform_now(group_assignment, group) }
                 .to have_broadcasted_to(channel)
-                .with(text: subject::CREATE_COMPLETE, status: "completed")
+                .with(text: subject::CREATE_COMPLETE, status: "completed", repo_url: nil)
             end
           end
 
@@ -264,7 +268,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             it "creating_repo" do
               expect { subject.perform_now(group_assignment, group) }
                 .to have_broadcasted_to(channel)
-                .with(text: subject::CREATE_REPO, status: "creating_repo")
+                .with(text: subject::CREATE_REPO, status: "creating_repo", repo_url: nil)
             end
 
             it "errored_creating_repo" do
@@ -324,7 +328,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             it "creating_repo" do
               expect { subject.perform_now(group_assignment, group) }
                 .to have_broadcasted_to(channel)
-                .with(text: subject::CREATE_REPO, status: "creating_repo")
+                .with(text: subject::CREATE_REPO, status: "creating_repo", repo_url: nil)
             end
 
             it "errored_creating_repo" do
@@ -387,7 +391,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             it "creating_repo" do
               expect { subject.perform_now(group_assignment, group) }
                 .to have_broadcasted_to(channel)
-                .with(text: subject::CREATE_REPO, status: "creating_repo")
+                .with(text: subject::CREATE_REPO, status: "creating_repo", repo_url: nil)
             end
 
             it "errored_creating_repo" do
@@ -442,7 +446,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             it "creating_repo" do
               expect { subject.perform_now(group_assignment, group) }
                 .to have_broadcasted_to(channel)
-                .with(text: subject::CREATE_REPO, status: "creating_repo")
+                .with(text: subject::CREATE_REPO, status: "creating_repo", repo_url: nil)
             end
 
             it "errored_creating_repo" do
