@@ -1,37 +1,37 @@
 <header class="site-header">
-  <div class="container-lg clearfix">
-    <%= link_to(image_tag('logo@2x.png', class: 'site-logo', alt: 'GitHub for Classrooms'), (logged_in? ? organizations_path : root_path)) %>
+  <div class="container-lg d-md-flex flex-items-center flex-justify-between p-responsive py-3">
+    <%= link_to(image_tag('logo@2x.png', class: 'site-logo', alt: 'GitHub for Classrooms'), (logged_in? ? organizations_path : root_path), class: 'd-block text-center mb-2 mb-md-0') %>
 
-    <nav class="site-nav float-right  d-flex flex-wrap flex-content-start flex-justify-center">
-      <%= link_to "GitHub Education", 'https://education.github.com', target: '_blank' %>
+    <nav class="site-nav d-sm-flex flex-wrap flex-content-start flex-justify-center">
+      <%= link_to "GitHub Education", 'https://education.github.com', target: '_blank', class: 'd-block text-center mx-sm-3 mb-2 mb-sm-0' %>
 
-      <ul>
+      <ul class="list-style-none d-flex flex-justify-center">
         <% if logged_in? %>
-          <li>
+          <li class="mx-3">
             <%= link_to 'https://education.github.com/forum', class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.community_discussion') do %>
               <%= octicon 'comment-discussion' %>
             <% end %>
           </li>
 
-          <li>
+          <li class="mx-3">
             <%= link_to videos_path, class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.video_tutorials') do %>
               <%= octicon 'device-camera-video' %>
             <% end %>
           </li>
 
-          <li>
+          <li class="mx-3">
             <%= link_to 'https://github.com/education/classroom/issues/new?template=bug_report.md', class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.report_bug') do %>
               <%= octicon 'bug' %>
             <% end %>
           </li>
 
-          <li>
+          <li class="mx-3">
             <%= link_to 'https://github.com/education/classroom/pulls?q=is%3Apr+is%3Amerged+sort%3Aupdated-desc', target: '_blank', class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.changelog') do %>
               <%= octicon 'git-pull-request' %>
             <% end %>
           </li>
 
-          <li>
+          <li class="mx-3">
             <% if impersonating?(current_user, true_user) %>
               <%= link_to stop_impersonating_stafftools_user_path(current_user), class: 'tooltipped tooltipped-s', method: :delete, 'aria-label' => t('views.shared.stop_impersonating', user: current_user.github_user.login) do %>
                 <div class="avatar-parent-child left">
@@ -46,14 +46,14 @@
             <% end %>
           </li>
 
-          <li>
+          <li class="ml-3">
             <%= link_to logout_path, method: :post, class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.sign_out') do %>
               <%= octicon 'sign-out' %>
             <% end %>
           </li>
 
         <% else %>
-          <li><%= link_to t('views.shared.sign_in'), login_path %></li>
+          <li class="ml-3"><%= link_to t('views.shared.sign_in'), login_path %></li>
         <% end %>
       </ul>
     </nav>

@@ -224,13 +224,6 @@ ActiveRecord::Schema.define(version: 20181101185917) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "ticker_stats", force: :cascade do |t|
-    t.integer "user_count"
-    t.integer "repo_count"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "users", id: :serial, force: :cascade do |t|
     t.integer "uid", null: false
     t.string "token", null: false
