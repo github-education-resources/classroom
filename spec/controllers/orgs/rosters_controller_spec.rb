@@ -242,6 +242,73 @@ RSpec.describe Orgs::RostersController, type: :controller do
     end
   end
 
+  describe "GET #select_google_classroom", :vcr do
+    before do
+      sign_in_as(user)
+      GoogleAPI = Google::Apis::ClassroomV1
+    end
+
+    context "with flipper enabled" do
+      before do
+        GitHubClassroom.flipper[:student_identifier].enable
+      end
+
+      context "when user is not authorized with google" do
+        before do
+          allow_any_instance_of(Orgs::RostersController)
+            .to receive(:user_google_classroom_credentials)
+            .and_return(nil)
+
+          get :select_google_classroom, params: {
+            id: organization.slug
+          }
+        end
+
+        it "redirects to authorization url" do
+          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
+        end
+      end
+
+      context "when user is authorized with google" do
+        before do
+          # Stub google authentication again
+          client = Signet::OAuth2::Client.new
+          allow_any_instance_of(Orgs::RostersController)
+            .to receive(:user_google_classroom_credentials)
+            .and_return(client)
+
+          # Stub list courses response
+          response = GoogleAPI::ListCoursesResponse.new
+          allow_any_instance_of(GoogleAPI::ClassroomService)
+            .to receive(:list_courses)
+            .and_return(response)
+
+          get :select_google_classroom, params: {
+            id: organization.slug
+          }
+        end
+
+        it "succeeds" do
+          expect(response).to have_http_status(:success)
+        end
+      end
+
+      after do
+        GitHubClassroom.flipper[:student_identifier].disable
+      end
+    end
+
+    context "with flipper disabled" do
+      before do
+        get :show, params: { id: organization.slug }
+      end
+
+      it "404s" do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
   describe "PATCH #link", :vcr do
     before do
       sign_in_as(user)
