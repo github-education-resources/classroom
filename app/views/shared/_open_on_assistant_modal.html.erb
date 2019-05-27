@@ -3,11 +3,13 @@
 <% end %>
 <div class="mt-3 pr-2">
   <details class="dropdown details-reset details-overlay d-inline-block">
-    <summary id="<%=  enabled ? "js-download-repos-btn" : "" %>" class="btn <%= enabled ? "" : "disabled" %>" aria-haspopup="true">
+    <summary
+      id="<%=  enabled ? "js-download-repos-btn" : "" %>"
+      class="btn <%= enabled ? "" : "disabled tooltipped tooltipped-n" %>"
+      aria-label="There are no repositories to download for this assignment."
+      aria-haspopup="true">
       Download Repositories
-      <% if enabled %>
-        <div class="dropdown-caret"></div>
-      <% end %>
+      <div class="dropdown-caret"></div>
     </summary>
 
     <% if enabled %>
