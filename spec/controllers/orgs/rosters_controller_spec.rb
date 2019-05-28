@@ -253,22 +253,6 @@ RSpec.describe Orgs::RostersController, type: :controller do
         GitHubClassroom.flipper[:student_identifier].enable
       end
 
-      context "when user is not authorized with google" do
-        before do
-          allow_any_instance_of(Orgs::RostersController)
-            .to receive(:user_google_classroom_credentials)
-            .and_return(nil)
-
-          get :select_google_classroom, params: {
-            id: organization.slug
-          }
-        end
-
-        it "redirects to authorization url" do
-          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
-        end
-      end
-
       context "when user is authorized with google" do
         before do
           # Stub google authentication again
@@ -290,6 +274,22 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
         it "succeeds" do
           expect(response).to have_http_status(:success)
+        end
+      end
+
+      context "when user is not authorized with google" do
+        before do
+          allow_any_instance_of(Orgs::RostersController)
+            .to receive(:user_google_classroom_credentials)
+            .and_return(nil)
+
+          get :select_google_classroom, params: {
+            id: organization.slug
+          }
+        end
+
+        it "redirects to authorization url" do
+          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
         end
       end
 
@@ -320,23 +320,6 @@ RSpec.describe Orgs::RostersController, type: :controller do
         GitHubClassroom.flipper[:student_identifier].enable
       end
 
-      context "when user is not authorized with google" do
-        before do
-          allow_any_instance_of(Orgs::RostersController)
-            .to receive(:user_google_classroom_credentials)
-            .and_return(nil)
-
-          get :search_google_classroom, params: {
-            id: organization.slug,
-            query: ""
-          }
-        end
-
-        it "redirects to authorization url" do
-          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
-        end
-      end
-
       context "when user is authorized with google" do
         before do
           # Stub google authentication again
@@ -357,6 +340,23 @@ RSpec.describe Orgs::RostersController, type: :controller do
             query: "git"
           }
           expect(request).to render_template(partial: "orgs/rosters/_google_classroom_collection")
+        end
+      end
+
+      context "when user is not authorized with google" do
+        before do
+          allow_any_instance_of(Orgs::RostersController)
+            .to receive(:user_google_classroom_credentials)
+            .and_return(nil)
+
+          get :search_google_classroom, params: {
+            id: organization.slug,
+            query: ""
+          }
+        end
+
+        it "redirects to authorization url" do
+          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
         end
       end
 
@@ -814,31 +814,6 @@ RSpec.describe Orgs::RostersController, type: :controller do
         GitHubClassroom.flipper[:student_identifier].enable
       end
 
-      context "when user is not authorized with google" do
-        before do
-          allow_any_instance_of(Orgs::RostersController)
-            .to receive(:user_google_classroom_credentials)
-            .and_return(nil)
-
-          patch :import_from_google_classroom, params: {
-            id: organization.slug,
-            course_id: "1234"
-          }
-        end
-
-        it "redirects to authorization url" do
-          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
-        end
-
-        after do
-          # Stub google authentication again
-          client = Signet::OAuth2::Client.new
-          allow_any_instance_of(Orgs::RostersController)
-            .to receive(:user_google_classroom_credentials)
-            .and_return(client)
-        end
-      end
-
       context "when user is authorized with google" do
         before do
           # Stub google authentication
@@ -965,6 +940,23 @@ RSpec.describe Orgs::RostersController, type: :controller do
         end
       end
 
+      context "when user is not authorized with google" do
+        before do
+          allow_any_instance_of(Orgs::RostersController)
+            .to receive(:user_google_classroom_credentials)
+            .and_return(nil)
+
+          patch :import_from_google_classroom, params: {
+            id: organization.slug,
+            course_id: "1234"
+          }
+        end
+
+        it "redirects to authorization url" do
+          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
+        end
+      end
+
       after do
         GitHubClassroom.flipper[:student_identifier].disable
       end
@@ -993,22 +985,6 @@ RSpec.describe Orgs::RostersController, type: :controller do
     context "with flipper enabled" do
       before do
         GitHubClassroom.flipper[:student_identifier].enable
-      end
-
-      context "when user is not authorized with google" do
-        before do
-          allow_any_instance_of(Orgs::RostersController)
-            .to receive(:user_google_classroom_credentials)
-            .and_return(nil)
-
-          patch :sync_google_classroom, params: {
-            id: organization.slug
-          }
-        end
-
-        it "redirects to authorization url" do
-          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
-        end
       end
 
       context "when user is authorized with google" do
@@ -1068,6 +1044,22 @@ RSpec.describe Orgs::RostersController, type: :controller do
             patch :sync_google_classroom, params: { id: organization.slug }
             expect(organization.roster.roster_entries.count).to eq(3)
           end
+        end
+      end
+
+      context "when user is not authorized with google" do
+        before do
+          allow_any_instance_of(Orgs::RostersController)
+            .to receive(:user_google_classroom_credentials)
+            .and_return(nil)
+
+          patch :sync_google_classroom, params: {
+            id: organization.slug
+          }
+        end
+
+        it "redirects to authorization url" do
+          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
         end
       end
 
