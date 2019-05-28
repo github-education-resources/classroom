@@ -910,7 +910,8 @@ RSpec.describe Orgs::RostersController, type: :controller do
             end
 
             it "sets warning message" do
-              expect(flash[:warning]).to eq("No students were found in your Google Classroom. Please add students and try again.")
+              message = "No students were found in your Google Classroom. Please add students and try again."
+              expect(flash[:warning]).to eq(message)
             end
 
             it "does not link the google classroom to the organization" do
