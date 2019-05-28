@@ -823,12 +823,11 @@ RSpec.describe Orgs::RostersController, type: :controller do
             .and_return(client)
         end
 
-        context "when course id is not valid" do
+        context "when there is an error fetching students" do
           before do
-            invalid_response = GoogleAPI::ListStudentsResponse.new
             allow_any_instance_of(GoogleAPI::ClassroomService)
               .to receive(:list_course_students)
-              .and_return(invalid_response)
+              .and_raise(Google::Apis::ServerError.new("boom"))
 
             patch :import_from_google_classroom, params: {
               id: organization.slug,
@@ -837,7 +836,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
           end
 
           it "sets error message" do
-            expect(flash[:error]).to eq("Failed to fetch students from Google Classroom. Please try again.")
+            expect(flash[:error]).to eq("Failed to fetch students from Google Classroom. Please try again later.")
           end
 
           it "does not link the google classroom to the organization" do
@@ -848,7 +847,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
         context "when course has no students" do
           before do
             empty_response = GoogleAPI::ListStudentsResponse.new
-            empty_response.students = []
+            empty_response.students = nil
             allow_any_instance_of(GoogleAPI::ClassroomService)
               .to receive(:list_course_students)
               .and_return(empty_response)

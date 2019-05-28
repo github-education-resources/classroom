@@ -192,18 +192,14 @@ module Orgs
     # rubocop:disable Metrics/AbcSize
     def import_from_google_classroom
       students = list_google_classroom_students(params[:course_id])
+      return if students.nil?
 
-      if students.nil?
-        flash[:error] = "Failed to fetch students from Google Classroom. Please try again."
-        redirect_to roster_path(current_organization)
+      current_organization.update_attributes!(google_course_id: params[:course_id])
+      if students.blank?
+        flash[:warning] = "No new students were found in your Google Classroom."
+        redirect_to organization_path(current_organization)
       else
-        current_organization.update_attributes!(google_course_id: params[:course_id])
-        if students.any?
-          add_google_classroom_students(students)
-        else
-          flash[:warning] = "No new students were found in your Google Classroom."
-          redirect_to organization_path(current_organization)
-        end
+        add_google_classroom_students(students)
       end
     end
     # rubocop:enable Metrics/MethodLength
@@ -328,12 +324,15 @@ module Orgs
     # Returns list of students in a google classroom with error checking
     def list_google_classroom_students(course_id)
       response = @google_classroom_service.list_course_students(course_id)
-      return response.students
+      response.students ||= [] # Set to empty array if no students in course
     rescue Google::Apis::AuthorizationError
       google_classroom_client = GitHubClassroom.google_classroom_client
       login_hint = current_user.github_user.login
       redirect_to google_classroom_client.get_authorization_url(login_hint: login_hint, request: request)
+      nil
     rescue Google::Apis::ServerError, Google::Apis::ClientError
+      flash[:error] = "Failed to fetch students from Google Classroom. Please try again later."
+      redirect_to organization_path(current_organization)
       nil
     end
 
