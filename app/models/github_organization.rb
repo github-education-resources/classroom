@@ -100,7 +100,7 @@ class GitHubOrganization < GitHubResource
     "https://github.com/orgs/#{login}/people"
   end
 
-  def create_organization_webhook(config: {}, options: {})
+  def create_organization_webhook(client:, config: {}, options: {})
     GitHub::Errors.with_error_handling do
       hook_config = { content_type: "json", secret: webhook_secret }.merge(config)
 
@@ -111,7 +111,7 @@ class GitHubOrganization < GitHubResource
         active: true
       }.merge(options)
 
-      @client.create_org_hook(@id, hook_config, hook_options)
+      client.create_org_hook(@id, hook_config, hook_options)
     end
   end
 
