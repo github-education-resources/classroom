@@ -305,9 +305,9 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
       context "with google classroom identifier disabled" do
         before do
-          patch :import_from_google_classroom, params: {
+          get :search_google_classroom, params: {
             id: organization.slug,
-            course_id: "1234"
+            query: ""
           }
         end
 
@@ -395,9 +395,9 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
       context "with google classroom identifier disabled" do
         before do
-          patch :import_from_google_classroom, params: {
+          get :search_google_classroom, params: {
             id: organization.slug,
-            course_id: "1234"
+            query: ""
           }
         end
 
@@ -910,11 +910,15 @@ RSpec.describe Orgs::RostersController, type: :controller do
             end
 
             it "sets warning message" do
-              expect(flash[:warning]).to eq("No new students were found in your Google Classroom.")
+              expect(flash[:warning]).to eq("No students were found in your Google Classroom. Please add students and try again.")
             end
 
-            it "links the google classroom to the organization" do
-              expect(organization.reload.google_course_id).to eq("1234")
+            it "does not link the google classroom to the organization" do
+              expect(organization.reload.google_course_id).to_not eq("1234")
+            end
+
+            it "redirects to roster path" do
+              expect(response).to redirect_to roster_path(organization)
             end
           end
 
@@ -1126,9 +1130,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
               .to receive(:user_google_classroom_credentials)
               .and_return(nil)
 
-            patch :sync_google_classroom, params: {
-              id: organization.slug
-            }
+            patch :sync_google_classroom, params: { id: organization.slug }
           end
 
           it "redirects to authorization url" do
@@ -1143,10 +1145,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
       context "with google classroom identifier disabled" do
         before do
-          patch :import_from_google_classroom, params: {
-            id: organization.slug,
-            course_id: "1234"
-          }
+          patch :sync_google_classroom, params: { id: organization.slug }
         end
 
         it "404s" do
@@ -1233,9 +1232,9 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
       context "with google classroom identifier disabled" do
         before do
-          patch :import_from_google_classroom, params: {
+          get :search_google_classroom, params: {
             id: organization.slug,
-            course_id: "1234"
+            query: ""
           }
         end
 

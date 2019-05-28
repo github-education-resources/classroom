@@ -199,11 +199,11 @@ module Orgs
       students = list_google_classroom_students(params[:course_id])
       return if students.nil?
 
-      current_organization.update_attributes!(google_course_id: params[:course_id])
       if students.blank?
-        flash[:warning] = "No new students were found in your Google Classroom."
-        redirect_to organization_path(current_organization)
+        flash[:warning] = "No students were found in your Google Classroom. Please add students and try again."
+        redirect_to roster_path(current_organization)
       else
+        current_organization.update_attributes!(google_course_id: params[:course_id])
         add_google_classroom_students(students)
       end
     end
