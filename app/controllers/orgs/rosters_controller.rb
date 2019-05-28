@@ -188,8 +188,6 @@ module Orgs
     end
     # rubocop:enable Metrics/AbcSize
 
-    # rubocop:disable Metrics/MethodLength
-    # rubocop:disable Metrics/AbcSize
     def import_from_google_classroom
       students = list_google_classroom_students(params[:course_id])
       return if students.nil?
@@ -202,8 +200,6 @@ module Orgs
         add_google_classroom_students(students)
       end
     end
-    # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/AbcSize
 
     # rubocop:disable Metrics/AbcSize
     def sync_google_classroom
@@ -322,6 +318,7 @@ module Orgs
     end
 
     # Returns list of students in a google classroom with error checking
+    # rubocop:disable Metrics/MethodLength
     def list_google_classroom_students(course_id)
       response = @google_classroom_service.list_course_students(course_id)
       response.students ||= [] # Set to empty array if no students in course
@@ -335,6 +332,7 @@ module Orgs
       redirect_to organization_path(current_organization)
       nil
     end
+    # rubocop:enable Metrics/MethodLength
 
     # Add Google Classroom students to roster
     def add_google_classroom_students(students)
