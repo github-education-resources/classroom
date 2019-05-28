@@ -6,6 +6,13 @@ require "google/apis/classroom_v1"
 module Orgs
   class RostersController < Orgs::Controller
     before_action :ensure_student_identifier_flipper_is_enabled
+    before_action :ensure_google_classroom_roster_import_is_enabled, only: %i[
+      import_from_google_classroom
+      select_google_classroom
+      search_google_classroom
+      sync_google_classroom
+      unlink_google_classroom
+    ]
     before_action :ensure_current_roster, except: %i[
       new
       create

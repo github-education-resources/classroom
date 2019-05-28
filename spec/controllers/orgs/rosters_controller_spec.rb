@@ -248,48 +248,71 @@ RSpec.describe Orgs::RostersController, type: :controller do
       GoogleAPI = Google::Apis::ClassroomV1
     end
 
-    context "with flipper enabled" do
+    context "with student identifier flipper enabled" do
       before do
         GitHubClassroom.flipper[:student_identifier].enable
       end
 
-      context "when user is authorized with google" do
+      context "with google classroom flipper enabled" do
         before do
-          # Stub google authentication again
-          client = Signet::OAuth2::Client.new
-          allow_any_instance_of(Orgs::RostersController)
-            .to receive(:user_google_classroom_credentials)
-            .and_return(client)
-
-          # Stub list courses response
-          response = GoogleAPI::ListCoursesResponse.new
-          allow_any_instance_of(GoogleAPI::ClassroomService)
-            .to receive(:list_courses)
-            .and_return(response)
-
-          get :select_google_classroom, params: {
-            id: organization.slug
-          }
+          GitHubClassroom.flipper[:google_classroom_roster_import].enable
         end
 
-        it "succeeds" do
-          expect(response).to have_http_status(:success)
+        context "when user is authorized with google" do
+          before do
+            # Stub google authentication again
+            client = Signet::OAuth2::Client.new
+            allow_any_instance_of(Orgs::RostersController)
+              .to receive(:user_google_classroom_credentials)
+              .and_return(client)
+
+            # Stub list courses response
+            response = GoogleAPI::ListCoursesResponse.new
+            allow_any_instance_of(GoogleAPI::ClassroomService)
+              .to receive(:list_courses)
+              .and_return(response)
+
+            get :select_google_classroom, params: {
+              id: organization.slug
+            }
+          end
+
+          it "succeeds" do
+            expect(response).to have_http_status(:success)
+          end
+        end
+
+        context "when user is not authorized with google" do
+          before do
+            allow_any_instance_of(Orgs::RostersController)
+              .to receive(:user_google_classroom_credentials)
+              .and_return(nil)
+
+            get :select_google_classroom, params: {
+              id: organization.slug
+            }
+          end
+
+          it "redirects to authorization url" do
+            expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
+          end
+        end
+
+        after do
+          GitHubClassroom.flipper[:google_classroom_roster_import].disable
         end
       end
 
-      context "when user is not authorized with google" do
+      context "with google classroom identifier disabled" do
         before do
-          allow_any_instance_of(Orgs::RostersController)
-            .to receive(:user_google_classroom_credentials)
-            .and_return(nil)
-
-          get :select_google_classroom, params: {
-            id: organization.slug
+          patch :import_from_google_classroom, params: {
+            id: organization.slug,
+            course_id: "1234"
           }
         end
 
-        it "redirects to authorization url" do
-          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
+        it "404s" do
+          expect(response).to have_http_status(:not_found)
         end
       end
 
@@ -315,48 +338,71 @@ RSpec.describe Orgs::RostersController, type: :controller do
       GoogleAPI = Google::Apis::ClassroomV1
     end
 
-    context "with flipper enabled" do
+    context "with student identifier flipper enabled" do
       before do
         GitHubClassroom.flipper[:student_identifier].enable
       end
 
-      context "when user is authorized with google" do
+      context "with google classroom flipper enabled" do
         before do
-          # Stub google authentication again
-          client = Signet::OAuth2::Client.new
-          allow_any_instance_of(Orgs::RostersController)
-            .to receive(:user_google_classroom_credentials)
-            .and_return(client)
-
-          response = GoogleAPI::ListCoursesResponse.new
-          allow_any_instance_of(GoogleAPI::ClassroomService)
-            .to receive(:list_courses)
-            .and_return(response)
+          GitHubClassroom.flipper[:google_classroom_roster_import].enable
         end
 
-        it "renders google classroom collection partial" do
-          request = get :search_google_classroom, params: {
-            id: organization.slug,
-            query: "git"
-          }
-          expect(request).to render_template(partial: "orgs/rosters/_google_classroom_collection")
+        context "when user is authorized with google" do
+          before do
+            # Stub google authentication again
+            client = Signet::OAuth2::Client.new
+            allow_any_instance_of(Orgs::RostersController)
+              .to receive(:user_google_classroom_credentials)
+              .and_return(client)
+
+            response = GoogleAPI::ListCoursesResponse.new
+            allow_any_instance_of(GoogleAPI::ClassroomService)
+              .to receive(:list_courses)
+              .and_return(response)
+          end
+
+          it "renders google classroom collection partial" do
+            request = get :search_google_classroom, params: {
+              id: organization.slug,
+              query: "git"
+            }
+            expect(request).to render_template(partial: "orgs/rosters/_google_classroom_collection")
+          end
+        end
+
+        context "when user is not authorized with google" do
+          before do
+            allow_any_instance_of(Orgs::RostersController)
+              .to receive(:user_google_classroom_credentials)
+              .and_return(nil)
+
+            get :search_google_classroom, params: {
+              id: organization.slug,
+              query: ""
+            }
+          end
+
+          it "redirects to authorization url" do
+            expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
+          end
+        end
+
+        after do
+          GitHubClassroom.flipper[:google_classroom_roster_import].disable
         end
       end
 
-      context "when user is not authorized with google" do
+      context "with google classroom identifier disabled" do
         before do
-          allow_any_instance_of(Orgs::RostersController)
-            .to receive(:user_google_classroom_credentials)
-            .and_return(nil)
-
-          get :search_google_classroom, params: {
+          patch :import_from_google_classroom, params: {
             id: organization.slug,
-            query: ""
+            course_id: "1234"
           }
         end
 
-        it "redirects to authorization url" do
-          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
+        it "404s" do
+          expect(response).to have_http_status(:not_found)
         end
       end
 
@@ -809,109 +855,30 @@ RSpec.describe Orgs::RostersController, type: :controller do
       GoogleAPI = Google::Apis::ClassroomV1
     end
 
-    context "with flipper enabled" do
+    context "with student identifier flipper enabled" do
       before do
         GitHubClassroom.flipper[:student_identifier].enable
       end
 
-      context "when user is authorized with google" do
+      context "with google classroom flipper enabled" do
         before do
-          # Stub google authentication
-          client = Signet::OAuth2::Client.new
-          allow_any_instance_of(Orgs::RostersController)
-            .to receive(:user_google_classroom_credentials)
-            .and_return(client)
+          GitHubClassroom.flipper[:google_classroom_roster_import].enable
         end
 
-        context "when there is an error fetching students" do
+        context "when user is authorized with google" do
           before do
-            allow_any_instance_of(GoogleAPI::ClassroomService)
-              .to receive(:list_course_students)
-              .and_raise(Google::Apis::ServerError.new("boom"))
-
-            patch :import_from_google_classroom, params: {
-              id: organization.slug,
-              course_id: "1234"
-            }
+            # Stub google authentication
+            client = Signet::OAuth2::Client.new
+            allow_any_instance_of(Orgs::RostersController)
+              .to receive(:user_google_classroom_credentials)
+              .and_return(client)
           end
 
-          it "sets error message" do
-            expect(flash[:error]).to eq("Failed to fetch students from Google Classroom. Please try again later.")
-          end
-
-          it "does not link the google classroom to the organization" do
-            expect(organization.google_course_id).to_not eq("1234")
-          end
-        end
-
-        context "when course has no students" do
-          before do
-            empty_response = GoogleAPI::ListStudentsResponse.new
-            empty_response.students = nil
-            allow_any_instance_of(GoogleAPI::ClassroomService)
-              .to receive(:list_course_students)
-              .and_return(empty_response)
-
-            patch :import_from_google_classroom, params: {
-              id: organization.slug,
-              course_id: "1234"
-            }
-          end
-
-          it "sets warning message" do
-            expect(flash[:warning]).to eq("No new students were found in your Google Classroom.")
-          end
-
-          it "links the google classroom to the organization" do
-            expect(organization.reload.google_course_id).to eq("1234")
-          end
-        end
-
-        context "when course has multiple students" do
-          before do
-            valid_response = GoogleAPI::ListStudentsResponse.new
-
-            student_names = ["Student 1", "Student 2"]
-            student_profiles = student_names.map do |name|
-              GoogleAPI::UserProfile.new(name: GoogleAPI::Name.new(full_name: name))
-            end
-            students = student_profiles.map { |prof| GoogleAPI::Student.new(profile: prof) }
-
-            valid_response.students = students
-            allow_any_instance_of(GoogleAPI::ClassroomService)
-              .to receive(:list_course_students)
-              .and_return(valid_response)
-          end
-
-          context "when organization already has roster" do
+          context "when there is an error fetching students" do
             before do
-              patch :import_from_google_classroom, params: {
-                id: organization.slug,
-                course_id: "1234"
-              }
-            end
-
-            it "sets success message" do
-              expect(flash[:success]).to eq("Students created.")
-            end
-
-            it "has correct number of students" do
-              expect(organization.roster.roster_entries.count).to eq(3)
-            end
-
-            it "has students with correct names" do
-              expect(organization.roster.roster_entries[1]).to have_attributes(identifier: "Student 1")
-              expect(organization.roster.roster_entries[2]).to have_attributes(identifier: "Student 2")
-            end
-
-            it "links the google classroom to the organization" do
-              expect(organization.reload.google_course_id).to eq("1234")
-            end
-          end
-
-          context "when organization has no roster" do
-            before do
-              organization.update_attributes(roster_id: nil)
+              allow_any_instance_of(GoogleAPI::ClassroomService)
+                .to receive(:list_course_students)
+                .and_raise(Google::Apis::ServerError.new("boom"))
 
               patch :import_from_google_classroom, params: {
                 id: organization.slug,
@@ -919,40 +886,142 @@ RSpec.describe Orgs::RostersController, type: :controller do
               }
             end
 
-            it "sets success message" do
-              expect(flash[:success]).to start_with("Your classroom roster has been saved! Manage it")
+            it "sets error message" do
+              expect(flash[:error]).to eq("Failed to fetch students from Google Classroom. Please try again later.")
             end
 
-            it "has correct number of students" do
-              expect(organization.reload.roster.roster_entries.count).to eq(2)
+            it "does not link the google classroom to the organization" do
+              expect(organization.google_course_id).to_not eq("1234")
+            end
+          end
+
+          context "when course has no students" do
+            before do
+              empty_response = GoogleAPI::ListStudentsResponse.new
+              empty_response.students = nil
+              allow_any_instance_of(GoogleAPI::ClassroomService)
+                .to receive(:list_course_students)
+                .and_return(empty_response)
+
+              patch :import_from_google_classroom, params: {
+                id: organization.slug,
+                course_id: "1234"
+              }
             end
 
-            it "has students with correct names" do
-              expect(organization.reload.roster.roster_entries[0]).to have_attributes(identifier: "Student 1")
-              expect(organization.reload.roster.roster_entries[1]).to have_attributes(identifier: "Student 2")
+            it "sets warning message" do
+              expect(flash[:warning]).to eq("No new students were found in your Google Classroom.")
             end
 
             it "links the google classroom to the organization" do
               expect(organization.reload.google_course_id).to eq("1234")
             end
           end
+
+          context "when course has multiple students" do
+            before do
+              valid_response = GoogleAPI::ListStudentsResponse.new
+
+              student_names = ["Student 1", "Student 2"]
+              student_profiles = student_names.map do |name|
+                GoogleAPI::UserProfile.new(name: GoogleAPI::Name.new(full_name: name))
+              end
+              students = student_profiles.map { |prof| GoogleAPI::Student.new(profile: prof) }
+
+              valid_response.students = students
+              allow_any_instance_of(GoogleAPI::ClassroomService)
+                .to receive(:list_course_students)
+                .and_return(valid_response)
+            end
+
+            context "when organization already has roster" do
+              before do
+                patch :import_from_google_classroom, params: {
+                  id: organization.slug,
+                  course_id: "1234"
+                }
+              end
+
+              it "sets success message" do
+                expect(flash[:success]).to eq("Students created.")
+              end
+
+              it "has correct number of students" do
+                expect(organization.roster.roster_entries.count).to eq(3)
+              end
+
+              it "has students with correct names" do
+                expect(organization.roster.roster_entries[1]).to have_attributes(identifier: "Student 1")
+                expect(organization.roster.roster_entries[2]).to have_attributes(identifier: "Student 2")
+              end
+
+              it "links the google classroom to the organization" do
+                expect(organization.reload.google_course_id).to eq("1234")
+              end
+            end
+
+            context "when organization has no roster" do
+              before do
+                organization.update_attributes(roster_id: nil)
+
+                patch :import_from_google_classroom, params: {
+                  id: organization.slug,
+                  course_id: "1234"
+                }
+              end
+
+              it "sets success message" do
+                expect(flash[:success]).to start_with("Your classroom roster has been saved! Manage it")
+              end
+
+              it "has correct number of students" do
+                expect(organization.reload.roster.roster_entries.count).to eq(2)
+              end
+
+              it "has students with correct names" do
+                expect(organization.reload.roster.roster_entries[0]).to have_attributes(identifier: "Student 1")
+                expect(organization.reload.roster.roster_entries[1]).to have_attributes(identifier: "Student 2")
+              end
+
+              it "links the google classroom to the organization" do
+                expect(organization.reload.google_course_id).to eq("1234")
+              end
+            end
+          end
+        end
+
+        context "when user is not authorized with google" do
+          before do
+            allow_any_instance_of(Orgs::RostersController)
+              .to receive(:user_google_classroom_credentials)
+              .and_return(nil)
+
+            patch :import_from_google_classroom, params: {
+              id: organization.slug,
+              course_id: "1234"
+            }
+          end
+
+          it "redirects to authorization url" do
+            expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
+          end
+        end
+
+        after do
+          GitHubClassroom.flipper[:google_classroom_roster_import].disable
         end
       end
 
-      context "when user is not authorized with google" do
+      context "with google classroom identifier disabled" do
         before do
-          allow_any_instance_of(Orgs::RostersController)
-            .to receive(:user_google_classroom_credentials)
-            .and_return(nil)
-
           patch :import_from_google_classroom, params: {
             id: organization.slug,
             course_id: "1234"
           }
         end
 
-        it "redirects to authorization url" do
-          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
+        it "404s" do
+          expect(response).to have_http_status(:not_found)
         end
       end
 
@@ -981,84 +1050,107 @@ RSpec.describe Orgs::RostersController, type: :controller do
       GoogleAPI = Google::Apis::ClassroomV1
     end
 
-    context "with flipper enabled" do
+    context "with student identifier flipper enabled" do
       before do
         GitHubClassroom.flipper[:student_identifier].enable
       end
 
-      context "when user is authorized with google" do
+      context "with google classroom flipper enabled" do
         before do
-          # Stub google authentication again
-          client = Signet::OAuth2::Client.new
-          allow_any_instance_of(Orgs::RostersController)
-            .to receive(:user_google_classroom_credentials)
-            .and_return(client)
+          GitHubClassroom.flipper[:google_classroom_roster_import].enable
         end
 
-        context "classroom has no linked google course id" do
+        context "when user is authorized with google" do
           before do
+            # Stub google authentication again
+            client = Signet::OAuth2::Client.new
+            allow_any_instance_of(Orgs::RostersController)
+              .to receive(:user_google_classroom_credentials)
+              .and_return(client)
+          end
+
+          context "classroom has no linked google course id" do
+            before do
+              patch :sync_google_classroom, params: {
+                id: organization.slug
+              }
+            end
+
+            it "doesn't add any students" do
+              expect(organization.roster.roster_entries.count).to eq(1)
+            end
+          end
+
+          context "classroom has a linked google course" do
+            before do
+              organization.update_attributes(google_course_id: "1234")
+
+              student_names = ["Student 1", "Student 2"]
+              student_profiles = student_names.map do |name|
+                GoogleAPI::UserProfile.new(name: GoogleAPI::Name.new(full_name: name))
+              end
+              @students = student_profiles.map do |prof|
+                GoogleAPI::Student.new(profile: prof, user_id: SecureRandom.uuid)
+              end
+
+              allow_any_instance_of(Orgs::RostersController)
+                .to receive(:list_google_classroom_students)
+                .and_return(@students)
+
+              patch :sync_google_classroom, params: { id: organization.slug }
+            end
+
+            it "adds the new student to the roster" do
+              expect(organization.roster.roster_entries.count).to eq(3)
+            end
+
+            it "deduplicates students that were already added to roster" do
+              patch :sync_google_classroom, params: { id: organization.slug }
+              expect(organization.roster.roster_entries.count).to eq(3)
+            end
+
+            it "does not remove students deleted from google classroom" do
+              allow_any_instance_of(Orgs::RostersController)
+                .to receive(:list_google_classroom_students)
+                .and_return([])
+
+              patch :sync_google_classroom, params: { id: organization.slug }
+              expect(organization.roster.roster_entries.count).to eq(3)
+            end
+          end
+        end
+
+        context "when user is not authorized with google" do
+          before do
+            allow_any_instance_of(Orgs::RostersController)
+              .to receive(:user_google_classroom_credentials)
+              .and_return(nil)
+
             patch :sync_google_classroom, params: {
               id: organization.slug
             }
           end
 
-          it "doesn't add any students" do
-            expect(organization.roster.roster_entries.count).to eq(1)
+          it "redirects to authorization url" do
+            expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
           end
         end
 
-        context "classroom has a linked google course" do
-          before do
-            organization.update_attributes(google_course_id: "1234")
-
-            student_names = ["Student 1", "Student 2"]
-            student_profiles = student_names.map do |name|
-              GoogleAPI::UserProfile.new(name: GoogleAPI::Name.new(full_name: name))
-            end
-            @students = student_profiles.map do |prof|
-              GoogleAPI::Student.new(profile: prof, user_id: SecureRandom.uuid)
-            end
-
-            allow_any_instance_of(Orgs::RostersController)
-              .to receive(:list_google_classroom_students)
-              .and_return(@students)
-
-            patch :sync_google_classroom, params: { id: organization.slug }
-          end
-
-          it "adds the new student to the roster" do
-            expect(organization.roster.roster_entries.count).to eq(3)
-          end
-
-          it "deduplicates students that were already added to roster" do
-            patch :sync_google_classroom, params: { id: organization.slug }
-            expect(organization.roster.roster_entries.count).to eq(3)
-          end
-
-          it "does not remove students deleted from google classroom" do
-            allow_any_instance_of(Orgs::RostersController)
-              .to receive(:list_google_classroom_students)
-              .and_return([])
-
-            patch :sync_google_classroom, params: { id: organization.slug }
-            expect(organization.roster.roster_entries.count).to eq(3)
-          end
+        after do
+          GitHubClassroom.flipper[:google_classroom_roster_import].disable
         end
       end
 
-      context "when user is not authorized with google" do
+      context "with google classroom identifier disabled" do
         before do
-          allow_any_instance_of(Orgs::RostersController)
-            .to receive(:user_google_classroom_credentials)
-            .and_return(nil)
-
-          patch :sync_google_classroom, params: {
-            id: organization.slug
+          patch :import_from_google_classroom, params: {
+            id: organization.slug,
+            course_id: "1234"
           }
         end
 
-        it "redirects to authorization url" do
-          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
+        it "404s" do
+          expect(response).to have_http_status(:not_found)
         end
       end
 
@@ -1084,47 +1176,71 @@ RSpec.describe Orgs::RostersController, type: :controller do
       GoogleAPI = Google::Apis::ClassroomV1
     end
 
-    context "with flipper enabled" do
+    context "with student identifier flipper enabled" do
       before do
         GitHubClassroom.flipper[:student_identifier].enable
       end
 
-      context "when user is authorized with google" do
+      context "with google classroom flipper enabled" do
         before do
-          # Stub google authentication again
-          client = Signet::OAuth2::Client.new
-          allow_any_instance_of(Orgs::RostersController)
-            .to receive(:user_google_classroom_credentials)
-            .and_return(client)
-
-          organization.update_attributes(google_course_id: "1234")
-
-          patch :unlink_google_classroom, params: { id: organization.slug }
+          GitHubClassroom.flipper[:google_classroom_roster_import].enable
         end
 
-        it "removes google course id" do
-          expect(organization.reload.google_course_id).to be_nil
+        context "when user is authorized with google" do
+          before do
+            # Stub google authentication again
+            client = Signet::OAuth2::Client.new
+            allow_any_instance_of(Orgs::RostersController)
+              .to receive(:user_google_classroom_credentials)
+              .and_return(client)
+
+            organization.update_attributes(google_course_id: "1234")
+
+            patch :unlink_google_classroom, params: { id: organization.slug }
+          end
+
+          it "removes google course id" do
+            expect(organization.reload.google_course_id).to be_nil
+          end
+
+          it "flashes success message" do
+            message = "Removed link to Google Classroom. No students were removed from your roster."
+            expect(flash[:success]).to eq(message)
+          end
         end
 
-        it "flashes success message" do
-          expect(flash[:success]).to eq("Removed link to Google Classroom. No students were removed from your roster.")
+        context "when user is not authorized with google" do
+          before do
+            allow_any_instance_of(Orgs::RostersController)
+              .to receive(:user_google_classroom_credentials)
+              .and_return(nil)
+
+            get :search_google_classroom, params: {
+              id: organization.slug,
+              query: ""
+            }
+          end
+
+          it "redirects to authorization url" do
+            expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
+          end
+        end
+
+        after do
+          GitHubClassroom.flipper[:google_classroom_roster_import].disable
         end
       end
 
-      context "when user is not authorized with google" do
+      context "with google classroom identifier disabled" do
         before do
-          allow_any_instance_of(Orgs::RostersController)
-            .to receive(:user_google_classroom_credentials)
-            .and_return(nil)
-
-          get :search_google_classroom, params: {
+          patch :import_from_google_classroom, params: {
             id: organization.slug,
-            query: ""
+            course_id: "1234"
           }
         end
 
-        it "redirects to authorization url" do
-          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
+        it "404s" do
+          expect(response).to have_http_status(:not_found)
         end
       end
 
