@@ -226,7 +226,7 @@ module Orgs
 
     def unlink_google_classroom
       current_organization.update_attributes!(google_course_id: nil)
-      flash[:success] = "Removed link to u Classroom"
+      flash[:success] = "Removed link to Google Classroom. No students were removed from your roster."
 
       redirect_to roster_path(current_organization)
     end
