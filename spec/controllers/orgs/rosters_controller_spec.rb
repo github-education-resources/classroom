@@ -355,7 +355,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
           request = get :search_google_classroom, params: {
             id: organization.slug,
             query: "git"
-          } 
+          }
           expect(request).to render_template(partial: "orgs/rosters/_google_classroom_collection")
         end
       end
@@ -367,8 +367,10 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
     context "with flipper disabled" do
       before do
-        get :search_google_classroom,
-        params: { id: organization.slug, query: "" }
+        get :search_google_classroom, params: {
+          id: organization.slug,
+          query: ""
+        }
       end
 
       it "404s" do
@@ -974,6 +976,107 @@ RSpec.describe Orgs::RostersController, type: :controller do
           id: organization.slug,
           course_id: "1234"
         }
+      end
+
+      it "404s" do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  describe "PATCH #sync_google_classroom", :vcr do
+    before do
+      sign_in_as(user)
+      GoogleAPI = Google::Apis::ClassroomV1
+    end
+
+    context "with flipper enabled" do
+      before do
+        GitHubClassroom.flipper[:student_identifier].enable
+      end
+
+      context "when user is not authorized with google" do
+        before do
+          allow_any_instance_of(Orgs::RostersController)
+            .to receive(:user_google_classroom_credentials)
+            .and_return(nil)
+
+          patch :sync_google_classroom, params: {
+            id: organization.slug
+          }
+        end
+
+        it "redirects to authorization url" do
+          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
+        end
+      end
+
+      context "when user is authorized with google" do
+        before do
+          # Stub google authentication again
+          client = Signet::OAuth2::Client.new
+          allow_any_instance_of(Orgs::RostersController)
+            .to receive(:user_google_classroom_credentials)
+            .and_return(client)
+        end
+
+        context "classroom has no linked google course id" do
+          before do
+            patch :sync_google_classroom, params: {
+              id: organization.slug
+            }
+          end
+
+          it "doesn't add any students" do
+            expect(organization.roster.roster_entries.count).to eq(1)
+          end
+        end
+
+        context "classroom has a linked google course" do
+          before do
+            organization.update_attributes(google_course_id: "1234")
+            
+            student_names = ["Student 1", "Student 2"]
+            student_profiles = student_names.map do |name|
+              GoogleAPI::UserProfile.new(name: GoogleAPI::Name.new(full_name: name))
+            end
+            @students = student_profiles.map { |prof| GoogleAPI::Student.new(profile: prof, user_id: SecureRandom.uuid) }
+            
+            allow_any_instance_of(Orgs::RostersController)
+              .to receive(:list_google_classroom_students)
+              .and_return(@students)
+
+            patch :sync_google_classroom, params: { id: organization.slug }
+          end
+
+          it "adds the new student to the roster" do
+            expect(organization.roster.roster_entries.count).to eq(3)
+          end
+
+          it "deduplicates students that were already added to roster" do         
+            patch :sync_google_classroom, params: { id: organization.slug }
+            expect(organization.roster.roster_entries.count).to eq(3)
+          end
+
+          it "does not remove students deleted from google classroom" do
+            allow_any_instance_of(Orgs::RostersController)
+              .to receive(:list_google_classroom_students)
+              .and_return([])
+            
+            patch :sync_google_classroom, params: { id: organization.slug }
+            expect(organization.roster.roster_entries.count).to eq(3)
+          end
+        end
+      end
+
+      after do
+        GitHubClassroom.flipper[:student_identifier].disable
+      end
+    end
+
+    context "with flipper disabled" do
+      before do
+        patch :sync_google_classroom, params: { id: organization.slug }
       end
 
       it "404s" do
