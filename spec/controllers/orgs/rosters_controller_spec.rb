@@ -309,6 +309,74 @@ RSpec.describe Orgs::RostersController, type: :controller do
     end
   end
 
+  describe "GET #search_google_classroom", :vcr do
+    before do
+      sign_in_as(user)
+      GoogleAPI = Google::Apis::ClassroomV1
+    end
+
+    context "with flipper enabled" do
+      before do
+        GitHubClassroom.flipper[:student_identifier].enable
+      end
+
+      context "when user is not authorized with google" do
+        before do
+          allow_any_instance_of(Orgs::RostersController)
+            .to receive(:user_google_classroom_credentials)
+            .and_return(nil)
+
+          get :search_google_classroom, params: {
+            id: organization.slug,
+            query: ""
+          }
+        end
+
+        it "redirects to authorization url" do
+          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
+        end
+      end
+
+      context "when user is authorized with google" do
+        before do
+          # Stub google authentication again
+          client = Signet::OAuth2::Client.new
+          allow_any_instance_of(Orgs::RostersController)
+            .to receive(:user_google_classroom_credentials)
+            .and_return(client)
+
+          response = GoogleAPI::ListCoursesResponse.new
+          allow_any_instance_of(GoogleAPI::ClassroomService)
+            .to receive(:list_courses)
+            .and_return(response)
+        end
+
+        it "renders google classroom collection partial" do
+          request = get :search_google_classroom, params: {
+            id: organization.slug,
+            query: "git"
+          } 
+          expect(request).to render_template(partial: "orgs/rosters/_google_classroom_collection")
+        end
+      end
+
+      after do
+        GitHubClassroom.flipper[:student_identifier].disable
+      end
+    end
+
+    context "with flipper disabled" do
+      before do
+        get :search_google_classroom,
+        params: { id: organization.slug, query: "" }
+      end
+
+      it "404s" do
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
   describe "PATCH #link", :vcr do
     before do
       sign_in_as(user)
