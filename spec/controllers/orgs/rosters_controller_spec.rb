@@ -1035,13 +1035,15 @@ RSpec.describe Orgs::RostersController, type: :controller do
         context "classroom has a linked google course" do
           before do
             organization.update_attributes(google_course_id: "1234")
-            
+
             student_names = ["Student 1", "Student 2"]
             student_profiles = student_names.map do |name|
               GoogleAPI::UserProfile.new(name: GoogleAPI::Name.new(full_name: name))
             end
-            @students = student_profiles.map { |prof| GoogleAPI::Student.new(profile: prof, user_id: SecureRandom.uuid) }
-            
+            @students = student_profiles.map do |prof|
+              GoogleAPI::Student.new(profile: prof, user_id: SecureRandom.uuid)
+            end
+
             allow_any_instance_of(Orgs::RostersController)
               .to receive(:list_google_classroom_students)
               .and_return(@students)
@@ -1053,7 +1055,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
             expect(organization.roster.roster_entries.count).to eq(3)
           end
 
-          it "deduplicates students that were already added to roster" do         
+          it "deduplicates students that were already added to roster" do
             patch :sync_google_classroom, params: { id: organization.slug }
             expect(organization.roster.roster_entries.count).to eq(3)
           end
@@ -1062,7 +1064,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
             allow_any_instance_of(Orgs::RostersController)
               .to receive(:list_google_classroom_students)
               .and_return([])
-            
+
             patch :sync_google_classroom, params: { id: organization.slug }
             expect(organization.roster.roster_entries.count).to eq(3)
           end
