@@ -51,10 +51,10 @@
           <td class="text-emphasized"><%= t('views.stafftools.organizations.homepage') %></td>
           <td><%= link_to @organization.github_organization.html_url, @organization.github_organization.html_url %></td>
         </tr>
-        <% if @organization.webhook_id.present? %>
+        <% if @organization.organization_webhook.github_id.present? %>
           <tr>
             <td class="text-emphasized"><%= t('views.stafftools.organizations.webhook_url') %></td>
-            <% url = "https://github.com/organizations/#{@organization.github_organization.login}/settings/hooks/#{@organization.webhook_id}" %>
+            <% url = "https://github.com/organizations/#{@organization.github_organization.login}/settings/hooks/#{@organization.organization_webhook.github_id}" %>
             <td><%= link_to url, url %></td>
           </tr>
           <tr>
