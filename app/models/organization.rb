@@ -68,7 +68,7 @@ class Organization < ApplicationRecord
 
   def silently_remove_organization_webhook
     return true unless last_classroom_on_org?
-    return true unless organization_webhook.github_id.present?
+    return true if organization_webhook.github_id.blank?
 
     begin
       github_organization.remove_organization_webhook(organization_webhook.github_id)
