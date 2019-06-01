@@ -67,7 +67,7 @@
           </tr>
         <% end %>
       </table>
-      <%= button_to t('views.stafftools.organizations.ensure_webhook_is_active'), stafftools_organization_path(@organization.id), method: :post, class: 'btn btn-danger btn-block js-submit' %>
+      <%= button_to t('views.stafftools.organizations.ensure_webhook_is_active'), ensure_webhook_is_active_stafftools_organization_path(@organization.id), method: :post, class: 'btn btn-danger btn-block js-submit' %>
     </div>
   </div>
 
