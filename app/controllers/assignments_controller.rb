@@ -30,6 +30,11 @@ class AssignmentsController < ApplicationController
   # rubocop:disable MethodLength
   # rubocop:disable Metrics/AbcSize
   def show
+    @assignment_repos = AssignmentRepo
+        .where(assignment: @assignment)
+        .order(:id)
+        .page(params[:page])
+
     if @organization.roster
       @roster_entries = @organization.roster.roster_entries
         .order(:id)
@@ -40,11 +45,6 @@ class AssignmentsController < ApplicationController
         .where(assignment: @assignment, user: @unlinked_users)
         .order(:id)
         .page(params[:unlinked_accounts_page])
-    else
-      @assignment_repos = AssignmentRepo
-        .where(assignment: @assignment)
-        .order(:id)
-        .page(params[:page])
     end
   end
   # rubocop:enable MethodLength
