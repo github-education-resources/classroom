@@ -26,6 +26,7 @@ module Stafftools
         flash[:error] = "The organization webhook could not be activated. " \
         "This is probabily because there isn't a user in this classroom with the `admin:org_hook` scope."
       end
+      redirect_to stafftools_organization_path(@organization.id)
     end
 
     private
