@@ -98,7 +98,7 @@ RSpec.describe Organization, type: :model do
           end
 
           it "does not delete the webhook from GitHub" do
-            subject.update(webhook_id: 9_999_999, is_webhook_active: true)
+            subject.update(webhook_id: 9_999_999)
 
             org_id     = subject.github_id
             webhook_id = subject.webhook_id
@@ -111,7 +111,7 @@ RSpec.describe Organization, type: :model do
 
         context "last classroom on organization" do
           it "deletes the webhook from GitHub" do
-            subject.update(webhook_id: 9_999_999, is_webhook_active: true)
+            subject.update(webhook_id: 9_999_999)
 
             webhook_id = subject.webhook_id
 
