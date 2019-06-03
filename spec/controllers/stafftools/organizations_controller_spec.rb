@@ -5,6 +5,14 @@ require "rails_helper"
 RSpec.describe Stafftools::OrganizationsController, type: :controller do
   let(:organization) { classroom_org     }
   let(:user)         { classroom_teacher }
+  let(:organization_webhook) do
+    organization_webhook = create(
+      :organization_webhook,
+      github_organization_id: classroom_org.github_id
+    )
+    classroom_org.update(organization_webhook: organization_webhook)
+    organization_webhook
+  end
 
   before(:each) do
     sign_in_as(user)
@@ -20,6 +28,7 @@ RSpec.describe Stafftools::OrganizationsController, type: :controller do
 
     context "as an authorized user" do
       before do
+        organization_webhook
         user.update_attributes(site_admin: true)
         get :show, params: { id: organization.id }
       end
@@ -30,6 +39,56 @@ RSpec.describe Stafftools::OrganizationsController, type: :controller do
 
       it "sets the organization" do
         expect(assigns(:organization).id).to eq(organization.id)
+      end
+
+      it "sets the organization_webhook" do
+        expect(assigns(:organization_webhook).id).to eq(organization_webhook.id)
+      end
+    end
+  end
+
+  describe "POST #ensure_webhook_is_active", :vcr do
+    context "as an unauthorized user" do
+      it "returns a 404" do
+        post :ensure_webhook_is_active, params: { id: organization.id }
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "as an authorized user" do
+      before do
+        organization_webhook
+        user.update_attributes(site_admin: true)
+      end
+
+      context "ensure_webhook_is_active returns true" do
+        before do
+          expect_any_instance_of(OrganizationWebhook).to receive(:ensure_webhook_is_active!).and_return(true)
+          post :ensure_webhook_is_active, params: { id: organization.id }
+        end
+
+        it "redirects" do
+          expect(response).to have_http_status(:redirect)
+        end
+
+        it "flashes a success" do
+          expect(flash[:success]).to be_present
+        end
+      end
+
+      context "ensure_webhook_is_active returns false" do
+        before do
+          expect_any_instance_of(OrganizationWebhook).to receive(:ensure_webhook_is_active!).and_return(false)
+          post :ensure_webhook_is_active, params: { id: organization.id }
+        end
+
+        it "redirects" do
+          expect(response).to have_http_status(:redirect)
+        end
+
+        it "flashes a error" do
+          expect(flash[:error]).to be_present
+        end
       end
     end
   end

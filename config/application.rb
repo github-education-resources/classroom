@@ -76,24 +76,37 @@ module GitHubClassroom
           # necessarily need replicas.
           # Docs: https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-health.html
           raise "Elasticsearch status is #{status}" unless %w[green yellow].include?(status)
+
           "ok"
         end
 
-        ping.check :github do
-          uri = URI("https://status.github.com/api/status.json")
-          status = JSON.parse(Net::HTTP.get(uri))["status"]
-          raise "GitHub status is #{status}" unless status == "good"
+        ping.check :github, timeout: 5 do
+          uri = URI("https://www.githubstatus.com/api/v2/components.json")
+          status_components = JSON.parse(Net::HTTP.get(uri))["components"]
+          raise "GitHub status format is invalid!" if status_components.blank?
+
+          github_status_api_id = "brv1bkgrwx7q"
+          api_component = status_components.find do |component|
+            component["id"] == github_status_api_id
+          end
+          raise "GitHub API status ID (#{github_status_api_id}) cannot be found!" if api_component.blank?
+
+          api_status = api_component["status"]
+          raise "GitHub API status is #{status}" if api_status != "operational"
+
           "ok"
         end
 
-        ping.check :github_api do
+        ping.check :github_api, timeout: 5 do
           client = GitHubClassroom.github_client
           rate_limit = client.rate_limit
           status = client.last_response.status
-          raise "GitHub API status is #{status}" unless status == 200
-          if rate_limit.remaining < 2_000
+          raise "GitHub API status is #{status}" if status != 200
+
+          if rate_limit.remaining < 10
             raise "Low rate limit. #{rate_limit.remaining} remaining, resets in #{rate_limit.resets_in}"
           end
+
           "ok"
         end
       end

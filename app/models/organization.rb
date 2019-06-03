@@ -56,8 +56,9 @@ class Organization < ApplicationRecord
     users.count == 1
   end
 
-  def in_good_health?
-    organization_webhook.github_id.present?
+  def geo_pattern_data_uri
+    patterns = %i[chevrons hexagons octagons plus_signs triangles squares diamonds]
+    @geo_pattern_data_uri ||= GeoPattern.generate(id, base_color: "#28a745", patterns: patterns).to_data_uri
   end
 
   # Check if we are the last Classroom on this GitHub Organization
@@ -67,13 +68,18 @@ class Organization < ApplicationRecord
 
   def silently_remove_organization_webhook
     return true unless last_classroom_on_org?
+    return true if organization_webhook&.github_id.blank?
 
     begin
-      github_organization.remove_organization_webhook(webhook_id)
+      github_organization.remove_organization_webhook(organization_webhook.github_id)
     rescue GitHub::Error => err
       logger.info err.message
     end
 
     true
+  end
+
+  def self.search(search)
+    where("title LIKE ?", "%#{search}%")
   end
 end

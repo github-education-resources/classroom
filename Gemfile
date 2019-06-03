@@ -8,7 +8,7 @@ git_source(:github) do |repo_name|
 end
 
 ruby File.read(File.expand_path("../.ruby-version", __FILE__)).chomp
-gem "rails", "~> 5.1", ">= 5.1.3"
+gem "rails", "~> 5.1", ">= 5.1.7"
 
 gem "autoprefixer-rails", "~> 7.1", ">= 7.1.3"
 
@@ -44,7 +44,6 @@ gem "local_time", "~> 2.0"
 gem "octicons_helper", "~> 2.1"
 gem "octokit", github: "octokit/octokit.rb", ref: "ffae5ddd6fd9da6f4538ca7adeb5d1768011610b"
 gem "octopoller",      "~> 0.1"
-gem "omniauth",        "~> 1.6", ">= 1.6.1"
 gem "omniauth-github", "~> 1.3"
 
 gem "peek",                 "~> 1.0", ">= 1.0.1"

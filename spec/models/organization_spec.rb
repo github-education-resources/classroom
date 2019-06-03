@@ -89,38 +89,6 @@ RSpec.describe Organization, type: :model do
     end
   end
 
-  describe "#in_good_health?" do
-    context "organization_webhook has a github_id" do
-      let(:organization_webhook) do
-        create(
-          :organization_webhook,
-          github_organization_id: subject.github_id,
-          github_id: 1
-        )
-      end
-
-      before do
-        subject.update(organization_webhook: organization_webhook)
-      end
-
-      it "returns true" do
-        expect(subject.in_good_health?).to be_truthy
-      end
-    end
-
-    context "organization_webhook doesn't have a github_id" do
-      let(:organization_webhook) { create(:organization_webhook, github_organization_id: subject.github_id) }
-
-      before do
-        subject.update(organization_webhook: organization_webhook)
-      end
-
-      it "returns false" do
-        expect(subject.in_good_health?).to be_falsey
-      end
-    end
-  end
-
   describe "callbacks" do
     describe "before_destroy" do
       describe "#silently_remove_organization_webhook", :vcr do
@@ -130,10 +98,10 @@ RSpec.describe Organization, type: :model do
           end
 
           it "does not delete the webhook from GitHub" do
-            subject.update(webhook_id: 9_999_999, is_webhook_active: true)
+            subject.organization_webhook.update(github_id: 9_999_999)
 
             org_id     = subject.github_id
-            webhook_id = subject.webhook_id
+            webhook_id = subject.organization_webhook.github_id
 
             subject.destroy
 
@@ -143,14 +111,13 @@ RSpec.describe Organization, type: :model do
 
         context "last classroom on organization" do
           it "deletes the webhook from GitHub" do
-            subject.update(webhook_id: 9_999_999, is_webhook_active: true)
+            subject.organization_webhook.update(github_id: 9_999_999)
 
-            org_id     = subject.github_id
-            webhook_id = subject.webhook_id
+            webhook_id = subject.organization_webhook.github_id
 
             subject.destroy
 
-            expect(WebMock).to have_requested(:delete, github_url("/organizations/#{org_id}/hooks/#{webhook_id}"))
+            expect(WebMock).to have_requested(:delete, github_url("/orgs/ghost/hooks/#{webhook_id}"))
           end
         end
       end

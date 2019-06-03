@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181101185917) do
+ActiveRecord::Schema.define(version: 20190601200321) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -178,8 +178,6 @@ ActiveRecord::Schema.define(version: 20181101185917) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.string "slug", null: false
-    t.integer "webhook_id"
-    t.boolean "is_webhook_active", default: false
     t.integer "roster_id"
     t.string "github_global_relay_id"
     t.bigint "organization_webhook_id"
@@ -220,13 +218,6 @@ ActiveRecord::Schema.define(version: 20181101185917) do
 
   create_table "rosters", force: :cascade do |t|
     t.string "identifier_name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "ticker_stats", force: :cascade do |t|
-    t.integer "user_count"
-    t.integer "repo_count"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
