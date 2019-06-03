@@ -58,10 +58,6 @@
             <td><%= link_to url, url %></td>
           </tr>
           <tr>
-            <td class="text-emphasized"><%= t('views.stafftools.organizations.webhook_enabled_check') %></td>
-            <td><%= @organization.is_webhook_active? %></td>
-          </tr>
-          <tr>
             <td class="text-emphasized"><%= t('views.stafftools.organizations.webhook_last_received') %></td>
             <td><%= @organization_webhook.last_webhook_recieved&.utc %></td>
           </tr>
