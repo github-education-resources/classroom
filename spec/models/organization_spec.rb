@@ -98,10 +98,10 @@ RSpec.describe Organization, type: :model do
           end
 
           it "does not delete the webhook from GitHub" do
-            subject.update(webhook_id: 9_999_999)
+            subject.organization_webhook.update(github_id: 9_999_999)
 
             org_id     = subject.github_id
-            webhook_id = subject.webhook_id
+            webhook_id = subject.organization_webhook.github_id
 
             subject.destroy
 
@@ -111,9 +111,9 @@ RSpec.describe Organization, type: :model do
 
         context "last classroom on organization" do
           it "deletes the webhook from GitHub" do
-            subject.update(webhook_id: 9_999_999)
+            subject.organization_webhook.update(github_id: 9_999_999)
 
-            webhook_id = subject.webhook_id
+            webhook_id = subject.organization_webhook.github_id
 
             subject.destroy
 
