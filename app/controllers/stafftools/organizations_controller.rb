@@ -23,7 +23,7 @@ module Stafftools
       begin
         flash[:success] = "The organization webhook active." if @organization_webhook.ensure_webhook_is_active!
       rescue ActiveRecord::RecordInvalid, GitHub::Error, OrganizationWebhook::NoValidTokenError => error
-         flash[:error] = "The organization webhook could not be activated.\nError: #{error.message}"
+        flash[:error] = "The organization webhook could not be activated.\nError: #{error.message}"
       end
       redirect_to stafftools_organization_path(@organization.id)
     end

@@ -78,7 +78,9 @@ RSpec.describe Stafftools::OrganizationsController, type: :controller do
 
       context "ensure_webhook_is_active raises an error" do
         before do
-          expect_any_instance_of(OrganizationWebhook).to receive(:ensure_webhook_is_active!).and_raise(OrganizationWebhook::NoValidTokenError)
+          expect_any_instance_of(OrganizationWebhook)
+            .to receive(:ensure_webhook_is_active!)
+            .and_raise(OrganizationWebhook::NoValidTokenError)
           post :ensure_webhook_is_active, params: { id: organization.id }
         end
 
