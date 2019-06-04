@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "ruby-progressbar"
+
 class OrganizationWebhookHealthService
   class Result
     def self.success
@@ -81,6 +83,17 @@ class OrganizationWebhookHealthService
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
   def perform
+    org_webhook_count = (@all_organizations ? OrganizationWebhook : OrganizationWebhook.where(github_id: nil)).count
+
+    progress_bar = ProgressBar.create(
+      title: "Iterating over OrganizationWebhooks",
+      starting_at: 0,
+      total: org_webhook_count,
+      format: "%t: %a %e %c/%C (%j%%) %R |%B|",
+      throttle_rate: 0.5,
+      output: Rails.env.test? ? StringIO.new : STDERR
+    )
+
     success_org_webhooks = []
     failed_org_webhooks = {}
     (@all_organizations ? OrganizationWebhook : OrganizationWebhook.where(github_id: nil))
@@ -93,6 +106,7 @@ class OrganizationWebhookHealthService
             failed_org_webhooks[result.error.class.to_s] ||= []
             failed_org_webhooks[result.error.class.to_s] << organization_webhook.id
           end
+          progress_bar.increment
         end
       end
 
@@ -135,7 +149,7 @@ class OrganizationWebhookHealthService
     result_string = <<~HEREDOC
 
       Organization Webhook Health Service Results
-      ===========================================
+      –––––––––––––––––––––––––––––––––––––––––––
       Success count: #{results[:success].count}
       Errored organization webhooks:
       #{results[:failed].to_json}
