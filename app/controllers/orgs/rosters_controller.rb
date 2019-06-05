@@ -185,11 +185,10 @@ module Orgs
         course.name.downcase.include? params[:query].downcase
       end
 
-      response = Kaminari.paginate_array(courses_found).page(params[:page]).per(10)
       respond_to do |format|
         format.html do
           render partial: "orgs/rosters/google_classroom_collection",
-                 locals: { courses: response }
+                 locals: { courses: courses_found }
         end
       end
     end
