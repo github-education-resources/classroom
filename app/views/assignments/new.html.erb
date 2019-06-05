@@ -1,29 +1,27 @@
 <%= render 'organizations/organization_banner' %>
 
-<div class="site-content">
-  <div class="site-content-cap">
-    <h2 class="site-content-heading">
-      <span class="assignment-icon assignment-icon-individual">
+<div class="container-lg p-responsive">
+  <div class="Subhead Subhead--spacious">
+    <div class="Subhead-heading d-flex flex-items-center">
+      <span class="assignment-icon assignment-icon-individual mr-2">
         <%= octicon 'person', height: 22 %>
       </span>
-      New individual assignment
-    </h2>
-  </div>
-</div>
-
-<div class="site-content-body">
-  <%= form_for [@organization, @assignment] do |f| %>
-    <div class="columns">
-      <div class="two-thirds column">
-        <%= render partial: 'assignments/assignment_form_options', locals: { f: f } %>
-      </div>
-
-      <%= render partial: 'shared/unlimited_free_private_repositories_banner' %>
+      <span>New individual assignment</span>
     </div>
+  </div>
 
-    <div class="form-actions">
-      <%= f.submit 'Create Assignment', class: 'btn btn-primary', id: 'assignment_submit' %>
-      <%= link_to 'Cancel', organization_path(@organization), class: 'btn', role: 'button' %>
+  <%= form_for [@organization, @assignment] do |f| %>
+    <div class="d-md-flex">
+      <div class="col-md-9">
+        <%= render partial: 'assignments/assignment_form_options', locals: { f: f } %>
+        <div class="form-actions">
+          <%= f.submit 'Create Assignment', class: 'btn btn-primary', id: 'assignment_submit' %>
+          <%= link_to 'Cancel', organization_path(@organization), class: 'btn', role: 'button' %>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <%= render partial: 'shared/unlimited_free_private_repositories_banner' %>
+      </div>
     </div>
   <% end %>
 </div>

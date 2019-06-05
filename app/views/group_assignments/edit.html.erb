@@ -1,37 +1,30 @@
 <%= render 'organizations/organization_banner' %>
 
-<div class="site-content">
-  <div class="site-content-cap">
-    <h2 class="site-content-heading">
-      <span class="assignment-icon assignment-icon-group">
-        <%= octicon 'organization', height: 22 %>
-      </span>
-      Group assignment settings
-    </h2>
+<%= render 'group_assignments/banner' %>
+
+<div class="border-top border-bottom bg-white">
+  <div class="container-lg p-responsive py-5">
+    <%= form_for [@organization, @group_assignment] do |f| %>
+
+      <div class="columns">
+        <div class="two-thirds column">
+          <%= render partial: 'group_assignments/group_assignment_form_options', locals: { f: f } %>
+        </div>
+
+        <div class="one-third column dangerzone-container pt-3">
+          <p class="text-emphasized">Delete this group assignment</p>
+          <p class="text-gray">Once you delete this group assignment, there is no going back. Please be certain.</p>
+
+          <a data-remodal-target="delete-group-assignment" class="btn btn-danger btn-block">Delete this group assignment</a>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit 'Save changes', class: 'btn btn-primary' %>
+        <%= link_to 'Cancel', [@organization, @group_assignment], class: 'btn', role: 'button' %>
+      </div>
+    <% end %>
   </div>
-</div>
-
-<div class="site-content-body">
-  <%= form_for [@organization, @group_assignment] do |f| %>
-
-    <div class="columns">
-      <div class="two-thirds column">
-        <%= render partial: 'group_assignments/group_assignment_form_options', locals: { f: f } %>
-      </div>
-
-      <div class="one-third column dangerzone-container pt-3">
-        <p class="text-emphasized">Delete this group assignment</p>
-        <p class="text-gray">Once you delete this group assignment, there is no going back. Please be certain.</p>
-
-        <a data-remodal-target="delete-group-assignment" class="btn btn-danger btn-block">Delete this group assignment</a>
-      </div>
-    </div>
-
-    <div class="form-actions">
-      <%= f.submit 'Save changes', class: 'btn btn-primary' %>
-      <%= link_to 'Cancel', [@organization, @group_assignment], class: 'btn', role: 'button' %>
-    </div>
-  <% end %>
 </div>
 
 <%= render partial: 'group_assignments/delete_group_assignment_modal' %>
