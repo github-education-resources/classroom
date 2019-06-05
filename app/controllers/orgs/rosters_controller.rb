@@ -6,6 +6,13 @@ require "google/apis/classroom_v1"
 module Orgs
   class RostersController < Orgs::Controller
     before_action :ensure_student_identifier_flipper_is_enabled
+    before_action :ensure_google_classroom_roster_import_is_enabled, only: %i[
+      import_from_google_classroom
+      select_google_classroom
+      search_google_classroom
+      sync_google_classroom
+      unlink_google_classroom
+    ]
     before_action :ensure_current_roster, except: %i[
       new
       create
@@ -178,36 +185,27 @@ module Orgs
         course.name.downcase.include? params[:query].downcase
       end
 
-      response = Kaminari.paginate_array(courses_found).page(params[:page]).per(10)
       respond_to do |format|
         format.html do
           render partial: "orgs/rosters/google_classroom_collection",
-                 locals: { courses: response }
+                 locals: { courses: courses_found }
         end
       end
     end
     # rubocop:enable Metrics/AbcSize
 
-    # rubocop:disable Metrics/MethodLength
-    # rubocop:disable Metrics/AbcSize
     def import_from_google_classroom
       students = list_google_classroom_students(params[:course_id])
+      return if students.nil?
 
-      if students.nil?
-        flash[:error] = "Failed to fetch students from Google Classroom. Please try again."
+      if students.blank?
+        flash[:warning] = "No students were found in your Google Classroom. Please add students and try again."
         redirect_to roster_path(current_organization)
       else
         current_organization.update_attributes!(google_course_id: params[:course_id])
-        if students.any?
-          add_google_classroom_students(students)
-        else
-          flash[:warning] = "No new students were found in your Google Classroom."
-          redirect_to organization_path(current_organization)
-        end
+        add_google_classroom_students(students)
       end
     end
-    # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/AbcSize
 
     # rubocop:disable Metrics/AbcSize
     def sync_google_classroom
@@ -226,7 +224,7 @@ module Orgs
 
     def unlink_google_classroom
       current_organization.update_attributes!(google_course_id: nil)
-      flash[:success] = "Removed link to u Classroom"
+      flash[:success] = "Removed link to Google Classroom. No students were removed from your roster."
 
       redirect_to roster_path(current_organization)
     end
@@ -326,16 +324,21 @@ module Orgs
     end
 
     # Returns list of students in a google classroom with error checking
+    # rubocop:disable Metrics/MethodLength
     def list_google_classroom_students(course_id)
       response = @google_classroom_service.list_course_students(course_id)
-      return response.students
+      response.students ||= [] # Set to empty array if no students in course
     rescue Google::Apis::AuthorizationError
       google_classroom_client = GitHubClassroom.google_classroom_client
       login_hint = current_user.github_user.login
       redirect_to google_classroom_client.get_authorization_url(login_hint: login_hint, request: request)
+      nil
     rescue Google::Apis::ServerError, Google::Apis::ClientError
+      flash[:error] = "Failed to fetch students from Google Classroom. Please try again later."
+      redirect_to organization_path(current_organization)
       nil
     end
+    # rubocop:enable Metrics/MethodLength
 
     # Add Google Classroom students to roster
     def add_google_classroom_students(students)

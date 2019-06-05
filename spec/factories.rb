@@ -71,8 +71,10 @@ FactoryBot.define do
   end
 
   factory :organization do
+    organization_webhook
+
     title      { "#{Faker::Company.name} Class" }
-    github_id  { rand(1..1_000_000) }
+    github_id  { organization_webhook.github_organization_id }
 
     transient do
       users_count 1

@@ -37,9 +37,9 @@ describe OrganizationWebhookHealthService do
         organization_webhooks
       end
 
-      it "invokes OrganizationWebhook.where.find_in_batches" do
+      it "invokes OrganizationWebhook.where(github_id: nil)" do
         expect(OrganizationWebhook)
-          .to receive_message_chain(:where, :find_in_batches) { nil }
+          .to receive(:where).with(github_id: nil).twice.and_return(OrganizationWebhook.where(github_id: nil))
         subject.perform
       end
 
@@ -91,9 +91,9 @@ describe OrganizationWebhookHealthService do
         organization_webhooks
       end
 
-      it "invokes OrganizationWebhook.find_in_batches" do
+      it "OrganizationWebhook does not receive :where" do
         expect(OrganizationWebhook)
-          .to receive(:find_in_batches)
+          .to_not receive(:where)
         subject.perform
       end
 
