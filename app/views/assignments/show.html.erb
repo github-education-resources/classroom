@@ -10,6 +10,14 @@
           <span id='students-tab' onclick="selectTab(this)" class="cursor selected mr-3" aria-current="page">All students</span>
           <span id='unlinked-tab' onclick="selectTab(this)" class="cursor">Unlinked GitHub accounts</span>
         </div>
+      </div>
+
+      <% if download_repositories_enabled? %>
+        <%= render partial: 'shared/open_on_assistant_modal', locals: {
+          assistant_url: assistant_organization_assignment_url,
+          enabled: @assignment_repos.present?
+        } %>
+      <% end %>
 
         <span id='students-span'>
           <div class="assignment-repo-list">
