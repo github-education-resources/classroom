@@ -12,24 +12,17 @@
         </div>
       </div>
 
-      <% if download_repositories_enabled? %>
-        <%= render partial: 'shared/open_on_assistant_modal', locals: {
-          assistant_url: assistant_organization_assignment_url,
-          enabled: @assignment_repos.present?
-        } %>
-      <% end %>
+      <span id='students-span'>
+        <div class="assignment-repo-list">
+          <% @roster_entries.each do |entry| %>
+            <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
+              url: organization_assignment_roster_entry_path(@organization, @assignment, entry)
+            } %>
+          <% end %>
+        </div>
 
-        <span id='students-span'>
-          <div class="assignment-repo-list">
-            <% @roster_entries.each do |entry| %>
-              <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
-                url: organization_assignment_roster_entry_path(@organization, @assignment, entry)
-              } %>
-            <% end %>
-          </div>
-
-          <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :students_page } %>
-        </span>
+        <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :students_page } %>
+      </span>
 
       <span id='unlinked-span' class='hidden-tab'>
         <span>
