@@ -22,15 +22,6 @@
         </p>
       </div>
     </div>
-    <% if download_repositories_enabled? %>
-      <%= render partial: 'shared/open_on_assistant_modal', locals: {
-        assistant_url: assistant_organization_group_assignment_url,
-        enabled: @group_assignment_repos.present?
-      } %>
-    <% end %>
-  </div>
-
-  <div class="mb-3">
     <%= render assignment.group_assignment_invitation %>
   </div>
 

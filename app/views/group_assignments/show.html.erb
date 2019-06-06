@@ -6,9 +6,16 @@
   <div class="container-lg p-responsive py-5">
     <% if @organization.roster %>
       <div class="Box">
-        <div class="Box-header text-gray">
+        <div class="Box-header text-gray d-flex flex-items-center">
           <span id='students-tab' onclick="selectTab(this)" class="cursor selected mr-3" aria-current="page">Teams</span>
-          <span id='unlinked-tab' onclick="selectTab(this)" class="cursor">Students not on a team</span>
+          <span id='unlinked-tab' onclick="selectTab(this)" class="cursor flex-auto">Students not on a team</span>
+
+          <% if download_repositories_enabled? %>
+            <%= render partial: 'shared/open_on_assistant_modal', locals: {
+              assistant_url: assistant_organization_group_assignment_url,
+              enabled: @group_assignment_repos.present?
+            } %>
+          <% end %>
         </div>
       </div>
 

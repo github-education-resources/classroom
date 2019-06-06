@@ -22,16 +22,7 @@
         </p>
       </div>
     </div>
-    <% if download_repositories_enabled? %>
-      <%= render partial: 'shared/open_on_assistant_modal', locals: {
-        assistant_url: assistant_organization_assignment_url,
-        enabled: @assignment_repos.present?
-      } %>
-    <% end %>
-  </div>
-
-  <div class="mb-3">
-    <%= render @assignment.assignment_invitation %>
+    <%= render assignment.assignment_invitation %>
   </div>
 
   <%= render 'assignments/navigation', organization: organization, assignment: assignment %>
