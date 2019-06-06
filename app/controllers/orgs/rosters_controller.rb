@@ -59,7 +59,6 @@ module Orgs
     def create
       result = Roster::Creator.perform(
         organization: current_organization,
-        identifier_name: "Identifiers",
         identifiers: params[:identifiers],
         google_user_ids: params[:google_user_ids]
       )
@@ -100,7 +99,7 @@ module Orgs
       user_id = params[:user_id].to_i
       raise ActiveRecord::ActiveRecordError unless unlinked_user_ids.include?(user_id)
 
-      current_roster_entry.update_attributes!(user_id: user_id)
+      current_roster_entry.update_attributes(user_id: user_id)
 
       flash[:success] = "Student and GitHub account linked!"
     rescue ActiveRecord::ActiveRecordError
@@ -179,7 +178,6 @@ module Orgs
       @google_classroom_courses = fetch_all_google_classrooms
     end
 
-    # rubocop:disable Metrics/AbcSize
     def search_google_classroom
       courses_found = fetch_all_google_classrooms.select do |course|
         course.name.downcase.include? params[:query].downcase
@@ -192,7 +190,6 @@ module Orgs
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize
 
     def import_from_google_classroom
       students = list_google_classroom_students(params[:course_id])
@@ -202,7 +199,7 @@ module Orgs
         flash[:warning] = "No students were found in your Google Classroom. Please add students and try again."
         redirect_to roster_path(current_organization)
       else
-        current_organization.update_attributes!(google_course_id: params[:course_id])
+        current_organization.update_attributes(google_course_id: params[:course_id])
         add_google_classroom_students(students)
       end
     end
