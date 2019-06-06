@@ -230,25 +230,7 @@ hr {
   }
 }
 
-.user-list {
-  margin-top: 2px;
-}
-
-.assignment-repo-list {
-  .assignment-repo-list-item:not(:first-child) {
-    border-top: 1px solid #e3e3e3;
-  }
-}
-
 .assignment-repo-list-item {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-  font-size: 14px;
-
-  &:last-child {
-    padding-bottom: 0;
-  }
-
   .octicon-alert {
     display: none;
   }
@@ -276,14 +258,6 @@ hr {
       .spinner {
         display: none;
       }
-    }
-  }
-
-  .avatar {
-    margin-right: 10px;
-
-    @media screen and (max-width: 40em) {
-      margin-right: 0;
     }
   }
 

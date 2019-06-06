@@ -3,17 +3,17 @@
 <% hover_text    ||= '' %>
 
 <% if url.present? %>
-  <a class="repo-detail-item <%= 'tooltipped tooltipped-n' if hover_text.present? %>" aria-label="<%= hover_text %>" href="<%= url %>" target='_blank'>
+  <a class="mr-3 <%= 'tooltipped tooltipped-n' if hover_text.present? %>" aria-label="<%= hover_text %>" href="<%= url %>" target='_blank'>
     <span class="submission-icon-container">
       <%= octicon octicon_name, height: 20, class: octicon_class %>
     </span>
-    <span class='text-muted'><%= text %></span>
+    <span class='muted-link'><%= text %></span>
   </a>
 <% else %>
-    <span class="repo-detail-item <%= 'tooltipped tooltipped-n' if hover_text.present? %>" aria-label="<%= hover_text %>">
+    <span class="mr-3 <%= 'tooltipped tooltipped-n' if hover_text.present? %>" aria-label="<%= hover_text %>">
       <span class='submission-icon-container'>
         <%= octicon octicon_name, height: 20, class: octicon_class %>
       </span>
-      <span class='text-muted'><%= text %></span>
+      <span class='muted-link'><%= text %></span>
     </span>
 <% end %>

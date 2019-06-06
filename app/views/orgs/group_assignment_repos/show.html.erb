@@ -1,6 +1,6 @@
 <% view = GroupAssignmentRepoView::ShowView.new(assignment_repo: @group_assignment_repo) %>
 
-<div class='Box-row d-flex flex-row flex-justify-between flex-items-center <%= view.disabled_class %>'>
+<div class='Box-row d-flex flex-row flex-justify-between flex-items-center assignment-repo-list-item <%= view.disabled_class %>'>
   <div class='d-flex flex-column flex-content-around'>
     <div>
       <%= link_to view.github_team_url, class: "assignment-repo-github-url #{view.disabled_class}", target: '_blank' do %>
@@ -20,11 +20,11 @@
     </div>
   </div>
   <div class='d-flex'>
-    <ul class='user-list'>
+    <ul class='mt-1' style="list-style-type: none">
       <% view.github_team_members.first(3).map(&:github_user).each do |student| %>
-        <li>
+        <li class="d-inline-block">
           <%= link_to view.github_user_url_for(student), class: "tooltipped tooltipped-s #{view.disabled_class}", 'aria-label' => view.github_login_for(student) do %>
-            <%= image_tag view.github_avatar_url_for(student), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{view.github_login_for(student)}" %>
+            <%= image_tag view.github_avatar_url_for(student), class: 'mr-md-2 avatar avatar-small', height: 30, width: 30, alt: "@#{view.github_login_for(student)}" %>
           <% end %>
         </li>
       <% end %>
@@ -32,7 +32,7 @@
       <% if view.github_team_members.length > 3 %>
         <li>
           <%= link_to view.github_team_url, class: "#{view.disabled_class}" do %>
-            <%= image_tag 'student-ellipse@2x.png', class: 'avatar avatar-small', height: 30, width: 30, alt: 'student ellipse' %>
+            <%= image_tag 'student-ellipse@2x.png', class: 'mr-md-2 avatar avatar-small', height: 30, width: 30, alt: 'student ellipse' %>
           <% end %>
         </li>
       <% end %>
