@@ -721,3 +721,8 @@ div.site-content-body.tabnav-body.join-box {
 .form-checkbox:last-of-type {
   margin-bottom: 0;
 }
+
+// Patch for bug where scrolling locks on any link from a modal
+html.remodal-is-locked {
+  overflow: auto !important;
+}
