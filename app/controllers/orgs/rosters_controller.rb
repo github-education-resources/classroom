@@ -179,7 +179,6 @@ module Orgs
       @google_classroom_courses = fetch_all_google_classrooms
     end
 
-    # rubocop:disable Metrics/AbcSize
     def search_google_classroom
       courses_found = fetch_all_google_classrooms.select do |course|
         course.name.downcase.include? params[:query].downcase
@@ -192,7 +191,6 @@ module Orgs
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize
 
     def import_from_google_classroom
       students = list_google_classroom_students(params[:course_id])
