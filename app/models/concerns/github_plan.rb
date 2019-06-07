@@ -18,10 +18,11 @@ module GitHubPlan
     return if owned_private_repos < private_repos
 
     error_message = <<-ERROR
-    Cannot make this private assignment, your limit of #{private_repos}
-    #{'repository'.pluralize(private_repos)} has been reached. You can request
-    a larger plan for free at <a href='https://education.github.com/discount'>
-    https://education.github.com/discount</a>
+    Cannot make a private repository for this assignment, the organization has
+    a limit of #{private_repos} #{'repository'.pluralize(private_repos)}. 
+    Please let the organization owner know that they can either upgrade their 
+    limit or, if the owner qualifies, request a larger plan for free at 
+    <a href='https://education.github.com/discount'>https://education.github.com/discount</a>
     ERROR
 
     raise GitHub::Error, error_message
