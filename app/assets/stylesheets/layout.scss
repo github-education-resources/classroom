@@ -214,25 +214,7 @@ hr {
   }
 }
 
-.user-list {
-  margin-top: 2px;
-}
-
-.assignment-repo-list {
-  .assignment-repo-list-item:not(:first-child) {
-    border-top: 1px solid #e3e3e3;
-  }
-}
-
 .assignment-repo-list-item {
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-  font-size: 14px;
-
-  &:last-child {
-    padding-bottom: 0;
-  }
-
   .octicon-alert {
     display: none;
   }
@@ -260,14 +242,6 @@ hr {
       .spinner {
         display: none;
       }
-    }
-  }
-
-  .avatar {
-    margin-right: 10px;
-
-    @media screen and (max-width: 40em) {
-      margin-right: 0;
     }
   }
 
@@ -730,4 +704,9 @@ div.site-content-body.tabnav-body.join-box {
 
 .form-checkbox:last-of-type {
   margin-bottom: 0;
+}
+
+// Patch for bug where scrolling locks on any link from a modal
+html.remodal-is-locked {
+  overflow: auto !important;
 }

@@ -1,18 +1,17 @@
-<% unless enabled %>
+<% if enabled %>
   <iframe id="js-hidden-iframe" src="about:blank" style="display:none"></iframe>
 <% end %>
-<div class="mt-1 pr-2">
-  <details class="dropdown details-reset details-overlay d-inline-block">
-    <summary
-      id="<%=  enabled ? "js-download-repos-btn" : "" %>"
-      class="btn <%= enabled ? "" : "disabled tooltipped tooltipped-n" %>"
-      aria-label="There are no repositories to download for this assignment."
-      aria-haspopup="true">
-      Download Repositories
-      <div class="dropdown-caret"></div>
-    </summary>
+<details class="dropdown details-reset details-overlay">
+  <summary
+    id="<%=  enabled ? "js-download-repos-btn" : "" %>"
+    class="btn btn-primary btn-sm <%= enabled ? "" : "disabled tooltipped tooltipped-n" %>"
+    aria-label="There are no repositories to download for this assignment."
+    aria-haspopup="true">
+    Download Repositories
+    <div class="dropdown-caret"></div>
+  </summary>
 
-    <% if enabled %>
+  <% if enabled %>
     <div class="dropdown-menu dropdown-menu-sw assistant-modal-dropdown-menu ">
       <div id="js-modal-download-repos">
         <div class="py-2 px-3">
@@ -29,6 +28,5 @@
         <p class="text-gray">If nothing happens, <a href="http://classroom.github.com/assistant">download Classroom Assistant</a> and try again.</p>
       </div>
     </div>
-    <% end %>
-  </details>
-</div>
+  <% end %>
+</details>
