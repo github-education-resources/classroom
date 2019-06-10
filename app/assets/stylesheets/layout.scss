@@ -15,17 +15,6 @@ body {
   }
 }
 
-a {
-  &:hover {
-    text-decoration: none;
-  }
-
-  &.disabled {
-    pointer-events: none;
-    cursor: default;
-  }
-}
-
 a,
 span {
   &.submission-icon-container {
@@ -66,11 +55,6 @@ main {
   display: inline-block;
   vertical-align: middle;
   fill: currentColor;
-}
-
-.site-header {
-  color: #ccc;
-  background-color: #2f3232;
 }
 
 .site-logo {
