@@ -7,6 +7,23 @@ set -e
 
 cd "$(dirname "$0")/.."
 
+# Make sure the system has both rbenv 
+# and nodenv installed previously, otherwise we can't
+# ensure dependencies install correctly.
+if ! [ -f "$(which rbenv)" ]; then
+  echo "It looks like you don't have rbenv installed"
+  echo "Check out https://github.com/rbenv/rbenv#installation to get it running on your system"
+
+  exit 1
+fi
+
+if ! [ -f "$(which nodenv)" ]; then
+  echo "It looks like you don't have nodenv installed"
+  echo "Check out https://github.com/nodenv/nodenv#installation to get it running on your system"
+
+  exit 1
+fi
+
 # Install all the macOS dependencies via the Brewfile
 if [ "$(uname -s)" = "Darwin" ]; then
   echo "==> Ensuring Homebrew macOS dependencies..."
@@ -22,15 +39,6 @@ if [ "$(uname -s)" = "Darwin" ]; then
     brew setup-nginx-conf classroom . config/dev/nginx.conf.erb
     brew services restart nginx
   }
-fi
-
-# Make sure the system has rbenv installed
-# otherwise we can't get our gems setup properly
-if ! [ -f "$(which rbenv)" ]; then
-  echo "It looks like you don't have Rbenv installed"
-  echo "Check out https://github.com/rbenv/rbenv#installation to get it running on your system"
-
-  exit 1
 fi
 
 # Install all of our gems if we need to
