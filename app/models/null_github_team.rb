@@ -12,4 +12,12 @@ class NullGitHubTeam < NullGitHubResource
   def slug
     "ghost"
   end
+
+  def html_url
+    "https://github.com/orgs/ghost/teams/ghost"
+  end
+
+  def on_github?
+    false
+  end
 end
