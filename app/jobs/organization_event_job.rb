@@ -19,20 +19,28 @@ class OrganizationEventJob < ApplicationJob
 
     return true unless @user
 
-    transfer_assignments if user_owns_assignments?
+    transfer_assignments if user_owns_any_assignments?
     @organization.users.delete(@user)
   end
   # rubocop:enable Metrics/AbcSize
 
+  def user_owns_any_assignments?
+     user_owns_assignments? || user_owns_group_assignments?
+  end
+
   def user_owns_assignments?
-    @organization.all_assignments.map(&:creator_id).include? @user.id
+    @organization.assignments.where(creator_id: @user.id).count > 0
+  end
+
+  def user_owns_group_assignments?
+    @organization.group_assignments.where(creator_id: @user.id).count > 0
   end
 
   def transfer_assignments
     new_owner = @organization.users.where.not(id: @user.id).first
-    @organization.all_assignments.map do |a|
-      a.creator_id = new_owner.id if a.creator_id == @user.id
-      a.save
+    all_assignments_of_user = @organization.all_assignments.select{ |assignment| assignment.creator_id == @user.id }
+    all_assignments_of_user.map do |assignment|
+      assignment.update(creator_id: new_owner.id)
     end
   end
 end
