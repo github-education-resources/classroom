@@ -16,7 +16,7 @@ describe GitHubUser do
     gh_user = github_user.client.user(github_user.id)
 
     github_user.attributes.each do |attribute, value|
-      next if %i[client access_token].include?(attribute)
+      next if %i[id_attributes client access_token].include?(attribute)
       expect(gh_user).to respond_to(attribute)
       expect(value).to eql(gh_user.send(attribute))
     end
@@ -26,22 +26,22 @@ describe GitHubUser do
 
   it "responds to all *_no_cache methods", :vcr do
     github_user.attributes.each do |attribute, _|
-      next if %i[id client access_token].include?(attribute)
+      next if %i[id id_attributes client access_token].include?(attribute)
       expect(github_user).to respond_to("#{attribute}_no_cache")
     end
   end
 
   describe "#github_avatar_url", :vcr do
     it "returns the correct url with a default size of 40" do
-      expected_url = "https://avatars2.githubusercontent.com/u/#{github_user.id}?v=4&size=40"
-      expect(github_user.github_avatar_url).to eql(expected_url)
+      expected_url = %r{https:\/\/avatars[0-9].githubusercontent.com\/u\/#{github_user.id}\?v=4&size=40\z}
+      expect(github_user.github_avatar_url).to match(expected_url)
     end
 
     it "has a customizeable size" do
       size         = 90
-      expected_url = "https://avatars2.githubusercontent.com/u/#{github_user.id}?v=4&size=#{size}"
+      expected_url = %r{https:\/\/avatars[0-9].githubusercontent.com\/u\/#{github_user.id}\?v=4&size=#{size}\z}
 
-      expect(github_user.github_avatar_url(size)).to eql(expected_url)
+      expect(github_user.github_avatar_url(size)).to match(expected_url)
     end
   end
 

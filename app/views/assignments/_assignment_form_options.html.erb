@@ -2,13 +2,13 @@
 
 <dl class="<%= view.form_class_for(:title) %>">
   <dt><%= f.label :title %></dt>
-  <dd><%= f.text_field :title, class: 'textfield form-control input-contrast input-block' %></dd>
+  <dd><%= f.text_field :title, class: 'textfield form-control input-contrast input-block', autocomplete: :off %></dd>
   <%= render('shared/form_error', errors: view.error_message_for(:title)) if view.errors_for?(:title) %>
 </dl>
 
 <dl class="<%= view.form_class_for(:slug) %>">
   <dt><%= f.label :slug %></dt>
-  <dd><%= f.text_field :slug, class: 'textfield form-control input-contrast input-block' %></dd>
+  <dd><%= f.text_field :slug, class: 'textfield form-control input-contrast input-block', autocomplete: :off %></dd>
   <%= render('shared/form_error', errors: view.error_message_for(:slug)) if view.errors_for?(:slug) %>
   <span class="note"><%= t('assignment_form.slug_note') %></span>
 </dl>
@@ -23,7 +23,7 @@
   <div class="form-checkbox">
     <label><%= f.radio_button :public_repo, false %> Private</label>
     <%= octicon 'lock', height: 32 %>
-    <span class="note">Submit assignments using private repositories. Submissions will only be visible to the submitter and organization owners.</span>
+    <span class="note">Submit assignments using private repositories. Submissions will only be visible to the submitter and organization owners. Editing this after assignments are created will not retroactively change their visibility.</span>
   </div>
 
   <%= render('shared/form_error', errors: view.error_message_for(:public_repo)) if view.errors_for?(:public_repo) %>
@@ -31,7 +31,13 @@
 
 <dl class="form">
   <div class="form-checkbox">
-    <label><%= f.check_box :students_are_repo_admins %> Give students Admin permissions on their repository</label>
+    <label><%= f.check_box :students_are_repo_admins %> Give students Admin permissions on their repository. Editing this after assignments are created will not retroactively change their permissions.</label>
+  </div>
+</dl>
+
+<dl class="form">
+  <div class="form-checkbox">
+    <label><%= f.check_box :invitations_enabled %> Enable assignment invitation URL</label>
   </div>
 </dl>
 

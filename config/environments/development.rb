@@ -28,10 +28,11 @@ Rails.application.configure do
       pool_size:  (ENV.fetch("RAILS_MAX_THREADS") { 5 })
     }
 
-    config.cache_store = :dalli_store, "localhost:11211", dalli_store_config
+    memcached_url      = "localhost:22322"
+    config.cache_store = :dalli_store, memcached_url, dalli_store_config
 
     config.peek.adapter = :memcache, {
-      client: Dalli::Client.new("localhost:11211")
+      client: Dalli::Client.new(memcached_url)
     }
   else
     config.action_controller.perform_caching = false

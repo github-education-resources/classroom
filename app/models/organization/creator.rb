@@ -34,6 +34,10 @@ class Organization
       end
     end
 
+    NO_ADMIN_ORG_TOKEN_ERROR = "No user has the `admin:org_hook` scope on their token."
+
+    attr_reader :users
+
     # Public: Create an Organization.
     #
     # users     - An Array of Users that will own the organization.
@@ -63,11 +67,15 @@ class Organization
       ensure_users_are_authorized!
 
       begin
+        github_organization = GitHubOrganization.new(users.first.github_client, github_id)
+        organization_webhook = ensure_organization_webhook_exists!
+
         organization.update_attributes!(
           github_id: github_id,
           title: title,
           users: users,
-          webhook_id: create_organization_webhook!
+          github_global_relay_id: github_organization.node_id,
+          organization_webhook: organization_webhook
         )
       rescue ActiveRecord::RecordInvalid => err
         raise Result::Error, err.message
@@ -79,7 +87,6 @@ class Organization
 
       Result.success(organization)
     rescue Result::Error => err
-      silently_destroy_organization_webhook(organization)
       destroy_organization(organization)
 
       Result.failed(err.message)
@@ -89,22 +96,19 @@ class Organization
 
     private
 
-    # Internal: Create an GitHub Organization WebHook if there
-    # is a user who has the correct token scope.
+    # Internal: Creates a OrganizationWebhook if one does not exist yet,
+    # then creates an GitHubOrgHook if one does not exist, or activates the GitHubOrgHook if it is inactive.
     #
-    # Returns an Integer id, or raises a Result::Error
-    def create_organization_webhook!
-      return unless (user = user_with_admin_org_hook_scope)
+    # Returns the OrganizationWebhook, or raises an Result::Error
+    def ensure_organization_webhook_exists!
+      client = user_with_admin_org_hook_scope&.github_client
+      raise Result::Error, NO_ADMIN_ORG_TOKEN_ERROR if client.nil?
 
-      begin
-        github_organization = GitHubOrganization.new(user.github_client, github_id)
-        webhook = github_organization.create_organization_webhook(config: { url: webhook_url })
-
-        return webhook.id if webhook.try(:id).present?
-        raise GitHub::Error
-      rescue GitHub::Error
-        raise Result::Error, "Could not create WebHook, please try again."
-      end
+      organization_webhook = OrganizationWebhook.find_or_initialize_by(github_organization_id: github_id)
+      organization_webhook.ensure_webhook_is_active!(client: client)
+      organization_webhook
+    rescue ActiveRecord::RecordInvalid, GitHub::Error => error
+      raise Result::Error, error.message
     end
 
     # Internal: Make sure every user being added to the
@@ -112,6 +116,8 @@ class Organization
     #
     # Returns nil or raises a Result::Error
     def ensure_users_are_authorized!
+      raise Result::Error, "Cannot create an organization with no users" if users.empty?
+
       users.each do |user|
         login = user.github_user.login_no_cache
         next if GitHubOrganization.new(user.github_client, github_id).admin?(login)
@@ -136,19 +142,6 @@ class Organization
       organization.destroy!
     end
 
-    # Internal: Remove the Organization WebHook is possible.
-    #
-    # Returns true.
-    def silently_destroy_organization_webhook(organization)
-      return true if organization.webhook_id.nil?
-      return true unless (user = user_with_admin_org_hook_scope)
-
-      github_organization = GitHubOrganization.new(user.github_client, github_id)
-      github_organization.remove_organization_webhook(organization.webhook_id)
-
-      true
-    end
-
     # Internal: Get the default title for the Organization.
     #
     # Example
@@ -162,7 +155,10 @@ class Organization
 
       github_client = users.sample.github_client
       github_org = GitHubOrganization.new(github_client, github_id)
-      github_org.name.present? ? github_org.name : github_org.login
+
+      org_identifier = github_org.name.presence || github_org.login
+
+      find_unique_title(org_identifier)
     end
 
     # Internal: Find User that has the `admin:org_hook` scope
@@ -194,28 +190,30 @@ class Organization
       @users_with_scope.sample
     end
 
-    # Internal: Get the proper webhook url prefix
+    # Internal: Generates unique name for classroom if default
+    # name has already been taken
     #
-    # Rails.env.production?
-    # # => true
+    # Returns a String with an unique title
+    def find_unique_title(identifier)
+      # First Classroom on Org will have postfix 1
+      base_title = "#{identifier}-classroom-1"
+
+      count = 1
+      until unique_title?(base_title)
+        # Increments count at end of title
+        base_title = base_title.gsub(/\-\d+$/, "") + "-#{count}"
+        count += 1
+      end
+
+      base_title
+    end
+
+    # Internal: Checks if a classroom with the same title and github_id
+    # exists already
     #
-    # webhook_url
-    # # => "https://classroom.github.com"
-    #
-    # Returns a String for the url or raises a Result::Error
-    def webhook_url
-      webhook_url_prefix = ENV["CLASSROOM_WEBHOOK_URL_PREFIX"]
-
-      error_message = if Rails.env.production?
-                        "WebHook failed to be created, please open an issue at https://github.com/education/classroom/issues/new" # rubocop:disable Metrics/LineLength
-                      else
-                        "CLASSROOM_WEBHOOK_URL_PREFIX is not set, please check your .env file"
-                      end
-
-      hooks_path = Rails.application.routes.url_helpers.github_hooks_path
-      return "#{webhook_url_prefix}#{hooks_path}" if webhook_url_prefix.present?
-
-      raise Result::Error, error_message
+    # Returns a Boolean on whether duplicate classroom title is
+    def unique_title?(base_title)
+      Organization.where(title: base_title, github_id: github_id).blank?
     end
   end
 end

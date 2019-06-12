@@ -4,16 +4,20 @@ module Sluggable
   extend ActiveSupport::Concern
 
   included do
-    before_validation do
-      slugify
-    end
+    before_validation :slugify
   end
 
   def slugify
-    self.slug = title.parameterize
+    self.slug = name_for_slug.parameterize
   end
 
   def to_param
     slug
+  end
+
+  private
+
+  def name_for_slug
+    title
   end
 end

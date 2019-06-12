@@ -8,6 +8,7 @@ en:
       community_discussion: 'Community discussion'
       video_tutorials: 'Video tutorials'
       report_bug: 'Report a bug'
+      changelog: "Check out what's new on Classroom"
       copy_to_clipboard: 'Copy to clipboard'
       copy_invitation_link: 'Copy invitation link'
       give_this_to_students: 'Give this to your students'
@@ -15,3 +16,4 @@ en:
       classroom_is_open_source: "GitHub Classroom is %{href}."
       open_source_href: "open source"
       with_love_by_github: "%{octicon_mortar_board} with %{octicon_heart} by %{href}"
+      back_to_classroom: 'Back to Classroom'

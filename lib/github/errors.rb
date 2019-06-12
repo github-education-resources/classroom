@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require "English"
+
 module GitHub
   module Errors
     class << self
       def with_error_handling
         yield
       rescue Octokit::Error => err
+        GitHubClassroom.statsd.increment("github.error.#{err.class.to_s.remove('Octokit::')}")
         process_octokit_error(err)
       end
 

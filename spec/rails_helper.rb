@@ -7,7 +7,9 @@ require File.expand_path("../../config/environment", __FILE__)
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require "spec_helper"
+require "graphql_helper"
 require "rspec/rails"
+require "action_cable/testing/rspec"
 
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -42,9 +44,17 @@ RSpec.configure do |config|
 
   config.include GitHubFactory
   config.include RepositoryFactory
+  config.include JsonHelpers
 
   config.include ActiveJob::TestHelper, type: :job
   config.include ActiveJob::TestHelper, type: :controller
   config.include AuthenticationHelper,  type: :request
   config.include AuthenticationHelper,  type: :controller
+end
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
 end

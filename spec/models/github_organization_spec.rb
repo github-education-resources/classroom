@@ -16,7 +16,7 @@ describe GitHubOrganization do
     gh_organization = @client.organization(organization.github_id)
 
     @github_organization.attributes.each do |attribute, value|
-      next if %i[client access_token].include?(attribute)
+      next if %i[id_attributes client access_token].include?(attribute)
       expect(@github_organization).to respond_to(attribute)
       expect(value).to eql(gh_organization.send(attribute))
     end
@@ -26,7 +26,7 @@ describe GitHubOrganization do
 
   it "responds to all *_no_cache methods", :vcr do
     @github_organization.attributes.each do |attribute, _|
-      next if %i[id client access_token].include?(attribute)
+      next if %i[id id_attributes client access_token].include?(attribute)
       expect(@github_organization).to respond_to("#{attribute}_no_cache")
     end
   end
@@ -96,6 +96,25 @@ describe GitHubOrganization do
     end
   end
 
+  describe "#activate_organization_webhook", :vcr do
+    before do
+      @org_hook = @github_organization.create_organization_webhook(config: { url: "http://localhost" })
+    end
+
+    after do
+      @client.remove_org_hook(organization.github_id, @org_hook.id)
+    end
+
+    it "successfully creates a GitHub organization webhook" do
+      @github_organization.activate_organization_webhook(@org_hook.id, config: { url: "http://localhost" })
+      expect(WebMock)
+        .to have_requested(
+          :patch,
+          github_url("/organizations/#{organization.github_id}/hooks/#{@org_hook.id}")
+        )
+    end
+  end
+
   describe "#remove_organization_webhook", :vcr do
     before do
       @org_hook = @github_organization.create_organization_webhook(config: { url: "http://localhost" })
@@ -103,8 +122,10 @@ describe GitHubOrganization do
 
     it "successfully removes the GitHub organization webhook" do
       @github_organization.remove_organization_webhook(@org_hook.id)
-      expect(WebMock).to have_requested(:delete,
-                                        github_url("/organizations/#{organization.github_id}/hooks/#{@org_hook.id}"))
+      expect(WebMock).to have_requested(
+        :delete,
+        github_url("/orgs/#{@github_organization.login}/hooks/#{@org_hook.id}")
+      )
     end
   end
 

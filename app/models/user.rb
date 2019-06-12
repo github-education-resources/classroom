@@ -2,15 +2,17 @@
 
 class User < ApplicationRecord
   include Flippable
+  include GraphQLNode
 
-  update_index("stafftools#user") { self }
+  update_index("user#user") { self }
 
   has_many :assignment_repos
   has_many :repo_accesses, dependent: :destroy
   has_many :roster_entries
+  has_many :invite_statuses, dependent: :destroy
+  has_many :assignment_invitations, through: :invite_statuses
 
-  has_many :organization_users
-  has_many :organizations, through: :organization_users
+  has_and_belongs_to_many :organizations
 
   validates :last_active_at, presence: true
 
@@ -24,6 +26,8 @@ class User < ApplicationRecord
   before_validation(on: :create) { ensure_last_active_at_presence }
 
   delegate :authorized_access_token?, to: :github_user
+
+  alias_attribute :github_node_id, :github_global_relay_id
 
   def assign_from_auth_hash(hash)
     user_attributes = AuthHash.new(hash).user_info
@@ -53,6 +57,14 @@ class User < ApplicationRecord
 
   def staff?
     site_admin
+  end
+
+  def owns_all_assignments_for?(organization)
+    organization.all_assignments.map(&:creator_id).include? id
+  end
+
+  def api_token(exp = 5.minutes.from_now)
+    MessageVerifier.encode({ user_id: id }, exp)
   end
 
   private

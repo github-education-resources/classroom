@@ -1,6 +1,6 @@
 <div class="site-content">
   <div class="site-content-cap">
-    <h2 class="site-content-heading"><%= t('views.organizations.select_organization') %></h2>
+    <h2 class="site-content-heading d-inline-flex"><%= t('views.organizations.select_organization') %></h2>
   </div>
 
   <div class="site-content-body">
@@ -16,7 +16,7 @@
 
         <div class="org-select-grid">
           <% @users_github_organizations.each do |org| %>
-            <% if org[:role] == 'admin' && !org[:classroom].present? %>
+            <% if org[:role] == 'admin' && (!org[:classroom].present? || multiple_classrooms_per_org_enabled?) %>
               <%= render partial: 'organization_select', locals: { org: org } %>
             <% else %>
               <%= render partial: 'disabled_organization_select', locals: { org: org } %>

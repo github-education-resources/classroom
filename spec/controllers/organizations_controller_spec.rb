@@ -67,9 +67,9 @@ RSpec.describe OrganizationsController, type: :controller do
         user.update_attributes(token: "1234")
       end
 
-      it "redirects to login_path" do
+      it "logs out user" do
         get :index
-        expect(response).to redirect_to(login_path)
+        expect(response).to redirect_to(root_path)
       end
     end
   end
@@ -105,6 +105,36 @@ RSpec.describe OrganizationsController, type: :controller do
       organization.destroy!
     end
 
+    context "multiple_classrooms_per_org flag not enabled" do
+      before do
+        GitHubClassroom.flipper[:multiple_classrooms_per_org].disable
+      end
+
+      it "will not add an organization that already exists" do
+        existing_organization_options = { github_id: organization.github_id }
+        expect do
+          post :create, params: { organization: existing_organization_options }
+        end.to_not change(Organization, :count)
+      end
+    end
+
+    context "multiple_classrooms_per_org flag is enabled" do
+      before do
+        GitHubClassroom.flipper[:multiple_classrooms_per_org].enable
+      end
+
+      after do
+        GitHubClassroom.flipper[:multiple_classrooms_per_org].disable
+      end
+
+      it "will add a classroom on same organization" do
+        existing_organization_options = { github_id: organization.github_id }
+        expect do
+          post :create, params: { organization: existing_organization_options }
+        end.to change(Organization, :count)
+      end
+    end
+
     it "will fail to add an organization the user is not an admin of" do
       new_organization = build(:organization, github_id: 90)
       new_organization_options = { github_id: new_organization.github_id }
@@ -114,18 +144,14 @@ RSpec.describe OrganizationsController, type: :controller do
       end.to_not change(Organization, :count)
     end
 
-    it "will not add an organization that already exists" do
-      existing_organization_options = { github_id: organization.github_id }
-      expect do
-        post :create, params: { organization: existing_organization_options }
-      end.to_not change(Organization, :count)
-    end
-
     it "will add an organization that the user is admin of on GitHub" do
       organization_params = { github_id: organization.github_id, users: organization.users }
       organization.destroy!
 
       expect { post :create, params: { organization: organization_params } }.to change(Organization, :count)
+
+      expect(Organization.last.github_id).to_not be_nil
+      expect(Organization.last.github_global_relay_id).to_not be_nil
     end
 
     it "will redirect the user to the setup page" do
@@ -162,6 +188,48 @@ RSpec.describe OrganizationsController, type: :controller do
 
       expect(response).to have_http_status(:success)
       expect(assigns(:current_organization)).to_not be_nil
+    end
+  end
+
+  describe "PATCH #remove_user", :vcr do
+    context "returns 404" do
+      it "user is not an org owner" do
+        patch :remove_user, params: { id: organization.slug, user_id: student.id }
+
+        expect(response).to have_http_status(404)
+      end
+
+      it "user does not exist" do
+        patch :remove_user, params: { id: organization.slug, user_id: 105 }
+
+        expect(response).to have_http_status(404)
+      end
+    end
+
+    context "removes user from classroom" do
+      before(:each) do
+        teacher = create(:user)
+        organization.users << teacher
+      end
+
+      it "without assignments" do
+        patch :remove_user, params: { id: organization.slug, user_id: @teacher.id }
+
+        expect(response).to redirect_to(settings_invitations_organization_path)
+        expect(flash[:success]).to be_present
+        expect { organization.users.find(id: @teacher.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it "with assignments" do
+        assignment = create(:assignment, organization: organization, creator: @teacher)
+
+        patch :remove_user, params: { id: organization.slug, user_id: @teacher.id }
+
+        expect(assignment.reload.creator_id).not_to eq(@teacher.id)
+        expect { organization.users.find(id: @teacher.id) }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(response).to redirect_to(settings_invitations_organization_path)
+        expect(flash[:success]).to be_present
+      end
     end
   end
 

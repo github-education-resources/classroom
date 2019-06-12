@@ -5,7 +5,7 @@ class Assignment < ApplicationRecord
   include GitHubPlan
   include ValidatesNotReservedWord
 
-  update_index("stafftools#assignment") { self }
+  update_index("assignment#assignment") { self }
 
   default_scope { where(deleted_at: nil) }
 
@@ -32,6 +32,8 @@ class Assignment < ApplicationRecord
   validates :slug, length: { maximum: 60 }
   validates :slug, format: { with: /\A[-a-zA-Z0-9_]*\z/,
                              message: "should only contain letters, numbers, dashes and underscores" }
+
+  validates :assignment_invitation, presence: true
 
   validate :uniqueness_of_slug_across_organization
 

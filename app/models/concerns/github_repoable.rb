@@ -16,9 +16,13 @@ module GitHubRepoable
   #
   def create_github_repository
     repo_description = "#{repo_name} created by GitHub Classroom"
-    github_repository = github_organization.create_repository(repo_name,
-                                                              private: private?,
-                                                              description: repo_description)
+    github_repository = github_organization.create_repository(
+      repo_name,
+      private: private?,
+      description: repo_description
+    )
+
+    self.github_global_relay_id = github_repository.node_id
     self.github_repo_id = github_repository.id
   end
 
@@ -32,9 +36,9 @@ module GitHubRepoable
   #
   def delete_github_repository_on_failure
     yield
-  rescue GitHub::Error
+  rescue GitHub::Error => error
     silently_destroy_github_repository
-    raise GitHub::Error, "Assignment failed to be created"
+    raise GitHub::Error, "Assignment failed to be created: #{error}"
   end
 
   # Public
@@ -54,9 +58,7 @@ module GitHubRepoable
     assignment_repository   = GitHubRepository.new(client, github_repo_id)
     starter_code_repository = GitHubRepository.new(client, starter_code_repo_id)
 
-    delete_github_repository_on_failure do
-      assignment_repository.get_starter_code_from(starter_code_repository)
-    end
+    assignment_repository.get_starter_code_from(starter_code_repository)
   end
 
   # Internal

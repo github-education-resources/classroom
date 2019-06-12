@@ -16,11 +16,11 @@ module Stafftools
 
     def set_resources
       return @resources = nil if params[:query].blank?
-      @resources = StafftoolsIndex
-                   .query(match_phrase_prefix(params[:query]))
-                   .order(_type: :asc)
-                   .page(params[:page])
-                   .per(20)
+      @resources = MultiIndexSearchRequest.new(*ESIndices.indices)
+        .query(match_phrase_prefix(params[:query]))
+        .order(_type: :asc)
+        .page(params[:page])
+        .per(20)
     end
 
     def match_phrase_prefix(query)

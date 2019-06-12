@@ -60,6 +60,10 @@
           <td class="text-emphasized"><%= t('views.stafftools.assignment_repos.source_code') %></td>
           <td><%= link_to @assignment_repo.github_repository.html_url, @assignment_repo.github_repository.html_url %></td>
         </tr>
+        <tr>
+          <td class="text-emphasized"><%= t('views.stafftools.assignment_repos.import_status') %></td>
+          <td><%= @assignment_repo.import_status%></td>
+        </tr>
       </table>
     </div>
   </div>

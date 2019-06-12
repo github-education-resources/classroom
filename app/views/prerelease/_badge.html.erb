@@ -1,0 +1,14 @@
+<% if display_badge %>
+  <span
+    class="tooltipped tooltipped-multiline tooltipped-s Label Label--outline text-bold rounded-1 <%= additional_classes %>"
+    aria-label="<%= public_name %> is a beta feature. Leave feedback on the feature by clicking this label."
+  >
+    <% if feedback_url %>
+      <a href="<%= feedback_url %>">
+        <%= octicon 'beaker', height: 15, class: "mr-1" %>Pre-release
+      </a>
+    <% else %>
+      <%= octicon 'beaker', height: 15, class: "mr-1" %>Pre-release
+    <% end %>
+  </span>
+<% end %>

@@ -9,15 +9,15 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate_user! # authentication_dependency
 
-  helper_method :current_user, :logged_in?, :true_user                  # authentication_dependency
+  helper_method :current_user, :logged_in?, :true_user, :log_out        # authentication_dependency
   helper_method :student_identifier_enabled?, :team_management_enabled? # feature_flags_dependency
 
   # errors_dependency
   rescue_from StandardError, with: :send_to_statsd_and_reraise
   rescue_from GitHub::Error,
-              GitHub::Forbidden,
-              GitHub::NotFound,
-              NotAuthorized, with: :flash_and_redirect_back_with_message
+    GitHub::Forbidden,
+    GitHub::NotFound,
+    NotAuthorized, with: :flash_and_redirect_back_with_message
   rescue_from ActionController::RoutingError, ActiveRecord::RecordNotFound, with: :render_404
 
   rescue_from ActionController::InvalidAuthenticityToken do
@@ -60,9 +60,11 @@ class ApplicationController < ActionController::Base
 
     case exception
     when ActionController::RoutingError
-      render file: Rails.root.join("public", "404.html"), layout: false, status: :not_found
+      render file: Rails.root.join("public", "404.html"), layout: false,
+             status: :not_found, formats: [:html]
     when ActiveRecord::RecordNotFound
-      render file: Rails.root.join("public", "invalid_link_error.html"), layout: false, status: :not_found
+      render file: Rails.root.join("public", "invalid_link_error.html"), layout: false,
+             status: :not_found, formats: [:html]
     end
   end
 end

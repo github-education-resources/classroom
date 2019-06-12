@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170802170240) do
+ActiveRecord::Schema.define(version: 20190601200321) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,11 +36,10 @@ ActiveRecord::Schema.define(version: 20170802170240) do
     t.integer "assignment_id"
     t.integer "user_id"
     t.string "submission_sha"
-    t.string "global_relay_id"
+    t.string "github_global_relay_id"
     t.integer "configuration_state", default: 0
     t.index ["assignment_id"], name: "index_assignment_repos_on_assignment_id"
     t.index ["github_repo_id"], name: "index_assignment_repos_on_github_repo_id", unique: true
-    t.index ["global_relay_id"], name: "index_assignment_repos_on_global_relay_id"
     t.index ["repo_access_id"], name: "index_assignment_repos_on_repo_access_id"
     t.index ["user_id"], name: "index_assignment_repos_on_user_id"
   end
@@ -56,6 +55,7 @@ ActiveRecord::Schema.define(version: 20170802170240) do
     t.datetime "deleted_at"
     t.string "slug", null: false
     t.boolean "students_are_repo_admins", default: false, null: false
+    t.boolean "invitations_enabled", default: true
     t.index ["deleted_at"], name: "index_assignments_on_deleted_at"
     t.index ["organization_id"], name: "index_assignments_on_organization_id"
     t.index ["slug"], name: "index_assignments_on_slug"
@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(version: 20170802170240) do
     t.integer "group_id", null: false
     t.string "submission_sha"
     t.integer "configuration_state", default: 0
+    t.string "github_global_relay_id"
     t.index ["github_repo_id"], name: "index_group_assignment_repos_on_github_repo_id", unique: true
     t.index ["group_assignment_id"], name: "index_group_assignment_repos_on_group_assignment_id"
   end
@@ -108,9 +109,20 @@ ActiveRecord::Schema.define(version: 20170802170240) do
     t.string "slug", null: false
     t.integer "max_members"
     t.boolean "students_are_repo_admins", default: false, null: false
+    t.boolean "invitations_enabled", default: true
     t.index ["deleted_at"], name: "index_group_assignments_on_deleted_at"
     t.index ["organization_id"], name: "index_group_assignments_on_organization_id"
     t.index ["slug"], name: "index_group_assignments_on_slug"
+  end
+
+  create_table "group_invite_statuses", force: :cascade do |t|
+    t.integer "status", default: 0
+    t.bigint "group_id"
+    t.bigint "group_assignment_invitation_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_assignment_invitation_id"], name: "index_group_invite_statuses_on_group_assignment_invitation_id"
+    t.index ["group_id"], name: "index_group_invite_statuses_on_group_id"
   end
 
   create_table "groupings", id: :serial, force: :cascade do |t|
@@ -140,6 +152,25 @@ ActiveRecord::Schema.define(version: 20170802170240) do
     t.index ["repo_access_id"], name: "index_groups_repo_accesses_on_repo_access_id"
   end
 
+  create_table "invite_statuses", force: :cascade do |t|
+    t.integer "status", default: 0
+    t.bigint "assignment_invitation_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assignment_invitation_id"], name: "index_invite_statuses_on_assignment_invitation_id"
+    t.index ["user_id"], name: "index_invite_statuses_on_user_id"
+  end
+
+  create_table "organization_webhooks", force: :cascade do |t|
+    t.integer "github_id"
+    t.integer "github_organization_id", null: false
+    t.datetime "last_webhook_recieved"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["github_id"], name: "index_organization_webhooks_on_github_id", unique: true
+  end
+
   create_table "organizations", id: :serial, force: :cascade do |t|
     t.integer "github_id", null: false
     t.string "title", null: false
@@ -147,11 +178,12 @@ ActiveRecord::Schema.define(version: 20170802170240) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.string "slug", null: false
-    t.integer "webhook_id"
-    t.boolean "is_webhook_active", default: false
     t.integer "roster_id"
+    t.string "github_global_relay_id"
+    t.bigint "organization_webhook_id"
     t.index ["deleted_at"], name: "index_organizations_on_deleted_at"
-    t.index ["github_id"], name: "index_organizations_on_github_id", unique: true
+    t.index ["github_id"], name: "index_organizations_on_github_id"
+    t.index ["organization_webhook_id"], name: "index_organizations_on_organization_webhook_id"
     t.index ["roster_id"], name: "index_organizations_on_roster_id"
     t.index ["slug"], name: "index_organizations_on_slug"
   end
@@ -197,8 +229,14 @@ ActiveRecord::Schema.define(version: 20170802170240) do
     t.datetime "updated_at", null: false
     t.boolean "site_admin", default: false
     t.datetime "last_active_at", null: false
+    t.string "github_global_relay_id"
     t.index ["token"], name: "index_users_on_token", unique: true
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
+  add_foreign_key "group_invite_statuses", "group_assignment_invitations"
+  add_foreign_key "group_invite_statuses", "groups"
+  add_foreign_key "invite_statuses", "assignment_invitations"
+  add_foreign_key "invite_statuses", "users"
+  add_foreign_key "organizations", "organization_webhooks"
 end

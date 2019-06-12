@@ -1,0 +1,2 @@
+<%= image_tag user.github_user.github_avatar_url(50), height: 30, width: 30, alt: "@#{user.github_user.login}" %>
+<strong><%= link_to user.github_user.login, stafftools_user_path(user.id) %></strong>

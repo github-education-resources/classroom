@@ -11,6 +11,10 @@ body {
     min-height: 100vh;
     flex-direction: column;
   }
+
+  &.index {
+    background: linear-gradient(#fff, #fafafa);
+  }
 }
 
 a {
@@ -67,8 +71,6 @@ main {
 }
 
 .site-header {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
   color: #ccc;
   background-color: #2f3232;
 }
@@ -76,64 +78,15 @@ main {
 .site-logo {
   width: 188px;
   height: 20px;
-  margin-top: 0.3rem;
-
-  @media screen and (max-width: 40em) {
-    display: block;
-    float: none;
-    margin-right: auto;
-    margin-bottom: 1rem;
-    margin-left: auto;
-  }
 }
 
 .site-nav {
-  float: right;
-  margin-top: 0.1rem;
-  font-size: 0.9rem;
-
-  ul {
-    display: inline-block;
-    list-style-type: none;
-
-    li {
-      display: block;
-      float: left;
-      margin-left: 2rem;
-
-      @media screen and (max-width: 40em) {
-        margin-left: 0;
-      }
-
-      .octicon {
-        font-size: 18px;
-      }
-    }
-  }
-
   a {
-    display: block;
-    height: 28px;
-    padding-top: 4px;
-    padding-bottom: 4px;
     color: rgba(255, 255, 255, 0.5);
-
-    @media screen and (max-width: 40em) {
-      margin-right: 1rem;
-      margin-left: 1rem;
-    }
   }
 
   a:hover {
     color: rgba(255, 255, 255, 1);
-  }
-
-  @media screen and (max-width: 40em) {
-    width: 100%;
-    padding-top: 1rem;
-    margin-bottom: 0.8rem;
-    text-align: center;
-    border-top: 0.075rem solid rgba(255, 255, 255, 0.25);
   }
 }
 
@@ -196,10 +149,6 @@ main {
   border: solid 1px #e3e3e3;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
-
-  .btn {
-    margin-top: -5px;
-  }
 
   @media screen and (max-width: 40em) {
     padding: 1.5rem 1rem;
@@ -449,59 +398,9 @@ hr {
   }
 }
 
-.organization-list-items {
-  .organization-list-item:not(:first-child) {
-    padding-top: 2rem;
-    margin-top: 2rem;
-    border-top: 1px solid #e3e3e3;
-
-    @media screen and (max-width: 40em) {
-      padding-top: 1rem;
-      margin-top: 1rem;
-    }
-  }
-}
-
-.organization-list-item {
-  font-size: 16px;
-
-  .avatar {
-    margin-right: 10px;
-  }
-
-  .organization-title {
-    display: block;
-    padding-top: 0.4em;
-
-    &:hover {
-      color: $blue;
-    }
-  }
-
-  .organization-stats {
-    padding-top: 0.5em;
-    font-size: 14px;
-    font-weight: bold;
-    vertical-align: inherit;
-
-    .organization-stat-item {
-      margin-right: 0.6em;
-
-      .octicon {
-        margin-right: 4px;
-        font-size: 16px;
-      }
-    }
-
-    @media screen and (max-width: 40em) {
-      display: none;
-    }
-  }
-}
-
 .site-footer {
-  margin-top: 2em;
-  margin-bottom: 2em;
+  padding-top: 2em;
+  padding-bottom: 2em;
   color: #777;
 }
 
@@ -518,6 +417,22 @@ hr {
     &:hover { color: #333; }
   }
 }
+
+
+.pages {
+  &.homev2 {
+    .site-footer {
+      background-color: $gray-000;
+    }
+  }
+
+  &.assistant {
+    .site-footer {
+      background-color: #fff;
+    }
+  }
+}
+
 
 .desktop-invitation-content,
 .settings,
@@ -655,6 +570,13 @@ hr {
 
   .column {
     padding: 0 20px;
+  }
+}
+
+.what-teachers-say-section {
+  .img-card {
+    min-width: 100%;
+    filter: blur(1px) brightness(50%);
   }
 }
 
@@ -931,6 +853,10 @@ hr {
 .remodal-user-list {
   max-height: 200px;
   overflow: scroll;
+}
+
+.remodal-button {
+  margin-bottom: 16px;
 }
 
 .assignment-container {

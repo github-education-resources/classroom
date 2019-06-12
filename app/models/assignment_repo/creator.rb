@@ -6,6 +6,8 @@ class AssignmentRepo
     REPOSITORY_CREATION_FAILED              = "GitHub repository could not be created, please try again"
     REPOSITORY_STARTER_CODE_IMPORT_FAILED   = "We were not able to import you the starter code to your assignment, please try again." # rubocop:disable LineLength
     REPOSITORY_COLLABORATOR_ADDITION_FAILED = "We were not able to add you to the Assignment as a collaborator, please try again." # rubocop:disable LineLength
+    REPOSITORY_CREATION_COMPLETE            = "Your GitHub repository was created."
+    IMPORT_ONGOING                          = "Your GitHub repository is importing starter code."
 
     attr_reader :assignment, :user, :organization
 
@@ -20,7 +22,11 @@ class AssignmentRepo
         new(:failed, error: error)
       end
 
-      attr_reader :error, :assignment_repo
+      def self.pending
+        new(:pending)
+      end
+
+      attr_reader :error, :assignment_repo, :status
 
       def initialize(status, assignment_repo: nil, error: nil)
         @status          = status
@@ -34,6 +40,10 @@ class AssignmentRepo
 
       def failed?
         @status == :failed
+      end
+
+      def pending?
+        @status == :pending
       end
     end
 
@@ -57,11 +67,13 @@ class AssignmentRepo
     # rubocop:disable AbcSize
     def perform
       start = Time.zone.now
-
       verify_organization_has_private_repos_available!
 
+      github_repository = create_github_repository!
+
       assignment_repo = assignment.assignment_repos.build(
-        github_repo_id: create_github_repository!,
+        github_repo_id: github_repository.id,
+        github_global_relay_id: github_repository.node_id,
         user: user
       )
 
@@ -79,18 +91,18 @@ class AssignmentRepo
 
       duration_in_millseconds = (Time.zone.now - start) * 1_000
       GitHubClassroom.statsd.timing("exercise_repo.create.time", duration_in_millseconds)
+      GitHubClassroom.statsd.increment("exercise_repo.create.success")
 
       Result.success(assignment_repo)
     rescue Result::Error => err
       delete_github_repository(assignment_repo.try(:github_repo_id))
+      GitHubClassroom.statsd.increment("exercise_repo.create.fail")
       Result.failed(err.message)
     end
     # rubocop:enable AbcSize
     # rubocop:enable MethodLength
 
-    private
-
-    # Internal: Add the User to the GitHub repository
+    # Public: Add the User to the GitHub repository
     # as a collaborator.
     #
     # Returns true if successful, otherwise raises a Result::Error
@@ -99,15 +111,15 @@ class AssignmentRepo
       options = {}.tap { |opt| opt[:permission] = "admin" if assignment.students_are_repo_admins? }
 
       github_repository = GitHubRepository.new(organization.github_client, github_repository_id)
-      invitation_id = github_repository.invite(user.github_user.login_no_cache, options).id
+      invitation = github_repository.invite(user.github_user.login_no_cache, options)
 
-      user.github_user.accept_repository_invitation(invitation_id)
+      user.github_user.accept_repository_invitation(invitation.id) if invitation.present?
     rescue GitHub::Error
       raise Result::Error, REPOSITORY_COLLABORATOR_ADDITION_FAILED
     end
     # rubocop:enable Metrics/AbcSize
 
-    # Internal: Create the GitHub repository for the AssignmentRepo.
+    # Public: Create the GitHub repository for the AssignmentRepo.
     #
     # Returns an Integer ID or raises a Result::Error
     def create_github_repository!
@@ -118,7 +130,7 @@ class AssignmentRepo
         description: "#{repository_name} created by GitHub Classroom"
       }
 
-      organization.github_organization.create_repository(repository_name, options).id
+      organization.github_organization.create_repository(repository_name, options)
     rescue GitHub::Error
       raise Result::Error, REPOSITORY_CREATION_FAILED
     end
@@ -130,7 +142,7 @@ class AssignmentRepo
       true
     end
 
-    # Internal: Push starter code to the newly created GitHub
+    # Public: Push starter code to the newly created GitHub
     # repository.
     #
     # github_repo_id - The Integer id of the GitHub repository.
@@ -148,27 +160,37 @@ class AssignmentRepo
       raise Result::Error, REPOSITORY_STARTER_CODE_IMPORT_FAILED
     end
 
-    # Internal: Ensure that we can make a private repository on GitHub.
+    # Public: Ensure that we can make a private repository on GitHub.
     #
     # Returns True or raises a Result::Error with a helpful message.
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable MethodLength
     def verify_organization_has_private_repos_available!
       return true if assignment.public?
 
-      github_organization_plan = GitHubOrganization.new(organization.github_client, organization.github_id).plan
+      begin
+        github_organization_plan = GitHubOrganization.new(organization.github_client, organization.github_id).plan
+      rescue GitHub::Error => error
+        raise Result::Error, error.message
+      end
 
       owned_private_repos = github_organization_plan[:owned_private_repos]
       private_repos       = github_organization_plan[:private_repos]
 
       return true if owned_private_repos < private_repos
 
-      error_message = <<-ERROR
-      Cannot make this private assignment, your limit of #{private_repos}
-      #{'repository'.pluralize(private_repos)} has been reached. You can request
-      a larger plan for free at https://education.github.com/discount
+      error_message = <<~ERROR
+        Cannot make this private assignment, your limit of #{private_repos}
+        #{'repository'.pluralize(private_repos)} has been reached. You can request
+        a larger plan for free at https://education.github.com/discount
       ERROR
 
       raise Result::Error, error_message
     end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable MethodLength
+
+    private
 
     #####################################
     # GitHub repository name generation #

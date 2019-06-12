@@ -11,7 +11,7 @@
   })();
 
   ready = function() {
-    return $('#js-search-form').on('change keyup', function() {
+    return $('#js-search-form').on('keyup', function() {
       var $this, formData;
       $this = $(this);
       formData = $(this).serialize();

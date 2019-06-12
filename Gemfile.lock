@@ -1,80 +1,65 @@
 GIT
-  remote: https://github.com/Soliah/peek-sidekiq.git
-  revision: 261c857578ae6dc189506a35194785a4db51e54c
-  ref: 261c857578ae6dc189506a35194785a4db51e54c
+  remote: https://github.com/d12/graphql-client.git
+  revision: 24ced5ff8b4ff401aa7da927d7d1df19e1607fbf
+  ref: 24ced5f
   specs:
-    peek-sidekiq (1.0.0)
-      peek
-      sidekiq
+    graphql-client (0.13.0)
+      activesupport (>= 3.0, < 6.0)
+      graphql (~> 1.6)
 
 GIT
-  remote: https://github.com/mkcode/peek-pg.git
-  revision: 9bbe212ed1b6b4a4ad56ded1ef4cf9179cdac0cd
-  ref: 9bbe212ed1b6b4a4ad56ded1ef4cf9179cdac0cd
+  remote: https://github.com/octokit/octokit.rb.git
+  revision: ffae5ddd6fd9da6f4538ca7adeb5d1768011610b
+  ref: ffae5ddd6fd9da6f4538ca7adeb5d1768011610b
   specs:
-    peek-pg (1.2.0)
-      concurrent-ruby
-      concurrent-ruby-ext
-      peek
-      pg
-
-GIT
-  remote: https://github.com/peek/peek-dalli.git
-  revision: 0a68e1fc73095a421dc2cae3d23937bb1cbb027c
-  ref: 0a68e1fc73095a421dc2cae3d23937bb1cbb027c
-  specs:
-    peek-dalli (1.1.3)
-      concurrent-ruby
-      concurrent-ruby-ext
-      dalli
-      peek
-
-GIT
-  remote: https://github.com/turbolinks/turbolinks-classic.git
-  revision: 37a7c296232d20a61bd1946f600da7f2009189db
-  ref: 37a7c296232d20a61bd1946f600da7f2009189db
-  specs:
-    turbolinks (3.0.0)
-      coffee-rails
+    octokit (4.9.0)
+      sawyer (~> 0.8.0, >= 0.5.3)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    actioncable (5.1.3)
-      actionpack (= 5.1.3)
+    action-cable-testing (0.3.1)
+      actioncable (~> 5.0)
+    actioncable (5.1.7)
+      actionpack (= 5.1.7)
       nio4r (~> 2.0)
       websocket-driver (~> 0.6.1)
-    actionmailer (5.1.3)
-      actionpack (= 5.1.3)
-      actionview (= 5.1.3)
-      activejob (= 5.1.3)
+    actionmailer (5.1.7)
+      actionpack (= 5.1.7)
+      actionview (= 5.1.7)
+      activejob (= 5.1.7)
       mail (~> 2.5, >= 2.5.4)
       rails-dom-testing (~> 2.0)
-    actionpack (5.1.3)
-      actionview (= 5.1.3)
-      activesupport (= 5.1.3)
+    actionpack (5.1.7)
+      actionview (= 5.1.7)
+      activesupport (= 5.1.7)
       rack (~> 2.0)
-      rack-test (~> 0.6.3)
+      rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
-    actionview (5.1.3)
-      activesupport (= 5.1.3)
+    actionview (5.1.7)
+      activesupport (= 5.1.7)
       builder (~> 3.1)
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
-    activejob (5.1.3)
-      activesupport (= 5.1.3)
+    active_model_serializers (0.10.7)
+      actionpack (>= 4.1, < 6)
+      activemodel (>= 4.1, < 6)
+      case_transform (>= 0.2)
+      jsonapi-renderer (>= 0.1.1.beta1, < 0.3)
+    activejob (5.1.7)
+      activesupport (= 5.1.7)
       globalid (>= 0.3.6)
-    activemodel (5.1.3)
-      activesupport (= 5.1.3)
-    activerecord (5.1.3)
-      activemodel (= 5.1.3)
-      activesupport (= 5.1.3)
+    activemodel (5.1.7)
+      activesupport (= 5.1.7)
+    activerecord (5.1.7)
+      activemodel (= 5.1.7)
+      activesupport (= 5.1.7)
       arel (~> 8.0)
-    activesupport (5.1.3)
+    activesupport (5.1.7)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-      i18n (~> 0.7)
+      i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     addressable (2.5.2)
@@ -82,6 +67,7 @@ GEM
     airbrake (6.2.1)
       airbrake-ruby (~> 2.3, >= 2.3.1)
     airbrake-ruby (2.3.2)
+    api-pagination (4.7.1)
     arel (8.0.0)
     ast (2.3.0)
     autoprefixer-rails (7.1.3)
@@ -95,7 +81,9 @@ GEM
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.10.0)
     byebug (9.1.0)
-    chewy (0.10.1)
+    case_transform (0.2)
+      activesupport
+    chewy (5.0.0)
       activesupport (>= 4.0)
       elasticsearch (>= 2.0.0)
       elasticsearch-dsl
@@ -114,6 +102,7 @@ GEM
     connection_pool (2.2.1)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
+    crass (1.0.4)
     dalli (2.7.6)
     database_cleaner (1.6.1)
     diff-lcs (1.3)
@@ -123,16 +112,16 @@ GEM
     dotenv-rails (2.2.1)
       dotenv (= 2.2.1)
       railties (>= 3.2, < 5.2)
-    elasticsearch (5.0.4)
-      elasticsearch-api (= 5.0.4)
-      elasticsearch-transport (= 5.0.4)
-    elasticsearch-api (5.0.4)
+    elasticsearch (6.1.0)
+      elasticsearch-api (= 6.1.0)
+      elasticsearch-transport (= 6.1.0)
+    elasticsearch-api (6.1.0)
       multi_json
-    elasticsearch-dsl (0.1.5)
-    elasticsearch-transport (5.0.4)
+    elasticsearch-dsl (0.1.6)
+    elasticsearch-transport (6.1.0)
       faraday
       multi_json
-    erubi (1.6.1)
+    erubi (1.8.0)
     erubis (2.7.0)
     ethon (0.10.1)
       ffi (>= 1.3.0)
@@ -152,7 +141,7 @@ GEM
       multipart-post (>= 1.2, < 3)
     faraday-http-cache (2.0.0)
       faraday (~> 0.8)
-    ffi (1.9.18)
+    ffi (1.9.24)
     flipper (0.10.2)
     flipper-redis (0.10.2)
       flipper (~> 0.10.2)
@@ -168,8 +157,15 @@ GEM
     geo_pattern (1.4.0)
       color (~> 1.5)
     get_process_mem (0.2.1)
-    globalid (0.4.0)
+    globalid (0.4.2)
       activesupport (>= 4.2.0)
+    graphql (1.8.4)
+    graphql-batch (0.3.10)
+      graphql (>= 0.8, < 2)
+      promise.rb (~> 0.7.2)
+    graphql-remote_loader (1.0.3)
+      graphql (~> 1.6)
+      graphql-batch (~> 0.3)
     guard (2.14.1)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
@@ -185,13 +181,15 @@ GEM
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
     hashdiff (0.3.6)
-    hashie (3.5.6)
-    i18n (0.8.6)
+    hashie (3.6.0)
+    i18n (0.9.5)
+      concurrent-ruby (~> 1.0)
     jquery-datetimepicker-rails (2.4.1.0)
     jquery-turbolinks (2.1.0)
       railties (>= 3.1.0)
       turbolinks
     json (2.1.0)
+    jsonapi-renderer (0.2.0)
     jwt (1.5.6)
     kaminari (1.0.1)
       activesupport (>= 4.1.0)
@@ -217,26 +215,25 @@ GEM
       activesupport (>= 4, < 5.2)
       railties (>= 4, < 5.2)
       request_store (~> 1.0)
-    loofah (2.0.3)
+    loofah (2.2.3)
+      crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lumberjack (1.0.12)
-    mail (2.6.6)
-      mime-types (>= 1.16, < 4)
+    mail (2.7.1)
+      mini_mime (>= 0.1.1)
     method_source (0.8.2)
-    mime-types (3.1)
-      mime-types-data (~> 3.2015)
-    mime-types-data (3.2016.0521)
-    mini_portile2 (2.2.0)
-    minitest (5.10.3)
+    mini_mime (1.0.1)
+    mini_portile2 (2.4.0)
+    minitest (5.11.3)
     msgpack (1.1.0)
     multi_json (1.12.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
     nenv (0.3.0)
     newrelic_rpm (4.4.0.336)
-    nio4r (2.1.0)
-    nokogiri (1.8.0)
-      mini_portile2 (~> 2.2.0)
+    nio4r (2.3.1)
+    nokogiri (1.10.3)
+      mini_portile2 (~> 2.4.0)
     notiffany (0.1.1)
       nenv (~> 0.1)
       shellany (~> 0.0)
@@ -251,10 +248,9 @@ GEM
     octicons_helper (2.1.0)
       octicons (~> 2.0)
       rails
-    octokit (4.7.0)
-      sawyer (~> 0.8.0, >= 0.5.3)
-    omniauth (1.6.1)
-      hashie (>= 3.4.6, < 3.6.0)
+    octopoller (0.1.0)
+    omniauth (1.9.0)
+      hashie (>= 3.4.6, < 3.7.0)
       rack (>= 1.6.2, < 3)
     omniauth-github (1.3.0)
       omniauth (~> 1.5)
@@ -269,16 +265,30 @@ GEM
       concurrent-ruby (>= 0.9.0)
       concurrent-ruby-ext (>= 0.9.0)
       railties (>= 4.0.0)
+    peek-dalli (1.1.3.4.g0a68e1f)
+      concurrent-ruby
+      concurrent-ruby-ext
+      dalli
+      peek
     peek-gc (0.0.2)
       peek
     peek-git (1.0.2)
       peek
     peek-performance_bar (1.2.0)
       peek (>= 0.1.0)
+    peek-pg (1.3.0)
+      concurrent-ruby
+      concurrent-ruby-ext
+      peek
+      pg
+    peek-sidekiq (1.0.0.4.g261c857)
+      peek
+      sidekiq
     pg (0.21.0)
     pinglish (0.2.1)
       rack
     powerpack (0.1.1)
+    promise.rb (0.7.4)
     pry (0.10.4)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -293,30 +303,31 @@ GEM
     puma_worker_killer (0.1.0)
       get_process_mem (~> 0.2)
       puma (>= 2.7, < 4)
-    rack (2.0.3)
+    rack (2.0.7)
     rack-canonical-host (0.2.3)
       addressable (> 0, < 3)
       rack (>= 1.0.0, < 3)
     rack-protection (2.0.0)
       rack
-    rack-test (0.6.3)
-      rack (>= 1.0)
+    rack-rewrite (1.5.1)
+    rack-test (1.1.0)
+      rack (>= 1.0, < 3)
     rack-timeout (0.4.2)
     rack-tracker (1.4.0)
       activesupport (>= 3.0)
       rack (>= 1.4)
       tilt (>= 1.4)
-    rails (5.1.3)
-      actioncable (= 5.1.3)
-      actionmailer (= 5.1.3)
-      actionpack (= 5.1.3)
-      actionview (= 5.1.3)
-      activejob (= 5.1.3)
-      activemodel (= 5.1.3)
-      activerecord (= 5.1.3)
-      activesupport (= 5.1.3)
+    rails (5.1.7)
+      actioncable (= 5.1.7)
+      actionmailer (= 5.1.7)
+      actionpack (= 5.1.7)
+      actionview (= 5.1.7)
+      activejob (= 5.1.7)
+      activemodel (= 5.1.7)
+      activerecord (= 5.1.7)
+      activesupport (= 5.1.7)
       bundler (>= 1.3.0)
-      railties (= 5.1.3)
+      railties (= 5.1.7)
       sprockets-rails (>= 2.0.0)
     rails-controller-testing (1.0.2)
       actionpack (~> 5.x, >= 5.0.1)
@@ -325,20 +336,20 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.0.3)
-      loofah (~> 2.0)
+    rails-html-sanitizer (1.0.4)
+      loofah (~> 2.2, >= 2.2.2)
     rails-i18n (5.0.4)
       i18n (~> 0.7)
       railties (~> 5.0)
-    railties (5.1.3)
-      actionpack (= 5.1.3)
-      activesupport (= 5.1.3)
+    railties (5.1.7)
+      actionpack (= 5.1.7)
+      activesupport (= 5.1.7)
       method_source
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rainbow (2.2.2)
       rake
-    rake (12.0.0)
+    rake (12.3.2)
     rb-fsevent (0.10.2)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
@@ -391,6 +402,8 @@ GEM
       rake (>= 0.9, < 13)
       sass (~> 3.4.20)
     shellany (0.0.1)
+    shoulda-matchers (4.0.0.rc1)
+      activesupport (>= 4.2.0)
     sidekiq (5.0.4)
       concurrent-ruby (~> 1.0)
       connection_pool (~> 2.2, >= 2.2.0)
@@ -407,7 +420,7 @@ GEM
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
       spring (>= 1.2, < 3.0)
-    sprockets (3.7.1)
+    sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
     sprockets-rails (3.2.1)
@@ -419,13 +432,16 @@ GEM
     thread_safe (0.3.6)
     tilt (2.0.8)
     timecop (0.9.1)
+    turbolinks (2.5.3.226.g37a7c29)
+      coffee-rails
     typhoeus (1.3.0)
       ethon (>= 0.9.0)
-    tzinfo (1.2.3)
+    tzinfo (1.2.5)
       thread_safe (~> 0.1)
     uglifier (3.2.0)
       execjs (>= 0.3.0, < 3)
     unicode-display_width (1.3.0)
+    unicode-emoji (1.1.0)
     uniform_notifier (1.10.0)
     vcr (3.0.3)
     web-console (3.5.1)
@@ -439,18 +455,21 @@ GEM
       hashdiff
     websocket-driver (0.6.5)
       websocket-extensions (>= 0.1.0)
-    websocket-extensions (0.1.2)
+    websocket-extensions (0.1.3)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  action-cable-testing (~> 0.3)
+  active_model_serializers (~> 0.10.0)
   airbrake (~> 6.2, >= 6.2.1)
+  api-pagination (= 4.7.1)
   autoprefixer-rails (~> 7.1, >= 7.1.3)
   awesome_print (~> 1.8)
   bootsnap (~> 1.1, >= 1.1.2)
   bullet (~> 5.6, >= 5.6.1)
-  chewy (~> 0.10.1)
+  chewy (~> 5.0.0)
   connection_pool (~> 2.2, >= 2.2.1)
   dalli (~> 2.7, >= 2.7.6)
   database_cleaner (~> 1.6, >= 1.6.1)
@@ -465,6 +484,9 @@ DEPENDENCIES
   flipper-ui (~> 0.10.2)
   foreman (~> 0.84.0)
   geo_pattern (~> 1.4)
+  graphql (= 1.8.4)
+  graphql-client!
+  graphql-remote_loader (= 1.0.3)
   guard-rspec (~> 4.7, >= 4.7.3)
   jquery-datetimepicker-rails (~> 2.4, >= 2.4.1.0)
   jquery-turbolinks (~> 2.1)
@@ -474,16 +496,16 @@ DEPENDENCIES
   lograge (~> 0.6.0)
   newrelic_rpm (~> 4.4, >= 4.4.0.336)
   octicons_helper (~> 2.1)
-  octokit (~> 4.7)
-  omniauth (~> 1.6, >= 1.6.1)
+  octokit!
+  octopoller (~> 0.1)
   omniauth-github (~> 1.3)
   peek (~> 1.0, >= 1.0.1)
-  peek-dalli!
+  peek-dalli (= 1.1.3.4.g0a68e1f)
   peek-gc (~> 0.0.2)
   peek-git (~> 1.0, >= 1.0.2)
   peek-performance_bar (= 1.2)
-  peek-pg!
-  peek-sidekiq!
+  peek-pg (~> 1.3)
+  peek-sidekiq (= 1.0.0.4.g261c857)
   pg (~> 0.21.0)
   pinglish (~> 0.2.1)
   pry-byebug (~> 3.5)
@@ -491,9 +513,10 @@ DEPENDENCIES
   puma (~> 3.10)
   puma_worker_killer (~> 0.1.0)
   rack-canonical-host (~> 0.2.3)
+  rack-rewrite (~> 1.5.0)
   rack-timeout (~> 0.4.2)
   rack-tracker (~> 1.4)
-  rails (~> 5.1, >= 5.1.3)
+  rails (~> 5.1, >= 5.1.7)
   rails-controller-testing (~> 1.0, >= 1.0.2)
   rails-i18n (~> 5.0, >= 5.0.1)
   redis-namespace (~> 1.5, >= 1.5.3)
@@ -502,16 +525,18 @@ DEPENDENCIES
   ruby-progressbar (~> 1.8, >= 1.8.1)
   sass-rails (~> 5.0, >= 5.0.6)
   scss_lint (~> 0.54.0)
+  shoulda-matchers (= 4.0.0.rc1)
   sidekiq (~> 5.0, >= 5.0.4)
   simplecov (~> 0.15.0)
   spring (~> 2.0, >= 2.0.2)
   spring-watcher-listen (~> 2.0, >= 2.0.1)
-  sprockets (~> 3.7, >= 3.7.1)
+  sprockets (~> 3.7, >= 3.7.2)
   terminal-notifier-guard (~> 1.7)
   timecop (~> 0.9.1)
-  turbolinks!
+  turbolinks (= 2.5.3.226.g37a7c29)
   typhoeus (~> 1.3)
   uglifier (~> 3.2)
+  unicode-emoji (~> 1.1)
   vcr (~> 3.0, >= 3.0.3)
   web-console (~> 3.5, >= 3.5.1)
   webmock (~> 3.0, >= 3.0.1)
@@ -520,4 +545,4 @@ RUBY VERSION
    ruby 2.4.2p198
 
 BUNDLED WITH
-   1.15.4
+   2.0.1

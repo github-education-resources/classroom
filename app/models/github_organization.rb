@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class GitHubOrganization < GitHubResource
   def accept_membership(user_github_login)
     return if organization_member?(user_github_login)
@@ -44,21 +45,21 @@ class GitHubOrganization < GitHubResource
 
   def create_team(team_name)
     github_team = GitHub::Errors.with_error_handling do
-      @client.create_team(@id,
-                          description: "#{team_name} created by GitHub Classroom",
-                          name: team_name,
-                          permission: "push")
+      @client.create_team(
+        @id,
+        description: "#{team_name} created by GitHub Classroom",
+        name: team_name,
+        permission: "push"
+      )
     end
 
     GitHubTeam.new(@client, github_team.id)
   end
 
   def delete_team(team_id)
-    @client.delete_team(team_id)
-  end
-
-  def geo_pattern_data_uri
-    @geo_pattern_data_uri ||= GeoPattern.generate(id, color: "#5fb27b").to_data_uri
+    GitHub::Errors.with_error_handling do
+      @client.delete_team(team_id)
+    end
   end
 
   def github_avatar_url(size = 40)
@@ -114,10 +115,31 @@ class GitHubOrganization < GitHubResource
     end
   end
 
+  def activate_organization_webhook(webhook_id, config: {}, options: {})
+    GitHub::Errors.with_error_handling do
+      hook_config = { content_type: "json", secret: webhook_secret }.merge(config)
+
+      hook_options = {
+        # Send the [wildcard](https://developer.github.com/webhooks/#wildcard-event)
+        # so that we don't have to upgrade the webhooks everytime we need something new.
+        events: ["*"],
+        active: true
+      }.merge(options)
+
+      @client.edit_org_hook(@id, webhook_id, hook_config, hook_options)
+    end
+  end
+
+  def organization_webhooks
+    GitHub::Errors.with_error_handling do
+      @client.org_hooks(@id)
+    end
+  end
+
   def remove_organization_webhook(webhook_id)
     return if webhook_id.blank?
     GitHub::Errors.with_error_handling do
-      @client.remove_org_hook(@id, webhook_id)
+      @client.remove_org_hook(@login, webhook_id)
     end
   end
 
@@ -134,7 +156,7 @@ class GitHubOrganization < GitHubResource
   private
 
   def github_attributes
-    %w[login avatar_url html_url name]
+    %w[login avatar_url html_url name node_id]
   end
 
   def github_repo_default_options
@@ -150,3 +172,4 @@ class GitHubOrganization < GitHubResource
     Rails.application.secrets.webhook_secret
   end
 end
+# rubocop:enable Metrics/ClassLength

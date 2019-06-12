@@ -3,18 +3,63 @@
 require "rails_helper"
 
 RSpec.describe AssignmentRepo::Creator, type: :model do
+  subject            { described_class }
   let(:organization) { classroom_org }
   let(:student)      { classroom_student }
+  let(:teacher)      { classroom_teacher }
 
   let(:assignment) do
     options = {
       title: "Learn Elm",
       starter_code_repo_id: 1_062_897,
       organization: organization,
-      students_are_repo_admins: true
+      students_are_repo_admins: true,
+      public_repo: false
     }
 
     create(:assignment, options)
+  end
+
+  describe "#verify_organization_has_private_repos_available!", :vcr do
+    let(:creator) { subject.new(assignment: assignment, user: student) }
+
+    context "organization has private repos" do
+      it "returns true" do
+        expect(creator.verify_organization_has_private_repos_available!).to eq(true)
+      end
+    end
+
+    context "organization plan can't be found" do
+      before do
+        expect_any_instance_of(GitHubOrganization)
+          .to receive(:plan)
+          .and_raise(GitHub::Error, "Cannot retrieve this organizations repo plan, please reauthenticate your token.")
+      end
+
+      it "raises a Result::Error" do
+        expect { creator.verify_organization_has_private_repos_available! }
+          .to raise_error(
+            GitHub::Error,
+            "Cannot retrieve this organizations repo plan, please reauthenticate your token."
+          )
+      end
+    end
+
+    context "organization plan limit reached" do
+      before do
+        expect_any_instance_of(GitHubOrganization)
+          .to receive(:plan)
+          .and_return(
+            owned_private_repos: 1,
+            private_repos: 1
+          )
+      end
+
+      it "raises a Result::Error" do
+        expect { creator.verify_organization_has_private_repos_available! }
+          .to raise_error(GitHub::Error)
+      end
+    end
   end
 
   describe "::perform", :vcr do
@@ -23,16 +68,31 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
         AssignmentRepo.destroy_all
       end
 
-      it "creates an AssignmentRepo" do
+      it "creates an AssignmentRepo as an outside_collaborator" do
         result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
 
         expect(result.success?).to be_truthy
         expect(result.assignment_repo.assignment).to eql(assignment)
         expect(result.assignment_repo.user).to eql(student)
+        expect(result.assignment_repo.github_global_relay_id).to be_truthy
+      end
+
+      it "creates an AssignmentRepo as a member" do
+        result = AssignmentRepo::Creator.perform(assignment: assignment, user: teacher)
+
+        expect(result.success?).to be_truthy
+        expect(result.assignment_repo.assignment).to eql(assignment)
+        expect(result.assignment_repo.user).to eql(teacher)
+        expect(result.assignment_repo.github_global_relay_id).to be_truthy
       end
 
       it "tracks the how long it too to be created" do
         expect(GitHubClassroom.statsd).to receive(:timing)
+        AssignmentRepo::Creator.perform(assignment: assignment, user: student)
+      end
+
+      it "tracks create success stat" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
         AssignmentRepo::Creator.perform(assignment: assignment, user: student)
       end
 
@@ -67,6 +127,15 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
 
         expect(result.failed?).to be_truthy
         expect(result.error).to eql(AssignmentRepo::Creator::REPOSITORY_CREATION_FAILED)
+      end
+
+      it "tracks create fail stat" do
+        stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
+          .to_return(body: "{}", status: 401)
+
+        expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.Unauthorized")
+        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.fail")
+        AssignmentRepo::Creator.perform(assignment: assignment, user: student)
       end
 
       context "with a successful repository creation" do

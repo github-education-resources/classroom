@@ -6,15 +6,11 @@ RSpec.describe Stafftools::GroupsController, type: :controller do
   let(:user)         { classroom_teacher }
   let(:organization) { classroom_org     }
 
-  let(:grouping) { create(:grouping, organization: organization)         }
-  let(:group)    { Group.create(grouping: grouping, title: "The B Team") }
+  let(:grouping) { create(:grouping, organization: organization) }
+  let(:group)    { create(:group, grouping: grouping, github_team_id: 2_976_595) }
 
   before(:each) do
     sign_in_as(user)
-  end
-
-  after do
-    Group.destroy_all
   end
 
   describe "GET #show", :vcr do

@@ -8,6 +8,14 @@ cd "$(dirname "$0")/.."
 
 script/bootstrap
 
-echo "==> Updating db..."
-# run all database migrations to ensure everything is up to date.
-bin/rake db:create db:migrate
+echo "===> Waiting for the containers to mount..."
+sleep 5
+
+echo "==> Updating database..."
+bin/rake db:migrate db:test:prepare
+
+echo "===> Remove old logs and tempfiles..."
+bin/rails log:clear tmp:clear
+
+echo "===> Restart application server..."
+bin/rails restart

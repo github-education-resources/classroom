@@ -5,7 +5,7 @@ class GroupAssignmentRepo < ApplicationRecord
   include GitHubRepoable
   include Nameable
 
-  update_index("stafftools#group_assignment_repo") { self }
+  update_index("group_assignment_repo#group_assignment_repo") { self }
 
   enum configuration_state: %i[not_configured configuring configured]
 
@@ -28,8 +28,10 @@ class GroupAssignmentRepo < ApplicationRecord
   before_validation(on: :create) do
     if organization
       create_github_repository
-      push_starter_code
-      add_team_to_github_repository
+      delete_github_repository_on_failure do
+        push_starter_code
+        add_team_to_github_repository
+      end
     end
   end
 
@@ -58,6 +60,12 @@ class GroupAssignmentRepo < ApplicationRecord
 
   def repo_name
     @repo_name ||= generate_github_repo_name
+  end
+
+  def import_status
+    return "No starter code provided" unless group_assignment.starter_code?
+
+    github_repository.import_progress.status.humanize
   end
 
   private

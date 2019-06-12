@@ -4,7 +4,7 @@ class Organization < ApplicationRecord
   include Flippable
   include Sluggable
 
-  update_index("stafftools#organization") { self }
+  update_index("organization#organization") { self }
 
   default_scope { where(deleted_at: nil) }
 
@@ -13,19 +13,18 @@ class Organization < ApplicationRecord
   has_many :group_assignments,        dependent: :destroy
   has_many :repo_accesses,            dependent: :destroy
 
+  belongs_to :organization_webhook
   belongs_to :roster, optional: true
 
-  has_many :organization_users
-  has_many :users, through: :organization_users
+  has_and_belongs_to_many :users
 
-  validates :github_id, presence: true, uniqueness: true
+  validates :github_id, presence: true
 
   validates :title, presence: true
   validates :title, length: { maximum: 60 }
+  validates :title, uniqueness: { scope: :github_id }
 
   validates :slug, uniqueness: true
-
-  validates :webhook_id, uniqueness: true, allow_nil: true
 
   before_destroy :silently_remove_organization_webhook
 
@@ -37,7 +36,11 @@ class Organization < ApplicationRecord
   end
 
   def github_client
-    token = users.limit(1).order("RANDOM()").pluck(:token)[0]
+    if Rails.env.test?
+      token = users.first.token unless users.first.nil?
+    else
+      token = users.limit(1).order("RANDOM()").pluck(:token)[0]
+    end
     Octokit::Client.new(access_token: token)
   end
 
@@ -45,17 +48,38 @@ class Organization < ApplicationRecord
     @github_organization ||= GitHubOrganization.new(github_client, github_id)
   end
 
-  def slugify
-    self.slug = "#{github_id} #{title}".parameterize
+  def name_for_slug
+    "#{github_id} #{title}"
+  end
+
+  def one_owner_remains?
+    users.count == 1
+  end
+
+  def geo_pattern_data_uri
+    patterns = %i[chevrons hexagons octagons plus_signs triangles squares diamonds]
+    @geo_pattern_data_uri ||= GeoPattern.generate(id, base_color: "#28a745", patterns: patterns).to_data_uri
+  end
+
+  # Check if we are the last Classroom on this GitHub Organization
+  def last_classroom_on_org?
+    Organization.where(github_id: github_id).length <= 1
   end
 
   def silently_remove_organization_webhook
+    return true unless last_classroom_on_org?
+    return true if organization_webhook&.github_id.blank?
+
     begin
-      github_organization.remove_organization_webhook(webhook_id)
+      github_organization.remove_organization_webhook(organization_webhook.github_id)
     rescue GitHub::Error => err
       logger.info err.message
     end
 
     true
+  end
+
+  def self.search(search)
+    where("title LIKE ?", "%#{search}%")
   end
 end
