@@ -6,10 +6,12 @@ describe TransferAssignmentsService do
   let(:organization) { classroom_org }
   let(:old_user) { classroom_teacher }
   let(:new_user) { create(:user) }
+
   before(:each) do
     organization.users << new_user
     organization.save
   end
+
   context "when teacher owns no assignments" do
     let(:transfer_assignment_service) { TransferAssignmentsService.new(organization, old_user) }
     it "is expected to return false" do
@@ -32,6 +34,7 @@ describe TransferAssignmentsService do
       expect(assignment.creator_id).to eq(new_user.id)
     end
   end
+
   context "when teacher owns group assignments" do
     it "is expected to transfer group assignments to random new user" do
       assignment = create(:group_assignment, organization: organization, creator: old_user)
