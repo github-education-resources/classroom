@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 describe TransferAssignmentsService do
   let(:organization) { classroom_org }
@@ -20,7 +20,7 @@ describe TransferAssignmentsService do
   context "when teacher owns individual assignments" do
     it "is expected to transfer assignments to random new user" do
       assignment = create(:assignment, organization: organization, creator: old_user)
-      TransferAssignmentsService.new(organization,old_user).transfer
+      TransferAssignmentsService.new(organization, old_user).transfer
       assignment.reload
       expect(assignment.creator_id).not_to eq(old_user.id)
     end
@@ -35,7 +35,7 @@ describe TransferAssignmentsService do
   context "when teacher owns group assignments" do
     it "is expected to transfer group assignments to random new user" do
       assignment = create(:group_assignment, organization: organization, creator: old_user)
-      TransferAssignmentsService.new(organization,old_user).transfer
+      TransferAssignmentsService.new(organization, old_user).transfer
       assignment.reload
       expect(assignment.creator_id).not_to eq(old_user.id)
     end

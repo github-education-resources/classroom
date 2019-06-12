@@ -10,7 +10,7 @@ class TransferAssignmentsService
 
   def transfer
     return false unless user_owns_any_assignments?
-    all_assignments_of_user = organization.all_assignments.select do |assignment| 
+    all_assignments_of_user = organization.all_assignments.select do |assignment|
       assignment.creator_id == old_user.id
     end
     all_assignments_of_user.map do |assignment|
@@ -19,6 +19,7 @@ class TransferAssignmentsService
   end
 
   private
+
   def user_owns_any_assignments?
     user_owns_assignments? || user_owns_group_assignments?
   end
@@ -30,5 +31,4 @@ class TransferAssignmentsService
   def user_owns_group_assignments?
     organization.group_assignments.where(creator_id: old_user.id).any?
   end
-
 end
