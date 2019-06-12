@@ -3,12 +3,10 @@
 class AssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
+  include AssignmentSort
 
   before_action :set_assignment, except: %i[new create]
   before_action :set_unlinked_users, only: [:show]
-
-  SORT_MODES        = ["Assignment acceptance time", "Student name", "Student username"].freeze
-  DEFAULT_SORT_MODE = SORT_MODES.first
 
   def new
     @assignment = Assignment.new
@@ -37,8 +35,15 @@ class AssignmentsController < ApplicationController
       .where(assignment: @assignment)
       .order(:id)
       .page(params[:page])
-    return unless @organization.roster
 
+    @assignment_sort_modes = {
+        "Created at" => ->(repo) { repo.created_at },
+        "Student name" => ->(repo) { repo.github_user.name || "" },
+        "Student username" => ->(repo) { repo.github_user.login }
+    }  
+    sort_assignment_repos(@assignment_repos, @assignment_sort_modes)
+
+    return unless @organization.roster
     @roster_entries = @organization.roster.roster_entries
       .order(:id)
       .page(params[:students_page])
@@ -139,19 +144,5 @@ class AssignmentsController < ApplicationController
   def send_create_assignment_statsd_events
     GitHubClassroom.statsd.increment("exercise.create")
     GitHubClassroom.statsd.increment("deadline.create") if @assignment.deadline
-  end
-
-  def sort_assignment_repositories(assignment_repos)
-    @current_sort_mode = params[:sort_assignment_repos_by] || DEFAULT_SORT_MODE
-    @all_sort_modes    = SORT_MODES
-
-    case @current_sort_mode
-    when "Assignment acceptance time"
-      assignment_repos
-    when "Student name"
-      assignment_repos.sort_by { |repo| repo.github_user.name }
-    when "Student username"
-      assignment_repos.sort_by { |repo| repo.github_user.login }
-    end
   end
 end

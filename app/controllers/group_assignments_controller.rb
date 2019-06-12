@@ -4,6 +4,7 @@
 class GroupAssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
+  include AssignmentSort
 
   before_action :set_group_assignment,      except: %i[new create]
   before_action :set_groupings,             except: [:show]
@@ -35,6 +36,12 @@ class GroupAssignmentsController < ApplicationController
       .where(group_assignment: @group_assignment)
       .order(:id)
       .page(params[pagination_key])
+
+    @assignment_sort_modes = {
+      "Created at" => ->(repo) { repo.created_at },
+      "Team name" => ->(repo) { repo.github_user.name }
+    }
+    sort_assignment_repos(@group_assignment_repos, @assignment_sort_modes)
 
     return unless @organization.roster
     @students_not_on_team = @organization.roster.roster_entries
