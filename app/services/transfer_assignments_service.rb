@@ -2,6 +2,7 @@
 
 class TransferAssignmentsService
   attr_accessor :organization, :old_user, :new_user
+
   def initialize(organization, old_user, new_user = nil)
     @organization = organization
     @old_user = old_user
@@ -10,10 +11,8 @@ class TransferAssignmentsService
 
   def transfer
     return false unless user_owns_any_assignments?
-    all_assignments_of_user = organization.all_assignments.select do |assignment|
-      assignment.creator_id == old_user.id
-    end
-    all_assignments_of_user.map do |assignment|
+    organization.all_assignments.each do |assignment|
+      next unless assignment.creator_id == old_user.id
       assignment.update(creator_id: new_user.id)
     end
   end
