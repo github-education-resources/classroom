@@ -25,20 +25,20 @@ class OrganizationEventJob < ApplicationJob
   # rubocop:enable Metrics/AbcSize
 
   def user_owns_any_assignments?
-     user_owns_assignments? || user_owns_group_assignments?
+    user_owns_assignments? || user_owns_group_assignments?
   end
 
   def user_owns_assignments?
-    @organization.assignments.where(creator_id: @user.id).count > 0
+    @organization.assignments.where(creator_id: @user.id).count.positive?
   end
 
   def user_owns_group_assignments?
-    @organization.group_assignments.where(creator_id: @user.id).count > 0
+    @organization.group_assignments.where(creator_id: @user.id).positive?
   end
 
   def transfer_assignments
     new_owner = @organization.users.where.not(id: @user.id).first
-    all_assignments_of_user = @organization.all_assignments.select{ |assignment| assignment.creator_id == @user.id }
+    all_assignments_of_user = @organization.all_assignments.select { |assignment| assignment.creator_id == @user.id }
     all_assignments_of_user.map do |assignment|
       assignment.update(creator_id: new_owner.id)
     end
