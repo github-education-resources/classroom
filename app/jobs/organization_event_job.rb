@@ -18,29 +18,8 @@ class OrganizationEventJob < ApplicationJob
     @user = @organization.users.find_by(uid: github_user_id)
 
     return true unless @user
-
-    transfer_assignments if user_owns_any_assignments?
+    TransferAssignmentsService.new(@organization, @user).transfer
     @organization.users.delete(@user)
   end
   # rubocop:enable Metrics/AbcSize
-
-  def user_owns_any_assignments?
-    user_owns_assignments? || user_owns_group_assignments?
-  end
-
-  def user_owns_assignments?
-    @organization.assignments.where(creator_id: @user.id).any?
-  end
-
-  def user_owns_group_assignments?
-    @organization.group_assignments.where(creator_id: @user.id).any?
-  end
-
-  def transfer_assignments
-    new_owner = @organization.users.where.not(id: @user.id).first
-    all_assignments_of_user = @organization.all_assignments.select { |assignment| assignment.creator_id == @user.id }
-    all_assignments_of_user.map do |assignment|
-      assignment.update(creator_id: new_owner.id)
-    end
-  end
 end
