@@ -29,11 +29,11 @@ class OrganizationEventJob < ApplicationJob
   end
 
   def user_owns_assignments?
-    @organization.assignments.where(creator_id: @user.id).count.positive?
+    @organization.assignments.where(creator_id: @user.id).any?
   end
 
   def user_owns_group_assignments?
-    @organization.group_assignments.where(creator_id: @user.id).positive?
+    @organization.group_assignments.where(creator_id: @user.id).any?
   end
 
   def transfer_assignments
