@@ -7,6 +7,6 @@ cask "docker"
 cask "ngrok"
 
 brew "nginx", restart_service: :changed
-brew "postgresql"
+brew "postgresql@9.4"
 brew "terminal-notifier"
 brew "yarn"
