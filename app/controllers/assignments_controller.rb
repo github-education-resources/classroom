@@ -31,17 +31,19 @@ class AssignmentsController < ApplicationController
   # rubocop:disable MethodLength
   # rubocop:disable Metrics/AbcSize
   def show
-    @assignment_repos = AssignmentRepo
+    @assignment_sort_modes = {
+      "Created at" => ->(repo) { repo.created_at },
+      "Student username" => ->(repo) { repo.github_user.login }
+    }  
+
+    repos = AssignmentRepo
       .where(assignment: @assignment)
       .order(:id)
-      .page(params[:page])
 
-    @assignment_sort_modes = {
-        "Created at" => ->(repo) { repo.created_at },
-        "Student name" => ->(repo) { repo.github_user.name || "" },
-        "Student username" => ->(repo) { repo.github_user.login }
-    }  
-    sort_assignment_repos(@assignment_repos, @assignment_sort_modes)
+    # To ensure pagination information is correct, we must paginate on the sorted array
+    # instead of the (unsorted) ActiveRecord_Relation
+    sorted_assignment_repos = sort_assignment_repos(repos, @assignment_sort_modes)
+    @assignment_repos = Kaminari.paginate_array(sorted_assignment_repos).page(params[:page])
 
     return unless @organization.roster
     @roster_entries = @organization.roster.roster_entries

@@ -32,16 +32,20 @@ class GroupAssignmentsController < ApplicationController
 
   def show
     pagination_key = @organization.roster ? :teams_page : :page
-    @group_assignment_repos = GroupAssignmentRepo
-      .where(group_assignment: @group_assignment)
-      .order(:id)
-      .page(params[pagination_key])
 
     @assignment_sort_modes = {
       "Created at" => ->(repo) { repo.created_at },
-      "Team name" => ->(repo) { repo.github_user.name }
+      "Team name" => ->(repo) { repo.github_team.name }
     }
-    sort_assignment_repos(@group_assignment_repos, @assignment_sort_modes)
+
+    repos = GroupAssignmentRepo
+      .where(group_assignment: @group_assignment)
+      .order(:id)
+
+    # To ensure pagination information is correct, we must paginate on the sorted array
+    # instead of the (unsorted) ActiveRecord_Relation
+    sorted_assignment_repos = sort_assignment_repos(repos, @assignment_sort_modes)
+    @group_assignment_repos = Kaminari.paginate_array(sorted_assignment_repos).page(params[pagination_key])
 
     return unless @organization.roster
     @students_not_on_team = @organization.roster.roster_entries
