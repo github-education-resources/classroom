@@ -96,9 +96,6 @@ Rails.application.routes.draw do
         resources :assignment_repos, only: [:show], controller: "orgs/assignment_repos"
         get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
         get :assistant, on: :member
-        collection do
-          get :search
-        end
       end
 
       resources :group_assignments, path: "group-assignments" do

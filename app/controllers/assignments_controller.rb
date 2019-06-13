@@ -7,6 +7,17 @@ class AssignmentsController < ApplicationController
   before_action :set_assignment, except: %i[new create]
   before_action :set_unlinked_users, only: [:show]
 
+  def index
+    if params[:query]
+      search
+    else
+      @assignment_repos = AssignmentRepo
+      .where(assignment: @assignment)
+      .order(:id)
+      .page(params[:page])
+    end
+  end
+
   def new
     @assignment = Assignment.new
   end
@@ -30,10 +41,10 @@ class AssignmentsController < ApplicationController
   # rubocop:disable MethodLength
   # rubocop:disable Metrics/AbcSize
   def show
-    @assignment_repos = AssignmentRepo
-      .where(assignment: @assignment)
-      .order(:id)
-      .page(params[:page])
+    # @assignment_repos = AssignmentRepo
+    #   .where(assignment: @assignment)
+    #   .order(:id)
+    #   .page(params[:page])
     return unless @organization.roster
 
     @roster_entries = @organization.roster.roster_entries
@@ -83,8 +94,9 @@ class AssignmentsController < ApplicationController
   end
 
   def search
-    user = @organization.roster.roster_entries("identifier LIKE ?", "%#{params[:query]}%").user_id
-    assignments = @organization.assignment_repo.where(user_id: user)
+    user = @organization.roster.roster_entries("identifier LIKE ?", "%#{params[:query]}%")
+    @assignment_repos = @organization.assignment_repo.where(user_id: user)
+    redirect_to :show
   end
 
   private
