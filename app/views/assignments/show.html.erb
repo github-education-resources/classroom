@@ -1,6 +1,9 @@
 <%= render 'organizations/organization_banner' %>
 
 <div class="site-content">
+<%= form_tag organization_assignment_path, class: 'form-block col-md-4', method: :get do %>
+  <%= text_field_tag :query, params[:query], class: 'form-control width-full', placeholder: 'Search assignments', autofocus: true, autocomplete: :off %>
+<% end %>
   <div class="site-content-cap d-flex flex-justify-between">
       <div class="pr-2">
         <div class="d-table col-12">
