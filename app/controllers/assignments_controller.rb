@@ -82,6 +82,11 @@ class AssignmentsController < ApplicationController
     redirect_to "x-github-classroom://?assignment_url=#{url_param}&code=#{code_param}"
   end
 
+  def search
+    user = @organization.roster.roster_entries("identifier LIKE ?", "%#{params[:query]}%").user_id
+    assignments = @organization.assignment_repo.where(user_id: user)
+  end
+
   private
 
   def new_assignment_params
