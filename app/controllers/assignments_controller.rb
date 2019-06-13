@@ -8,13 +8,9 @@ class AssignmentsController < ApplicationController
   before_action :set_unlinked_users, only: [:show]
 
   def index
+    binding.pry
     if params[:query]
       search
-    else
-      @assignment_repos = AssignmentRepo
-      .where(assignment: @assignment)
-      .order(:id)
-      .page(params[:page])
     end
   end
 
@@ -41,24 +37,45 @@ class AssignmentsController < ApplicationController
   # rubocop:disable MethodLength
   # rubocop:disable Metrics/AbcSize
   def show
-    # @assignment_repos = AssignmentRepo
-    #   .where(assignment: @assignment)
-    #   .order(:id)
-    #   .page(params[:page])
-    return unless @organization.roster
+    if params[:query]
+      search
+    else
+      @assignment_repos = AssignmentRepo
+        .where(assignment: @assignment)
+        .order(:id)
+        .page(params[:page])
+      return unless @organization.roster
 
-    @roster_entries = @organization.roster.roster_entries
-      .order(:id)
+      @roster_entries = @organization.roster.roster_entries
+        .order(:id)
+        .page(params[:students_page])
+        .order_for_view(@assignment)
+
+      @unlinked_user_repos = AssignmentRepo
+        .where(assignment: @assignment, user: @unlinked_users)
+        .order(:id)
+        .page(params[:unlinked_accounts_page])
+    end
+  end
+  # rubocop:enable MethodLength
+  # rubocop:enable Metrics/AbcSize
+
+  def search
+    user = @organization.roster.roster_entries.where("identifier LIKE ?", "%#{params[:query]}%")
+
+    @assignment_repos = AssignmentRepo
+      .where(assignment: @assignment, user_id: user.first.id)
+      .page(params[:page])
+
+    @roster_entries = user
       .page(params[:students_page])
       .order_for_view(@assignment)
 
     @unlinked_user_repos = AssignmentRepo
-      .where(assignment: @assignment, user: @unlinked_users)
+      .where(assignment: @assignment, user: @unlinked_accounts_page, user_id: user.first.id)
       .order(:id)
       .page(params[:unlinked_accounts_page])
   end
-  # rubocop:enable MethodLength
-  # rubocop:enable Metrics/AbcSize
 
   def edit; end
 
@@ -91,12 +108,6 @@ class AssignmentsController < ApplicationController
     url_param = CGI.escape(organization_assignment_url)
 
     redirect_to "x-github-classroom://?assignment_url=#{url_param}&code=#{code_param}"
-  end
-
-  def search
-    user = @organization.roster.roster_entries("identifier LIKE ?", "%#{params[:query]}%")
-    @assignment_repos = @organization.assignment_repo.where(user_id: user)
-    redirect_to :show
   end
 
   private
