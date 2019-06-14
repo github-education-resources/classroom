@@ -30,7 +30,7 @@ class AssignmentsController < ApplicationController
   # rubocop:disable MethodLength
   # rubocop:disable Metrics/AbcSize
   def show
-    if params[:query]
+    if params[:query] && @organization.roster
       search
     else
       @assignment_repos = AssignmentRepo
