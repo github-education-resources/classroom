@@ -47,7 +47,7 @@
       <%= render @assignment.assignment_invitation %>
     </div>
     <%= form_tag organization_assignment_path, id: 'js-search-form', class: 'form-block col-md-4', method: :get, remote: true do %>
-      <%= text_field_tag :query, params[:query], class: 'form-control width-full', placeholder: 'Search students...', autofocus: true, autocomplete: :off %>
+      <%= text_field_tag :query, params[:query], class: 'form-control width-full', placeholder: 'Search students by identifier...', autofocus: true, autocomplete: :off %>
     <% end %>
     <% if @organization.roster %>
       <div class="assignment-container">
