@@ -179,12 +179,12 @@ If you are recording new cassettes, you need to make sure all of these values ar
 
 ENV Variable | Description |
 :-------------------|:-----------------|
-`TEST_CLASSROOM_OWNER_GITHUB_ID` | The GitHub `user_id` of an organization admin.
-`TEST_CLASSROOM_OWNER_GITHUB_TOKEN` | The [Personal Access Token](https://github.com/blog/1509-personal-api-tokens) for the classroom owner
-`TEST_CLASSROOM_STUDENT_GITHUB_ID` | Test OAuth application client ID.
-`TEST_CLASSROOM_STUDENT_GITHUB_TOKEN` | The [Personal Access Token](https://github.com/blog/1509-personal-api-tokens) for the student
-`TEST_CLASSROOM_OWNER_ORGANIZATION_GITHUB_ID` | GitHub ID (preferably one created specifically for testing against).
-`TEST_CLASSROOM_OWNER_ORGANIZATION_GITHUB_LOGIN` | GitHub login (preferably one created specifically for testing against).
+`TEST_CLASSROOM_OWNER_GITHUB_ID` | GitHub `user_id` of an organization admin (classroom owner)
+`TEST_CLASSROOM_OWNER_GITHUB_TOKEN` | [OAuth Access Token](https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#creating-multiple-tokens-for-oauth-apps) for GitHub Classroom on behalf of the test classroom owner
+`TEST_CLASSROOM_STUDENT_GITHUB_ID` | GitHub `user_id` of the student
+`TEST_CLASSROOM_STUDENT_GITHUB_TOKEN` | [OAuth Access Token](https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/#creating-multiple-tokens-for-oauth-apps) for GitHub Classroom on behalf of the test student
+`TEST_CLASSROOM_OWNER_ORGANIZATION_GITHUB_ID` | GitHub ID of classroom organization (preferably one created specifically for testing against)
+`TEST_CLASSROOM_OWNER_ORGANIZATION_GITHUB_LOGIN` | GitHub login of classroom organization (preferably one created specifically for testing against)
 
 To obtain these values you will need:
 
@@ -196,11 +196,11 @@ It is best if you create your own organization for testing purposes, if you have
 
 To obtain the `OWNER_GITHUB_ID` value, you can go to `https://api.github.com/users/organization_owner_username`.
 
-To obtain the `OWNER_GITHUB_TOKEN` value, you will need to generate a [personal access token](https://github.com/blog/1509-personal-api-tokens).
+To obtain the `OWNER_GITHUB_TOKEN` value, you will need to log in to Classroom with the owner test account, pull up the Rails console, and copy the `token` field
 
 To get the `STUDENT_GITHUB_ID` value you will need to create another user account on GitHub and get the ID by going to `https://api.github.com/users/student_username`
 
-To get the `STUDENT_GITHUB_TOKEN` value you will need to generate another [personal access token](https://github.com/blog/1509-personal-api-tokens) for the student account.
+To get the `STUDENT_GITHUB_TOKEN` value, you will need to log in to Classroom with the student test account, pull up the Rails console, and copy the `token` field
 
 To obtain the `OWNER_ORGANIZATION_GITHUB_ID/LOGIN` you can go to `https://api.github.com/orgs/organization_name`.
 
