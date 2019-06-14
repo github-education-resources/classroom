@@ -208,15 +208,20 @@ RSpec.describe AssignmentsController, type: :controller do
     before do 
       organization.roster = create(:roster)
       organization.save!
-      RosterEntry.create(identifier: "aaaaabbbbbb", roster: organization.roster)
+      RosterEntry.create(identifier: "tester", roster: organization.roster)
       organization.roster.reload
     end
 
-    it "finds one user" do
-      get :show, params: { organization_id: organization.slug, id: assignment.slug, query: "aaaaabbbbbb" }
-      binding.pry
+    it "finds one user if in roster" do
+      get :search, params: { organization_id: organization.slug, id: assignment.slug, query: "tester" }
       expect(response.status).to eq(200)
       expect(assigns(:roster_entries)).to_not be_nil
+    end
+
+    it "finds no user if not in roster" do
+      get :search, params: { organization_id: organization.slug, id: assignment.slug, query: "aaaabbbbb" }
+      expect(response.status).to eq(200)
+      expect(assigns(:roster_entries)).to eq([])
     end
   end
 
