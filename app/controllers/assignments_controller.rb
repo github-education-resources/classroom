@@ -34,7 +34,7 @@ class AssignmentsController < ApplicationController
     @assignment_sort_modes = {
       "Created at" => ->(repo) { repo.created_at },
       "Student username" => ->(repo) { repo.github_user.login }
-    }  
+    }
 
     repos = AssignmentRepo
       .where(assignment: @assignment)
