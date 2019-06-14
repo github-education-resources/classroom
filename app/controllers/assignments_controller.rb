@@ -30,7 +30,7 @@ class AssignmentsController < ApplicationController
   # rubocop:disable MethodLength
   # rubocop:disable Metrics/AbcSize
   def show
-    if !params[:query].blank?
+    if params[:query]
       search
     else
       @assignment_repos = AssignmentRepo
@@ -69,6 +69,19 @@ class AssignmentsController < ApplicationController
       .order(:id)
       .where(assignment: @assignment, user: @unlinked_users, user_id: users.ids)
       .page(params[:unlinked_accounts_page])
+
+      return unless @assignment_repos || @roster_entires
+
+      respond_to do |format|
+        format.html do
+          render partial: "assignments/assignment_list_layout",
+            locals: {
+              roster_entries: @roster_entries,
+              organization: @organization,
+              assignment: @assignment
+            }
+        end
+      end
   end
 
   def edit; end
