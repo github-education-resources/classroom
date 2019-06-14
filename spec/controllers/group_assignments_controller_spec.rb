@@ -5,7 +5,8 @@ require "rails_helper"
 RSpec.describe GroupAssignmentsController, type: :controller do
   let(:user)             { classroom_teacher                                     }
   let(:organization)     { classroom_org                                         }
-  let(:group_assignment) { create(:group_assignment, organization: organization) }
+  let(:grouping)         { create(:grouping, title: "test assignment grouping", organization: organization) }
+  let(:group_assignment) { create(:group_assignment, title: "test group assignment", organization: organization, grouping: grouping) }
 
   before do
     sign_in_as(user)
@@ -134,6 +135,30 @@ RSpec.describe GroupAssignmentsController, type: :controller do
     it "returns success status" do
       get :show, params: { organization_id: organization.slug, id: group_assignment.slug }
       expect(response).to have_http_status(:success)
+    end
+
+    context "multiple assignment repos exist" do
+      let(:group_1) { create(:group, slug: group_assignment.slug, grouping: grouping, github_team_id: 3289076, organization: organization) }
+      let(:group_2) { create(:group, slug: group_assignment.slug, grouping: grouping, github_team_id: 3289095, organization: organization) }
+
+      before do 
+        GroupAssignmentRepo.create(group_assignment: group_assignment, group: group_1)
+        GroupAssignmentRepo.create(group_assignment: group_assignment, group: group_2)
+      end
+
+      after do
+        GroupAssignmentRepo.destroy_all
+      end
+
+      it "sorts assignments by time created by default" do
+        get :show, params: { organization_id: organization.slug, id: group_assignment.slug }
+        expect(assigns(:group_assignment_repos)).to match_array(group_assignment.group_assignment_repos.sort_by &:created_at)
+      end 
+
+      it "sorts assignments by team name when specified" do
+        get :show, params: { organization_id: organization.slug, id: group_assignment.slug, sort_assignment_repos_by: "Team name" }
+        expect(assigns(:group_assignment_repos)).to match_array(group_assignment.group_assignment_repos.sort_by {|r| r.github_team.name})
+      end
     end
   end
 

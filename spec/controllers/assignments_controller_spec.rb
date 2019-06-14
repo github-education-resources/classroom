@@ -202,6 +202,27 @@ RSpec.describe AssignmentsController, type: :controller do
       get :show, params: { organization_id: organization.slug, id: assignment.slug }
       expect(response).to have_http_status(:success)
     end
+
+    context "multiple assignment repos exist" do
+      before do 
+        create(:assignment_repo, github_repo_id: 1, assignment: assignment, user: classroom_student) 
+        create(:assignment_repo, github_repo_id: 2, assignment: assignment, user: classroom_teacher)
+      end
+
+      after do
+        AssignmentRepo.destroy_all
+      end 
+
+      it "sorts assignments by time created by default" do
+        get :show, params: { organization_id: organization.slug, id: assignment.slug }
+        expect(assigns(:assignment_repos)).to match_array(assignment.assignment_repos.sort_by &:created_at)
+      end 
+
+      it "sorts assignments by username when specified" do
+        get :show, params: { organization_id: organization.slug, id: assignment.slug, sort_assignment_repos_by: "Student username" }
+        expect(assigns(:assignment_repos)).to match_array(assignment.assignment_repos.sort_by {|r| r.github_user.login})
+      end
+    end
   end
 
   describe "GET #edit", :vcr do
