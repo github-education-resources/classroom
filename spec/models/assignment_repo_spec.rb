@@ -53,6 +53,7 @@ RSpec.describe AssignmentRepo, type: :model do
 
       expect(repo.valid?).to be_truthy
     end
+
     it "expects github_team_id to be nil" do
       repo = build(:assignment_repo, assignment: assignment, github_repo_id: 42)
       repo.repo_access = nil
