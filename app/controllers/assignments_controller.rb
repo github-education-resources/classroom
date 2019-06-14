@@ -21,7 +21,7 @@ class AssignmentsController < ApplicationController
 
       send_create_assignment_statsd_events
       flash[:success] = "\"#{@assignment.title}\" has been created!"
-      redirect_to organization_assignment_path(@organization, @assignment)
+      redirect_to organization_assignment_path(@organization, @assignment) 
     else
       render :new
     end
@@ -30,30 +30,28 @@ class AssignmentsController < ApplicationController
   # rubocop:disable MethodLength
   # rubocop:disable Metrics/AbcSize
   def show
-    if params[:query] && @organization.roster
-      search
-    else
-      @assignment_repos = AssignmentRepo
-        .where(assignment: @assignment)
-        .order(:id)
-        .page(params[:page])
-      return unless @organization.roster
+    @assignment_repos = AssignmentRepo
+      .where(assignment: @assignment)
+      .order(:id)
+      .page(params[:page])
+    return unless @organization.roster
 
-      @roster_entries = @organization.roster.roster_entries
-        .order(:id)
-        .page(params[:students_page])
-        .order_for_view(@assignment)
+    @roster_entries = @organization.roster.roster_entries
+      .order(:id)
+      .page(params[:students_page])
+      .order_for_view(@assignment)
 
-      @unlinked_user_repos = AssignmentRepo
-        .where(assignment: @assignment, user: @unlinked_users)
-        .order(:id)
-        .page(params[:unlinked_accounts_page])
-    end
+    @unlinked_user_repos = AssignmentRepo
+      .where(assignment: @assignment, user: @unlinked_users)
+      .order(:id)
+      .page(params[:unlinked_accounts_page])
   end
   # rubocop:enable MethodLength
   # rubocop:enable Metrics/AbcSize
 
   def search
+    return unless @organization.roster
+
     users = @organization.roster.roster_entries.where("identifier LIKE ?", "%#{params[:query]}%")
 
     @assignment_repos = AssignmentRepo
@@ -70,18 +68,18 @@ class AssignmentsController < ApplicationController
       .where(assignment: @assignment, user: @unlinked_users, user_id: users.ids)
       .page(params[:unlinked_accounts_page])
 
-      return unless @assignment_repos || @roster_entires
+    return unless @assignment_repos || @roster_entries
 
-      respond_to do |format|
-        format.html do
-          render partial: "assignments/assignment_list_layout",
-            locals: {
-              roster_entries: @roster_entries,
-              organization: @organization,
-              assignment: @assignment
-            }
-        end
+    respond_to do |format|
+      format.html do
+        render partial: "assignments/assignment_list_layout",
+        locals: {
+          roster_entries: @roster_entries,
+          organization: @organization,
+          assignment: @assignment
+        } 
       end
+    end
   end
 
   def edit; end
