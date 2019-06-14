@@ -7,11 +7,33 @@ set -e
 
 cd "$(dirname "$0")/.."
 
+# Make sure the system has both rbenv 
+# and nodenv installed previously, otherwise we can't
+# ensure dependencies install correctly.
+if ! [ -f "$(which rbenv)" ]; then
+  echo "It looks like you don't have rbenv installed"
+  echo "Check out https://github.com/rbenv/rbenv#installation to get it running on your system"
+
+  exit 1
+fi
+
+if ! [ -f "$(which nodenv)" ]; then
+  echo "It looks like you don't have nodenv installed"
+  echo "Check out https://github.com/nodenv/nodenv#installation to get it running on your system"
+
+  exit 1
+fi
+
 # Install all the macOS dependencies via the Brewfile
 if [ "$(uname -s)" = "Darwin" ]; then
   echo "==> Ensuring Homebrew macOS dependencies..."
   brew update
 
+  # Ensure github/bootstrap is tapped, otherwise
+  # bootstrap-rbenv-ruby and bootstrap-nodenv-node
+  # will not be found
+  echo "==> Tapping github/homebrew-bootstrap"
+  brew tap github/bootstrap
   brew bootstrap-rbenv-ruby
   brew bootstrap-nodenv-node
 
@@ -19,18 +41,18 @@ if [ "$(uname -s)" = "Darwin" ]; then
     echo "==> Installing Homebrew dependencies..."
     brew bundle
 
+    # According to homebrew, postgresql@9.4 is pinned and as
+    # such is keg-only, which means it is not symlinked into 
+    # /usr/local automatically. We link it to the user's PATH, 
+    # if no other version other exists locally.
+    if ! [ -f "$(which postgres)" ]; then
+      echo "No existing postgresql installation detected. Linking postgresql@9.4 to PATH..."
+      brew link --force postgresql@9.4
+    fi
+
     brew setup-nginx-conf classroom . config/dev/nginx.conf.erb
     brew services restart nginx
   }
-fi
-
-# Make sure the system has rbenv installed
-# otherwise we can't get our gems setup properly
-if ! [ -f "$(which rbenv)" ]; then
-  echo "It looks like you don't have Rbenv installed"
-  echo "Check out https://github.com/rbenv/rbenv#installation to get it running on your system"
-
-  exit 1
 fi
 
 # Install all of our gems if we need to
