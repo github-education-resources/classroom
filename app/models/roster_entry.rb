@@ -5,6 +5,8 @@ class RosterEntry < ApplicationRecord
   belongs_to :roster
   belongs_to :user, optional: true
 
+  has_many :assignment_repos, ->(roster_entry) { unscope(:where).where(user: roster_entry.user) }
+
   validates :identifier, presence: true
   validates :roster,     presence: true
 
