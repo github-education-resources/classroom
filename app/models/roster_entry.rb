@@ -5,6 +5,8 @@ class RosterEntry < ApplicationRecord
   belongs_to :roster
   belongs_to :user, optional: true
 
+  has_many :assignment_repos, primary_key: :user_id, foreign_key: :user_id
+
   validates :identifier, presence: true
   validates :roster,     presence: true
 
