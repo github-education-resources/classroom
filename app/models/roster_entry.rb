@@ -5,12 +5,17 @@ class RosterEntry < ApplicationRecord
   belongs_to :roster
   belongs_to :user, optional: true
 
-  has_many :assignment_repos, primary_key: :user_id, foreign_key: :user_id
-
   validates :identifier, presence: true
   validates :roster,     presence: true
 
   before_create :validate_identifiers_are_unique_to_roster
+
+  def assignment_repos(organization_id: nil)
+    AssignmentRepo
+      .joins(:assignment)
+      .where(user: user_id)
+      .where(assignments: { organization_id: organization_id })
+  end
 
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity
   def self.to_csv(user_to_group_map = {})
