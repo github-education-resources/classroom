@@ -61,7 +61,7 @@ module Orgs
     end
 
     def find_assignment_repo
-      current_roster_entry.assignment_repos.find_by(assignment: current_assignment)
+      current_assignment.repos.find_by(user: current_roster_entry.user)
     end
 
     def find_current_assignment_repo
