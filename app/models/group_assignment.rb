@@ -4,6 +4,7 @@ class GroupAssignment < ApplicationRecord
   include Flippable
   include GitHubPlan
   include ValidatesNotReservedWord
+  include Sortable
 
   update_index("group_assignment#group_assignment") { self }
 
@@ -39,6 +40,10 @@ class GroupAssignment < ApplicationRecord
 
   alias_attribute :invitation, :group_assignment_invitation
   alias_attribute :repos, :group_assignment_repos
+
+  def self.sort_modes
+    raise "To implement"
+  end
 
   def private?
     !public_repo

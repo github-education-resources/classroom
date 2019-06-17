@@ -3,7 +3,6 @@
 class AssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
-  include AssignmentSort
 
   before_action :set_assignment, except: %i[new create]
   before_action :set_unlinked_users, only: [:show]
@@ -31,23 +30,16 @@ class AssignmentsController < ApplicationController
   # rubocop:disable MethodLength
   # rubocop:disable Metrics/AbcSize
   def show
-    @assignment_sort_modes = {
-      "Created at" => ->(repo) { repo.created_at },
-      "Student username" => ->(repo) { repo.github_user.login }
-    }
-
-    repos = AssignmentRepo
+    @assignment_repos = AssignmentRepo
       .where(assignment: @assignment)
       .order(:id)
-
-    # To ensure pagination information is correct, we must paginate on the sorted array
-    # instead of the (unsorted) ActiveRecord_Relation
-    sorted_assignment_repos = sort_assignment_repos(repos, @assignment_sort_modes)
-    @assignment_repos = Kaminari.paginate_array(sorted_assignment_repos).page(params[:page])
+      .page(params[:page])
 
     return unless @organization.roster
+    @assignment_sort_modes = RosterEntry.sort_modes
+    @current_sort_mode = params[:sort_assignment_repos_by] || RosterEntry.sort_modes.keys.first
     @roster_entries = @organization.roster.roster_entries
-      .order(:id)
+      .order_by_sort_mode(mode: @current_sort_mode, context: {assignment: @assignment})
       .page(params[:students_page])
       .order_for_view(@assignment)
 

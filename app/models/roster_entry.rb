@@ -2,6 +2,9 @@
 
 class RosterEntry < ApplicationRecord
   class IdentifierCreationError < StandardError; end
+
+  include Sortable
+
   belongs_to :roster
   belongs_to :user, optional: true
 
@@ -11,6 +14,23 @@ class RosterEntry < ApplicationRecord
   validates :roster,     presence: true
 
   before_create :validate_identifiers_are_unique_to_roster
+
+  scope :order_by_repo_created_at, ->(context) {
+    assignment = context[:assignment]
+
+    joins("LEFT OUTER JOIN assignment_repos ON roster_entries.user_id = assignment_repos.user_id AND assignment_repos.assignment_id = ?", assignment.id)
+  }
+
+  scope :order_by_student_identifier, ->(context=nil){
+    order(identifier: :asc)
+  }
+
+  def self.sort_modes
+    {
+      "Created at" => :order_by_repo_created_at,
+      "Student identifier" => :order_by_student_identifier
+    }
+  end
 
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity
   def self.to_csv(user_to_group_map = {})

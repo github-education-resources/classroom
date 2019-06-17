@@ -56,6 +56,16 @@
             </nav>
           </div>
           <span id='students-span'>
+            <%= 
+              render partial: 'shared/select_menu',
+                locals: { 
+                  title: 'Sort assignments by:',
+                  options: @assignment_sort_modes.keys,
+                  option_links: @assignment_sort_modes.keys.map { |mode| "?sort_assignment_repos_by=#{mode}" },
+                  selected_option: @current_sort_mode
+                }
+            %>
+
             <div class="assignment-repo-list">
               <% @roster_entries.each do |entry| %>
                 <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
@@ -83,16 +93,6 @@
       </div>
     <% else %>
       <% if @assignment_repos.present? %>
-        <%= 
-          render partial: 'shared/select_menu',
-            locals: { 
-              title: 'Sort assignments by:',
-              options: @assignment_sort_modes.keys,
-              option_links: @assignment_sort_modes.keys.map { |mode| "?sort_assignment_repos_by=#{mode}" },
-              selected_option: @current_sort_mode
-            }
-        %>
-
         <% @assignment_repos.each do |assignment_repo| %>
           <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: { url: organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo) } %>
         <% end %>

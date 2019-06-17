@@ -13,6 +13,7 @@ class AssignmentRepo < ApplicationRecord
   belongs_to :user
 
   has_one :organization, -> { unscope(where: :deleted_at) }, through: :assignment
+  has_many :roster_entries, :primary_key => :user_id, :foreign_key => :user_id
 
   validates :assignment, presence: true
 
