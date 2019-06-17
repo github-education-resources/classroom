@@ -205,7 +205,7 @@ RSpec.describe AssignmentsController, type: :controller do
   end
 
   describe "search for user in the roster", :vcr do
-    before do 
+    before do
       organization.roster = create(:roster)
       organization.save!
       RosterEntry.create(identifier: "tester", roster: organization.roster)
@@ -224,7 +224,6 @@ RSpec.describe AssignmentsController, type: :controller do
       expect(assigns(:roster_entries)).to eq([])
     end
   end
-
 
   describe "GET #edit", :vcr do
     it "returns success and sets the assignment" do

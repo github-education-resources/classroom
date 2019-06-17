@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class AssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
@@ -21,7 +22,7 @@ class AssignmentsController < ApplicationController
 
       send_create_assignment_statsd_events
       flash[:success] = "\"#{@assignment.title}\" has been created!"
-      redirect_to organization_assignment_path(@organization, @assignment) 
+      redirect_to organization_assignment_path(@organization, @assignment)
     else
       render :new
     end
@@ -46,13 +47,11 @@ class AssignmentsController < ApplicationController
       .order(:id)
       .page(params[:unlinked_accounts_page])
   end
-  # rubocop:enable MethodLength
-  # rubocop:enable Metrics/AbcSize
 
   def search
-    return unless @organization.roster
-
     users = @organization.roster.roster_entries.where("identifier LIKE ?", "%#{params[:query]}%")
+
+    return unless @organization.roster
 
     @assignment_repos = AssignmentRepo
       .where(assignment: @assignment, user_id: users.ids)
@@ -73,14 +72,17 @@ class AssignmentsController < ApplicationController
     respond_to do |format|
       format.html do
         render partial: "assignments/assignment_list_layout",
-        locals: {
-          roster_entries: @roster_entries,
-          organization: @organization,
-          assignment: @assignment
-        } 
+               locals: {
+                 roster_entries: @roster_entries,
+                 organization: @organization,
+                 assignment: @assignment
+               }
       end
     end
   end
+
+  # rubocop:enable MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   def edit; end
 
@@ -171,3 +173,4 @@ class AssignmentsController < ApplicationController
     GitHubClassroom.statsd.increment("deadline.create") if @assignment.deadline
   end
 end
+# rubocop:enable Metrics/ClassLength
