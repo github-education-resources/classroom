@@ -5,7 +5,6 @@ module Orgs
     layout false
 
     def show
-      binding.pry
       @assignment_repo = AssignmentRepo.includes(:user).find_by!(id: params[:id], assignment: current_assignment)
     end
 
