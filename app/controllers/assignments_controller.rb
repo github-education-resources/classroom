@@ -5,6 +5,7 @@ class AssignmentsController < ApplicationController
   include StarterCode
 
   before_action :set_assignment, except: %i[new create]
+  before_action :set_current_sort_mode, only: [:show]
   before_action :set_unlinked_users, only: [:show]
 
   def new
@@ -36,8 +37,6 @@ class AssignmentsController < ApplicationController
       .page(params[:page])
 
     return unless @organization.roster
-    @assignment_sort_modes = RosterEntry.sort_modes
-    @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
 
     @roster_entries = @organization.roster.roster_entries
       .page(params[:students_page])
@@ -113,6 +112,11 @@ class AssignmentsController < ApplicationController
 
   def set_assignment
     @assignment = @organization.assignments.includes(:assignment_invitation).find_by!(slug: params[:id])
+  end
+
+  def set_current_sort_mode
+    @assignment_sort_modes = RosterEntry.sort_modes
+    @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
   end
 
   def deadline_param

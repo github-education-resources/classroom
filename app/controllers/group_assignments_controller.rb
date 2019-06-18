@@ -7,6 +7,7 @@ class GroupAssignmentsController < ApplicationController
 
   before_action :set_group_assignment,      except: %i[new create]
   before_action :set_groupings,             except: [:show]
+  before_action :set_current_sort_mode,     only: [:show]
   before_action :authorize_grouping_access, only: %i[create update]
 
   def new
@@ -33,9 +34,6 @@ class GroupAssignmentsController < ApplicationController
   # rubocop:disable Metrics/AbcSize
   def show
     pagination_key = @organization.roster ? :teams_page : :page
-
-    @assignment_sort_modes = GroupAssignmentRepo.sort_modes
-    @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
 
     @group_assignment_repos = GroupAssignmentRepo
       .where(group_assignment: @group_assignment)
@@ -137,6 +135,11 @@ class GroupAssignmentsController < ApplicationController
       .group_assignments
       .includes(:group_assignment_invitation)
       .find_by!(slug: params[:id])
+  end
+
+  def set_current_sort_mode
+    @assignment_sort_modes = RosterEntry.sort_modes
+    @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
   end
 
   def deadline_param
