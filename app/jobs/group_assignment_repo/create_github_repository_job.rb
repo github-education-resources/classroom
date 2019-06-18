@@ -51,6 +51,7 @@ class GroupAssignmentRepo
     # rubocop:enable AbcSize
 
     private
+
     # Creates a GroupAssignmentRepo with an associated GitHub repo
     # If creation fails, it deletes the GitHub repo
     #
@@ -73,7 +74,7 @@ class GroupAssignmentRepo
       group_assignment_repo
     rescue ActiveRecord::RecordInvalid => error
       creator.delete_github_repository(group_assignment_repo&.github_repo_id)
-      logger.warn(err.message)
+      logger.warn(error.message)
       raise Creator::Result::Error, Creator::DEFAULT_ERROR_MESSAGE
     rescue Creator::Result::Error => error
       creator.delete_github_repository(group_assignment_repo&.github_repo_id)
@@ -81,7 +82,6 @@ class GroupAssignmentRepo
     end
     # rubocop:enable MethodLength
     # rubocop:enable AbcSize
-
 
     # Given an error, retries the job if the number of retries left is positive
     # or broadcasts a failure to the group

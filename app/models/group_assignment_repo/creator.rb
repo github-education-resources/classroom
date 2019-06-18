@@ -171,6 +171,7 @@ class GroupAssignmentRepo
         options[:permission] = "admin" if group_assignment.students_are_repo_admins?
       end
     end
+    # rubocop:disable AbcSize
 
     def generate_github_repository_name
       suffix_count = 0
@@ -184,6 +185,7 @@ class GroupAssignmentRepo
 
       suffixed_repo_name(repository_name, suffix_count)
     end
+    # rubocop:enable AbcSize
 
     def suffixed_repo_name(repository_name, suffix_count)
       return repository_name if suffix_count.zero?

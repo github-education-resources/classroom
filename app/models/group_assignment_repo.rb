@@ -28,7 +28,5 @@ class GroupAssignmentRepo < ApplicationRecord
     @github_team ||= group.github_team
   end
 
-  private
-
   delegate :slug, to: :group_assignment
 end
