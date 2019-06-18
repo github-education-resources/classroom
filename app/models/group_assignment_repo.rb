@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class GroupAssignmentRepo < ApplicationRecord
-  include GitHubRepoable
   include AssignmentRepoable
 
   update_index("group_assignment_repo#group_assignment_repo") { self }
@@ -20,8 +19,6 @@ class GroupAssignmentRepo < ApplicationRecord
 
   validates :group, presence: true
   validates :group, uniqueness: { scope: :group_assignment }
-
-  before_destroy :silently_destroy_github_repository
 
   delegate :creator, :starter_code_repo_id, to: :group_assignment
   delegate :github_team_id,                 to: :group
