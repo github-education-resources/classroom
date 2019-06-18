@@ -13,7 +13,7 @@
           <% if defined? current_roster_entry %>
             <h3 class="css-truncate css-truncate-target"><%=  current_roster_entry.identifier %></h3>
           <% else %>
-            <h3 class="css-truncate css-truncate-target"><%= view.github_user_login %></h3>
+            <h3 class="css-truncate css-truncate-target"><%=  view.github_user_login %></h3>
           <% end %>
         <% end %>
       </div>
