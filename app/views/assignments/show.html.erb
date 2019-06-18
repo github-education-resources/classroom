@@ -50,7 +50,7 @@
       <%= form_tag search_organization_assignment_path, id: 'js-search-form', class: 'form-block col-md-4 mt-5', method: :get, remote: true do %>
         <%= text_field_tag :query, params[:query], class: 'form-control width-full', placeholder: 'Search students by identifier...', autofocus: true, autocomplete: :off %>
       <% end %>
-      <div class="assignment-container" id="js-search-results">
+      <div class="assignment-container">
         <div class="tabnav-body clearfix ">
           <div class="tabnav">
             <nav class="tabnav-tabs">
@@ -59,7 +59,7 @@
             </nav>
           </div>
           <span id='students-span'>
-            <div class="assignment-repo-list">
+            <div class="assignment-repo-list" id="js-search-results">
               <% @roster_entries.each do |entry| %>
                 <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
                   url: organization_assignment_roster_entry_path(@organization, @assignment, entry)
