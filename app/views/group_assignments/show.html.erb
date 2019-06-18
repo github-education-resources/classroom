@@ -57,6 +57,16 @@
             </nav>
           </div>
           <span id='students-span'>
+
+            <%= render partial: 'shared/select_menu',
+                 locals: {
+                     title: 'Sort group assignments by:',
+                     options: @assignment_sort_modes.keys,
+                     option_links: @assignment_sort_modes.keys.map { |mode| "?sort_assignment_repos_by=#{mode}" },
+                     selected_option: @current_sort_mode
+                 }
+            %>
+
             <div class="assignment-repo-list">
               <% if @group_assignment_repos.present? %>
                 <div class="assignment-repo-list">

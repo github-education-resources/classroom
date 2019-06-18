@@ -13,15 +13,18 @@ class RosterEntry < ApplicationRecord
 
   before_create :validate_identifiers_are_unique_to_roster
 
-  scope :order_by_repo_created_at, ->(context) {
+  scope :order_by_repo_created_at, lambda { |context|
     assignment = context[:assignment]
+    sql_formatted_assignment_id = assignment.id
 
-    joins("LEFT OUTER JOIN assignment_repos ON roster_entries.user_id = assignment_repos.user_id AND assignment_repos.assignment_id = ?", assignment.id)
+    joins <<~SQL
+      LEFT OUTER JOIN assignment_repos
+      ON roster_entries.user_id = assignment_repos.user_id
+      AND assignment_repos.assignment_id=#{sql_formatted_assignment_id}
+    SQL
   }
 
-  scope :order_by_student_identifier, ->(context=nil){
-    order(identifier: :asc)
-  }
+  scope :order_by_student_identifier, ->(_context = nil) { order(identifier: :asc) }
 
   def self.sort_modes
     {

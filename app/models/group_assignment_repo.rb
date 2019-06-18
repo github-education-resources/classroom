@@ -40,14 +40,8 @@ class GroupAssignmentRepo < ApplicationRecord
   delegate :github_team_id,                 to: :group
   delegate :default_branch, :commits,       to: :github_repository
 
-  scope :order_by_repo_created_at, ->(context=nil) {
-    order(:created_at)
-  }
-  
-  scope :order_by_team_name, ->(context=nil){
-    joins(:group)
-    .order("title asc")
-  }
+  scope :order_by_repo_created_at, ->(_context = nil) { order(:created_at) }
+  scope :order_by_team_name, ->(_context = nil) { joins(:group).order("title asc") }
 
   def self.sort_modes
     {

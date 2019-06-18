@@ -37,9 +37,10 @@ class AssignmentsController < ApplicationController
 
     return unless @organization.roster
     @assignment_sort_modes = RosterEntry.sort_modes
-    @current_sort_mode = params[:sort_assignment_repos_by] || RosterEntry.sort_modes.keys.first
+    @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
+
     @roster_entries = @organization.roster.roster_entries
-      .order_by_sort_mode(mode: @current_sort_mode, context: {assignment: @assignment})
+      .order_by_sort_mode(@current_sort_mode, assignment: @assignment)
       .page(params[:students_page])
       .order_for_view(@assignment)
 

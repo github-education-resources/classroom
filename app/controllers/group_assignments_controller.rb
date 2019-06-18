@@ -35,10 +35,11 @@ class GroupAssignmentsController < ApplicationController
     pagination_key = @organization.roster ? :teams_page : :page
 
     @assignment_sort_modes = GroupAssignmentRepo.sort_modes
-    @current_sort_mode = params[:sort_assignment_repos_by]
+    @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
+
     @group_assignment_repos = GroupAssignmentRepo
       .where(group_assignment: @group_assignment)
-      .order_by_sort_mode(mode: @current_sort_mode)
+      .order_by_sort_mode(@current_sort_mode)
       .page(params[pagination_key])
 
     return unless @organization.roster
