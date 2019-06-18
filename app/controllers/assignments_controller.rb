@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class AssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
@@ -49,6 +50,40 @@ class AssignmentsController < ApplicationController
       .order(:id)
       .page(params[:unlinked_accounts_page])
   end
+
+  def search
+    users = @organization.roster.roster_entries.where("identifier LIKE ?", "%#{params[:query]}%")
+
+    return unless @organization.roster
+
+    @assignment_repos = AssignmentRepo
+      .where(assignment: @assignment, user_id: users.ids)
+      .page(params[:page])
+
+    @roster_entries = users
+      .order(:id)
+      .page(params[:students_page])
+      .order_for_view(@assignment)
+
+    @unlinked_user_repos = AssignmentRepo
+      .order(:id)
+      .where(assignment: @assignment, user: @unlinked_users, user_id: users.ids)
+      .page(params[:unlinked_accounts_page])
+
+    return unless @assignment_repos || @roster_entries
+
+    respond_to do |format|
+      format.html do
+        render partial: "assignments/assignment_list_layout",
+               locals: {
+                 roster_entries: @roster_entries,
+                 organization: @organization,
+                 assignment: @assignment
+               }
+      end
+    end
+  end
+
   # rubocop:enable MethodLength
   # rubocop:enable Metrics/AbcSize
 
@@ -141,3 +176,4 @@ class AssignmentsController < ApplicationController
     GitHubClassroom.statsd.increment("deadline.create") if @assignment.deadline
   end
 end
+# rubocop:enable Metrics/ClassLength
