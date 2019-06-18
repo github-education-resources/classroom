@@ -54,7 +54,7 @@ class GroupAssignmentRepo
     def initialize(group_assignment:, group:)
       @group_assignment = group_assignment
       @group = group
-      @organization = organization
+      @organization = group_assignment.organization
     end
 
     # rubocop:disable MethodLength
@@ -97,40 +97,40 @@ class GroupAssignmentRepo
     # rubocop:enable AbcSize
 
     def create_github_repository!
-      repo_description = "#{repo_name} created by GitHub Classroom"
+      repository_name = generate_github_repository_name
       organization.github_organization.create_repository(
-        repo_name,
-        private: private?,
-        description: repo_description
+        repository_name,
+        private: group_assignment.private?,
+        description: "#{repository_name} created by GitHub Classroom"
       )
-    rescue Github::Error
+    rescue GitHub::Error
       raise Result::Error, REPOSITORY_CREATION_FAILED
     end
 
-    def add_team_to_github_repository(github_repository_id)
+    def add_team_to_github_repository!(github_repository_id)
       github_repository = GitHubRepository.new(organization.github_client, github_repository_id)
-      github_team       = GitHubTeam.new(organization.github_client, github_team_id)
+      github_team       = GitHubTeam.new(organization.github_client, group.github_team_id)
 
       github_team.add_team_repository(github_repository.full_name, repository_permissions)
-    rescue Github::Error
+    rescue GitHub::Error
       raise Result::Error, REPOSITORY_TEAM_ADDITION_FAILED
     end
 
-    def push_starter_code!(_github_repository_id)
+    def push_starter_code!(github_repository_id)
       client = group_assignment.creator.github_client
       starter_code_repo_id = group_assignment.starter_code_repo_id
-      assignment_repository   = GitHubRepository.new(client, github_repo_id)
+      assignment_repository   = GitHubRepository.new(client, github_repository_id)
       starter_code_repository = GitHubRepository.new(client, starter_code_repo_id)
 
       assignment_repository.get_starter_code_from(starter_code_repository)
-    rescue Github::Error
+    rescue GitHub::Error
       raise Result::Error, REPOSITORY_STARTER_CODE_IMPORT_FAILED
     end
 
-    def delete_github_repository(github_repo_id)
-      return true if github_repo_id.nil?
-      organization.github_organization.delete_repository(github_repo_id)
-    rescue Github::Error
+    def delete_github_repository(github_repository_id)
+      return true if github_repository_id.nil?
+      organization.github_organization.delete_repository(github_repository_id)
+    rescue GitHub::Error
       true
     end
 
@@ -141,7 +141,7 @@ class GroupAssignmentRepo
 
       begin
         github_organization_plan = GitHubOrganization.new(organization.github_client, organization.github_id).plan
-      rescue Github::Error => error
+      rescue GitHub::Error => error
         raise Result::Error, error.message
       end
 
@@ -170,6 +170,26 @@ class GroupAssignmentRepo
       {}.tap do |options|
         options[:permission] = "admin" if group_assignment.students_are_repo_admins?
       end
+    end
+
+    def generate_github_repository_name
+      suffix_count = 0
+      owner = organization.github_organization.login_no_cache
+      repository_name = "#{group_assignment.slug}-#{group.github_team.slug_no_cache}"
+      loop do
+        name = "#{owner}/#{suffixed_repo_name(repository_name, suffix_count)}"
+        break unless GitHubRepository.present?(organization.github_client, name)
+        suffix_count += 1
+      end
+
+      suffixed_repo_name(repository_name, suffix_count)
+    end
+
+    def suffixed_repo_name(repository_name, suffix_count)
+      return repository_name if suffix_count.zero?
+
+      suffix = "-#{suffix_count}"
+      repository_name.truncate(100 - suffix.length, omission: "") + suffix
     end
   end
 end
