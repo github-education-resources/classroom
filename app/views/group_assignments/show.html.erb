@@ -48,6 +48,9 @@
     </div>
 
     <% if @organization.roster %>
+      <%= form_tag search_organization_group_assignment_path, id: 'js-search-form', class: 'form-block col-md-4 mt-5', method: :get, remote: true do %>
+        <%= text_field_tag :query, params[:query], class: 'form-control width-full', placeholder: 'Search groups...', autofocus: true, autocomplete: :off %>
+      <% end %>
       <div class="assignment-container">
         <div class="tabnav-body clearfix ">
           <div class="tabnav">
@@ -67,7 +70,7 @@
                  }
             %>
 
-            <div class="assignment-repo-list">
+            <div class="assignment-repo-list" id="js-search-results">
               <% if @group_assignment_repos.present? %>
                 <div class="assignment-repo-list">
                   <% @group_assignment_repos.each do |group_assignment_repo| %>

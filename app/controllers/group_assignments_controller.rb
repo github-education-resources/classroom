@@ -51,6 +51,31 @@ class GroupAssignmentsController < ApplicationController
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable MethodLength
 
+  def search
+    pagination_key = @organization.roster ? :teams_page : :page
+    @group_assignment_repos = GroupAssignmentRepo
+      .where(group_assignment: @group_assignment, )
+      .page(params[pagination_key])
+    @group_assignment_repos = @organization.group_assignments.where("title LIKE ?", "%#{params[:query]}%")
+
+    return unless @organization.roster
+    @students_not_on_team = @organization.roster.roster_entries
+      .students_not_on_team(@group_assignment)
+      .order(:id)
+      .page(params[:students_page])
+  
+    respond_to do |format|
+      format.html do
+        render partial: "assignments/group_assignment_list",
+               locals: {
+                 group_assignment_repos: @group_assignment_repos,
+                 organization: @organization,
+                 group_assignment: @group_assignment
+               }
+      end
+    end
+  end
+
   def edit; end
 
   def update
