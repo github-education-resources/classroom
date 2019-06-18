@@ -47,9 +47,6 @@
       <%= render @assignment.assignment_invitation %>
     </div>
     <% if @organization.roster %>
-      <%= form_tag search_organization_assignment_path, id: 'js-search-form', class: 'form-block col-md-4 mt-5', method: :get, remote: true do %>
-        <%= text_field_tag :query, params[:query], class: 'form-control width-full', placeholder: 'Search students by identifier...', autofocus: true, autocomplete: :off %>
-      <% end %>
       <div class="assignment-container">
         <div class="tabnav-body clearfix ">
           <div class="tabnav">
@@ -59,6 +56,25 @@
             </nav>
           </div>
           <span id='students-span'>
+            <div class="TableObject">
+              <div class="TableObject-item TableObject-item--primary">
+                  <%= form_tag search_organization_assignment_path, id: 'js-search-form', method: :get, remote: true do %>
+                    <%= text_field_tag :query, params[:query], class: 'input-block form-control', placeholder: 'Search by student identifier', autofocus: true, autocomplete: :off %>
+                  <% end %>
+              </div>
+              <div class="TableObject-item">
+              <%= 
+                render partial: 'shared/select_menu',
+                  locals: { 
+                    title: 'Sort assignments by:',
+                    options: @assignment_sort_modes.keys,
+                    option_links: @assignment_sort_modes.keys.map { |mode| "?sort_assignment_repos_by=#{mode}" },
+                    selected_option: @current_sort_mode
+                  }
+                %>
+              </div>
+            </div>
+
             <div class="assignment-repo-list" id="js-search-results">
               <% @roster_entries.each do |entry| %>
                 <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {

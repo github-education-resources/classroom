@@ -52,9 +52,9 @@ class AssignmentsController < ApplicationController
   end
 
   def search
-    users = @organization.roster.roster_entries.where("identifier LIKE ?", "%#{params[:query]}%")
-
     return unless @organization.roster
+
+    users = @organization.roster.roster_entries.where("identifier LIKE ?", "%#{params[:query]}%")
 
     @assignment_repos = AssignmentRepo
       .where(assignment: @assignment, user_id: users.ids)
@@ -64,6 +64,7 @@ class AssignmentsController < ApplicationController
       .order(:id)
       .page(params[:students_page])
       .order_for_view(@assignment)
+      .order_by_sort_mode(@current_sort_mode, assignment: @assignment)
 
     @unlinked_user_repos = AssignmentRepo
       .order(:id)
