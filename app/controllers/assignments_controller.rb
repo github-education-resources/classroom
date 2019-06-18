@@ -40,9 +40,9 @@ class AssignmentsController < ApplicationController
     @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
 
     @roster_entries = @organization.roster.roster_entries
-      .order_by_sort_mode(@current_sort_mode, assignment: @assignment)
       .page(params[:students_page])
       .order_for_view(@assignment)
+      .order_by_sort_mode(@current_sort_mode, assignment: @assignment)
 
     @unlinked_user_repos = AssignmentRepo
       .where(assignment: @assignment, user: @unlinked_users)

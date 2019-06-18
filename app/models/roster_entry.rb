@@ -17,11 +17,12 @@ class RosterEntry < ApplicationRecord
     assignment = context[:assignment]
     sql_formatted_assignment_id = assignment.id
 
-    joins <<~SQL
-      LEFT OUTER JOIN assignment_repos
-      ON roster_entries.user_id = assignment_repos.user_id
-      AND assignment_repos.assignment_id=#{sql_formatted_assignment_id}
-    SQL
+    order("assignment_repos.created_at")
+      .joins <<~SQL
+        LEFT OUTER JOIN assignment_repos
+        ON roster_entries.user_id = assignment_repos.user_id
+        AND assignment_repos.assignment_id=#{sql_formatted_assignment_id}
+      SQL
   }
 
   scope :order_by_student_identifier, ->(_context = nil) { order(identifier: :asc) }
@@ -72,7 +73,6 @@ class RosterEntry < ApplicationRecord
         WHEN roster_entries.user_id IN #{sql_formatted_users} THEN 0 /* Accepted */
         ELSE 1                                                       /* Linked but not accepted */
       END
-      , id
     SQL
   end
 
