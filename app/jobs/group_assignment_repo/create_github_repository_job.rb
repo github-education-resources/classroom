@@ -26,7 +26,7 @@ class GroupAssignmentRepo
 
       broadcast_message(CREATE_REPO, invite_status, group_assignment, group)
 
-      group_assignment_repo = GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
+      group_assignment_repo = create_group_assignment_repo(group_assignment, group)
       report_time(start)
 
       GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.success")
@@ -44,13 +44,44 @@ class GroupAssignmentRepo
         invite_status.completed!
         broadcast_message(CREATE_COMPLETE, invite_status, group_assignment, group)
       end
-    rescue GitHub::Error, ActiveRecord::RecordInvalid => error
+    rescue Creator::Result::Error => error
       handle_error(error, group_assignment, group, invite_status, retries)
     end
     # rubocop:enable MethodLength
     # rubocop:enable AbcSize
 
     private
+    # Creates a GroupAssignmentRepo with an associated GitHub repo
+    # If creation fails, it deletes the GitHub repo
+    #
+    # rubocop:disable MethodLength
+    # rubocop:disable AbcSize
+    def create_group_assignment_repo(group_assignment, group)
+      creator = Creator.new(group_assignment: group_assignment, group: group)
+      creator.verify_organization_has_private_repos_available!
+
+      github_repository = creator.create_github_repository!
+
+      group_assignment_repo = group_assignment.group_assignment_repos.build(
+        github_repo_id: github_repository.id,
+        github_global_relay_id: github_repository.node_id,
+        group: group
+      )
+      creator.add_team_to_github_repository!(group_assignment_repo.github_repo_id)
+      creator.push_starter_code!(group_assignment_repo.github_repo_id) if group_assignment.starter_code?
+      group_assignment_repo.save!
+      group_assignment_repo
+    rescue ActiveRecord::RecordInvalid => error
+      creator.delete_github_repository(group_assignment_repo&.github_repo_id)
+      logger.warn(err.message)
+      raise Creator::Result::Error, Creator::DEFAULT_ERROR_MESSAGE
+    rescue Creator::Result::Error => error
+      creator.delete_github_repository(group_assignment_repo&.github_repo_id)
+      raise error
+    end
+    # rubocop:enable MethodLength
+    # rubocop:enable AbcSize
+
 
     # Given an error, retries the job if the number of retries left is positive
     # or broadcasts a failure to the group
