@@ -1,0 +1,175 @@
+# frozen_string_literal: true
+
+class GroupAssignmentRepo
+  class Creator
+    DEFAULT_ERROR_MESSAGE                   = "Group assignment could not be created, please try again"
+    REPOSITORY_CREATION_FAILED              = "GitHub repository could not be created, please try again"
+    REPOSITORY_STARTER_CODE_IMPORT_FAILED   = "We were not able to import you the starter code to yourgroup assignment, please try again." # rubocop:disable LineLength
+    REPOSITORY_TEAM_ADDITION_FAILED = "We were not able to add the team to the repository, please try again." # rubocop:disable LineLength
+    REPOSITORY_CREATION_COMPLETE            = "Your GitHub repository was created."
+    IMPORT_ONGOING                          = "Your GitHub repository is importing starter code."
+
+    class Result
+      class Error < StandardError; end
+
+      def self.success(group_assignment_repo)
+        new(:success, group_assignment_repo: group_assignment_repo)
+      end
+
+      def self.failed(error)
+        new(:failed, error: error)
+      end
+
+      def self.pending
+        new(:pending)
+      end
+
+      attr_reader :error, :group_assignment_repo, :status
+
+      def initialize(status, group_assignment_repo: nil, error: nil)
+        @status = status
+        @group_assignment_repo = group_assignment_repo
+        @error = error
+      end
+
+      def success?
+        @status == :success
+      end
+
+      def failed?
+        @status == :failed
+      end
+
+      def pending?
+        @status == :pending
+      end
+    end
+
+    def self.perform(group_assignment:)
+      new(group_assignment: group_assignment).perform
+    end
+
+    attr_reader :group_assignment, :group, :organization
+
+    def initialize(group_assignment:, group:)
+      @group_assignment = group_assignment
+      @group = group
+      @organization = organization
+    end
+
+    # rubocop:disable MethodLength
+    # rubocop:disable AbcSize
+    def perform
+      start = Time.zone.now
+      verify_organization_has_private_repos_available!
+
+      github_repository = create_github_repository!
+
+      group_assignment_repo = group_assignment.group_assignment_repos.build(
+        github_repo_id: github_repository.id,
+        github_global_relay_id: github_repository.node_id,
+        group: group
+      )
+
+      add_team_to_github_repository(github_repository.id)
+
+      if group_assignment.starter_code?
+        push_starter_code!(group_assignment_repo.github_repo_id)
+      end
+
+      begin
+        group_assignment_repo.save!
+      rescue ActiveRecord::RecordInvalid
+        raise Result::Error, DEFAULT_ERROR_MESSAGE
+      end
+
+      duration_in_millseconds = (Time.zone.now - start) * 1_000
+      GitHubClassroom.statsd.timing("exercise_repo.create.time", duration_in_millseconds)
+      GitHubClassroom.statsd.increment("exercise_repo.create.success")
+
+      Result.success(group_assignment_repo)
+    rescue Result::Error => error
+      delete_github_repository(group_assignment_repo&.github_repo_id)
+      GitHubClassroom.statsd.increment("exercise_repo.create.fail")
+      Result.failed(error.message)
+    end
+    # rubocop:enable MethodLength
+    # rubocop:enable AbcSize
+
+    def create_github_repository!
+      repo_description = "#{repo_name} created by GitHub Classroom"
+      organization.github_organization.create_repository(
+        repo_name,
+        private: private?,
+        description: repo_description
+      )
+    rescue Github::Error
+      raise Result::Error, REPOSITORY_CREATION_FAILED
+    end
+
+    def add_team_to_github_repository(github_repository_id)
+      github_repository = GitHubRepository.new(organization.github_client, github_repository_id)
+      github_team       = GitHubTeam.new(organization.github_client, github_team_id)
+
+      github_team.add_team_repository(github_repository.full_name, repository_permissions)
+    rescue Github::Error
+      raise Result::Error, REPOSITORY_TEAM_ADDITION_FAILED
+    end
+
+    def push_starter_code!(_github_repository_id)
+      client = group_assignment.creator.github_client
+      starter_code_repo_id = group_assignment.starter_code_repo_id
+      assignment_repository   = GitHubRepository.new(client, github_repo_id)
+      starter_code_repository = GitHubRepository.new(client, starter_code_repo_id)
+
+      assignment_repository.get_starter_code_from(starter_code_repository)
+    rescue Github::Error
+      raise Result::Error, REPOSITORY_STARTER_CODE_IMPORT_FAILED
+    end
+
+    def delete_github_repository(github_repo_id)
+      return true if github_repo_id.nil?
+      organization.github_organization.delete_repository(github_repo_id)
+    rescue Github::Error
+      true
+    end
+
+    # rubocop:disable MethodLength
+    # rubocop:disable Metrics/AbcSize
+    def verify_organization_has_private_repos_available!
+      return true if group_assignment.public?
+
+      begin
+        github_organization_plan = GitHubOrganization.new(organization.github_client, organization.github_id).plan
+      rescue Github::Error => error
+        raise Result::Error, error.message
+      end
+
+      owned_private_repos = github_organization_plan[:owned_private_repos]
+      private_repos       = github_organization_plan[:private_repos]
+
+      return true if owned_private_repos < private_repos
+
+      # TODO: make message consistent for both assignment types
+      error_message = <<-ERROR
+        Cannot make a private repository for this assignment, the organization has
+        a limit of #{private_repos} #{'repository'.pluralize(private_repos)}.
+        Please let the organization owner know that they can either upgrade their
+        limit or, if the owner qualifies, request a larger plan for free at
+        <a href='https://education.github.com/discount'>https://education.github.com/discount</a>
+      ERROR
+
+      raise Result::Error, error_message
+    end
+    # rubocop:enable MethodLength
+    # rubocop:enable Metrics/AbcSize
+
+    private
+
+    def repository_permissions
+      {}.tap do |options|
+        options[:permission] = "admin" if group_assignment.students_are_repo_admins?
+      end
+    end
+  end
+end
