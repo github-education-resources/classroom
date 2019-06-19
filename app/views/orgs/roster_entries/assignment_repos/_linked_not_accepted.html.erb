@@ -9,7 +9,7 @@
       <div>
         <%= link_to current_roster_entry.user.github_user.html_url, class: "assignment-repo-github-url", target: '_blank' do %>
           <% if current_roster_entry.identifier %>
-          <h3 class="css-truncate css-truncate-target"><%= current_roster_entry.identifier %></h3>
+            <h3 class="css-truncate css-truncate-target"><%= current_roster_entry.identifier %></h3>
           <% else %> 
             <h3 class="css-truncate css-truncate-target"><%= current_roster_entry.user.github_user.login %></h3>
           <% end %> 
