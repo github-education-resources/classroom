@@ -98,6 +98,7 @@ Rails.application.routes.draw do
         get :assistant, on: :member
         member do
           get :search
+          get :list_assignment_repos
         end
       end
 
@@ -107,6 +108,7 @@ Rails.application.routes.draw do
         get :assistant, on: :member
         member do
           get :search
+          get :list_assignment_repos
         end
       end
     end

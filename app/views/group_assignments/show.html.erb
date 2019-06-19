@@ -65,14 +65,15 @@
                  locals: {
                      title: 'Sort group assignments by:',
                      options: @assignment_sort_modes.keys,
-                     option_links: @assignment_sort_modes.keys.map { |mode| "?sort_assignment_repos_by=#{mode}" },
-                     selected_option: @current_sort_mode
+                     option_links: @assignment_sort_modes_links,
+                     selected_option: @current_sort_mode,
+                     remote: true
                  }
             %>
 
             <div class="assignment-repo-list" id="js-search-results">
               <% if @group_assignment_repos.present? %>
-                <div class="assignment-repo-list">
+                <div class="assignment-repo-list" id="js-menu-container">
                   <% @group_assignment_repos.each do |group_assignment_repo| %>
                     <%= render partial: 'orgs/group_assignment_repos/group_assignment_repo', \
                       locals: { url: organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo) } %>
@@ -114,12 +115,12 @@
                  locals: {
                      title: 'Sort group assignments by:',
                      options: @assignment_sort_modes.keys,
-                     option_links: @assignment_sort_modes.keys.map { |mode| "?sort_assignment_repos_by=#{mode}" },
+                     option_links: @assignment_sort_modes_links,
                      selected_option: @current_sort_mode
                  }
         %>
 
-        <div class="assignment-repo-list">
+        <div class="assignment-repo-list" id="js-menu-container">
           <% @group_assignment_repos.each do |group_assignment_repo| %>
             <%= render partial: 'orgs/group_assignment_repos/group_assignment_repo', \
               locals: { url: organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo) } %>

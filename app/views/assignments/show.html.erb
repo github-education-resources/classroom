@@ -68,14 +68,14 @@
                   locals: { 
                     title: 'Sort assignments by:',
                     options: @assignment_sort_modes.keys,
-                    option_links: @assignment_sort_modes.keys.map { |mode| "?sort_assignment_repos_by=#{mode}" },
+                    option_links: @assignment_sort_modes_links,
                     selected_option: @current_sort_mode
                   }
                 %>
               </div>
             </div>
 
-            <div class="assignment-repo-list" id="js-search-results">
+            <div class="assignment-repo-list" id="js-search-results js-menu-container">
               <% @roster_entries.each do |entry| %>
                 <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
                   url: organization_assignment_roster_entry_path(@organization, @assignment, entry)
