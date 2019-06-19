@@ -135,7 +135,7 @@ class AssignmentsController < ApplicationController
 
     @assignment_sort_modes_links = @assignment_sort_modes.keys.map do |mode|
       list_assignment_repos_organization_assignment_path(
-        sort_assignment_repos_by: @assignment_sort_modes[mode]
+        sort_assignment_repos_by: mode
       )
     end
 

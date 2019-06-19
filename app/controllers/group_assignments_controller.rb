@@ -7,7 +7,8 @@ class GroupAssignmentsController < ApplicationController
 
   before_action :set_group_assignment,      except: %i[new create]
   before_action :set_groupings,             except: [:show]
-  before_action :set_current_sort_mode,     only: [:show]
+  before_action :set_pagination_key,        only: %i[create show list]
+  before_action :set_current_sort_mode,     only: %i[show list_assignment_repos]
   before_action :authorize_grouping_access, only: %i[create update]
 
   def new
@@ -31,18 +32,29 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def show
-    pagination_key = @organization.roster ? :teams_page : :page
-
     @group_assignment_repos = GroupAssignmentRepo
       .where(group_assignment: @group_assignment)
       .order_by_sort_mode(@current_sort_mode)
-      .page(params[pagination_key])
+      .page(params[@pagination_key])
 
     return unless @organization.roster
     @students_not_on_team = @organization.roster.roster_entries
       .students_not_on_team(@group_assignment)
       .order(:id)
       .page(params[:students_page])
+  end
+
+  def list_assignment_repos
+    @group_assignment_repos = GroupAssignmentRepo
+      .where(group_assignment: @group_assignment)
+      .order_by_sort_mode(@current_sort_mode)
+      .page(params[@pagination_key])
+
+    render partial: "group_assignments/group_assignment_list", locals: {
+      group_assignment_repos: @group_assignment_repos,
+      organization: @organization,
+      group_assignment: @group_assignment
+    }
   end
 
   def edit; end
@@ -134,8 +146,19 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def set_current_sort_mode
-    @assignment_sort_modes = RosterEntry.sort_modes
+    @assignment_sort_modes = GroupAssignmentRepo.sort_modes
+
+    @assignment_sort_modes_links = @assignment_sort_modes.keys.map do |mode|
+      list_assignment_repos_organization_group_assignment_path(
+        sort_assignment_repos_by: mode
+      )
+    end
+
     @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
+  end
+
+  def set_pagination_key
+    @pagination_key = @organization.roster ? :teams_page : :page
   end
 
   def deadline_param
