@@ -208,29 +208,29 @@ RSpec.describe AssignmentsController, type: :controller do
     before do
       organization.users.push(create(:user))
       organization.roster = create(:roster)
+      organization.roster.roster_entries.push(RosterEntry.create(
+                                                identifier: "student",
+                                                roster: organization.roster,
+                                                user_id: organization.users.last, roster_id: 5
+      ))
       organization.save!
       organization.roster.reload
     end
 
     it "displays student's identifier if is a roster_entry" do
-      roster_entry = RosterEntry.create(identifier: "student", roster: organization.roster, user_id: organization.users.last)
       assignment_repo = create(:assignment_repo, assignment: assignment, user: organization.users.last)
-      render :partial => 'orgs/roster_entries/assignment_repos/linked_accepted',
-              locals: {
-                assignment_repo: assignment_repo,
-                current_roster_entry: organization.roster.roster_entries.last
-              }
+      render partial: "orgs/roster_entries/assignment_repos/linked_accepted",
+             locals: { assignment_repo: assignment_repo,
+                       current_roster_entry: organization.roster.roster_entries.last }
       expect(response).to include("student")
-    end 
+    end
 
-    it "displays student github username if there is no roster_entry" do 
+    it "displays student github username if there is no roster_entry" do
       assignment_repo = create(:assignment_repo, assignment: assignment, user: organization.users.last)
-      render :partial => 'orgs/roster_entries/assignment_repos/linked_accepted',
-              locals: {
-                assignment_repo: assignment_repo,
-              }
+      render partial: "orgs/roster_entries/assignment_repos/linked_accepted",
+             locals: { assignment_repo: assignment_repo }
       expect(response).to_not include("student")
-    end 
+    end
   end
 
   describe "GET #edit", :vcr do
