@@ -1,7 +1,9 @@
+<% remote = local_assigns.fetch(:remote, false) %>
+
 <div class="select-menu">
   <button class="btn btn-sm select-menu-button" aria-expanded="false" tabindex="0">
     <i><%= title %></i>
-    <span><%= selected_option %></span>
+    <span class="selected-option"><%= selected_option %></span>
   </button>
   <div class="select-menu-modal-holder">
     <div class="select-menu-modal">
@@ -11,18 +13,15 @@
       </div>
       <div class="select-menu-list">
         <% options.each_with_index do |option, i| %>
-          <% if option == selected_option %>
-            <span class="select-menu-item selected">
-              <%= octicon 'check', class: "select-menu-item-icon" %>
-              <span class="select-menu-item-text">
-                <%= selected_option %>
-              </span>
-            </span>
-          <% else %>
-            <%= link_to option_links[i], class: "select-menu-item" do %>
-              <span class="select-menu-item-text"><%= option %></span>
-            <% end %>
-          <% end %>
+              <% conditional_selected_class = "selected" if option == selected_option %>
+
+              <%= link_to option_links[i], class: "select-menu-item #{conditional_selected_class}", remote: remote do %>
+                <% show_or_hide_class = "v-hidden" if option != selected_option %>
+
+                <%= octicon 'check', class: "select-menu-item-icon #{show_or_hide_class}" %>
+                <span class="select-menu-item-text"><%= option %></span>
+              <% end %>
+
         <% end %>
       </div>
     </div>

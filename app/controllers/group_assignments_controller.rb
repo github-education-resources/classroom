@@ -30,8 +30,6 @@ class GroupAssignmentsController < ApplicationController
     end
   end
 
-  # rubocop:disable MethodLength
-  # rubocop:disable Metrics/AbcSize
   def show
     pagination_key = @organization.roster ? :teams_page : :page
 
@@ -46,8 +44,6 @@ class GroupAssignmentsController < ApplicationController
       .order(:id)
       .page(params[:students_page])
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable MethodLength
 
   def edit; end
 

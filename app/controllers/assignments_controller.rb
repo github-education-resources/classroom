@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
+# rubocop:disable ClassLength
 class AssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
 
   before_action :set_assignment, except: %i[new create]
-  before_action :set_current_sort_mode, only: [:show]
-  before_action :set_unlinked_users, only: [:show]
+  before_action :set_current_sort_mode, only: %i[show list_assignment_repos]
+  before_action :set_unlinked_users, only: %i[show list_assignment_repos]
 
   def new
     @assignment = Assignment.new
@@ -29,7 +30,7 @@ class AssignmentsController < ApplicationController
   end
 
   # rubocop:disable MethodLength
-  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable AbcSize
   def show
     @assignment_repos = AssignmentRepo
       .where(assignment: @assignment)
@@ -48,8 +49,23 @@ class AssignmentsController < ApplicationController
       .order(:id)
       .page(params[:unlinked_accounts_page])
   end
+  # rubocop:enable AbcSize
   # rubocop:enable MethodLength
-  # rubocop:enable Metrics/AbcSize
+
+  def list_assignment_repos
+    return unless @organization.roster
+
+    @roster_entries = @organization.roster.roster_entries
+      .page(params[:students_page])
+      .order_for_view(@assignment)
+      .order_by_sort_mode(@current_sort_mode, assignment: @assignment)
+
+    render partial: "assignments/assignment_roster_list", locals: {
+      roster_entries: @roster_entries,
+      organization: @organization,
+      assignment: @assignment
+    }
+  end
 
   def edit; end
 
@@ -116,6 +132,13 @@ class AssignmentsController < ApplicationController
 
   def set_current_sort_mode
     @assignment_sort_modes = RosterEntry.sort_modes
+
+    @assignment_sort_modes_links = @assignment_sort_modes.keys.map do |mode|
+      list_assignment_repos_organization_assignment_path(
+        sort_assignment_repos_by: @assignment_sort_modes[mode]
+      )
+    end
+
     @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
   end
 
@@ -145,3 +168,4 @@ class AssignmentsController < ApplicationController
     GitHubClassroom.statsd.increment("deadline.create") if @assignment.deadline
   end
 end
+# rubocop:enable ClassLength
