@@ -101,6 +101,12 @@ FactoryBot.define do
   factory :user do
     uid    { rand(1..1_000_000) }
     token  { SecureRandom.hex(20) }
+    
+    factory :github_user do
+      id      { 1 }
+      login   { "abc123" }
+      token   { "jkdkdkd333" }
+    end
 
     factory :user_with_organizations do
       transient do
