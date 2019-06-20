@@ -47,6 +47,7 @@ class GroupAssignmentsController < ApplicationController
 
   # rubocop:disable MethodLength
   def filter_repos
+    return unless search_assignments_enabled?
     matching_groups = @group_assignment.grouping.groups
     if @query.present?
       matching_groups = matching_groups.where("slug LIKE ?", "%#{@query}%")
