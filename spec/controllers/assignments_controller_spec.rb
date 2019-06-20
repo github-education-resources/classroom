@@ -204,6 +204,27 @@ RSpec.describe AssignmentsController, type: :controller do
     end
   end
 
+  describe "search for user in the roster", :vcr do
+    before do
+      organization.roster = create(:roster)
+      organization.save!
+      RosterEntry.create(identifier: "tester", roster: organization.roster)
+      organization.roster.reload
+    end
+
+    it "finds one user if in roster" do
+      get :filter_repos, params: { organization_id: organization.slug, id: assignment.slug, query: "tester", format: :js }
+      expect(response.status).to eq(200)
+      expect(assigns(:roster_entries)).to_not be_nil
+    end
+
+    it "finds no user if not in roster" do
+      get :filter_repos, params: { organization_id: organization.slug, id: assignment.slug, query: "aaaabbbbb", format: :js }
+      expect(response.status).to eq(200)
+      expect(assigns(:roster_entries)).to eq([])
+    end
+  end
+
   describe "GET #edit", :vcr do
     it "returns success and sets the assignment" do
       get :edit, params: { id: assignment.slug, organization_id: organization.slug }
