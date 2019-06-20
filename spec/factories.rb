@@ -59,6 +59,11 @@ FactoryBot.define do
     slug  { title.parameterize  }
   end
 
+  factory :group_assignment_repo do
+    group_assignment
+    group
+    github_repo_id { rand(1..1_00_000) }
+  end
   factory :group do
     grouping
 

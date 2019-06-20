@@ -23,10 +23,10 @@ class GroupAssignmentRepo < ApplicationRecord
   delegate :creator, :starter_code_repo_id, to: :group_assignment
   delegate :github_team_id,                 to: :group
   delegate :default_branch, :commits,       to: :github_repository
+  delegate :slug, to: :group_assignment
 
   def github_team
     @github_team ||= group.github_team
   end
 
-  delegate :slug, to: :group_assignment
 end
