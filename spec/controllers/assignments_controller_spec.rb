@@ -213,13 +213,13 @@ RSpec.describe AssignmentsController, type: :controller do
     end
 
     it "finds one user if in roster" do
-      get :filter_repos, params: { organization_id: organization.slug, id: assignment.slug, query: "tester", format: :js }
+      get :filter_repos, xhr: true, params: { organization_id: organization.slug, id: assignment.slug, query: "tester" }
       expect(response.status).to eq(200)
       expect(assigns(:roster_entries)).to_not be_nil
     end
 
     it "finds no user if not in roster" do
-      get :filter_repos, params: { organization_id: organization.slug, id: assignment.slug, query: "aaaabbbbb", format: :js }
+      get :filter_repos, xhr: true, params: { organization_id: organization.slug, id: assignment.slug, query: "aabz" }
       expect(response.status).to eq(200)
       expect(assigns(:roster_entries)).to eq([])
     end
