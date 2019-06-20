@@ -141,6 +141,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
     before do
       group_assignment.grouping.groups = [create(:group, grouping: group_assignment.grouping, title: "testing stuff")]
       group_assignment.save!
+      GitHubClassroom.flipper[:search_assignments].enable
     end
 
     it "finds group assignment in search" do

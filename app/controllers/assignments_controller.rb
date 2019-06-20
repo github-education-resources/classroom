@@ -55,7 +55,7 @@ class AssignmentsController < ApplicationController
 
   # rubocop:disable MethodLength
   def filter_repos
-    return unless @organization.roster || search_assignments_enabled?
+    return unless @organization.roster && search_assignments_enabled?
 
     matching_roster_entries = @organization.roster.roster_entries
     if @query.present?

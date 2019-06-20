@@ -210,6 +210,7 @@ RSpec.describe AssignmentsController, type: :controller do
       organization.save!
       RosterEntry.create(identifier: "tester", roster: organization.roster)
       organization.roster.reload
+      GitHubClassroom.flipper[:search_assignments].enable
     end
 
     it "finds one user if in roster" do

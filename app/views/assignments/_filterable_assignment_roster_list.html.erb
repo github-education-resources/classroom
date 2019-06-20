@@ -1,9 +1,5 @@
-<<<<<<< Updated upstream
-<div class='TableObject'>
-=======
 <% if search_assignments_enabled? %>
   <div class='TableObject'>
->>>>>>> Stashed changes
     <div class='TableObject-item TableObject-item--primary'>
       <%= form_tag filter_repos_organization_assignment_path, id: 'js-search-form', method: :get, remote: true do %>
         <%= text_field_tag :query, @query, class: 'input-block form-control', placeholder: 'Search by student identifier', autofocus: true, autocomplete: :off, id: 'search-query-field' %>
