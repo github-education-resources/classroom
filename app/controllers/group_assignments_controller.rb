@@ -102,7 +102,8 @@ class GroupAssignmentsController < ApplicationController
         :grouping_id,
         :max_members,
         :students_are_repo_admins,
-        :invitations_enabled
+        :invitations_enabled,
+        :max_teams
       )
       .merge(
         creator: current_user,
@@ -156,7 +157,8 @@ class GroupAssignmentsController < ApplicationController
         :max_members,
         :students_are_repo_admins,
         :deadline,
-        :invitations_enabled
+        :invitations_enabled,
+        :max_teams
       )
       .merge(starter_code_repo_id: starter_code_repo_id_param)
   end

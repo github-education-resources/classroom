@@ -330,6 +330,53 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         end
       end
 
+      context "assignment has reached maximum number of teams" do
+        let(:existing_group) { create(:group, grouping: grouping, github_team_id: 2_973_107) }
+        let(:new_group) { create(:group, grouping: grouping, github_team_id: 2_973_108) }
+        let(:second_invitation) { create(:group_assignment_invitation, group_assignment: group_assignment) }
+
+        before(:each) do
+          group_assignment.update(max_teams: 1)
+          patch :accept_invitation, params: { id: invitation.key, group: { title: existing_group.title } }
+        end
+
+        it "does not allow a user to create a team" do
+          expect_any_instance_of(ApplicationController).to receive(:flash_and_redirect_back_with_message)
+          patch :accept_invitation, params: { id: second_invitation.key, group: { title: new_group.title } }
+        end
+      end
+
+      context "assignment has not reached maximum number of teams" do
+        let(:existing_group) { create(:group, grouping: grouping, github_team_id: 2_973_107) }
+        let(:new_group) { create(:group, grouping: grouping, github_team_id: 2_973_108) }
+        let(:second_invitation) { create(:group_assignment_invitation, group_assignment: group_assignment) }
+
+        before(:each) do
+          group_assignment.update(max_teams: 2)
+          patch :accept_invitation, params: { id: invitation.key, group: { title: existing_group.title } }
+        end
+
+        it "allows user to create a team" do
+          patch :accept_invitation, params: { id: second_invitation.key, group: { title: new_group.title } }
+          expect(group_assignment.grouping.groups.count).to eql(2)
+        end
+      end
+
+      context "assignment does not have maximum number of teams" do
+        let(:existing_group) { create(:group, grouping: grouping, github_team_id: 2_973_107) }
+        let(:new_group) { create(:group, grouping: grouping, github_team_id: 2_973_108) }
+        let(:second_invitation) { create(:group_assignment_invitation, group_assignment: group_assignment) }
+
+        before(:each) do
+          patch :accept_invitation, params: { id: invitation.key, group: { title: existing_group.title } }
+        end
+
+        it "allows user to create a team" do
+          patch :accept_invitation, params: { id: second_invitation.key, group: { title: new_group.title } }
+          expect(group_assignment.grouping.groups.count).to eql(2)
+        end
+      end
+
       context "with group import resiliency enabled" do
         before do
           GitHubClassroom.flipper[:group_import_resiliency].enable
