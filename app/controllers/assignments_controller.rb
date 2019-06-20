@@ -52,6 +52,7 @@ class AssignmentsController < ApplicationController
   # rubocop:enable AbcSize
   # rubocop:enable MethodLength
 
+  # rubocop:disable MethodLength
   def filter_repos
     return unless @organization.roster
 
@@ -66,18 +67,10 @@ class AssignmentsController < ApplicationController
       .order_by_sort_mode(@current_sort_mode, assignment: @assignment)
 
     respond_to do |format|
-      format.html do
-        render partial: "assignments/assignment_roster_list",
-                locals: {
-                  roster_entries: @roster_entries,
-                  organization: @organization,
-                  assignment: @assignment
-                }
-      end
-
       format.js
     end
   end
+  # rubocop:enable MethodLength
 
   def edit; end
 

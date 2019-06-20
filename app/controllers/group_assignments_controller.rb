@@ -45,7 +45,6 @@ class GroupAssignmentsController < ApplicationController
   end
 
   # rubocop:disable MethodLength
-  # rubocop:disable Metrics/AbcSize
   def filter_repos
     matching_groups = @group_assignment.grouping.groups
     if @query.present?
@@ -58,20 +57,10 @@ class GroupAssignmentsController < ApplicationController
       .page(params[@pagination_key])
 
     respond_to do |format|
-      format.html do
-        render partial: "group_assignments/group_assignment_list",
-                locals: {
-                  group_assignment_repos: @group_assignment_repos,
-                  organization: @organization,
-                  group_assignment: @group_assignment
-                }
-      end
-
       format.js
     end
   end
   # rubocop:enable MethodLength
-  # rubocop:enable Metrics/AbcSize
 
   def edit; end
 
