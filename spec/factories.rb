@@ -98,14 +98,6 @@ FactoryBot.define do
     identifier { "myemail@example.com" }
   end
 
-  factory :github_user do
-    user
-
-    id      { rand(1..1_000_000) }
-    login   { "abc123" }
-    token   { SecureRandom.hex(20) }
-  end
-
   factory :user do
     uid    { rand(1..1_000_000) }
     token  { SecureRandom.hex(20) }
