@@ -21,7 +21,7 @@ class RosterEntry < ApplicationRecord
       .joins <<~SQL
         LEFT OUTER JOIN assignment_repos
         ON roster_entries.user_id = assignment_repos.user_id
-        AND assignment_repos.assignment_id=#{sql_formatted_assignment_id}
+        AND assignment_repos.assignment_id='#{sql_formatted_assignment_id}'
       SQL
   }
 
