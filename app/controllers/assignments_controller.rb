@@ -43,6 +43,7 @@ class AssignmentsController < ApplicationController
       .page(params[:students_page])
       .order_for_view(@assignment)
       .order_by_sort_mode(@current_sort_mode, assignment: @assignment)
+      .order(:id)
 
     @unlinked_user_repos = AssignmentRepo
       .where(assignment: @assignment, user: @unlinked_users)
@@ -62,9 +63,10 @@ class AssignmentsController < ApplicationController
     end
 
     @roster_entries = matching_roster_entries
-      .page(params[:students_page])
+      .page(1)
       .order_for_view(@assignment)
       .order_by_sort_mode(@current_sort_mode, assignment: @assignment)
+      .order(:id)
 
     respond_to do |format|
       format.js

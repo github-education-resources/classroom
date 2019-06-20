@@ -7,7 +7,7 @@ class GroupAssignmentsController < ApplicationController
 
   before_action :set_group_assignment,      except: %i[new create]
   before_action :set_groupings,             except: %i[show filter_repos]
-  before_action :set_pagination_key,        only: %i[create show filter_repos]
+  before_action :set_pagination_key,        only: %i[create show]
   before_action :set_filter_options,        only: %i[show filter_repos]
   before_action :authorize_grouping_access, only: %i[create update]
 
@@ -35,6 +35,7 @@ class GroupAssignmentsController < ApplicationController
     @group_assignment_repos = GroupAssignmentRepo
       .where(group_assignment: @group_assignment)
       .order_by_sort_mode(@current_sort_mode)
+      .order(:id)
       .page(params[@pagination_key])
 
     return unless @organization.roster
@@ -54,7 +55,8 @@ class GroupAssignmentsController < ApplicationController
     @group_assignment_repos = GroupAssignmentRepo
       .where(group_assignment: @group_assignment, group_id: matching_groups.ids)
       .order_by_sort_mode(@current_sort_mode)
-      .page(params[@pagination_key])
+      .order(:id)
+      .page(1)
 
     respond_to do |format|
       format.js
