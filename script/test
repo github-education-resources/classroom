@@ -36,3 +36,6 @@ if [ -n "$1" ]; then
 else
   bin/rspec
 fi
+
+echo "===> Running linter..."
+script/linter
