@@ -8,7 +8,7 @@ class SharedAssignmentRepoView < ViewModel
 
   def disabled?
     return @disabled if defined?(@disabled)
-    @disabled = assignment_repo.disabled?
+    @disabled = !github_repository.on_github? || !github_entity.on_github?
   end
 
   def github_repo_url
@@ -67,5 +67,15 @@ class SharedAssignmentRepoView < ViewModel
 
   def repository_text
     disabled? ? "Repository not found" : "View repository"
+  end
+
+  private
+
+  def github_entity
+    if assignment_repo.is_a?(AssignmentRepo)
+      assignment_repo.github_user
+    else
+      assignment_repo.github_team
+    end
   end
 end

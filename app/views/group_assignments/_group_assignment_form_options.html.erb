@@ -54,6 +54,12 @@
    <%= render 'shared/form_error', errors: view.error_message_for(:max_members) if view.errors_for?(:max_members) %>
 </dl>
 
+<dl class="<%= view.form_class_for(:max_teams) %>">
+   <dt><%= f.label "Maximum number of teams (optional)" %></dt>
+   <dd><%= f.number_field :max_teams, class: 'textfield form-control input-contrast input-block', autocomplete: :off %></dd>
+   <%= render 'shared/form_error', errors: view.error_message_for(:max_teams) if view.errors_for?(:max_teams) %>
+</dl>
+
 
 <dl class="<%= view.form_class_for(:deadline) %>">
   <dt><label>Deadline <small>(optional)</small></label></dt>

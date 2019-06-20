@@ -8,7 +8,6 @@ RSpec.describe GroupAssignmentRepo, type: :model do
     let(:student)      { classroom_student }
     let(:repo_access)  { RepoAccess.create(user: student, organization: organization) }
     let(:grouping)     { create(:grouping, organization: organization) }
-    let(:group)        { create(:group, grouping: grouping, github_team_id: 2_977_000) }
 
     let(:group_assignment) do
       create(
@@ -22,19 +21,22 @@ RSpec.describe GroupAssignmentRepo, type: :model do
     end
 
     before(:each) do
-      group.repo_accesses << repo_access
+      github_team_id = organization.github_organization.create_team(Faker::Team.name[0..39]).id
+      @group = create(:group, grouping: grouping, github_team_id: github_team_id)
+      @group.repo_accesses << repo_access
     end
 
     after(:each) do
       repo_access.destroy
       @group_assignment_repo.destroy if @group_assignment_repo.present?
+      organization.github_organization.delete_team(@group.github_team_id)
     end
 
     describe "callbacks", :vcr do
       describe "before_validation" do
         context "success" do
           before(:each) do
-            @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
+            @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: @group)
           end
 
           describe "#create_github_repository" do
@@ -58,19 +60,19 @@ RSpec.describe GroupAssignmentRepo, type: :model do
           describe "#add_team_to_github_repository" do
             it "adds the team to the repository" do
               github_repo = GitHubRepository.new(organization.github_client, @group_assignment_repo.github_repo_id)
-              add_github_team_url = github_url("/teams/#{group.github_team_id}/repos/#{github_repo.full_name}")
+              add_github_team_url = github_url("/teams/#{@group.github_team_id}/repos/#{github_repo.full_name}")
               expect(WebMock).to have_requested(:put, add_github_team_url)
             end
 
             context "when students_are_repo_admins is true" do
               before do
                 group_assignment.update(students_are_repo_admins: true)
-                @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
+                @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: @group)
               end
 
               it "adds the team to the repository" do
                 github_repo = GitHubRepository.new(organization.github_client, @group_assignment_repo.github_repo_id)
-                add_github_team_url = github_url("/teams/#{group.github_team_id}/repos/#{github_repo.full_name}")
+                add_github_team_url = github_url("/teams/#{@group.github_team_id}/repos/#{github_repo.full_name}")
                 permission_param = { permission: "admin" }
                 expect(WebMock).to have_requested(:put, add_github_team_url)
                   .with(body: hash_including(permission_param))
@@ -89,7 +91,7 @@ RSpec.describe GroupAssignmentRepo, type: :model do
             it "fails to push the starter code to the GitHub repository" do
               stub_request(:put, %r{#{github_url("/repositories")}/\d+/import$})
                 .to_return(status: 500)
-              expect { GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group) }
+              expect { GroupAssignmentRepo.create!(group_assignment: group_assignment, group: @group) }
                 .to raise_error(GitHub::Error)
             end
           end
@@ -98,10 +100,10 @@ RSpec.describe GroupAssignmentRepo, type: :model do
             it "fails to add team to the repository" do
               USERNAME_REGEX = GitHub::USERNAME_REGEX
               REPOSITORY_REGEX = GitHub::REPOSITORY_REGEX
-              regex = %r{#{github_url("/teams/#{group.github_team_id}/repos/")}#{USERNAME_REGEX}\/#{REPOSITORY_REGEX}$}
+              regex = %r{#{github_url("/teams/#{@group.github_team_id}/repos/")}#{USERNAME_REGEX}\/#{REPOSITORY_REGEX}$}
               stub_request(:put, regex)
                 .to_return(status: 500)
-              expect { GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group) }
+              expect { GroupAssignmentRepo.create!(group_assignment: group_assignment, group: @group) }
                 .to raise_error(GitHub::Error)
             end
           end
@@ -110,7 +112,7 @@ RSpec.describe GroupAssignmentRepo, type: :model do
 
       describe "before_destroy" do
         before(:each) do
-          @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
+          @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: @group)
         end
 
         describe "#destroy_github_repository" do
@@ -126,11 +128,26 @@ RSpec.describe GroupAssignmentRepo, type: :model do
 
     describe "#creator" do
       before(:each) do
-        @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
+        @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: @group)
       end
 
       it "returns the group assignments creator" do
         expect(@group_assignment_repo.creator).to eql(group_assignment.creator)
+      end
+    end
+
+    describe "#github_team" do
+      before(:each) do
+        @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: @group)
+      end
+
+      it "returns a NillGitHubTeam when group is nil" do
+        @group_assignment_repo.group.destroy
+        expect(@group_assignment_repo.reload.github_team).to be_a(NullGitHubTeam)
+      end
+
+      it "returns a valid GitHubTeam when group exists" do
+        expect(@group_assignment_repo.github_team).to be_a(GitHubTeam)
       end
     end
   end
