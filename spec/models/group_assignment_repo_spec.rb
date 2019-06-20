@@ -135,5 +135,20 @@ RSpec.describe GroupAssignmentRepo, type: :model do
         expect(@group_assignment_repo.creator).to eql(group_assignment.creator)
       end
     end
+
+    describe "#github_team" do
+      before(:each) do
+        @group_assignment_repo = GroupAssignmentRepo.create(group_assignment: group_assignment, group: @group)
+      end
+
+      it "returns a NillGitHubTeam when group is nil" do
+        @group_assignment_repo.group.destroy
+        expect(@group_assignment_repo.reload.github_team).to be_a(NullGitHubTeam)
+      end
+
+      it "returns a valid GitHubTeam when group exists" do
+        expect(@group_assignment_repo.github_team).to be_a(GitHubTeam)
+      end
+    end
   end
 end
