@@ -10,7 +10,11 @@
     <div class='d-flex flex-column flex-justify-around'>
       <div>
         <%= link_to view.github_user_url, class: "assignment-repo-github-url", target: '_blank' do %>
-          <h3 class="css-truncate css-truncate-target"><%= view.github_user_login %></h3>
+          <% if defined? current_roster_entry %>
+            <h3 class="css-truncate css-truncate-target"><%=  current_roster_entry.identifier %></h3>
+          <% else %>
+            <h3 class="css-truncate css-truncate-target"><%=  view.github_user_login %></h3>
+          <% end %>
         <% end %>
       </div>
       <div class="assignment-properties">
