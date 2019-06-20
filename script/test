@@ -37,4 +37,5 @@ else
   bin/rspec
 fi
 
+echo "===> Running linter..."
 script/linter
