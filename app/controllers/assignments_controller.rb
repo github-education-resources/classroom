@@ -6,8 +6,8 @@ class AssignmentsController < ApplicationController
   include StarterCode
 
   before_action :set_assignment, except: %i[new create]
-  before_action :set_current_sort_mode, only: %i[show list_assignment_repos]
-  before_action :set_unlinked_users, only: %i[show list_assignment_repos]
+  before_action :set_filter_options, only: %i[show filter_repos]
+  before_action :set_unlinked_users, only: %i[show]
 
   def new
     @assignment = Assignment.new
@@ -49,56 +49,34 @@ class AssignmentsController < ApplicationController
       .order(:id)
       .page(params[:unlinked_accounts_page])
   end
-
-  def search
-    return unless @organization.roster
-
-    users = @organization.roster.roster_entries.where("identifier LIKE ?", "%#{params[:query]}%")
-
-    @assignment_repos = AssignmentRepo
-      .where(assignment: @assignment, user_id: users.ids)
-      .page(params[:page])
-
-    @roster_entries = users
-      .order(:id)
-      .page(params[:students_page])
-      .order_for_view(@assignment)
-      .order_by_sort_mode(@current_sort_mode, assignment: @assignment)
-
-    @unlinked_user_repos = AssignmentRepo
-      .order(:id)
-      .where(assignment: @assignment, user: @unlinked_users, user_id: users.ids)
-      .page(params[:unlinked_accounts_page])
-
-    return unless @assignment_repos || @roster_entries
-
-    respond_to do |format|
-      format.html do
-        render partial: "assignments/assignment_list_layout",
-               locals: {
-                 roster_entries: @roster_entries,
-                 organization: @organization,
-                 assignment: @assignment
-               }
-      end
-    end
-  end
   # rubocop:enable AbcSize
   # rubocop:enable MethodLength
 
-  def list_assignment_repos
+  def filter_repos
     return unless @organization.roster
 
-    @roster_entries = @organization.roster.roster_entries
+    matching_roster_entries = @organization.roster.roster_entries
+    if @query.present?
+      matching_roster_entries = matching_roster_entries.where("identifier LIKE ?", "%#{@query}%")
+    end
+
+    @roster_entries = matching_roster_entries
       .page(params[:students_page])
       .order_for_view(@assignment)
       .order_by_sort_mode(@current_sort_mode, assignment: @assignment)
 
-    render partial: "assignments/assignment_roster_list", locals: {
-      roster_entries: @roster_entries,
-      organization: @organization,
-      assignment: @assignment
-    }
+    respond_to do |format|
+      format.html do
+        render partial: "assignments/assignment_roster_list",
+                locals: {
+                  roster_entries: @roster_entries,
+                  organization: @organization,
+                  assignment: @assignment
+                }
+      end
+
+      format.js
+    end
   end
 
   def edit; end
@@ -164,16 +142,18 @@ class AssignmentsController < ApplicationController
     @assignment = @organization.assignments.includes(:assignment_invitation).find_by!(slug: params[:id])
   end
 
-  def set_current_sort_mode
+  def set_filter_options
     @assignment_sort_modes = RosterEntry.sort_modes
 
+    @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
+    @query = params[:query]
+
     @assignment_sort_modes_links = @assignment_sort_modes.keys.map do |mode|
-      list_assignment_repos_organization_assignment_path(
-        sort_assignment_repos_by: mode
+      filter_repos_organization_assignment_path(
+        sort_assignment_repos_by: mode,
+        query: @query
       )
     end
-
-    @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
   end
 
   def deadline_param

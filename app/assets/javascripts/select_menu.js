@@ -1,11 +1,11 @@
-$(document).ready(function() {
-  select_menu              = $(".select-menu");
-  select_menu_modal        = $(".select-menu-modal-holder");
-  select_menu_list         = $(".select-menu-list");
-  select_menu_list_items   = $(".select-menu-item");
-  select_menu_button       = $(".select-menu-button");
-  select_menu_close_button = $(".select-menu-close-button");
-  selected_option          = $(".select-menu .selected-option");
+function initialize_select_menu() {
+  let select_menu              = $(".select-menu");
+  let select_menu_modal        = $(".select-menu-modal-holder");
+  let select_menu_list         = $(".select-menu-list");
+  let select_menu_list_items   = $(".select-menu-item");
+  let select_menu_button       = $(".select-menu-button");
+  let select_menu_close_button = $(".select-menu-close-button");
+  let selected_option          = $(".select-menu .selected-option");
 
   select_menu_button.click(function() {
     if (select_menu_button.attr("aria-expanded") === "true") {
@@ -24,10 +24,6 @@ $(document).ready(function() {
 
   select_menu_close_button.click(function(e) {
     closeSelectMenu();
-  });
-
-  select_menu.on('ajax:success', function(e, data, status, xhr) {
-    return $('#js-menu-container').html(xhr.responseText);
   });
 
   function selectItem(item) {
@@ -59,4 +55,7 @@ $(document).ready(function() {
       closeSelectMenu();
     }
   });
-});
+};
+
+
+$(document).ready(initialize_select_menu)

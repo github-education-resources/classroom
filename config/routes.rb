@@ -97,8 +97,7 @@ Rails.application.routes.draw do
         get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
         get :assistant, on: :member
         member do
-          get :search
-          get :list_assignment_repos
+          get :filter_repos
         end
       end
 
@@ -107,8 +106,7 @@ Rails.application.routes.draw do
         get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
         get :assistant, on: :member
         member do
-          get :search
-          get :list_assignment_repos
+          get :filter_repos
         end
       end
     end

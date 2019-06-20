@@ -6,9 +6,9 @@ class GroupAssignmentsController < ApplicationController
   include StarterCode
 
   before_action :set_group_assignment,      except: %i[new create]
-  before_action :set_groupings,             except: [:show]
-  before_action :set_pagination_key,        only: %i[create show list]
-  before_action :set_current_sort_mode,     only: %i[show list_assignment_repos]
+  before_action :set_groupings,             except: %i[show filter_repos]
+  before_action :set_pagination_key,        only: %i[create show filter_repos]
+  before_action :set_filter_options,        only: %i[show filter_repos]
   before_action :authorize_grouping_access, only: %i[create update]
 
   def new
@@ -44,44 +44,30 @@ class GroupAssignmentsController < ApplicationController
       .page(params[:students_page])
   end
 
-  def list_assignment_repos
-    @group_assignment_repos = GroupAssignmentRepo
-      .where(group_assignment: @group_assignment)
-      .order_by_sort_mode(@current_sort_mode)
-      .page(params[@pagination_key])
-
-    render partial: "group_assignments/group_assignment_list", locals: {
-      group_assignment_repos: @group_assignment_repos,
-      organization: @organization,
-      group_assignment: @group_assignment
-    }
-  end
-
   # rubocop:disable MethodLength
   # rubocop:disable Metrics/AbcSize
-  def search
-    pagination_key = @organization.roster ? :teams_page : :page
-    groups_found = @group_assignment.grouping.groups.where("slug LIKE ?", "%#{params[:query]}%")
+  def filter_repos
+    matching_groups = @group_assignment.grouping.groups
+    if @query.present?
+      matching_groups = matching_groups.where("slug LIKE ?", "%#{@query}%")
+    end
 
     @group_assignment_repos = GroupAssignmentRepo
-      .where(group_assignment: @group_assignment, group_id: groups_found.ids)
-      .page(params[pagination_key])
-
-    return unless @organization.roster
-    @students_not_on_team = @organization.roster.roster_entries
-      .students_not_on_team(@group_assignment)
-      .order(:id)
-      .page(params[:students_page])
+      .where(group_assignment: @group_assignment, group_id: matching_groups.ids)
+      .order_by_sort_mode(@current_sort_mode)
+      .page(params[@pagination_key])
 
     respond_to do |format|
       format.html do
         render partial: "group_assignments/group_assignment_list",
-               locals: {
-                 group_assignment_repos: @group_assignment_repos,
-                 organization: @organization,
-                 group_assignment: @group_assignment
-               }
+                locals: {
+                  group_assignment_repos: @group_assignment_repos,
+                  organization: @organization,
+                  group_assignment: @group_assignment
+                }
       end
+
+      format.js
     end
   end
   # rubocop:enable MethodLength
@@ -175,12 +161,16 @@ class GroupAssignmentsController < ApplicationController
       .find_by!(slug: params[:id])
   end
 
-  def set_current_sort_mode
+  def set_filter_options
     @assignment_sort_modes = GroupAssignmentRepo.sort_modes
 
+    @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
+    @query = params[:query]
+
     @assignment_sort_modes_links = @assignment_sort_modes.keys.map do |mode|
-      list_assignment_repos_organization_group_assignment_path(
-        sort_assignment_repos_by: mode
+      filter_repos_organization_group_assignment_path(
+        sort_assignment_repos_by: mode,
+        query: @query
       )
     end
 

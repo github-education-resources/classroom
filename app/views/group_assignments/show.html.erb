@@ -48,9 +48,6 @@
     </div>
 
     <% if @organization.roster %>
-      <%= form_tag search_organization_group_assignment_path, id: 'js-search-form', class: 'form-block col-md-4 mt-5', method: :get, remote: true do %>
-        <%= text_field_tag :query, params[:query], class: 'form-control width-full', placeholder: 'Search groups...', autofocus: true, autocomplete: :off %>
-      <% end %>
       <div class="assignment-container">
         <div class="tabnav-body clearfix ">
           <div class="tabnav">
@@ -60,27 +57,10 @@
             </nav>
           </div>
           <span id='students-span'>
-
-            <%= render partial: 'shared/select_menu',
-                 locals: {
-                     title: 'Sort group assignments by:',
-                     options: @assignment_sort_modes.keys,
-                     option_links: @assignment_sort_modes_links,
-                     selected_option: @current_sort_mode,
-                     remote: true
-                 }
-            %>
-
-            <div class="assignment-repo-list" id="js-search-results">
               <% if @group_assignment_repos.present? %>
-                <div class="assignment-repo-list" id="js-menu-container">
-                  <% @group_assignment_repos.each do |group_assignment_repo| %>
-                    <%= render partial: 'orgs/group_assignment_repos/group_assignment_repo', \
-                      locals: { url: organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo) } %>
-                  <% end %>
-                </div>
-
+                <%= render partial: 'group_assignments/filterable_group_assignment_repo_list' %>
                 <%= render partial: 'shared/pagination', locals: { collection: @group_assignment_repos, param_name: :teams_page } %>
+
               <% else %>
                 <div class="blankslate">
                   <h3>"<%= @group_assignment.title %>" does not have any repositories.</h3>
@@ -110,23 +90,7 @@
       </div>
     <% else %>
       <% if @group_assignment_repos.present? %>
-        <%=
-          render partial: 'shared/select_menu',
-                 locals: {
-                     title: 'Sort group assignments by:',
-                     options: @assignment_sort_modes.keys,
-                     option_links: @assignment_sort_modes_links,
-                     selected_option: @current_sort_mode
-                 }
-        %>
-
-        <div class="assignment-repo-list" id="js-menu-container">
-          <% @group_assignment_repos.each do |group_assignment_repo| %>
-            <%= render partial: 'orgs/group_assignment_repos/group_assignment_repo', \
-              locals: { url: organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo) } %>
-          <% end %>
-        </div>
-
+        <%= render partial: 'group_assignments/filterable_group_assignment_repo_list' %>
         <%= render partial: 'shared/pagination', locals: { collection: @group_assignment_repos } %>
       <% else %>
         <div class="blankslate">

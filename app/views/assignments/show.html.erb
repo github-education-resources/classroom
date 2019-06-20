@@ -56,34 +56,8 @@
             </nav>
           </div>
           <span id='students-span'>
-            <div class="TableObject">
-              <div class="TableObject-item TableObject-item--primary">
-                  <%= form_tag search_organization_assignment_path, id: 'js-search-form', method: :get, remote: true do %>
-                    <%= text_field_tag :query, params[:query], class: 'input-block form-control', placeholder: 'Search by student identifier', autofocus: true, autocomplete: :off %>
-                  <% end %>
-              </div>
-              <div class="TableObject-item">
-              <%= 
-                render partial: 'shared/select_menu',
-                  locals: { 
-                    title: 'Sort assignments by:',
-                    options: @assignment_sort_modes.keys,
-                    option_links: @assignment_sort_modes_links,
-                    selected_option: @current_sort_mode
-                  }
-                %>
-              </div>
-            </div>
-
-            <div class="assignment-repo-list" id="js-search-results js-menu-container">
-              <% @roster_entries.each do |entry| %>
-                <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
-                  url: organization_assignment_roster_entry_path(@organization, @assignment, entry)
-                } %>
-              <% end %>
-            </div>
-
-            <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :students_page } %>
+              <%= render partial: 'assignments/filterable_assignment_roster_list' %>
+              <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :students_page } %>
           </span>
           <span id='unlinked-span' class='hidden-tab'>
             <span>
