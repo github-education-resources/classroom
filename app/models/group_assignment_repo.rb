@@ -51,6 +51,8 @@ class GroupAssignmentRepo < ApplicationRecord
   end
 
   def github_team
+    return NullGitHubTeam.new if group.nil?
+
     @github_team ||= group.github_team
   end
 
