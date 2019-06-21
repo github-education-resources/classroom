@@ -5,7 +5,7 @@
     var timer;
     timer = 0;
     return function(callback, ms) {
-      if(timer) {
+      if (timer) {
         clearTimeout(timer);
       }
       timer = setTimeout(callback, ms);
@@ -16,16 +16,16 @@
     return $('#js-search-form').on('keyup', function() {
       var $this, formData;
       $this = $(this);
-      formData = $(this).serialize();
-      history.replaceState(null, '', "?" + formData);
+      formData = $(this).find('input[name!=utf8]').serialize();
+      history.replaceState(null, '', '?' + formData);
 
       debounce(function() { 
         $this.one('ajax:beforeSend', function(e, data, status, xhr) {
-          $this.find(":input").prop("disabled", true);
+          $this.find(':input').prop('disabled', true);
         });
 
         $this.one('ajax:complete', function(e, data, status, xhr) {
-          $this.find(":input").prop("disabled", false);
+          $this.find(':input').prop('disabled', false);
         });
 
         $this.one('ajax:success', function(e, data, status, xhr) {
