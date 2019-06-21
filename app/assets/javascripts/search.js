@@ -20,6 +20,14 @@
       history.replaceState(null, '', "?" + formData);
 
       debounce(function() { 
+        $this.one('ajax:beforeSend', function(e, data, status, xhr) {
+          $this.find(":input").prop("disabled", true);
+        });
+
+        $this.one('ajax:complete', function(e, data, status, xhr) {
+          $this.find(":input").prop("disabled", false);
+        });
+
         $this.one('ajax:success', function(e, data, status, xhr) {
           return $('#js-search-results').html(xhr.responseText);
         });
