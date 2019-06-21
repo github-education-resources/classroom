@@ -46,6 +46,7 @@ FactoryBot.define do
     slug     { title.parameterize                            }
     grouping { create(:grouping, organization: organization) }
     creator  { organization.users.first                      }
+    group_assignment_invitation { build_group_assignment_invitation }
   end
 
   factory :group_assignment_invitation do
@@ -62,7 +63,7 @@ FactoryBot.define do
   factory :group_assignment_repo do
     group_assignment
     group
-    github_repo_id { rand(1..1_00_000) }
+    github_repo_id { rand(1..1_000_000) }
   end
   factory :group do
     grouping
