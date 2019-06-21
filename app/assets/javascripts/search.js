@@ -16,12 +16,14 @@
       $this = $(this);
       formData = $(this).serialize();
       history.replaceState(null, '', "?" + formData);
-      return delay((function() {
-        $this.submit();
-        return $this.on('ajax:success', function(e, data, status, xhr) {
+
+      delay(function() { 
+        $this.one('ajax:success', function(e, data, status, xhr) {
           return $('#js-search-results').html(xhr.responseText);
         });
-      }), 200);
+        
+        $this.submit();
+      }, 200);
     });
   };
 
