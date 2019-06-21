@@ -1,7 +1,7 @@
 <% if search_assignments_enabled? %>
   <div class='TableObject'>
     <div class='TableObject-item TableObject-item--primary'>
-      <%= form_tag filter_repos_organization_assignment_path, id: 'js-search-form', method: :get, remote: true do %>
+      <%= form_tag organization_assignment_path, id: 'js-search-form', method: :get, remote: true do %>
         <%= text_field_tag :query, @query, class: 'input-block form-control', placeholder: 'Search by student identifier', autofocus: true, autocomplete: :off, id: 'search-query-field' %>
         <%= hidden_field_tag :sort_assignment_repos_by, @current_sort_mode, id: 'sort-mode-field' %>
       <% end %>
@@ -28,4 +28,8 @@
     assignment: @assignment,
      roster_entries: @roster_entries
   } %>
+</div>
+
+<div id='assignment-repo-pagination'>
+  <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :students_page } %>
 </div>

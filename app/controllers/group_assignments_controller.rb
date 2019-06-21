@@ -6,9 +6,9 @@ class GroupAssignmentsController < ApplicationController
   include StarterCode
 
   before_action :set_group_assignment,      except: %i[new create]
-  before_action :set_groupings,             except: %i[show filter_repos]
+  before_action :set_groupings,             except: %i[show]
   before_action :set_pagination_key,        only: %i[create show]
-  before_action :set_filter_options,        only: %i[show filter_repos]
+  before_action :set_filter_options,        only: %i[show]
   before_action :authorize_grouping_access, only: %i[create update]
 
   def new
@@ -32,38 +32,34 @@ class GroupAssignmentsController < ApplicationController
   end
 
   def show
-    @group_assignment_repos = GroupAssignmentRepo
-      .where(group_assignment: @group_assignment)
-      .order_by_sort_mode(@current_sort_mode)
-      .order(:id)
-      .page(params[@pagination_key])
-
-    return unless @organization.roster
-    @students_not_on_team = @organization.roster.roster_entries
-      .students_not_on_team(@group_assignment)
-      .order(:id)
-      .page(params[:students_page])
-  end
-
-  # rubocop:disable MethodLength
-  def filter_repos
-    return unless search_assignments_enabled?
     matching_groups = @group_assignment.grouping.groups
-    if @query.present?
+    if search_assignments_enabled? && @query.present?
       matching_groups = matching_groups.where("slug LIKE ?", "%#{@query}%")
     end
+
 
     @group_assignment_repos = GroupAssignmentRepo
       .where(group_assignment: @group_assignment, group_id: matching_groups.ids)
       .order_by_sort_mode(@current_sort_mode)
       .order(:id)
-      .page(1)
+      .page(params[@pagination_key])
+
+    if @organization.roster
+      @students_not_on_team = @organization.roster.roster_entries
+        .students_not_on_team(@group_assignment)
+        .order(:id)
+        .page(params[:students_page])
+    end
 
     respond_to do |format|
-      format.js
+      format.html
+      format.js do 
+        if search_assignments_enabled?
+          render "group_assignments/filter_repos.js.erb", format: :js
+        end
+      end
     end
   end
-  # rubocop:enable MethodLength
 
   def edit; end
 
@@ -161,7 +157,7 @@ class GroupAssignmentsController < ApplicationController
     @query = params[:query]
 
     @assignment_sort_modes_links = @assignment_sort_modes.keys.map do |mode|
-      filter_repos_organization_group_assignment_path(
+      organization_group_assignment_path(
         sort_assignment_repos_by: mode,
         query: @query
       )

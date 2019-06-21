@@ -57,7 +57,6 @@
           </div>
           <span id='students-span'>
               <%= render partial: 'assignments/filterable_assignment_roster_list' %>
-              <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :students_page } %>
           </span>
           <span id='unlinked-span' class='hidden-tab'>
             <span>

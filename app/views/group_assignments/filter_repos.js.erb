@@ -8,6 +8,13 @@
                 } %>"
     );
 
+     $("#assignment-repo-pagination").html(
+        "<%= j render partial: 'shared/pagination', locals: { 
+            collection: @group_assignment_repos, 
+            param_name: @pagination_key
+        } %>"
+    );
+
     $("#select-menu-container").html(
         "<%= j render partial: 'shared/select_menu', locals: {
             title: 'Sort assignments by:',

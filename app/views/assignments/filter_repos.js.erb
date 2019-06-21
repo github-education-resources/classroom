@@ -7,6 +7,13 @@
         } %>"
     );
 
+    $("#assignment-repo-pagination").html(
+        "<%= j render partial: 'shared/pagination', locals: { 
+            collection: @roster_entries, 
+            param_name: :students_page
+        } %>"
+    );
+
     $("#select-menu-container").html(
         "<%= j render partial: 'shared/select_menu', locals: {
             title: 'Sort assignments by:',

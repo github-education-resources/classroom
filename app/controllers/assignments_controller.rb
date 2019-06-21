@@ -6,7 +6,7 @@ class AssignmentsController < ApplicationController
   include StarterCode
 
   before_action :set_assignment, except: %i[new create]
-  before_action :set_filter_options, only: %i[show filter_repos]
+  before_action :set_filter_options, only: %i[show]
   before_action :set_unlinked_users, only: %i[show]
 
   def new
@@ -39,7 +39,12 @@ class AssignmentsController < ApplicationController
 
     return unless @organization.roster
 
-    @roster_entries = @organization.roster.roster_entries
+    roster_entries = @organization.roster.roster_entries
+    if search_assignments_enabled? && @query.present?
+      roster_entries = roster_entries.where("identifier LIKE ?", "%#{@query}%")
+    end
+
+    @roster_entries = roster_entries
       .page(params[:students_page])
       .order_for_view(@assignment)
       .order_by_sort_mode(@current_sort_mode, assignment: @assignment)
@@ -49,29 +54,17 @@ class AssignmentsController < ApplicationController
       .where(assignment: @assignment, user: @unlinked_users)
       .order(:id)
       .page(params[:unlinked_accounts_page])
-  end
-  # rubocop:enable AbcSize
-  # rubocop:enable MethodLength
-
-  # rubocop:disable MethodLength
-  def filter_repos
-    return unless @organization.roster && search_assignments_enabled?
-
-    matching_roster_entries = @organization.roster.roster_entries
-    if @query.present?
-      matching_roster_entries = matching_roster_entries.where("identifier LIKE ?", "%#{@query}%")
-    end
-
-    @roster_entries = matching_roster_entries
-      .page(1)
-      .order_for_view(@assignment)
-      .order_by_sort_mode(@current_sort_mode, assignment: @assignment)
-      .order(:id)
 
     respond_to do |format|
-      format.js
+      format.html
+      format.js do
+         if search_assignments_enabled?
+            render "assignments/filter_repos.js.erb", format: :js
+         end
+      end
     end
   end
+  # rubocop:enable AbcSize
   # rubocop:enable MethodLength
 
   def edit; end
@@ -144,7 +137,7 @@ class AssignmentsController < ApplicationController
     @query = params[:query]
 
     @assignment_sort_modes_links = @assignment_sort_modes.keys.map do |mode|
-      filter_repos_organization_assignment_path(
+      organization_assignment_path(
         sort_assignment_repos_by: mode,
         query: @query
       )
