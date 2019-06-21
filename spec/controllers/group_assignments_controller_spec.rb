@@ -145,7 +145,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
     end
 
     it "finds group assignment in search" do
-      get :filter_repos, xhr: true, params: {
+      get :show, xhr: true, params: {
         organization_id: organization.slug, id: group_assignment.slug, query: "test"
       }
 
@@ -153,7 +153,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
     end
 
     it "finds no group assignment in search" do
-      get :filter_repos, xhr: true, params: {
+      get :show, xhr: true, params: {
         organization_id: organization.slug, id: group_assignment.slug, query: "hello"
       }
 
