@@ -1,11 +1,13 @@
 (function() {
-  var delay, ready;
+  var debounce, ready;
 
-  delay = (function() {
+  debounce = (function() {
     var timer;
     timer = 0;
     return function(callback, ms) {
-      clearTimeout(timer);
+      if(timer) {
+        clearTimeout(timer);
+      }
       timer = setTimeout(callback, ms);
     };
   })();
@@ -17,7 +19,7 @@
       formData = $(this).serialize();
       history.replaceState(null, '', "?" + formData);
 
-      delay(function() { 
+      debounce(function() { 
         $this.one('ajax:success', function(e, data, status, xhr) {
           return $('#js-search-results').html(xhr.responseText);
         });
