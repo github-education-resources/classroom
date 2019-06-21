@@ -1,68 +1,44 @@
 # frozen_string_literal: true
 
 class GroupAssignmentRepo
+  # rubocop:disable Metrics/ClassLength
   class Creator
     DEFAULT_ERROR_MESSAGE                   = "Group assignment could not be created, please try again"
     REPOSITORY_CREATION_FAILED              = "GitHub repository could not be created, please try again"
-    REPOSITORY_STARTER_CODE_IMPORT_FAILED   = "We were not able to import you the starter code to yourgroup assignment, please try again." # rubocop:disable LineLength
-    REPOSITORY_TEAM_ADDITION_FAILED = "We were not able to add the team to the repository, please try again." # rubocop:disable LineLength
+    REPOSITORY_STARTER_CODE_IMPORT_FAILED   = "We were not able to import you the starter code to your group assignment, please try again." # rubocop:disable LineLength
+    REPOSITORY_TEAM_ADDITION_FAILED         = "We were not able to add the team to the repository, please try again." # rubocop:disable LineLength
     REPOSITORY_CREATION_COMPLETE            = "Your GitHub repository was created."
     IMPORT_ONGOING                          = "Your GitHub repository is importing starter code."
+    CREATE_REPO         = "Creating repository"
+    ADDING_COLLABORATOR = "Adding collaborator"
+    IMPORT_STARTER_CODE = "Importing starter code"
+    CREATE_COMPLETE     = "Your GitHub repository was created."
 
-    class Result
-      class Error < StandardError; end
-
-      def self.success(group_assignment_repo)
-        new(:success, group_assignment_repo: group_assignment_repo)
-      end
-
-      def self.failed(error)
-        new(:failed, error: error)
-      end
-
-      def self.pending
-        new(:pending)
-      end
-
-      attr_reader :error, :group_assignment_repo, :status
-
-      def initialize(status, group_assignment_repo: nil, error: nil)
-        @status = status
-        @group_assignment_repo = group_assignment_repo
-        @error = error
-      end
-
-      def success?
-        @status == :success
-      end
-
-      def failed?
-        @status == :failed
-      end
-
-      def pending?
-        @status == :pending
-      end
+    def self.perform(group_assignment:, group:)
+      new(group_assignment: group_assignment, group: group).perform
     end
 
-    def self.perform(group_assignment:)
-      new(group_assignment: group_assignment).perform
-    end
-
-    attr_reader :group_assignment, :group, :organization
+    attr_reader :group_assignment, :group, :organization, :invite_status, :reporter
+    delegate :broadcast_message, :broadcast_error, :report_time, to: :reporter
 
     def initialize(group_assignment:, group:)
       @group_assignment = group_assignment
-      @group = group
-      @organization = group_assignment.organization
+      @group            = group
+      @organization     = group_assignment.organization
+      @invite_status    = group_assignment.invitation.status(group)
+      @reporter         = Reporter.new(self)
     end
 
+    # Creates a GroupAssignmentRepo with an associated GitHub repo
+    # If creation fails, it deletes the GitHub repo
+    #
     # rubocop:disable MethodLength
     # rubocop:disable AbcSize
     def perform
       start = Time.zone.now
+      invite_status.creating_repo!
+      broadcast_message(CREATE_REPO)
       verify_organization_has_private_repos_available!
-
       github_repository = create_github_repository!
 
       group_assignment_repo = group_assignment.group_assignment_repos.build(
@@ -71,7 +47,7 @@ class GroupAssignmentRepo
         group: group
       )
 
-      add_team_to_github_repository(github_repository.id)
+      add_team_to_github_repository!(github_repository.id)
 
       if group_assignment.starter_code?
         push_starter_code!(group_assignment_repo.github_repo_id)
@@ -79,8 +55,23 @@ class GroupAssignmentRepo
 
       begin
         group_assignment_repo.save!
-      rescue ActiveRecord::RecordInvalid
+      rescue ActiveRecord::RecordInvalid => error
+        Rails.logger.warn(error.message)
         raise Result::Error, DEFAULT_ERROR_MESSAGE
+      end
+
+      GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.success")
+
+      if group_assignment.starter_code?
+        invite_status.importing_starter_code!
+        broadcast_message(
+          IMPORT_STARTER_CODE,
+          group_assignment_repo&.github_repository&.html_url
+        )
+        GitHubClassroom.statsd.increment("group_exercise_repo.import.started")
+      else
+        invite_status.completed!
+        broadcast_message(CREATE_COMPLETE)
       end
 
       duration_in_millseconds = (Time.zone.now - start) * 1_000
@@ -117,8 +108,8 @@ class GroupAssignmentRepo
     end
 
     def push_starter_code!(github_repository_id)
-      client = group_assignment.creator.github_client
-      starter_code_repo_id = group_assignment.starter_code_repo_id
+      client                  = group_assignment.creator.github_client
+      starter_code_repo_id    = group_assignment.starter_code_repo_id
       assignment_repository   = GitHubRepository.new(client, github_repository_id)
       starter_code_repository = GitHubRepository.new(client, starter_code_repo_id)
 
@@ -171,11 +162,11 @@ class GroupAssignmentRepo
         options[:permission] = "admin" if group_assignment.students_are_repo_admins?
       end
     end
-    # rubocop:disable AbcSize
 
+    # rubocop:disable AbcSize
     def generate_github_repository_name
-      suffix_count = 0
-      owner = organization.github_organization.login_no_cache
+      suffix_count    = 0
+      owner           = organization.github_organization.login_no_cache
       repository_name = "#{group_assignment.slug}-#{group.github_team.slug_no_cache}"
       loop do
         name = "#{owner}/#{suffixed_repo_name(repository_name, suffix_count)}"
@@ -194,4 +185,5 @@ class GroupAssignmentRepo
       repository_name.truncate(100 - suffix.length, omission: "") + suffix
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end

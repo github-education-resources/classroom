@@ -28,5 +28,4 @@ class GroupAssignmentRepo < ApplicationRecord
   def github_team
     @github_team ||= group.github_team
   end
-
 end
