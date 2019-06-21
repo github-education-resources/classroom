@@ -31,12 +31,13 @@ class GroupAssignmentsController < ApplicationController
     end
   end
 
+  # rubocop:disable AbcSize
+  # rubocop:disable MethodLength
   def show
     matching_groups = @group_assignment.grouping.groups
     if search_assignments_enabled? && @query.present?
       matching_groups = matching_groups.where("slug LIKE ?", "%#{@query}%")
     end
-
 
     @group_assignment_repos = GroupAssignmentRepo
       .where(group_assignment: @group_assignment, group_id: matching_groups.ids)
@@ -53,13 +54,15 @@ class GroupAssignmentsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.js do 
+      format.js do
         if search_assignments_enabled?
           render "group_assignments/filter_repos.js.erb", format: :js
         end
       end
     end
   end
+  # rubocop:enable MethodLength
+  # rubocop:enable AbcSize
 
   def edit; end
 

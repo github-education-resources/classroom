@@ -58,9 +58,9 @@ class AssignmentsController < ApplicationController
     respond_to do |format|
       format.html
       format.js do
-         if search_assignments_enabled?
-            render "assignments/filter_repos.js.erb", format: :js
-         end
+        if search_assignments_enabled?
+          render "assignments/filter_repos.js.erb", format: :js
+        end
       end
     end
   end
