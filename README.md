@@ -237,6 +237,11 @@ We strongly encourage you to use [https://classroom.github.com](https://classroo
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
+Test Azure deployment.
+
+[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
+
+
 There are a few environment variables you will need to know in order to get Classroom working on production.
 
 ### Production environment variables
