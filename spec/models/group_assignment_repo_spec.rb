@@ -21,8 +21,8 @@ RSpec.describe GroupAssignmentRepo, type: :model do
     end
 
     let(:github_team_id) { organization.github_organization.create_team(Faker::Team.name[0..39]).id }
-    let(:group)          { create(:group, grouping: grouping, github_team_id: github_team_id, repo_accesses: [repo_access]) }
-    subject              { create(:group_assignment_repo, group_assignment: group_assignment, group: group, github_repo_id: 42) }
+    let(:group) { create(:group, grouping: grouping, github_team_id: github_team_id, repo_accesses: [repo_access]) }
+    subject { create(:group_assignment_repo, group_assignment: group_assignment, group: group, github_repo_id: 42) }
 
     describe "callbacks", :vcr do
       describe "before_destroy" do
