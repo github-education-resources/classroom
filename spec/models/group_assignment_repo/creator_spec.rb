@@ -22,7 +22,7 @@ RSpec.describe GroupAssignmentRepo::Creator do
     )
   end
   let(:group_repo_channel) { GroupRepositoryCreationStatusChannel }
-  let(:channel)       { group_repo_channel.channel(group_assignment_id: group_assignment.id, group_id: group.id) }
+  let(:channel) { group_repo_channel.channel(group_assignment_id: group_assignment.id, group_id: group.id) }
 
   describe "#verify_organization_has_private_repos_available!", :vcr do
     before(:each) do
@@ -39,7 +39,7 @@ RSpec.describe GroupAssignmentRepo::Creator do
       before do
         expect_any_instance_of(GitHubOrganization)
           .to receive(:plan)
-                .and_raise(GitHub::Error, "Cannot retrieve this organizations repo plan, please reauthenticate your token.")
+          .and_raise(GitHub::Error, "Cannot retrieve this organizations repo plan, please reauthenticate your token.")
         creator.group_assignment.public_repo = false
       end
 
@@ -50,9 +50,9 @@ RSpec.describe GroupAssignmentRepo::Creator do
       it "raises a Result::Error" do
         expect { creator.verify_organization_has_private_repos_available! }
           .to raise_error(
-                subject::Result::Error,
-                "Cannot retrieve this organizations repo plan, please reauthenticate your token."
-              )
+            subject::Result::Error,
+            "Cannot retrieve this organizations repo plan, please reauthenticate your token."
+          )
       end
     end
 
@@ -60,10 +60,10 @@ RSpec.describe GroupAssignmentRepo::Creator do
       before do
         expect_any_instance_of(GitHubOrganization)
           .to receive(:plan)
-                .and_return(
-                  owned_private_repos: 1,
-                  private_repos: 1
-                )
+          .and_return(
+            owned_private_repos: 1,
+            private_repos: 1
+          )
         creator.group_assignment.public_repo = false
       end
 
@@ -125,27 +125,27 @@ RSpec.describe GroupAssignmentRepo::Creator do
         it "new repository name has expected suffix" do
           GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
           expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
-          .with(body: /^.*#{@original_repository.name}-1.*$/)
+            .with(body: /^.*#{@original_repository.name}-1.*$/)
         end
       end
       describe "broadcasts" do
         it "creating_repo" do
           expect { subject.perform(group_assignment: group_assignment, group: group) }
-          .to have_broadcasted_to(channel)
-          .with(text: subject::CREATE_REPO, status: "creating_repo", repo_url: nil)
+            .to have_broadcasted_to(channel)
+            .with(text: subject::CREATE_REPO, status: "creating_repo", repo_url: nil)
         end
 
         it "importing_starter_code" do
+          slug = group.github_team.slug
           expect { subject.perform(group_assignment: group_assignment, group: group) }
-          .to have_broadcasted_to(channel)
-          .with(
-            text: subject::IMPORT_STARTER_CODE,
-            status: "importing_starter_code",
-            repo_url: "https://github.com/#{organization.github_organization.login}/learn-javascript-#{group.github_team.slug}"
-          )
+            .to have_broadcasted_to(channel)
+            .with(
+              text: subject::IMPORT_STARTER_CODE,
+              status: "importing_starter_code",
+              repo_url: "https://github.com/#{organization.github_organization.login}/learn-javascript-#{slug}"
+            )
         end
       end
-
     end
 
     describe "unsuccessful creation" do
