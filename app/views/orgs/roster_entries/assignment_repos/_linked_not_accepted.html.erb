@@ -8,7 +8,7 @@
     <div class='d-flex flex-column flex-justify-around'>
       <div>
         <%= link_to current_roster_entry.user.github_user.html_url, class: "assignment-repo-github-url", target: '_blank' do %>
-          <h3 class="css-truncate css-truncate-target"><%= current_roster_entry.user.github_user.login %></h3>
+          <h3 class="css-truncate css-truncate-target"><%= current_roster_entry.identifier %></h3>
         <% end %>
       </div>
       <div class="assignment-properties">

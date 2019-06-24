@@ -4,6 +4,7 @@ class GroupAssignmentRepo < ApplicationRecord
   include GitHubPlan
   include GitHubRepoable
   include Nameable
+  include AssignmentRepoable
 
   update_index("group_assignment_repo#group_assignment_repo") { self }
 
@@ -16,9 +17,6 @@ class GroupAssignmentRepo < ApplicationRecord
   has_one :organization, -> { unscope(where: :deleted_at) }, through: :group_assignment
 
   has_many :repo_accesses, through: :group
-
-  validates :github_repo_id, presence:   true
-  validates :github_repo_id, uniqueness: true
 
   validates :group_assignment, presence: true
 
@@ -41,31 +39,14 @@ class GroupAssignmentRepo < ApplicationRecord
   delegate :github_team_id,                 to: :group
   delegate :default_branch, :commits,       to: :github_repository
 
-  # TODO: Move to a view model
-  def disabled?
-    @disabled ||= !github_repository.on_github? || !github_team.on_github?
-  end
-
-  def github_repository
-    @github_repository ||= GitHubRepository.new(organization.github_client, github_repo_id)
-  end
-
   def github_team
-    @github_team ||= group.github_team
-  end
+    return NullGitHubTeam.new if group.nil?
 
-  def private?
-    !group_assignment.public_repo?
+    @github_team ||= group.github_team
   end
 
   def repo_name
     @repo_name ||= generate_github_repo_name
-  end
-
-  def import_status
-    return "No starter code provided" unless group_assignment.starter_code?
-
-    github_repository.import_progress.status.humanize
   end
 
   private

@@ -59,10 +59,6 @@ class User < ApplicationRecord
     site_admin
   end
 
-  def owns_all_assignments_for?(organization)
-    organization.all_assignments.map(&:creator_id).include? id
-  end
-
   def api_token(exp = 5.minutes.from_now)
     MessageVerifier.encode({ user_id: id }, exp)
   end

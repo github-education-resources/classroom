@@ -30,6 +30,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   def accept_invitation
     selected_group       = Group.find_by(id: group_params[:id])
     selected_group_title = group_params[:title]
+    validate_max_teams_not_exceeded! unless selected_group
 
     create_group_assignment_repo(selected_group: selected_group, new_group_title: selected_group_title) do
       redirect_to successful_invitation_group_assignment_invitation_path
@@ -163,6 +164,15 @@ class GroupAssignmentInvitationsController < ApplicationController
 
     report_invitation_failure
     raise NotAuthorized, "This team has reached its maximum member limit of #{group_assignment.max_members}."
+  end
+
+  def validate_max_teams_not_exceeded!
+    return unless group_assignment.present? && group_assignment.max_teams.present?
+    return unless group_assignment.grouping.groups.count >= group_assignment.max_teams
+
+    report_invitation_failure
+    raise NotAuthorized, "This assignment has reached its team limit of #{group_assignment.max_teams}."\
+      " Please join an existing team."
   end
   # rubocop:enable Metrics/AbcSize
 

@@ -204,6 +204,41 @@ RSpec.describe AssignmentsController, type: :controller do
     end
   end
 
+  describe "display student username", :vcr, type: :view do
+    before do
+      organization.users.push(create(:user, uid: 90, token: "asdfsad4333"))
+      organization.roster = create(:roster)
+      organization.roster.roster_entries.push(RosterEntry.create(
+                                                identifier: "student",
+                                                roster: organization.roster,
+                                                user_id: organization.users.last
+      ))
+      organization.save!
+      organization.roster.reload
+    end
+
+    it "displays student's identifier if is a roster_entry" do
+      assignment_repo = create(:assignment_repo,
+        assignment: assignment,
+        user: organization.users.last,
+        github_repo_id: 34_534_534)
+      render partial: "orgs/roster_entries/assignment_repos/linked_accepted",
+             locals: { assignment_repo: assignment_repo,
+                       current_roster_entry: organization.roster.roster_entries.last }
+      expect(response).to include("student")
+    end
+
+    it "displays student github username if there is no roster_entry" do
+      assignment_repo = create(:assignment_repo,
+        assignment: assignment,
+        user: organization.users.last,
+        github_repo_id: 34_534_534)
+      render partial: "orgs/roster_entries/assignment_repos/linked_accepted",
+             locals: { assignment_repo: assignment_repo }
+      expect(response).to_not include("student")
+    end
+  end
+
   describe "GET #edit", :vcr do
     it "returns success and sets the assignment" do
       get :edit, params: { id: assignment.slug, organization_id: organization.slug }
