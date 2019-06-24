@@ -384,7 +384,7 @@ module Orgs
     # Helper method for getting current user's google classroom credentials
     def user_google_classroom_credentials
       google_classroom_client = GitHubClassroom.google_classroom_client
-      user_id = current_user.github_user.login
+      user_id = current_user.uid.to_s
 
       google_classroom_client.get_credentials(user_id, request)
     rescue Signet::AuthorizationError
