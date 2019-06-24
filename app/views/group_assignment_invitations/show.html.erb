@@ -53,9 +53,16 @@
     <dl class="form">
       <dt><label><%= 'OR' if @groups.present? %> Create a new team</label></dt>
       <dd class="d-flex">
-        <%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'form-control input-block' %>
-        <%= button_tag(type: 'submit', class: 'btn btn-primary js-navigation js-form-submit') do %>
-          <%= octicon 'plus' %> Create team
+        <% if group_assignment.max_teams && group_assignment.grouping.groups.count >= group_assignment.max_teams %>
+          <%= text_field_tag 'group[title]', nil, placeholder: 'Team limit reached', disabled: true, class: 'form-control input-block' %>
+          <%= button_tag(type: 'submit', disabled: true, class: 'btn btn-primary js-navigation js-form-submit disabled') do %>
+            <%= octicon 'plus' %> Create team
+          <% end %>
+        <% else %>
+          <%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'form-control input-block' %>
+          <%= button_tag(type: 'submit', class: 'btn btn-primary js-navigation js-form-submit') do %>
+            <%= octicon 'plus' %> Create team
+          <% end %>
         <% end %>
       </dd>
     </dl>
