@@ -45,6 +45,7 @@ RSpec.configure do |config|
   config.include GitHubFactory
   config.include RepositoryFactory
   config.include JsonHelpers
+  config.include StubHelper
 
   config.include ActiveJob::TestHelper, type: :job
   config.include ActiveJob::TestHelper, type: :controller
