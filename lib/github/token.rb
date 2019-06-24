@@ -41,11 +41,10 @@ module GitHub
         }
       }.freeze
 
-      def scopes(token, client = nil)
+      def scopes(token)
         GitHub::Errors.with_error_handling do
-          github_client = client.present? ? client : GitHubClassroom.github_client
-          unexpanded_scopes = github_client.scopes(token, headers: GitHub::APIHeaders.no_cache_no_store)
-          expand_scopes(unexpanded_scopes)
+          client = GitHubClassroom.github_client
+          expand_scopes(client.check_application_authorization(token).scopes)
         end
       rescue GitHub::Forbidden
         []

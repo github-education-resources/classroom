@@ -52,7 +52,7 @@ class User < ApplicationRecord
   end
 
   def github_client_scopes
-    GitHub::Token.scopes(token, github_client)
+    GitHub::Token.scopes(token)
   end
 
   def staff?
