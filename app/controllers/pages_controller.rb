@@ -7,6 +7,13 @@ class PagesController < ApplicationController
 
   skip_before_action :authenticate_user!
 
+  HELP_DOCUMENTS = [
+    "create-group-assignments",
+    "help",
+    "probot-settings",
+    "upgrade-your-organization"
+  ].freeze
+
   def home
     return redirect_to organizations_path if logged_in?
 
@@ -42,13 +49,4 @@ class PagesController < ApplicationController
   rescue Errno::ENOENT
     return not_found
   end
-
-  private
-
-  HELP_DOCUMENTS = [
-    "create-group-assignments",
-    "help",
-    "probot-settings",
-    "upgrade-your-organization"
-  ]
 end
