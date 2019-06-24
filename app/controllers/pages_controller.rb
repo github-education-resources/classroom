@@ -31,6 +31,8 @@ class PagesController < ApplicationController
 
   def help
     file_name = params[:article_name] ? params[:article_name] : "help"
+    return not_found unless HELP_DOCUMENTS.include? file_name
+
     @file = File.read(Rails.root.join("docs", "#{file_name}.md"))
 
     @breadcrumbs = [["/", "Classroom"], ["/help", "Help"]]
@@ -40,4 +42,13 @@ class PagesController < ApplicationController
   rescue Errno::ENOENT
     return not_found
   end
+
+  private
+
+  HELP_DOCUMENTS = [
+    "create-group-assignments",
+    "help",
+    "probot-settings",
+    "upgrade-your-organization"
+  ]
 end
