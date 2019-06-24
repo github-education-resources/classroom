@@ -99,7 +99,7 @@ module Orgs
       user_id = params[:user_id].to_i
       raise ActiveRecord::ActiveRecordError unless unlinked_user_ids.include?(user_id)
 
-      current_roster_entry.update_attributes(user_id: user_id)
+      current_roster_entry.update(user_id: user_id)
 
       flash[:success] = "Student and GitHub account linked!"
     rescue ActiveRecord::ActiveRecordError
@@ -199,7 +199,7 @@ module Orgs
         flash[:warning] = "No students were found in your Google Classroom. Please add students and try again."
         redirect_to roster_path(current_organization)
       else
-        current_organization.update_attributes(google_course_id: params[:course_id])
+        current_organization.update(google_course_id: params[:course_id])
         add_google_classroom_students(students)
       end
     end
@@ -220,7 +220,7 @@ module Orgs
     # rubocop:enable Metrics/AbcSize
 
     def unlink_google_classroom
-      current_organization.update_attributes!(google_course_id: nil)
+      current_organization.update!(google_course_id: nil)
       flash[:success] = "Removed link to Google Classroom. No students were removed from your roster."
 
       redirect_to roster_path(current_organization)
