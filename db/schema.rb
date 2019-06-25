@@ -182,8 +182,10 @@ ActiveRecord::Schema.define(version: 20190618173308) do
     t.integer "roster_id"
     t.string "github_global_relay_id"
     t.bigint "organization_webhook_id"
+    t.string "google_course_id"
     t.index ["deleted_at"], name: "index_organizations_on_deleted_at"
     t.index ["github_id"], name: "index_organizations_on_github_id"
+    t.index ["google_course_id"], name: "index_organizations_on_google_course_id"
     t.index ["organization_webhook_id"], name: "index_organizations_on_organization_webhook_id"
     t.index ["roster_id"], name: "index_organizations_on_roster_id"
     t.index ["slug"], name: "index_organizations_on_slug"
@@ -213,6 +215,8 @@ ActiveRecord::Schema.define(version: 20190618173308) do
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "google_user_id"
+    t.index ["google_user_id"], name: "index_roster_entries_on_google_user_id"
     t.index ["roster_id"], name: "index_roster_entries_on_roster_id"
     t.index ["user_id"], name: "index_roster_entries_on_user_id"
   end
