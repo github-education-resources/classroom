@@ -13,12 +13,6 @@
         </li>
 
         <li class="mx-3">
-          <%= link_to videos_path, class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.video_tutorials') do %>
-            <%= octicon 'device-camera-video' %>
-          <% end %>
-        </li>
-
-        <li class="mx-3">
           <%= link_to 'https://github.com/education/classroom/issues', class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.report_bug') do %>
             <%= octicon 'bug' %>
           <% end %>
@@ -27,6 +21,12 @@
         <li class="mx-3">
           <%= link_to 'https://github.com/education/classroom/pulls?q=is%3Apr+is%3Amerged+sort%3Aupdated-desc', target: '_blank', class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.changelog') do %>
             <%= octicon 'git-pull-request' %>
+          <% end %>
+        </li>
+
+        <li class="mx-3">
+          <%= link_to help_path, class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.help') do %>
+            <%= octicon 'question' %>
           <% end %>
         </li>
 

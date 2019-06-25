@@ -4,6 +4,7 @@
   "dependencies": {
     "clipboard": "^1.7.1",
     "dragula": "3.7.1",
+    "github-markdown-css": "^3.0.1",
     "include-fragment-element": "^3.0.0",
     "jquery": "^3.4.1",
     "jquery-readyselector": "git+https://git@github.com/Verba/jquery-readyselector.git",
