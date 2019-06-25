@@ -238,7 +238,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
               expect { subject.perform_now(group_assignment, group) }
                 .to have_broadcasted_to(channel)
                 .with(
-                  error: "GitHub repository could not be created, please try again",
+                  error: "GitHub repository could not be created, please try again.",
                   status: "errored_creating_repo"
                 )
             end
@@ -273,7 +273,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             it "logs error" do
               expect(Rails.logger)
                 .to receive(:warn)
-                .with("GitHub repository could not be created, please try again")
+                .with("GitHub repository could not be created, please try again.")
             end
           end
         end
@@ -415,7 +415,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
               expect { subject.perform_now(group_assignment, group) }
                 .to have_broadcasted_to(channel)
                 .with(
-                  error: "Group assignment could not be created, please try again",
+                  error: "Group assignment could not be created, please try again.",
                   status: "errored_creating_repo"
                 )
             end
