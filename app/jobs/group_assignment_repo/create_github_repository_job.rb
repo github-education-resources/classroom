@@ -33,7 +33,6 @@ class GroupAssignmentRepo
         CreateGitHubRepositoryJob.perform_later(creator.group_assignment, creator.group, retries: retries - 1)
       else
         creator.invite_status.errored_creating_repo!
-        creator.invite_status.reload
         creator.broadcast_error(error)
         GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.fail")
       end
