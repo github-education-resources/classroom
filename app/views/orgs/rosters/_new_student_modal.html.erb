@@ -4,7 +4,7 @@
   <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
   <h2 class="remodal-header text-left">Add students to your Roster</h2>
 
-  <% unless @google_course_name.nil? %>
+  <% unless @google_course_id.nil? && !google_classroom_roster_import_enabled? %>
     <div class="my-3">
       <h3 class="h4 mb-2">Sync with Google Classroom</h3>
       <div class="f5 mt-2 d-block">Linked with <strong><%= @google_course_name %></strong></div>
@@ -17,16 +17,18 @@
       <% end %>
     </div>
   <% else %>
-    <div class="my-3">
-      <h2 class="h4 mb-2">Import from</h2>
+    <% if google_classroom_roster_import_enabled? %>
+      <div class="my-3">
+        <h2 class="h4 mb-2">Import from</h2>
 
-      <%= link_to image_tag('google-classroom-logo.png', size: "15", class:"mr-2") + "Google Classroom",
-        select_google_classroom_roster_path,
-        class: "btn btn-sm btn-secondary d-inline-flex flex-items-center mb-2"
-      %>
-    </div>
+        <%= link_to image_tag('google-classroom-logo.png', size: "15", class:"mr-2") + "Google Classroom",
+          select_google_classroom_roster_path,
+          class: "btn btn-sm btn-secondary d-inline-flex flex-items-center mb-2"
+        %>
+      </div>
 
-    <div class="f5 text-gray text-italic">or...</div>
+      <div class="f5 text-gray text-italic">or...</div>
+    <% end %>
 
     <div class="my-3">
       <h2 class="h4 mb-2">Manually add students</h2>

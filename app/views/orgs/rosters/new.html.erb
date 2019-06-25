@@ -8,17 +8,18 @@
     <div class="markdown-body">
       <p>Let's set up a roster so you can easily track student progress on your dashboard. You can always come back and complete this step later.</p>
     </div>
+    <% if google_classroom_roster_import_enabled? %>
+      <div class="my-3">
+        <h2 class="h3 mb-2">Import from</h2>
 
-    <div class="my-3">
-      <h2 class="h3 mb-2">Import from</h2>
+        <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Google Classroom",
+          select_google_classroom_roster_path,
+          class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+        %>
+      </div>
 
-      <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Google Classroom",
-        select_google_classroom_roster_path,
-        class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
-      %>
-    </div>
-
-    <div class="f4 text-gray text-italic">or...</div>
+      <div class="f4 text-gray text-italic">or...</div>
+    <% end %>
 
     <div class="my-3">
       <h2 class="h3 mb-2">Manually add students</h2>
