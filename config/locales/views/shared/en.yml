@@ -6,7 +6,7 @@ en:
       stop_impersonating: 'Stop impersonating @%{user}'
       view_gh_profile: 'View GitHub profile'
       community_discussion: 'Community discussion'
-      video_tutorials: 'Video tutorials'
+      help: 'Help'
       report_bug: 'Report a bug'
       changelog: "Check out what's new on Classroom"
       copy_to_clipboard: 'Copy to clipboard'
