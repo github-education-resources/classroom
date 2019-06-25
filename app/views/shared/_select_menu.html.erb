@@ -13,14 +13,14 @@
       </div>
       <div class="select-menu-list">
         <% options.each_with_index do |option, i| %>
-              <% conditional_selected_class = "selected" if option == selected_option %>
+          <% conditional_selected_class = "selected" if option == selected_option %>
 
-              <%= link_to option_links[i], class: "select-menu-item #{conditional_selected_class}", remote: remote do %>
-                <% show_or_hide_class = "v-hidden" unless option == selected_option %>
+          <%= link_to option_links[i], class: "select-menu-item #{conditional_selected_class}", remote: remote do %>
+            <% show_or_hide_class = "v-hidden" unless option == selected_option %>
 
-                <%= octicon 'check', class: "select-menu-item-icon #{show_or_hide_class}" %>
-                <span class="select-menu-item-text"><%= option %></span>
-              <% end %>
+            <%= octicon 'check', class: "select-menu-item-icon #{show_or_hide_class}" %>
+            <span class="select-menu-item-text"><%= option %></span>
+          <% end %>
         <% end %>
       </div>
     </div>
