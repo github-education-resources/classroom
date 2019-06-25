@@ -604,7 +604,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
       context "GroupAssignmentRepo already present" do
         before do
-          GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
+          GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
           get :progress, params: { id: invitation.key }
         end
 
@@ -624,7 +624,8 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
     before(:each) do
       sign_in_as(student)
-      @group_assignment_repo = GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
+      result = GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
+      @group_assignment_repo = result.group_assignment_repo
     end
 
     after(:each) do
