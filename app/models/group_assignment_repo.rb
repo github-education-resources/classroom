@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 class GroupAssignmentRepo < ApplicationRecord
-  include GitHubPlan
-  include GitHubRepoable
-  include Nameable
   include AssignmentRepoable
   include Sortable
 
@@ -24,21 +21,10 @@ class GroupAssignmentRepo < ApplicationRecord
   validates :group, presence: true
   validates :group, uniqueness: { scope: :group_assignment }
 
-  before_validation(on: :create) do
-    if organization
-      create_github_repository
-      delete_github_repository_on_failure do
-        push_starter_code
-        add_team_to_github_repository
-      end
-    end
-  end
-
-  before_destroy :silently_destroy_github_repository
-
   delegate :creator, :starter_code_repo_id, to: :group_assignment
   delegate :github_team_id,                 to: :group
   delegate :default_branch, :commits,       to: :github_repository
+  delegate :slug, to: :group_assignment
 
   scope :order_by_repo_created_at, ->(_context = nil) { order(:created_at) }
   scope :order_by_team_name, ->(_context = nil) { joins(:group).order("title asc") }
@@ -54,17 +40,5 @@ class GroupAssignmentRepo < ApplicationRecord
     return NullGitHubTeam.new if group.nil?
 
     @github_team ||= group.github_team
-  end
-
-  def repo_name
-    @repo_name ||= generate_github_repo_name
-  end
-
-  private
-
-  delegate :slug, to: :group_assignment
-
-  def name
-    @name ||= group.github_team.slug_no_cache
   end
 end

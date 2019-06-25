@@ -11,9 +11,8 @@ RSpec.describe Stafftools::GroupAssignmentReposController, type: :controller do
     create(:group_assignment, title: "Learn Ruby", organization: organization, public_repo: false)
   end
   let(:group) { create(:group, grouping: group_assignment.grouping, github_team_id: 2_976_561) }
-  let(:group_assignment_repo) do
-    GroupAssignmentRepo.create(group_assignment: group_assignment, group: group)
-  end
+  let(:result) { GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group) }
+  let(:group_assignment_repo) { result.group_assignment_repo }
 
   before(:each) do
     sign_in_as(user)

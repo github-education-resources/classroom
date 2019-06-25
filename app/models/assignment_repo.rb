@@ -18,9 +18,6 @@ class AssignmentRepo < ApplicationRecord
 
   validate :assignment_user_key_uniqueness
 
-  # TODO: Remove this dependency from the model.
-  before_destroy :silently_destroy_github_repository
-
   delegate :creator, :starter_code_repo_id, to: :assignment
   delegate :github_user,                    to: :user
   delegate :default_branch, :commits,       to: :github_repository
@@ -42,18 +39,6 @@ class AssignmentRepo < ApplicationRecord
   end
 
   private
-
-  # Internal: Attempt to destroy the GitHub repository.
-  #
-  # Returns true.
-  def silently_destroy_github_repository
-    return true if organization.blank?
-
-    organization.github_organization.delete_repository(github_repo_id)
-    true
-  rescue GitHub::Error
-    true
-  end
 
   # Internal: Validate uniqueness of <user, assignment> key.
   # Only runs the validation on new records.

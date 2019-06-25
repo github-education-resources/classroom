@@ -2,8 +2,8 @@
 
 class AssignmentRepo
   class Creator
-    DEFAULT_ERROR_MESSAGE                   = "Assignment could not be created, please try again"
-    REPOSITORY_CREATION_FAILED              = "GitHub repository could not be created, please try again"
+    DEFAULT_ERROR_MESSAGE                   = "Assignment could not be created, please try again."
+    REPOSITORY_CREATION_FAILED              = "GitHub repository could not be created, please try again."
     REPOSITORY_STARTER_CODE_IMPORT_FAILED   = "We were not able to import you the starter code to your assignment, please try again." # rubocop:disable LineLength
     REPOSITORY_COLLABORATOR_ADDITION_FAILED = "We were not able to add you to the Assignment as a collaborator, please try again." # rubocop:disable LineLength
     REPOSITORY_CREATION_COMPLETE            = "Your GitHub repository was created."
