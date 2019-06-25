@@ -206,7 +206,10 @@ module Orgs
 
     # rubocop:disable Metrics/AbcSize
     def sync_google_classroom
-      return if current_organization.google_course_id.nil?
+      if current_organization.google_course_id.nil?
+        flash[:error] = "No Google Classroom has been linked. Please link Google Classroom."
+        return;
+      end
 
       latest_students = list_google_classroom_students(current_organization.google_course_id)
       latest_student_ids = latest_students.collect(&:user_id)
@@ -311,7 +314,6 @@ module Orgs
 
     # Returns name of the linked google course to current organization (for syncing rosters)
     def current_organization_google_course_name
-      return nil unless defined? current_organization.google_course_id
       return nil if current_organization.google_course_id.nil?
       authorize_google_classroom
       course = @google_classroom_service.get_course(current_organization.google_course_id)
