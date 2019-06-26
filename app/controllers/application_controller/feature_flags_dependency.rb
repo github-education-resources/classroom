@@ -58,4 +58,9 @@ class ApplicationController
     logged_in? && current_user.feature_enabled?(:download_repositories)
   end
   helper_method :download_repositories_enabled?
+
+  def search_assignments_enabled?
+    logged_in? && current_user.feature_enabled?(:search_assignments)
+  end
+  helper_method :search_assignments_enabled?
 end

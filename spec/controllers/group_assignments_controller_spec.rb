@@ -137,6 +137,30 @@ RSpec.describe GroupAssignmentsController, type: :controller do
     end
   end
 
+  describe "search for group_assignments", :vcr do
+    before do
+      group_assignment.grouping.groups = [create(:group, grouping: group_assignment.grouping, title: "testing stuff")]
+      group_assignment.save!
+      GitHubClassroom.flipper[:search_assignments].enable
+    end
+
+    it "finds group assignment in search" do
+      get :show, xhr: true, params: {
+        organization_id: organization.slug, id: group_assignment.slug, query: "test"
+      }
+
+      expect(assigns(:group_assignment_repos)).to_not be_nil
+    end
+
+    it "finds no group assignment in search" do
+      get :show, xhr: true, params: {
+        organization_id: organization.slug, id: group_assignment.slug, query: "hello"
+      }
+
+      expect(assigns(:group_assignment_repos)).to eq([])
+    end
+  end
+
   describe "GET #edit", :vcr do
     it "returns success status and sets the group assignment" do
       get :edit, params: { organization_id: organization.slug, id: group_assignment.slug }

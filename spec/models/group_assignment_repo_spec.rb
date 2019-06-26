@@ -67,6 +67,30 @@ RSpec.describe GroupAssignmentRepo, type: :model do
       end
     end
 
+    describe "is sortable", :vcr do
+      # rubocop:disable Metrics/LineLength
+      let(:github_team_id_two) { organization.github_organization.create_team(Faker::Team.name[0..39]).id }
+      let(:group_two) { create(:group, grouping: grouping, github_team_id: github_team_id_two, repo_accesses: [repo_access]) }
+
+      let(:group_assignment_repo_one) { create(:group_assignment_repo, group_assignment: group_assignment, group: group, github_repo_id: 1) }
+      let(:group_assignment_repo_two) { create(:group_assignment_repo, group_assignment: group_assignment, group: group_two, github_repo_id: 2) }
+      # rubocop:enable Metrics/LineLength
+
+      it "order_by_sort_mode sorts by 'Team name'" do
+        expected_ordering = [group_assignment_repo_one, group_assignment_repo_two].sort_by { |repo| repo.group.title }
+        actual_ordering = GroupAssignmentRepo.where(group_assignment: group_assignment).order_by_sort_mode("Team name")
+
+        expect(actual_ordering).to eq(expected_ordering)
+      end
+
+      it "order_by_sort_mode sorts by 'Created at'" do
+        expected_ordering = [group_assignment_repo_one, group_assignment_repo_two].sort_by(&:created_at)
+        actual_ordering = GroupAssignmentRepo.where(group_assignment: group_assignment).order_by_sort_mode("Created at")
+
+        expect(actual_ordering).to eq(expected_ordering)
+      end
+    end
+
     describe "#github_team" do
       it "returns the github team of the group" do
         expect(subject.github_team).to be(group.github_team)

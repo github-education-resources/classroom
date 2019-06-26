@@ -1,0 +1,31 @@
+(function() {
+    $("#assignment-repo-list").html(
+        "<%= j render partial: "group_assignments/group_assignment_list",
+                locals: {
+                  group_assignment_repos: @group_assignment_repos,
+                  organization: @organization,
+                  group_assignment: @group_assignment
+                } %>"
+    );
+
+     $("#assignment-repo-pagination").html(
+        "<%= j render partial: 'shared/pagination', locals: { 
+            collection: @group_assignment_repos, 
+            param_name: @pagination_key
+        } %>"
+    );
+
+    $("#select-menu-container").html(
+        "<%= j render partial: 'shared/select_menu', locals: {
+            title: 'Sort assignments by:',
+            options: @assignment_sort_modes.keys,
+            option_links: @assignment_sort_modes_links,
+            selected_option: @current_sort_mode,
+            remote: true
+        } %>"
+    );
+    initializeSelectMenu();
+
+    $("#sort-mode-field").val("<%= @current_sort_mode %>");
+    $("#search-query-field").val("<%= @query %>");
+})();
