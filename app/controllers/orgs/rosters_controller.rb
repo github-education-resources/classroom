@@ -193,7 +193,7 @@ module Orgs
 
     def import_from_google_classroom
       students = list_google_classroom_students(params[:course_id])
-      return if students.nil?
+      return unless students
 
       if students.blank?
         flash[:warning] = "No students were found in your Google Classroom. Please add students and try again."
@@ -206,7 +206,7 @@ module Orgs
 
     # rubocop:disable Metrics/AbcSize
     def sync_google_classroom
-      if current_organization.google_course_id.nil?
+     unless current_organization.google_course_id
         flash[:error] = "No Google Classroom has been linked. Please link Google Classroom."
         return;
       end
@@ -373,7 +373,7 @@ module Orgs
     # Used as a before_action before routes which require Google authorization
     def authorize_google_classroom
       google_classroom_client = GitHubClassroom.google_classroom_client
-      if user_google_classroom_credentials.nil?
+      unless user_google_classroom_credentials
         login_hint = current_user.github_user.login
         redirect_to google_classroom_client.get_authorization_url(login_hint: login_hint, request: request)
       end
