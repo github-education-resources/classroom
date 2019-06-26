@@ -56,7 +56,14 @@
             </nav>
           </div>
           <span id='students-span'>
-              <%= render partial: 'assignments/filterable_assignment_roster_list' %>
+              <% if @roster_entries.present? %>
+                <%= render partial: 'assignments/filterable_assignment_roster_list' %>
+              <% else %>
+                <div class="blankslate">
+                  <h3>"<%= @assignment.title %>" does not have any repositories.</h3>
+                  <p>Share the invitation link with your students to get started.</p>
+                </div>
+              <% end %>
           </span>
           <span id='unlinked-span' class='hidden-tab'>
             <span>
