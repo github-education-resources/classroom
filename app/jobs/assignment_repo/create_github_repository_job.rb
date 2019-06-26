@@ -85,7 +85,7 @@ class AssignmentRepo
     rescue ActiveRecord::RecordInvalid => err
       creator.delete_github_repository(assignment_repo.try(:github_repo_id))
       logger.warn(err.message)
-      raise Creator::Result::Error, Creator::DEFAULT_ERROR_MESSAGE
+      raise Creator::Result::Error.new Creator::DEFAULT_ERROR_MESSAGE, err.message
     rescue Creator::Result::Error => err
       creator.delete_github_repository(assignment_repo.try(:github_repo_id))
       raise err
@@ -147,12 +147,12 @@ class AssignmentRepo
     # Maps the type of error to a Datadog error
     #
     def report_error(err)
-      case err.message
-      when Creator::REPOSITORY_CREATION_FAILED
+      message = err.message
+      if message.include? Creator::REPOSITORY_CREATION_FAILED
         GitHubClassroom.statsd.increment("v2_exercise_repo.create.repo.fail")
-      when Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED
+      elsif message.include? Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED
         GitHubClassroom.statsd.increment("v2_exercise_repo.create.adding_collaborator.fail")
-      when Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
+      elsif message.include? Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
         GitHubClassroom.statsd.increment("v2_exercise_repo.create.importing_starter_code.fail")
       else
         GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")

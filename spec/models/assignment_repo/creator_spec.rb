@@ -126,7 +126,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
         result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
 
         expect(result.failed?).to be_truthy
-        expect(result.error).to eql(AssignmentRepo::Creator::REPOSITORY_CREATION_FAILED)
+        expect(result.error).to start_with(AssignmentRepo::Creator::REPOSITORY_CREATION_FAILED)
       end
 
       it "tracks create fail stat" do
@@ -154,7 +154,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
           result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
 
           expect(result.failed?).to be_truthy
-          expect(result.error).to eql(AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
+          expect(result.error).to start_with(AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
           expect(WebMock).to have_requested(:put, import_regex)
         end
 
@@ -166,7 +166,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
           result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
 
           expect(result.failed?).to be_truthy
-          expect(result.error).to eql(AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED)
+          expect(result.error).to start_with(AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED)
           expect(WebMock).to have_requested(:put, repo_invitation_regex)
         end
 
@@ -176,7 +176,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
           result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
 
           expect(result.failed?).to be_truthy
-          expect(result.error).to eql(AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE)
+          expect(result.error).to start_with(AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE)
         end
       end
     end
