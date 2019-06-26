@@ -6,6 +6,12 @@ node_js:
 sudo: false
 
 before_install:
+  - sudo sed -i -e '/local.*peer/s/postgres/all/' -e 's/peer\|md5/trust/g' /etc/postgresql/*/main/pg_hba.conf
+  - sed -e 's/^port.*/port = 5432/' /etc/postgresql/10/main/postgresql.conf > postgresql.conf
+  - sudo chown postgres postgresql.conf
+  - sudo mv postgresql.conf /etc/postgresql/10/main
+  - sudo service postgresql stop && sudo service postgresql start $DB_VERSION
+  - echo "Using postgres version $(psql -U postgres -tc 'SHOW server_version')"
   - gem update --system
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.24.6
   - export PATH=$HOME/.yarn/bin:$PATH
@@ -27,8 +33,13 @@ install:
   - yarn install
 
 services:
-  - postgresql
   - redis-server
+
+addons:
+  apt:
+    packages:
+      - postgresql-10
+      - postgresql-client-10
 
 env:
   global:
@@ -42,8 +53,10 @@ env:
     - WEBHOOK_SECRET=abcdefg
     - API_SECRET=abcdefg
   matrix:
-    - CI_NODE_INDEX=0
-    - CI_NODE_INDEX=1
+    - CI_NODE_INDEX=0 DB_VERSION=9.4
+    - CI_NODE_INDEX=1 DB_VERSION=9.4
+    - CI_NODE_INDEX=0 DB_VERSION=10
+    - CI_NODE_INDEX=1 DB_VERSION=10
 
 notifications:
   email: false
