@@ -1,4 +1,4 @@
-function initialize_select_menu() {
+function initializeSelectMenu() {
   let select_menu              = $(".select-menu");
   let select_menu_modal        = $(".select-menu-modal-holder");
   let select_menu_list         = $(".select-menu-list");
@@ -58,4 +58,4 @@ function initialize_select_menu() {
 };
 
 
-$(document).ready(initialize_select_menu)
+$(document).ready(initializeSelectMenu)
