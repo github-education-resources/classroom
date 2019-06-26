@@ -224,6 +224,12 @@ RSpec.describe AssignmentsController, type: :controller do
       expect(response.status).to eq(200)
       expect(assigns(:roster_entries)).to eq([])
     end
+
+    it "search is not case-sensitive" do
+      get :show, xhr: true, params: { organization_id: organization.slug, id: assignment.slug, query: "TESTER" }
+      expect(response.status).to eq(200)
+      expect(assigns(:roster_entries)).to_not be_nil
+    end
   end
 
   describe "display student username", :vcr, type: :view do

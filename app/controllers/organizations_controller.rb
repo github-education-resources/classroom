@@ -103,7 +103,7 @@ class OrganizationsController < Orgs::Controller
   end
 
   def search
-    orgs_found = current_user.organizations.order(:id).where("title LIKE ?", "%#{params[:query]}%")
+    orgs_found = current_user.organizations.order(:id).where("title ILIKE ?", "%#{params[:query]}%")
     respond_to do |format|
       format.html do
         render partial: "organizations/organization_card_layout",
