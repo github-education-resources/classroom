@@ -206,10 +206,10 @@ module Orgs
 
     # rubocop:disable Metrics/AbcSize
     def sync_google_classroom
-     unless current_organization.google_course_id
+      unless current_organization.google_course_id
         flash[:error] = "No Google Classroom has been linked. Please link Google Classroom."
-        return;
-      end
+        return
+       end
 
       latest_students = list_google_classroom_students(current_organization.google_course_id)
       latest_student_ids = latest_students.collect(&:user_id)
