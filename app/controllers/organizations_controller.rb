@@ -104,10 +104,11 @@ class OrganizationsController < Orgs::Controller
 
   def search
     orgs_found = current_user.organizations.order(:id).where("title ILIKE ?", "%#{params[:query]}%")
+    @organization = orgs_found.page(params[:page]).per(12)
     respond_to do |format|
       format.html do
         render partial: "organizations/organization_card_layout",
-               locals: { organizations: orgs_found.page(params[:page]).per(12) }
+               locals: { organizations: @organization }
       end
     end
   end

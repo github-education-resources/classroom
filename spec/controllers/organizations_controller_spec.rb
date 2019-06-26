@@ -173,6 +173,31 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
+  describe "search organizations", :vcr do
+    before do 
+      user.organizations = [create(:organization, title: "github_class_300"), organization]
+      user.save!
+    end
+
+    it "finds an organization" do
+      get :search, params: { id: organization.slug, query: "github" }
+      expect(response.status).to eq(200)
+      expect(assigns(:organization)).to_not be_nil
+    end
+
+    it "finds no organization" do
+      get :search, params: { id: organization.slug, query: "testing stuff"}
+      expect(response.status).to eq(200)
+      expect(assigns(:organization)).to eq([])
+    end
+
+    it "is not case sensitive" do
+      get :search, params: { id: organization.slug, query: "GITHUB" }
+      expect(response.status).to eq(200)
+      expect(assigns(:organization)).to_not be_nil
+    end 
+  end
+
   describe "GET #edit", :vcr do
     it "returns success and sets the organization" do
       get :edit, params: { id: organization.slug }
