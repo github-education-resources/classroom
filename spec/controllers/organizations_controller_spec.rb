@@ -174,7 +174,7 @@ RSpec.describe OrganizationsController, type: :controller do
   end
 
   describe "search organizations", :vcr do
-    before do 
+    before do
       user.organizations = [create(:organization, title: "github_class_300"), organization]
       user.save!
     end
@@ -186,7 +186,7 @@ RSpec.describe OrganizationsController, type: :controller do
     end
 
     it "finds no organization" do
-      get :search, params: { id: organization.slug, query: "testing stuff"}
+      get :search, params: { id: organization.slug, query: "testing stuff" }
       expect(response.status).to eq(200)
       expect(assigns(:organization)).to eq([])
     end
@@ -195,7 +195,7 @@ RSpec.describe OrganizationsController, type: :controller do
       get :search, params: { id: organization.slug, query: "GITHUB" }
       expect(response.status).to eq(200)
       expect(assigns(:organization)).to_not be_nil
-    end 
+    end
   end
 
   describe "GET #edit", :vcr do
