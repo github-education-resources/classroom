@@ -1,11 +1,11 @@
 function initializeSelectMenu() {
-  let select_menu              = $(".select-menu");
-  let select_menu_modal        = $(".select-menu-modal-holder");
-  let select_menu_list         = $(".select-menu-list");
-  let select_menu_list_items   = $(".select-menu-item");
-  let select_menu_button       = $(".select-menu-button");
-  let select_menu_close_button = $(".select-menu-close-button");
-  let selected_option          = $(".select-menu .selected-option");
+  var select_menu              = $(".select-menu");
+  var select_menu_modal        = $(".select-menu-modal-holder");
+  var select_menu_list         = $(".select-menu-list");
+  var select_menu_list_items   = $(".select-menu-item");
+  var select_menu_button       = $(".select-menu-button");
+  var select_menu_close_button = $(".select-menu-close-button");
+  var selected_option          = $(".select-menu .selected-option");
 
   select_menu_button.click(function() {
     if (select_menu_button.attr("aria-expanded") === "true") {
@@ -16,7 +16,7 @@ function initializeSelectMenu() {
   });
 
   select_menu_list_items.click(function(e) {
-    let clicked_item = $(e.target).closest(select_menu_list_items);
+    var clicked_item = $(e.target).closest(select_menu_list_items);
 
     selectItem(clicked_item);
     closeSelectMenu();
