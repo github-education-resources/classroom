@@ -2,6 +2,7 @@
 
 class GroupAssignmentRepo < ApplicationRecord
   include AssignmentRepoable
+  include Sortable
 
   update_index("group_assignment_repo#group_assignment_repo") { self }
 
@@ -24,6 +25,16 @@ class GroupAssignmentRepo < ApplicationRecord
   delegate :github_team_id,                 to: :group
   delegate :default_branch, :commits,       to: :github_repository
   delegate :slug, to: :group_assignment
+
+  scope :order_by_repo_created_at, ->(_context = nil) { order(:created_at) }
+  scope :order_by_team_name, ->(_context = nil) { joins(:group).order("title asc") }
+
+  def self.sort_modes
+    {
+      "Created at" => :order_by_repo_created_at,
+      "Team name" => :order_by_team_name
+    }
+  end
 
   def github_team
     return NullGitHubTeam.new if group.nil?
