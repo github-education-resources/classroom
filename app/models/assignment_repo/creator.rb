@@ -135,7 +135,7 @@ class AssignmentRepo
         description: "#{repository_name} created by GitHub Classroom"
       }
 
-      organization.github_organization.create_repository("", options)
+      organization.github_organization.create_repository(repository_name, options)
     rescue GitHub::Error => error
       raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
     end
