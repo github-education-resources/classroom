@@ -28,5 +28,22 @@ RSpec.describe MembershipEventJob, type: :job do
 
       expect(group.repo_accesses.find_by(user_id: student.id)).to be_nil
     end
+
+    it "returns early if user not found" do
+      allow(payload).to receive(:dig).with("member", "id").and_return(nil)
+      allow(payload).to receive(:dig).with("team", "id").and_return(:default)
+      expect(MembershipEventJob.perform_now(payload)).to be true
+    end
+
+    it "returns early if group not found" do
+      allow(payload).to receive(:dig).with("member", "id").and_return(:default)
+      allow(payload).to receive(:dig).with("team", "id").and_return(nil)
+      expect(MembershipEventJob.perform_now(payload)).to be true
+    end
+
+    it "returns early if repo_access not found" do
+      allow_any_instance_of(Group).to receive_message_chain("repo_accesses.find_by").and_return(nil)
+      expect(MembershipEventJob.perform_now(payload)).to be true
+    end
   end
 end
