@@ -16,4 +16,18 @@ RSpec.describe PagesController, type: :controller do
       expect(response).to redirect_to(organizations_path)
     end
   end
+
+  describe "GET #help" do
+    it "returns success" do
+      expected_pages = [
+        "create-group-assignments",
+        "probot-settings",
+        "upgrade-your-organization"
+      ]
+      expected_pages.each do |help_page|
+        get :help, params: { article_name: help_page }
+        expect(response).to have_http_status(:success)
+      end
+    end
+  end
 end
