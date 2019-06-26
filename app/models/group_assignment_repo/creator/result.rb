@@ -3,7 +3,12 @@
 class GroupAssignmentRepo
   class Creator
     class Result
-      class Error < StandardError; end
+      class Error < StandardError
+        def initialize(message, github_error_message = nil)
+          message += " (#{github_error_message})" if github_error_message
+          super(message)
+        end
+      end
 
       def self.success(group_assignment_repo)
         new(:success, group_assignment_repo: group_assignment_repo)
