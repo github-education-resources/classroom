@@ -1,5 +1,5 @@
-$(".group_assignments").ready(function() { 
-    $(".group_assignments #js-search-form").on("keyup", function(e) {
+$(document).ready(function() {
+    $("#repo-search-query-field").on("keyup", function(e) {
         var $queryField = $(e.target);
         var $sortMenu = $(".select-menu");
         var query = $queryField.val();
