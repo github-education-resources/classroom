@@ -6,10 +6,11 @@ $('.assignments').ready(function() {
 
         var currentLinks = $sortMenu[0].getOptionLinks();
         var newLinks = currentLinks.map(link => {
-            newLink = new URLSearchParams(link);
-            newLink.set("query", query);
+            var url = new URL(link);
+            var urlParams = new URLSearchParams(url.search.slice(1));
+            urlParams.set("query", query);
 
-            return newLink.toString();
+            return "?" + urlParams.toString();
         });
 
         $sortMenu[0].setOptionLinks(newLinks);
