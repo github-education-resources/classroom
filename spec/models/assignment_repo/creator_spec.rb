@@ -64,6 +64,18 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
 
   describe "::perform", :vcr do
     describe "successful creation" do
+      let(:assignment) do
+        options = {
+          title: "Learn Elm",
+          starter_code_repo_id: 1_062_897,
+          organization: organization,
+          students_are_repo_admins: true,
+          public_repo: true
+        }
+
+        create(:assignment, options)
+      end
+
       after(:each) do
         AssignmentRepo.destroy_all
       end
@@ -87,11 +99,14 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
       end
 
       it "tracks the how long it too to be created" do
-        expect(GitHubClassroom.statsd).to receive(:timing)
+        expect(GitHubClassroom.statsd).to receive(:timing).with("exercise_repo.create.time", anything)
+        expect(GitHubClassroom.statsd).to receive(:timing).with("v2_exercise_repo.create.time", anything)
         AssignmentRepo::Creator.perform(assignment: assignment, user: student)
       end
 
       it "tracks create success stat" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.import.started")
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.success")
         expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
         AssignmentRepo::Creator.perform(assignment: assignment, user: student)
       end
