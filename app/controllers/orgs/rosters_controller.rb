@@ -327,7 +327,7 @@ module Orgs
     # rubocop:disable Metrics/MethodLength
     def list_google_classroom_students(course_id)
       response = @google_classroom_service.list_course_students(course_id)
-      response.students = [] unless undefined? response.students
+      response.students = [] unless defined? response.students
     rescue Google::Apis::AuthorizationError
       google_classroom_client = GitHubClassroom.google_classroom_client
       login_hint = current_user.github_user.login
