@@ -105,7 +105,7 @@ class OrganizationsController < Orgs::Controller
   # rubocop:disable MethodLength
   def search
     @organization = current_user
-      .organization
+      .organizations
       .order(:id)
       .where("title ILIKE ?", "%#{params[:query]}%")
       .page(params[:page])
