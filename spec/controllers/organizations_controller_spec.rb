@@ -182,7 +182,7 @@ RSpec.describe OrganizationsController, type: :controller do
     it "finds an organization" do
       get :search, params: { id: organization.slug, query: "github" }
       expect(response.status).to eq(200)
-      expect(assigns(:organization)).to_not be_nil
+      expect(assigns(:organization)).to_not eq([])
     end
 
     it "finds no organization" do
@@ -194,7 +194,7 @@ RSpec.describe OrganizationsController, type: :controller do
     it "is not case sensitive" do
       get :search, params: { id: organization.slug, query: "GITHUB" }
       expect(response.status).to eq(200)
-      expect(assigns(:organization)).to_not be_nil
+      expect(assigns(:organization)).to_not eq([])
     end
   end
 
