@@ -37,6 +37,8 @@ class Assignment < ApplicationRecord
 
   validate :uniqueness_of_slug_across_organization
 
+  validate :starter_code_repository_not_empty
+
   alias_attribute :invitation, :assignment_invitation
   alias_attribute :repos, :assignment_repos
 
@@ -66,5 +68,11 @@ class Assignment < ApplicationRecord
   def uniqueness_of_slug_across_organization
     return if GroupAssignment.where(slug: slug, organization: organization).blank?
     errors.add(:slug, :taken)
+  end
+
+  def starter_code_repository_not_empty
+    return unless starter_code? && starter_code_repository.empty?
+    raise GitHub::Error, "Starter code repository cannot be empty. Select a repository that is not empty or create the"\
+      " assignment without starter code."
   end
 end
