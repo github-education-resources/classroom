@@ -2,7 +2,7 @@
   <div class="TableObject">
     <div class="TableObject-item TableObject-item--primary">
       <%= form_tag organization_group_assignment_path, id: 'js-search-form', method: :get, remote: true do %>
-        <%= text_field_tag :query, @query, class: 'input-block form-control', placeholder: 'Search groups by team name', autofocus: true, autocomplete: :off, id: 'search-query-field' %>
+        <%= text_field_tag :query, @query, class: 'input-block form-control', placeholder: 'Search groups by team name', autofocus: true, autocomplete: :off, id: 'repo-search-query-field' %>
         <%= hidden_field_tag :sort_assignment_repos_by, @current_sort_mode, id: 'sort-mode-field' %>
       <% end %>
     </div>
