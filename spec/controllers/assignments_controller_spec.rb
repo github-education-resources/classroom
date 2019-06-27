@@ -216,13 +216,19 @@ RSpec.describe AssignmentsController, type: :controller do
     it "finds one user if in roster" do
       get :show, xhr: true, params: { organization_id: organization.slug, id: assignment.slug, query: "tester" }
       expect(response.status).to eq(200)
-      expect(assigns(:roster_entries)).to_not be_nil
+      expect(assigns(:roster_entries)).to_not eq([])
     end
 
     it "finds no user if not in roster" do
       get :show, xhr: true, params: { organization_id: organization.slug, id: assignment.slug, query: "aabz" }
       expect(response.status).to eq(200)
       expect(assigns(:roster_entries)).to eq([])
+    end
+
+    it "search is not case-sensitive" do
+      get :show, xhr: true, params: { organization_id: organization.slug, id: assignment.slug, query: "TESTER" }
+      expect(response.status).to eq(200)
+      expect(assigns(:roster_entries)).to_not eq([])
     end
   end
 
