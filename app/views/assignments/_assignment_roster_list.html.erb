@@ -1,5 +1,11 @@
-<% roster_entries.each do |entry| %>
+<% if roster_entries.present? %>
+  <% roster_entries.each do |entry| %>
     <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
       url: organization_assignment_roster_entry_path(organization, assignment, entry)
     } %>
+  <% end %>
+<% else %>
+  <div class="blankslate">
+    <h3>"<%= assignment.title %>" does not have any repositories matching this query</h3>
+  </div>
 <% end %>
