@@ -62,7 +62,7 @@ class AssignmentRepo
         assignment_repo.save!
       rescue ActiveRecord::RecordInvalid => error
         Rails.logger.warn(error.message)
-        raise Result::Error, DEFAULT_ERROR_MESSAGE
+        raise Result::Error.new DEFAULT_ERROR_MESSAGE, error.message
       end
       report_time(start)
 
@@ -88,10 +88,10 @@ class AssignmentRepo
       GitHubClassroom.statsd.increment("exercise_repo.create.success")
 
       Result.success(assignment_repo)
-    rescue Result::Error => err
+    rescue Result::Error => error
       delete_github_repository(assignment_repo.try(:github_repo_id))
       GitHubClassroom.statsd.increment("exercise_repo.create.fail")
-      Result.failed(err.message)
+      Result.failed(error.message)
     end
     # rubocop:enable AbcSize
     # rubocop:enable MethodLength
@@ -108,8 +108,8 @@ class AssignmentRepo
       invitation = github_repository.invite(user.github_user.login_no_cache, options)
 
       user.github_user.accept_repository_invitation(invitation.id) if invitation.present?
-    rescue GitHub::Error
-      raise Result::Error, REPOSITORY_COLLABORATOR_ADDITION_FAILED
+    rescue GitHub::Error => error
+      raise Result::Error.new REPOSITORY_COLLABORATOR_ADDITION_FAILED, error.message
     end
     # rubocop:enable Metrics/AbcSize
 
@@ -125,8 +125,8 @@ class AssignmentRepo
       }
 
       organization.github_organization.create_repository(repository_name, options)
-    rescue GitHub::Error
-      raise Result::Error, REPOSITORY_CREATION_FAILED
+    rescue GitHub::Error => error
+      raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
     end
 
     def delete_github_repository(github_repo_id)
@@ -150,8 +150,8 @@ class AssignmentRepo
       starter_code_repository = GitHubRepository.new(client, starter_code_repo_id)
 
       assignment_repository.get_starter_code_from(starter_code_repository)
-    rescue GitHub::Error
-      raise Result::Error, REPOSITORY_STARTER_CODE_IMPORT_FAILED
+    rescue GitHub::Error => error
+      raise Result::Error.new REPOSITORY_STARTER_CODE_IMPORT_FAILED, error.message
     end
 
     # Public: Ensure that we can make a private repository on GitHub.

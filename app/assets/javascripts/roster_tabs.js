@@ -3,6 +3,7 @@ function selectTab(element){
   unlinkedTab = document.getElementById('unlinked-tab');
   studentsSpan = document.getElementById('students-span');
   unlinkedSpan = document.getElementById('unlinked-span');
+  searchBar = document.getElementById('js-search-form');
 
   if(element == studentsTab){
     studentsSpan.classList.remove("hidden-tab");
@@ -10,6 +11,8 @@ function selectTab(element){
 
     studentsTab.classList.add("selected");
     unlinkedTab.classList.remove("selected");
+
+    searchBar.style.display = "block"
 
     // Unset cookie
     document.cookie = "unlinkedSet=; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
@@ -19,6 +22,8 @@ function selectTab(element){
 
     studentsTab.classList.remove("selected");
     unlinkedTab.classList.add("selected");
+
+    searchBar.style.display = "none"
 
     document.cookie = "unlinkedSet=true; path=/";
   }

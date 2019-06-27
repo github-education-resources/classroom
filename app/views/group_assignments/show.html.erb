@@ -57,16 +57,8 @@
             </nav>
           </div>
           <span id='students-span'>
-            <div class="assignment-repo-list">
               <% if @group_assignment_repos.present? %>
-                <div class="assignment-repo-list">
-                  <% @group_assignment_repos.each do |group_assignment_repo| %>
-                    <%= render partial: 'orgs/group_assignment_repos/group_assignment_repo', \
-                      locals: { url: organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo) } %>
-                  <% end %>
-                </div>
-
-                <%= render partial: 'shared/pagination', locals: { collection: @group_assignment_repos, param_name: :teams_page } %>
+                <%= render partial: 'group_assignments/filterable_group_assignment_repo_list', locals: { param_name: :teams_page } %>
               <% else %>
                 <div class="blankslate">
                   <h3>"<%= @group_assignment.title %>" does not have any repositories.</h3>
@@ -96,13 +88,7 @@
       </div>
     <% else %>
       <% if @group_assignment_repos.present? %>
-        <div class="assignment-repo-list">
-          <% @group_assignment_repos.each do |group_assignment_repo| %>
-            <%= render partial: 'orgs/group_assignment_repos/group_assignment_repo', \
-              locals: { url: organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo) } %>
-          <% end %>
-        </div>
-
+        <%= render partial: 'group_assignments/filterable_group_assignment_repo_list', locals: { param_name: :page } %>
         <%= render partial: 'shared/pagination', locals: { collection: @group_assignment_repos } %>
       <% else %>
         <div class="blankslate">

@@ -1,0 +1,5 @@
+<% roster_entries.each do |entry| %>
+    <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
+      url: organization_assignment_roster_entry_path(organization, assignment, entry)
+    } %>
+<% end %>

@@ -56,15 +56,7 @@
             </nav>
           </div>
           <span id='students-span'>
-            <div class="assignment-repo-list">
-              <% @roster_entries.each do |entry| %>
-                <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
-                  url: organization_assignment_roster_entry_path(@organization, @assignment, entry)
-                } %>
-              <% end %>
-            </div>
-
-            <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :students_page } %>
+              <%= render partial: 'assignments/filterable_assignment_roster_list' %>
           </span>
           <span id='unlinked-span' class='hidden-tab'>
             <span>
@@ -83,12 +75,9 @@
       </div>
     <% else %>
       <% if @assignment_repos.present? %>
-        <div class="assignment-repo-list">
-          <% @assignment_repos.each do |assignment_repo| %>
-            <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: { url: organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo) } %>
-          <% end %>
-        </div>
-
+        <% @assignment_repos.each do |assignment_repo| %>
+          <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: { url: organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo) } %>
+        <% end %>
         <%= render partial: 'shared/pagination', locals: { collection: @assignment_repos } %>
       <% else %>
         <div class="blankslate">
