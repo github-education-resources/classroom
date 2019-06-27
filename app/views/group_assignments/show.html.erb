@@ -57,15 +57,14 @@
             </nav>
           </div>
           <span id='students-span'>
-              <% if @group_assignment_repos.present? %>
-                <%= render partial: 'group_assignments/filterable_group_assignment_repo_list', locals: { param_name: :teams_page } %>
-              <% else %>
-                <div class="blankslate">
-                  <h3>"<%= @group_assignment.title %>" does not have any repositories.</h3>
-                  <p>Share the invitation link with your students to get started.</p>
-                </div>
-              <% end %>
-            </div>
+            <% if @group_assignment_repos.present? %>
+              <%= render partial: 'group_assignments/filterable_group_assignment_repo_list', locals: { param_name: :teams_page } %>
+            <% else %>
+              <div class="blankslate">
+                <h3>"<%= @group_assignment.title %>" does not have any repositories.</h3>
+                <p>Share the invitation link with your students to get started.</p>
+              </div>
+            <% end %>
           </span>
           <span id='unlinked-span' class='hidden-tab'>
             <div class="assignment-repo-list">
@@ -89,7 +88,6 @@
     <% else %>
       <% if @group_assignment_repos.present? %>
         <%= render partial: 'group_assignments/filterable_group_assignment_repo_list', locals: { param_name: :page } %>
-        <%= render partial: 'shared/pagination', locals: { collection: @group_assignment_repos } %>
       <% else %>
         <div class="blankslate">
           <h3>"<%= @group_assignment.title %>" does not have any repositories.</h3>

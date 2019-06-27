@@ -15,17 +15,5 @@
         } %>"
     );
 
-    $("#select-menu-container").html(
-        "<%= j render partial: 'shared/select_menu', locals: {
-            title: 'Sort assignments by:',
-            options: @assignment_sort_modes.keys,
-            option_links: @assignment_sort_modes_links,
-            selected_option: @current_sort_mode,
-            remote: true
-        } %>"
-    );
-    initializeSelectMenu();
-
     $("#sort-mode-field").val("<%= @current_sort_mode %>");
-    $("#search-query-field").val("<%= @query %>");
 })();
