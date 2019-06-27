@@ -57,7 +57,7 @@ class GroupAssignmentRepo
         group_assignment_repo.save!
       rescue ActiveRecord::RecordInvalid => error
         Rails.logger.warn(error.message)
-        raise Result::Error, DEFAULT_ERROR_MESSAGE
+        raise Result::Error.new DEFAULT_ERROR_MESSAGE, error.message
       end
 
       GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.success")
@@ -94,8 +94,8 @@ class GroupAssignmentRepo
         private: group_assignment.private?,
         description: "#{repository_name} created by GitHub Classroom"
       )
-    rescue GitHub::Error
-      raise Result::Error, REPOSITORY_CREATION_FAILED
+    rescue GitHub::Error => error
+      raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
     end
 
     def add_team_to_github_repository!(github_repository_id)
@@ -103,8 +103,8 @@ class GroupAssignmentRepo
       github_team       = GitHubTeam.new(organization.github_client, group.github_team_id)
 
       github_team.add_team_repository(github_repository.full_name, repository_permissions)
-    rescue GitHub::Error
-      raise Result::Error, REPOSITORY_TEAM_ADDITION_FAILED
+    rescue GitHub::Error => error
+      raise Result::Error.new REPOSITORY_TEAM_ADDITION_FAILED, error.message
     end
 
     def push_starter_code!(github_repository_id)
@@ -114,8 +114,8 @@ class GroupAssignmentRepo
       starter_code_repository = GitHubRepository.new(client, starter_code_repo_id)
 
       assignment_repository.get_starter_code_from(starter_code_repository)
-    rescue GitHub::Error
-      raise Result::Error, REPOSITORY_STARTER_CODE_IMPORT_FAILED
+    rescue GitHub::Error => error
+      raise Result::Error.new REPOSITORY_STARTER_CODE_IMPORT_FAILED, error.message
     end
 
     def delete_github_repository(github_repository_id)
