@@ -41,7 +41,7 @@ class AssignmentsController < ApplicationController
 
     roster_entries = @organization.roster.roster_entries
     if search_assignments_enabled? && @query.present?
-      roster_entries = roster_entries.where("identifier LIKE ?", "%#{@query}%")
+      roster_entries = roster_entries.where("identifier ILIKE ?", "%#{@query}%")
     end
 
     @roster_entries = roster_entries
