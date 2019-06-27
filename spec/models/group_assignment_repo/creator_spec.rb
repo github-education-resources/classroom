@@ -156,7 +156,7 @@ RSpec.describe GroupAssignmentRepo::Creator do
         result = GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
 
         expect(result.failed?).to be_truthy
-        expect(result.error).to eql(GroupAssignmentRepo::Creator::REPOSITORY_CREATION_FAILED)
+        expect(result.error).to start_with(GroupAssignmentRepo::Creator::REPOSITORY_CREATION_FAILED)
       end
 
       it "tracks create fail stat" do
@@ -184,7 +184,7 @@ RSpec.describe GroupAssignmentRepo::Creator do
           result = GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
 
           expect(result.failed?).to be_truthy
-          expect(result.error).to eql(GroupAssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
+          expect(result.error).to start_with(GroupAssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
           expect(WebMock).to have_requested(:put, import_regex)
         end
 
@@ -198,7 +198,7 @@ RSpec.describe GroupAssignmentRepo::Creator do
           result = GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
 
           expect(result.failed?).to be_truthy
-          expect(result.error).to eql(GroupAssignmentRepo::Creator::REPOSITORY_TEAM_ADDITION_FAILED)
+          expect(result.error).to start_with(GroupAssignmentRepo::Creator::REPOSITORY_TEAM_ADDITION_FAILED)
           expect(WebMock).to have_requested(:put, regex)
         end
 
@@ -208,7 +208,7 @@ RSpec.describe GroupAssignmentRepo::Creator do
           result = GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
 
           expect(result.failed?).to be_truthy
-          expect(result.error).to eql(GroupAssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE)
+          expect(result.error).to start_with(GroupAssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE)
         end
       end
     end
