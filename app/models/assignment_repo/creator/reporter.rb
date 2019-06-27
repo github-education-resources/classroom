@@ -43,11 +43,11 @@ class AssignmentRepo
       #
       def report_error(err)
         case err.message
-        when Creator::REPOSITORY_CREATION_FAILED
+        when /^#{REPOSITORY_CREATION_FAILED}/
           GitHubClassroom.statsd.increment("v2_exercise_repo.create.repo.fail")
-        when Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED
+        when /^#{REPOSITORY_COLLABORATOR_ADDITION_FAILED}/
           GitHubClassroom.statsd.increment("v2_exercise_repo.create.adding_collaborator.fail")
-        when Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED
+        when /^#{REPOSITORY_STARTER_CODE_IMPORT_FAILED}/
           GitHubClassroom.statsd.increment("v2_exercise_repo.create.importing_starter_code.fail")
         else
           GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
