@@ -11,8 +11,6 @@ Octokit.middleware = Faraday::RackBuilder.new do |builder|
     opts[:logger] = Rails.logger unless Rails.env.production?
   end
 
-  builder.use :http_cache, options
-
   builder.use Octokit::Middleware::FollowRedirects
   builder.use Octokit::Response::RaiseError
 
