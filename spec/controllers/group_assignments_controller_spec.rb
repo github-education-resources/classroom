@@ -171,6 +171,8 @@ RSpec.describe GroupAssignmentsController, type: :controller do
       get :show, xhr: true, params: {
         organization_id: organization.slug, id: group_assignment.slug, query: "TEST"
       }
+
+      expect(assigns(:group_assignment_repos).first.id).to equal(GroupAssignmentRepo.first.id)
     end
   end
 
