@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   root to: "pages#home"
 
   get "/assistant", to: "pages#assistant"
+  get "/help/(:article_name)", to: "pages#help", as: "help"
   get "/home", to: "pages#homev2"
 
   get  "/login",  to: "sessions#new",     as: "login"
@@ -61,6 +62,10 @@ Rails.application.routes.draw do
 
   scope path_names: { edit: "settings" } do
     resources :organizations, path: "classrooms" do
+      collection do
+        get :search
+      end
+
       member do
         get   :invite
         get   :new_assignment, path: "new-assignment"
@@ -123,6 +128,7 @@ Rails.application.routes.draw do
     resources :organizations, path: "classrooms", only: [:show] do
       member do
         delete "/users/:user_id", to: "organizations#remove_user", as: "remove_user"
+        post :ensure_webhook_is_active
       end
     end
 

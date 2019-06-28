@@ -384,7 +384,8 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
           expect(json)
             .to eq(
               "job_started" => true,
-              "status" => "waiting"
+              "status" => "waiting",
+              "repo_url" => nil
             )
         end
       end
@@ -427,7 +428,8 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
           expect(json)
             .to eq(
               "job_started" => true,
-              "status" => "waiting"
+              "status" => "waiting",
+              "repo_url" => nil
             )
         end
 
@@ -440,6 +442,27 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
           invite_status.errored_importing_starter_code!
           expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.import.retry")
           post :create_repo, params: { id: invitation.key }
+        end
+      end
+
+      context "when a repo exists" do
+        before do
+          invite_status.importing_starter_code!
+          octokit_repo_id = 417_862
+          assignment_repo = AssignmentRepo.new(github_repo_id: octokit_repo_id, assignment: invitation.assignment)
+          expect_any_instance_of(AssignmentInvitationsController)
+            .to receive(:current_submission)
+            .and_return(assignment_repo)
+        end
+
+        it "has a repo_url" do
+          post :create_repo, params: { id: invitation.key }
+          expect(json)
+            .to eq(
+              "job_started" => false,
+              "status" => "importing_starter_code",
+              "repo_url" => "https://github.com/octokit/octokit.rb"
+            )
         end
       end
 
@@ -459,7 +482,8 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
           expect(json)
             .to eq(
               "job_started" => false,
-              "status" => "unaccepted"
+              "status" => "unaccepted",
+              "repo_url" => nil
             )
         end
       end

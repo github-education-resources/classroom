@@ -8,7 +8,7 @@ git_source(:github) do |repo_name|
 end
 
 ruby File.read(File.expand_path("../.ruby-version", __FILE__)).chomp
-gem "rails", "~> 5.1", ">= 5.1.3"
+gem "rails", "~> 5.1", ">= 5.1.7"
 
 gem "autoprefixer-rails", "~> 7.1", ">= 7.1.3"
 
@@ -44,7 +44,6 @@ gem "local_time", "~> 2.0"
 gem "octicons_helper", "~> 2.1"
 gem "octokit", github: "octokit/octokit.rb", ref: "ffae5ddd6fd9da6f4538ca7adeb5d1768011610b"
 gem "octopoller",      "~> 0.1"
-gem "omniauth",        "~> 1.6", ">= 1.6.1"
 gem "omniauth-github", "~> 1.3"
 
 gem "peek",                 "~> 1.0", ">= 1.0.1"
@@ -54,7 +53,7 @@ gem "peek-git",             "~> 1.0", ">= 1.0.2"
 gem "peek-performance_bar", "1.2"
 gem "peek-pg",              "~> 1.3"
 gem "peek-sidekiq",         "1.0.0.4.g261c857"
-gem "pg",                   "~> 0.21.0"
+gem "pg",                   "~> 1.1.4"
 gem "pry-byebug",           "~> 3.5"
 gem "pry-rails",            "~> 0.3.6"
 gem "puma",                 "~> 3.10"
@@ -65,6 +64,8 @@ gem "rack-timeout",        "~> 0.4.2", require: false
 gem "rails-i18n",          "~> 5.0", ">= 5.0.1"
 gem "redis-namespace",     "~> 1.5", ">= 1.5.3"
 gem "ruby-progressbar",    "~> 1.8", ">= 1.8.1", require: false
+
+gem "kramdown",            "~> 1.17.0"
 
 gem "sass-rails", "~> 5.0", ">= 5.0.6"
 gem "sidekiq",    "~> 5.0", ">= 5.0.4"
@@ -85,6 +86,7 @@ group :development, :test do
   gem "awesome_print",            "~> 1.8", require: "ap"
   gem "bullet",                   "~> 5.6", ">= 5.6.1"
   gem "dotenv-rails",             "~> 2.2", ">= 2.2.1"
+  gem "fuubar",                   "~> 2.4.0"
   gem "guard-rspec",              "~> 4.7", ">= 4.7.3", require: false
   gem "knapsack",                 "~> 1.14", ">= 1.14.1"
   gem "rails-controller-testing", "~> 1.0", ">= 1.0.2"
@@ -112,6 +114,7 @@ group :test do
   gem "database_cleaner",     "~> 1.6", ">= 1.6.1"
   gem "factory_bot_rails",    "~> 4.8"
   gem "faker",                "~> 1.8", ">= 1.8.4"
+  gem "shoulda-matchers",     "4.0.0.rc1"
   gem "simplecov",            "~> 0.15.0", require: false
   gem "vcr",                  "~> 3.0", ">= 3.0.3"
   gem "webmock",              "~> 3.0", ">= 3.0.1"

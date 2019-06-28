@@ -26,7 +26,7 @@ RSpec.describe RosterEntry, type: :model do
     end
   end
 
-  describe "order_for_view" do
+  describe "ordering" do
     let(:organization) { classroom_org                                   }
     let(:assignment)   { create(:assignment, organization: organization) }
 
@@ -41,14 +41,36 @@ RSpec.describe RosterEntry, type: :model do
     let(:not_linked_entry)          { create(:roster_entry, roster: roster, identifier: "b")                  }
     let(:linked_not_accepted_entry) { create(:roster_entry, roster: roster, user: student2, identifier: "c")  }
 
-    it "orders correctly" do
+    context "order_by_sort_mode" do
+      it "order_by_sort_mode sorts by 'Student identifier'" do
+        roster.roster_entries.first.destroy # Ignore the default entry here
+
+        expected_ordering = [linked_accepted_entry, not_linked_entry, linked_not_accepted_entry]
+        actual_ordering = RosterEntry.where(roster: roster).order_by_sort_mode("Student identifier").to_a
+
+        expect(actual_ordering).to eq(expected_ordering)
+      end
+
+      it "order_by_sort_mode sorts by 'Created at'" do
+        roster.roster_entries.first.destroy # Ignore the default entry here
+
+        expected_ordering = [linked_accepted_entry, linked_not_accepted_entry, not_linked_entry]
+        actual_ordering = RosterEntry
+          .where(roster: roster)
+          .order_by_sort_mode("Created at", assignment: assignment)
+
+        expect(actual_ordering).to eq(expected_ordering)
+      end
+    end
+
+    it "order_for_view works correctly" do
       roster.roster_entries.first.destroy # Ignore the default entry here
       expected_ordering = [linked_accepted_entry, linked_not_accepted_entry, not_linked_entry]
 
       expect(RosterEntry.where(roster: roster).order_for_view(assignment).to_a).to eq(expected_ordering)
     end
 
-    it "orders correctly, even with no accepted students" do
+    it "order_for_view correctly, even with no accepted students" do
       roster.roster_entries.first.destroy # Ignore the default entry here
       assignment_repo.delete
       linked_accepted_entry.destroy

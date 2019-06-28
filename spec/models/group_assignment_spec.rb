@@ -88,4 +88,60 @@ RSpec.describe GroupAssignment, type: :model do
       end
     end
   end
+
+  describe "#max_teams_less_than_group_count" do
+    let(:organization) { classroom_org }
+    let(:grouping)     { create(:grouping, organization: organization) }
+    let(:first_group)  { create(:group, grouping: grouping) }
+    let(:second_group) { create(:group, grouping: grouping) }
+    let(:options) do
+      {
+        organization: organization,
+        slug: "group-assignment-1",
+        title: "Group Assignment 1",
+        grouping: grouping
+      }
+    end
+
+    before(:each) do
+      first_group.reload
+      second_group.reload
+    end
+
+    context "adding max_teams limit to new group assignment" do
+      let(:group_assignment) { build(:group_assignment, options) }
+
+      it "raises exception when creating new assignment with grouping group count greater than max_teams" do
+        group_assignment.update(max_teams: 1)
+
+        validation_message = "Validation failed: Max teams is less than the number of teams in the existing"\
+          " set you've selected (2)"
+        expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, validation_message)
+      end
+
+      it "does not raise exception when creating new assignment with grouping group count less than or equal to"\
+        " max_teams" do
+        group_assignment.update(max_teams: 2)
+
+        expect { group_assignment.save! }.not_to raise_error
+      end
+    end
+
+    context "adding max_teams limit to existing group assignment" do
+      let(:group_assignment) { create(:group_assignment, options) }
+
+      it "raises exception when existing group count is greater than max_teams limit" do
+        group_assignment.update(max_teams: 1)
+
+        validation_message = "Validation failed: Max teams is less than the number of existing teams (2)"
+        expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, validation_message)
+      end
+
+      it "does not raise an exception when existing group count is less than or equal to max_teams limit" do
+        group_assignment.update(max_teams: 2)
+
+        expect { group_assignment.save! }.not_to raise_error
+      end
+    end
+  end
 end

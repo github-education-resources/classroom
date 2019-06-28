@@ -127,12 +127,14 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         .with(
           text: subject::CREATE_REPO,
           status: "creating_repo",
-          status_text: "Creating GitHub repository"
+          status_text: "Creating GitHub repository",
+          repo_url: nil
         )
         .with(
           text: subject::IMPORT_STARTER_CODE,
           status: "importing_starter_code",
-          status_text: "Import started"
+          status_text: "Import started",
+          repo_url: "https://github.com/#{organization.github_organization.login}/learn-elm-EDONTestTeacher"
         )
     end
 
@@ -169,12 +171,16 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         .with(
           text: subject::CREATE_REPO,
           status: "creating_repo",
-          status_text: "Creating GitHub repository"
+          status_text: "Creating GitHub repository",
+          repo_url: nil
         )
         .with(
-          error: AssignmentRepo::Creator::REPOSITORY_CREATION_FAILED,
-          status: "errored_creating_repo",
-          status_text: "Failed"
+          hash_including(
+            :error,
+            status: "errored_creating_repo",
+            status_text: "Failed",
+            repo_url: nil
+          )
         )
     end
 
@@ -216,12 +222,16 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           .with(
             text: subject::CREATE_REPO,
             status: "creating_repo",
-            status_text: "Creating GitHub repository"
+            status_text: "Creating GitHub repository",
+            repo_url: nil
           )
           .with(
-            error: AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED,
-            status: "errored_creating_repo",
-            status_text: "Failed"
+            hash_including(
+              :error,
+              status: "errored_creating_repo",
+              status_text: "Failed",
+              repo_url: nil
+            )
           )
       end
 
@@ -232,7 +242,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
         expect(Rails.logger)
           .to receive(:warn)
-          .with(AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
+          .with(a_string_starting_with(AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED))
         subject.perform_now(assignment, student)
       end
 
@@ -262,12 +272,16 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           .with(
             text: subject::CREATE_REPO,
             status: "creating_repo",
-            status_text: "Creating GitHub repository"
+            status_text: "Creating GitHub repository",
+            repo_url: nil
           )
           .with(
-            error: AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED,
-            status: "errored_creating_repo",
-            status_text: "Failed"
+            hash_including(
+              :error,
+              status: "errored_creating_repo",
+              status_text: "Failed",
+              repo_url: nil
+            )
           )
       end
 
@@ -278,7 +292,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
         expect(Rails.logger)
           .to receive(:warn)
-          .with(AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED)
+          .with(a_string_starting_with(AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED))
         subject.perform_now(assignment, student)
       end
 
@@ -306,12 +320,16 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           .with(
             text: subject::CREATE_REPO,
             status: "creating_repo",
-            status_text: "Creating GitHub repository"
+            status_text: "Creating GitHub repository",
+            repo_url: nil
           )
           .with(
-            error: AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE,
-            status: "errored_creating_repo",
-            status_text: "Failed"
+            hash_including(
+              :error,
+              status: "errored_creating_repo",
+              status_text: "Failed",
+              repo_url: nil
+            )
           )
       end
 
@@ -323,7 +341,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           .with("Record invalid")
         expect(Rails.logger)
           .to receive(:warn)
-          .with(AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE)
+          .with(a_string_starting_with(AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE))
         subject.perform_now(assignment, student)
       end
 

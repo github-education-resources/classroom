@@ -1,0 +1,18 @@
+(function() {
+    $("#assignment-repo-list").html(
+        "<%= j render partial: 'assignments/assignment_roster_list', locals: {
+            organization: @organization,
+            assignment: @assignment,
+            roster_entries: @roster_entries
+        } %>"
+    );
+
+    $("#assignment-repo-pagination").html(
+        "<%= j render partial: 'shared/pagination', locals: { 
+            collection: @roster_entries, 
+            param_name: :students_page
+        } %>"
+    );
+
+    $("#sort-mode-field").val("<%= @current_sort_mode %>");
+})();

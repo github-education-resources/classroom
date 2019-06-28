@@ -5,6 +5,9 @@ require "rails_helper"
 RSpec.describe Organization, type: :model do
   subject { create(:organization, github_id: 12_345) }
 
+  it { should belong_to(:organization_webhook) }
+  it { should belong_to(:roster).optional }
+
   describe "roster association" do
     it "can have a roster" do
       subject.roster = create(:roster)
@@ -95,10 +98,10 @@ RSpec.describe Organization, type: :model do
           end
 
           it "does not delete the webhook from GitHub" do
-            subject.update(webhook_id: 9_999_999, is_webhook_active: true)
+            subject.organization_webhook.update(github_id: 9_999_999)
 
             org_id     = subject.github_id
-            webhook_id = subject.webhook_id
+            webhook_id = subject.organization_webhook.github_id
 
             subject.destroy
 
@@ -108,14 +111,13 @@ RSpec.describe Organization, type: :model do
 
         context "last classroom on organization" do
           it "deletes the webhook from GitHub" do
-            subject.update(webhook_id: 9_999_999, is_webhook_active: true)
+            subject.organization_webhook.update(github_id: 9_999_999)
 
-            org_id     = subject.github_id
-            webhook_id = subject.webhook_id
+            webhook_id = subject.organization_webhook.github_id
 
             subject.destroy
 
-            expect(WebMock).to have_requested(:delete, github_url("/organizations/#{org_id}/hooks/#{webhook_id}"))
+            expect(WebMock).to have_requested(:delete, github_url("/orgs/ghost/hooks/#{webhook_id}"))
           end
         end
       end

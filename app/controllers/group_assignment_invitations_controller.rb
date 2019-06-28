@@ -9,7 +9,6 @@ class GroupAssignmentInvitationsController < ApplicationController
   layout "layouts/invitations"
 
   before_action :route_based_on_status,                  only: %i[setup successful_invitation]
-  before_action :check_group_not_previous_acceptee,      only: :show
   before_action :check_user_not_group_member,            only: :show
   before_action :check_should_redirect_to_roster_page,   only: :show
   before_action :authorize_group_access,                 only: :accept_invitation
@@ -31,6 +30,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   def accept_invitation
     selected_group       = Group.find_by(id: group_params[:id])
     selected_group_title = group_params[:title]
+    validate_max_teams_not_exceeded! unless selected_group
 
     create_group_assignment_repo(selected_group: selected_group, new_group_title: selected_group_title) do
       redirect_to successful_invitation_group_assignment_invitation_path
@@ -46,14 +46,17 @@ class GroupAssignmentInvitationsController < ApplicationController
   def create_repo
     job_started =
       if group_invite_status.accepted? || group_invite_status.errored?
-        if group_assignment_repo&.github_repository&.empty?
+        if repo_ready?
+          group_invite_status.completed!
+          false
+        else
           group_assignment_repo&.destroy
           @group_assignment_repo = nil
+          report_retry
+          group_invite_status.waiting!
+          GroupAssignmentRepo::CreateGitHubRepositoryJob.perform_later(group_assignment, group, retries: 3)
+          true
         end
-        report_retry
-        group_invite_status.waiting!
-        GroupAssignmentRepo::CreateGitHubRepositoryJob.perform_later(group_assignment, group, retries: 3)
-        true
       else
         false
       end
@@ -134,12 +137,6 @@ class GroupAssignmentInvitationsController < ApplicationController
     raise NotAuthorized, "You are not permitted to select this team"
   end
 
-  def check_group_not_previous_acceptee
-    return unless group.present? && group_assignment_repo.present?
-
-    redirect_to successful_invitation_group_assignment_invitation_path
-  end
-
   def check_user_not_group_member
     return if group.blank?
     redirect_to accept_group_assignment_invitation_path
@@ -167,6 +164,15 @@ class GroupAssignmentInvitationsController < ApplicationController
 
     report_invitation_failure
     raise NotAuthorized, "This team has reached its maximum member limit of #{group_assignment.max_members}."
+  end
+
+  def validate_max_teams_not_exceeded!
+    return unless group_assignment.present? && group_assignment.max_teams.present?
+    return unless group_assignment.grouping.groups.count >= group_assignment.max_teams
+
+    report_invitation_failure
+    raise NotAuthorized, "This assignment has reached its team limit of #{group_assignment.max_teams}."\
+      " Please join an existing team."
   end
   # rubocop:enable Metrics/AbcSize
 
@@ -251,5 +257,11 @@ class GroupAssignmentInvitationsController < ApplicationController
     @organization ||= group_assignment.organization
   end
   helper_method :organization
+
+  def repo_ready?
+    return false if group_assignment_repo.blank?
+    return false if group_assignment.starter_code? && !group_assignment_repo.github_repository.imported?
+    true
+  end
 end
 # rubocop:enable Metrics/ClassLength

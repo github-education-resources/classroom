@@ -326,29 +326,54 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
         it "allows user to join" do
           patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
-          expect(group_assignment.group_assignment_repos.count).to eql(1)
           expect(student.repo_accesses.count).to eql(1)
         end
       end
 
-      context "github repository with the same name already exists" do
-        let(:group) { create(:group, grouping: grouping, github_team_id: 2_973_107) }
+      context "assignment has reached maximum number of teams" do
+        let(:existing_group) { create(:group, grouping: grouping, github_team_id: 2_973_107) }
+        let(:new_group) { create(:group, grouping: grouping, github_team_id: 2_973_108) }
+        let(:second_invitation) { create(:group_assignment_invitation, group_assignment: group_assignment) }
 
-        before do
-          group_assignment_repo = GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
-          @original_repository = organization.github_client.repository(group_assignment_repo.github_repo_id)
-          group_assignment_repo.delete
-          patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
+        before(:each) do
+          group_assignment.update(max_teams: 1)
+          patch :accept_invitation, params: { id: invitation.key, group: { title: existing_group.title } }
         end
 
-        it "creates a new group assignment repo" do
-          expect(group_assignment.group_assignment_repos.count).to eql(1)
+        it "does not allow a user to create a team" do
+          expect_any_instance_of(ApplicationController).to receive(:flash_and_redirect_back_with_message)
+          patch :accept_invitation, params: { id: second_invitation.key, group: { title: new_group.title } }
+        end
+      end
+
+      context "assignment has not reached maximum number of teams" do
+        let(:existing_group) { create(:group, grouping: grouping, github_team_id: 2_973_107) }
+        let(:new_group) { create(:group, grouping: grouping, github_team_id: 2_973_108) }
+        let(:second_invitation) { create(:group_assignment_invitation, group_assignment: group_assignment) }
+
+        before(:each) do
+          group_assignment.update(max_teams: 2)
+          patch :accept_invitation, params: { id: invitation.key, group: { title: existing_group.title } }
         end
 
-        it "new repository name has expected suffix" do
-          expect(WebMock)
-            .to have_requested(:post, %r{#{github_url("/organizations/")}\d+/repos$})
-            .with(body: /^.*#{@original_repository.name}-1.*$/)
+        it "allows user to create a team" do
+          patch :accept_invitation, params: { id: second_invitation.key, group: { title: new_group.title } }
+          expect(group_assignment.grouping.groups.count).to eql(2)
+        end
+      end
+
+      context "assignment does not have maximum number of teams" do
+        let(:existing_group) { create(:group, grouping: grouping, github_team_id: 2_973_107) }
+        let(:new_group) { create(:group, grouping: grouping, github_team_id: 2_973_108) }
+        let(:second_invitation) { create(:group_assignment_invitation, group_assignment: group_assignment) }
+
+        before(:each) do
+          patch :accept_invitation, params: { id: invitation.key, group: { title: existing_group.title } }
+        end
+
+        it "allows user to create a team" do
+          patch :accept_invitation, params: { id: second_invitation.key, group: { title: new_group.title } }
+          expect(group_assignment.grouping.groups.count).to eql(2)
         end
       end
 
@@ -579,7 +604,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
       context "GroupAssignmentRepo already present" do
         before do
-          GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
+          GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
           get :progress, params: { id: invitation.key }
         end
 
@@ -599,7 +624,8 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
     before(:each) do
       sign_in_as(student)
-      @group_assignment_repo = GroupAssignmentRepo.create!(group_assignment: group_assignment, group: group)
+      result = GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
+      @group_assignment_repo = result.group_assignment_repo
     end
 
     after(:each) do

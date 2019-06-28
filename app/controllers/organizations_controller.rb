@@ -10,11 +10,11 @@ class OrganizationsController < Orgs::Controller
   before_action :paginate_users_github_organizations, only: %i[new create]
   before_action :verify_user_belongs_to_organization, only: [:remove_user]
 
-  skip_before_action :ensure_current_organization,                         only: %i[index new create]
-  skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create]
+  skip_before_action :ensure_current_organization,                         only: %i[index new create search]
+  skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create search]
 
   def index
-    @organizations = current_user.organizations.order(:id).page(params[:page])
+    @organizations = current_user.organizations.order(:id).page(params[:page]).per(12)
   end
 
   def new
@@ -69,7 +69,7 @@ class OrganizationsController < Orgs::Controller
     if current_organization.update_attributes(deleted_at: Time.zone.now)
       DestroyResourceJob.perform_later(current_organization)
 
-      flash[:success] = "Your organization, @#{current_organization.github_organization.login} is being reset"
+      flash[:success] = "Your classroom, @#{current_organization.title} is being deleted"
       redirect_to organizations_path
     else
       render :edit
@@ -80,7 +80,7 @@ class OrganizationsController < Orgs::Controller
     if current_organization.one_owner_remains?
       flash[:error] = "The user can not be removed from the classroom"
     else
-      transfer_assignments if @removed_user.owns_all_assignments_for?(current_organization)
+      TransferAssignmentsService.new(current_organization, @removed_user).transfer
       current_organization.users.delete(@removed_user)
       flash[:success] = "The user has been removed from the classroom"
     end
@@ -101,6 +101,24 @@ class OrganizationsController < Orgs::Controller
       render :setup
     end
   end
+
+  # rubocop:disable MethodLength
+  def search
+    @organizations = current_user
+      .organizations
+      .order(:id)
+      .where("title ILIKE ?", "%#{params[:query]}%")
+      .page(params[:page])
+      .per(12)
+
+    respond_to do |format|
+      format.html do
+        render partial: "organizations/organization_card_layout",
+               locals: { organizations: @organizations }
+      end
+    end
+  end
+  # rubocop:enable MethodLength
 
   private
 
@@ -170,14 +188,6 @@ class OrganizationsController < Orgs::Controller
   def verify_user_belongs_to_organization
     @removed_user = User.find(params[:user_id])
     not_found unless current_organization.users.map(&:id).include?(@removed_user.id)
-  end
-
-  def transfer_assignments
-    new_owner = current_organization.users.where.not(id: @removed_user.id).first
-    current_organization.all_assignments.map do |assignment|
-      next unless assignment.creator_id == @removed_user.id
-      assignment.update_attributes(creator_id: new_owner.id)
-    end
   end
 
   def validate_multiple_classrooms_on_org

@@ -9,6 +9,11 @@ class ApplicationController
     not_found unless student_identifier_enabled?
   end
 
+  def dashboard_search_enabled?
+    logged_in? && current_user.feature_enabled?(:dashboard_search)
+  end
+  helper_method :dashboard_search_enabled?
+
   def multiple_classrooms_per_org_enabled?
     logged_in? && current_user.feature_enabled?(:multiple_classrooms_per_org)
   end
@@ -53,4 +58,9 @@ class ApplicationController
     logged_in? && current_user.feature_enabled?(:download_repositories)
   end
   helper_method :download_repositories_enabled?
+
+  def search_assignments_enabled?
+    logged_in? && current_user.feature_enabled?(:search_assignments)
+  end
+  helper_method :search_assignments_enabled?
 end

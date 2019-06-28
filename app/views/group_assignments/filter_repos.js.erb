@@ -1,0 +1,19 @@
+(function() {
+    $("#assignment-repo-list").html(
+        "<%= j render partial: "group_assignments/group_assignment_list",
+                locals: {
+                  group_assignment_repos: @group_assignment_repos,
+                  organization: @organization,
+                  group_assignment: @group_assignment
+                } %>"
+    );
+
+     $("#assignment-repo-pagination").html(
+        "<%= j render partial: 'shared/pagination', locals: { 
+            collection: @group_assignment_repos, 
+            param_name: @pagination_key
+        } %>"
+    );
+
+    $("#sort-mode-field").val("<%= @current_sort_mode %>");
+})();
