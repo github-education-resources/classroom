@@ -9,7 +9,8 @@ module GitHubClassroom
 
   def self.statsd
     @statsd ||= if Rails.env.production?
-                  ::Datadog::Statsd.new("localhost", 8125, tags: ["application:#{APP_NAME}", "dyno_id:#{DYNO}"])
+                  # ::Datadog::Statsd.new("localhost", 8125, tags: ["application:#{APP_NAME}", "dyno_id:#{DYNO}"])
+                  ::GitHubClassroom::NullStatsD.new
                 else
                   ::GitHubClassroom::NullStatsD.new
                 end
