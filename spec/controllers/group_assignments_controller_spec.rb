@@ -149,7 +149,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
         organization_id: organization.slug, id: group_assignment.slug, query: "test"
       }
 
-      expect(assigns(:group_assignment_repos)).to_not equal([])
+      expect(assigns(:group_assignment_repos)).to_not be_nil
     end
 
     it "finds no group assignment in search" do
@@ -158,14 +158,6 @@ RSpec.describe GroupAssignmentsController, type: :controller do
       }
 
       expect(assigns(:group_assignment_repos)).to eq([])
-    end
-
-    it "search is not case senstive" do
-      get :show, xhr: true, params: {
-        organization_id: organization.slug, id: group_assignment.slug, query: "TEST"
-      }
-
-      expect(assigns(:group_assignment_repos)).to_not equal([])
     end
   end
 
