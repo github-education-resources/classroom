@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class SessionsController < ApplicationController
-  skip_before_action :authenticate_user!, except: [:lti]
-  skip_before_action :verify_authenticity_token, only: [:lti]
+  skip_before_action :authenticate_user!,         except: [:lti_launch]
+  skip_before_action :verify_authenticity_token,  only: [:lti_launch]
 
   def new
     scopes = session[:required_scopes] || default_required_scopes
@@ -31,10 +31,9 @@ class SessionsController < ApplicationController
 
   def lti_launch
     # TODO: actually store/do something with lti user data
-    lti_auth_hash = request.env["omniauth.auth"]
-    lti_launch_params = request.env["lti.launch_params"]
+    auth_hash = request.env["omniauth.auth"]
 
-    redirect_to organizations_path
+    redirect_to organizations_path, alert: "LTI Launch Successful. [LMS User ID: #{auth_hash.info.user_id}]"
   end
 
   def destroy

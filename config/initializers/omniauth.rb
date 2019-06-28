@@ -2,7 +2,7 @@
 
 module OmniAuth
   module Strategies
-    autoload :Lti, Rails.root.join('lib', 'omniauth', 'strategies', 'lti') 
+    autoload :Lti, Rails.root.join("lib", "omniauth", "strategies", "lti")
   end
 end
 
