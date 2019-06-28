@@ -114,7 +114,7 @@ class OrganizationsController < Orgs::Controller
     respond_to do |format|
       format.html do
         render partial: "organizations/organization_card_layout",
-               locals: { organizations: @organizations }
+               locals: { organizations: @organization }
       end
     end
   end
