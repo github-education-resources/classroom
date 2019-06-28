@@ -139,7 +139,14 @@ RSpec.describe GroupAssignmentsController, type: :controller do
 
   describe "search for group_assignments", :vcr do
     before do
-      group_assignment.grouping.groups = [create(:group, grouping: group_assignment.grouping, title: "testing stuff")]
+      group_assignment.grouping.groups = [
+        create(:group, grouping: group_assignment.grouping, title: "testing stuff")
+      ]
+      create(
+        :group_assignment_repo,
+        group_assignment: group_assignment,
+        group: group_assignment.grouping.groups.first
+      )
       group_assignment.save!
       GitHubClassroom.flipper[:search_assignments].enable
     end
@@ -149,7 +156,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
         organization_id: organization.slug, id: group_assignment.slug, query: "test"
       }
 
-      expect(assigns(:group_assignment_repos)).to_not equal([])
+      expect(assigns(:group_assignment_repos).first.id).to equal(GroupAssignmentRepo.first.id)
     end
 
     it "finds no group assignment in search" do
@@ -165,7 +172,6 @@ RSpec.describe GroupAssignmentsController, type: :controller do
         organization_id: organization.slug, id: group_assignment.slug, query: "TEST"
       }
 
-      expect(assigns(:group_assignment_repos)).to_not equal([])
     end
   end
 
