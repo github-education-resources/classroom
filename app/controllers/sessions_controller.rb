@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class SessionsController < ApplicationController
-  skip_before_action :authenticate_user!
+  skip_before_action :authenticate_user!, except: [:lti]
+  skip_before_action :verify_authenticity_token, only: [:lti]
 
   def new
     scopes = session[:required_scopes] || default_required_scopes
@@ -26,6 +27,14 @@ class SessionsController < ApplicationController
     session[:current_scopes] = user.github_client_scopes
 
     redirect_to url
+  end
+
+  def lti_launch
+    # TODO: actually store/do something with lti user data
+    lti_auth_hash = request.env["omniauth.auth"]
+    lti_launch_params = request.env["lti.launch_params"]
+
+    redirect_to organizations_path
   end
 
   def destroy

@@ -19,8 +19,9 @@ Rails.application.routes.draw do
   get  "/login/oauth/authorize", to: "oauth#authorize"
   post  "/login/oauth/access_token", to: "oauth#access_token"
 
-  match "/auth/:provider/callback", to: "sessions#create",  via: %i[get post]
-  match "/auth/failure",            to: "sessions#failure", via: %i[get post]
+  match "/auth/lti/callback",       to: "sessions#lti_launch",  via: %i[get post]
+  match "/auth/:provider/callback", to: "sessions#create",      via: %i[get post]
+  match "/auth/failure",            to: "sessions#failure",     via: %i[get post]
 
   get "/a/:short_key", to: "short_url#assignment_invitation",       as: "assignment_invitation_short"
   get "/g/:short_key", to: "short_url#group_assignment_invitation", as: "group_assignment_invitation_short"
