@@ -8,12 +8,14 @@ module GitHubClassroom
   DYNO = ENV["DYNO"] || 1
 
   def self.statsd
-    @statsd ||= if Rails.env.production?
-                  # ::Datadog::Statsd.new("localhost", 8125, tags: ["application:#{APP_NAME}", "dyno_id:#{DYNO}"])
-                  ::GitHubClassroom::NullStatsD.new
-                else
-                  ::GitHubClassroom::NullStatsD.new
-                end
+    @statsd ||= ::GitHubClassroom::NullStatsD.new
+
+    # if Rails.env.production?
+    #               # ::Datadog::Statsd.new("localhost", 8125, tags: ["application:#{APP_NAME}", "dyno_id:#{DYNO}"])
+    #               ::GitHubClassroom::NullStatsD.new
+    #             else
+    #               ::GitHubClassroom::NullStatsD.new
+    #             end
   end
 end
 
