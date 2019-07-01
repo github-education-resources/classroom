@@ -5,6 +5,14 @@ require "rails_helper"
 RSpec.describe "LTI launch", type: :request do
   let(:organization) { classroom_org }
 
+  before do
+    GitHubClassroom.flipper[:lti_launch].enable
+  end
+
+  after do
+    GitHubClassroom.flipper[:lti_launch].disable
+  end
+
   describe "sessions#lti_launch", :vcr do
     context "unauthenticated request" do
       it "redirects to sessions#new" do
