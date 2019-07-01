@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class GroupAssignmentRepo
-  # rubocop:disable Metrics/ClassLength
   class Creator
+    include RepoCreatable
+
     DEFAULT_ERROR_MESSAGE                   = "Group assignment could not be created, please try again."
     REPOSITORY_CREATION_FAILED              = "GitHub repository could not be created, please try again."
     REPOSITORY_STARTER_CODE_IMPORT_FAILED   = "We were not able to import you the starter code to your group assignment, please try again." # rubocop:disable LineLength
@@ -12,14 +13,14 @@ class GroupAssignmentRepo
     CREATE_REPO         = "Creating repository"
     ADDING_COLLABORATOR = "Adding collaborator"
     IMPORT_STARTER_CODE = "Importing starter code"
-    CREATE_COMPLETE     = "Your GitHub repository was created."
 
     def self.perform(group_assignment:, group:)
       new(group_assignment: group_assignment, group: group).perform
     end
 
-    attr_reader :group_assignment, :group, :organization, :invite_status, :reporter
+    attr_reader :group_assignment, :group, :organization, :invite_status, :reporter, :slug
     delegate :broadcast_message, :broadcast_error, :report_time, to: :reporter
+    alias assignment group_assignment
 
     def initialize(group_assignment:, group:)
       @group_assignment = group_assignment
@@ -27,6 +28,7 @@ class GroupAssignmentRepo
       @organization     = group_assignment.organization
       @invite_status    = group_assignment.invitation.status(group)
       @reporter         = Reporter.new(self)
+      @slug             = group.github_team.slug_no_cache
     end
 
     # Creates a GroupAssignmentRepo with an associated GitHub repo
@@ -71,7 +73,7 @@ class GroupAssignmentRepo
         GitHubClassroom.statsd.increment("group_exercise_repo.import.started")
       else
         invite_status.completed!
-        broadcast_message(CREATE_COMPLETE)
+        broadcast_message(REPOSITORY_CREATION_COMPLETE)
       end
 
       duration_in_millseconds = (Time.zone.now - start) * 1_000
@@ -87,17 +89,6 @@ class GroupAssignmentRepo
     # rubocop:enable MethodLength
     # rubocop:enable AbcSize
 
-    def create_github_repository!
-      repository_name = generate_github_repository_name
-      organization.github_organization.create_repository(
-        repository_name,
-        private: group_assignment.private?,
-        description: "#{repository_name} created by GitHub Classroom"
-      )
-    rescue GitHub::Error => error
-      raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
-    end
-
     def add_team_to_github_repository!(github_repository_id)
       github_repository = GitHubRepository.new(organization.github_client, github_repository_id)
       github_team       = GitHubTeam.new(organization.github_client, group.github_team_id)
@@ -106,84 +97,5 @@ class GroupAssignmentRepo
     rescue GitHub::Error => error
       raise Result::Error.new REPOSITORY_TEAM_ADDITION_FAILED, error.message
     end
-
-    def push_starter_code!(github_repository_id)
-      client                  = group_assignment.creator.github_client
-      starter_code_repo_id    = group_assignment.starter_code_repo_id
-      assignment_repository   = GitHubRepository.new(client, github_repository_id)
-      starter_code_repository = GitHubRepository.new(client, starter_code_repo_id)
-
-      assignment_repository.get_starter_code_from(starter_code_repository)
-    rescue GitHub::Error => error
-      raise Result::Error.new REPOSITORY_STARTER_CODE_IMPORT_FAILED, error.message
-    end
-
-    def delete_github_repository(github_repository_id)
-      return true if github_repository_id.nil?
-      organization.github_organization.delete_repository(github_repository_id)
-    rescue GitHub::Error
-      true
-    end
-
-    # rubocop:disable MethodLength
-    # rubocop:disable Metrics/AbcSize
-    def verify_organization_has_private_repos_available!
-      return true if group_assignment.public?
-
-      begin
-        github_organization_plan = GitHubOrganization.new(organization.github_client, organization.github_id).plan
-      rescue GitHub::Error => error
-        raise Result::Error, error.message
-      end
-
-      owned_private_repos = github_organization_plan[:owned_private_repos]
-      private_repos       = github_organization_plan[:private_repos]
-
-      return true if owned_private_repos < private_repos
-
-      # TODO: make message consistent for both assignment types
-      error_message = <<-ERROR
-        Cannot make a private repository for this assignment, the organization has
-        a limit of #{private_repos} #{'repository'.pluralize(private_repos)}.
-        Please let the organization owner know that they can either upgrade their
-        limit or, if the owner qualifies, request a larger plan for free at
-        <a href='https://education.github.com/discount'>https://education.github.com/discount</a>
-      ERROR
-
-      raise Result::Error, error_message
-    end
-    # rubocop:enable MethodLength
-    # rubocop:enable Metrics/AbcSize
-
-    private
-
-    def repository_permissions
-      {}.tap do |options|
-        options[:permission] = "admin" if group_assignment.students_are_repo_admins?
-      end
-    end
-
-    # rubocop:disable AbcSize
-    def generate_github_repository_name
-      suffix_count    = 0
-      owner           = organization.github_organization.login_no_cache
-      repository_name = "#{group_assignment.slug}-#{group.github_team.slug_no_cache}"
-      loop do
-        name = "#{owner}/#{suffixed_repo_name(repository_name, suffix_count)}"
-        break unless GitHubRepository.present?(organization.github_client, name)
-        suffix_count += 1
-      end
-
-      suffixed_repo_name(repository_name, suffix_count)
-    end
-    # rubocop:enable AbcSize
-
-    def suffixed_repo_name(repository_name, suffix_count)
-      return repository_name if suffix_count.zero?
-
-      suffix = "-#{suffix_count}"
-      repository_name.truncate(100 - suffix.length, omission: "") + suffix
-    end
   end
-  # rubocop:enable Metrics/ClassLength
 end
