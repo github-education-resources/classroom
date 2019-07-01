@@ -3,6 +3,7 @@
 class SessionsController < ApplicationController
   skip_before_action :authenticate_user!,         except: [:lti_callback]
   skip_before_action :verify_authenticity_token,  only: [:lti_launch]
+  before_action      :verify_lti_launch_enabled,  only: %i[lti_launch lti_callback]
 
   def new
     scopes = session[:required_scopes] || default_required_scopes
@@ -55,5 +56,11 @@ class SessionsController < ApplicationController
 
   def failure
     redirect_to root_path, alert: "There was a problem authenticating with GitHub, please try again."
+  end
+
+  private
+
+  def verify_lti_launch_enabled
+    return not_found unless lti_launch_enabled?
   end
 end
