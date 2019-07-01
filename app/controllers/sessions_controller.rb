@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SessionsController < ApplicationController
-  skip_before_action :authenticate_user!,         except: [:lti_launch]
+  skip_before_action :authenticate_user!,         except: [:lti_callback]
   skip_before_action :verify_authenticity_token,  only: [:lti_launch]
 
   def new
@@ -30,10 +30,23 @@ class SessionsController < ApplicationController
   end
 
   def lti_launch
-    # TODO: actually store/do something with lti user data
     auth_hash = request.env["omniauth.auth"]
+    session[:lti_uid] = auth_hash.uid
 
-    redirect_to organizations_path, alert: "LTI Launch Successful. [LMS User ID: #{auth_hash.info.user_id}]"
+    # A simple before_filter will not work with this action,
+    # as POST body from LTI launch _must_ be preserved
+    if logged_in?
+      redirect_to auth_lti_callback_path
+    else
+      session[:pre_login_destination] = auth_lti_callback_path
+      authenticate_user! unless logged_in?
+    end
+  end
+
+  def lti_callback
+    lti_uid = session[:lti_uid]
+
+    redirect_to organizations_path, alert: "LTI Launch Successful. [LMS User ID: #{lti_uid}]"
   end
 
   def destroy

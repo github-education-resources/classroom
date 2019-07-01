@@ -13,6 +13,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
     scope: "user:email,repo,delete_repo,admin:org,admin:org_hook"
 
   provider :lti,
+    callback_path: "/auth/lti/launch",
     consumer_key: Rails.application.secrets.lti_consumer_key,
     shared_secret: Rails.application.secrets.lti_shared_secret
 end
