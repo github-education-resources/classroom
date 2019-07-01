@@ -63,9 +63,9 @@ module RepoCreatable
     return true if owned_private_repos < private_repos
 
     error_message = <<~ERROR
-        Cannot make this private assignment, your limit of #{private_repos}
-        #{'repository'.pluralize(private_repos)} has been reached. You can request
-        a larger plan for free at https://education.github.com/discount
+      Cannot make this private assignment, your limit of #{private_repos}
+      #{'repository'.pluralize(private_repos)} has been reached. You can request
+      a larger plan for free at https://education.github.com/discount
       ERROR
 
     raise self.class::Result::Error, error_message
@@ -78,8 +78,6 @@ module RepoCreatable
   #####################################
   # GitHub repository name generation #
   #####################################
-
-  # rubocop:disable AbcSize
   def generate_github_repository_name
     suffix_count = 0
 
