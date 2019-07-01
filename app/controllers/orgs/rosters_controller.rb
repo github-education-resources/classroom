@@ -9,7 +9,7 @@ module Orgs
     before_action :ensure_current_roster_entry,       except: %i[show new create remove_organization add_students]
     before_action :ensure_enough_members_in_roster,   only: [:delete_entry]
     before_action :ensure_allowed_to_access_grouping, only: [:show]
-
+    before_action :redirect_if_roster_exists, only: [:new]
     helper_method :current_roster, :unlinked_users
 
     # rubocop:disable AbcSize
@@ -227,6 +227,10 @@ module Orgs
       end
 
       mapping
+    end
+
+    def redirect_if_roster_exists
+      redirect_to roster_url(current_organization) if current_organization.roster.present?
     end
   end
 end
