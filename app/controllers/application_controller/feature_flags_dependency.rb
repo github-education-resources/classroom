@@ -63,4 +63,9 @@ class ApplicationController
     logged_in? && current_user.feature_enabled?(:search_assignments)
   end
   helper_method :search_assignments_enabled?
+
+  def lti_roster_enabled?
+    logged_in? && current_user.feature_enabled?(:lti_roster)
+  end
+  helper_method :search_assignments_enabled?
 end
