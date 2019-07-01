@@ -50,6 +50,25 @@ function initializeSelectMenu() {
     select_menu_button.attr("aria-expanded", "false");
   }
 
+    // Create public instance methods on the DOM Element
+    if(select_menu.get(0)) {
+      select_menu.get(0).getOptionLinks = function() {
+        var optionLinks = [];
+        select_menu_list_items.each(function() {
+          optionLinks.push($(this).prop("href"));
+        });
+  
+        return optionLinks;
+      }
+  
+      select_menu.get(0).setOptionLinks = function(optionLinks) {
+        select_menu_list_items.each(function (index) {
+          optionLink = optionLinks[index];
+          $(this).prop("href", optionLink);
+        });
+      }
+    }
+
   $(document).click(function(event) {
     if(select_menu.find(event.target).length < 1) {
       closeSelectMenu();
