@@ -8,4 +8,7 @@ development:
   host: 'localhost:9227'
 
 production:
-  host: <%= "#{ENV['FOUNDELASTICSEARCH_URL']}:9243" %>
+  host:     <%= ENV["FOUNDELASTICSEARCH_URL"] %>
+  port:     <%= ENV["FOUNDELASTICSEARCH_PORT"] %>
+  username: <%= ENV["FOUNDELASTICSEARCH_USERNAME"] %>
+  password: <%= ENV["FOUNDELASTICSEARCH_PASSWORD"] %>
