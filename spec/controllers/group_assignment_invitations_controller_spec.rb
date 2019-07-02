@@ -14,8 +14,9 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     create(:group_assignment, options)
   end
   let(:grouping) { group_assignment.grouping }
+  let(:github_team_id) { organization.github_organization.create_team(Faker::Team.name).id }
   let(:group) do
-    group = create(:group, grouping: grouping, github_team_id: 2_973_107)
+    group = create(:group, grouping: grouping, github_team_id: github_team_id)
     group.repo_accesses << RepoAccess.create(user: student, organization: organization)
     group
   end
@@ -254,7 +255,6 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         expect(GitHubClassroom.statsd)
           .to receive(:increment)
           .with("group_exercise_invitation.accept")
-
         patch :accept_invitation, params: { id: invitation.key, group: { title: "Code Squad" } }
       end
 
@@ -616,8 +616,9 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
   end
 
   describe "GET #successful_invitation", :vcr do
+    let(:github_team_id) { organization.github_organization.create_team(Faker::Team.name).id }
     let(:group) do
-      group = create(:group, grouping: grouping, github_team_id: 2_973_107)
+      group = create(:group, grouping: grouping, github_team_id: github_team_id)
       group.repo_accesses << RepoAccess.create(user: student, organization: organization)
       group
     end

@@ -7,7 +7,8 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
   let(:user)              { classroom_teacher }
   let(:student)      { classroom_student }
   let(:grouping)     { create(:grouping, organization: organization) }
-  let(:group) { create(:group, grouping: grouping, github_team_id: 3_284_880) }
+  let(:github_team_id) { organization.github_organization.create_team(Faker::Team.name).id }
+  let(:group) { create(:group, grouping: grouping, github_team_id: github_team_id) }
   let(:group_assignment) do
     create(
       :group_assignment,
@@ -29,6 +30,7 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
     end
 
     after do
+      organization.github_organization.delete_team(group.github_team_id)
       GroupAssignmentRepo.destroy_all
     end
 
