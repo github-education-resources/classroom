@@ -10,14 +10,6 @@
   },
 
   "env": {
-    "AIRBRAKE_PROJECT_ID": {
-      "description": "the ID for the application in airbrake.io, if set Airbrake will be enabled",
-      "required": false
-    },
-    "AIRBRAKE_PROJECT_KEY": {
-      "description": "the PROJECT_KEY for the application in airbrake.io, if set Airbrake will be enabled",
-      "required": false
-    },
     "CLASSROOM_WEBHOOK_PREFIX_URL": {
       "description": "The URL for your application to recieve webhooks ex https://classroom.github.com",
       "required": true
