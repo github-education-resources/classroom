@@ -36,7 +36,7 @@ class GroupAssignmentsController < ApplicationController
   def show
     matching_groups = @group_assignment.grouping.groups
     if search_assignments_enabled? && @query.present?
-      matching_groups = matching_groups.where("title LIKE ?", "%#{@query}%")
+      matching_groups = matching_groups.where("title ILIKE ?", "%#{@query}%")
     end
 
     @group_assignment_repos = GroupAssignmentRepo
