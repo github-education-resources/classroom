@@ -14,6 +14,20 @@
         </div>
 
         <div class="site-content-body markdown-body">
+          <p>This information is available within your LMS.</p>
+          <div class="form-actions">
+            <div>
+              <p>Client ID</p>
+              <%= text_field_tag 'group[title]', nil, placeholder: 'Client ID', disabled: false, class: 'form-control input-block' %>
+
+              <p>Secret</p>
+              <%= text_field_tag 'group[title]', nil, placeholder: 'Secret', disabled: false, class: 'form-control input-block' %>
+
+              <p>LMS Classroom Link</p>
+              <%= text_field_tag 'group[title]', nil, placeholder: 'LMS Classroom Link', disabled: false, class: 'form-control input-block' %>
+            </div>
+            <%= submit_tag 'Save changes', class: 'btn btn-primary' %>
+          </div>
         </div>
       </div>
     </div>
