@@ -1,9 +1,10 @@
 class CreateLtiConfigurations < ActiveRecord::Migration[5.1]
   def change
     create_table :lti_configurations do |t|
-      t.text :client_id
-      t.text :secret
+      t.text :consumer_key
+      t.text :shared_secret
       t.text :lms_link
+      t.belongs_to :organization, index: true
 
       t.timestamps
     end

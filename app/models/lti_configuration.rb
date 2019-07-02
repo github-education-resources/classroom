@@ -1,4 +1,3 @@
 class LtiConfiguration < ApplicationRecord
-  has_one :organization, dependent: :destroy
-
+  belongs_to :organization
 end
