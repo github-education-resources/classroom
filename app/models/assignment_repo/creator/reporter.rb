@@ -37,22 +37,31 @@ class AssignmentRepo
       def report_time(start_time)
         duration_in_millseconds = (Time.zone.now - start_time) * 1_000
         GitHubClassroom.statsd.timing("v2_exercise_repo.create.time", duration_in_millseconds)
+        GitHubClassroom.statsd.timing("exercise_repo.create.time", duration_in_millseconds)
       end
 
       # Maps the type of error to a Datadog error
       #
+      # rubocop:disable MethodLength
+      # rubocop:disable AbcSize
       def report_error(err)
         case err.message
         when /^#{REPOSITORY_CREATION_FAILED}/
           GitHubClassroom.statsd.increment("v2_exercise_repo.create.repo.fail")
+          GitHubClassroom.statsd.increment("exercise_repo.create.repo.fail")
         when /^#{REPOSITORY_COLLABORATOR_ADDITION_FAILED}/
           GitHubClassroom.statsd.increment("v2_exercise_repo.create.adding_collaborator.fail")
+          GitHubClassroom.statsd.increment("exercise_repo.create.adding_collaborator.fail")
         when /^#{REPOSITORY_STARTER_CODE_IMPORT_FAILED}/
           GitHubClassroom.statsd.increment("v2_exercise_repo.create.importing_starter_code.fail")
+          GitHubClassroom.statsd.increment("exercise_repo.create.importing_starter_code.fail")
         else
           GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
+          GitHubClassroom.statsd.increment("exercise_repo.create.fail")
         end
       end
+      # rubocop:enable MethodLength
+      # rubocop:enable AbcSize
     end
   end
 end

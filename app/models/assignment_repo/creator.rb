@@ -67,6 +67,7 @@ class AssignmentRepo
       report_time(start)
 
       GitHubClassroom.statsd.increment("v2_exercise_repo.create.success")
+      GitHubClassroom.statsd.increment("exercise_repo.create.success")
       if assignment.starter_code?
         invite_status.importing_starter_code!
         broadcast_message(
@@ -83,14 +84,9 @@ class AssignmentRepo
         )
       end
 
-      duration_in_millseconds = (Time.zone.now - start) * 1_000
-      GitHubClassroom.statsd.timing("exercise_repo.create.time", duration_in_millseconds)
-      GitHubClassroom.statsd.increment("exercise_repo.create.success")
-
       Result.success(assignment_repo)
     rescue Result::Error => error
       delete_github_repository(assignment_repo.try(:github_repo_id))
-      GitHubClassroom.statsd.increment("exercise_repo.create.fail")
       Result.failed(error.message)
     end
     # rubocop:enable AbcSize

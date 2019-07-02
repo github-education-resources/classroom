@@ -61,6 +61,7 @@ class GroupAssignmentRepo
       end
 
       GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.success")
+      GitHubClassroom.statsd.increment("group_exercise_repo.create.success")
 
       if group_assignment.starter_code?
         invite_status.importing_starter_code!
