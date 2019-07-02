@@ -14,6 +14,14 @@ Rails.application.config.middleware.use OmniAuth::Builder do
 
   provider :lti,
     callback_path: "/auth/lti/launch",
-    consumer_key: Rails.application.secrets.lti_consumer_key,
-    shared_secret: Rails.application.secrets.lti_shared_secret
+    setup: lambda do |env|
+      consumer_key =  request.params[:consumer_key]
+      lti_provider = GitHubClassroom.lti_provider(
+        consumer_key: consumer_key
+      )
+
+      strategy = env['omniauth.strategy']
+      strategy[:consumer_key] = consumer_key
+      strategy[:shared_secret] = lti_provider.shared_secret
+    end
 end
