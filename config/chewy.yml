@@ -8,4 +8,4 @@ development:
   host: 'localhost:9227'
 
 production:
-  host: <%= ENV['FOUNDELASTICSEARCH_URL'] %>
+  host: <%= "#{ENV['FOUNDELASTICSEARCH_URL']}:9243" %>
