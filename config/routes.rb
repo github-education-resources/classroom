@@ -74,6 +74,8 @@ Rails.application.routes.draw do
         get   "settings/invitations", to: "organizations#invitation"
         get   "settings/teams",       to: "organizations#show_groupings"
         delete "users/:user_id",      to: "organizations#remove_user", as: "remove_user"
+        get    "settings/link_lms_classrom", to: "organizations#link_lms_classroom"
+        get    "settings/lms_configuration", to: "organizations#lms_configuration"
 
         resource :roster, only: %i[show new create], controller: "orgs/rosters" do
           patch :link
