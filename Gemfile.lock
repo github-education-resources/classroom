@@ -64,9 +64,6 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
-    airbrake (6.2.1)
-      airbrake-ruby (~> 2.3, >= 2.3.1)
-    airbrake-ruby (2.3.2)
     api-pagination (4.7.1)
     arel (8.0.0)
     ast (2.3.0)
@@ -154,6 +151,9 @@ GEM
     foreman (0.84.0)
       thor (~> 0.19.1)
     formatador (0.2.5)
+    fuubar (2.4.0)
+      rspec-core (~> 3.0)
+      ruby-progressbar (~> 1.4)
     geo_pattern (1.4.0)
       color (~> 1.5)
     get_process_mem (0.2.1)
@@ -205,6 +205,7 @@ GEM
     kaminari-core (1.0.1)
     knapsack (1.14.1)
       rake
+    kramdown (1.17.0)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -284,7 +285,7 @@ GEM
     peek-sidekiq (1.0.0.4.g261c857)
       peek
       sidekiq
-    pg (0.21.0)
+    pg (1.1.4)
     pinglish (0.2.1)
       rack
     powerpack (0.1.1)
@@ -463,7 +464,6 @@ PLATFORMS
 DEPENDENCIES
   action-cable-testing (~> 0.3)
   active_model_serializers (~> 0.10.0)
-  airbrake (~> 6.2, >= 6.2.1)
   api-pagination (= 4.7.1)
   autoprefixer-rails (~> 7.1, >= 7.1.3)
   awesome_print (~> 1.8)
@@ -483,6 +483,7 @@ DEPENDENCIES
   flipper-redis (~> 0.10.2)
   flipper-ui (~> 0.10.2)
   foreman (~> 0.84.0)
+  fuubar (~> 2.4.0)
   geo_pattern (~> 1.4)
   graphql (= 1.8.4)
   graphql-client!
@@ -492,6 +493,7 @@ DEPENDENCIES
   jquery-turbolinks (~> 2.1)
   kaminari (~> 1.0, >= 1.0.1)
   knapsack (~> 1.14, >= 1.14.1)
+  kramdown (~> 1.17.0)
   local_time (~> 2.0)
   lograge (~> 0.6.0)
   newrelic_rpm (~> 4.4, >= 4.4.0.336)
@@ -506,7 +508,7 @@ DEPENDENCIES
   peek-performance_bar (= 1.2)
   peek-pg (~> 1.3)
   peek-sidekiq (= 1.0.0.4.g261c857)
-  pg (~> 0.21.0)
+  pg (~> 1.1.4)
   pinglish (~> 0.2.1)
   pry-byebug (~> 3.5)
   pry-rails (~> 0.3.6)
@@ -545,4 +547,4 @@ RUBY VERSION
    ruby 2.4.2p198
 
 BUNDLED WITH
-   2.0.1
+   2.0.2

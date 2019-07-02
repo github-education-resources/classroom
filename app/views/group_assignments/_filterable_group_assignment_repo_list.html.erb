@@ -1,0 +1,35 @@
+<% if search_assignments_enabled? %>
+  <div class="TableObject">
+    <div class="TableObject-item TableObject-item--primary">
+      <%= form_tag organization_group_assignment_path, id: 'js-search-form', method: :get, remote: true do %>
+        <%= text_field_tag :query, @query, class: 'input-block form-control', placeholder: 'Search groups by team name', autofocus: true, autocomplete: :off, id: 'repo-search-query-field' %>
+        <%= hidden_field_tag :sort_assignment_repos_by, @current_sort_mode, id: 'sort-mode-field' %>
+      <% end %>
+    </div>
+    <div class="TableObject-item">
+      <div id="select-menu-container">
+        <%= render partial: 'shared/select_menu',
+            locals: {
+              title: 'Sort group assignments by:',
+              options: @assignment_sort_modes.keys,
+              option_links: @assignment_sort_modes_links,
+              selected_option: @current_sort_mode,
+              remote: true
+            }
+        %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="assignment-repo-list" id="assignment-repo-list">
+  <%= render partial: 'group_assignments/group_assignment_list', locals: {
+      group_assignment_repos: @group_assignment_repos,
+      organization: @organization,
+      group_assignment: @group_assignment
+  } %>
+</div>
+
+<div id='assignment-repo-pagination'>
+  <%= render partial: 'shared/pagination', locals: { collection: @group_assignment_repos, param_name: local_assigns[:param_name] } %>
+</div>

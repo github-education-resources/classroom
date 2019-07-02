@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
 class AssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
 
   before_action :set_assignment, except: %i[new create]
-  before_action :set_unlinked_users, only: [:show]
+  before_action :set_filter_options, only: %i[show]
+  before_action :set_unlinked_users, only: %i[show]
 
   def new
     @assignment = Assignment.new
@@ -28,26 +30,41 @@ class AssignmentsController < ApplicationController
   end
 
   # rubocop:disable MethodLength
-  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable AbcSize
   def show
     @assignment_repos = AssignmentRepo
       .where(assignment: @assignment)
       .order(:id)
       .page(params[:page])
+
     return unless @organization.roster
 
-    @roster_entries = @organization.roster.roster_entries
-      .order(:id)
+    roster_entries = @organization.roster.roster_entries
+    if search_assignments_enabled? && @query.present?
+      roster_entries = roster_entries.where("identifier ILIKE ?", "%#{@query}%")
+    end
+
+    @roster_entries = roster_entries
       .page(params[:students_page])
       .order_for_view(@assignment)
+      .order_by_sort_mode(@current_sort_mode, assignment: @assignment)
+      .order(:id)
 
     @unlinked_user_repos = AssignmentRepo
       .where(assignment: @assignment, user: @unlinked_users)
       .order(:id)
       .page(params[:unlinked_accounts_page])
+
+    respond_to do |format|
+      format.html
+      format.js do
+        not_found unless search_assignments_enabled?
+        render "assignments/filter_repos.js.erb", format: :js
+      end
+    end
   end
+  # rubocop:enable AbcSize
   # rubocop:enable MethodLength
-  # rubocop:enable Metrics/AbcSize
 
   def edit; end
 
@@ -112,6 +129,20 @@ class AssignmentsController < ApplicationController
     @assignment = @organization.assignments.includes(:assignment_invitation).find_by!(slug: params[:id])
   end
 
+  def set_filter_options
+    @assignment_sort_modes = RosterEntry.sort_modes
+
+    @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
+    @query = params[:query]
+
+    @assignment_sort_modes_links = @assignment_sort_modes.keys.map do |mode|
+      organization_assignment_path(
+        sort_assignment_repos_by: mode,
+        query: @query
+      )
+    end
+  end
+
   def deadline_param
     return if params[:assignment][:deadline].blank?
 
@@ -138,3 +169,4 @@ class AssignmentsController < ApplicationController
     GitHubClassroom.statsd.increment("deadline.create") if @assignment.deadline
   end
 end
+# rubocop:enable Metrics/ClassLength
