@@ -10,5 +10,5 @@ development:
 production:
   host:     <%= ENV["FOUNDELASTICSEARCH_URL"] %>
   port:     <%= ENV["FOUNDELASTICSEARCH_PORT"] %>
-  username: <%= ENV["FOUNDELASTICSEARCH_USERNAME"] %>
+  user:     <%= ENV["FOUNDELASTICSEARCH_USERNAME"] %>
   password: <%= ENV["FOUNDELASTICSEARCH_PASSWORD"] %>
