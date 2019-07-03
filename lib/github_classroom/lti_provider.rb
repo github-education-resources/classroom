@@ -5,6 +5,10 @@ module GitHubClassroom
     attr_reader :consumer_key
 
     def initialize(consumer_key: nil, shared_secret: nil, redis_store: nil)
+      raise(ArgumentError, "consumer_key may not be nil") if consumer_key.blank?
+      raise(ArgumentError, "shared_secret may not be nil") if shared_secret.blank?
+      raise(ArgumentError, "redis_store may not be nil") if redis_store.blank?
+
       @consumer_key = consumer_key
       @shared_secret = shared_secret
       @redis_store = redis_store
@@ -40,7 +44,11 @@ module GitHubClassroom
       scoped = scoped_nonce(nonce)
       raw_message = @redis_store.get(scoped)
 
-      raw_message.from_json
+      return nil unless raw_message
+
+      json_message = JSON.parse(raw_message)
+
+      hydrate(json_message)
     end
 
     private
@@ -48,6 +56,19 @@ module GitHubClassroom
     def nonce_exists?(nonce)
       scoped = scoped_nonce(nonce)
       @redis_store.exists(scoped)
+    end
+
+    def hydrate(json_message)
+      params = {}
+      json_message.each do |param_key, param_value|
+        if param_value.is_a?(Hash)
+          param_value.each { |k, v| params[k] = v }
+        else
+          params[param_key] = param_value
+        end
+      end
+
+      self.class.construct_message(params)
     end
 
     ##
