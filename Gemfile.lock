@@ -64,15 +64,14 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
-    airbrake (6.2.1)
-      airbrake-ruby (~> 2.3, >= 2.3.1)
-    airbrake-ruby (2.3.2)
+    aes_key_wrap (1.0.1)
     api-pagination (4.7.1)
     arel (8.0.0)
     ast (2.3.0)
     autoprefixer-rails (7.1.3)
       execjs
     awesome_print (1.8.0)
+    bindata (2.4.4)
     bindex (0.5.0)
     bootsnap (1.1.2)
       msgpack (~> 1.0)
@@ -112,13 +111,13 @@ GEM
     dotenv-rails (2.2.1)
       dotenv (= 2.2.1)
       railties (>= 3.2, < 5.2)
-    elasticsearch (6.1.0)
-      elasticsearch-api (= 6.1.0)
-      elasticsearch-transport (= 6.1.0)
-    elasticsearch-api (6.1.0)
+    elasticsearch (7.2.0)
+      elasticsearch-api (= 7.2.0)
+      elasticsearch-transport (= 7.2.0)
+    elasticsearch-api (7.2.0)
       multi_json
     elasticsearch-dsl (0.1.6)
-    elasticsearch-transport (6.1.0)
+    elasticsearch-transport (7.2.0)
       faraday
       multi_json
     erubi (1.8.0)
@@ -141,6 +140,8 @@ GEM
       multipart-post (>= 1.2, < 3)
     faraday-http-cache (2.0.0)
       faraday (~> 0.8)
+    faraday_middleware (0.13.1)
+      faraday (>= 0.7.4, < 1.0)
     ffi (1.9.24)
     flipper (0.10.2)
     flipper-redis (0.10.2)
@@ -187,11 +188,22 @@ GEM
     hashie (3.6.0)
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
+    ims-lti (2.2.3)
+      addressable (~> 2.5, >= 2.5.1)
+      builder (~> 3.2)
+      faraday (~> 0.8)
+      faraday_middleware (~> 0.8)
+      json-jwt (~> 1.7)
+      simple_oauth (~> 0.3.1)
     jquery-datetimepicker-rails (2.4.1.0)
     jquery-turbolinks (2.1.0)
       railties (>= 3.1.0)
       turbolinks
     json (2.1.0)
+    json-jwt (1.10.2)
+      activesupport (>= 4.2)
+      aes_key_wrap
+      bindata
     jsonapi-renderer (0.2.0)
     jwt (1.5.6)
     kaminari (1.0.1)
@@ -230,9 +242,9 @@ GEM
     mini_portile2 (2.4.0)
     minitest (5.11.3)
     msgpack (1.1.0)
-    multi_json (1.12.1)
+    multi_json (1.13.1)
     multi_xml (0.6.0)
-    multipart-post (2.0.0)
+    multipart-post (2.1.1)
     nenv (0.3.0)
     newrelic_rpm (4.4.0.336)
     nio4r (2.3.1)
@@ -413,6 +425,7 @@ GEM
       connection_pool (~> 2.2, >= 2.2.0)
       rack-protection (>= 1.5.0)
       redis (~> 3.3, >= 3.3.3)
+    simple_oauth (0.3.1)
     simplecov (0.15.0)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -467,7 +480,6 @@ PLATFORMS
 DEPENDENCIES
   action-cable-testing (~> 0.3)
   active_model_serializers (~> 0.10.0)
-  airbrake (~> 6.2, >= 6.2.1)
   api-pagination (= 4.7.1)
   autoprefixer-rails (~> 7.1, >= 7.1.3)
   awesome_print (~> 1.8)
@@ -493,6 +505,7 @@ DEPENDENCIES
   graphql-client!
   graphql-remote_loader (= 1.0.3)
   guard-rspec (~> 4.7, >= 4.7.3)
+  ims-lti (~> 2.2.3)
   jquery-datetimepicker-rails (~> 2.4, >= 2.4.1.0)
   jquery-turbolinks (~> 2.1)
   kaminari (~> 1.0, >= 1.0.1)
@@ -551,4 +564,4 @@ RUBY VERSION
    ruby 2.4.2p198
 
 BUNDLED WITH
-   2.0.1
+   2.0.2

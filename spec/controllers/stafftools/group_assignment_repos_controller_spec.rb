@@ -10,7 +10,8 @@ RSpec.describe Stafftools::GroupAssignmentReposController, type: :controller do
   let(:group_assignment) do
     create(:group_assignment, title: "Learn Ruby", organization: organization, public_repo: false)
   end
-  let(:group) { create(:group, grouping: group_assignment.grouping, github_team_id: 2_976_561) }
+  let(:github_team_id) { organization.github_organization.create_team(Faker::Team.name[0..39]).id }
+  let(:group) { create(:group, grouping: group_assignment.grouping, github_team_id: github_team_id) }
   let(:result) { GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group) }
   let(:group_assignment_repo) { result.group_assignment_repo }
 
@@ -20,6 +21,10 @@ RSpec.describe Stafftools::GroupAssignmentReposController, type: :controller do
 
   after do
     GroupAssignmentRepo.destroy_all
+  end
+
+  after(:each) do
+    organization.github_organization.delete_team(group.github_team_id)
   end
 
   describe "GET #show", :vcr do
