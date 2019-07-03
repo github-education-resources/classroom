@@ -63,4 +63,9 @@ class ApplicationController
     logged_in? && current_user.feature_enabled?(:search_assignments)
   end
   helper_method :search_assignments_enabled?
+
+  def lti_launch_enabled?
+    GitHubClassroom.flipper[:lti_launch].enabled?
+  end
+  helper_method :lti_launch_enabled?
 end
