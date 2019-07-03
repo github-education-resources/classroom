@@ -12,6 +12,5 @@ class CreateLtiConfigurations < ActiveRecord::Migration[5.1]
     end
 
     add_index :lti_configurations, :consumer_key, unique: true
-    add_index :lti_configurations, :lms_link, unique: true
   end
 end
