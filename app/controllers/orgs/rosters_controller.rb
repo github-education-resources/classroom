@@ -314,7 +314,7 @@ module Orgs
 
     # Returns name of the linked google course to current organization (for syncing rosters)
     def current_organization_google_course_name
-     return unless current_organization.google_course_id
+      return unless current_organization.google_course_id
       authorize_google_classroom
       course = @google_classroom_service.get_course(current_organization.google_course_id)
       course&.name
