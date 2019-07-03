@@ -102,10 +102,6 @@ class OrganizationsController < Orgs::Controller
     end
   end
 
-  def link_lms_classroom; end
-
-  def lms_configuration; end
-
   # rubocop:disable MethodLength
   def search
     @organizations = current_user
