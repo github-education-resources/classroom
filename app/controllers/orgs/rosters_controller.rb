@@ -180,7 +180,7 @@ module Orgs
 
     def search_google_classroom
       courses_found = fetch_all_google_classrooms.select do |course|
-        course.where("name ILIKE ?", "#{params[:query]}#")
+        course.name.downcase.include? params[:query].downcase
       end
 
       respond_to do |format|
