@@ -11,5 +11,3 @@ module GitHubClassroom
     GitHubClassroom::LtiProvider.new(client_options)
   end
 end
-
-

@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 module GitHubClassroom
   class LtiProvider
-
     attr_reader :consumer_key
 
     def initialize(consumer_key: nil, shared_secret: nil, redis_store: nil)
@@ -20,7 +21,7 @@ module GitHubClassroom
       return false if nonce_exists?(lti_message.oauth_nonce)
 
       # nonce too old
-      return false if DateTime.strptime(lti_message.oauth_timestamp,'%s') < 5.minutes.ago
+      return false if DateTime.strptime(lti_message.oauth_timestamp, "%s") < 5.minutes.ago
 
       true
     end
@@ -38,7 +39,8 @@ module GitHubClassroom
     def get_message(nonce)
       scoped = scoped_nonce(nonce)
       raw_message = @redis_store.get(scoped)
-      # convert from json
+
+      raw_message.from_json
     end
 
     private
