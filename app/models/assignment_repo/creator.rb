@@ -132,6 +132,26 @@ class AssignmentRepo
       true
     end
 
+    # rubocop:enable Metrics/AbcSize
+
+    # Public: Clone the GitHub template repository for the AssignmentRepo.
+    #
+    # Returns an Integer ID or raises a Result::Error
+    def clone_github_template_repository!
+      client = assignment.creator.github_client
+      github_repository_url = client.get("https://api.github.com/repositories/#{assignment.starter_code_repo_id}").url
+      repository_name = generate_github_repository_name
+
+      options = {
+        name: repository_name,
+        owner: organization.github_organization.login,
+        private: assignment.private?,
+        description: "#{repository_name} created by GitHub Classroom",
+        accept: "application/vnd.github.baptiste-preview"
+      }
+      client.post("#{github_repository_url}/generate", options)
+    end
+
     # Public: Push starter code to the newly created GitHub
     # repository.
     #

@@ -39,7 +39,12 @@ class GroupAssignmentRepo
       invite_status.creating_repo!
       broadcast_message(CREATE_REPO)
       verify_organization_has_private_repos_available!
-      github_repository = create_github_repository!
+
+      if group_assignment.organization.feature_enabled?(:template_repos) && group_assignment.use_template_repos?
+        github_repository = clone_github_template_repository!
+      else
+        github_repository = create_github_repository!
+      end
 
       group_assignment_repo = group_assignment.group_assignment_repos.build(
         github_repo_id: github_repository.id,
@@ -49,7 +54,7 @@ class GroupAssignmentRepo
 
       add_team_to_github_repository!(github_repository.id)
 
-      if group_assignment.starter_code?
+      if group_assignment.use_importer?
         push_starter_code!(group_assignment_repo.github_repo_id)
       end
 
@@ -63,7 +68,7 @@ class GroupAssignmentRepo
       GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.success")
       GitHubClassroom.statsd.increment("group_exercise_repo.create.success")
 
-      if group_assignment.starter_code?
+      if group_assignment.use_importer?
         invite_status.importing_starter_code!
         broadcast_message(
           IMPORT_STARTER_CODE,
@@ -96,6 +101,21 @@ class GroupAssignmentRepo
       )
     rescue GitHub::Error => error
       raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
+    end
+
+    def clone_github_template_repository!
+      repository_name = generate_github_repository_name
+      client = group_assignment.creator.github_client
+      github_repository_url = client.get("https://api.github.com/repositories/#{group_assignment.starter_code_repo_id}").url
+
+      options = {
+        name: repository_name,
+        owner: organization.github_organization.login,
+        private: group_assignment.private?,
+        description: "#{repository_name} created by GitHub Classroom",
+        accept: "application/vnd.github.baptiste-preview"
+      }
+      client.post("#{github_repository_url}/generate", options)
     end
 
     def add_team_to_github_repository!(github_repository_id)

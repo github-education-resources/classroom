@@ -40,6 +40,8 @@ class GroupAssignment < ApplicationRecord
   validate :max_teams_less_than_group_count
   validate :starter_code_repository_not_empty
 
+  validate :starter_code_repository_is_a_template_repository  
+
   alias_attribute :invitation, :group_assignment_invitation
   alias_attribute :repos, :group_assignment_repos
 
@@ -58,6 +60,22 @@ class GroupAssignment < ApplicationRecord
   def starter_code_repository
     return unless starter_code?
     @starter_code_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id)
+  end
+
+  def template_repos_enabled?
+    template_repos_enabled
+  end
+
+  def template_repos_disabled?
+    !template_repos_enabled?
+  end
+
+  def use_template_repos?
+    starter_code? && template_repos_enabled
+  end
+
+  def use_importer?
+    starter_code? && template_repos_disabled?
   end
 
   def to_param
@@ -84,5 +102,23 @@ class GroupAssignment < ApplicationRecord
     return unless starter_code? && starter_code_repository.empty?
     errors.add :starter_code_repository, "cannot be empty. Select a repository that is not empty or create the"\
       " assignment without starter code."
+  end
+
+  def starter_code_repository_is_a_template_repository
+    return unless starter_code? && use_template_repos?
+
+    options = { accept: "application/vnd.github.baptiste-preview" }
+    endpoint_url = "https://api.github.com/repositories/#{starter_code_repo_id}"
+    starter_code_github_repository = creator.github_client.get(endpoint_url, options)
+
+    if starter_code_github_repository.is_template
+      return true
+    else
+      errors.add(
+        :starter_code_repository,
+        "is not a template repository. Make it a template repository to use template repository cloning."
+      )
+      return false
+    end
   end
 end
