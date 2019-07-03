@@ -7,7 +7,8 @@ RSpec.describe Group, type: :model do
   let(:organization) { classroom_org }
   let(:grouping)     { create(:grouping, organization: organization) }
   let(:user)         { classroom_student }
-  let(:group)        { create(:group, grouping: grouping, github_team_id: 2_977_000) }
+  let(:github_team_id) { organization.github_organization.create_team(Faker::Team.name[0..39]).id }
+  let(:group) { create(:group, grouping: grouping, github_team_id: github_team_id) }
 
   it_behaves_like "github_teamable"
 

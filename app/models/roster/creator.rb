@@ -53,6 +53,7 @@ class Roster
       @organization    = organization
       @identifier_name = identifier_name
       @options         = options
+      @roster = Roster.new(identifier_name: @identifier_name)
     end
 
     # Internal: Create create a Roster.
@@ -61,7 +62,6 @@ class Roster
       ensure_organization_does_not_have_roster!
 
       ActiveRecord::Base.transaction do
-        @roster = Roster.new(identifier_name: @identifier_name)
         add_identifiers_to_roster(@options[:identifiers]) if @options.key?(:identifiers)
 
         @roster.save!

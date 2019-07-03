@@ -39,6 +39,7 @@ gem "active_model_serializers", "~> 0.10.0"
 gem "api-pagination", "4.7.1"
 gem "kaminari", "~> 1.0", ">= 1.0.1"
 
+gem "ims-lti", "~> 2.2.3"
 gem "local_time", "~> 2.0"
 
 gem "octicons_helper", "~> 2.1"
@@ -100,7 +101,6 @@ group :development, :test do
 end
 
 group :production do
-  gem "airbrake",           "~> 6.2", ">= 6.2.1"
   gem "dogstatsd-ruby",     "~> 3.0"
   gem "lograge",            "~> 0.6.0"
   gem "newrelic_rpm",       "~> 4.4", ">= 4.4.0.336"

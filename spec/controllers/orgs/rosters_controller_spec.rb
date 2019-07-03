@@ -16,8 +16,12 @@ RSpec.describe Orgs::RostersController, type: :controller do
     context "with flipper enabled" do
       before do
         GitHubClassroom.flipper[:student_identifier].enable
+        organization.update_attributes!(roster_id: nil)
       end
 
+      after do
+        organization.update_attributes(roster_id: roster.id)
+      end
       it "succeeds" do
         sign_in_as(user)
         get :new, params: { id: organization.slug }
