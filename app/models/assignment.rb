@@ -72,7 +72,7 @@ class Assignment < ApplicationRecord
 
   def starter_code_repository_not_empty
     return unless starter_code? && starter_code_repository.empty?
-    raise GitHub::Error, "Starter code repository cannot be empty. Select a repository that is not empty or create the"\
+    errors.add :starter_code_repository, "cannot be empty. Select a repository that is not empty or create the"\
       " assignment without starter code."
   end
 end
