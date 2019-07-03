@@ -317,8 +317,7 @@ module Orgs
      return unless current_organization.google_course_id
       authorize_google_classroom
       course = @google_classroom_service.get_course(current_organization.google_course_id)
-      return course.name unless course.nil?
-      nil
+      course&.name
     rescue Google::Apis::Error
       nil
     end
