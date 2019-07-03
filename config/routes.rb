@@ -88,6 +88,13 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :lti_configurations do
+        member do 
+          get    "settings/link_lms_classrom", to: "lti_configurations#link_lms_classroom"
+          get    "settings/lms_configuration", to: "lti_configurations#lms_configuration"
+        end
+      end
+
       resources :groupings, only: %i[show edit update] do
         resources :groups, only: [:show] do
           member do
