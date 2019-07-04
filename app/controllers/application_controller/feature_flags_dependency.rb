@@ -19,16 +19,6 @@ class ApplicationController
   end
   helper_method :multiple_classrooms_per_org_enabled?
 
-  def public_assistant_landing_page_enabled?
-    GitHubClassroom.flipper[:public_assistant_landing_page].enabled?
-  end
-  helper_method :public_assistant_landing_page_enabled?
-
-  def assistant_landing_page_enabled?
-    logged_in? && current_user.feature_enabled?(:assistant_landing_page)
-  end
-  helper_method :assistant_landing_page_enabled?
-
   def public_home_v2_enabled?
     GitHubClassroom.flipper[:public_home_v2].enabled?
   end
