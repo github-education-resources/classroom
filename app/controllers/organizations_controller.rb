@@ -192,7 +192,7 @@ class OrganizationsController < Orgs::Controller
 
   def validate_multiple_classrooms_on_org
     classroom_exists_on_org = Organization.unscoped.find_by(github_id: new_organization_params[:github_id])
-    if classroom_exists_on_org && !multiple_classrooms_per_org_enabled?
+    if classroom_exists_on_org
       flash[:error] = "Validation failed: GitHub ID has already been taken"
       redirect_to new_organization_path
       return false

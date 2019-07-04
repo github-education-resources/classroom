@@ -14,11 +14,6 @@ class ApplicationController
   end
   helper_method :dashboard_search_enabled?
 
-  def multiple_classrooms_per_org_enabled?
-    logged_in? && current_user.feature_enabled?(:multiple_classrooms_per_org)
-  end
-  helper_method :multiple_classrooms_per_org_enabled?
-
   def public_assistant_landing_page_enabled?
     GitHubClassroom.flipper[:public_assistant_landing_page].enabled?
   end
