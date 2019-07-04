@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe GitHubClassroom::LtiProvider do
+describe GitHubClassroom::LtiMessageStore do
   subject { described_class }
   let(:consumer_key)  { "consumer_key" }
   let(:shared_secret) { "shared_secret" }
@@ -97,23 +97,21 @@ describe GitHubClassroom::LtiProvider do
     end
 
     context "launch_valid?" do
-      let(:mock_launch_request) { instance_double("Request", params: lti_launch_params) }
-
       it "returns true when launch is valid" do
-        expect(instance.launch_valid?(mock_launch_request)).to be true
+        expect(instance.message_valid?(lti_message)).to be true
       end
 
       it "returns false when nonce is a duplicate" do
         instance.save_message(lti_message)
-        expect(instance.launch_valid?(mock_launch_request)).to be false
+        expect(instance.message_valid?(lti_message)).to be false
       end
 
       it "returns false when nonce is too old" do
         old_lti_launch_params = lti_launch_params.clone
         old_lti_launch_params["oauth_timestamp"] = 5.minutes.ago.to_i.to_s
-        old_mock_launch_request = instance_double("Request", params: old_lti_launch_params)
+        old_lti_message = subject.construct_message(old_lti_launch_params)
 
-        expect(instance.launch_valid?(old_mock_launch_request)).to be false
+        expect(instance.message_valid?(old_lti_message)).to be false
       end
     end
   end

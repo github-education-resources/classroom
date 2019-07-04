@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module GitHubClassroom
-  class LtiProvider
+  class LtiMessageStore
     attr_reader :consumer_key
 
     def initialize(consumer_key: nil, shared_secret: nil, redis_store: nil)
@@ -18,13 +18,11 @@ module GitHubClassroom
       IMS::LTI::Models::Messages::Message.generate(params)
     end
 
-    def launch_valid?(launch_request)
-      lti_message = self.class.construct_message(launch_request.params)
-
-      # duplicate nonce
+    def message_valid?(lti_message)
+      # check for duplicate nonce
       return false if nonce_exists?(lti_message.oauth_nonce)
 
-      # nonce too old
+      # check if nonce too old
       return false if DateTime.strptime(lti_message.oauth_timestamp, "%s") < 5.minutes.ago
 
       true
