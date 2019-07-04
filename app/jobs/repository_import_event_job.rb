@@ -62,8 +62,6 @@ class RepositoryImportEventJob < ApplicationJob
     invite_status = invitation.status(group)
     channel = GroupRepositoryCreationStatusChannel.channel(group_id: group.id, group_assignment_id: assignment.id)
 
-    return unless organization.feature_enabled?(:group_import_resiliency)
-
     case status
     when "success"
       invite_status.completed!

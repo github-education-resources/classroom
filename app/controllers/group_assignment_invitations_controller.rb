@@ -13,7 +13,6 @@ class GroupAssignmentInvitationsController < ApplicationController
   before_action :check_should_redirect_to_roster_page,   only: :show
   before_action :authorize_group_access,                 only: :accept_invitation
   before_action :ensure_github_repo_exists,              only: :successful_invitation
-  before_action :ensure_group_import_resiliency_enabled, only: %i[create_repo progress]
 
   def show
     @groups = invitation.groups.order(:title).page(params[:page])
@@ -38,7 +37,6 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
 
   def setup
-    not_found unless organization.feature_enabled?(:group_import_resiliency)
   end
 
   # rubocop:disable Metrics/AbcSize
@@ -100,15 +98,10 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   ## Before Actions
 
-  def ensure_group_import_resiliency_enabled
-    not_found unless organization.feature_enabled?(:group_import_resiliency)
-  end
-
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
   # rubocop:disable Metrics/CyclomaticComplexity
   def route_based_on_status
-    return unless organization.feature_enabled?(:group_import_resiliency)
     status = group_invite_status&.status
     case status
     when "unaccepted", nil
@@ -191,13 +184,8 @@ class GroupAssignmentInvitationsController < ApplicationController
       flash[:error] = result.error
       redirect_to group_assignment_invitation_path
     when :success, :pending
-      if organization.feature_enabled?(:group_import_resiliency)
-        GitHubClassroom.statsd.increment("v2_group_exercise_invitation.accept")
-        route_based_on_status
-      else
-        GitHubClassroom.statsd.increment("group_exercise_invitation.accept")
-        yield if block_given?
-      end
+      GitHubClassroom.statsd.increment("v2_group_exercise_invitation.accept")
+      route_based_on_status
     end
   end
   # rubocop:enable Metrics/AbcSize
@@ -214,11 +202,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
 
   def report_invitation_failure
-    if organization.feature_enabled?(:group_import_resiliency)
-      GitHubClassroom.statsd.increment("v2_group_exercise_invitation.fail")
-    else
-      GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
-    end
+    GitHubClassroom.statsd.increment("v2_group_exercise_invitation.fail")
   end
 
   ## Resource Helpers

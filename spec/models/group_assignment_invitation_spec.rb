@@ -82,14 +82,6 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
     end
 
     describe "import resiliency enabled" do
-      before do
-        GitHubClassroom.flipper[:group_import_resiliency].enable
-      end
-
-      after do
-        GitHubClassroom.flipper[:group_import_resiliency].disable
-      end
-
       it "pending?" do
         result = subject.redeem_for(student, nil, group_name)
         expect(result.pending?).to be_truthy

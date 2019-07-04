@@ -164,14 +164,6 @@ RSpec.describe RepositoryImportEventJob, type: :job do
     end
 
     context "with group_import_resiliency enabled" do
-      before do
-        GitHubClassroom.flipper[:group_import_resiliency].enable
-      end
-
-      after do
-        GitHubClassroom.flipper[:group_import_resiliency].disable
-      end
-
       context "with source import success" do
         it "sets invite_status to completed" do
           subject.perform_now(success_payload)

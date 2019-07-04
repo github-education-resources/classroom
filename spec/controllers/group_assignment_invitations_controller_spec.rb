@@ -26,11 +26,9 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
   describe "route_based_on_status", :vcr do
     before(:each) do
       sign_in_as(student)
-      GitHubClassroom.flipper[:group_import_resiliency].enable
     end
 
     after(:each) do
-      GitHubClassroom.flipper[:group_import_resiliency].disable
       GroupInviteStatus.destroy_all
     end
 
@@ -223,14 +221,6 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       end
 
       context "with group import resiliency enabled" do
-        before do
-          GitHubClassroom.flipper[:group_import_resiliency].enable
-        end
-
-        after do
-          GitHubClassroom.flipper[:group_import_resiliency].disable
-        end
-
         it "renders accept" do
           invite_status.unaccepted!
           get :accept, params: { id: invitation.key }
@@ -378,14 +368,6 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       end
 
       context "with group import resiliency enabled" do
-        before do
-          GitHubClassroom.flipper[:group_import_resiliency].enable
-        end
-
-        after do
-          GitHubClassroom.flipper[:group_import_resiliency].disable
-        end
-
         describe "success" do
           it "sends an event to statsd" do
             expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_invitation.accept")
@@ -450,20 +432,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       sign_in_as(student)
     end
 
-    it "404s when feature is off" do
-      get :setup, params: { id: invitation.key }
-      expect(response.status).to eq(404)
-    end
-
     context "with group import resiliency enabled" do
-      before do
-        GitHubClassroom.flipper[:group_import_resiliency].enable
-      end
-
-      after do
-        GitHubClassroom.flipper[:group_import_resiliency].disable
-      end
-
       it "renders setup" do
         invite_status.creating_repo!
         get :setup, params: { id: invitation.key }
@@ -477,20 +446,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       sign_in_as(student)
     end
 
-    it "404s when feature is off" do
-      post :create_repo, params: { id: invitation.key }
-      expect(response.status).to eq(404)
-    end
-
     context "with group import resiliency enabled" do
-      before do
-        GitHubClassroom.flipper[:group_import_resiliency].enable
-      end
-
-      after do
-        GitHubClassroom.flipper[:group_import_resiliency].disable
-      end
-
       invalid_statuses = GroupInviteStatus::SETUP_STATUSES - ["accepted"]
       valid_statuses = GroupInviteStatus::ERRORED_STATUSES + ["accepted"]
 
@@ -573,21 +529,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       sign_in_as(student)
     end
 
-    it "404s when feature is off" do
-      get :progress, params: { id: invitation.key }
-      expect(response.status).to eq(404)
-    end
-
     context "with group import resiliency enabled" do
-      before do
-        GitHubClassroom.flipper[:group_import_resiliency].enable
-        invite_status.unaccepted!
-      end
-
-      after do
-        GitHubClassroom.flipper[:group_import_resiliency].disable
-      end
-
       context "GroupAssignemntRepo not present" do
         before do
           get :progress, params: { id: invitation.key }
@@ -650,14 +592,6 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
     end
 
     context "with group import resiliency enabled" do
-      before do
-        GitHubClassroom.flipper[:group_import_resiliency].enable
-      end
-
-      after do
-        GitHubClassroom.flipper[:group_import_resiliency].disable
-      end
-
       it "renders #successful_invitation" do
         invite_status.completed!
         get :successful_invitation, params: { id: invitation.key }

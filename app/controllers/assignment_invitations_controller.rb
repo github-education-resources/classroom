@@ -8,40 +8,31 @@ class AssignmentInvitationsController < ApplicationController
   include RepoSetup
 
   before_action :route_based_on_status, only: %i[show setup success]
-  before_action :check_user_not_previous_acceptee, :check_should_redirect_to_roster_page, only: :show
+  before_action :check_should_redirect_to_roster_page, only: :show
   before_action :ensure_submission_repository_exists, only: :success
-  before_action :ensure_import_resiliency_enabled, only: %i[create_repo progress]
 
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
   def accept
-    if import_resiliency_enabled?
-      result = current_invitation.redeem_for(current_user, import_resiliency: import_resiliency_enabled?)
-      case result.status
-      when :success
-        current_invitation_status.completed! if current_invitation_status.unaccepted?
-        GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
-      when :pending
-        current_invitation_status.accepted!
-        GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
-      when :failed
-        GitHubClassroom.statsd.increment("v2_exercise_invitation.fail")
-        current_invitation_status.unaccepted!
-        flash[:error] = result.error
-      end
-      route_based_on_status
-    else
-      create_submission do
-        GitHubClassroom.statsd.increment("exercise_invitation.accept")
-        redirect_to success_assignment_invitation_path
-      end
+    result = current_invitation.redeem_for(current_user)
+    case result.status
+    when :success
+      current_invitation_status.completed! if current_invitation_status.unaccepted?
+      GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
+    when :pending
+      current_invitation_status.accepted!
+      GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
+    when :failed
+      GitHubClassroom.statsd.increment("v2_exercise_invitation.fail")
+      current_invitation_status.unaccepted!
+      flash[:error] = result.error
     end
+    route_based_on_status
   end
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize
 
   def setup
-    not_found unless import_resiliency_enabled?
   end
 
   # rubocop:disable MethodLength
@@ -102,25 +93,14 @@ class AssignmentInvitationsController < ApplicationController
     @current_submission = nil
     current_invitation_status.accepted!
 
-    if import_resiliency_enabled?
-      redirect_to setup_assignment_invitation_path
-    else
-      create_submission
-    end
+    redirect_to setup_assignment_invitation_path
   end
   # rubocop:enable MethodLength
-
-  def check_user_not_previous_acceptee
-    return if import_resiliency_enabled?
-    return if current_submission.nil?
-    redirect_to success_assignment_invitation_path
-  end
 
   # rubocop:disable AbcSize
   # rubocop:disable CyclomaticComplexity
   # rubocop:disable MethodLength
   def route_based_on_status
-    return unless import_resiliency_enabled?
     case current_invitation_status.status
     when "unaccepted"
       redirect_to assignment_invitation_path(current_invitation) if action_name != "show"
@@ -135,10 +115,6 @@ class AssignmentInvitationsController < ApplicationController
   # rubocop:enable AbcSize
   # rubocop:enable CyclomaticComplexity
   # rubocop:enable MethodLength
-
-  def ensure_import_resiliency_enabled
-    render status: 404, json: { error: "Not found" } unless import_resiliency_enabled?
-  end
 
   def create_submission
     result = current_invitation.redeem_for(current_user)
