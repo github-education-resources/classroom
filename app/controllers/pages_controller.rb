@@ -14,6 +14,7 @@ class PagesController < ApplicationController
     "upgrade-your-organization"
   ].freeze
 
+  # rubocop:disable AbcSize
   def home
     return redirect_to organizations_path if logged_in?
 
@@ -25,6 +26,7 @@ class PagesController < ApplicationController
 
     render layout: "layouts/pages"
   end
+  # rubocop:enable AbcSize
 
   def assistant
     return not_found unless assistant_landing_page_enabled? || public_assistant_landing_page_enabled?
