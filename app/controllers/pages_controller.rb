@@ -17,23 +17,18 @@ class PagesController < ApplicationController
   def home
     return redirect_to organizations_path if logged_in?
 
-    render :homev2, layout: "layouts/pagesv2" if public_home_v2_enabled?
-  end
-
-  def homev2
     @teacher_count = User.last.id if User.last
 
     if AssignmentRepo.last && GroupAssignmentRepo.last.id
       @repo_count = AssignmentRepo.last.id + GroupAssignmentRepo.last.id
     end
 
-    return not_found unless home_v2_enabled?
-    render layout: "layouts/pagesv2"
+    render layout: "layouts/pages"
   end
 
   def assistant
     return not_found unless assistant_landing_page_enabled? || public_assistant_landing_page_enabled?
-    render layout: "layouts/pagesv2"
+    render layout: "layouts/pages"
   end
 
   def help
@@ -45,7 +40,7 @@ class PagesController < ApplicationController
     @breadcrumbs = [["/", "Classroom"], ["/help", "Help"]]
     @breadcrumbs.push(["", file_name]) if file_name != "help"
 
-    render layout: "layouts/pagesv2"
+    render layout: "layouts/pages"
   rescue Errno::ENOENT
     return not_found
   end

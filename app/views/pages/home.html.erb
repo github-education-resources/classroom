@@ -1,51 +1,96 @@
-<div class="remodal-bg">
-  <div class="signin-section">
-    <div class="container-lg text-center">
-      <ul>
-        <li><%= octicon 'book', height: 38 %></li>
-        <li><%= octicon 'pencil', height: 38 %></li>
-        <li><%= octicon 'mortar-board', height: 38 %></li>
-        <li><%= octicon 'organization', height: 38 %></li>
-        <li><%= octicon 'calendar', height: 38 %></li>
-        <li><%= octicon 'comment-discussion', height: 38 %></li>
-      </ul>
+<%= render partial: 'pages/header' %>
 
-      <h1 class="heading"><%= t('pages.banner_heading') %></h1>
-      <p class="subheading"><%= t('pages.banner_subheading') %></p>
+<%= render partial: 'pages/sign_in_section' %>
 
-      <div class="d-flex flex-column flex-items-center">
-        <a class="open-video mb-3" data-remodal-target="getting-started-video"><%= image_tag('play@2x.png', class: 'play-icon', alt: 'Play') %><%= t('pages.see_how_it_works') %></a>
-        <%= link_to t('pages.sign_in_to_start'), login_path, class: 'btn btn-blue btn-large btn-blue' %>
+<div class="why-classroom-section bg-white">
+  <div class="container-lg p-responsive py-5">
+    <h2 class="alt-h2 text-center text-md-left my-3"><%= t('.why_classroom_section.heading') %></h2>
+
+    <div class="col-md-9 f4 mx-auto">
+      <% t('.why_classroom_section.items')[0..2].each do |item| %>
+        <h3 class="mb-1"><%= item[:heading]%></h3>
+        <p class="text-gray mb-4"><%= parse_markdown_link(item[:content]) %></p>
+      <% end %>
+
+      <div class="Box col-md-5 float-sm-right p-3 mx-auto mx-md-4 mb-4">
+        <p class="mb-3 text-left f4"><b>Classroom Assistant</b> downloads all of your repositories with the click of a button.</p>
+
+        <a class="f6 btn btn-small btn-blue" href="https://classroom.github.com/assistant/download/mac" data-for-os="mac" data-download="mac">Download for macOS</a>
+        <a class="f6 btn btn-small btn-blue" href="https://classroom.github.com/assistant/download/win" data-for-os="windows" data-download="windows">Download for Windows</a>
+        <a class="f6 btn btn-small btn-blue" href="https://classroom.github.com/assistant/download/linux_deb_64" data-for-os="linux" data-download="mac">Download for Linux</a>
+        <a class="f6 btn btn-small btn-blue" href="https://github.com/education/classroom-assistant/releases/latest" data-for-os="unknownOS">Download Classroom Assistant</a>
       </div>
+
+      <% t('.why_classroom_section.items')[3..-1].each do |item| %>
+        <h3 class="mb-1"><%= item[:heading]%></h3>
+        <p class="text-gray mb-4"><%= parse_markdown_link(item[:content]) %></p>
+      <% end %>
     </div>
   </div>
-
-  <div class="information-section">
-    <div class="container-lg">
-      <div class="columns">
-        <div class="col-md-4 float-left p-4">
-          <h2><%= octicon 'repo', height: 22 %> <%= t('views.pages.create_assignments') %></h2>
-          <p>
-            <%= t('pages.create_assignments_desc') %>
-          </p>
-        </div>
-
-        <div class="col-md-4 float-left p-4">
-          <h2><%= octicon 'organization', height: 22 %> <%= t('views.pages.invite_students') %></h2>
-          <p>
-            <%= t('pages.invite_students_desc') %>
-          </p>
-        </div>
-
-        <div class="col-md-4 float-left p-4">
-          <h2><%= octicon 'graph', height: 22 %> <%= t('views.pages.review_progress') %></h2>
-          <p>
-            <%= t('pages.review_progress_desc') %>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <%= render partial: 'pages/getting_started_video_modal' %>
 </div>
+
+<div class="what-teachers-say-section bg-white">
+  <div class="container-xl p-responsive py-4">
+    <h2 class="alt-h2 text-center mb-4"><%= t('.what_teachers_say_section.heading') %></h2>
+
+    <div class="d-sm-flex flex-wrap gutter-sm">
+      <% t('.what_teachers_say_section.items').each do |item| %>
+        <div class="col-sm-6 col-lg-3 mb-3 mb-sm-5">
+          <div class="Box height-full position-relative p-3">
+
+            <% if item[:school] %>
+              <div class="position-absolute top-0 right-0 bottom-0 left-0 overflow-hidden">
+                  <%= image_tag "schools/#{item[:school]}.png", class:"height-full img-card", alt: item[:school] %>
+                  <div class="position-absolute top-0 right-0 bottom-0 left-0" style="background: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.5));"></div>
+              </div>
+            <% end %>
+
+            <div class="position-relative text-white" style="opacity:0.5;">
+              <%= octicon 'quote', height: 32 %>
+            </div>
+
+            <div class="position-relative">
+              <blockquote class="alt-mono-font text-white text-shadow-dark mt-3">
+                <p class="f4"><%= parse_markdown_link(item[:quote]) %></p>
+              </blockquote>
+              <cite class="d-block f5 text-white text-shadow-dark mb-3" style="font-style: normal;">
+                <%= item[:name] %>, <div><%= item[:school] %></div>
+              </cite>
+            </div>
+
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="classroom-in-action-section border-top border-bottom bg-gray-light py-6">
+  <div class="container-md text-center p-responsive">
+    <h3 class="h2"><%= t('.classroom_in_action_section.heading')%></h3>
+    <p class="f4 text-gray mt-2"><%= t('.classroom_in_action_section.subheading') %></p>
+
+    <div class="d-flex flex-column flex-items-center">
+      <%=
+        link_to t('.classroom_in_action_section.accept_button'),
+        "https://classroom.github.com/assignment-invitations/ee60d53d80579ff2bfe745f68a46a12b",
+        class: 'btn btn-large btn-blue mt-1'
+      %>
+    </div>
+  </div>
+</div>
+
+<div class="get-started-section border-bottom bg-white">
+  <div class="container-lg p-responsive py-5">
+    <h2 class="alt-h2 text-center text-md-left my-3"><%= t('.get_started_section.heading') %></h2>
+
+    <div class="col-md-9 f4 mx-auto">
+      <% t('.get_started_section.items').each do |item| %>
+        <h3 class="mb-1"><%= item[:heading]%></h3>
+        <p class="text-gray mb-4"><%= parse_markdown_link(item[:content]) %></p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%= render partial: 'pages/getting_started_video_modal' %>
