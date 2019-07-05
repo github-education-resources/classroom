@@ -13,10 +13,8 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
 
   describe "GET #link_lms_classroom", :vcr do
     it "returns success status" do
-      binding.pry
       get :link_lms_classroom, params: { organization: organization }
       expect(response).to have_http_status(:success)
-      binding.pry
     end
   end
 
