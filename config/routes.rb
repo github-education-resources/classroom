@@ -84,12 +84,10 @@ Rails.application.routes.draw do
           patch :add_students
           patch :remove_organization
         end
-      end
 
-      resources :lti_configurations do
-        member do 
-          get    "settings/link_lms_classrom", to: "lti_configurations#link_lms_classroom"
-          get    "settings/lms_configuration", to: "lti_configurations#lms_configuration"
+        resource :lti_configurations, controller: "orgs/lti_configurations" do 
+          get :link_lms_classroom
+          get :lms_configuration
         end
       end
 

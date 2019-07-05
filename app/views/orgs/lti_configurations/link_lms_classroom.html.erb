@@ -29,12 +29,9 @@
             <li>Link to the LMS classroom page</li>
           </ul>
 
-          <%= link_to "Connect to LMS", settings_lms_configuration_organization_path(organization), class: 'btn btn-primary' %>
+          <%= link_to "Connect to LMS", lms_configuration_lti_configurations_path(organization), class: 'btn btn-primary' %>
         </div>
       </div>
     </div>
   </div>
-
-
-  <%= render partial: 'organizations/reset_and_remove_organization_modal' %>
 </div>

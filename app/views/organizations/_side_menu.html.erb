@@ -20,7 +20,7 @@
                 class: "menu-item #{'selected' if current_page?(roster_path(organization))}" %>
   <% end %>
 
-    <%= link_to 'LMS configuration', settings_link_lms_classrom_organization_path(organization),
-                  class: "menu-item #{'selected' if current_page?(settings_link_lms_classrom_organization_path(organization))}" %>
+    <%= link_to 'LMS configuration', link_lms_classroom_lti_configurations_path(organization),
+                  class: "menu-item #{'selected' if current_page?(link_lms_classroom_lti_configurations_path(organization))}" %>
 
 </nav>
