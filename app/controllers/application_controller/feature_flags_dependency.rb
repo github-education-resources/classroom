@@ -9,6 +9,10 @@ class ApplicationController
     not_found unless student_identifier_enabled?
   end
 
+  def ensure_lti_launch_flipper_is_enabled
+    not_found unless lti_launch_enabled?
+  end
+
   def dashboard_search_enabled?
     logged_in? && current_user.feature_enabled?(:dashboard_search)
   end
@@ -65,7 +69,7 @@ class ApplicationController
   helper_method :search_assignments_enabled?
 
   def lti_launch_enabled?
-    GitHubClassroom.flipper[:lti_launch].enabled?
+    logged_in? && current_user.feature_enabled?(:lti_launch)
   end
   helper_method :lti_launch_enabled?
 end
