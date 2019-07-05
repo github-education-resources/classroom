@@ -9,11 +9,6 @@ class ApplicationController
     not_found unless student_identifier_enabled?
   end
 
-  def dashboard_search_enabled?
-    logged_in? && current_user.feature_enabled?(:dashboard_search)
-  end
-  helper_method :dashboard_search_enabled?
-
   def multiple_classrooms_per_org_enabled?
     logged_in? && current_user.feature_enabled?(:multiple_classrooms_per_org)
   end
