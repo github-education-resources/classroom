@@ -278,7 +278,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it "records error stat" do
-        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_invitation.fail")
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_invitation.fail")
         patch :accept, params: { id: invitation.key }
       end
 
@@ -518,17 +518,6 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
     after(:each) do
       AssignmentRepo.destroy_all
-    end
-
-    context "creates a GitHub repo if one doesn't exist" do
-      it "renders #success when no GitHub repo present" do
-        expect_any_instance_of(GitHubRepository)
-          .to receive(:present?)
-          .with(headers: GitHub::APIHeaders.no_cache_no_store)
-          .and_return(false)
-        get :success, params: { id: invitation.key }
-        expect(response).to render_template(:success)
-      end
     end
 
     describe "import resiliency enabled" do

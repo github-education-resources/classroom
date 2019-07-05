@@ -286,12 +286,8 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         it "does not allow user to join" do
           expect_any_instance_of(ApplicationController).to receive(:flash_and_redirect_back_with_message)
           patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
-        end
 
-        it "sends an event to statsd" do
-          expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_invitation.fail")
-
-          patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
+          expect(invitation.status(group).status).to eq("unaccepted")
         end
       end
 
@@ -532,7 +528,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         end
 
         it "returns status" do
-          expect(json["status"]).to_be nil
+          expect(json["status"]).to be_nil
         end
 
         it "doesn't have a repo_url" do
