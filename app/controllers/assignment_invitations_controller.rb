@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable ClassLength
 class AssignmentInvitationsController < ApplicationController
   class InvalidStatusForRouteError < StandardError; end
 
@@ -32,8 +31,7 @@ class AssignmentInvitationsController < ApplicationController
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize
 
-  def setup
-  end
+  def setup; end
 
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
@@ -81,7 +79,6 @@ class AssignmentInvitationsController < ApplicationController
 
   private
 
-  # rubocop:disable MethodLength
   def ensure_submission_repository_exists
     github_repo_exists = current_submission &&
       current_submission
@@ -95,11 +92,9 @@ class AssignmentInvitationsController < ApplicationController
 
     redirect_to setup_assignment_invitation_path
   end
-  # rubocop:enable MethodLength
 
   # rubocop:disable AbcSize
   # rubocop:disable CyclomaticComplexity
-  # rubocop:disable MethodLength
   def route_based_on_status
     case current_invitation_status.status
     when "unaccepted"
@@ -114,7 +109,6 @@ class AssignmentInvitationsController < ApplicationController
   end
   # rubocop:enable AbcSize
   # rubocop:enable CyclomaticComplexity
-  # rubocop:enable MethodLength
 
   def create_submission
     result = current_invitation.redeem_for(current_user)
@@ -150,4 +144,3 @@ class AssignmentInvitationsController < ApplicationController
     GitHubClassroom::Scopes::ASSIGNMENT_STUDENT
   end
 end
-# rubocop:enable ClassLength

@@ -28,8 +28,6 @@ class AssignmentInvitation < ApplicationRecord
   #
   # Returns a AssignmentRepo::Creator::Result.
   #
-  # rubocop:disable MethodLength
-  # rubocop:disable AbcSize
   def redeem_for(invitee)
     if (repo_access = RepoAccess.find_by(user: invitee, organization: organization))
       assignment_repo = AssignmentRepo.find_by(assignment: assignment, repo_access: repo_access)
@@ -43,8 +41,6 @@ class AssignmentInvitation < ApplicationRecord
 
     AssignmentRepo::Creator::Result.pending
   end
-  # rubocop:enable MethodLength
-  # rubocop:enable AbcSize
 
   def to_param
     key

@@ -36,8 +36,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     end
   end
 
-  def setup
-  end
+  def setup; end
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
@@ -100,7 +99,6 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
-  # rubocop:disable Metrics/CyclomaticComplexity
   def route_based_on_status
     status = group_invite_status&.status
     case status
@@ -116,7 +114,6 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable MethodLength
-  # rubocop:enable Metrics/CyclomaticComplexity
 
   def authorize_group_access
     group_id = group_params[:id]

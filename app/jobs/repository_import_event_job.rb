@@ -56,7 +56,6 @@ class RepositoryImportEventJob < ApplicationJob
   # rubocop:disable Metrics/AbcSize
   def handle_group_assignment_repo(group_assignment_repo, status)
     group = group_assignment_repo.group
-    organization = group_assignment_repo.organization
     assignment = group_assignment_repo.assignment
     invitation = assignment.invitation
     invite_status = invitation.status(group)
