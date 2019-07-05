@@ -244,7 +244,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       it "sends an event to statsd" do
         expect(GitHubClassroom.statsd)
           .to receive(:increment)
-          .with("group_exercise_invitation.accept")
+          .with("v2_group_exercise_invitation.accept")
         patch :accept_invitation, params: { id: invitation.key, group: { title: "Code Squad" } }
       end
 
@@ -289,11 +289,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         end
 
         it "sends an event to statsd" do
-          expect(GitHubClassroom.statsd).to receive(:increment).with(
-            "exception.swallowed",
-            tags: [ApplicationController::NotAuthorized.to_s]
-          )
-          expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_invitation.fail")
+          expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_invitation.fail")
 
           patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
         end
@@ -536,7 +532,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         end
 
         it "returns status" do
-          expect(json["status"]).to eq("unaccepted")
+          expect(json["status"]).to_be nil
         end
 
         it "doesn't have a repo_url" do
@@ -573,22 +569,6 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
     after(:each) do
       GroupAssignmentRepo.destroy_all
-    end
-
-    it "renders #successful_invitation" do
-      get :successful_invitation, params: { id: invitation.key }
-      expect(response).to render_template(:successful_invitation)
-    end
-
-    context "delete github repository after accepting a invitation successfully" do
-      before do
-        organization.github_client.delete_repository(@group_assignment_repo.github_repo_id)
-        get :successful_invitation, params: { id: invitation.key }
-      end
-
-      it "deletes the old group assignment repo" do
-        expect { @group_assignment_repo.reload }.to raise_error(ActiveRecord::RecordNotFound)
-      end
     end
 
     context "with group import resiliency enabled" do

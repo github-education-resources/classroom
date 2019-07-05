@@ -195,15 +195,14 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         end
 
         context "previous acceptee" do
-          before(:each) do
-            expect_any_instance_of(AssignmentInvitationsController)
-              .to receive(:current_submission)
-              .and_return(assignment_repo)
-          end
-
           it "redirects to success" do
+            assignment_repo = create(:assignment_repo, assignment: invitation.assignment, user: user)
+            AssignmentRepo::Creator::Result.success(assignment_repo)
+            invitation.status(user).accepted!
+
             get :show, params: { id: invitation.key }
-            expect(response).to redirect_to(success_assignment_invitation_url(invitation))
+
+            expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
           end
         end
       end
@@ -264,7 +263,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
 
     it "sends an event to statsd" do
-      expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_invitation.accept")
+      expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_invitation.accept")
 
       allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result)
 
@@ -519,21 +518,6 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
     after(:each) do
       AssignmentRepo.destroy_all
-    end
-
-    context "github repository deleted after accepting a invitation successfully" do
-      before do
-        organization.github_client.delete_repository(@assignment_repo.github_repo_id)
-        get :success, params: { id: invitation.key }
-      end
-
-      it "deletes the old assignment repo" do
-        expect { @assignment_repo.reload }.to raise_error(ActiveRecord::RecordNotFound)
-      end
-
-      it "creates a new assignment repo for the student" do
-        expect(AssignmentRepo.last.id).not_to eq(@assignment_repo.id)
-      end
     end
 
     context "creates a GitHub repo if one doesn't exist" do
