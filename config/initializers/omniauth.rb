@@ -14,9 +14,9 @@ Rails.application.config.middleware.use OmniAuth::Builder do
 
   provider :lti,
     callback_path: "/auth/lti/launch",
-    setup: lambda do |env|
-      req = Rack::Request.new(env)
-      consumer_key  = req.params["oauth_consumer_key"]
+    setup: (lambda do |env|
+      current_request = Rack::Request.new(env)
+      consumer_key  = current_request.params["oauth_consumer_key"]
       shared_secret = LtiConfiguration
         .find_by(consumer_key: consumer_key)
         .shared_secret
@@ -24,5 +24,5 @@ Rails.application.config.middleware.use OmniAuth::Builder do
       strategy = env["omniauth.strategy"]
       strategy.options.consumer_key = consumer_key
       strategy.options.shared_secret = shared_secret
-    end
+    end)
 end
