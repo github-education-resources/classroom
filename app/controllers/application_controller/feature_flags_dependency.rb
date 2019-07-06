@@ -54,11 +54,6 @@ class ApplicationController
   end
   helper_method :import_resiliency_enabled?
 
-  def download_repositories_enabled?
-    logged_in? && current_user.feature_enabled?(:download_repositories)
-  end
-  helper_method :download_repositories_enabled?
-
   def search_assignments_enabled?
     logged_in? && current_user.feature_enabled?(:search_assignments)
   end
