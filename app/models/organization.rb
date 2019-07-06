@@ -15,6 +15,7 @@ class Organization < ApplicationRecord
 
   belongs_to :organization_webhook
   belongs_to :roster, optional: true
+  belongs_to :lti_configuration, optional: true
 
   has_and_belongs_to_many :users
 
