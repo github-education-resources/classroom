@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   get  "/login/oauth/authorize", to: "oauth#authorize"
   post  "/login/oauth/access_token", to: "oauth#access_token"
 
+  match "/auth/lti/setup",          to: "sessions#lti_setup",     via: %i[get post]
   match "/auth/lti/launch",         to: "sessions#lti_launch",    via: %i[get post]
   match "/auth/:provider/callback", to: "sessions#create",        via: %i[get post]
   match "/auth/failure",            to: "sessions#failure",       via: %i[get post]

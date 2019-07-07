@@ -3,7 +3,7 @@
 class SessionsController < ApplicationController
   skip_before_action :authenticate_user!
   skip_before_action :verify_authenticity_token,  only: [:lti_launch]
-  before_action      :verify_lti_launch_enabled,  only: [:lti_launch]
+  before_action      :verify_lti_launch_enabled,  only: %i[lti_setup lti_launch]
 
   def new
     scopes = session[:required_scopes] || default_required_scopes
@@ -28,6 +28,19 @@ class SessionsController < ApplicationController
     session[:current_scopes] = user.github_client_scopes
 
     redirect_to url
+  end
+
+  def lti_setup
+    consumer_key  = request.params["oauth_consumer_key"]
+    shared_secret = LtiConfiguration
+      .find_by(consumer_key: consumer_key)
+      .shared_secret
+
+    strategy = request.env["omniauth.strategy"]
+    strategy.options.consumer_key = consumer_key
+    strategy.options.shared_secret = shared_secret
+
+    head :ok
   end
 
   # rubocop:disable MethodLength
