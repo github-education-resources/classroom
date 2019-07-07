@@ -4,13 +4,11 @@ module GitHubClassroom
   class LtiMessageStore
     attr_reader :consumer_key
 
-    def initialize(consumer_key: nil, shared_secret: nil, redis_store: nil)
+    def initialize(consumer_key: nil, redis_store: nil)
       raise(ArgumentError, "consumer_key may not be nil") if consumer_key.blank?
-      raise(ArgumentError, "shared_secret may not be nil") if shared_secret.blank?
       raise(ArgumentError, "redis_store may not be nil") if redis_store.blank?
 
       @consumer_key = consumer_key
-      @shared_secret = shared_secret
       @redis_store = redis_store
     end
 

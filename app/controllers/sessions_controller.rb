@@ -35,8 +35,7 @@ class SessionsController < ApplicationController
   def lti_launch
     auth_hash = request.env["omniauth.auth"]
     message_store = GitHubClassroom.lti_message_store(
-      consumer_key: auth_hash.credentials.token,
-      shared_secret: auth_hash.credentials.secret
+      consumer_key: auth_hash.credentials.token
     )
 
     message = GitHubClassroom::LtiMessageStore.construct_message(auth_hash.extra.raw_info)

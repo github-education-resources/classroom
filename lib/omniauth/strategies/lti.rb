@@ -44,10 +44,7 @@ module OmniAuth
       end
 
       credentials do
-        {
-          token: options.consumer_key,
-          secret: options.shared_secret
-        }
+        { token: options.consumer_key }
       end
 
       extra do
