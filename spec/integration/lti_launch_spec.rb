@@ -32,6 +32,38 @@ RSpec.describe "LTI launch", type: :request do
     redis_store.quit
   end
 
+  describe "sessions#lti_setup", :vcr do
+    it "errors when no consumer_key is present" do
+      expect { get auth_lti_setup_path }.to raise_error(ActionController::BadRequest)
+    end
+
+    it "errors when consumer_key is present, no corresponding lti_configuration exists" do
+      LtiConfiguration.stub(:find_by).and_return(nil)
+
+      expect { get auth_lti_setup_path(oauth_consumer_key: lti_configuration.consumer_key) }
+        .to raise_error(ActionController::BadRequest)
+    end
+
+    it "errors when omniauth strategy request env variable is not present" do
+      expect { get auth_lti_setup_path(oauth_consumer_key: lti_configuration.consumer_key) }
+        .to raise_error(ActionController::BadRequest)
+    end
+
+    it "succeeeds" do
+      options = double("options")
+      allow(options).to receive(:consumer_key=)
+      allow(options).to receive(:shared_secret=)
+
+      strategy = double("omniauth.strategy", options: options)
+
+      Rails.application.env_config["omniauth.strategy"] = strategy
+      get auth_lti_setup_path(oauth_consumer_key: lti_configuration.consumer_key)
+      Rails.application.env_config["omniauth.strategy"] = nil
+
+      expect(response).to have_http_status(200)
+    end
+  end
+
   describe "sessions#lti_launch", :vcr do
     it "sets lti_nonce on session on success" do
       get auth_lti_launch_path(oauth_consumer_key: consumer_key)

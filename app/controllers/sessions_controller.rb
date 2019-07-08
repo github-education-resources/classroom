@@ -30,18 +30,25 @@ class SessionsController < ApplicationController
     redirect_to url
   end
 
+  # rubocop:disable AbcSize
   def lti_setup
-    consumer_key  = request.params["oauth_consumer_key"]
-    shared_secret = LtiConfiguration
-      .find_by(consumer_key: consumer_key)
-      .shared_secret
+    consumer_key = request.params["oauth_consumer_key"]
+    raise(ActionController::BadRequest, "consumer_key must be present") if consumer_key.blank?
+
+    lti_configuration = LtiConfiguration.find_by(consumer_key: consumer_key)
+    raise(ActionController::BadRequest, "missing corresponding lti configuration") if lti_configuration.blank?
+
+    shared_secret = lti_configuration.shared_secret
 
     strategy = request.env["omniauth.strategy"]
+    raise(ActionController::BadRequest, "request.env[\"omniauth.strategy\"] must be set") if strategy.blank?
+
     strategy.options.consumer_key = consumer_key
     strategy.options.shared_secret = shared_secret
 
     head :ok
   end
+  # rubocop:enable AbcSize
 
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
