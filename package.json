@@ -9,7 +9,7 @@
     "jquery-readyselector": "git+https://git@github.com/Verba/jquery-readyselector.git",
     "jquery-ujs": " ~1.2.2",
     "jquery.turbolinks": "git+https://git@github.com/kossnocorp/jquery.turbolinks#2.1.0",
-    "primer": "^10.10.5",
+    "primer": "^10.10.4",
     "rails-ujs": "^5.1.1",
     "remodal": "^1.1.1",
     "transliteration": "^1.6.2",
