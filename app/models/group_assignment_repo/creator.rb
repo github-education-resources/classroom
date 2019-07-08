@@ -166,7 +166,7 @@ class GroupAssignmentRepo
     # rubocop:disable AbcSize
     def generate_github_repository_name
       suffix_count    = 0
-      owner           = organization.github_organization.login_no_cache
+      owner           = organization.github_organization.login(use_cache: false)
       repository_name = "#{group_assignment.slug}-#{group.github_team.slug_no_cache}"
       loop do
         name = "#{owner}/#{suffixed_repo_name(repository_name, suffix_count)}"
