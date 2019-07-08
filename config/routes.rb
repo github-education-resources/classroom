@@ -85,10 +85,7 @@ Rails.application.routes.draw do
           patch :remove_organization
         end
 
-        resource :lti_configurations, controller: "orgs/lti_configurations" do
-          get :link_lms_classroom
-          get :lms_configuration
-        end
+        resource :lti_configuration, controller: "orgs/lti_configurations"
       end
 
       resources :groupings, only: %i[show edit update] do
