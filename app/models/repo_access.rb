@@ -44,7 +44,7 @@ class RepoAccess < ApplicationRecord
 
   def remove_organization_member
     github_organization = GitHubOrganization.new(organization.github_client, organization.github_id)
-    github_organization.remove_organization_member(user.uid)
+    github_organization.remove_organization_member(user)
   end
 
   def silently_remove_organization_member
