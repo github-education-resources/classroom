@@ -13,8 +13,7 @@ module Orgs
     private
 
     def current_lti_configuration
-      @current_lti_configuration ||= LtiConfiguration.find_by(organization: current_organization)
-      # @current_lti_configuration ||= current_organization.lti_configuration
+      @current_lti_configuration ||= current_organization.lti_configuration
     end
 
     def ensure_current_lti_configuration
