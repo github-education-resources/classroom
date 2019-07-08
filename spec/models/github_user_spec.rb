@@ -8,7 +8,7 @@ describe GitHubUser do
     @client = oauth_client
   end
 
-  let(:github_user)       { GitHubUser.new(@client, @client.user.id, classroom_resource: classroom_teacher ) }
+  let(:github_user)       { GitHubUser.new(@client, @client.user.id, classroom_resource: classroom_teacher) }
   let(:other_user)        { classroom_student }
   let(:other_github_user) { GitHubUser.new(@client, other_user.uid, classroom_resource: other_user) }
 
