@@ -31,6 +31,7 @@ class GitHubModel
   # options - A Hash of options to pass (optional).
   #
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/BlockLength
   # rubocop:disable MethodLength
   def initialize(client, id_attributes, **options)
     resource = options.delete(:classroom_resource)
@@ -66,8 +67,8 @@ class GitHubModel
 
             api_response = github_response(client, id_attributes.values.compact, no_cache_options)
 
-            local_cached_attributes.each do |attr|
-              resource.assign_attributes("github_#{attr}" => api_response.send(attr))
+            local_cached_attributes.each do |attribute|
+              resource.assign_attributes("github_#{attribute}" => api_response.send(attribute))
             end
 
             resource.save
@@ -88,6 +89,7 @@ class GitHubModel
     after_initialize if respond_to? :after_initialize
   end
   # rubocop:enable MethodLength
+  # rubocop:enable Metrics/BlockLength
   # rubocop:enable Metrics/AbcSize
 
   # Internal: Update this instance's attribute instance variables with

@@ -9,8 +9,8 @@ describe GitHubUser do
   end
 
   let(:github_user)       { GitHubUser.new(@client, @client.user.id, classroom_resource: @client.user) }
-  let(:other_user)        { classroom_student                        }
-  let(:other_github_user) { GitHubUser.new(@client, other_user.uid, classroom_resource: other_user)  }
+  let(:other_user)        { classroom_student }
+  let(:other_github_user) { GitHubUser.new(@client, other_user.uid, classroom_resource: other_user) }
 
   it "responds to all (GitHub) attributes", :vcr do
     gh_user = github_user.client.user(github_user.id)
