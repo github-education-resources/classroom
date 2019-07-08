@@ -8,7 +8,7 @@ describe GitHubUser do
     @client = oauth_client
   end
 
-  let(:github_user)       { GitHubUser.new(@client, @client.user.id, classroom_resource: @client.user) }
+  let(:github_user)       { GitHubUser.new(@client, @client.user.id, classroom_resource: classroom_teacher ) }
   let(:other_user)        { classroom_student }
   let(:other_github_user) { GitHubUser.new(@client, other_user.uid, classroom_resource: other_user) }
 
@@ -21,7 +21,7 @@ describe GitHubUser do
       expect(value).to eql(gh_user.send(attribute))
     end
 
-    expect(WebMock).to have_requested(:get, github_url("/user/#{gh_user.id}")).twice
+    expect(WebMock).to have_requested(:get, github_url("/user/#{gh_user.id}")).once
   end
 
   it "responds to all *_no_cache methods", :vcr do
