@@ -34,7 +34,7 @@ class GitHubUser < GitHubResource
 
   private
 
-  def github_attributes
-    %w[login avatar_url html_url name]
+  def local_cached_attributes
+    %w[avatar_url html_url name login]
   end
 end

@@ -48,7 +48,7 @@ class User < ApplicationRecord
   end
 
   def github_user
-    @github_user ||= GitHubUser.new(github_client, uid)
+    @github_user ||= GitHubUser.new(github_client, uid, classroom_resource: self)
   end
 
   def github_client_scopes

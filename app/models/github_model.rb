@@ -33,6 +33,8 @@ class GitHubModel
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
   def initialize(client, id_attributes, **options)
+    resource = options.delete(:classroom_resource)
+
     attributes = {}.tap do |attr|
       attr[:client]        = client
       attr[:access_token]  = client.access_token
@@ -49,7 +51,30 @@ class GitHubModel
         attr[gh_attr.to_sym] = github_response(client, id_attributes.values.compact, options).send(gh_attr)
       end
 
-      remove_instance_variable("@response")
+      remove_instance_variable("@response") if defined?(@response)
+
+      local_cached_attributes.each do |gh_attr|
+        define_singleton_method(gh_attr) do |use_local_cache: true|
+          field_name = "github_#{gh_attr}".to_sym
+
+          if use_local_cache
+            cached_value = resource.send(field_name)
+            return cached_value if cached_value
+
+            api_response = github_response(client, id_attributes.values.compact, options)
+
+            local_cached_attributes.each do |attr|
+              resource.assign_attributes("github_#{attr}" => api_response.send(attr))
+            end
+
+            resource.save
+
+            resource.send(field_name)
+          else
+            github_response(client, id_attributes.values.compact, options).send(gh_attr)
+          end
+        end
+      end
     end
 
     update(attributes || {})
