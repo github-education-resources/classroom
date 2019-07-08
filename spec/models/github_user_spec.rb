@@ -2,6 +2,7 @@
 
 require "rails_helper"
 
+# rubocop:disable Rails/SkipsModelValidations
 describe GitHubUser do
   before do
     Octokit.reset!
@@ -103,3 +104,4 @@ describe GitHubUser do
     end
   end
 end
+# rubocop:enable Rails/SkipsModelValidations
