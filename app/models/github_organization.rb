@@ -87,7 +87,7 @@ class GitHubOrganization < GitHubResource
   end
 
   def remove_organization_member(user)
-    github_user_login = user.github_user.login(use_local_cache: false)
+    github_user_login = user.github_user.login(use_cache: false)
 
     return if admin?(github_user_login)
 

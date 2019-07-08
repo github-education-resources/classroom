@@ -54,13 +54,13 @@ class GitHubModel
       remove_instance_variable("@response") if defined?(@response)
 
       local_cached_attributes.each do |gh_attr|
-        define_singleton_method(gh_attr) do |use_local_cache: true|
+        define_singleton_method(gh_attr) do |use_cache: true|
           field_name = "github_#{gh_attr}".to_sym
 
           no_cache_options = options.dup
           no_cache_options[:headers] = GitHub::APIHeaders.no_cache_no_store
 
-          if use_local_cache
+          if use_cache
             cached_value = resource.send(field_name)
             return cached_value if cached_value
 
@@ -123,6 +123,8 @@ class GitHubModel
   end
 
   private
+
+  # TODO: We can kill these once we're fully migrated to the local DB cache.
 
   # Internal: Define specified *_no_cache methods.
   #
