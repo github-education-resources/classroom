@@ -57,11 +57,14 @@ class GitHubModel
         define_singleton_method(gh_attr) do |use_local_cache: true|
           field_name = "github_#{gh_attr}".to_sym
 
+          no_cache_options = options.dup
+          no_cache_options[:headers] = GitHub::APIHeaders.no_cache_no_store
+
           if use_local_cache
             cached_value = resource.send(field_name)
             return cached_value if cached_value
 
-            api_response = github_response(client, id_attributes.values.compact, options)
+            api_response = github_response(client, id_attributes.values.compact, no_cache_options)
 
             local_cached_attributes.each do |attr|
               resource.assign_attributes("github_#{attr}" => api_response.send(attr))
@@ -71,7 +74,7 @@ class GitHubModel
 
             resource.send(field_name)
           else
-            github_response(client, id_attributes.values.compact, options).send(gh_attr)
+            github_response(client, id_attributes.values.compact, no_cache_options).send(gh_attr)
           end
         end
       end
