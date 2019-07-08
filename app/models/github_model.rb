@@ -52,8 +52,6 @@ class GitHubModel
         attr[gh_attr.to_sym] = github_response(client, id_attributes.values.compact, options).send(gh_attr)
       end
 
-      remove_instance_variable("@response") if defined?(@response)
-
       local_cached_attributes.each do |gh_attr|
         define_singleton_method(gh_attr) do |use_cache: true|
           field_name = "github_#{gh_attr}".to_sym
@@ -79,6 +77,8 @@ class GitHubModel
           end
         end
       end
+
+      remove_instance_variable("@response") if defined?(@response)
     end
 
     update(attributes || {})
