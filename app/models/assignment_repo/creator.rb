@@ -205,7 +205,7 @@ class AssignmentRepo
     def generate_github_repository_name
       suffix_count = 0
 
-      owner           = organization.github_organization.login(use_cache: false)
+      owner           = organization.github_organization.login_no_cache
       repository_name = "#{assignment.slug}-#{user.github_user.login(use_cache: false)}"
 
       loop do
