@@ -320,16 +320,6 @@ RSpec.describe Orgs::RostersController, type: :controller do
         GitHubClassroom.flipper[:student_identifier].disable
       end
     end
-
-    context "with flipper disabled" do
-      before do
-        get :show, params: { id: organization.slug }
-      end
-
-      it "404s" do
-        expect(response).to have_http_status(:not_found)
-      end
-    end
   end
 
   describe "GET #search_google_classroom", :vcr do
