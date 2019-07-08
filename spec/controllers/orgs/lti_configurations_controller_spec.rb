@@ -11,32 +11,32 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
     GitHubClassroom.flipper[:lti_launch].enable
   end
 
-  describe "GET #link_lms_classroom", :vcr do
+  describe "GET #new" do
     it "returns success status" do
-      get :link_lms_classroom, params: { organization: organization }
+      get :new, params: { organization: organization }
       expect(response).to have_http_status(:success)
     end
   end
 
-  describe "GET #lms_configuration", :vcr do
+  describe "GET #show" do
     it "returns success status" do
-      get :lms_configuration, params: { organization: organization }
+      get :show, params: { organization: organization }
       expect(response).to have_http_status(:success)
     end
   end
 
-  describe "flag is turned off", :vcr do
+  describe "flag is turned off" do
     before(:each) do
       GitHubClassroom.flipper[:lti_launch].disable
     end
 
-    it "returns not found for link_lms_classroom" do
-      get :link_lms_classroom, params: { organization: organization }
+    it "returns not found for #new" do
+      get :new, params: { organization: organization }
       expect(response).to have_http_status(:not_found)
     end
 
-    it "returns not found for lms_configuration" do
-      get :lms_configuration, params: { organization: organization }
+    it "returns not found for #show" do
+      get :show, params: { organization: organization }
       expect(response).to have_http_status(:not_found)
     end
   end
