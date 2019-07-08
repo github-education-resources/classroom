@@ -117,7 +117,8 @@ RSpec.describe Orgs::RostersController, type: :controller do
           before do
             post :create, params: {
               id: organization.slug,
-              identifiers: "    \r\n "
+              identifiers: "    \r\n ",
+              identifier_name: "emails"
             }
 
             @roster = Roster.first
