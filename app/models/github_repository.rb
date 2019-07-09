@@ -161,7 +161,7 @@ class GitHubRepository < GitHubResource
   end
 
   def empty?
-    @client.repository(full_name).size.zero?
+    number_of_commits.zero?
   end
 
   def commits_url(branch)
