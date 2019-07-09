@@ -7,6 +7,7 @@ RSpec.describe Organization, type: :model do
 
   it { should belong_to(:organization_webhook) }
   it { should belong_to(:roster).optional }
+  it { should have_one(:lti_configuration) }
 
   describe "roster association" do
     it "can have a roster" do
