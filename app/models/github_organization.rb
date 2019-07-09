@@ -86,8 +86,8 @@ class GitHubOrganization < GitHubResource
     end
   end
 
-  def remove_organization_member(github_user_id)
-    github_user_login = GitHubUser.new(@client, github_user_id).login
+  def remove_organization_member(user)
+    github_user_login = user.github_user.login(use_cache: false)
 
     return if admin?(github_user_login)
 

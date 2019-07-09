@@ -116,7 +116,7 @@ class AssignmentRepo
       options = {}.tap { |opt| opt[:permission] = "admin" if assignment.students_are_repo_admins? }
 
       github_repository = GitHubRepository.new(organization.github_client, github_repository_id)
-      invitation = github_repository.invite(user.github_user.login_no_cache, options)
+      invitation = github_repository.invite(user.github_user.login(use_cache: false), options)
 
       user.github_user.accept_repository_invitation(invitation.id) if invitation.present?
     rescue GitHub::Error => error
@@ -206,7 +206,7 @@ class AssignmentRepo
       suffix_count = 0
 
       owner           = organization.github_organization.login_no_cache
-      repository_name = "#{assignment.slug}-#{user.github_user.login_no_cache}"
+      repository_name = "#{assignment.slug}-#{user.github_user.login(use_cache: false)}"
 
       loop do
         name = "#{owner}/#{suffixed_repo_name(repository_name, suffix_count)}"

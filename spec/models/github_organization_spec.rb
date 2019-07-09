@@ -34,13 +34,13 @@ describe GitHubOrganization do
   describe "#admin?", :vcr do
     it "verifies if the user is an admin of the organization" do
       user         = organization.users.first
-      github_admin = GitHubUser.new(user.github_client, user.uid)
+      github_admin = GitHubUser.new(user.github_client, user.uid, classroom_resource: user)
       expect(@github_organization.admin?(github_admin.login)).to eql(true)
     end
 
     it "returns false otherwise" do
       user = create(:user, uid: 67)
-      github_admin = GitHubUser.new(user.github_client, user.uid)
+      github_admin = GitHubUser.new(user.github_client, user.uid, classroom_resource: user)
       expect(@github_organization.admin?(github_admin.login)).to be_falsey
     end
   end
