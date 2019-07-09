@@ -52,8 +52,8 @@
   <% if github_template_repos_enabled? %>
     <div id="import-options" style=<%= "display:none;" if not @assignment.starter_code? %>>
       <div class="form-checkbox">
-        <label><%= f.radio_button :template_repos_enabled, true %> Import starter code using a template repository (recommended)</label>
-        <span class="note">Starter code repository should be a template repository. Increases student repository creation and code import speed dramatically.</span>
+        <label><%= f.radio_button :template_repos_enabled, true, checked: (true if @assignment.new_record?) %> Import starter code using a template repository (recommended)</label>
+        <span class="note">Starter code repository should be a <%= link_to "template repository", "https://help.github.com/en/articles/creating-a-template-repository", target: "_blank" %>. Increases student repository creation and code import speed dramatically.</span>
       </div>
 
       <div class="form-checkbox">
