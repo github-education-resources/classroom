@@ -25,12 +25,6 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
 
     context "organization has private repos" do
       it "returns true" do
-        allow_any_instance_of(GitHubOrganization)
-          .to receive(:plan)
-          .and_return(
-            owned_private_repos: 1,
-            private_repos: 2
-          )
         expect(creator.verify_organization_has_private_repos_available!).to eq(true)
       end
     end
