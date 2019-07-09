@@ -14,6 +14,5 @@ Rails.application.config.middleware.use OmniAuth::Builder do
 
   provider :lti,
     callback_path: "/auth/lti/launch",
-    consumer_key: Rails.application.secrets.lti_consumer_key,
-    shared_secret: Rails.application.secrets.lti_shared_secret
+    setup: true
 end

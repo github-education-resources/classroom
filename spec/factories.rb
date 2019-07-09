@@ -118,4 +118,12 @@ FactoryBot.define do
       end
     end
   end
+
+  factory :lti_configuration do
+    organization
+
+    consumer_key { SecureRandom.uuid }
+    shared_secret { SecureRandom.uuid }
+    lms_link { "www.example.com" }
+  end
 end

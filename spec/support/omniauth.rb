@@ -16,12 +16,17 @@ VCR.use_cassette "auth_user" do
   )
 
   OmniAuth.config.mock_auth[:lti] = OmniAuth::AuthHash.new(
-    "provider" => "lti",
-    "uid"      => "mock_lti_uid",
+    provider: "lti",
+    uid: "mock_lti_uid",
 
-    "extra" => { raw_info: {} },
+    extra: {
+      raw_info: {
+        oauth_nonce: "mock_nonce",
+        oauth_timestamp: DateTime.now.to_i.to_s
+      }
+    },
 
-    "info"  => {
+    info: {
       name: "mock_name",
       user_id: "mock_lti_uid",
       email: "mock_email",
@@ -30,7 +35,10 @@ VCR.use_cassette "auth_user" do
       image: "mock_image_url"
     },
 
-    "credentials" => { "token" => token }
+    credentials: {
+      token: "mock_token",
+      secret: "mock_secret"
+    }
   )
 end
 
