@@ -95,7 +95,7 @@ class Assignment < ApplicationRecord
   end
 
   def starter_code_repository_is_a_template_repository
-    return unless starter_code? && use_template_repos?
+    return unless use_template_repos?
 
     options = { accept: "application/vnd.github.baptiste-preview" }
     endpoint_url = "https://api.github.com/repositories/#{starter_code_repo_id}"
@@ -103,7 +103,7 @@ class Assignment < ApplicationRecord
 
     errors.add(
       :starter_code_repository,
-      "is not a template repository. Make it a template repository to use template repository cloning."
+      "is not a template repository. Make it a template repository to use template cloning."
     ) unless starter_code_github_repository.is_template
   end
 end

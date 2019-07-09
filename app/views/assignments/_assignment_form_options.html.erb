@@ -43,21 +43,23 @@
 
 <dl class="<%= view.form_class_for(:starter_code_repository) %>">
   <dt><label>Add your starter code from GitHub <small>(optional)</small> </label></dt>
-  <dd><input class="textfield js-autocomplete-textfield form-control input-contrast input-block" type="text" name="repo_name" value="<%= @assignment.starter_code_repository.try(:full_name) %>" placeholder="<%= @assignment.starter_code_repository.try(:full_name) || 'Search repositories'%>" autocomplete="off" data-autocomplete-search-endpoint="github_repos"></dd>
+  <dd><input class="textfield js-autocomplete-textfield form-control input-contrast input-block" type="text" name="repo_name" value="<%= @assignment.starter_code_repository.try(:full_name) %>" placeholder="<%= @assignment.starter_code_repository.try(:full_name) || 'Search repositories'%>" autocomplete="off" data-autocomplete-search-endpoint="github_repos" oninput="import_options(this.value)"></dd>
   <dd class="dd-autocomplete-suggestions"><%= render_autocomplete_suggestions_container %></dd>
   <input class="js-autocomplete-resource-id" type="hidden" name="repo_id" />
 
   <%= render('shared/form_error', errors: view.error_message_for(:starter_code_repository)) if view.errors_for?(:starter_code_repository) %>
 
   <% if github_template_repos_enabled? %>
-    <div class="form-checkbox">
-      <label><%= f.radio_button :template_repos_enabled, true %> Import starter code using a template repository</label>
-      <span class="note">(Recommended) Starter code repository should be a template repository. Increases student repository creation and code import speed dramatically.</span>
-    </div>
+    <div id="import-options" style="<%= "display:none;" if not @assignment.starter_code? %>">
+      <div class="form-checkbox">
+        <label><%= f.radio_button :template_repos_enabled, true %> Import starter code using a template repository</label>
+        <span class="note">(Recommended) Starter code repository should be a template repository. Increases student repository creation and code import speed dramatically.</span>
+      </div>
 
-    <div class="form-checkbox">
-      <label><%= f.radio_button :template_repos_enabled, false %> Import starter code using source importer</label>
-      <span class="note">Slower than template repository method, but copies branches from starter code repository.</span>
+      <div class="form-checkbox">
+        <label><%= f.radio_button :template_repos_enabled, false %> Import starter code using source importer</label>
+        <span class="note">Slower than template repository method, but copies branches from starter code repository.</span>
+      </div>
     </div>
   <% end %>
 </dl>
