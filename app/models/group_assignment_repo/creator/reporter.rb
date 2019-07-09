@@ -36,9 +36,9 @@ class GroupAssignmentRepo
 
       # Reports the elapsed time to Datadog
       #
-      def report_time(start_time, assignment)
+      def report_time(start_time, group_assignment)
         duration_in_millseconds = (Time.zone.now - start_time) * 1_000
-        if assignment.starter_code?
+        if group_assignment.starter_code?
           GitHubClassroom.statsd.timing("v2_group_exercise_repo.create.time.with_importer", duration_in_millseconds)
         else
           GitHubClassroom.statsd.timing("v2_group_exercise_repo.create.time", duration_in_millseconds)
