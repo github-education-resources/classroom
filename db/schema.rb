@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190618173308) do
+ActiveRecord::Schema.define(version: 20190708134457) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -163,6 +163,17 @@ ActiveRecord::Schema.define(version: 20190618173308) do
     t.index ["user_id"], name: "index_invite_statuses_on_user_id"
   end
 
+  create_table "lti_configurations", force: :cascade do |t|
+    t.text "consumer_key", null: false
+    t.text "shared_secret", null: false
+    t.text "lms_link", null: false
+    t.bigint "organization_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["consumer_key"], name: "index_lti_configurations_on_consumer_key", unique: true
+    t.index ["organization_id"], name: "index_lti_configurations_on_organization_id"
+  end
+
   create_table "organization_webhooks", force: :cascade do |t|
     t.integer "github_id"
     t.integer "github_organization_id", null: false
@@ -235,6 +246,10 @@ ActiveRecord::Schema.define(version: 20190618173308) do
     t.boolean "site_admin", default: false
     t.datetime "last_active_at", null: false
     t.string "github_global_relay_id"
+    t.string "github_login"
+    t.string "github_name"
+    t.string "github_avatar_url"
+    t.string "github_html_url"
     t.index ["token"], name: "index_users_on_token", unique: true
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end

@@ -119,7 +119,7 @@ class Organization
       raise Result::Error, "Cannot create an organization with no users" if users.empty?
 
       users.each do |user|
-        login = user.github_user.login_no_cache
+        login = user.github_user.login(use_cache: false)
         next if GitHubOrganization.new(user.github_client, github_id).admin?(login)
         raise Result::Error, "@#{login} is not a GitHub admin for this Organization."
       end
