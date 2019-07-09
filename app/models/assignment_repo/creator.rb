@@ -150,6 +150,8 @@ class AssignmentRepo
         accept: "application/vnd.github.baptiste-preview"
       }
       client.post("#{github_repository_url}/generate", options)
+    rescue GitHub::Error => error_message
+      raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
     end
 
     # Public: Push starter code to the newly created GitHub

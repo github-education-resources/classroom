@@ -116,6 +116,8 @@ class GroupAssignmentRepo
         accept: "application/vnd.github.baptiste-preview"
       }
       client.post("#{github_repository_url}/generate", options)
+    rescue GitHub::Error => error
+      raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
     end
 
     def add_team_to_github_repository!(github_repository_id)
