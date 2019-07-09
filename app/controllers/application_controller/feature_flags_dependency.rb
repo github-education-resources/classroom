@@ -10,7 +10,7 @@ class ApplicationController
   end
 
   def ensure_lti_launch_flipper_is_enabled
-    not found unless lti_launch_enabled?
+    not_found unless lti_launch_enabled?
   end
 
   def dashboard_search_enabled?
