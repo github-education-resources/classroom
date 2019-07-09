@@ -6,8 +6,8 @@ module Orgs
     before_action :ensure_current_lti_configuration, except: %i[new create]
 
     def create
-      # Create a new lti configuration for the current organization here
-      # redirect_to lti_configuration_path(current_organization) after
+      # TODO: Create a new lti configuration for the current organization here
+      # TODO: redirect_to lti_configuration_path(current_organization) after
     end
 
     private
