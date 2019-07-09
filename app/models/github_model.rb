@@ -31,8 +31,11 @@ class GitHubModel
   # options - A Hash of options to pass (optional).
   #
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/BlockLength
   # rubocop:disable MethodLength
   def initialize(client, id_attributes, **options)
+    resource = options.delete(:classroom_resource)
+
     attributes = {}.tap do |attr|
       attr[:client]        = client
       attr[:access_token]  = client.access_token
@@ -49,7 +52,33 @@ class GitHubModel
         attr[gh_attr.to_sym] = github_response(client, id_attributes.values.compact, options).send(gh_attr)
       end
 
-      remove_instance_variable("@response")
+      local_cached_attributes.each do |gh_attr|
+        define_singleton_method(gh_attr) do |use_cache: true|
+          field_name = "github_#{gh_attr}".to_sym
+
+          no_cache_options = options.dup
+          no_cache_options[:headers] = GitHub::APIHeaders.no_cache_no_store
+
+          if use_cache
+            cached_value = resource.send(field_name)
+            return cached_value if cached_value
+
+            api_response = github_response(client, id_attributes.values.compact, no_cache_options)
+
+            local_cached_attributes.each do |attribute|
+              resource.assign_attributes("github_#{attribute}" => api_response.send(attribute))
+            end
+
+            resource.save
+
+            resource.send(field_name)
+          else
+            github_response(client, id_attributes.values.compact, no_cache_options).send(gh_attr)
+          end
+        end
+      end
+
+      remove_instance_variable("@response") if defined?(@response)
     end
 
     update(attributes || {})
@@ -60,6 +89,7 @@ class GitHubModel
     after_initialize if respond_to? :after_initialize
   end
   # rubocop:enable MethodLength
+  # rubocop:enable Metrics/BlockLength
   # rubocop:enable Metrics/AbcSize
 
   # Internal: Update this instance's attribute instance variables with
@@ -95,6 +125,8 @@ class GitHubModel
   end
 
   private
+
+  # TODO: We can kill these once we're fully migrated to the local DB cache.
 
   # Internal: Define specified *_no_cache methods.
   #
