@@ -134,8 +134,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           text: subject::IMPORT_STARTER_CODE,
           status: "importing_starter_code",
           status_text: "Import started",
-          repo_url: "https://github.com/#{organization.github_organization.login}/learn-elm-"\
-            "#{teacher.github_user.login}"
+          repo_url: "https://github.com/#{organization.github_organization.login}/learn-elm-EDONTestTeacher"
         )
     end
 
