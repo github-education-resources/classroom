@@ -9,6 +9,10 @@ class ApplicationController
     not_found unless student_identifier_enabled?
   end
 
+  def ensure_lti_launch_flipper_is_enabled
+    not found unless lti_launch_enabled?
+  end
+
   def dashboard_search_enabled?
     logged_in? && current_user.feature_enabled?(:dashboard_search)
   end
