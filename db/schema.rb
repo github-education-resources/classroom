@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190702222417) do
+ActiveRecord::Schema.define(version: 20190708134457) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -246,6 +246,10 @@ ActiveRecord::Schema.define(version: 20190702222417) do
     t.boolean "site_admin", default: false
     t.datetime "last_active_at", null: false
     t.string "github_global_relay_id"
+    t.string "github_login"
+    t.string "github_name"
+    t.string "github_avatar_url"
+    t.string "github_html_url"
     t.index ["token"], name: "index_users_on_token", unique: true
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end

@@ -4,7 +4,7 @@ class User < ApplicationRecord
   include Flippable
   include GraphQLNode
 
-  update_index("user#user") { self }
+  # update_index("user#user") { self }
 
   has_many :assignment_repos
   has_many :repo_accesses, dependent: :destroy
@@ -48,7 +48,7 @@ class User < ApplicationRecord
   end
 
   def github_user
-    @github_user ||= GitHubUser.new(github_client, uid)
+    @github_user ||= GitHubUser.new(github_client, uid, classroom_resource: self)
   end
 
   def github_client_scopes
