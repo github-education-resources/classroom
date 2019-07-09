@@ -5,7 +5,6 @@ require "rails_helper"
 describe GitHubClassroom::LtiMessageStore do
   subject { described_class }
   let(:consumer_key)  { "consumer_key" }
-  let(:shared_secret) { "shared_secret" }
   let(:redis_store)   { Redis.new }
   let(:lti_launch_params) do
     {
@@ -43,23 +42,18 @@ describe GitHubClassroom::LtiMessageStore do
 
   context "without necessary initializtion params" do
     it "should error when consumer_key is not present" do
-      expect { subject.new(shared_secret: shared_secret, redis_store: redis_store) }
-        .to raise_error(ArgumentError)
-    end
-
-    it "should error when shared_secret is not present" do
-      expect { subject.new(consumer_key: consumer_key, redis_store: redis_store) }
+      expect { subject.new(redis_store: redis_store) }
         .to raise_error(ArgumentError)
     end
 
     it "should error when redis_store is not present" do
-      expect { subject.new(consumer_key: consumer_key, shared_secret: shared_secret) }
+      expect { subject.new(consumer_key: consumer_key) }
         .to raise_error(ArgumentError)
     end
   end
 
   context "with necessary initialization params" do
-    let(:instance) { subject.new(consumer_key: consumer_key, shared_secret: shared_secret, redis_store: redis_store) }
+    let(:instance) { subject.new(consumer_key: consumer_key, redis_store: redis_store) }
 
     it "should initialize" do
       expect(instance).to be_an_instance_of(subject)
