@@ -3,8 +3,8 @@
 require "rails_helper"
 
 RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
-  let(:organization) { classroom_org                                   }
-  let(:user)         { classroom_teacher                               }
+  let(:organization) { classroom_org }
+  let(:user)         { classroom_teacher }
 
   before(:each) do
     sign_in_as(user)
