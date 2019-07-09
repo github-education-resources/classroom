@@ -9,6 +9,8 @@ module GroupAssignmentRepoView
     end
 
     def github_team_members
+      return [] if assignment_repo.group.nil?
+
       assignment_repo.group.repo_accesses.map(&:user)
     end
 

@@ -36,6 +36,7 @@ class GroupAssignment < ApplicationRecord
                              message: "should only contain letters, numbers, dashes and underscores" }
 
   validate :uniqueness_of_slug_across_organization
+  validate :max_teams_less_than_group_count
 
   alias_attribute :invitation, :group_assignment_invitation
   alias_attribute :repos, :group_assignment_repos
@@ -66,5 +67,14 @@ class GroupAssignment < ApplicationRecord
   def uniqueness_of_slug_across_organization
     return if Assignment.where(slug: slug, organization: organization).blank?
     errors.add(:slug, :taken)
+  end
+
+  def max_teams_less_than_group_count
+    return unless max_teams.present? && grouping.present? && max_teams < group_count = grouping.groups.count
+    if new_record?
+      errors.add(:max_teams, "is less than the number of teams in the existing set you've selected (#{group_count})")
+    else
+      errors.add(:max_teams, "is less than the number of existing teams (#{group_count})")
+    end
   end
 end
