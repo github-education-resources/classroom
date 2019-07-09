@@ -84,6 +84,6 @@ class OrganizationDefaultRepositoryPermissionMigrator
 
   def organization_admin_user?(user)
     github_organization = GitHubOrganization.new(user.github_client, organization.github_id)
-    github_organization.admin?(user.github_user.login_no_cache)
+    github_organization.admin?(user.github_user.login(use_cache: false))
   end
 end
