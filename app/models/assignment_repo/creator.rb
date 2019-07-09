@@ -141,7 +141,6 @@ class AssignmentRepo
       client = assignment.creator.github_client
       github_repository_url = client.get("https://api.github.com/repositories/#{assignment.starter_code_repo_id}").url
       repository_name = generate_github_repository_name
-
       options = {
         name: repository_name,
         owner: organization.github_organization.login,
@@ -149,6 +148,7 @@ class AssignmentRepo
         description: "#{repository_name} created by GitHub Classroom",
         accept: "application/vnd.github.baptiste-preview"
       }
+
       client.post("#{github_repository_url}/generate", options)
     rescue GitHub::Error => error_message
       raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
