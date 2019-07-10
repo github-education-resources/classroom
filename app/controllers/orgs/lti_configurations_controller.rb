@@ -6,8 +6,13 @@ module Orgs
     before_action :ensure_current_lti_configuration, only: :show
 
     def create
-      # TODO: Create a new lti configuration for the current organization here
-      # TODO: redirect_to lti_configuration_path(current_organization) after
+      lti_configuration = LtiConfiguration.new
+      lti_configuration.organization = current_organization
+      lti_configuration.consumer_key = SecureRandom.uuid
+      lti_configuration.shared_secret = SecureRandom.uuid
+      lti_configuration.lms_link = ""
+      lti_configuration.save!
+      redirect_to info_lti_configuration_path(current_organization)
     end
 
     def show; end
