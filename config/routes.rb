@@ -77,7 +77,7 @@ Rails.application.routes.draw do
         get   "settings/teams",       to: "organizations#show_groupings"
         delete "users/:user_id",      to: "organizations#remove_user", as: "remove_user"
 
-        resource :roster, only: %i[show new create index], controller: "orgs/rosters" do
+        resource :roster, only: %i[show new create], controller: "orgs/rosters" do
           patch :link
           patch :unlink
           patch :delete_entry
