@@ -6,6 +6,7 @@ class AssignmentsController < ApplicationController
   include StarterCode
 
   before_action :set_assignment, except: %i[new create]
+  before_action :set_list_type,      only: %i[show]
   before_action :set_filter_options, only: %i[show]
   before_action :set_unlinked_users, only: %i[show]
 
@@ -129,8 +130,12 @@ class AssignmentsController < ApplicationController
     @assignment = @organization.assignments.includes(:assignment_invitation).find_by!(slug: params[:id])
   end
 
+  def set_list_type
+    @list_type = @organization.roster ? :roster_entries : :assignment_repos
+  end
+
   def set_filter_options
-    @assignment_sort_modes = RosterEntry.sort_modes
+    @assignment_sort_modes = @list_type == :roster_entries ? RosterEntry.sort_modes : AssignmentRepo.sort_modes
 
     @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
     @query = params[:query]
