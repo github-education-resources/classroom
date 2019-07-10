@@ -3,8 +3,6 @@
 # rubocop:disable Metrics/ClassLength
 module Orgs
   class RostersController < Orgs::Controller
-    before_action :ensure_student_identifier_flipper_is_enabled
-
     before_action :ensure_current_roster,             except: %i[new create]
     before_action :ensure_current_roster_entry,       except: %i[show new create remove_organization add_students]
     before_action :ensure_enough_members_in_roster,   only: [:delete_entry]

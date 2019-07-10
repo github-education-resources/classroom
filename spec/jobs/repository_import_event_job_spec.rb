@@ -147,31 +147,7 @@ RSpec.describe RepositoryImportEventJob, type: :job do
       GroupAssignment.destroy_all
     end
 
-    it "doesn't change the invite_status" do
-      status = group_invite_status.status
-      subject.perform_now(success_payload)
-      expect(group_invite_status.reload.status).to eq(status)
-    end
-
-    it "doesn't report any stats" do
-      expect(GitHubClassroom.statsd).to_not receive(:increment)
-      subject.perform_now(success_payload)
-    end
-
-    it "doesn't broadcast" do
-      expect { subject.perform_now(success_payload) }
-        .to_not have_broadcasted_to(individual_channel)
-    end
-
     context "with group_import_resiliency enabled" do
-      before do
-        GitHubClassroom.flipper[:group_import_resiliency].enable
-      end
-
-      after do
-        GitHubClassroom.flipper[:group_import_resiliency].disable
-      end
-
       context "with source import success" do
         it "sets invite_status to completed" do
           subject.perform_now(success_payload)
