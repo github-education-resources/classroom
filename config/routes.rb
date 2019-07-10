@@ -84,6 +84,10 @@ Rails.application.routes.draw do
           patch :add_students
           patch :remove_organization
         end
+
+        resource :lti_configuration, only: %i[show create edit], controller: "orgs/lti_configurations" do
+          get :info
+        end
       end
 
       resources :groupings, only: %i[show edit update] do
