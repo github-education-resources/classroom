@@ -114,7 +114,7 @@ class GroupAssignmentRepo
         accept: "application/vnd.github.baptiste-preview"
       }
 
-      client.post("https://api.github.com/repositories/#{assignment.starter_code_repo_id}/generate", options)
+      client.post("https://api.github.com/repositories/#{group_assignment.starter_code_repo_id}/generate", options)
     rescue GitHub::Error => error
       raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
     end
