@@ -23,13 +23,18 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
     end
 
     context "with flipper enabled" do
+      render_views 
       before(:each) do
         GitHubClassroom.flipper[:lti_launch].enable
+        get :info, params: { id: organization.slug }
       end
 
       it "returns success status" do
-        get :info, params: { id: organization.slug }
         expect(response).to have_http_status(:success)
+      end
+
+      it "renders info template" do
+        expect(response).to render_template(:info)
       end
     end
   end
@@ -54,11 +59,15 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       context "with lti_configuration present" do
         before(:each) do
           create(:lti_configuration, organization: organization)
+          get :show, params: { id: organization.slug }
         end
 
         it "returns success status" do
-          get :show, params: { id: organization.slug }
           expect(response).to have_http_status(:success)
+        end
+
+        it "renders show template" do
+          expect(response).to render_template(:show)
         end
       end
 
