@@ -63,9 +63,9 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       end
 
       context "with no existing lti_configuration" do
-        it "redirects to new" do
+        it "redirects to info" do
           get :show, params: { id: organization.slug }
-          expect(response).to redirect_to(new_lti_configuration_path(organization))
+          expect(response).to redirect_to(info_lti_configuration_path(organization))
         end
       end
     end
