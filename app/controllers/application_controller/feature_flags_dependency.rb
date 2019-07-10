@@ -5,6 +5,10 @@ class ApplicationController
     not_found unless team_management_enabled?
   end
 
+  def ensure_lti_launch_flipper_is_enabled
+    not_found unless lti_launch_enabled?
+  end
+
   def dashboard_search_enabled?
     logged_in? && current_user.feature_enabled?(:dashboard_search)
   end
