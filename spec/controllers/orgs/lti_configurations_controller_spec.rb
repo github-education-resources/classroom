@@ -23,7 +23,6 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
     end
 
     context "with flipper enabled" do
-      render_views 
       before(:each) do
         GitHubClassroom.flipper[:lti_launch].enable
         get :info, params: { id: organization.slug }
