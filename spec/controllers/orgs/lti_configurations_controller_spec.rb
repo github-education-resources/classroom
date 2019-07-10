@@ -10,14 +10,14 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
     sign_in_as(user)
   end
 
-  describe "GET #new", :vcr do
+  describe "GET #info", :vcr do
     context "with flipper disabled" do
       before(:each) do
         GitHubClassroom.flipper[:lti_launch].disable
       end
 
       it "returns not_found" do
-        get :new, params: { id: organization.slug }
+        get :info, params: { id: organization.slug }
         expect(response).to have_http_status(:not_found)
       end
     end
@@ -28,7 +28,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       end
 
       it "returns success status" do
-        get :new, params: { id: organization.slug }
+        get :info, params: { id: organization.slug }
         expect(response).to have_http_status(:success)
       end
     end
