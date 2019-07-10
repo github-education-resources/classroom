@@ -83,68 +83,137 @@ RSpec.describe GroupAssignmentRepo::Creator do
       group_assignment.invitation.status(group).waiting!
     end
     describe "successful creation" do
-      after(:each) do
-        GroupAssignmentRepo.destroy_all
-      end
-
-      it "creates a GroupAssignmentRepo with a group" do
-        result = GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
-
-        expect(result.success?).to be_truthy
-        expect(result.group_assignment_repo.group_assignment).to eql(group_assignment)
-        expect(result.group_assignment_repo.group).to eql(group)
-        expect(result.group_assignment_repo.github_global_relay_id).to be_truthy
-      end
-
-      it "tracks the how long it too to be created" do
-        expect(GitHubClassroom.statsd).to receive(:timing)
-        GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
-      end
-
-      it "tracks create success stat" do
-        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.success")
-        expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.create.success")
-        expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.import.started")
-        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
-        GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
-      end
-
-      context "github repository with the same name already exists" do
-        before do
-          @result = GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
-          group_assignment_repo = @result.group_assignment_repo
-
-          @original_repository = organization.github_client.repository(group_assignment_repo.github_repo_id)
-          group_assignment_repo.delete
-        end
-
-        after do
-          organization.github_client.delete_repository(@original_repository.id)
+      context "with source importer" do
+        after(:each) do
           GroupAssignmentRepo.destroy_all
         end
 
-        it "new repository name has expected suffix" do
-          GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
-          expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
-            .with(body: /^.*#{@original_repository.name}-1.*$/)
-        end
-      end
-      describe "broadcasts" do
-        it "creating_repo" do
-          expect { subject.perform(group_assignment: group_assignment, group: group) }
-            .to have_broadcasted_to(channel)
-            .with(text: subject::CREATE_REPO, status: "creating_repo", repo_url: nil)
+        it "creates a GroupAssignmentRepo with a group" do
+          result = GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
+
+          expect(result.success?).to be_truthy
+          expect(result.group_assignment_repo.group_assignment).to eql(group_assignment)
+          expect(result.group_assignment_repo.group).to eql(group)
+          expect(result.group_assignment_repo.github_global_relay_id).to be_truthy
         end
 
-        it "importing_starter_code" do
-          slug = group.github_team.slug
-          expect { subject.perform(group_assignment: group_assignment, group: group) }
-            .to have_broadcasted_to(channel)
-            .with(
-              text: subject::IMPORT_STARTER_CODE,
-              status: "importing_starter_code",
-              repo_url: "https://github.com/#{organization.github_organization.login}/learn-javascript-#{slug}"
-            )
+        it "tracks the how long it too to be created" do
+          expect(GitHubClassroom.statsd).to receive(:timing)
+          GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
+        end
+
+        it "tracks create success stat" do
+          expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.success")
+          expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.create.success")
+          expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.import.started")
+          expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
+          GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
+        end
+
+        context "github repository with the same name already exists" do
+          before do
+            @result = GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
+            group_assignment_repo = @result.group_assignment_repo
+
+            @original_repository = organization.github_client.repository(group_assignment_repo.github_repo_id)
+            group_assignment_repo.delete
+          end
+
+          after do
+            organization.github_client.delete_repository(@original_repository.id)
+            GroupAssignmentRepo.destroy_all
+          end
+
+          it "new repository name has expected suffix" do
+            GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
+            expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
+              .with(body: /^.*#{@original_repository.name}-1.*$/)
+          end
+        end
+        describe "broadcasts" do
+          it "creating_repo" do
+            expect { subject.perform(group_assignment: group_assignment, group: group) }
+              .to have_broadcasted_to(channel)
+              .with(text: subject::CREATE_REPO, status: "creating_repo", repo_url: nil)
+          end
+
+          it "importing_starter_code" do
+            slug = group.github_team.slug
+            expect { subject.perform(group_assignment: group_assignment, group: group) }
+              .to have_broadcasted_to(channel)
+              .with(
+                text: subject::IMPORT_STARTER_CODE,
+                status: "importing_starter_code",
+                repo_url: "https://github.com/#{organization.github_organization.login}/learn-javascript-#{slug}"
+              )
+          end
+        end
+      end
+
+      context "with template repos" do
+        let(:group_assignment) do
+          create(
+            :group_assignment,
+            grouping: grouping,
+            title: "Learn JavaScript",
+            organization: organization,
+            public_repo: true,
+            starter_code_repo_id: 141379603,
+            template_repos_enabled: true
+          )
+        end
+
+        after(:each) do
+          GroupAssignmentRepo.destroy_all
+        end
+
+        it "creates a GroupAssignmentRepo with a group" do
+          result = GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
+
+          expect(result.success?).to be_truthy
+          expect(result.group_assignment_repo.group_assignment).to eql(group_assignment)
+          expect(result.group_assignment_repo.group).to eql(group)
+          expect(result.group_assignment_repo.github_global_relay_id).to be_truthy
+        end
+
+        it "tracks the how long it too to be created" do
+          expect(GitHubClassroom.statsd).to receive(:timing)
+          GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
+        end
+
+        it "tracks create success stat" do
+          expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.success")
+          expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.create.success")
+          expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
+          GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
+        end
+
+        context "github repository with the same name already exists" do
+          before do
+            @result = GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
+            group_assignment_repo = @result.group_assignment_repo
+
+            @original_repository = organization.github_client.repository(group_assignment_repo.github_repo_id)
+            group_assignment_repo.delete
+          end
+
+          after do
+            organization.github_client.delete_repository(@original_repository.id)
+            GroupAssignmentRepo.destroy_all
+          end
+
+          it "new repository name has expected suffix" do
+            GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
+            expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
+              .with(body: /^.*#{@original_repository.name}-1.*$/)
+          end
+        end
+        describe "broadcasts" do
+          it "creating_repo" do
+            expect { subject.perform(group_assignment: group_assignment, group: group) }
+              .to have_broadcasted_to(channel)
+              .with(text: subject::CREATE_REPO, status: "creating_repo", repo_url: nil)
+          end
         end
       end
     end
