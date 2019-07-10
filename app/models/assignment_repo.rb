@@ -2,6 +2,7 @@
 
 class AssignmentRepo < ApplicationRecord
   include AssignmentRepoable
+  include Searchable
 
   update_index("assignment_repo#assignment_repo") { self }
 
@@ -22,6 +23,13 @@ class AssignmentRepo < ApplicationRecord
   delegate :github_user,                    to: :user
   delegate :default_branch, :commits,       to: :github_repository
   delegate :github_team_id,                 to: :repo_access, allow_nil: true
+
+
+  scope :search_by_github_login, ->(query) { joins(:user).where("users.github_login ILIKE ?", "%#{query}%") }
+
+  def self.search_mode
+    :search_by_github_login
+  end
 
   # Public: This method is used for legacy purposes
   # until we can get the transition finally completed
