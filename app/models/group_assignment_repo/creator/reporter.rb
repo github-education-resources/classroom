@@ -42,6 +42,7 @@ class GroupAssignmentRepo
           GitHubClassroom.statsd.timing("v2_group_exercise_repo.create.time.with_importer", duration_in_millseconds)
         else
           GitHubClassroom.statsd.timing("v2_group_exercise_repo.create.time", duration_in_millseconds)
+          GitHubClassroom.statsd.timing("group_exercise_repo.create.time", duration_in_millseconds)
         end
       end
     end
