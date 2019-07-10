@@ -3,7 +3,7 @@
 module Orgs
   class LtiConfigurationsController < Orgs::Controller
     before_action :ensure_lti_launch_flipper_is_enabled
-    # before_action :ensure_current_lti_configuration, only: :show
+    before_action :ensure_current_lti_configuration, only: :show
 
     def create
       # TODO: Create a new lti configuration for the current organization here
@@ -14,7 +14,7 @@ module Orgs
 
     def info; end
 
-    def edit; end
+    def edit;
 
     private
 
