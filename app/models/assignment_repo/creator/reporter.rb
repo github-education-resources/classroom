@@ -36,7 +36,7 @@ class AssignmentRepo
       #
       def report_time(start_time, assignment)
         duration_in_millseconds = (Time.zone.now - start_time) * 1_000
-        if group_assignment.starter_code?
+        if assignment.starter_code?
           GitHubClassroom.statsd.timing("exercise_repo.create.time.with_importer", duration_in_millseconds)
         else
           GitHubClassroom.statsd.timing("v2_exercise_repo.create.time", duration_in_millseconds)
