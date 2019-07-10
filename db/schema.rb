@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190618173308) do
+ActiveRecord::Schema.define(version: 20190709163639) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,6 +56,7 @@ ActiveRecord::Schema.define(version: 20190618173308) do
     t.string "slug", null: false
     t.boolean "students_are_repo_admins", default: false, null: false
     t.boolean "invitations_enabled", default: true
+    t.boolean "template_repos_enabled"
     t.index ["deleted_at"], name: "index_assignments_on_deleted_at"
     t.index ["organization_id"], name: "index_assignments_on_organization_id"
     t.index ["slug"], name: "index_assignments_on_slug"
@@ -111,6 +112,7 @@ ActiveRecord::Schema.define(version: 20190618173308) do
     t.boolean "students_are_repo_admins", default: false, null: false
     t.boolean "invitations_enabled", default: true
     t.integer "max_teams"
+    t.boolean "template_repos_enabled"
     t.index ["deleted_at"], name: "index_group_assignments_on_deleted_at"
     t.index ["organization_id"], name: "index_group_assignments_on_organization_id"
     t.index ["slug"], name: "index_group_assignments_on_slug"
@@ -161,6 +163,17 @@ ActiveRecord::Schema.define(version: 20190618173308) do
     t.datetime "updated_at", null: false
     t.index ["assignment_invitation_id"], name: "index_invite_statuses_on_assignment_invitation_id"
     t.index ["user_id"], name: "index_invite_statuses_on_user_id"
+  end
+
+  create_table "lti_configurations", force: :cascade do |t|
+    t.text "consumer_key", null: false
+    t.text "shared_secret", null: false
+    t.text "lms_link", null: false
+    t.bigint "organization_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["consumer_key"], name: "index_lti_configurations_on_consumer_key", unique: true
+    t.index ["organization_id"], name: "index_lti_configurations_on_organization_id"
   end
 
   create_table "organization_webhooks", force: :cascade do |t|
@@ -235,6 +248,10 @@ ActiveRecord::Schema.define(version: 20190618173308) do
     t.boolean "site_admin", default: false
     t.datetime "last_active_at", null: false
     t.string "github_global_relay_id"
+    t.string "github_login"
+    t.string "github_name"
+    t.string "github_avatar_url"
+    t.string "github_html_url"
     t.index ["token"], name: "index_users_on_token", unique: true
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end

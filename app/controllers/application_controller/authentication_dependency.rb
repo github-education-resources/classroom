@@ -28,7 +28,7 @@ class ApplicationController
   end
 
   def auth_redirect
-    session[:pre_login_destination] = "#{request.base_url}#{request.path}"
+    session[:pre_login_destination] ||= "#{request.base_url}#{request.path}"
     session[:required_scopes] = required_scopes.join(",")
     redirect_to login_path
   end

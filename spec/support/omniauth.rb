@@ -14,6 +14,32 @@ VCR.use_cassette "auth_user" do
 
     "credentials" => { "token" => token }
   )
+
+  OmniAuth.config.mock_auth[:lti] = OmniAuth::AuthHash.new(
+    provider: "lti",
+    uid: "mock_lti_uid",
+
+    extra: {
+      raw_info: {
+        oauth_nonce: "mock_nonce",
+        oauth_timestamp: DateTime.now.to_i.to_s
+      }
+    },
+
+    info: {
+      name: "mock_name",
+      user_id: "mock_lti_uid",
+      email: "mock_email",
+      first_name: "mock_first_name",
+      last_name: "mock_last_name",
+      image: "mock_image_url"
+    },
+
+    credentials: {
+      token: "mock_token",
+      secret: "mock_secret"
+    }
+  )
 end
 
 module AuthenticationHelper
