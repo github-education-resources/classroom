@@ -14,7 +14,7 @@ module Orgs
 
     def info; end
 
-    def edit;
+    def edit; end
 
     private
 
