@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190708134457) do
+ActiveRecord::Schema.define(version: 20190709163639) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,6 +56,7 @@ ActiveRecord::Schema.define(version: 20190708134457) do
     t.string "slug", null: false
     t.boolean "students_are_repo_admins", default: false, null: false
     t.boolean "invitations_enabled", default: true
+    t.boolean "template_repos_enabled"
     t.index ["deleted_at"], name: "index_assignments_on_deleted_at"
     t.index ["organization_id"], name: "index_assignments_on_organization_id"
     t.index ["slug"], name: "index_assignments_on_slug"
@@ -111,6 +112,7 @@ ActiveRecord::Schema.define(version: 20190708134457) do
     t.boolean "students_are_repo_admins", default: false, null: false
     t.boolean "invitations_enabled", default: true
     t.integer "max_teams"
+    t.boolean "template_repos_enabled"
     t.index ["deleted_at"], name: "index_group_assignments_on_deleted_at"
     t.index ["organization_id"], name: "index_group_assignments_on_organization_id"
     t.index ["slug"], name: "index_group_assignments_on_slug"

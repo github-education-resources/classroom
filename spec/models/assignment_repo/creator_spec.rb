@@ -167,7 +167,6 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
           .to_return(body: "{}", status: 401)
 
         expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.Unauthorized")
-        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.fail")
         AssignmentRepo::Creator.perform(assignment: assignment, user: student)
       end
 

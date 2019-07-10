@@ -4,7 +4,7 @@ class User < ApplicationRecord
   include Flippable
   include GraphQLNode
 
-  update_index("user#user") { self }
+  # update_index("user#user") { self }
 
   has_many :assignment_repos
   has_many :repo_accesses, dependent: :destroy

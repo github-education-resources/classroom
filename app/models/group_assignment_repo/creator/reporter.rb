@@ -39,6 +39,7 @@ class GroupAssignmentRepo
       def report_time(start_time)
         duration_in_millseconds = (Time.zone.now - start_time) * 1_000
         GitHubClassroom.statsd.timing("v2_group_exercise_repo.create.time", duration_in_millseconds)
+        GitHubClassroom.statsd.timing("group_exercise_repo.create.time", duration_in_millseconds)
       end
     end
   end
