@@ -35,6 +35,7 @@ class GroupAssignmentRepo
         creator.invite_status.errored_creating_repo!
         creator.broadcast_error(error)
         GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.fail")
+        GitHubClassroom.statsd.increment("group_exercise_repo.create.fail")
       end
       logger.warn(error.message)
     end
