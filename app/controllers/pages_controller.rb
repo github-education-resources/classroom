@@ -29,7 +29,6 @@ class PagesController < ApplicationController
   # rubocop:enable AbcSize
 
   def assistant
-    return not_found unless assistant_landing_page_enabled? || public_assistant_landing_page_enabled?
     render layout: "layouts/pages"
   end
 
