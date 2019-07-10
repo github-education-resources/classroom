@@ -17,11 +17,6 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
   describe "route_based_on_status", :vcr do
     before do
       sign_in_as(user)
-      GitHubClassroom.flipper[:import_resiliency].enable
-    end
-
-    after do
-      GitHubClassroom.flipper[:import_resiliency].disable
     end
 
     describe "unaccepted!" do
@@ -200,15 +195,14 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         end
 
         context "previous acceptee" do
-          before(:each) do
-            expect_any_instance_of(AssignmentInvitationsController)
-              .to receive(:current_submission)
-              .and_return(assignment_repo)
-          end
-
           it "redirects to success" do
+            assignment_repo = create(:assignment_repo, assignment: invitation.assignment, user: user)
+            AssignmentRepo::Creator::Result.success(assignment_repo)
+            invitation.status(user).accepted!
+
             get :show, params: { id: invitation.key }
-            expect(response).to redirect_to(success_assignment_invitation_url(invitation))
+
+            expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
           end
         end
       end
@@ -269,7 +263,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
 
     it "sends an event to statsd" do
-      expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_invitation.accept")
+      expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_invitation.accept")
 
       allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result)
 
@@ -284,7 +278,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it "records error stat" do
-        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_invitation.fail")
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_invitation.fail")
         patch :accept, params: { id: invitation.key }
       end
 
@@ -300,19 +294,11 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
 
     context "with import resiliency enabled" do
-      before do
-        GitHubClassroom.flipper[:import_resiliency].enable
-      end
-
-      after do
-        GitHubClassroom.flipper[:import_resiliency].disable
-      end
-
       it "sends an event to statsd" do
         expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_invitation.accept")
 
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
-          .with(user, import_resiliency: true)
+          .with(user)
           .and_return(result)
 
         patch :accept, params: { id: invitation.key }
@@ -320,7 +306,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
       it "redirects to success when AssignmentRepo already exists" do
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
-          .with(user, import_resiliency: true)
+          .with(user)
           .and_return(result)
 
         patch :accept, params: { id: invitation.key }
@@ -330,7 +316,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       it "redirects to setup when AssignmentRepo already exists but isn't completed" do
         invite_status.waiting!
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
-          .with(user, import_resiliency: true)
+          .with(user)
           .and_return(result)
 
         patch :accept, params: { id: invitation.key }
@@ -340,7 +326,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       it "redirects to setup when AssignmentRepo doesn't already exist" do
         invite_status.accepted!
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
-          .with(user, import_resiliency: true)
+          .with(user)
           .and_return(AssignmentRepo::Creator::Result.pending)
 
         patch :accept, params: { id: invitation.key }
@@ -354,20 +340,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       sign_in_as(user)
     end
 
-    it "404 when feature is off" do
-      post :create_repo, params: { id: invitation.key }
-      expect(response.status).to eq(404)
-    end
-
     context "with import resiliency enabled" do
-      before do
-        GitHubClassroom.flipper[:import_resiliency].enable
-      end
-
-      after do
-        GitHubClassroom.flipper[:import_resiliency].disable
-      end
-
       context "when invitation status is accepted" do
         before do
           invite_status.accepted!
@@ -494,11 +467,6 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     before(:each) do
       sign_in_as(user)
     end
-
-    it "404s when feature is off" do
-      get :setup, params: { id: invitation.key }
-      expect(response.status).to eq(404)
-    end
   end
 
   describe "GET #progress", :vcr do
@@ -506,20 +474,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       sign_in_as(user)
     end
 
-    it "404 when feature is off" do
-      post :create_repo, params: { id: invitation.key }
-      expect(response.status).to eq(404)
-    end
-
     context "with import resiliency enabled" do
-      before do
-        GitHubClassroom.flipper[:import_resiliency].enable
-      end
-
-      after do
-        GitHubClassroom.flipper[:import_resiliency].disable
-      end
-
       it "returns the invite_status" do
         invite_status.errored_creating_repo!
         get :progress, params: { id: invitation.key }
@@ -565,41 +520,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       AssignmentRepo.destroy_all
     end
 
-    context "github repository deleted after accepting a invitation successfully" do
-      before do
-        organization.github_client.delete_repository(@assignment_repo.github_repo_id)
-        get :success, params: { id: invitation.key }
-      end
-
-      it "deletes the old assignment repo" do
-        expect { @assignment_repo.reload }.to raise_error(ActiveRecord::RecordNotFound)
-      end
-
-      it "creates a new assignment repo for the student" do
-        expect(AssignmentRepo.last.id).not_to eq(@assignment_repo.id)
-      end
-    end
-
-    context "creates a GitHub repo if one doesn't exist" do
-      it "renders #success when no GitHub repo present" do
-        expect_any_instance_of(GitHubRepository)
-          .to receive(:present?)
-          .with(headers: GitHub::APIHeaders.no_cache_no_store)
-          .and_return(false)
-        get :success, params: { id: invitation.key }
-        expect(response).to render_template(:success)
-      end
-    end
-
     describe "import resiliency enabled" do
-      before do
-        GitHubClassroom.flipper[:import_resiliency].enable
-      end
-
-      after do
-        GitHubClassroom.flipper[:import_resiliency].disable
-      end
-
       it "redirects to setup when no GitHub repo present" do
         invite_status.completed!
         expect_any_instance_of(GitHubRepository)

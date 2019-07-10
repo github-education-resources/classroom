@@ -15,10 +15,8 @@
               settings_invitations_organization_path(organization),
               class: "menu-item #{'selected' if current_page?(settings_invitations_organization_path(organization))}" %>
 
-  <% if student_identifier_enabled? %>
-    <%= link_to 'Roster management', roster_path(organization),
-                class: "menu-item #{'selected' if current_page?(roster_path(organization))}" %>
-  <% end %>
+  <%= link_to 'Roster management', roster_path(organization),
+              class: "menu-item #{'selected' if current_page?(roster_path(organization))}" %>
 
   <% if lti_launch_enabled? %>
     <%= link_to 'LMS configuration', lti_configuration_path(organization),

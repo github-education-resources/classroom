@@ -27,12 +27,10 @@
         </div>
       </div>
 
-      <% if download_repositories_enabled? %>
-        <%= render partial: 'shared/open_on_assistant_modal', locals: {
-          assistant_url: assistant_organization_assignment_url,
-          enabled: @assignment_repos.present?
-        } %>
-      <% end %>
+      <%= render partial: 'shared/open_on_assistant_modal', locals: {
+        assistant_url: assistant_organization_assignment_url,
+        enabled: @assignment_repos.present?
+      } %>
 
       <div class="text-right mt-3 pl-2 settings">
         <%= link_to edit_organization_assignment_path(@organization, @assignment), class: 'btn right' do %>
