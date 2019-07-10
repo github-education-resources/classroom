@@ -24,7 +24,6 @@ en:
       remove_owner_header: 'Are you sure you want to remove this owner ?'
       copy_to_clipboard: 'Copy to clipboard'
       copied: 'Copied!'
-      copy: 'Copy'
       copy_classroom_link: 'Copy classroom link'
       continue: 'Continue'
       individual_assignments: 'Individual Assignments'
@@ -62,7 +61,3 @@ en:
       assignments: 'Assignments'
       no_assignments: "This organization doesn't have any assignments yet."
       create_first_assignment: 'Create your first assignment'
-      lti_configuration:
-        show_title: 'Learning Management System Configuration'
-        consumer_key: 'Consumer key'
-        shared_secret: 'Shared secret'
