@@ -2,6 +2,7 @@
 
 class AssignmentRepo < ApplicationRecord
   include AssignmentRepoable
+  include Sortable
   include Searchable
 
   update_index("assignment_repo#assignment_repo") { self }
@@ -24,8 +25,17 @@ class AssignmentRepo < ApplicationRecord
   delegate :default_branch, :commits,       to: :github_repository
   delegate :github_team_id,                 to: :repo_access, allow_nil: true
 
+  scope :order_by_created_at, ->(_context = nil) { order(:created_at) }
+  scope :order_by_github_login, ->(_context = nil) { joins(:user).order("users.github_login") }
 
   scope :search_by_github_login, ->(query) { joins(:user).where("users.github_login ILIKE ?", "%#{query}%") }
+
+  def self.sort_modes
+    {
+      "Created at" => :order_by_created_at,
+      "GitHub login" => :order_by_github_login
+    }
+  end
 
   def self.search_mode
     :search_by_github_login
