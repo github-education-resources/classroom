@@ -9,6 +9,10 @@ class ApplicationController
     not_found unless student_identifier_enabled?
   end
 
+  def ensure_lti_launch_flipper_is_enabled
+    not_found unless lti_launch_enabled?
+  end
+
   def multiple_classrooms_per_org_enabled?
     logged_in? && current_user.feature_enabled?(:multiple_classrooms_per_org)
   end

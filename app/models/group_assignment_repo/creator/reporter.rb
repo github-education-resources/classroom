@@ -6,8 +6,6 @@ class GroupAssignmentRepo
     # also broadcasts messages to our channels for progress updates
     #
     class Reporter
-      # Broadcasts a ActionCable message with a status to the given group_assignment and group
-      #
       attr_reader :creator
       delegate :group, :group_assignment, :invite_status, to: :creator
 
@@ -15,6 +13,8 @@ class GroupAssignmentRepo
         @creator = creator
       end
 
+      # Broadcasts a ActionCable message with a status to the given group_assignment and group
+      #
       def broadcast_message(message, repo_url = nil)
         ActionCable.server.broadcast(
           GroupRepositoryCreationStatusChannel.channel(group_id: group.id, group_assignment_id: group_assignment.id),
@@ -39,6 +39,7 @@ class GroupAssignmentRepo
       def report_time(start_time)
         duration_in_millseconds = (Time.zone.now - start_time) * 1_000
         GitHubClassroom.statsd.timing("v2_group_exercise_repo.create.time", duration_in_millseconds)
+        GitHubClassroom.statsd.timing("group_exercise_repo.create.time", duration_in_millseconds)
       end
     end
   end
