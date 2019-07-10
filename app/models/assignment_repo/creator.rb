@@ -44,7 +44,11 @@ class AssignmentRepo
       )
       verify_organization_has_private_repos_available!
 
-      github_repository = create_github_repository!
+      if assignment.organization.feature_enabled?(:template_repos) && assignment.use_template_repos?
+        github_repository = clone_github_template_repository!
+      else
+        github_repository = create_github_repository!
+      end
 
       assignment_repo = assignment.assignment_repos.build(
         github_repo_id: github_repository.id,
@@ -54,7 +58,7 @@ class AssignmentRepo
 
       add_user_to_repository!(assignment_repo.github_repo_id)
 
-      if assignment.starter_code?
+      if assignment.use_importer?
         push_starter_code!(assignment_repo.github_repo_id)
       end
 
@@ -68,7 +72,7 @@ class AssignmentRepo
 
       GitHubClassroom.statsd.increment("v2_exercise_repo.create.success")
       GitHubClassroom.statsd.increment("exercise_repo.create.success")
-      if assignment.starter_code?
+      if assignment.use_importer?
         invite_status.importing_starter_code!
         broadcast_message(
           message: IMPORT_STARTER_CODE,
