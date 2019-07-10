@@ -15,16 +15,6 @@ class ApplicationController
   end
   helper_method :multiple_classrooms_per_org_enabled?
 
-  def public_home_v2_enabled?
-    GitHubClassroom.flipper[:public_home_v2].enabled?
-  end
-  helper_method :public_home_v2_enabled?
-
-  def home_v2_enabled?
-    logged_in? && current_user.feature_enabled?(:home_v2)
-  end
-  helper_method :home_v2_enabled?
-
   def team_management_enabled?
     logged_in? && current_user.feature_enabled?(:team_management)
   end
