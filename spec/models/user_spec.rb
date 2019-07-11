@@ -8,6 +8,39 @@ RSpec.describe User, type: :model do
   let(:github_omniauth_hash)  { OmniAuth.config.mock_auth[:github] }
   let(:user)                  { subject }
 
+  describe ".search" do
+    let(:searchable_user) { create(:user, github_login: "d12", github_name: "Nathaniel Woodthorpe", uid: 123999) }
+
+    before do
+      expect(searchable_user).to_not be_nil
+    end
+
+    it "searches by github_login" do
+      results = User.search("d12")
+      expect(results.to_a).to include(searchable_user)
+    end
+
+    it "searches by github_name" do
+      results = User.search("Nathaniel")
+      expect(results.to_a).to include(searchable_user)
+    end
+
+    it "searches by uid" do
+      results = User.search(searchable_user.uid)
+      expect(results.to_a).to include(searchable_user)
+    end
+
+    it "searches by id" do
+      results = User.search(searchable_user.id)
+      expect(results.to_a).to include(searchable_user)
+    end
+
+    it "does not return the user when it shouldn't" do
+      results = User.search("penutbutter")
+      expect(results.to_a).to_not include(searchable_user)
+    end
+  end
+
   describe "#assign_from_auth_hash", :vcr do
     it "updates the users attributes" do
       user.assign_from_auth_hash(github_omniauth_hash)
