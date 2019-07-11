@@ -1,21 +1,58 @@
+<% view = FormView.new(subject: roster) %>
+
 <div class="remodal text-left" data-remodal-id="new-student-modal">
   <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
   <h2 class="remodal-header text-left">Add students to your Roster</h2>
 
-  <%= form_tag({ controller: :rosters, action: :add_students }, method: :patch) do %>
-    <dl class="form">
-      <dt><label><%= roster.identifier_name.pluralize %></label></dt>
-      <%= text_area_tag 'identifiers', '', class: "form-control input-block", id: 'entries-field' %>
-    </dl>
+  <% if @google_course_id && google_classroom_roster_import_enabled? %>
+    <div class="my-3">
+      <h3 class="h4 mb-2">Sync with Google Classroom</h3>
+      <div class="f5 mt-2 d-block">Linked with <strong><%= @google_course_name %></strong></div>
+      <%= link_to sync_google_classroom_roster_path, method: :patch, class: "btn btn-sm mt-4" do %>
+        Update Sync
+      <% end %>
 
-    <dl class="form">
-      <dt><label>OR upload a CSV or text file:</label></dt>
-      <label class='btn btn-secondary btn-sm' for="file-upload">Upload file</label>
-      <%= file_field_tag :identifiers_file, style: 'display: none', id: 'file-upload', onchange: 'onIdentifiersUploaded()' %>
-    </dl>
+      <%= link_to unlink_google_classroom_roster_path, method: :patch, class: "btn btn-sm btn-danger mt-4 ml-2" do %>
+        Remove Link
+      <% end %>
+    </div>
+  <% else %>
+    <% if google_classroom_roster_import_enabled? %>
+      <div class="my-3">
+        <h2 class="h4 mb-2">Import from</h2>
 
-    <div class="form-actions">
-      <%= submit_tag 'Create students', class: "btn btn-primary" %>
+        <%= link_to image_tag('google-classroom-logo.png', size: "15", class:"mr-2") + "Google Classroom",
+          select_google_classroom_roster_path,
+          class: "btn btn-sm btn-secondary d-inline-flex flex-items-center mb-2"
+        %>
+      </div>
+
+      <div class="f5 text-gray text-italic">or...</div>
+    <% end %>
+
+    <div class="my-3">
+      <h2 class="h4 mb-2">Manually add students</h2>
+
+      <div>
+        <%= form_tag roster_path(current_organization), method: :post do |f| %>
+        <div class="Box">
+          <dl class="Box-body <%= view.form_class_for(:roster_entries) %> mb-0">
+            <dt class="text-gray mb-1">Enter your list of students' identifiers, <strong>one per line</strong>.</dt>
+            <dd><%= text_area_tag(:identifiers, '', class: 'form-control input-block', id: 'entries-field', required: true) %></dd>
+            <%= render('shared/form_error', errors: view.error_message_for(:roster_entries)) if view.errors_for?(:roster_entries) %>
+          </dl>
+
+          <div class="Box-footer bg-gray">
+            <label class='btn btn-secondary btn-sm' for="file-upload">Upload a CSV or text file</label>
+            <%= file_field_tag :identifiers_file, style: 'display: none', id: 'file-upload', onchange: 'onIdentifiersUploaded()' %>
+          </div>
+        </div>
+
+          <div class="d-flex flex-items-center border-top pt-5">
+            <%= submit_tag 'Create roster', class: 'btn btn-primary mr-3' %>
+          </div>
+        <% end %>
+      </div>
     </div>
   <% end %>
 </div>
