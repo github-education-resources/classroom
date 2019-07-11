@@ -81,8 +81,4 @@ class Organization < ApplicationRecord
 
     true
   end
-
-  def self.search(search)
-    where("title LIKE ?", "%#{search}%")
-  end
 end
