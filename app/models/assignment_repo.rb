@@ -2,20 +2,9 @@
 
 class AssignmentRepo < ApplicationRecord
   include AssignmentRepoable
-  include PgSearch
+  include StafftoolsSearchable
 
-  pg_search_scope(
-    :search,
-    against: %i[
-      id
-      github_repo_id
-    ],
-    using: {
-      tsearch: {
-        dictionary: "english"
-      }
-    }
-  )
+  define_pg_search(columns: %i[id github_repo_id])
 
   # TODO: remove this enum (dead code)
   enum configuration_state: %i[not_configured configuring configured]

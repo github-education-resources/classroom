@@ -3,20 +3,9 @@
 class GroupAssignmentRepo < ApplicationRecord
   include AssignmentRepoable
   include Sortable
-  include PgSearch
+  include StafftoolsSearchable
 
-  pg_search_scope(
-    :search,
-    against: %i[
-      id
-      github_repo_id
-    ],
-    using: {
-      tsearch: {
-        dictionary: "english"
-      }
-    }
-  )
+  define_pg_search(columns: %i[id github_repo_id])
 
   enum configuration_state: %i[not_configured configuring configured]
 

@@ -3,22 +3,9 @@
 class Organization < ApplicationRecord
   include Flippable
   include Sluggable
-  include PgSearch
+  include StafftoolsSearchable
 
-  pg_search_scope(
-    :search,
-    against: %i[
-      id
-      github_id
-      title
-      slug
-    ],
-    using: {
-      tsearch: {
-        dictionary: "english"
-      }
-    }
-  )
+  define_pg_search(columns: %i[id github_id title slug])
 
   default_scope { where(deleted_at: nil) }
 

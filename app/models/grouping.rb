@@ -2,21 +2,9 @@
 
 class Grouping < ApplicationRecord
   include Sluggable
-  include PgSearch
+  include StafftoolsSearchable
 
-  pg_search_scope(
-    :search,
-    against: %i[
-      id
-      title
-      slug
-    ],
-    using: {
-      tsearch: {
-        dictionary: "english"
-      }
-    }
-  )
+  define_pg_search(columns: %i[id title slug])
 
   has_many :groups, dependent: :destroy
   has_many :users, through: :groups, source: :repo_accesses

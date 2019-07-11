@@ -4,21 +4,9 @@ class Assignment < ApplicationRecord
   include Flippable
   include GitHubPlan
   include ValidatesNotReservedWord
-  include PgSearch
+  include StafftoolsSearchable
 
-  pg_search_scope(
-    :search,
-    against: %i[
-      id
-      title
-      slug
-    ],
-    using: {
-      tsearch: {
-        dictionary: "english"
-      }
-    }
-  )
+  define_pg_search(columns: %i[id title slug])
 
   default_scope { where(deleted_at: nil) }
 

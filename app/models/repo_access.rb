@@ -2,20 +2,9 @@
 
 class RepoAccess < ApplicationRecord
   include GitHubTeamable
-  include PgSearch
+  include StafftoolsSearchable
 
-  pg_search_scope(
-    :search,
-    against: %i[
-      id
-      github_team_id
-    ],
-    using: {
-      tsearch: {
-        dictionary: "english"
-      }
-    }
-  )
+  define_pg_search(columns: %i[id github_team_id])
 
   belongs_to :user
   belongs_to(:organization, -> { unscope(where: :deleted_at) })

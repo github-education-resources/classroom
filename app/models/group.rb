@@ -3,22 +3,9 @@
 class Group < ApplicationRecord
   include GitHubTeamable
   include Sluggable
-  include PgSearch
+  include StafftoolsSearchable
 
-  pg_search_scope(
-    :search,
-    against: %i[
-      id
-      github_team_id
-      title
-      slug
-    ],
-    using: {
-      tsearch: {
-        dictionary: "english"
-      }
-    }
-  )
+  define_pg_search(columns: %i[id github_team_id title slug])
 
   belongs_to :grouping
 

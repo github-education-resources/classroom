@@ -2,20 +2,9 @@
 
 class GroupAssignmentInvitation < ApplicationRecord
   include ShortKey
-  include PgSearch
+  include StafftoolsSearchable
 
-  pg_search_scope(
-    :search,
-    against: %i[
-      id
-      key
-    ],
-    using: {
-      tsearch: {
-        dictionary: "english"
-      }
-    }
-  )
+  define_pg_search(columns: %i[id key])
 
   default_scope { where(deleted_at: nil) }
 
