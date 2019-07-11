@@ -7,15 +7,15 @@ class User < ApplicationRecord
 
   pg_search_scope(
     :search,
-    against: %i(
+    against: %i[
       id
       uid
       github_login
       github_name
-    ),
+    ],
     using: {
       tsearch: {
-        dictionary: "english",
+        dictionary: "english"
       }
     }
   )

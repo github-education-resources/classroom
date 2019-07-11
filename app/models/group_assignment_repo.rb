@@ -7,13 +7,13 @@ class GroupAssignmentRepo < ApplicationRecord
 
   pg_search_scope(
     :search,
-    against: %i(
+    against: %i[
       id
       github_repo_id
-    ),
+    ],
     using: {
       tsearch: {
-        dictionary: "english",
+        dictionary: "english"
       }
     }
   )

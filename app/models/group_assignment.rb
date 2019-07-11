@@ -8,14 +8,14 @@ class GroupAssignment < ApplicationRecord
 
   pg_search_scope(
     :search,
-    against: %i(
+    against: %i[
       id
       title
       slug
-    ),
+    ],
     using: {
       tsearch: {
-        dictionary: "english",
+        dictionary: "english"
       }
     }
   )

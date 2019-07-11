@@ -14,7 +14,7 @@ class StafftoolsMultiTableSearch
       Organization,
       RepoAccess,
       User
-    ]
+    ].freeze
 
     def search(query)
       results = {}

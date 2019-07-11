@@ -6,13 +6,13 @@ class AssignmentInvitation < ApplicationRecord
 
   pg_search_scope(
     :search,
-    against: %i(
+    against: %i[
       id
       key
-    ),
+    ],
     using: {
       tsearch: {
-        dictionary: "english",
+        dictionary: "english"
       }
     }
   )

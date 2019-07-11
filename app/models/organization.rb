@@ -7,15 +7,15 @@ class Organization < ApplicationRecord
 
   pg_search_scope(
     :search,
-    against: %i(
+    against: %i[
       id
       github_id
       title
       slug
-    ),
+    ],
     using: {
       tsearch: {
-        dictionary: "english",
+        dictionary: "english"
       }
     }
   )
