@@ -161,7 +161,9 @@ class GitHubRepository < GitHubResource
   end
 
   def empty?
-    number_of_commits.zero?
+    @client.contents(full_name).empty?
+  rescue Octokit::NotFound
+    return true
   end
 
   def commits_url(branch)
