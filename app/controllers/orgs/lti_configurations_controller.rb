@@ -20,6 +20,8 @@ module Orgs
 
     def edit; end
 
+    def destroy; end
+
     private
 
     def current_lti_configuration

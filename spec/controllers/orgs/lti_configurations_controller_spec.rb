@@ -78,4 +78,25 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       end
     end
   end
+
+  describe "POST #create", :vcr do
+    context "with flipper enabled" do
+      before(:each) do
+        GitHubClassroom.flipper[:lti_launch].enable
+      end
+
+      it "creates lti_configuration" do
+        post :create, params: { id: organization.slug }
+        expect(organization.lti_configuration).to_not be_nil
+      end
+    end
+
+    context "with flipper disabled" do
+      it "does not create lti_configuration" do
+        post :create, params: { id: organization.slug }
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
 end
+
