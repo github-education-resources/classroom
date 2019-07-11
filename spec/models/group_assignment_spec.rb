@@ -5,6 +5,34 @@ require "rails_helper"
 RSpec.describe GroupAssignment, type: :model do
   it_behaves_like "a default scope where deleted_at is not present"
 
+  describe ".search" do
+    let(:searchable_assignment) { create(:group_assignment) }
+
+    before do
+      expect(searchable_assignment).to_not be_nil
+    end
+
+    it "searches by id" do
+      results = GroupAssignment.search(searchable_assignment.id)
+      expect(results.to_a).to include(searchable_assignment)
+    end
+
+    it "searches by title" do
+      results = GroupAssignment.search(searchable_assignment.title)
+      expect(results.to_a).to include(searchable_assignment)
+    end
+
+    it "searches by slug" do
+      results = GroupAssignment.search(searchable_assignment.slug)
+      expect(results.to_a).to include(searchable_assignment)
+    end
+
+    it "does not return the assignment when it shouldn't" do
+      results = GroupAssignment.search("spaghetto")
+      expect(results.to_a).to_not include(searchable_assignment)
+    end
+  end
+
   describe "invitations_enabled default" do
     it "sets invitations_enabled to true by default" do
       options = {
