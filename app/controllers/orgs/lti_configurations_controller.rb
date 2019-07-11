@@ -6,18 +6,24 @@ module Orgs
     before_action :ensure_current_lti_configuration, only: :show
 
     def create
-      lti_configuration = LtiConfiguration.new
-      lti_configuration.organization = current_organization
-      lti_configuration.consumer_key = SecureRandom.uuid
-      lti_configuration.shared_secret = SecureRandom.uuid
-      lti_configuration.save!
-      redirect_to lti_configuration_path(current_organization)
+      lti_configuration = LtiConfiguration.create({
+        organization: current_organization,
+        consumer_key: SecureRandom.uuid,
+        shared_secret: SecureRandom.uuid
+      })
+
+      if lti_configuration.present?
+        redirect_to lti_configuration_path(current_organization)
+      else
+        redirect_to info_lti_configuration_path(current_lti_configuration),
+          alert: "There was a problem creating the configuration. Please try again."
+      end
     end
 
     def show; end
 
     def info; end
-  
+
     def edit
       if @current_lti_configuration.update_attributes(lti_configuration_params)
         flash[:success] = "Your LMS configuration has been created!"
