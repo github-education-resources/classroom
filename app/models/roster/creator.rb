@@ -53,8 +53,8 @@ class Roster
 
     def initialize(organization:, **options)
       @organization    = organization
-      @options         = options
-      @roster = Roster.new(identifier_name: @identifier_name)
+      @options         = options 
+      @roster = Roster.new(identifier_name: DEFAULT_IDENTIFIER_NAME)
     end
 
     # Internal: Create create a Roster.

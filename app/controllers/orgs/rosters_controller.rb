@@ -19,7 +19,6 @@ module Orgs
       import_from_google_classroom
       search_google_classroom
     ]
-    before_action :redirect_if_roster_exists, only: [:new]
     before_action :ensure_current_roster_entry,       only:   %i[link unlink delete_entry download_roster]
     before_action :ensure_enough_members_in_roster,   only:   [:delete_entry]
     before_action :ensure_allowed_to_access_grouping, only:   [:show]
@@ -60,6 +59,7 @@ module Orgs
       result = Roster::Creator.perform(
         organization: current_organization,
         identifiers: params[:identifiers],
+        idenifier_name: params[:identifier_name],
         google_user_ids: params[:google_user_ids]
       )
 

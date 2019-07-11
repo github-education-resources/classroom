@@ -561,7 +561,7 @@ primer-utilities@4.14.4:
   dependencies:
     primer-support "4.7.2"
 
-primer@^10.10.5:
+primer@^10.10.4:
   version "10.10.5"
   resolved "https://registry.yarnpkg.com/primer/-/primer-10.10.5.tgz#de2201180df50877b8017de7be369653c9eff2ca"
   integrity sha512-iJjmOomFef/W+oBtwo4U+o2MwCL00z+4XM7ixRP5kJ3Fgc9QEhVW7IPv3DWhqRlbPrMhF68ytM+AFRcHHT8rEA==

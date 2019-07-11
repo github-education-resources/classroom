@@ -67,12 +67,13 @@ RSpec.describe Orgs::RostersController, type: :controller do
         post :create, params: { id: organization.slug, identifiers: "myemail" }
       end
 
-      it "renders new" do
-        expect(response).to render_template("rosters/new")
+      it "it creates roster" do
+        expect(Roster.count).to eq(1)
       end
 
-      it "does not create any rosters" do
-        expect(Roster.count).to eq(0)
+      it "redirects user to organization#show" do
+        expect(response).to redirect_to(organization_path)
+        expect(flash[:success]).to be_present
       end
     end
 
@@ -95,11 +96,6 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
         it "redirects to organization path" do
           expect(response).to redirect_to(organization_url(organization))
-        end
-
-        it "creates one roster with correct identifier_name" do
-          expect(Roster.count).to eq(1)
-          expect(@roster.identifier_name).to eq("emails")
         end
 
         it "creates two roster_entries" do
@@ -816,7 +812,6 @@ RSpec.describe Orgs::RostersController, type: :controller do
             context "when organization has no roster" do
               before do
                 organization.update_attributes(roster_id: nil)
-
                 patch :import_from_google_classroom, params: {
                   id: organization.slug,
                   course_id: "1234"
