@@ -53,9 +53,7 @@ class GroupAssignmentRepo
 
       add_team_to_github_repository!(github_repository.id)
 
-      if group_assignment.use_importer?
-        push_starter_code!(group_assignment_repo.github_repo_id)
-      end
+      push_starter_code!(group_assignment_repo.github_repo_id) if group_assignment.use_importer?
 
       begin
         group_assignment_repo.save!

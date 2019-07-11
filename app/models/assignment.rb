@@ -61,11 +61,11 @@ class Assignment < ApplicationRecord
   end
 
   def template_repos_disabled?
-    !template_repos_enabled?
+    !template_repos_enabled
   end
 
   def use_template_repos?
-    starter_code? && template_repos_enabled
+    starter_code? && template_repos_enabled?
   end
 
   def use_importer?
