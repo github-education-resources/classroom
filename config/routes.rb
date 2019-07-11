@@ -85,8 +85,7 @@ Rails.application.routes.draw do
           patch :remove_organization
         end
 
-        resource :lti_configuration, only: %i[show create edit], controller: "orgs/lti_configurations" do
-          get :info
+        resource :lti_configuration, controller: "orgs/lti_configurations" do
         end
       end
 

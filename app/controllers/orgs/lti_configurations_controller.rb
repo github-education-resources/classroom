@@ -15,14 +15,14 @@ module Orgs
       if lti_configuration.present?
         redirect_to lti_configuration_path(current_organization)
       else
-        redirect_to info_lti_configuration_path(current_lti_configuration),
+        redirect_to new_lti_configuration_path(current_lti_configuration),
           alert: "There was a problem creating the configuration. Please try again."
       end
     end
 
     def show; end
 
-    def info; end
+    def new; end
 
     def edit
       if @current_lti_configuration.update_attributes(lti_configuration_params)
@@ -44,7 +44,7 @@ module Orgs
     end
 
     def ensure_current_lti_configuration
-      redirect_to info_lti_configuration_path(current_organization) if current_lti_configuration.nil?
+      redirect_to new_lti_configuration_path(current_organization) if current_lti_configuration.nil?
     end
 
     def lti_configuration_params
