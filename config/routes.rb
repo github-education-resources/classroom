@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   get "/assistant", to: "pages#assistant"
   get "/help/(:article_name)", to: "pages#help", as: "help"
-  get "/home", to: "pages#homev2"
+  get "/home", to: "pages#home"
 
   get  "/login",  to: "sessions#new",     as: "login"
   post "/logout", to: "sessions#destroy", as: "logout"

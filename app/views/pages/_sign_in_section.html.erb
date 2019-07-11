@@ -7,16 +7,16 @@
       <div class="col-md-7 text-md-left">
         <h1 class="d-none">GitHub Classroom</h1>
         <%= link_to(image_tag('wordmark@2x.png', class: 'col-10 col-sm-8 width-fit mb-3 mx-auto', alt: 'GitHub Classroom'), (logged_in? ? organizations_path : root_path)) %>
-        <p class="alt-lead"><%= t('pages.homev2.signin_section.banner_heading') %> <%= t('pages.homev2.signin_section.banner_subheading') %></p>
+        <p class="alt-lead"><%= t('pages.home.signin_section.banner_heading') %> <%= t('pages.home.signin_section.banner_subheading') %></p>
         <%= image_tag('classroom-logo.png', class:"d-md-none col-8 col-sm-6 width-fit my-5", alt: 'Classroom Logo') %>
       </div>
     </div>
   </div>
 
   <div class="container-md p-responsive">
-    <p class="f4 text-gray"><%= t('pages.homev2.signin_section.why_classroom_html') %></p>
+    <p class="f4 text-gray"><%= t('pages.home.signin_section.why_classroom_html') %></p>
     <% unless logged_in? %>
-      <%= link_to t('pages.homev2.signin_section.sign_in_to_start'), login_path, class: 'btn btn-large btn-blue mt-2' %>
+      <%= link_to t('pages.home.signin_section.sign_in_to_start'), login_path, class: 'btn btn-large btn-blue mt-2' %>
     <% end %>
   </div>
 </div>
