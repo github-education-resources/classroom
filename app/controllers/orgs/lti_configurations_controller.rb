@@ -17,10 +17,19 @@ module Orgs
     def show; end
 
     def info; end
+  
+    def edit
+      if @current_lti_configuration.update_attributes(lti_configuration_params)
+        flash[:success] = "Your LMS configuration has been created!"
+      else
+        flash[:error] = "Your LMS configuration could not be created. Please try again."
+      end
+      render :show
+    end
 
-    def edit; end
-
-    def destroy; end
+    def destroy
+      current_lti_configuration.destroy!
+    end
 
     private
 
@@ -30,6 +39,10 @@ module Orgs
 
     def ensure_current_lti_configuration
       redirect_to info_lti_configuration_path(current_organization) if current_lti_configuration.nil?
+    end
+
+    def lti_configuration_params
+      params.require(:lti_configuration).permit(:lms_link)
     end
   end
 end
