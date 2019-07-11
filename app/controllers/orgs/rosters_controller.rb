@@ -5,7 +5,6 @@ require "google/apis/classroom_v1"
 # rubocop:disable Metrics/ClassLength
 module Orgs
   class RostersController < Orgs::Controller
-    before_action :ensure_student_identifier_flipper_is_enabled
     before_action :ensure_google_classroom_roster_import_is_enabled, only: %i[
       import_from_google_classroom
       select_google_classroom
