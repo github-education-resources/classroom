@@ -1,17 +1,42 @@
 # frozen_string_literal: true
 
+require "google/apis/classroom_v1"
+
 # rubocop:disable Metrics/ClassLength
 module Orgs
   class RostersController < Orgs::Controller
-    before_action :ensure_current_roster,             except: %i[new create]
-    before_action :ensure_current_roster_entry,       except: %i[show new create remove_organization add_students]
-    before_action :ensure_enough_members_in_roster,   only: [:delete_entry]
-    before_action :ensure_allowed_to_access_grouping, only: [:show]
+    before_action :ensure_google_classroom_roster_import_is_enabled, only: %i[
+      import_from_google_classroom
+      select_google_classroom
+      search_google_classroom
+      sync_google_classroom
+      unlink_google_classroom
+    ]
+    before_action :ensure_current_roster, except: %i[
+      new
+      create
+      select_google_classroom
+      import_from_google_classroom
+      search_google_classroom
+    ]
     before_action :redirect_if_roster_exists, only: [:new]
-    helper_method :current_roster, :unlinked_users
+    before_action :ensure_current_roster_entry,       only:   %i[link unlink delete_entry download_roster]
+    before_action :ensure_enough_members_in_roster,   only:   [:delete_entry]
+    before_action :ensure_allowed_to_access_grouping, only:   [:show]
+    before_action :authorize_google_classroom, only:   %i[
+      import_from_google_classroom
+      select_google_classroom
+      search_google_classroom
+      sync_google_classroom
+      unlink_google_classroom
+    ]
+
+    helper_method :current_roster, :unlinked_users, :authorize_google_classroom
 
     # rubocop:disable AbcSize
     def show
+      @google_course_name = current_organization_google_course_name
+
       @roster_entries = current_roster.roster_entries
         .includes(:user)
         .order(:identifier)
@@ -34,8 +59,9 @@ module Orgs
     def create
       result = Roster::Creator.perform(
         organization: current_organization,
-        identifier_name: params[:identifier_name],
-        identifiers: params[:identifiers]
+        identifiers: params[:identifiers],
+        idenifier_name: params[:identifier_name],
+        google_user_ids: params[:google_user_ids]
       )
 
       # Set the object so that we can see errors when rendering :new
@@ -74,7 +100,7 @@ module Orgs
       user_id = params[:user_id].to_i
       raise ActiveRecord::ActiveRecordError unless unlinked_user_ids.include?(user_id)
 
-      current_roster_entry.update_attributes!(user_id: user_id)
+      current_roster_entry.update(user_id: user_id)
 
       flash[:success] = "Student and GitHub account linked!"
     rescue ActiveRecord::ActiveRecordError
@@ -107,9 +133,14 @@ module Orgs
     # rubocop:disable Metrics/AbcSize
     def add_students
       identifiers = params[:identifiers].split("\r\n").reject(&:blank?).uniq
+      google_ids = params[:google_user_ids] || []
 
       begin
-        entries = RosterEntry.create_entries(identifiers: identifiers, roster: current_roster)
+        entries = RosterEntry.create_entries(
+          identifiers: identifiers,
+          roster: current_roster,
+          google_user_ids: google_ids
+        )
 
         if entries.empty?
           flash[:warning] = "No students created."
@@ -143,6 +174,61 @@ module Orgs
     end
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
+
+    def select_google_classroom
+      @google_classroom_courses = fetch_all_google_classrooms
+    end
+
+    def search_google_classroom
+      courses_found = fetch_all_google_classrooms.select do |course|
+        course.name.downcase.include? params[:query].downcase
+      end
+
+      respond_to do |format|
+        format.html do
+          render partial: "orgs/rosters/google_classroom_collection",
+                 locals: { courses: courses_found }
+        end
+      end
+    end
+
+    def import_from_google_classroom
+      students = list_google_classroom_students(params[:course_id])
+      return unless students
+
+      if students.blank?
+        flash[:warning] = "No students were found in your Google Classroom. Please add students and try again."
+        redirect_to roster_path(current_organization)
+      else
+        current_organization.update(google_course_id: params[:course_id])
+        add_google_classroom_students(students)
+      end
+    end
+
+    # rubocop:disable Metrics/AbcSize
+    def sync_google_classroom
+      unless current_organization.google_course_id
+        flash[:error] = "No Google Classroom has been linked. Please link Google Classroom."
+        return
+      end
+
+      latest_students = list_google_classroom_students(current_organization.google_course_id)
+      latest_student_ids = latest_students.collect(&:user_id)
+      current_student_ids = current_roster.roster_entries.collect(&:google_user_id)
+
+      new_student_ids = latest_student_ids - current_student_ids
+      new_students = latest_students.select { |s| new_student_ids.include? s.user_id }
+
+      add_google_classroom_students(new_students)
+    end
+    # rubocop:enable Metrics/AbcSize
+
+    def unlink_google_classroom
+      current_organization.update!(google_course_id: nil)
+      flash[:success] = "Removed link to Google Classroom. No students were removed from your roster."
+
+      redirect_to roster_path(current_organization)
+    end
 
     private
 
@@ -225,6 +311,88 @@ module Orgs
       end
 
       mapping
+    end
+
+    # Returns name of the linked google course to current organization (for syncing rosters)
+    def current_organization_google_course_name
+      return unless current_organization.google_course_id
+      authorize_google_classroom
+      course = @google_classroom_service.get_course(current_organization.google_course_id)
+      course&.name
+    rescue Google::Apis::Error
+      nil
+    end
+
+    # Returns list of students in a google classroom with error checking
+    # rubocop:disable Metrics/MethodLength
+    def list_google_classroom_students(course_id)
+      response = @google_classroom_service.list_course_students(course_id)
+      response.students ||= []
+      response.students
+    rescue Google::Apis::AuthorizationError
+      google_classroom_client = GitHubClassroom.google_classroom_client
+      login_hint = current_user.github_user.login
+      redirect_to google_classroom_client.get_authorization_url(login_hint: login_hint, request: request)
+      nil
+    rescue Google::Apis::ServerError, Google::Apis::ClientError
+      flash[:error] = "Failed to fetch students from Google Classroom. Please try again later."
+      redirect_to organization_path(current_organization)
+      nil
+    end
+    # rubocop:enable Metrics/MethodLength
+
+    # Add Google Classroom students to roster
+    def add_google_classroom_students(students)
+      names = students.map { |s| s.profile.name.full_name }
+      user_ids = students.map(&:user_id)
+      params[:identifiers] = names.join("\r\n")
+      params[:google_user_ids] = user_ids
+
+      if current_roster.nil?
+        create
+      else
+        add_students
+      end
+    end
+
+    # Fetches all courses for a Google Account
+    def fetch_all_google_classrooms
+      next_page = nil
+      courses = []
+      loop do
+        response = @google_classroom_service.list_courses(page_size: 20, page_token: next_page)
+        courses.push(*response.courses)
+
+        next_page = response.next_page_token
+        break unless next_page
+      end
+
+      courses
+    end
+
+    # Authorizes current user through Google and sets google_classroom_service
+    # Used as a before_action before routes which require Google authorization
+    def authorize_google_classroom
+      google_classroom_client = GitHubClassroom.google_classroom_client
+      unless user_google_classroom_credentials
+        login_hint = current_user.github_user.login
+        redirect_to google_classroom_client.get_authorization_url(login_hint: login_hint, request: request)
+      end
+
+      @google_classroom_service = Google::Apis::ClassroomV1::ClassroomService.new
+      @google_classroom_service.client_options.application_name = "GitHub Classroom"
+      @google_classroom_service.authorization = user_google_classroom_credentials
+    end
+
+    # Helper method for getting current user's google classroom credentials
+    def user_google_classroom_credentials
+      google_classroom_client = GitHubClassroom.google_classroom_client
+      user_id = current_user.uid.to_s
+
+      google_classroom_client.get_credentials(user_id, request)
+    rescue Signet::AuthorizationError
+      # Will reauthorize upstream
+      nil
     end
 
     def redirect_if_roster_exists
