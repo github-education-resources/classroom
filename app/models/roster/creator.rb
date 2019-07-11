@@ -53,13 +53,12 @@ class Roster
 
     def initialize(organization:, **options)
       @organization    = organization
-      @options         = options 
+      @options         = options
       @roster = Roster.new(identifier_name: DEFAULT_IDENTIFIER_NAME)
     end
 
     # Internal: Create create a Roster.
     #
-    # rubocop:disable Metrics/MethodLength
     def perform
       ensure_organization_does_not_have_roster!
 
