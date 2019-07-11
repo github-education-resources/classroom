@@ -64,6 +64,18 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
 
   describe "::perform", :vcr do
     describe "successful creation" do
+      let(:assignment) do
+        options = {
+          title: "Learn Elm",
+          starter_code_repo_id: 1_062_897,
+          organization: organization,
+          students_are_repo_admins: true,
+          public_repo: true
+        }
+
+        create(:assignment, options)
+      end
+
       after(:each) do
         AssignmentRepo.destroy_all
       end
@@ -87,11 +99,14 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
       end
 
       it "tracks the how long it too to be created" do
-        expect(GitHubClassroom.statsd).to receive(:timing)
+        expect(GitHubClassroom.statsd).to receive(:timing).with("exercise_repo.create.time", anything)
+        expect(GitHubClassroom.statsd).to receive(:timing).with("v2_exercise_repo.create.time", anything)
         AssignmentRepo::Creator.perform(assignment: assignment, user: student)
       end
 
       it "tracks create success stat" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.import.started")
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.success")
         expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
         AssignmentRepo::Creator.perform(assignment: assignment, user: student)
       end
@@ -126,7 +141,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
         result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
 
         expect(result.failed?).to be_truthy
-        expect(result.error).to eql(AssignmentRepo::Creator::REPOSITORY_CREATION_FAILED)
+        expect(result.error).to start_with(AssignmentRepo::Creator::REPOSITORY_CREATION_FAILED)
       end
 
       it "tracks create fail stat" do
@@ -134,7 +149,6 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
           .to_return(body: "{}", status: 401)
 
         expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.Unauthorized")
-        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.fail")
         AssignmentRepo::Creator.perform(assignment: assignment, user: student)
       end
 
@@ -154,7 +168,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
           result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
 
           expect(result.failed?).to be_truthy
-          expect(result.error).to eql(AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
+          expect(result.error).to start_with(AssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED)
           expect(WebMock).to have_requested(:put, import_regex)
         end
 
@@ -166,7 +180,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
           result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
 
           expect(result.failed?).to be_truthy
-          expect(result.error).to eql(AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED)
+          expect(result.error).to start_with(AssignmentRepo::Creator::REPOSITORY_COLLABORATOR_ADDITION_FAILED)
           expect(WebMock).to have_requested(:put, repo_invitation_regex)
         end
 
@@ -176,7 +190,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
           result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
 
           expect(result.failed?).to be_truthy
-          expect(result.error).to eql(AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE)
+          expect(result.error).to start_with(AssignmentRepo::Creator::DEFAULT_ERROR_MESSAGE)
         end
       end
     end

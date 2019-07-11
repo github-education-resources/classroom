@@ -11,7 +11,8 @@ Rails.application.routes.draw do
   root to: "pages#home"
 
   get "/assistant", to: "pages#assistant"
-  get "/home", to: "pages#homev2"
+  get "/help/(:article_name)", to: "pages#help", as: "help"
+  get "/home", to: "pages#home"
 
   get  "/login",  to: "sessions#new",     as: "login"
   post "/logout", to: "sessions#destroy", as: "logout"
@@ -19,8 +20,10 @@ Rails.application.routes.draw do
   get  "/login/oauth/authorize", to: "oauth#authorize"
   post  "/login/oauth/access_token", to: "oauth#access_token"
 
-  match "/auth/:provider/callback", to: "sessions#create",  via: %i[get post]
-  match "/auth/failure",            to: "sessions#failure", via: %i[get post]
+  match "/auth/lti/setup",          to: "sessions#lti_setup",     via: %i[get post]
+  match "/auth/lti/launch",         to: "sessions#lti_launch",    via: %i[get post]
+  match "/auth/:provider/callback", to: "sessions#create",        via: %i[get post]
+  match "/auth/failure",            to: "sessions#failure",       via: %i[get post]
 
   match "/google_classroom/oauth2_callback", to: Google::Auth::WebUserAuthorizer::CallbackApp, via: :all
   get "/google_classroom/list", to: "google_classroom#index"
@@ -89,6 +92,10 @@ Rails.application.routes.draw do
           patch :unlink_google_classroom
           get   :select_google_classroom
           get   :search_google_classroom
+        end
+
+        resource :lti_configuration, only: %i[show create edit], controller: "orgs/lti_configurations" do
+          get :info
         end
       end
 

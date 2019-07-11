@@ -6,7 +6,6 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
   include ActiveJob::TestHelper
 
   subject { described_class }
-
   let(:group_repo_channel) { GroupRepositoryCreationStatusChannel }
 
   context "with created objects", :vcr do
@@ -14,11 +13,11 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
     let(:student)       { classroom_student }
     let(:repo_access)   { RepoAccess.create(user: student, organization: organization) }
     let(:grouping)      { create(:grouping, organization: organization) }
-    let(:group)         { create(:group, grouping: grouping, github_team_id: 3_260_555) }
+    let(:github_team_id) { organization.github_organization.create_team(Faker::Team.name).id }
+    let(:group)         { create(:group, grouping: grouping, github_team_id: github_team_id) }
     let(:invite_status) { group_assignment.invitation.status(group) }
-    let(:channel)       { group_repo_channel.channel(group_assignment_id: group_assignment.id, group_id: group.id) }
     let(:group_assignment) do
-      group_assignment = create(
+      create(
         :group_assignment,
         grouping: grouping,
         title: "Learn JavaScript",
@@ -26,11 +25,11 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         public_repo: true,
         starter_code_repo_id: 1_062_897
       )
-      group_assignment.build_group_assignment_invitation
-      group_assignment
     end
+    let(:channel) { group_repo_channel.channel(group_assignment_id: group_assignment.id, group_id: group.id) }
 
     after(:each) do
+      organization.github_organization.delete_team(group.github_team_id)
       GroupAssignmentRepo.destroy_all
       clear_enqueued_jobs
       clear_performed_jobs
@@ -47,7 +46,7 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       end
 
       after(:each) do
-        expect_any_instance_of(subject).to_not receive(:broadcast_message)
+        expect_any_instance_of(GroupAssignmentRepo::Creator::Reporter).to_not receive(:broadcast_message)
         subject.perform_now(group_assignment, group)
         expect { GroupAssignmentRepo.find_by!(group_assignment: group_assignment, group: group) }
           .to raise_error(ActiveRecord::RecordNotFound)
@@ -122,30 +121,14 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       end
 
       describe "successful creation" do
-        describe "broadcasts" do
-          it "creating_repo" do
-            expect { subject.perform_now(group_assignment, group) }
-              .to have_broadcasted_to(channel)
-              .with(text: subject::CREATE_REPO, status: "creating_repo", repo_url: nil)
-          end
-
-          it "importing_starter_code" do
-            expect { subject.perform_now(group_assignment, group) }
-              .to have_broadcasted_to(channel)
-              .with(
-                text: subject::IMPORT_STARTER_CODE,
-                status: "importing_starter_code",
-                repo_url: "https://github.com/#{organization.github_organization.login}/learn-javascript-big_data_team"
-              )
-          end
-        end
-
         describe "datadog stats" do
           after do
             subject.perform_now(group_assignment, group)
           end
 
           it "tracks create success and import started" do
+            expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.create.success")
+            expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
             expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.success")
             expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.import.started")
           end
@@ -157,25 +140,20 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       end
 
       describe "context no starter code" do
-        let(:group_assignment) do
-          group_assignment = create(
-            :group_assignment,
-            grouping: grouping,
-            title: "Empty repo",
-            organization: organization,
-            public_repo: false
-          )
-          group_assignment.build_group_assignment_invitation
-          group_assignment
-        end
-
         describe "successful creation" do
           let(:assignment_repo) { GroupAssignmentRepo.find_by!(group_assignment: group_assignment, group: group) }
 
           before do
+            group_assignment.starter_code_repo_id = nil
+            group_assignment.save
+            invite_status.waiting!
             subject.perform_now(group_assignment, group)
           end
 
+          after do
+            group_assignment.starter_code_repo_id = 1_062_897
+            group_assignment.save
+          end
           it "changes the invite_status to completed" do
             expect(invite_status.reload.status).to eq("completed")
           end
@@ -210,27 +188,16 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         end
 
         describe "successful creation" do
-          describe "broadcasts" do
-            it "creating_repo" do
-              expect { subject.perform_now(group_assignment, group) }
-                .to have_broadcasted_to(channel)
-                .with(text: subject::CREATE_REPO, status: "creating_repo", repo_url: nil)
-            end
-
-            it "completed" do
-              expect { subject.perform_now(group_assignment, group) }
-                .to have_broadcasted_to(channel)
-                .with(text: subject::CREATE_COMPLETE, status: "completed", repo_url: nil)
-            end
-          end
-
           describe "datadog stats" do
             after do
               subject.perform_now(group_assignment, group)
             end
 
             it "tracks create success" do
+              expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.create.success")
+              expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.import.started")
               expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.success")
+              expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
             end
 
             it "tracks elapsed time" do
@@ -268,15 +235,17 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             it "creating_repo" do
               expect { subject.perform_now(group_assignment, group) }
                 .to have_broadcasted_to(channel)
-                .with(text: subject::CREATE_REPO, status: "creating_repo", repo_url: nil)
+                .with(text: GroupAssignmentRepo::Creator::CREATE_REPO, status: "creating_repo", repo_url: nil)
             end
 
             it "errored_creating_repo" do
               expect { subject.perform_now(group_assignment, group) }
                 .to have_broadcasted_to(channel)
                 .with(
-                  error: "There seems to be a problem on github.com, please try again.",
-                  status: "errored_creating_repo"
+                  hash_including(
+                    :error,
+                    status: "errored_creating_repo"
+                  )
                 )
             end
           end
@@ -302,14 +271,16 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             end
 
             it "tracks create fail" do
+              expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.create.fail")
               expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.InternalServerError")
+              expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.fail")
               expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.fail")
             end
 
             it "logs error" do
               expect(Rails.logger)
                 .to receive(:warn)
-                .with("There seems to be a problem on github.com, please try again.")
+                .with(a_string_starting_with(GroupAssignmentRepo::Creator::REPOSITORY_CREATION_FAILED))
             end
           end
         end
@@ -320,23 +291,21 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
               .to_return(status: 500)
           end
 
-          after(:each) do
-            expect(WebMock).to have_requested(:delete, %r{#{github_url("/repositories")}/\d+$})
-          end
-
           describe "broadcasts" do
             it "creating_repo" do
               expect { subject.perform_now(group_assignment, group) }
                 .to have_broadcasted_to(channel)
-                .with(text: subject::CREATE_REPO, status: "creating_repo", repo_url: nil)
+                .with(text: GroupAssignmentRepo::Creator::CREATE_REPO, status: "creating_repo", repo_url: nil)
             end
 
             it "errored_creating_repo" do
               expect { subject.perform_now(group_assignment, group) }
                 .to have_broadcasted_to(channel)
                 .with(
-                  status: "errored_creating_repo",
-                  error: "Assignment failed to be created: There seems to be a problem on github.com, please try again."
+                  hash_including(
+                    :error,
+                    status: "errored_creating_repo"
+                  )
                 )
             end
           end
@@ -362,14 +331,16 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             end
 
             it "tracks create fail" do
+              expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.create.fail")
               expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.InternalServerError")
+              expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.fail")
               expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.fail")
             end
 
             it "logs error" do
               expect(Rails.logger)
                 .to receive(:warn)
-                .with("Assignment failed to be created: There seems to be a problem on github.com, please try again.")
+                .with(a_string_starting_with(GroupAssignmentRepo::Creator::REPOSITORY_STARTER_CODE_IMPORT_FAILED))
             end
           end
         end
@@ -391,22 +362,24 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             it "creating_repo" do
               expect { subject.perform_now(group_assignment, group) }
                 .to have_broadcasted_to(channel)
-                .with(text: subject::CREATE_REPO, status: "creating_repo", repo_url: nil)
+                .with(text: GroupAssignmentRepo::Creator::CREATE_REPO, status: "creating_repo", repo_url: nil)
             end
 
             it "errored_creating_repo" do
-              expect { subject.perform_now(group_assignment, group) }
+              expect { subject.perform_now(group_assignment, group, retries: 0) }
                 .to have_broadcasted_to(channel)
                 .with(
-                  status: "errored_creating_repo",
-                  error: "Assignment failed to be created: There seems to be a problem on github.com, please try again."
+                  hash_including(
+                    :error,
+                    status: "errored_creating_repo"
+                  )
                 )
             end
           end
 
           context "perform before" do
             before do
-              subject.perform_now(group_assignment, group)
+              subject.perform_now(group_assignment, group, retries: 0)
             end
 
             it "doesn't create a GroupAssignmentRepo" do
@@ -425,36 +398,40 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             end
 
             it "tracks create fail" do
+              expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.create.fail")
               expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.InternalServerError")
+              expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.fail")
               expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.fail")
             end
 
             it "logs error" do
               expect(Rails.logger)
                 .to receive(:warn)
-                .with("Assignment failed to be created: There seems to be a problem on github.com, please try again.")
+                .with(a_string_starting_with(GroupAssignmentRepo::Creator::REPOSITORY_TEAM_ADDITION_FAILED))
             end
           end
         end
 
         context "fails to save the record" do
           before do
-            allow(GroupAssignmentRepo).to receive(:create!).and_raise(ActiveRecord::RecordInvalid)
+            allow_any_instance_of(GroupAssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
           end
 
           describe "broadcasts" do
             it "creating_repo" do
               expect { subject.perform_now(group_assignment, group) }
                 .to have_broadcasted_to(channel)
-                .with(text: subject::CREATE_REPO, status: "creating_repo", repo_url: nil)
+                .with(text: GroupAssignmentRepo::Creator::CREATE_REPO, status: "creating_repo", repo_url: nil)
             end
 
             it "errored_creating_repo" do
               expect { subject.perform_now(group_assignment, group) }
                 .to have_broadcasted_to(channel)
                 .with(
-                  error: "Record invalid",
-                  status: "errored_creating_repo"
+                  hash_including(
+                    :error,
+                    status: "errored_creating_repo"
+                  )
                 )
             end
           end
@@ -480,13 +457,9 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             end
 
             it "tracks create fail" do
+              expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.create.fail")
+              expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.fail")
               expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.fail")
-            end
-
-            it "logs error" do
-              expect(Rails.logger)
-                .to receive(:warn)
-                .with("Record invalid")
             end
           end
         end

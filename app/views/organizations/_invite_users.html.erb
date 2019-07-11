@@ -28,8 +28,7 @@
 
     <% if action_name == 'invite' %>
       <div class="form-actions">
-        <% path = student_identifier_enabled? ? new_roster_path(current_organization) : organization_path(current_organization) %>
-        <%= link_to t('views.organizations.continue'), path, class: 'btn btn-primary right' %>
+        <%= link_to t('views.organizations.continue'), new_roster_path(current_organization), class: 'btn btn-primary right' %>
       </div>
     <% end %>
   </div>

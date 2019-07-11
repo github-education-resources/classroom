@@ -56,13 +56,10 @@ class RepositoryImportEventJob < ApplicationJob
   # rubocop:disable Metrics/AbcSize
   def handle_group_assignment_repo(group_assignment_repo, status)
     group = group_assignment_repo.group
-    organization = group_assignment_repo.organization
     assignment = group_assignment_repo.assignment
     invitation = assignment.invitation
     invite_status = invitation.status(group)
     channel = GroupRepositoryCreationStatusChannel.channel(group_id: group.id, group_assignment_id: assignment.id)
-
-    return unless organization.feature_enabled?(:group_import_resiliency)
 
     case status
     when "success"

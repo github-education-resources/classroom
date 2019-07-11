@@ -27,12 +27,10 @@
         </div>
       </div>
 
-      <% if download_repositories_enabled? %>
-        <%= render partial: 'shared/open_on_assistant_modal', locals: {
-          assistant_url: assistant_organization_assignment_url,
-          enabled: @assignment_repos.present?
-        } %>
-      <% end %>
+      <%= render partial: 'shared/open_on_assistant_modal', locals: {
+        assistant_url: assistant_organization_assignment_url,
+        enabled: @assignment_repos.present?
+      } %>
 
       <div class="text-right mt-3 pl-2 settings">
         <%= link_to edit_organization_assignment_path(@organization, @assignment), class: 'btn right' do %>
@@ -56,15 +54,14 @@
             </nav>
           </div>
           <span id='students-span'>
-            <div class="assignment-repo-list">
-              <% @roster_entries.each do |entry| %>
-                <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
-                  url: organization_assignment_roster_entry_path(@organization, @assignment, entry)
-                } %>
+              <% if @roster_entries.present? %>
+                <%= render partial: 'assignments/filterable_assignment_roster_list' %>
+              <% else %>
+                <div class="blankslate">
+                  <h3>"<%= @assignment.title %>" does not have any repositories.</h3>
+                  <p>Share the invitation link with your students to get started.</p>
+                </div>
               <% end %>
-            </div>
-
-            <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :students_page } %>
           </span>
           <span id='unlinked-span' class='hidden-tab'>
             <span>
@@ -83,12 +80,9 @@
       </div>
     <% else %>
       <% if @assignment_repos.present? %>
-        <div class="assignment-repo-list">
-          <% @assignment_repos.each do |assignment_repo| %>
-            <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: { url: organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo) } %>
-          <% end %>
-        </div>
-
+        <% @assignment_repos.each do |assignment_repo| %>
+          <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: { url: organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo) } %>
+        <% end %>
         <%= render partial: 'shared/pagination', locals: { collection: @assignment_repos } %>
       <% else %>
         <div class="blankslate">

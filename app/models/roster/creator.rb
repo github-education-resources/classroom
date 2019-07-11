@@ -54,6 +54,7 @@ class Roster
     def initialize(organization:, **options)
       @organization    = organization
       @options         = options
+      @roster = Roster.new(identifier_name: @identifier_name)
     end
 
     # Internal: Create create a Roster.
@@ -63,8 +64,6 @@ class Roster
       ensure_organization_does_not_have_roster!
 
       ActiveRecord::Base.transaction do
-        @roster = Roster.new(identifier_name: DEFAULT_IDENTIFIER_NAME)
-
         google_ids = @options[:google_user_ids] || []
         add_identifiers_to_roster(@options[:identifiers], google_ids: google_ids) if @options.key?(:identifiers)
 

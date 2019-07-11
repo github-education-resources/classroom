@@ -1,11 +1,7 @@
 <div class="d-sm-flex flex-items-center flex-justify-between my-4">
   <% if @organizations.present? %>
-    <% if dashboard_search_enabled? %>
-      <%= form_tag search_organizations_path, id: 'js-search-form', class: 'form-block col-md-4', method: :get, remote: true do %>
-        <%= text_field_tag :query, params[:query], class: 'form-control width-full', placeholder: 'Search Classrooms...', autofocus: true, autocomplete: :off %>
-      <% end %>
-    <% else %>
-      <h2 class="f2 text-normal text-gray"><%= t('views.organizations.classrooms') %></h2>
+    <%= form_tag search_organizations_path, id: 'js-search-form', class: 'form-block col-md-4', method: :get, remote: true do %>
+      <%= text_field_tag :query, params[:query], class: 'form-control width-full', placeholder: 'Search Classrooms...', autofocus: true, autocomplete: :off %>
     <% end %>
 
     <%= link_to new_organization_path, class: 'd-none d-sm-inline-block btn btn-primary', role: 'button' do %>
@@ -15,16 +11,9 @@
 </div>
 
 <% if @organizations.present? %>
-  <% if dashboard_search_enabled? %>
     <div class="my-4" id="js-search-results">
       <%= render partial: 'organization_card_layout', locals: {organizations: @organizations} %>
     </div>
-  <% else %>
-    <div class="border rounded-1 bg-white my-4">
-      <%= render @organizations %>
-      <%= render partial: 'shared/pagination', locals: { collection: @organizations } %>
-    </div>
-  <% end %>
 <% else %>
     <div class="blankslate large-format spacious clean-background">
       <h3><%= t('views.organizations.no_classrooms') %></h3>

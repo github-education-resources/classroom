@@ -102,15 +102,23 @@ class OrganizationsController < Orgs::Controller
     end
   end
 
+  # rubocop:disable MethodLength
   def search
-    orgs_found = current_user.organizations.order(:id).where("title LIKE ?", "%#{params[:query]}%")
+    @organizations = current_user
+      .organizations
+      .order(:id)
+      .where("title ILIKE ?", "%#{params[:query]}%")
+      .page(params[:page])
+      .per(12)
+
     respond_to do |format|
       format.html do
         render partial: "organizations/organization_card_layout",
-               locals: { organizations: orgs_found.page(params[:page]).per(12) }
+               locals: { organizations: @organizations }
       end
     end
   end
+  # rubocop:enable MethodLength
 
   private
 

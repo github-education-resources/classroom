@@ -1,52 +1,19 @@
 # frozen_string_literal: true
 
 class AssignmentRepo
+  # rubocop:disable ClassLength
   class Creator
-    DEFAULT_ERROR_MESSAGE                   = "Assignment could not be created, please try again"
-    REPOSITORY_CREATION_FAILED              = "GitHub repository could not be created, please try again"
+    DEFAULT_ERROR_MESSAGE                   = "Assignment could not be created, please try again."
+    REPOSITORY_CREATION_FAILED              = "GitHub repository could not be created, please try again."
     REPOSITORY_STARTER_CODE_IMPORT_FAILED   = "We were not able to import you the starter code to your assignment, please try again." # rubocop:disable LineLength
     REPOSITORY_COLLABORATOR_ADDITION_FAILED = "We were not able to add you to the Assignment as a collaborator, please try again." # rubocop:disable LineLength
     REPOSITORY_CREATION_COMPLETE            = "Your GitHub repository was created."
     IMPORT_ONGOING                          = "Your GitHub repository is importing starter code."
+    CREATE_REPO                             = "Creating GitHub repository."
+    IMPORT_STARTER_CODE                     = "Importing starter code."
 
-    attr_reader :assignment, :user, :organization
-
-    class Result
-      class Error < StandardError; end
-
-      def self.success(assignment_repo)
-        new(:success, assignment_repo: assignment_repo)
-      end
-
-      def self.failed(error)
-        new(:failed, error: error)
-      end
-
-      def self.pending
-        new(:pending)
-      end
-
-      attr_reader :error, :assignment_repo, :status
-
-      def initialize(status, assignment_repo: nil, error: nil)
-        @status          = status
-        @assignment_repo = assignment_repo
-        @error           = error
-      end
-
-      def success?
-        @status == :success
-      end
-
-      def failed?
-        @status == :failed
-      end
-
-      def pending?
-        @status == :pending
-      end
-    end
-
+    attr_reader :assignment, :user, :organization, :invite_status, :reporter
+    delegate :broadcast_message, :report_time, :report_error, to: :reporter
     # Public: Create an AssignmentRepo.
     #
     # assignment - The Assignment that will own the AssignmentRepo.
@@ -61,12 +28,20 @@ class AssignmentRepo
       @assignment   = assignment
       @user         = user
       @organization = assignment.organization
+      @invite_status = assignment.invitation.status(user)
+      @reporter = Reporter.new(self)
     end
 
     # rubocop:disable MethodLength
     # rubocop:disable AbcSize
     def perform
       start = Time.zone.now
+      invite_status.creating_repo!
+
+      broadcast_message(
+        message: CREATE_REPO,
+        status_text: CREATE_REPO.chomp(".")
+      )
       verify_organization_has_private_repos_available!
 
       github_repository = create_github_repository!
@@ -85,19 +60,34 @@ class AssignmentRepo
 
       begin
         assignment_repo.save!
-      rescue ActiveRecord::RecordInvalid
-        raise Result::Error, DEFAULT_ERROR_MESSAGE
+      rescue ActiveRecord::RecordInvalid => error
+        Rails.logger.warn(error.message)
+        raise Result::Error.new DEFAULT_ERROR_MESSAGE, error.message
+      end
+      report_time(start)
+
+      GitHubClassroom.statsd.increment("v2_exercise_repo.create.success")
+      GitHubClassroom.statsd.increment("exercise_repo.create.success")
+      if assignment.starter_code?
+        invite_status.importing_starter_code!
+        broadcast_message(
+          message: IMPORT_STARTER_CODE,
+          status_text: "Import started",
+          repo_url: assignment_repo.github_repository.html_url
+        )
+        GitHubClassroom.statsd.increment("exercise_repo.import.started")
+      else
+        invite_status.completed!
+        broadcast_message(
+          message: REPOSITORY_CREATION_COMPLETE,
+          status_text: "Completed"
+        )
       end
 
-      duration_in_millseconds = (Time.zone.now - start) * 1_000
-      GitHubClassroom.statsd.timing("exercise_repo.create.time", duration_in_millseconds)
-      GitHubClassroom.statsd.increment("exercise_repo.create.success")
-
       Result.success(assignment_repo)
-    rescue Result::Error => err
+    rescue Result::Error => error
       delete_github_repository(assignment_repo.try(:github_repo_id))
-      GitHubClassroom.statsd.increment("exercise_repo.create.fail")
-      Result.failed(err.message)
+      Result.failed(error.message)
     end
     # rubocop:enable AbcSize
     # rubocop:enable MethodLength
@@ -111,11 +101,11 @@ class AssignmentRepo
       options = {}.tap { |opt| opt[:permission] = "admin" if assignment.students_are_repo_admins? }
 
       github_repository = GitHubRepository.new(organization.github_client, github_repository_id)
-      invitation = github_repository.invite(user.github_user.login_no_cache, options)
+      invitation = github_repository.invite(user.github_user.login(use_cache: false), options)
 
       user.github_user.accept_repository_invitation(invitation.id) if invitation.present?
-    rescue GitHub::Error
-      raise Result::Error, REPOSITORY_COLLABORATOR_ADDITION_FAILED
+    rescue GitHub::Error => error
+      raise Result::Error.new REPOSITORY_COLLABORATOR_ADDITION_FAILED, error.message
     end
     # rubocop:enable Metrics/AbcSize
 
@@ -131,8 +121,8 @@ class AssignmentRepo
       }
 
       organization.github_organization.create_repository(repository_name, options)
-    rescue GitHub::Error
-      raise Result::Error, REPOSITORY_CREATION_FAILED
+    rescue GitHub::Error => error
+      raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
     end
 
     def delete_github_repository(github_repo_id)
@@ -156,8 +146,8 @@ class AssignmentRepo
       starter_code_repository = GitHubRepository.new(client, starter_code_repo_id)
 
       assignment_repository.get_starter_code_from(starter_code_repository)
-    rescue GitHub::Error
-      raise Result::Error, REPOSITORY_STARTER_CODE_IMPORT_FAILED
+    rescue GitHub::Error => error
+      raise Result::Error.new REPOSITORY_STARTER_CODE_IMPORT_FAILED, error.message
     end
 
     # Public: Ensure that we can make a private repository on GitHub.
@@ -201,7 +191,7 @@ class AssignmentRepo
       suffix_count = 0
 
       owner           = organization.github_organization.login_no_cache
-      repository_name = "#{assignment.slug}-#{user.github_user.login_no_cache}"
+      repository_name = "#{assignment.slug}-#{user.github_user.login(use_cache: false)}"
 
       loop do
         name = "#{owner}/#{suffixed_repo_name(repository_name, suffix_count)}"
@@ -221,4 +211,5 @@ class AssignmentRepo
       repository_name.truncate(100 - suffix.length, omission: "") + suffix
     end
   end
+  # rubocop:enable ClassLength
 end

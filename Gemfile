@@ -41,6 +41,7 @@ gem "active_model_serializers", "~> 0.10.0"
 gem "api-pagination", "4.7.1"
 gem "kaminari", "~> 1.0", ">= 1.0.1"
 
+gem "ims-lti", "~> 2.2.3"
 gem "local_time", "~> 2.0"
 
 gem "octicons_helper", "~> 2.1"
@@ -55,7 +56,7 @@ gem "peek-git",             "~> 1.0", ">= 1.0.2"
 gem "peek-performance_bar", "1.2"
 gem "peek-pg",              "~> 1.3"
 gem "peek-sidekiq",         "1.0.0.4.g261c857"
-gem "pg",                   "~> 0.21.0"
+gem "pg",                   "~> 1.1.4"
 gem "pry-byebug",           "~> 3.5"
 gem "pry-rails",            "~> 0.3.6"
 gem "puma",                 "~> 3.10"
@@ -66,6 +67,8 @@ gem "rack-timeout",        "~> 0.4.2", require: false
 gem "rails-i18n",          "~> 5.0", ">= 5.0.1"
 gem "redis-namespace",     "~> 1.5", ">= 1.5.3"
 gem "ruby-progressbar",    "~> 1.8", ">= 1.8.1", require: false
+
+gem "kramdown",            "~> 1.17.0"
 
 gem "sass-rails", "~> 5.0", ">= 5.0.6"
 gem "sidekiq",    "~> 5.0", ">= 5.0.4"
@@ -86,6 +89,7 @@ group :development, :test do
   gem "awesome_print",            "~> 1.8", require: "ap"
   gem "bullet",                   "~> 5.6", ">= 5.6.1"
   gem "dotenv-rails",             "~> 2.2", ">= 2.2.1"
+  gem "fuubar",                   "~> 2.4.0"
   gem "guard-rspec",              "~> 4.7", ">= 4.7.3", require: false
   gem "knapsack",                 "~> 1.14", ">= 1.14.1"
   gem "rails-controller-testing", "~> 1.0", ">= 1.0.2"
@@ -99,7 +103,6 @@ group :development, :test do
 end
 
 group :production do
-  gem "airbrake",           "~> 6.2", ">= 6.2.1"
   gem "dogstatsd-ruby",     "~> 3.0"
   gem "lograge",            "~> 0.6.0"
   gem "newrelic_rpm",       "~> 4.4", ">= 4.4.0.336"
