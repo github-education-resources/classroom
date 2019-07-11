@@ -9,7 +9,7 @@ RSpec.describe User, type: :model do
   let(:user)                  { subject }
 
   describe ".search" do
-    let(:searchable_user) { create(:user, github_login: "d12", github_name: "Nathaniel Woodthorpe", uid: 123999) }
+    let(:searchable_user) { create(:user, github_login: "d12", github_name: "Nathaniel Woodthorpe", uid: 123_999) }
 
     before do
       expect(searchable_user).to_not be_nil

@@ -20,7 +20,6 @@ RSpec.describe Organization, type: :model do
     end
 
     it "searches by github_id" do
-      byebug
       results = Organization.search(subject.github_id)
       expect(results.to_a).to include(subject)
     end
