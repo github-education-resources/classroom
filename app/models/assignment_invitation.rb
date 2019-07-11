@@ -2,10 +2,22 @@
 
 class AssignmentInvitation < ApplicationRecord
   include ShortKey
+  include PgSearch
+
+  pg_search_scope(
+    :search,
+    against: %i(
+      id
+      key
+    ),
+    using: {
+      tsearch: {
+        dictionary: "english",
+      }
+    }
+  )
 
   default_scope { where(deleted_at: nil) }
-
-  update_index("assignment_invitation#assignment_invitation") { self }
 
   belongs_to :assignment
 

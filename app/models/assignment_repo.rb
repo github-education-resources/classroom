@@ -2,8 +2,20 @@
 
 class AssignmentRepo < ApplicationRecord
   include AssignmentRepoable
+  include PgSearch
 
-  update_index("assignment_repo#assignment_repo") { self }
+  pg_search_scope(
+    :search,
+    against: %i(
+      id
+      github_repo_id
+    ),
+    using: {
+      tsearch: {
+        dictionary: "english",
+      }
+    }
+  )
 
   # TODO: remove this enum (dead code)
   enum configuration_state: %i[not_configured configuring configured]

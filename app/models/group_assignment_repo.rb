@@ -3,8 +3,20 @@
 class GroupAssignmentRepo < ApplicationRecord
   include AssignmentRepoable
   include Sortable
+  include PgSearch
 
-  update_index("group_assignment_repo#group_assignment_repo") { self }
+  pg_search_scope(
+    :search,
+    against: %i(
+      id
+      github_repo_id
+    ),
+    using: {
+      tsearch: {
+        dictionary: "english",
+      }
+    }
+  )
 
   enum configuration_state: %i[not_configured configuring configured]
 

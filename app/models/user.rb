@@ -3,8 +3,22 @@
 class User < ApplicationRecord
   include Flippable
   include GraphQLNode
+  include PgSearch
 
-  # update_index("user#user") { self }
+  pg_search_scope(
+    :search,
+    against: %i(
+      id
+      uid
+      github_login
+      github_name
+    ),
+    using: {
+      tsearch: {
+        dictionary: "english",
+      }
+    }
+  )
 
   has_many :assignment_repos
   has_many :repo_accesses, dependent: :destroy

@@ -4,8 +4,21 @@ class Assignment < ApplicationRecord
   include Flippable
   include GitHubPlan
   include ValidatesNotReservedWord
+  include PgSearch
 
-  update_index("assignment#assignment") { self }
+  pg_search_scope(
+    :search,
+    against: %i(
+      id
+      title
+      slug
+    ),
+    using: {
+      tsearch: {
+        dictionary: "english",
+      }
+    }
+  )
 
   default_scope { where(deleted_at: nil) }
 

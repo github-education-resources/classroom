@@ -2,8 +2,21 @@
 
 class Grouping < ApplicationRecord
   include Sluggable
+  include PgSearch
 
-  update_index("grouping#grouping") { self }
+  pg_search_scope(
+    :search,
+    against: %i(
+      id
+      title
+      slug
+    ),
+    using: {
+      tsearch: {
+        dictionary: "english",
+      }
+    }
+  )
 
   has_many :groups, dependent: :destroy
   has_many :users, through: :groups, source: :repo_accesses

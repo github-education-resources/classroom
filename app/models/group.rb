@@ -3,8 +3,22 @@
 class Group < ApplicationRecord
   include GitHubTeamable
   include Sluggable
+  include PgSearch
 
-  update_index("group#group") { self }
+  pg_search_scope(
+    :search,
+    against: %i(
+      id
+      github_team_id
+      title
+      slug
+    ),
+    using: {
+      tsearch: {
+        dictionary: "english",
+      }
+    }
+  )
 
   belongs_to :grouping
 
