@@ -24,6 +24,29 @@ RSpec.describe GroupAssignmentRepo, type: :model do
     let(:group) { create(:group, grouping: grouping, github_team_id: github_team_id, repo_accesses: [repo_access]) }
     subject { create(:group_assignment_repo, group_assignment: group_assignment, group: group, github_repo_id: 42) }
 
+    describe ".search" do
+      let(:searchable_repo) { create(:group_assignment_repo, group_assignment: group_assignment) }
+
+      before do
+        expect(searchable_repo).to_not be_nil
+      end
+
+      it "searches by id" do
+        results = GroupAssignmentRepo.search(searchable_repo.id)
+        expect(results.to_a).to include(searchable_repo)
+      end
+
+      it "searches by github_repo_id" do
+        results = GroupAssignmentRepo.search(searchable_repo.github_repo_id)
+        expect(results.to_a).to include(searchable_repo)
+      end
+
+      it "does not return the assignment when it shouldn't" do
+        results = GroupAssignmentRepo.search("spaghetto")
+        expect(results.to_a).to_not include(searchable_repo)
+      end
+    end
+
     describe "callbacks", :vcr do
       describe "before_destroy" do
         describe "#silently_destroy_github_repository" do
