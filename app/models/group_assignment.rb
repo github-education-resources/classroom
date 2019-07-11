@@ -38,6 +38,7 @@ class GroupAssignment < ApplicationRecord
 
   validate :uniqueness_of_slug_across_organization
   validate :max_teams_less_than_group_count
+  validate :starter_code_repository_not_empty
 
   alias_attribute :invitation, :group_assignment_invitation
   alias_attribute :repos, :group_assignment_repos
@@ -77,5 +78,11 @@ class GroupAssignment < ApplicationRecord
     else
       errors.add(:max_teams, "is less than the number of existing teams (#{group_count})")
     end
+  end
+
+  def starter_code_repository_not_empty
+    return unless starter_code? && starter_code_repository.empty?
+    raise GitHub::Error, "Starter code repository cannot be empty. Select a repository that is not empty or create the"\
+      " assignment without starter code."
   end
 end
