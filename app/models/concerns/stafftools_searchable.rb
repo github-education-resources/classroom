@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module StafftoolsSearchable
   extend ActiveSupport::Concern
   include PgSearch
