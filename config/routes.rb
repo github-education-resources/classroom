@@ -81,12 +81,13 @@ Rails.application.routes.draw do
           patch :link
           patch :unlink
           patch :delete_entry
-          patch :add_students
+          match :add_students, via: %i[get patch]
           patch :remove_organization
         end
 
         resource :lti_configuration, only: %i[show create edit], controller: "orgs/lti_configurations" do
           get :info
+          get :import
         end
       end
 
