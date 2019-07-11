@@ -173,7 +173,6 @@ RSpec.describe GroupAssignment, type: :model do
     end
   end
 
-<<<<<<< HEAD
   describe "#starter_code_repository_not_empty" do
     let(:organization) { classroom_org }
 
@@ -209,7 +208,7 @@ RSpec.describe GroupAssignment, type: :model do
       expect { group_assignment.save! }.not_to raise_error
     end
   end
-=======
+
   describe "#starter_code_repository_is_a_template_repository", :vcr do
     let(:organization) { classroom_org }
     let(:client) { oauth_client }

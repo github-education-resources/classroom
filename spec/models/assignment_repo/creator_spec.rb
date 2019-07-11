@@ -135,20 +135,30 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
       end
 
       context "using template repos" do
+        let(:client) { oauth_client }
+        let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
+        let(:github_repository) do
+          options = {
+            private: true,
+            is_template: true,
+            accept: "application/vnd.github.baptiste-preview"
+          }
+          github_organization.create_repository("#{Faker::Company.name} Template", options)
+        end
         let(:assignment) do
           options = {
             title: "Learn Elm",
-            starter_code_repo_id: 141_379_603,
+            starter_code_repo_id: github_repository.id,
             organization: organization,
             students_are_repo_admins: true,
             public_repo: true,
             template_repos_enabled: true
           }
-
           create(:assignment, options)
         end
 
         after(:each) do
+          client.delete_repository(github_repository.id)
           AssignmentRepo.destroy_all
         end
 

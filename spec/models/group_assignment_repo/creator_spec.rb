@@ -151,6 +151,17 @@ RSpec.describe GroupAssignmentRepo::Creator do
       end
 
       context "with template repos" do
+        let(:client) { oauth_client }
+        let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
+        let(:github_repository) do
+          options = {
+            private: true,
+            is_template: true,
+            accept: "application/vnd.github.baptiste-preview",
+            auto_init: true
+          }
+          github_organization.create_repository("#{Faker::Company.name} Template", options)
+        end
         let(:group_assignment) do
           create(
             :group_assignment,
@@ -158,7 +169,7 @@ RSpec.describe GroupAssignmentRepo::Creator do
             title: "Learn JavaScript",
             organization: organization,
             public_repo: true,
-            starter_code_repo_id: 141_379_603,
+            starter_code_repo_id: github_repository.id,
             template_repos_enabled: true
           )
         end
