@@ -110,14 +110,10 @@ class GroupAssignment < ApplicationRecord
     endpoint_url = "https://api.github.com/repositories/#{starter_code_repo_id}"
     starter_code_github_repository = creator.github_client.get(endpoint_url, options)
 
-    if starter_code_github_repository.is_template
-      return true
-    else
-      errors.add(
-        :starter_code_repository,
-        "is not a template repository. Make it a template repository to use template cloning."
-      )
-      return false
-    end
+    return if starter_code_github_repository.is_template
+    errors.add(
+      :starter_code_repository,
+      "is not a template repository. Make it a template repository to use template cloning."
+    )
   end
 end

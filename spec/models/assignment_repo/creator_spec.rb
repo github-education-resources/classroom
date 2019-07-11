@@ -131,14 +131,14 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
             expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
               .with(body: /^.*#{@original_repository.name}-1.*$/)
           end
-        end        
+        end
       end
 
       context "using template repos" do
         let(:assignment) do
           options = {
             title: "Learn Elm",
-            starter_code_repo_id: 141379603,
+            starter_code_repo_id: 141_379_603,
             organization: organization,
             students_are_repo_admins: true,
             public_repo: true,

@@ -157,10 +157,18 @@ class AssignmentsController < ApplicationController
     end
   end
 
+  # rubocop:disable MethodLength
   def update_assignment_params
     params
       .require(:assignment)
-      .permit(:title, :slug, :public_repo, :students_are_repo_admins, :deadline, :invitations_enabled, :template_repos_enabled)
+      .permit(
+        :title,
+        :slug,
+        :public_repo,
+        :students_are_repo_admins,
+        :deadline, :invitations_enabled,
+        :template_repos_enabled
+      )
       .merge(starter_code_repo_id: starter_code_repo_id_param)
   end
 

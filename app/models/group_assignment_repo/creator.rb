@@ -32,8 +32,7 @@ class GroupAssignmentRepo
     # Creates a GroupAssignmentRepo with an associated GitHub repo
     # If creation fails, it deletes the GitHub repo
     #
-    # rubocop:disable MethodLength
-    # rubocop:disable AbcSize
+    # rubocop:disable MethodLength, AbcSize, CyclomaticComplexity, PerceivedComplexity
     def perform
       start = Time.zone.now
       invite_status.creating_repo!
@@ -103,6 +102,7 @@ class GroupAssignmentRepo
       raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
     end
 
+    # rubocop:disable MethodLength, AbcSize
     def clone_github_template_repository!
       repository_name = generate_github_repository_name
       client = group_assignment.creator.github_client
@@ -146,8 +146,6 @@ class GroupAssignmentRepo
       true
     end
 
-    # rubocop:disable MethodLength
-    # rubocop:disable Metrics/AbcSize
     def verify_organization_has_private_repos_available!
       return true if group_assignment.public?
 

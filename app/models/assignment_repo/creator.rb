@@ -32,8 +32,7 @@ class AssignmentRepo
       @reporter = Reporter.new(self)
     end
 
-    # rubocop:disable MethodLength
-    # rubocop:disable AbcSize
+    # rubocop:disable MethodLength, AbcSize, CyclomaticComplexity, PerceivedComplexity
     def perform
       start = Time.zone.now
       invite_status.creating_repo!
@@ -44,11 +43,11 @@ class AssignmentRepo
       )
       verify_organization_has_private_repos_available!
 
-      if assignment.organization.feature_enabled?(:template_repos) && assignment.use_template_repos?
-        github_repository = clone_github_template_repository!
-      else
-        github_repository = create_github_repository!
-      end
+      github_repository = if assignment.organization.feature_enabled?(:template_repos) && assignment.use_template_repos?
+                            clone_github_template_repository!
+                          else
+                            create_github_repository!
+                          end
 
       assignment_repo = assignment.assignment_repos.build(
         github_repo_id: github_repository.id,
@@ -58,9 +57,7 @@ class AssignmentRepo
 
       add_user_to_repository!(assignment_repo.github_repo_id)
 
-      if assignment.use_importer?
-        push_starter_code!(assignment_repo.github_repo_id)
-      end
+      push_starter_code!(assignment_repo.github_repo_id) if assignment.use_importer?
 
       begin
         assignment_repo.save!
@@ -136,11 +133,10 @@ class AssignmentRepo
       true
     end
 
-    # rubocop:enable Metrics/AbcSize
-
     # Public: Clone the GitHub template repository for the AssignmentRepo.
     #
     # Returns an Integer ID or raises a Result::Error
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     def clone_github_template_repository!
       client = assignment.creator.github_client
       repository_name = generate_github_repository_name
@@ -153,7 +149,7 @@ class AssignmentRepo
       }
 
       client.post("https://api.github.com/repositories/#{assignment.starter_code_repo_id}/generate", options)
-    rescue GitHub::Error => error_message
+    rescue GitHub::Error => error
       raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
     end
 
@@ -178,8 +174,6 @@ class AssignmentRepo
     # Public: Ensure that we can make a private repository on GitHub.
     #
     # Returns True or raises a Result::Error with a helpful message.
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable MethodLength
     def verify_organization_has_private_repos_available!
       return true if assignment.public?
 

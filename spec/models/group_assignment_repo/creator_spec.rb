@@ -158,7 +158,7 @@ RSpec.describe GroupAssignmentRepo::Creator do
             title: "Learn JavaScript",
             organization: organization,
             public_repo: true,
-            starter_code_repo_id: 141379603,
+            starter_code_repo_id: 141_379_603,
             template_repos_enabled: true
           )
         end

@@ -171,13 +171,11 @@ RSpec.describe Assignment, type: :model do
         assignment.update(template_repos_enabled: true)
       end
 
-      it "does not raise an error when starter code repo is a template repo" do 
+      it "does not raise an error when starter code repo is a template repo" do
         client.patch(
           "https://api.github.com/repositories/#{github_repository.id}",
-          options = {
-            is_template: true,
-            accept: "application/vnd.github.baptiste-preview"
-          }
+          is_template: true,
+          accept: "application/vnd.github.baptiste-preview"
         )
         assignment.assign_attributes(starter_code_repo_id: github_repository.id)
         expect { assignment.save! }.not_to raise_error
@@ -186,10 +184,8 @@ RSpec.describe Assignment, type: :model do
       it "raises an error when starter code repository is not a template repo" do
         client.patch(
           "https://api.github.com/repositories/#{github_repository.id}",
-          options = {
-            is_template: false,
-            accept: "application/vnd.github.baptiste-preview"
-          }
+          is_template: false,
+          accept: "application/vnd.github.baptiste-preview"
         )
         assignment.assign_attributes(starter_code_repo_id: github_repository.id)
         expect { assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Starter code "\
