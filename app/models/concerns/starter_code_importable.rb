@@ -40,5 +40,5 @@ module StarterCodeImportable
       :starter_code_repository,
       "is not a template repository. Make it a template repository to use template cloning."
     )
-  end  
+  end
 end
