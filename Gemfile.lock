@@ -275,6 +275,7 @@ GEM
     notiffany (0.1.1)
       nenv (~> 0.1)
       shellany (~> 0.0)
+    oauth (0.5.4)
     oauth2 (1.4.0)
       faraday (>= 0.8, < 0.13)
       jwt (~> 1.0)
@@ -550,6 +551,7 @@ DEPENDENCIES
   local_time (~> 2.0)
   lograge (~> 0.6.0)
   newrelic_rpm (~> 4.4, >= 4.4.0.336)
+  oauth (~> 0.5.4)
   octicons_helper (~> 2.1)
   octokit!
   octopoller (~> 0.1)
