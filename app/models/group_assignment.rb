@@ -3,6 +3,7 @@
 class GroupAssignment < ApplicationRecord
   include Flippable
   include GitHubPlan
+  include StarterCodeImportable
   include ValidatesNotReservedWord
   include StafftoolsSearchable
 
@@ -50,31 +51,6 @@ class GroupAssignment < ApplicationRecord
 
   def public?
     public_repo
-  end
-
-  def starter_code?
-    starter_code_repo_id.present?
-  end
-
-  def starter_code_repository
-    return unless starter_code?
-    @starter_code_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id)
-  end
-
-  def template_repos_enabled?
-    template_repos_enabled
-  end
-
-  def template_repos_disabled?
-    !template_repos_enabled
-  end
-
-  def use_template_repos?
-    starter_code? && template_repos_enabled?
-  end
-
-  def use_importer?
-    starter_code? && template_repos_disabled?
   end
 
   def to_param
