@@ -30,6 +30,13 @@ module Orgs
       sync_google_classroom
       unlink_google_classroom
     ]
+    before_action :ensure_no_lti_configuration, only:   %i[
+      import_from_google_classroom
+      select_google_classroom
+      search_google_classroom
+      sync_google_classroom
+      unlink_google_classroom
+    ]
 
     helper_method :current_roster, :unlinked_users, :authorize_google_classroom
 
@@ -261,6 +268,13 @@ module Orgs
       return if params[:grouping].nil?
 
       not_found unless Grouping.find(params[:grouping]).organization_id == current_organization.id
+    end
+
+    def ensure_no_lti_configuration
+      if current_organization.lti_configuration
+        redirect_to edit_organization_path(current_organization),
+          alert: "An existing configuration exists. Please remove configuration before creating a new one."
+      end
     end
 
     # An unlinked user is a user who:

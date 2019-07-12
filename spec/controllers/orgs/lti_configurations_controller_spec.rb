@@ -11,6 +11,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
   end
 
   describe "GET #info", :vcr do
+  
     context "with flipper disabled" do
       before(:each) do
         GitHubClassroom.flipper[:lti_launch].disable
@@ -34,6 +35,18 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
 
       it "renders info template" do
         expect(response).to render_template(:info)
+      end
+
+      context "with existing google classrom" do
+        before do
+          organization.update_attributes(google_course_id: "1234")
+        end
+  
+        it "alerts user about existing configuration" do
+          get :info, params: { id: organization.slug }
+          expect(response).to redirect_to(edit_organization_path(organization))
+          expect(flash[:alert]).to eq("An existing configuration exists. Please remove configuration before creating a new one.")
+        end
       end
     end
   end
@@ -74,6 +87,18 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         it "redirects to info" do
           get :show, params: { id: organization.slug }
           expect(response).to redirect_to(info_lti_configuration_path(organization))
+        end
+      end
+
+      context "with existing google classrom" do
+        before do
+          organization.update_attributes(google_course_id: "1234")
+        end
+  
+        it "alerts user about existing configuration" do
+          get :show, params: { id: organization.slug }
+          expect(response).to redirect_to(edit_organization_path(organization))
+          expect(flash[:alert]).to eq("An existing configuration exists. Please remove configuration before creating a new one.")
         end
       end
     end
