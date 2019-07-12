@@ -3,7 +3,7 @@
 module Orgs
   class LtiConfigurationsController < Orgs::Controller
     before_action :ensure_lti_launch_flipper_is_enabled
-    before_action :ensure_current_lti_configuration, only: :show
+    before_action :ensure_current_lti_configuration, except: %i[new create]
 
     # rubocop:disable Metrics/MethodLength
     def create
@@ -26,13 +26,15 @@ module Orgs
 
     def new; end
 
-    def edit
-      if @current_lti_configuration.update_attributes(lti_configuration_params)
-        flash[:success] = "Your LMS configuration has been created!"
+    def edit; end
+
+    def update
+      if current_lti_configuration.update_attributes(lti_configuration_params)
+        redirect_to lti_configuration_path(current_organization)
       else
-        flash[:error] = "Your LMS configuration could not be created. Please try again."
+        flash[:error] = "The configuration could not be updated at this time. Please try again."
+        redirect_to edit_lti_configuration_path(current_organization)
       end
-      render :show
     end
 
     def destroy
