@@ -7,6 +7,6 @@ module GitHubClassroom
       redis_store: GitHubClassroom.redis
     }.merge!(options)
 
-    GitHubClassroom::LtiMessageStore.new(client_options)
+    LTI::MessageStore.new(client_options)
   end
 end
