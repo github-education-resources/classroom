@@ -5,20 +5,22 @@ module Orgs
     before_action :ensure_lti_launch_flipper_is_enabled
     before_action :ensure_current_lti_configuration, only: :show
 
+    # rubocop:disable Metrics/MethodLength
     def create
-      lti_configuration = LtiConfiguration.create({
+      lti_configuration = LtiConfiguration.create(
         organization: current_organization,
         consumer_key: SecureRandom.uuid,
         shared_secret: SecureRandom.uuid
-      })
+      )
 
       if lti_configuration.present?
         redirect_to lti_configuration_path(current_organization)
       else
         redirect_to new_lti_configuration_path(current_lti_configuration),
-          alert: "There was a problem creating the configuration. Please try again."
+          alert: "There was a problem creating the configuration. Please try again later."
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     def show; end
 
