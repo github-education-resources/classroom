@@ -35,6 +35,8 @@ module Orgs
 
     def destroy
       current_lti_configuration.destroy!
+
+      redirect_to edit_organization_path(id: current_organization), alert: "LTI Configuration Deleted."
     end
 
     private
