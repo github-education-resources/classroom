@@ -44,6 +44,22 @@
           <h3>2. Add LMS classroom link (optional)</h3>
           <%= render partial: "orgs/lti_configurations/edit_form" %>
         </div>
+
+        <div class="boxed-group dangerzone">
+          <h3>Delete LMS Configuration</h3>
+          <div class="boxed-group-inner pt-2 clearfix">
+            <p>
+              Deleting the LMS configuration will not delete all students.
+            </p>
+            <p>
+              This will not delete assignments, assignment repos, or submissions.
+            </p>
+              After deleting your LMS, you will not be able to sync your roster anymore.
+            </p>
+            <p>
+              <%= button_to "Delete LMS Configuration", lti_configuration_path(current_organization), method: :delete, class: 'btn btn-danger'%>
+            </p>
+          </div>
       </div>
     </div>
   </div>

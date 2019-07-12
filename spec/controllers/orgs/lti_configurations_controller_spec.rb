@@ -88,6 +88,19 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       it "creates lti_configuration" do
         post :create, params: { id: organization.slug }
         expect(organization.lti_configuration).to_not be_nil
+        expect(response).to redirect_to(lti_configuration_path(organization))
+      end
+
+      context "with existing configuration" do
+        before(:each) do
+          post :create, params: { id: organization.slug }
+        end
+
+        it "does not create a configuration if one exists" do
+          post :create, params: { id: organization.slug }
+          expect(flash[:alert]).to eq("An existing LMS configuration exists.")
+          expect(response).to redirect_to(lti_configuration_path(organization))
+        end
       end
     end
 
@@ -120,6 +133,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
           organization.reload
           expect(organization.lti_configuration).to be_nil
           expect(response).to redirect_to(edit_organization_path(id: organization))
+          expect(flash[:alert]).to eq("LTI configuration deleted.")
         end
       end
     end
@@ -131,6 +145,49 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
 
       it "does not create lti_configuration" do
         post :create, params: { id: organization.slug }
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  describe "PATCH #update", :vcr do
+    context "with flipper on" do
+      before(:each) do
+        GitHubClassroom.flipper[:lti_launch].enable
+      end
+
+      context "with existing lti_configuration" do
+        before(:each) do
+          post :create, params: { id: organization.slug }
+        end
+
+        it "updates with new LMS url" do
+          options = { lms_link: "https://github.com" }
+          patch :update, params: { id: organization.slug, lti_configuration: options }
+          expect(organization.lti_configuration.lms_link).to eq("https://github.com")
+          expect(flash[:success]).to eq("The configuration was sucessfully updated.")
+          expect(response).to redirect_to(lti_configuration_path(organization))
+        end
+      end
+
+      context "with no existing lti_configuration" do
+        it "does not update or create" do
+          options = { lms_link: "https://github.com" }
+          patch :update, params: { id: organization.slug, lti_configuration: options }
+          expect(response).to redirect_to(new_lti_configuration_path(organization))
+          expect(organization.lti_configuration).to be_nil
+        end
+      end
+    end
+
+    context "with flipper disabled" do 
+      before(:each) do
+        GitHubClassroom.flipper[:lti_launch].disable
+      end
+
+      it "returns a not_found" do
+        options = { lms_link: "https://github.com" }
+        patch :update, params: { id: organization.slug, lti_configuration: options }
         expect(response).to have_http_status(:not_found)
       end
     end

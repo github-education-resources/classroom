@@ -7,17 +7,22 @@ module Orgs
 
     # rubocop:disable Metrics/MethodLength
     def create
-      lti_configuration = LtiConfiguration.create(
-        organization: current_organization,
-        consumer_key: SecureRandom.uuid,
-        shared_secret: SecureRandom.uuid
-      )
+      if current_lti_configuration.nil?
+        lti_configuration = LtiConfiguration.create(
+          organization: current_organization,
+          consumer_key: SecureRandom.uuid,
+          shared_secret: SecureRandom.uuid
+        )
 
-      if lti_configuration.present?
-        redirect_to lti_configuration_path(current_organization)
+        if lti_configuration.present?
+          redirect_to lti_configuration_path(current_organization)
+        else
+          redirect_to new_lti_configuration_path(current_lti_configuration),
+            alert: "There was a problem creating the configuration. Please try again later."
+        end
       else
-        redirect_to new_lti_configuration_path(current_lti_configuration),
-          alert: "There was a problem creating the configuration. Please try again later."
+        redirect_to lti_configuration_path(current_organization),
+          alert: "An existing LMS configuration exists."
       end
     end
     # rubocop:enable Metrics/MethodLength
@@ -30,6 +35,7 @@ module Orgs
 
     def update
       if current_lti_configuration.update_attributes(lti_configuration_params)
+        flash[:success] = "The configuration was sucessfully updated."
         redirect_to lti_configuration_path(current_organization)
       else
         flash[:error] = "The configuration could not be updated at this time. Please try again."
@@ -40,7 +46,7 @@ module Orgs
     def destroy
       current_lti_configuration.destroy!
 
-      redirect_to edit_organization_path(id: current_organization), alert: "LTI Configuration Deleted."
+      redirect_to edit_organization_path(id: current_organization), alert: "LTI configuration deleted."
     end
 
     private
