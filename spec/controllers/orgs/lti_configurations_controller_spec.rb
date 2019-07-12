@@ -90,18 +90,6 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         expect(organization.lti_configuration).to_not be_nil
         expect(response).to redirect_to(lti_configuration_path(organization))
       end
-
-      context "with existing configuration" do
-        before(:each) do
-          post :create, params: { id: organization.slug }
-        end
-
-        it "does not create a configuration if one exists" do
-          post :create, params: { id: organization.slug }
-          expect(flash[:alert]).to eq("An existing LMS configuration exists.")
-          expect(response).to redirect_to(lti_configuration_path(organization))
-        end
-      end
     end
 
     context "with flipper disabled" do
@@ -167,6 +155,15 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
           expect(organization.lti_configuration.lms_link).to eq("https://github.com")
           expect(flash[:success]).to eq("The configuration was sucessfully updated.")
           expect(response).to redirect_to(lti_configuration_path(organization))
+        end
+      end
+
+      context "with no existing lti_configuration" do
+        it "does not update or create" do
+          options = { lms_link: "https://github.com" }
+          patch :update, params: { id: organization.slug, lti_configuration: options }
+          expect(response).to redirect_to(new_lti_configuration_path(organization))
+          expect(organization.lti_configuration).to be_nil
         end
       end
     end
