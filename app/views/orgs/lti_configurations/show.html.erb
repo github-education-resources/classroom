@@ -41,18 +41,8 @@
             </span>
           </div>
 
-          <%= form_with url: edit_lti_configuration_path(current_organization), class: "form-actions" do |f| %>
-            <h3>2. Add LMS classroom link (optional)</h3>
-            <p>This is optional. Adding a link to your LMS classroom allows you to easily open your LMS through GitHub Classroom.</p>
-            <div class="form-group">
-            LMS Link
-            <%= f.text_field :lms_link, placeholder: 'LMS Classroom Link', disabled: false, class: 'form-control input-block' %>
-            </div>
-
-            <div class="form-group">
-            <%= submit_tag 'Save changes', class: 'btn btn-primary' %>
-            </div>
-          <% end %>
+          <h3>2. Add LMS classroom link (optional)</h3>
+          <%= render partial: "orgs/lti_configurations/edit_form" %>
         </div>
       </div>
     </div>

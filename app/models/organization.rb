@@ -13,7 +13,7 @@ class Organization < ApplicationRecord
   has_many :group_assignments,        dependent: :destroy
   has_many :repo_accesses,            dependent: :destroy
 
-  has_one :lti_configuration
+  has_one :lti_configuration,         dependent: :destroy
 
   belongs_to :organization_webhook
   belongs_to :roster, optional: true
