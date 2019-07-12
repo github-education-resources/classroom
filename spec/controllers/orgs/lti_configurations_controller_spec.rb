@@ -169,18 +169,9 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
           expect(response).to redirect_to(lti_configuration_path(organization))
         end
       end
-
-      context "with no existing lti_configuration" do
-        it "does not update or create" do
-          options = { lms_link: "https://github.com" }
-          patch :update, params: { id: organization.slug, lti_configuration: options }
-          expect(response).to redirect_to(new_lti_configuration_path(organization))
-          expect(organization.lti_configuration).to be_nil
-        end
-      end
     end
 
-    context "with flipper disabled" do 
+    context "with flipper disabled" do
       before(:each) do
         GitHubClassroom.flipper[:lti_launch].disable
       end

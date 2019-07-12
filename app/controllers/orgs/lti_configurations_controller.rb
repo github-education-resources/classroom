@@ -7,22 +7,17 @@ module Orgs
 
     # rubocop:disable Metrics/MethodLength
     def create
-      if current_lti_configuration.nil?
-        lti_configuration = LtiConfiguration.create(
-          organization: current_organization,
-          consumer_key: SecureRandom.uuid,
-          shared_secret: SecureRandom.uuid
-        )
+      lti_configuration = LtiConfiguration.create(
+        organization: current_organization,
+        consumer_key: SecureRandom.uuid,
+        shared_secret: SecureRandom.uuid
+      )
 
-        if lti_configuration.present?
-          redirect_to lti_configuration_path(current_organization)
-        else
-          redirect_to new_lti_configuration_path(current_lti_configuration),
-            alert: "There was a problem creating the configuration. Please try again later."
-        end
+      if lti_configuration.present?
+        redirect_to lti_configuration_path(current_organization)
       else
-        redirect_to lti_configuration_path(current_organization),
-          alert: "An existing LMS configuration exists."
+        redirect_to new_lti_configuration_path(current_lti_configuration),
+          alert: "There was a problem creating the configuration. Please try again later."
       end
     end
     # rubocop:enable Metrics/MethodLength
