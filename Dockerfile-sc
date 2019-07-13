@@ -1,0 +1,40 @@
+FROM ruby:2.4.2
+
+WORKDIR /usr/src/app
+
+# weird we have to set these env variables to get rbenv
+# to install without an error, but such is life.
+ENV PATH "$PATH:/root/.rbenv/bin"
+ENV PATH "$PATH:/root/.rbenv/shims"
+
+#not sure what this bug is, should probably try taking it out later
+RUN printf "deb http://archive.debian.org/debian/ jessie main\ndeb-src http://archive.debian.org/debian/ jessie main\ndeb http://security.debian.org jessie/updates main\ndeb-src http://security.debian.org jessie/updates main" > /etc/apt/sources.list
+
+#install rbenv (though is this really necessary? Will try both ways.)
+RUN wget -q https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer -O- | bash
+
+#install yarn and node and other dependencies
+RUN wget -q https://deb.nodesource.com/setup_10.x -O- | bash -
+
+RUN wget -q https://dl.yarnpkg.com/debian/pubkey.gpg -O- | apt-key add -
+
+RUN echo "deb http://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update && apt-get install -y yarn nodejs
+
+RUN apt-get install -y netcat libpq-dev rinetd 
+
+#adding files needed to get the bootstrap script to run
+# Add files we need to build dependencies
+ADD Gemfil* ./
+ADD package.json .
+ADD yarn.lock .
+ADD .ruby-version .
+ADD bin .
+ADD script/bootstrap-sc .
+COPY vendor ./vendor
+RUN bash bootstrap-sc
+
+#Startup script and port forwarding
+COPY config/rinetd.conf /etc/rinetd.conf
+
+ENTRYPOINT bash

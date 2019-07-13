@@ -3,19 +3,32 @@
 # script/setup: Set up application for the first time after cloning, or set it
 #               back to the initial first unused state.
 
+
+
 set -e
 
 cd "$(dirname "$0")/.."
 
-if [ -f "$(which docker-compose)" ]; then
-  echo "===> Removing existing containers..."
-  docker-compose down
+if [ "$SELFCONTAINED" != "true" ]; then
+  # If not self contained, set up docker and dependencies
+  if [-f "$(which docker-compose)" ]; then
+    echo "===> Removing existing containers..."
+    docker-compose down
+  fi
+
+  script/bootstrap
+
+  echo "===> Waiting for the containers to mount..."
+  sleep 5
+else
+  # If we are self-contained, docker and dependencies are done, so check
+  # on the port forwarding.
+  unset BUNDLER_VERSION
+  if ! pgrep -x 'rinetd' > /dev/null
+  then
+    rinetd
+  fi
 fi
-
-script/bootstrap
-
-echo "===> Waiting for the containers to mount..."
-sleep 5
 
 echo "===> Preparing database..."
 bin/rails db:setup

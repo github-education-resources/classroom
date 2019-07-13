@@ -13,6 +13,7 @@ vendor/bundle
 !/log/.keep
 /tmp
 /coverage
+yarn-error.log
 
 # Ignore local environment variables
 .env
@@ -46,3 +47,4 @@ spec/examples.txt
 
 # mac
 .DS_Store
+

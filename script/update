@@ -6,10 +6,13 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-script/bootstrap
+if [ "$SELFCONTAINED" != "true" ]; then
+    script/bootstrap
 
-echo "===> Waiting for the containers to mount..."
-sleep 5
+    echo "===> Waiting for the containers to mount..."
+    sleep 5
+
+fi
 
 echo "==> Updating database..."
 bin/rake db:migrate db:test:prepare
