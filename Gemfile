@@ -81,7 +81,6 @@ gem "uglifier",      "~> 3.2"
 gem "unicode-emoji", "~> 1.1"
 
 group :development do
-  gem "foreman",     "~> 0.84.0"
   gem "web-console", "~> 3.5", ">= 3.5.1"
 end
 
