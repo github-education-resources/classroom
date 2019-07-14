@@ -482,7 +482,7 @@ GEM
     thread_safe (0.3.6)
     tilt (2.0.8)
     timecop (0.9.1)
-    turbolinks (2.5.3.226.g37a7c29)
+    turbolinks (2.5.4)
       coffee-rails
     typhoeus (1.3.0)
       ethon (>= 0.9.0)
@@ -588,7 +588,7 @@ DEPENDENCIES
   sprockets (~> 3.7, >= 3.7.2)
   terminal-notifier-guard (~> 1.7)
   timecop (~> 0.9.1)
-  turbolinks (= 2.5.3.226.g37a7c29)
+  turbolinks (~> 2.5, >= 2.5.4)
   typhoeus (~> 1.3)
   uglifier (~> 3.2)
   unicode-emoji (~> 1.1)
