@@ -20,7 +20,6 @@ class CreateGitHubRepoService
 
     github_repository = create_github_repository!
     assignment_repo = create_assignment_repo!(github_repository)
-    stats_sender.repo_creation_success
 
     add_collaborator_to_github_repository!(github_repository)
 
@@ -38,7 +37,8 @@ class CreateGitHubRepoService
     stats_sender.default_success
     Result.success(assignment_repo)
   rescue Result::Error => error
-    delete_github_repository(assignment_repo&.github_repo_id)
+    repo_id = assignment_repo&.github_repo_id || github_repository&.id
+    delete_github_repository(repo_id)
     stats_sender.default_failure
     Result.failed(error.message)
   end
@@ -53,7 +53,7 @@ class CreateGitHubRepoService
 
     organization.github_organization.create_repository(entity.repo_name, options)
   rescue GitHub::Error => error
-    raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
+    raise Result::Error.new errors(:repository_creation_failed), error.message
   end
 
   def create_assignment_repo!(github_repository)
@@ -89,7 +89,7 @@ class CreateGitHubRepoService
 
     assignment_repository.get_starter_code_from(starter_code_repository)
   rescue GitHub::Error => error
-    raise Result::Error.new errors(:collaborator_addition_failed), error.message
+    raise Result::Error.new errors(:starter_code_import_failed), error.message
   end
 
   # Public: Ensure that we can make a private repository on GitHub.
@@ -148,12 +148,12 @@ class CreateGitHubRepoService
   # rubocop:disable LineLength
   def errors(error_message)
     messages = {
-      default: "#{entity.assignment_type} could not be created, please try again.",
+      default: "#{entity.assignment_type.humanize} could not be created, please try again.",
       repository_creation_failed: "GitHub repository could not be created, please try again.",
-      starter_code_import_failed: "We were not able to import you the starter code to your #{entity.assignment_type.downcase}, please try again.",
-      collaborator_addition_failed: "We were not able to add the #{entity.humanize} to the #{entity.assignment_type.downcase}, please try again."
+      starter_code_import_failed: "We were not able to import you the starter code to your #{entity.assignment_type.humanize}, please try again.",
+      collaborator_addition_failed: "We were not able to add the #{entity.humanize} to the #{entity.assignment_type.humanize}, please try again."
     }
-    messages[error_message]
+    messages[error_message] || messages[:default]
   end
   # rubocop:enable LineLength
 end

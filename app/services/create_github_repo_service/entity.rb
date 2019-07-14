@@ -29,7 +29,7 @@ class CreateGitHubRepoService
     end
 
     def owner
-      @owner ||= organization.github_organization.login_no_cache
+      @owner ||= organization.github_organization.login
     end
 
     def assignment_type
@@ -73,7 +73,7 @@ class CreateGitHubRepoService
     end
 
     def slug
-      collaborator.github_user.login_no_cache
+      collaborator.github_user.login(use_cache: false)
     end
 
     def humanize

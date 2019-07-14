@@ -8,7 +8,7 @@ class CreateGitHubRepoService
     end
 
     def default_failure
-      GitHubClassroom.statsd.increment("#{root_prefix}.create.fail")
+      GitHubClassroom.statsd.increment("#{default_root_prefix}.create.fail")
     end
 
     def default_success
@@ -32,12 +32,8 @@ class CreateGitHubRepoService
       GitHubClassroom.statsd.increment("#{root_prefix}.create.importing_starter_code.fail")
     end
 
-    def repo_creation_success
-      GitHubClassroom.statsd.increment("#{root_prefix}.create.repo.success")
-    end
-
     def import_started
-      GitHubClassroom.statsd.increment("#{root_prefix}.create.import.started")
+      GitHubClassroom.statsd.increment("#{root_prefix}.import.started")
     end
 
     private
@@ -47,11 +43,7 @@ class CreateGitHubRepoService
     end
 
     def root_prefix
-      if entity.user?
-        default_root_prefix
-      else
-        "group_#{default_root_prefix}"
-      end
+      entity.stat_prefix
     end
   end
 end

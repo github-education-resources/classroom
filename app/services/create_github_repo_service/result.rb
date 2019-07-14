@@ -21,7 +21,7 @@ class CreateGitHubRepoService
       new(:pending)
     end
 
-    attr_reader :error, :entity, :status
+    attr_reader :error, :entity, :status, :repo
 
     def initialize(status, entity: nil, error: nil, repo: nil)
       @status          = status
