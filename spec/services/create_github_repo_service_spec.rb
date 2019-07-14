@@ -25,18 +25,18 @@ RSpec.describe CreateGitHubRepoService do
       it "creates a new github repo" do
         expect_any_instance_of(GitHubOrganization)
           .to receive(:create_repository)
-                .with(service.entity.repo_name, anything)
+          .with(service.entity.repo_name, anything)
         service.create_github_repository!
       end
       it "raises a Result::Error" do
         allow_any_instance_of(GitHubOrganization)
           .to receive(:create_repository)
-                .and_raise(GitHub::Error, "Could not created GitHub repository")
+          .and_raise(GitHub::Error, "Could not created GitHub repository")
         expect { service.create_github_repository! }
           .to raise_error(
-                subject::Result::Error,
-                "GitHub repository could not be created, please try again. (Could not created GitHub repository)"
-              )
+            subject::Result::Error,
+            "GitHub repository could not be created, please try again. (Could not created GitHub repository)"
+          )
       end
     end
     describe "#create_assignment_repo!" do
@@ -45,14 +45,14 @@ RSpec.describe CreateGitHubRepoService do
         assignment_repo = double("save!": true)
         expect(service.entity)
           .to receive_message_chain(:repos, :build)
-                .with(
-                  hash_including(
-                    github_repo_id: github_repository.id,
-                    github_global_relay_id: github_repository.node_id,
-                    "user" => student
-                  )
-                )
-                .and_return(assignment_repo)
+          .with(
+            hash_including(
+              github_repo_id: github_repository.id,
+              github_global_relay_id: github_repository.node_id,
+              "user" => student
+            )
+          )
+          .and_return(assignment_repo)
         service.create_assignment_repo!(github_repository)
       end
       it "raises a Result::Error if record not saved" do
@@ -60,9 +60,9 @@ RSpec.describe CreateGitHubRepoService do
         allow_any_instance_of(AssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
         expect { service.create_assignment_repo!(github_repository) }
           .to raise_error(
-                subject::Result::Error,
-                "Assignment could not be created, please try again. (Record invalid)"
-              )
+            subject::Result::Error,
+            "Assignment could not be created, please try again. (Record invalid)"
+          )
       end
     end
 
@@ -91,9 +91,9 @@ RSpec.describe CreateGitHubRepoService do
         allow(assignment_repository).to receive(:get_starter_code_from).and_raise(GitHub::Error)
         expect { service.push_starter_code!(assignment_repository) }
           .to raise_error(
-                subject::Result::Error,
-                "We were not able to import you the starter code to your Assignment, please try again. (GitHub::Error)"
-              )
+            subject::Result::Error,
+            "We were not able to import you the starter code to your Assignment, please try again. (GitHub::Error)"
+          )
       end
     end
     describe "#verify_organization_has_private_repos_available!" do
@@ -104,10 +104,10 @@ RSpec.describe CreateGitHubRepoService do
         it "returns true" do
           allow_any_instance_of(GitHubOrganization)
             .to receive(:plan)
-                  .and_return(
-                    owned_private_repos: 1,
-                    private_repos: 2
-                  )
+            .and_return(
+              owned_private_repos: 1,
+              private_repos: 2
+            )
           expect(service.verify_organization_has_private_repos_available!).to eq(true)
         end
       end
@@ -116,15 +116,15 @@ RSpec.describe CreateGitHubRepoService do
         before do
           allow_any_instance_of(GitHubOrganization)
             .to receive(:plan)
-                  .and_raise(GitHub::Error, "Cannot retrieve this organizations repo plan, please reauthenticate your token.")
+            .and_raise(GitHub::Error, "Cannot retrieve this organizations repo plan, please reauthenticate your token.")
         end
 
         it "raises a Result::Error" do
           expect { service.verify_organization_has_private_repos_available! }
             .to raise_error(
-                  subject::Result::Error,
-                  "Cannot retrieve this organizations repo plan, please reauthenticate your token."
-                )
+              subject::Result::Error,
+              "Cannot retrieve this organizations repo plan, please reauthenticate your token."
+            )
         end
       end
 
@@ -132,10 +132,10 @@ RSpec.describe CreateGitHubRepoService do
         before do
           expect_any_instance_of(GitHubOrganization)
             .to receive(:plan)
-                  .and_return(
-                    owned_private_repos: 1,
-                    private_repos: 1
-                  )
+            .and_return(
+              owned_private_repos: 1,
+              private_repos: 1
+            )
         end
 
         it "raises a Result::Error" do
@@ -155,9 +155,9 @@ RSpec.describe CreateGitHubRepoService do
         allow(service).to receive(:add_user_to_github_repository!).and_raise(GitHub::Error)
         expect { service.add_collaborator_to_github_repository!(github_repository) }
           .to raise_error(
-                subject::Result::Error,
-                "We were not able to add the user to the Assignment, please try again. (GitHub::Error)"
-              )
+            subject::Result::Error,
+            "We were not able to add the user to the Assignment, please try again. (GitHub::Error)"
+          )
       end
     end
 
@@ -167,11 +167,11 @@ RSpec.describe CreateGitHubRepoService do
         github_repository = double(full_name: "test/test")
         allow(github_repository)
           .to receive(:invite)
-                .and_return(invitation)
+          .and_return(invitation)
         allow(service.entity).to receive_message_chain("collaborator.github_user.login").with(anything)
         expect(service.entity)
           .to receive_message_chain("collaborator.github_user.accept_repository_invitation")
-                .with(invitation.id)
+          .with(invitation.id)
         service.add_collaborator_to_github_repository!(github_repository)
       end
     end
@@ -248,7 +248,7 @@ RSpec.describe CreateGitHubRepoService do
             service = CreateGitHubRepoService.new(assignment, student)
             service.perform
             expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
-                                 .with(body: /^.*#{service.entity.repo_name}.*$/)
+              .with(body: /^.*#{service.entity.repo_name}.*$/)
           end
         end
       end
@@ -290,7 +290,8 @@ RSpec.describe CreateGitHubRepoService do
             stub_request(:put, import_regex).to_return(body: "{}", status: 401)
             result = service.perform
             expect(result.failed?).to be_truthy
-            expect(result.error).to start_with("We were not able to import you the starter code to your Assignment, please try again.")
+            expect(result.error)
+              .to start_with("We were not able to import you the starter code to your Assignment, please try again.")
             expect(WebMock).to have_requested(:put, import_regex)
           end
 
@@ -322,7 +323,7 @@ RSpec.describe CreateGitHubRepoService do
   describe "for GroupAssignment", :vcr do
     let(:repo_access)    { RepoAccess.create(user: student, organization: organization) }
     let(:grouping)       { create(:grouping, organization: organization) }
-    let(:github_team_id) { 3284880 }
+    let(:github_team_id) { 3_284_880 }
     let(:group)          { create(:group, grouping: grouping, github_team_id: github_team_id) }
     let(:group_assignment) do
       create(
@@ -339,18 +340,18 @@ RSpec.describe CreateGitHubRepoService do
       it "creates a new github repo" do
         expect_any_instance_of(GitHubOrganization)
           .to receive(:create_repository)
-                .with(service.entity.repo_name, anything)
+          .with(service.entity.repo_name, anything)
         service.create_github_repository!
       end
       it "raises a Result::Error" do
         allow_any_instance_of(GitHubOrganization)
           .to receive(:create_repository)
-                .and_raise(GitHub::Error, "Could not created GitHub repository")
+          .and_raise(GitHub::Error, "Could not created GitHub repository")
         expect { service.create_github_repository! }
           .to raise_error(
-                subject::Result::Error,
-                "GitHub repository could not be created, please try again. (Could not created GitHub repository)"
-              )
+            subject::Result::Error,
+            "GitHub repository could not be created, please try again. (Could not created GitHub repository)"
+          )
       end
     end
     describe "#create_assignment_repo!" do
@@ -359,14 +360,14 @@ RSpec.describe CreateGitHubRepoService do
         assignment_repo = double("save!": true)
         expect(service.entity)
           .to receive_message_chain(:repos, :build)
-                .with(
-                  hash_including(
-                    github_repo_id: github_repository.id,
-                    github_global_relay_id: github_repository.node_id,
-                    "group" => group
-                  )
-                )
-                .and_return(assignment_repo)
+          .with(
+            hash_including(
+              github_repo_id: github_repository.id,
+              github_global_relay_id: github_repository.node_id,
+              "group" => group
+            )
+          )
+          .and_return(assignment_repo)
         service.create_assignment_repo!(github_repository)
       end
       it "raises a Result::Error if record not saved" do
@@ -374,9 +375,9 @@ RSpec.describe CreateGitHubRepoService do
         allow_any_instance_of(GroupAssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
         expect { service.create_assignment_repo!(github_repository) }
           .to raise_error(
-                subject::Result::Error,
-                "Group assignment could not be created, please try again. (Record invalid)"
-              )
+            subject::Result::Error,
+            "Group assignment could not be created, please try again. (Record invalid)"
+          )
       end
     end
 
@@ -405,9 +406,9 @@ RSpec.describe CreateGitHubRepoService do
         allow(assignment_repository).to receive(:get_starter_code_from).and_raise(GitHub::Error)
         expect { service.push_starter_code!(assignment_repository) }
           .to raise_error(
-                subject::Result::Error,
-                "We were not able to import you the starter code to your Group assignment, please try again. (GitHub::Error)"
-              )
+            subject::Result::Error,
+            "We were not able to import you the starter code to your Group assignment, please try again. (GitHub::Error)" # rubocop:disable LineLength
+          )
       end
     end
     describe "#verify_organization_has_private_repos_available!" do
@@ -418,10 +419,10 @@ RSpec.describe CreateGitHubRepoService do
         it "returns true" do
           allow_any_instance_of(GitHubOrganization)
             .to receive(:plan)
-                  .and_return(
-                    owned_private_repos: 1,
-                    private_repos: 2
-                  )
+            .and_return(
+              owned_private_repos: 1,
+              private_repos: 2
+            )
           expect(service.verify_organization_has_private_repos_available!).to eq(true)
         end
       end
@@ -430,15 +431,15 @@ RSpec.describe CreateGitHubRepoService do
         before do
           allow_any_instance_of(GitHubOrganization)
             .to receive(:plan)
-                  .and_raise(GitHub::Error, "Cannot retrieve this organizations repo plan, please reauthenticate your token.")
+            .and_raise(GitHub::Error, "Cannot retrieve this organizations repo plan, please reauthenticate your token.")
         end
 
         it "raises a Result::Error" do
           expect { service.verify_organization_has_private_repos_available! }
             .to raise_error(
-                  subject::Result::Error,
-                  "Cannot retrieve this organizations repo plan, please reauthenticate your token."
-                )
+              subject::Result::Error,
+              "Cannot retrieve this organizations repo plan, please reauthenticate your token."
+            )
         end
       end
 
@@ -446,10 +447,10 @@ RSpec.describe CreateGitHubRepoService do
         before do
           expect_any_instance_of(GitHubOrganization)
             .to receive(:plan)
-                  .and_return(
-                    owned_private_repos: 1,
-                    private_repos: 1
-                  )
+            .and_return(
+              owned_private_repos: 1,
+              private_repos: 1
+            )
         end
 
         it "raises a Result::Error" do
@@ -469,9 +470,9 @@ RSpec.describe CreateGitHubRepoService do
         allow(service).to receive(:add_group_to_github_repository!).and_raise(GitHub::Error)
         expect { service.add_collaborator_to_github_repository!(github_repository) }
           .to raise_error(
-                subject::Result::Error,
-                "We were not able to add the group to the Group assignment, please try again. (GitHub::Error)"
-              )
+            subject::Result::Error,
+            "We were not able to add the group to the Group assignment, please try again. (GitHub::Error)"
+          )
       end
     end
 
@@ -512,7 +513,7 @@ RSpec.describe CreateGitHubRepoService do
           allow(service.assignment).to receive(:starter_code?).and_return(false)
           expect(service.invite_status).to receive(:completed!)
           expect(subject::Broadcaster).to receive(:call).with(service.entity, :create_repo, :text)
-expect(subject::Broadcaster).to receive(:call).with(service.entity, :repository_creation_complete, :text)
+          expect(subject::Broadcaster).to receive(:call).with(service.entity, :repository_creation_complete, :text)
           service.perform
         end
 
@@ -534,7 +535,7 @@ expect(subject::Broadcaster).to receive(:call).with(service.entity, :repository_
             service = CreateGitHubRepoService.new(group_assignment, group)
             service.perform
             expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
-                                 .with(body: /^.*#{service.entity.repo_name}.*$/)
+              .with(body: /^.*#{service.entity.repo_name}.*$/)
           end
         end
       end
@@ -574,7 +575,8 @@ expect(subject::Broadcaster).to receive(:call).with(service.entity, :repository_
 
             result = service.perform
             expect(result.failed?).to be_truthy
-            expect(result.error).to start_with("We were not able to import you the starter code to your Group assignment, please try again.")
+            expect(result.error)
+              .to start_with("We were not able to import you the starter code to your Group assignment, please try again.") # rubocop:disable LineLength
             expect(WebMock).to have_requested(:put, import_regex)
           end
 
@@ -588,7 +590,8 @@ expect(subject::Broadcaster).to receive(:call).with(service.entity, :repository_
             result = service.perform
 
             expect(result.failed?).to be_truthy
-            expect(result.error).to start_with("We were not able to add the group to the Group assignment, please try again.")
+            expect(result.error)
+              .to start_with("We were not able to add the group to the Group assignment, please try again.")
             expect(WebMock).to have_requested(:put, regex)
           end
 
