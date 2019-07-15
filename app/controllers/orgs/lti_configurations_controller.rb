@@ -5,9 +5,8 @@ module Orgs
     before_action :ensure_lti_launch_flipper_is_enabled
     before_action :ensure_current_lti_configuration, except: %i[new create]
 
-    skip_before_action :authenticate_user!, only: :connect
-    skip_before_action :ensure_current_organization, only: :connect
-    skip_before_action :ensure_current_organization_visible_to_current_user, only: :connect
+    skip_before_action :authenticate_user!, only: :autoconfigure
+    skip_before_action :ensure_current_organization_visible_to_current_user, only: :autoconfigure
 
     # rubocop:disable Metrics/MethodLength
     def create
@@ -47,6 +46,7 @@ module Orgs
 
       redirect_to edit_organization_path(id: current_organization), alert: "LTI configuration deleted."
     end
+
     # rubocop:disable Metrics/MethodLength
     def autoconfigure
       builder = GitHubClassroom::LTI::ConfigurationBuilder.new("GitHub Classroom", auth_lti_launch_url)
@@ -76,7 +76,7 @@ module Orgs
         }
       )
 
-      render xml: builder.to_xml
+      render xml: builder.to_xml, status: :ok
     end
     # rubocop:enable Metrics/MethodLength
 
