@@ -1,11 +1,11 @@
 <div class="d-flex flex-md-row flex-items-center classroom-resource-item">
   <div class="col-1 d-flexp">
-    <%= image_tag github_avatar_url(user.uid, 96), height: 48, width: 48, class: 'avatar left', alt: "@#{user.login}" %>
+    <%= image_tag github_avatar_url(user.uid, 96), height: 48, width: 48, class: 'avatar left', alt: "@#{user.github_user.login}" %>
   </div>
 
   <div class="col-10 col-md-10 d-flex flex-column">
     <%= link_to stafftools_user_path(user.id) do %>
-      <strong class="search-result-title"><%= user.login %></strong>
+      <strong class="search-result-title"><%= user.github_user.login %></strong>
     <% end %>
 
     <span class="text-gray css-truncate css-truncate-target">

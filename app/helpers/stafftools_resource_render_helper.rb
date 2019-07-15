@@ -2,7 +2,7 @@
 
 module StafftoolsResourceRenderHelper
   def render_stafftools_resource(resource)
-    type = resource._data["_type"]
+    type = resource.class.to_s.underscore.downcase
     render partial: "stafftools/#{type.pluralize}/#{type}", locals: { type.to_sym => resource }
   end
 end

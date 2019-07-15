@@ -9,6 +9,34 @@ RSpec.describe Assignment, type: :model do
     expect { create(:assignment, assignment_invitation: nil) }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
+  describe ".search" do
+    let(:searchable_assignment) { create(:assignment) }
+
+    before do
+      expect(searchable_assignment).to_not be_nil
+    end
+
+    it "searches by id" do
+      results = Assignment.search(searchable_assignment.id)
+      expect(results.to_a).to include(searchable_assignment)
+    end
+
+    it "searches by title" do
+      results = Assignment.search(searchable_assignment.title)
+      expect(results.to_a).to include(searchable_assignment)
+    end
+
+    it "searches by slug" do
+      results = Assignment.search(searchable_assignment.slug)
+      expect(results.to_a).to include(searchable_assignment)
+    end
+
+    it "does not return the assignment when it shouldn't" do
+      results = Assignment.search("spaghetto")
+      expect(results.to_a).to_not include(searchable_assignment)
+    end
+  end
+
   describe "invitations_enabled default" do
     it "sets invitations_enabled to true by default" do
       options = {

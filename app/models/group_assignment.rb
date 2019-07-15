@@ -4,8 +4,9 @@ class GroupAssignment < ApplicationRecord
   include Flippable
   include GitHubPlan
   include ValidatesNotReservedWord
+  include StafftoolsSearchable
 
-  update_index("group_assignment#group_assignment") { self }
+  define_pg_search(columns: %i[id title slug])
 
   default_scope { where(deleted_at: nil) }
 
