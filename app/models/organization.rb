@@ -3,8 +3,9 @@
 class Organization < ApplicationRecord
   include Flippable
   include Sluggable
+  include StafftoolsSearchable
 
-  update_index("organization#organization") { self }
+  define_pg_search(columns: %i[id github_id title slug])
 
   default_scope { where(deleted_at: nil) }
 
@@ -79,9 +80,5 @@ class Organization < ApplicationRecord
     end
 
     true
-  end
-
-  def self.search(search)
-    where("title LIKE ?", "%#{search}%")
   end
 end

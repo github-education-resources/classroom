@@ -9,6 +9,23 @@ RSpec.describe AssignmentRepo, type: :model do
 
   subject { create(:assignment_repo, assignment: assignment, github_repo_id: 42) }
 
+  describe ".search" do
+    it "searches by id" do
+      results = AssignmentRepo.search(subject.id)
+      expect(results.to_a).to include(subject)
+    end
+
+    it "searches by github_repo_id" do
+      results = AssignmentRepo.search(subject.github_repo_id)
+      expect(results.to_a).to include(subject)
+    end
+
+    it "does not return the assignment when it shouldn't" do
+      results = AssignmentRepo.search("spaghetto")
+      expect(results.to_a).to_not include(subject)
+    end
+  end
+
   describe "callbacks", :vcr do
     describe "before_destroy" do
       describe "#silently_destroy_github_repository" do

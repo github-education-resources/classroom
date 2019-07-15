@@ -4,7 +4,7 @@
   <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
   <h2 class="remodal-header text-left">Add students to your Roster</h2>
 
-  <% if @google_course_id && google_classroom_roster_import_enabled? %>
+  <% if @google_course_name && google_classroom_roster_import_enabled? %>
     <div class="my-3">
       <h3 class="h4 mb-2">Sync with Google Classroom</h3>
       <div class="f5 mt-2 d-block">Linked with <strong><%= @google_course_name %></strong></div>

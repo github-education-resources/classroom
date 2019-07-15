@@ -9,6 +9,37 @@ RSpec.describe Organization, type: :model do
   it { should belong_to(:roster).optional }
   it { should have_one(:lti_configuration) }
 
+  describe ".search" do
+    before do
+      expect(subject).to_not be_nil
+    end
+
+    it "searches by id" do
+      results = Organization.search(subject.id)
+      expect(results.to_a).to include(subject)
+    end
+
+    it "searches by github_id" do
+      results = Organization.search(subject.github_id)
+      expect(results.to_a).to include(subject)
+    end
+
+    it "searches by title" do
+      results = Organization.search(subject.title)
+      expect(results.to_a).to include(subject)
+    end
+
+    it "searches by slug" do
+      results = Organization.search(subject.slug)
+      expect(results.to_a).to include(subject)
+    end
+
+    it "does not return the org when it shouldn't" do
+      results = Organization.search("spaghetto")
+      expect(results.to_a).to_not include(subject)
+    end
+  end
+
   describe "roster association" do
     it "can have a roster" do
       subject.roster = create(:roster)
