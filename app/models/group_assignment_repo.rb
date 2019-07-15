@@ -3,8 +3,9 @@
 class GroupAssignmentRepo < ApplicationRecord
   include AssignmentRepoable
   include Sortable
+  include StafftoolsSearchable
 
-  update_index("group_assignment_repo#group_assignment_repo") { self }
+  define_pg_search(columns: %i[id github_repo_id])
 
   enum configuration_state: %i[not_configured configuring configured]
 

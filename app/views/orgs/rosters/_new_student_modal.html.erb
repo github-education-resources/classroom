@@ -4,7 +4,7 @@
   <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
   <h2 class="remodal-header text-left">Add students to your Roster</h2>
 
-  <% if @google_course_id && google_classroom_roster_import_enabled? %>
+  <% if @google_course_name && google_classroom_roster_import_enabled? %>
     <div class="my-3">
       <h3 class="h4 mb-2">Sync with Google Classroom</h3>
       <div class="f5 mt-2 d-block">Linked with <strong><%= @google_course_name %></strong></div>
@@ -34,7 +34,7 @@
       <h2 class="h4 mb-2">Manually add students</h2>
 
       <div>
-        <%= form_tag roster_path(current_organization), method: :post do |f| %>
+        <%= form_tag add_students_roster_path(current_organization), method: :patch do |f| %>
         <div class="Box">
           <dl class="Box-body <%= view.form_class_for(:roster_entries) %> mb-0">
             <dt class="text-gray mb-1">Enter your list of students' identifiers, <strong>one per line</strong>.</dt>
@@ -49,7 +49,7 @@
         </div>
 
           <div class="d-flex flex-items-center border-top pt-5">
-            <%= submit_tag 'Create roster', class: 'btn btn-primary mr-3' %>
+            <%= submit_tag 'Add roster entries', class: 'btn btn-primary mr-3' %>
           </div>
         <% end %>
       </div>
