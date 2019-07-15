@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe GitHubClassroom::LtiMessageStore do
+describe GitHubClassroom::LTI::MessageStore do
   subject { described_class }
   let(:consumer_key)  { "consumer_key" }
   let(:redis_store)   { Redis.new }
