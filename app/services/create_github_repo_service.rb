@@ -27,19 +27,19 @@ class CreateGitHubRepoService
       push_starter_code!(github_repository)
       invite_status.importing_starter_code!
       Broadcaster.call(entity, :importing_starter_code, :text, assignment_repo&.github_repository&.html_url)
-      stats_sender.import_started
+      stats_sender.report(:import_started)
     else
       invite_status.completed!
       Broadcaster.call(entity, :repository_creation_complete, :text)
     end
 
     stats_sender.timing(start)
-    stats_sender.default_success
+    stats_sender.report(:success)
     Result.success(assignment_repo)
   rescue Result::Error => error
     repo_id = assignment_repo&.github_repo_id || github_repository&.id
     delete_github_repository(repo_id)
-    stats_sender.default_failure
+    stats_sender.report(:failure)
     Result.failed(error.message)
   end
   # rubocop:enable MethodLength
