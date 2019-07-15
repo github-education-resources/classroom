@@ -14,12 +14,12 @@ task backfill_github_cached_fields_for_user: :environment do
   users_to_update.find_in_batches(batch_size: BATCH_SIZE) do |users|
     puts "Updating batch #{batch_num}, starting with user ID #{users.first.id}"
 
-    users_updated += users.length
-    batch_num += 1
-
     users.each do |user|
       user.github_user.login # The cache will fetch all cacheable fields if an API call is required.
     end
+
+    users_updated += users.length
+    batch_num += 1
   end
 
   puts "Done! #{users_updated} users have been updated."
