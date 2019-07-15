@@ -4,8 +4,9 @@ class GroupAssignment < ApplicationRecord
   include Flippable
   include GitHubPlan
   include ValidatesNotReservedWord
+  include StafftoolsSearchable
 
-  update_index("group_assignment#group_assignment") { self }
+  define_pg_search(columns: %i[id title slug])
 
   default_scope { where(deleted_at: nil) }
 
@@ -37,6 +38,7 @@ class GroupAssignment < ApplicationRecord
 
   validate :uniqueness_of_slug_across_organization
   validate :max_teams_less_than_group_count
+  validate :starter_code_repository_not_empty
 
   alias_attribute :invitation, :group_assignment_invitation
   alias_attribute :repos, :group_assignment_repos
@@ -76,5 +78,11 @@ class GroupAssignment < ApplicationRecord
     else
       errors.add(:max_teams, "is less than the number of existing teams (#{group_count})")
     end
+  end
+
+  def starter_code_repository_not_empty
+    return unless starter_code? && starter_code_repository.empty?
+    errors.add :starter_code_repository, "cannot be empty. Select a repository that is not empty or create the"\
+      " assignment without starter code."
   end
 end

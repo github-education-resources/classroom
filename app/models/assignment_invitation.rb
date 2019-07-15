@@ -2,10 +2,11 @@
 
 class AssignmentInvitation < ApplicationRecord
   include ShortKey
+  include StafftoolsSearchable
+
+  define_pg_search(columns: %i[id key])
 
   default_scope { where(deleted_at: nil) }
-
-  update_index("assignment_invitation#assignment_invitation") { self }
 
   belongs_to :assignment
 

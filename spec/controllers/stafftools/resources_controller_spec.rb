@@ -48,7 +48,7 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
 
         it "has a MultiIndexSearchRequest of resources" do
           expect(assigns(:resources)).to_not be_nil
-          expect(assigns(:resources)).to be_kind_of(described_class::MultiIndexSearchRequest)
+          expect(assigns(:resources)).to be_kind_of(Hash)
         end
       end
     end
@@ -92,7 +92,7 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
 
         it "has a MultiIndexSearchRequest of resources" do
           expect(assigns(:resources)).to_not be_nil
-          expect(assigns(:resources)).to be_kind_of(described_class::MultiIndexSearchRequest)
+          expect(assigns(:resources)).to be_kind_of(described_class::Hash)
         end
       end
     end

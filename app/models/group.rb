@@ -3,8 +3,9 @@
 class Group < ApplicationRecord
   include GitHubTeamable
   include Sluggable
+  include StafftoolsSearchable
 
-  update_index("group#group") { self }
+  define_pg_search(columns: %i[id github_team_id title slug])
 
   belongs_to :grouping
 

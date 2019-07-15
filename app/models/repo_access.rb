@@ -2,8 +2,9 @@
 
 class RepoAccess < ApplicationRecord
   include GitHubTeamable
+  include StafftoolsSearchable
 
-  update_index("repo_access#repo_access") { self }
+  define_pg_search(columns: %i[id github_team_id])
 
   belongs_to :user
   belongs_to(:organization, -> { unscope(where: :deleted_at) })
