@@ -46,6 +46,7 @@
   <dd><input class="textfield js-autocomplete-textfield form-control input-contrast input-block" type="text" name="repo_name" value="<%= @group_assignment.starter_code_repository.try(:full_name) %>" placeholder="<%= @group_assignment.starter_code_repository.try(:full_name) || 'Search repositories'%>" autocomplete="off" data-autocomplete-search-endpoint="github_repos"></dd>
   <dd class="dd-autocomplete-suggestions"><%= render_autocomplete_suggestions_container %></dd>
   <input class="js-autocomplete-resource-id form-control input-contrast input-block" type="hidden" name="repo_id" />
+  <%= render('shared/form_error', errors: view.error_message_for(:starter_code_repository)) if view.errors_for?(:starter_code_repository) %>
 </dl>
 
 <dl class="<%= view.form_class_for(:max_members) %>">

@@ -194,8 +194,9 @@ RSpec.describe GroupAssignment, type: :model do
       group_assignment.assign_attributes(starter_code_repo_id: @github_repository.id)
 
       expect(@github_repository.empty?).to eql(true)
-      expect { group_assignment.save! }.to raise_error(GitHub::Error, "Starter code repository cannot be empty. Select"\
-        " a repository that is not empty or create the assignment without starter code.")
+      expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Starter code "\
+        "repository cannot be empty. Select a repository that is not empty or create the assignment without starter "\
+        "code.")
     end
 
     it "does not raise an error when starter code repository is not empty", :vcr do
