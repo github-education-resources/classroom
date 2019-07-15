@@ -45,6 +45,9 @@ class CreateGitHubRepoService
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize
 
+  # Public: Creates a new GitHub Repository based on assignment name and privacy details.
+  #
+  # Returns created GitHubRepository object or raises a Result::Error on failure.
   def create_github_repository!
     options = {
       private: assignment.private?,
@@ -56,6 +59,13 @@ class CreateGitHubRepoService
     raise Result::Error.new errors(:repository_creation_failed), error.message
   end
 
+  # Public: Creates a new AssignmentRepo/GroupAssignmentRepo object
+  #         with github_repository id and relay id.
+  #
+  # github_repository - GitHubRepository object of the newly created repo.
+  #
+  # Returns the created AssignmentRepo/GroupAssignmentRepo object
+  # or raises a Result::Error on failure
   def create_assignment_repo!(github_repository)
     assignment_repo_attrs = {
       github_repo_id: github_repository.id,
@@ -77,9 +87,9 @@ class CreateGitHubRepoService
   end
 
   # Public: Push starter code to the newly created GitHub
-  # repository.
+  #         repository.
   #
-  # github_repo_id - The Integer id of the GitHub repository.
+  # assignment_repository - GitHubRepository in which starter code is to be imported.
   #
   # Returns true of raises a Result::Error.
   def push_starter_code!(assignment_repository)
@@ -96,7 +106,6 @@ class CreateGitHubRepoService
   #
   # Returns True or raises a Result::Error with a helpful message.
   # rubocop:disable Metrics/AbcSize
-  # rubocop:disable MethodLength
   def verify_organization_has_private_repos_available!
     return true if assignment.public?
 
@@ -110,17 +119,17 @@ class CreateGitHubRepoService
     private_repos       = github_organization_plan[:private_repos]
 
     return true if owned_private_repos < private_repos
-    error_message = <<~ERROR
-      Cannot make this private assignment, your limit of #{private_repos}
-      #{'repository'.pluralize(private_repos)} has been reached. You can request
-      a larger plan for free at https://education.github.com/discount
-    ERROR
-
-    raise Result::Error, error_message
+    raise Result::Error, errors(:private_repos_not_available, github_organization_plan)
   end
   # rubocop:enable Metrics/AbcSize
-  # rubocop:enable MethodLength
 
+  # Public: Add user/team to the GitHubRepository based on the type of assignment.
+  #         Calls #add_user_to_github_repository! if it is an Assignment.
+  #         Calls #add_group_to_github_repository! if it is a GroupAssignment.
+  #
+  # github_repository - GitHubRepository in which we need to add collaborator.
+  #
+  # Returns true if collaborator added or raises a Result::Error.
   def add_collaborator_to_github_repository!(github_repository)
     send("add_#{entity.humanize}_to_github_repository!", github_repository)
   rescue GitHub::Error => error
@@ -129,11 +138,22 @@ class CreateGitHubRepoService
 
   private
 
+  # Internal: Creates a new team on GitHub and adds it to the repository.
+  #
+  # github_repository - GitHubRepository in which we need to add the team.
+  #
+  # Returns true if collaborator added or raises a GitHub::Error.
   def add_group_to_github_repository!(github_repository)
     github_team = GitHubTeam.new(organization.github_client, entity.collaborator.github_team_id)
     github_team.add_team_repository(github_repository.full_name, repository_permissions)
   end
 
+  # Internal: Creates a new invitation for the GitHubRepository and then accepts it on behalf
+  #           of the user.
+  #
+  # github_repository - GitHubRepository in which we need to add the user.
+  #
+  # Returns true if collaborator added or raises a GitHub::Error.
   def add_user_to_github_repository!(github_repository)
     invitation = github_repository.invite(entity.slug, repository_permissions)
     entity.collaborator.github_user.accept_repository_invitation(invitation.id) if invitation.present?
@@ -145,15 +165,27 @@ class CreateGitHubRepoService
     end
   end
 
+  # Internal: Method for error messages, modifies error messages based on the type of assignment.
+  #
+  # error_message - A symbol for getting the  appropriate error message.
   # rubocop:disable LineLength
-  def errors(error_message)
+  # rubocop:disable MethodLength
+  # rubocop:disable AbcSize
+  def errors(error_message, options = {})
     messages = {
       default: "#{entity.assignment_type.humanize} could not be created, please try again.",
       repository_creation_failed: "GitHub repository could not be created, please try again.",
       starter_code_import_failed: "We were not able to import you the starter code to your #{entity.assignment_type.humanize}, please try again.",
-      collaborator_addition_failed: "We were not able to add the #{entity.humanize} to the #{entity.assignment_type.humanize}, please try again."
+      collaborator_addition_failed: "We were not able to add the #{entity.humanize} to the #{entity.assignment_type.humanize}, please try again.",
+      private_repos_not_available: <<-ERROR
+      Cannot make this private assignment, your limit of #{options[:private_repos]}
+       #{'repository'.pluralize(options[:private_repos])} has been reached. You can request
+       a larger plan for free at https://education.github.com/discount
+       ERROR
     }
     messages[error_message] || messages[:default]
   end
   # rubocop:enable LineLength
+  # rubocop:enable MethodLength
+  # rubocop:enable AbcSize
 end
