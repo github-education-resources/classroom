@@ -64,7 +64,7 @@ class AssignmentRepo
         Rails.logger.warn(error.message)
         raise Result::Error.new DEFAULT_ERROR_MESSAGE, error.message
       end
-      report_time(start)
+      report_time(start, assignment)
 
       GitHubClassroom.statsd.increment("v2_exercise_repo.create.success")
       GitHubClassroom.statsd.increment("exercise_repo.create.success")

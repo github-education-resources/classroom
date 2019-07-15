@@ -26,6 +26,8 @@ gem "flipper-redis",      "~> 0.10.2"
 gem "flipper-ui",         "~> 0.10.2"
 
 gem "geo_pattern", "~> 1.4"
+gem "google-api-client", "~> 0.11"
+gem "googleauth", "~> 0.8.0"
 gem "graphql", "1.8.4"
 
 # Using fork of graphql-client which fixes a bug in graphql-client on Rails 5

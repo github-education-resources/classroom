@@ -2,47 +2,49 @@
 
 <div class="site-content">
   <div class="site-content-cap">
-    <h2 class="site-content-heading">Add students</h2>
+    <h1 class="site-content-heading">Add students</h1>
   </div>
   <div class="site-content-body">
     <div class="markdown-body">
-      <p> Next, let's set up a "roster", so you can easily track student progress on your dashboard.
-      <p> To create your roster, you'll need to share a way to identify your students. These "identifiers" can be:</p>
-
-      <ul>
-        <li>Student last names</li>
-        <li>Student email addresses</li>
-        <li>Any other unique piece of information</li>
-      </ul>
-
-      <p>You can always come back and complete this step later.</p>
+      <p>Let's set up a roster so you can easily track student progress on your dashboard. You can always come back and complete this step later.</p>
     </div>
-    </br>
-    <div>
-      <%= form_tag roster_path(current_organization), method: :post do |f| %>
-        <dl class="<%= view.form_class_for(:identifier_name) %> short-field">
-          <dt><label>What information would you like to use to identify your students?</br> (emails, student ID #, etc.)</label></dt>
-          <dd><%= text_field_tag(:identifier_name, '', class: 'form-control input-block', required: true) %></dd>
-          <%= render('shared/form_error', errors: view.error_message_for(:identifier_name)) if view.errors_for?(:identifier_name) %>
-        </dl>
+    <% if google_classroom_roster_import_enabled? %>
+      <div class="my-3">
+        <h2 class="h3 mb-2">Import from</h2>
 
-        <dl class="<%= view.form_class_for(:roster_entries) %> short-field">
-          <dt><label>Paste your list of identifiers below (one per line, please!):</label></dt>
-          <dd><%= text_area_tag(:identifiers, '', class: 'form-control input-block', id: 'entries-field', required: true) %></dd>
-          <%= render('shared/form_error', errors: view.error_message_for(:roster_entries)) if view.errors_for?(:roster_entries) %>
-        </dl>
+        <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Google Classroom",
+          select_google_classroom_roster_path,
+          class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+        %>
+      </div>
 
-        <dl class="form">
-          <dt><label>OR upload a CSV or text file:</label></dt>
-          <label class='btn btn-secondary btn-sm' for="file-upload">Upload file</label>
-          <%= file_field_tag :identifiers_file, style: 'display: none', id: 'file-upload', onchange: 'onIdentifiersUploaded()' %>
-        </dl>
+      <div class="f4 text-gray text-italic">or...</div>
+    <% end %>
 
-        <div class="form-actions">
-          <%= submit_tag 'Create roster', class: 'btn btn-primary right' %>
-          <%= link_to 'Skip', organization_path(current_organization), class: 'btn btn-secondary right' %>
-        </div>
-      <% end %>
+    <div class="my-3">
+      <h2 class="h3 mb-2">Manually add students</h2>
+
+      <div>
+        <%= form_tag roster_path(current_organization), method: :post do |f| %>
+          <div class="Box">
+            <dl class="Box-body <%= view.form_class_for(:roster_entries) %> mb-0">
+              <dt class="text-gray mb-1">Enter your list of students' identifiers, <strong>one per line</strong>.</dt>
+              <dd><%= text_area_tag(:identifiers, '', class: 'form-control input-block', id: 'entries-field', required: true) %></dd>
+              <%= render('shared/form_error', errors: view.error_message_for(:roster_entries)) if view.errors_for?(:roster_entries) %>
+            </dl>
+
+            <div class="Box-footer bg-gray">
+              <label class='btn btn-secondary btn-sm' for="file-upload">Upload a CSV or text file</label>
+              <%= file_field_tag :identifiers_file, style: 'display: none', id: 'file-upload', onchange: 'onIdentifiersUploaded()' %>
+            </div>
+          </div>
+
+          <div class="d-flex flex-items-center border-top pt-5">
+            <%= submit_tag 'Create roster', class: 'btn btn-primary mr-3' %>
+            <%= link_to 'Skip', organization_path(current_organization), class: 'btn-link' %>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>
