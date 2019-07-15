@@ -324,6 +324,9 @@ GEM
       peek
       sidekiq
     pg (1.1.4)
+    pg_search (2.2.0)
+      activerecord (>= 4.2)
+      activesupport (>= 4.2)
     pinglish (0.2.1)
       rack
     powerpack (0.1.1)
@@ -562,6 +565,7 @@ DEPENDENCIES
   peek-pg (~> 1.3)
   peek-sidekiq (= 1.0.0.4.g261c857)
   pg (~> 1.1.4)
+  pg_search (~> 2.2)
   pinglish (~> 0.2.1)
   pry-byebug (~> 3.5)
   pry-rails (~> 0.3.6)
