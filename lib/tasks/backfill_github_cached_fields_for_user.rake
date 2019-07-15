@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 task backfill_github_cached_fields_for_user: :environment do
   puts "Backfilling GitHub-cached fields for Users"
 
@@ -8,7 +7,6 @@ task backfill_github_cached_fields_for_user: :environment do
 
   users_updated = 0
   batch_num = 1
-
 
   users_to_update = User.where(github_login: nil)
   puts "There are #{users_to_update.count} users to update."
@@ -26,4 +24,3 @@ task backfill_github_cached_fields_for_user: :environment do
 
   puts "Done! #{users_updated} users have been updated."
 end
-# rubocop:enable Metrics/BlockLength
