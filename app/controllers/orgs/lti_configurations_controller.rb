@@ -51,7 +51,7 @@ module Orgs
     end
 
     def ensure_current_lti_configuration
-      redirect_to new_lti_configuration_path(current_organization) if current_lti_configuration.nil?
+      redirect_to new_lti_configuration_path(current_organization) unless current_lti_configuration
     end
 
     def lti_configuration_params
