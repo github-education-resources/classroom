@@ -44,6 +44,7 @@ class Assignment < ApplicationRecord
 
   alias_attribute :invitation, :assignment_invitation
   alias_attribute :repos, :assignment_repos
+  alias_attribute :template_repos_enabled?, :template_repos_enabled
 
   def private?
     !public_repo

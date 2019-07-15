@@ -37,9 +37,4 @@ class ApplicationController
     GitHubClassroom.flipper[:lti_launch].enabled? || (logged_in? && current_user.feature_enabled?(:lti_launch))
   end
   helper_method :lti_launch_enabled?
-
-  def github_template_repos_enabled?
-    logged_in? && current_user.feature_enabled?(:template_repos)
-  end
-  helper_method :github_template_repos_enabled?
 end

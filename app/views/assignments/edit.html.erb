@@ -15,7 +15,7 @@
   <%= form_for [@organization, @assignment] do |f| %>
     <div class="columns">
       <div class="two-thirds column">
-        <%= render partial: 'assignments/assignment_form_options', locals: { f: f } %>
+        <%= render partial: 'assignments/assignment_form_options', locals: { f: f, organization: @organization } %>
       </div>
 
       <div class="one-third column pt-3 dangerzone-container">

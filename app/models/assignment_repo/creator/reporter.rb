@@ -61,6 +61,8 @@ class AssignmentRepo
         when /^#{REPOSITORY_STARTER_CODE_IMPORT_FAILED}/
           GitHubClassroom.statsd.increment("v2_exercise_repo.create.importing_starter_code.fail")
           GitHubClassroom.statsd.increment("exercise_repo.create.importing_starter_code.fail")
+        when /^#{TEMPLATE_REPOSITORY_CREATION_FAILED}/
+          GitHubClassroom.statsd.increment("exercise_repo.create.repo.with_templates.failed")
         else
           GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
           GitHubClassroom.statsd.increment("exercise_repo.create.fail")

@@ -8,6 +8,7 @@ class AssignmentRepo
     REPOSITORY_STARTER_CODE_IMPORT_FAILED   = "We were not able to import you the starter code to your assignment, please try again." # rubocop:disable LineLength
     REPOSITORY_COLLABORATOR_ADDITION_FAILED = "We were not able to add you to the Assignment as a collaborator, please try again." # rubocop:disable LineLength
     REPOSITORY_CREATION_COMPLETE            = "Your GitHub repository was created."
+    TEMPLATE_REPOSITORY_CREATION_FAILED     = "GitHub repository could not be created from template, please try again."
     IMPORT_ONGOING                          = "Your GitHub repository is importing starter code."
     CREATE_REPO                             = "Creating GitHub repository."
     IMPORT_STARTER_CODE                     = "Importing starter code."
@@ -44,7 +45,7 @@ class AssignmentRepo
       verify_organization_has_private_repos_available!
 
       github_repository = if assignment.organization.feature_enabled?(:template_repos) && assignment.use_template_repos?
-                            clone_github_template_repository!
+                            create_github_repository_from_template!
                           else
                             create_github_repository!
                           end
@@ -137,7 +138,7 @@ class AssignmentRepo
     #
     # Returns an Integer ID or raises a Result::Error
     # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-    def clone_github_template_repository!
+    def create_github_repository_from_template!
       client = assignment.creator.github_client
       repository_name = generate_github_repository_name
       options = {

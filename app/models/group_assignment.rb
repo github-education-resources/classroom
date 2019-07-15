@@ -44,6 +44,7 @@ class GroupAssignment < ApplicationRecord
 
   alias_attribute :invitation, :group_assignment_invitation
   alias_attribute :repos, :group_assignment_repos
+  alias_attribute :template_repos_enabled?, :template_repos_enabled
 
   def private?
     !public_repo

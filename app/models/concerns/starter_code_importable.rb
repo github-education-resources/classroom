@@ -12,20 +12,12 @@ module StarterCodeImportable
     @starter_code_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id)
   end
 
-  def template_repos_enabled?
-    template_repos_enabled
-  end
-
-  def template_repos_disabled?
-    !template_repos_enabled
-  end
-
   def use_template_repos?
     starter_code? && template_repos_enabled?
   end
 
   def use_importer?
-    starter_code? && template_repos_disabled?
+    starter_code? && !template_repos_enabled?
   end
 
   def starter_code_repository_is_a_template_repository

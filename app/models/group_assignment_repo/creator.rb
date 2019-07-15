@@ -8,6 +8,7 @@ class GroupAssignmentRepo
     REPOSITORY_STARTER_CODE_IMPORT_FAILED   = "We were not able to import you the starter code to your group assignment, please try again." # rubocop:disable LineLength
     REPOSITORY_TEAM_ADDITION_FAILED         = "We were not able to add the team to the repository, please try again." # rubocop:disable LineLength
     REPOSITORY_CREATION_COMPLETE            = "Your GitHub repository was created."
+    TEMPLATE_REPOSITORY_CREATION_FAILED     = "GitHub repository could not be created from template, please try again."
     IMPORT_ONGOING                          = "Your GitHub repository is importing starter code."
     CREATE_REPO         = "Creating repository"
     ADDING_COLLABORATOR = "Adding collaborator"
@@ -40,7 +41,7 @@ class GroupAssignmentRepo
       verify_organization_has_private_repos_available!
 
       if group_assignment.organization.feature_enabled?(:template_repos) && group_assignment.use_template_repos?
-        github_repository = clone_github_template_repository!
+        github_repository = create_github_repository_from_template!
       else
         github_repository = create_github_repository!
       end
@@ -101,7 +102,7 @@ class GroupAssignmentRepo
     end
 
     # rubocop:disable MethodLength, AbcSize
-    def clone_github_template_repository!
+    def create_github_repository_from_template!
       repository_name = generate_github_repository_name
       client = group_assignment.creator.github_client
       options = {
@@ -114,7 +115,8 @@ class GroupAssignmentRepo
 
       client.post("https://api.github.com/repositories/#{group_assignment.starter_code_repo_id}/generate", options)
     rescue GitHub::Error => error
-      raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
+      GitHubClassroom.statsd.increment("group_exercise_repo.create.repo.with_templates.failed")
+      raise Result::Error.new TEMPLATE_REPOSITORY_CREATION_FAILED, error.message
     end
 
     def add_team_to_github_repository!(github_repository_id)
