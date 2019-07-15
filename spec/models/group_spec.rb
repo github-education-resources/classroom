@@ -12,6 +12,39 @@ RSpec.describe Group, type: :model do
 
   it_behaves_like "github_teamable"
 
+  describe ".search" do
+    let(:searchable_group) { create(:group) }
+
+    before do
+      expect(searchable_group).to_not be_nil
+    end
+
+    it "searches by id" do
+      results = Group.search(searchable_group.id)
+      expect(results.to_a).to include(searchable_group)
+    end
+
+    it "searches by github_team_id" do
+      results = Group.search(searchable_group.github_team_id)
+      expect(results.to_a).to include(searchable_group)
+    end
+
+    it "searches by title" do
+      results = Group.search(searchable_group.title)
+      expect(results.to_a).to include(searchable_group)
+    end
+
+    it "searches by slug" do
+      results = Group.search(searchable_group.slug)
+      expect(results.to_a).to include(searchable_group)
+    end
+
+    it "does not return the group when it shouldn't" do
+      results = Group.search("spaghetto")
+      expect(results.to_a).to_not include(searchable_group)
+    end
+  end
+
   describe "assocations", :vcr do
     after(:each) do
       RepoAccess.destroy_all

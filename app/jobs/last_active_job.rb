@@ -15,6 +15,5 @@ class LastActiveJob < ApplicationJob
 
     time_last_active = Time.zone.at(time_last_active)
     user.update_columns(last_active_at: time_last_active) # rubocop:disable Rails/SkipsModelValidations
-    User.update_index("user#user") { user }
   end
 end

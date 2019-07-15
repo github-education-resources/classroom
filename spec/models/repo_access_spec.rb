@@ -6,6 +6,29 @@ RSpec.describe RepoAccess, type: :model do
   let(:organization) { classroom_org     }
   let(:student)      { classroom_student }
 
+  describe ".search" do
+    before do
+      RepoAccess.any_instance.stub(:add_membership_to_github_organization)
+      RepoAccess.any_instance.stub(:accept_membership_to_github_organization)
+      @repo_access = RepoAccess.create(user: student, organization: organization, github_team_id: 50)
+    end
+
+    it "searches by id" do
+      results = RepoAccess.search(@repo_access.id)
+      expect(results.to_a).to include(@repo_access)
+    end
+
+    it "searches by github_team_id" do
+      results = RepoAccess.search(@repo_access.github_team_id)
+      expect(results.to_a).to include(@repo_access)
+    end
+
+    it "does not return the grouping when it shouldn't" do
+      results = RepoAccess.search("spaghetto")
+      expect(results.to_a).to_not include(@repo_access)
+    end
+  end
+
   describe "callbacks", :vcr do
     before(:each) do
       RepoAccess.create(user: student, organization: organization)
