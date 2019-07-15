@@ -15,13 +15,22 @@ VCR.configure do |c|
 
   c.before_record { |i| i.request.headers.delete "Authorization" }
 
-  # Application id
+  # GitHub Application id
   c.filter_sensitive_data("<TEST_APPLICATION_GITHUB_CLIENT_ID>") do
     application_github_client_id
   end
 
   c.filter_sensitive_data("<TEST_APPLICATION_GITHUB_CLIENT_SECRET>") do
     application_github_client_secret
+  end
+
+  # Google Application id
+  c.filter_sensitive_data("<TEST_APPLICATION_GOOGLE_CLIENT_ID>") do
+    application_google_client_id
+  end
+
+  c.filter_sensitive_data("<TEST_APPLICATION_GOOGLE_CLIENT_SECRET>") do
+    application_google_client_secret
   end
 
   # Owner
@@ -62,6 +71,14 @@ end
 
 def application_github_client_secret
   ENV.fetch("GITHUB_CLIENT_SECRET") { "r" * 20 }
+end
+
+def application_google_client_id
+  ENV.fetch("GOOGLE_CLIENT_ID") { "i" * 20 }
+end
+
+def application_google_client_secret
+  ENV.fetch("GOOGLE_CLIENT_SECRET") { "r" * 20 }
 end
 
 def classroom_owner_github_id

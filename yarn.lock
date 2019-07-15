@@ -364,10 +364,10 @@ primer-buttons@2.6.4:
   dependencies:
     primer-support "4.7.2"
 
-primer-core@6.10.8:
-  version "6.10.8"
-  resolved "https://registry.yarnpkg.com/primer-core/-/primer-core-6.10.8.tgz#9ceb1ee036be4dad487933660c04fff4ee4074ec"
-  integrity sha512-yeAAWxb7Ro+PYk1MN2mqvSA4XoCaX/KjwfEgJc0l+6qmQA74KZR0tLf9t/zzSyJRgLwKthWbcwZzzjrffEph4A==
+primer-core@6.10.9:
+  version "6.10.9"
+  resolved "https://registry.yarnpkg.com/primer-core/-/primer-core-6.10.9.tgz#80a6bb4ab2b19750c39de052fd587416a76e7223"
+  integrity sha512-OJmJzhjw4UXXU/IzH3JoJL6KGHfWep8G8t+EHNGIJVHBsrGQYylp5iEcsPuHLDQVpKbOtuj3Rqg3ef53ei2R5A==
   dependencies:
     primer-base "1.9.2"
     primer-box "2.5.13"
@@ -381,7 +381,7 @@ primer-core@6.10.8:
     primer-table-object "1.4.13"
     primer-tooltips "1.5.11"
     primer-truncate "1.4.13"
-    primer-utilities "4.14.3"
+    primer-utilities "4.14.4"
 
 primer-forms@2.1.8:
   version "2.1.8"
@@ -554,17 +554,17 @@ primer-truncate@1.4.13:
   dependencies:
     primer-support "4.7.2"
 
-primer-utilities@4.14.3:
-  version "4.14.3"
-  resolved "https://registry.yarnpkg.com/primer-utilities/-/primer-utilities-4.14.3.tgz#d421516299a8d07189649272bce83bc74f713e5a"
-  integrity sha512-VZsoYjEOQrnrW2x09dgXSKvwLtuo/BwSCKIVW0KtHbq1p6/i3IoeKglNF+7oQH+uTE9F6iSOuNFRNoitcnWKJg==
+primer-utilities@4.14.4:
+  version "4.14.4"
+  resolved "https://registry.yarnpkg.com/primer-utilities/-/primer-utilities-4.14.4.tgz#642d8df36fc35b3c34b1442ff8684864d44a073d"
+  integrity sha512-EEZxsp/bjY4jkTqDeVJfWI/df55icDhFDGylX59VeiSVudIgUUe5G1VqtgGJIXgqnkiLf5u+iaOSayFvxqhTrg==
   dependencies:
     primer-support "4.7.2"
 
 primer@^10.10.4:
-  version "10.10.4"
-  resolved "https://registry.yarnpkg.com/primer/-/primer-10.10.4.tgz#9de531d732365ef75f0c064e99f803743bdc9024"
-  integrity sha512-JslEj4o7n1kJMGPQvCkrZphBnTlJ+oXmDEB4zBc3fOgt0INWO8Y5vgsW2VutvoFbuiXbY0ydQfGPOcL5/J452Q==
+  version "10.10.5"
+  resolved "https://registry.yarnpkg.com/primer/-/primer-10.10.5.tgz#de2201180df50877b8017de7be369653c9eff2ca"
+  integrity sha512-iJjmOomFef/W+oBtwo4U+o2MwCL00z+4XM7ixRP5kJ3Fgc9QEhVW7IPv3DWhqRlbPrMhF68ytM+AFRcHHT8rEA==
   dependencies:
     primer-alerts "1.5.13"
     primer-avatars "1.5.10"
@@ -574,7 +574,7 @@ primer@^10.10.4:
     primer-branch-name "1.0.11"
     primer-breadcrumb "1.5.9"
     primer-buttons "2.6.4"
-    primer-core "6.10.8"
+    primer-core "6.10.9"
     primer-forms "2.1.8"
     primer-labels "1.5.13"
     primer-layout "1.6.2"
@@ -597,7 +597,7 @@ primer@^10.10.4:
     primer-tables "1.5.3"
     primer-tooltips "1.5.11"
     primer-truncate "1.4.13"
-    primer-utilities "4.14.3"
+    primer-utilities "4.14.4"
 
 pseudomap@^1.0.2:
   version "1.0.2"

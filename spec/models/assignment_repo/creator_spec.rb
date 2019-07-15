@@ -105,8 +105,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
       end
 
       it "tracks the how long it too to be created" do
-        expect(GitHubClassroom.statsd).to receive(:timing).with("exercise_repo.create.time", anything)
-        expect(GitHubClassroom.statsd).to receive(:timing).with("v2_exercise_repo.create.time", anything)
+        expect(GitHubClassroom.statsd).to receive(:timing).with("exercise_repo.create.time.with_importer", anything)
         AssignmentRepo::Creator.perform(assignment: assignment, user: student)
       end
 
