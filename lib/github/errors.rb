@@ -9,6 +9,7 @@ module GitHub
         yield
       rescue Octokit::Error => err
         GitHubClassroom.statsd.increment("github.error.#{err.class.to_s.remove('Octokit::')}")
+        Failbot.report!($ERROR_INFO)
         process_octokit_error(err)
       end
 
