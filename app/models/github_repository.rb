@@ -161,8 +161,10 @@ class GitHubRepository < GitHubResource
   end
 
   def empty?
-    @client.contents(full_name).empty?
-  rescue Octokit::NotFound
+    GitHub::Errors.with_error_handling do
+      @client.contents(full_name).empty?
+    end
+  rescue GitHub::Error
     return true
   end
 
