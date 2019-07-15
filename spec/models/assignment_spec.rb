@@ -119,4 +119,40 @@ RSpec.describe Assignment, type: :model do
       end
     end
   end
+
+  describe "#starter_code_repository_not_empty" do
+    let(:organization) { classroom_org }
+
+    before do
+      @client = oauth_client
+    end
+
+    before(:each) do
+      github_organization = GitHubOrganization.new(@client, organization.github_id)
+      @github_repository  = github_organization.create_repository("test-repository", private: true)
+    end
+
+    after(:each) do
+      @client.delete_repository(@github_repository.id)
+    end
+
+    it "raises an error when starter code repository is empty", :vcr do
+      assignment = build(:assignment, organization: organization, title: "assignment")
+      assignment.assign_attributes(starter_code_repo_id: @github_repository.id)
+
+      expect(@github_repository.empty?).to eql(true)
+      expect { assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Starter code "\
+        "repository cannot be empty. Select a repository that is not empty or create the assignment without starter "\
+        "code.")
+    end
+
+    it "does not raise an error when starter code repository is not empty", :vcr do
+      assignment = build(:assignment, organization: organization, title: "assignment")
+      assignment.assign_attributes(starter_code_repo_id: @github_repository.id)
+      GitHubRepository.any_instance.stub(:empty?).and_return(false)
+
+      expect(@github_repository.empty?).to eql(false)
+      expect { assignment.save! }.not_to raise_error
+    end
+  end
 end
