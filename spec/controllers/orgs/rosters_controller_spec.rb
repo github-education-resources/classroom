@@ -266,6 +266,10 @@ RSpec.describe Orgs::RostersController, type: :controller do
               "An existing configuration exists. Please remove configuration before creating a new one."
             )
           end
+
+          after do
+            LtiConfiguration.destroy_all
+          end
         end
 
         context "when user is not authorized with google" do
@@ -364,6 +368,10 @@ RSpec.describe Orgs::RostersController, type: :controller do
             expect(flash[:alert]).to eq(
               "An existing configuration exists. Please remove configuration before creating a new one."
             )
+          end
+
+          after do
+            LtiConfiguration.destroy_all
           end
         end
 
@@ -895,6 +903,10 @@ RSpec.describe Orgs::RostersController, type: :controller do
               "An existing configuration exists. Please remove configuration before creating a new one."
             )
           end
+
+          after do
+            LtiConfiguration.destroy_all
+          end
         end
 
         context "when user is not authorized with google" do
@@ -1044,6 +1056,10 @@ RSpec.describe Orgs::RostersController, type: :controller do
               "An existing configuration exists. Please remove configuration before creating a new one."
             )
           end
+
+          after do
+            LtiConfiguration.destroy_all
+          end
         end
 
         context "when user is not authorized with google" do
@@ -1144,6 +1160,10 @@ RSpec.describe Orgs::RostersController, type: :controller do
             expect(flash[:alert]).to eq(
               "An existing configuration exists. Please remove configuration before creating a new one."
             )
+          end
+
+          after do
+            LtiConfiguration.destroy_all
           end
         end
 
