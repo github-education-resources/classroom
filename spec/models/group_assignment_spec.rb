@@ -215,7 +215,7 @@ RSpec.describe GroupAssignment, type: :model do
     let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
     let(:group_assignment) { build(:group_assignment, organization: organization, title: "Group Assignment 1") }
     let(:github_repository) do
-      github_organization.create_repository("Group Assignment 1 Template", private: true, auto_init: true )
+      github_organization.create_repository("Group Assignment 1 Template", private: true, auto_init: true)
     end
 
     after(:each) do
@@ -263,5 +263,5 @@ RSpec.describe GroupAssignment, type: :model do
         expect { group_assignment.save! }.not_to raise_error
       end
     end
-  end  
+  end
 end

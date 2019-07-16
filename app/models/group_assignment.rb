@@ -40,7 +40,7 @@ class GroupAssignment < ApplicationRecord
   validate :uniqueness_of_slug_across_organization
   validate :max_teams_less_than_group_count
   validate :starter_code_repository_not_empty
-  validate :starter_code_repository_is_template  
+  validate :starter_code_repository_is_template
 
   alias_attribute :invitation, :group_assignment_invitation
   alias_attribute :repos, :group_assignment_repos
