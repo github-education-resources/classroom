@@ -60,10 +60,9 @@ module Orgs
     end
 
     def ensure_no_google_classroom
-      if current_organization.google_course_id
-        redirect_to edit_organization_path(current_organization),
-          alert: "An existing configuration exists. Please remove configuration before creating a new one."
-      end
+      return unless current_organization.google_course_id
+      redirect_to edit_organization_path(current_organization),
+        alert: "An existing configuration exists. Please remove configuration before creating a new one."
     end
   end
 end

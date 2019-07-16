@@ -271,10 +271,9 @@ module Orgs
     end
 
     def ensure_no_lti_configuration
-      if current_organization.lti_configuration
-        redirect_to edit_organization_path(current_organization),
-          alert: "An existing configuration exists. Please remove configuration before creating a new one."
-      end
+      return unless current_organization.lti_configuration
+      redirect_to edit_organization_path(current_organization),
+        alert: "An existing configuration exists. Please remove configuration before creating a new one."
     end
 
     # An unlinked user is a user who:

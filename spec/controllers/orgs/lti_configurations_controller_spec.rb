@@ -35,18 +35,6 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       it "renders new template" do
         expect(response).to render_template(:new)
       end
-
-      context "with existing google classrom" do
-        before do
-          organization.update_attributes(google_course_id: "1234")
-        end
-  
-        it "alerts user about existing configuration" do
-          get :info, params: { id: organization.slug }
-          expect(response).to redirect_to(edit_organization_path(organization))
-          expect(flash[:alert]).to eq("An existing configuration exists. Please remove configuration before creating a new one.")
-        end
-      end
     end
   end
 
@@ -93,11 +81,13 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         before do
           organization.update_attributes(google_course_id: "1234")
         end
-  
+
         it "alerts user about existing configuration" do
           get :show, params: { id: organization.slug }
           expect(response).to redirect_to(edit_organization_path(organization))
-          expect(flash[:alert]).to eq("An existing configuration exists. Please remove configuration before creating a new one.")
+          expect(flash[:alert]).to eq(
+            "An existing configuration exists. Please remove configuration before creating a new one."
+          )
         end
       end
     end
@@ -113,6 +103,20 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         post :create, params: { id: organization.slug }
         expect(organization.lti_configuration).to_not be_nil
         expect(response).to redirect_to(lti_configuration_path(organization))
+      end
+
+      context "with existing google classrom" do
+        before do
+          organization.update_attributes(google_course_id: "1234")
+        end
+
+        it "alerts user about existing configuration" do
+          get :create, params: { id: organization.slug }
+          expect(response).to redirect_to(edit_organization_path(organization))
+          expect(flash[:alert]).to eq(
+            "An existing configuration exists. Please remove configuration before creating a new one."
+          )
+        end
       end
     end
 
