@@ -64,7 +64,6 @@ class Assignment < ApplicationRecord
     return if GroupAssignment.where(slug: slug, organization: organization).blank?
     errors.add(:slug, :taken)
   end
-<<<<<<< HEAD
 
   def starter_code_repository_not_empty
     return unless starter_code? && starter_code_repository.empty?
@@ -85,6 +84,4 @@ class Assignment < ApplicationRecord
       "is not a template repository. Make it a template repository to use template cloning."
     )
   end
-=======
->>>>>>> Move assignment/group_assignment methods to concern
 end

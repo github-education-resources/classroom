@@ -120,7 +120,6 @@ RSpec.describe Assignment, type: :model do
     end
   end
 
-<<<<<<< HEAD
   describe "#starter_code_repository_not_empty" do
     let(:organization) { classroom_org }
 
@@ -154,7 +153,9 @@ RSpec.describe Assignment, type: :model do
 
       expect(@github_repository.empty?).to eql(false)
       expect { assignment.save! }.not_to raise_error
-=======
+    end
+  end
+
   describe "#starter_code_repository_is_a_template_repository", :vcr do
     let(:organization) { classroom_org }
     let(:client) { oauth_client }
@@ -206,7 +207,6 @@ RSpec.describe Assignment, type: :model do
       it "does not raise error when not using starter code" do
         expect { assignment.save! }.not_to raise_error
       end
->>>>>>> Added tests for template repo creation
     end
   end
 end
