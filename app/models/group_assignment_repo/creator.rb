@@ -105,6 +105,7 @@ class GroupAssignmentRepo
 
     # rubocop:disable MethodLength, AbcSize
     def create_github_repository_from_template!
+      GitHubClassroom.statsd.increment("group_exercise_repo.create.repo.with_templates.started")
       repository_name = generate_github_repository_name
       client = group_assignment.creator.github_client
       options = {
@@ -116,6 +117,7 @@ class GroupAssignmentRepo
       }
 
       client.post("#{GITHUB_API_HOST}/repositories/#{group_assignment.starter_code_repo_id}/generate", options)
+      GitHubClassroom.statsd.increment("group_exercise_repo.create.repo.with_templates.success")
     rescue GitHub::Error => error
       GitHubClassroom.statsd.increment("group_exercise_repo.create.repo.with_templates.failed")
       raise Result::Error.new TEMPLATE_REPOSITORY_CREATION_FAILED, error.message

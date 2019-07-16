@@ -141,6 +141,7 @@ class AssignmentRepo
     # Returns an Integer ID or raises a Result::Error
     # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     def create_github_repository_from_template!
+      GitHubClassroom.statsd.increment("exercise_repo.create.repo.with_templates.started")
       client = assignment.creator.github_client
       repository_name = generate_github_repository_name
       options = {
@@ -152,6 +153,7 @@ class AssignmentRepo
       }
 
       client.post("#{GITHUB_API_HOST}/repositories/#{assignment.starter_code_repo_id}/generate", options)
+      GitHubClassroom.statsd.increment("exercise_repo.create.repo.with_templates.success")
     rescue GitHub::Error => error
       raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
     end
