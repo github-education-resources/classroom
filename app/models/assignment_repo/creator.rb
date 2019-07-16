@@ -12,6 +12,8 @@ class AssignmentRepo
     IMPORT_ONGOING                          = "Your GitHub repository is importing starter code."
     CREATE_REPO                             = "Creating GitHub repository."
     IMPORT_STARTER_CODE                     = "Importing starter code."
+    GITHUB_API_HOST                         = "https://api.github.com"
+    TEMPLATE_REPOS_API_PREVIEW              = "application/vnd.github.baptiste-preview"
 
     attr_reader :assignment, :user, :organization, :invite_status, :reporter
     delegate :broadcast_message, :report_time, :report_error, to: :reporter
@@ -146,10 +148,10 @@ class AssignmentRepo
         owner: organization.github_organization.login,
         private: assignment.private?,
         description: "#{repository_name} created by GitHub Classroom",
-        accept: "application/vnd.github.baptiste-preview"
+        accept: TEMPLATE_REPOS_API_PREVIEW
       }
 
-      client.post("https://api.github.com/repositories/#{assignment.starter_code_repo_id}/generate", options)
+      client.post("#{GITHUB_API_HOST}/repositories/#{assignment.starter_code_repo_id}/generate", options)
     rescue GitHub::Error => error
       raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
     end

@@ -1,7 +1,8 @@
-function import_options(starter_code_field_value) {
-  if (starter_code_field_value.length > 0) {
-    document.getElementById("import-options").style.display ="";
+function importOptions(starterCodeFieldValue) {
+  const importOptions = document.getElementById('import-options');
+  if (starterCodeFieldValue.length > 0) {
+    importOptions.style.display = '';
   } else {
-    document.getElementById("import-options").style.display ="none";
+    importOptions.style.display = 'none';
   }
 }

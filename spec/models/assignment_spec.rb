@@ -156,12 +156,14 @@ RSpec.describe Assignment, type: :model do
     end
   end
 
-  describe "#starter_code_repository_is_a_template_repository", :vcr do
+  describe "#starter_code_repository_is_template", :vcr do
     let(:organization) { classroom_org }
     let(:client) { oauth_client }
     let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
     let(:assignment) { build(:assignment, organization: organization, title: "Assignment") }
-    let(:github_repository) { github_organization.create_repository("Assignment 1 Template", private: true) }
+    let(:github_repository) do
+      github_organization.create_repository("Assignment 1 Template", private: true, auto_init: true)
+    end
 
     after do
       client.delete_repository(github_repository.id)

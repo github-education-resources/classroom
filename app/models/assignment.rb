@@ -40,7 +40,7 @@ class Assignment < ApplicationRecord
   validate :uniqueness_of_slug_across_organization
   validate :starter_code_repository_not_empty
 
-  validate :starter_code_repository_is_a_template_repository
+  validate :starter_code_repository_is_template
 
   alias_attribute :invitation, :assignment_invitation
   alias_attribute :repos, :assignment_repos
@@ -69,19 +69,5 @@ class Assignment < ApplicationRecord
     return unless starter_code? && starter_code_repository.empty?
     errors.add :starter_code_repository, "cannot be empty. Select a repository that is not empty or create the"\
       " assignment without starter code."
-  end
-
-  def starter_code_repository_is_a_template_repository
-    return unless use_template_repos?
-
-    options = { accept: "application/vnd.github.baptiste-preview" }
-    endpoint_url = "https://api.github.com/repositories/#{starter_code_repo_id}"
-    starter_code_github_repository = creator.github_client.get(endpoint_url, options)
-
-    return if starter_code_github_repository.is_template
-    errors.add(
-      :starter_code_repository,
-      "is not a template repository. Make it a template repository to use template cloning."
-    )
   end
 end

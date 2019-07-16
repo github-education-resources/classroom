@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module StarterCodeImportable
+  GITHUB_API_HOST = "https://api.github.com"
+  TEMPLATE_REPOS_API_PREVIEW = "application/vnd.github.baptiste-preview"
+
   extend ActiveSupport::Concern
 
   def starter_code?
@@ -20,11 +23,11 @@ module StarterCodeImportable
     starter_code? && !template_repos_enabled?
   end
 
-  def starter_code_repository_is_a_template_repository
+  def starter_code_repository_is_template
     return unless use_template_repos?
 
-    options = { accept: "application/vnd.github.baptiste-preview" }
-    endpoint_url = "https://api.github.com/repositories/#{starter_code_repo_id}"
+    options = { accept: TEMPLATE_REPOS_API_PREVIEW }
+    endpoint_url = "#{GITHUB_API_HOST}/repositories/#{starter_code_repo_id}"
     starter_code_github_repository = creator.github_client.get(endpoint_url, options)
 
     return if starter_code_github_repository.is_template
