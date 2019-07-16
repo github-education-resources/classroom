@@ -157,12 +157,20 @@ ENV Variable | Description |
 `GITHUB_CLIENT_ID`| the GitHub Application Client ID.
 `GITHUB_CLIENT_SECRET`| the GitHub Application Client Secret.
 `NON_STAFF_GITHUB_ADMIN_IDS` | GitHub `user_ids` of users to be granted staff level access.
+`GOOGLE_CLIENT_ID` | the Google Client ID
+`GOOGLE_CLIENT_SECRET=` | the Google Client Secret 
 
 To obtain your `GitHub Client ID/Secret` you need to [register a new OAuth application](https://github.com/settings/applications/new).
 
 After you register your OAuth application, you should fill in the homepage url with `http://localhost:5000` and the authorization url with `http://localhost:5000/auth/github/callback`.
 
 To obtain your GitHub User ID for the `NON_STAFF_GITHUB_ADMIN_IDS` field, go to `https://api.github.com/users/your_username`
+
+To obtain your `Google Client ID/Secret` you will need to [create a new web application](http://console.developers.google.com). When creating credientals choose `OAuth Client ID`, then fill in the `Authorized JavaScript origins` with `http://localhost:5000` and the `Authorized redirect URIs` with `http://localhost:5000/auth/github/callback`. 
+
+After creating your Google credientials, add the Google Classroom scopes of:
+* `https://www.googleapis.com/auth/classroom.courses.readonly`
+* `https://www.googleapis.com/auth/classroom.rosters.readonly`
 
 ### Testing environment variables
 

@@ -1,6 +1,6 @@
 <div class="d-flex flex-md-row flex-items-center classroom-resource-item">
   <div class="col-1 d-flexp">
-    <%= image_tag github_avatar_url(organization.github_id, 96), height: 48, width: 48, class: 'avatar left', alt: "@#{organization.login}" %>
+    <%= image_tag github_avatar_url(organization.github_id, 96), height: 48, width: 48, class: 'avatar left', alt: "@#{organization.github_organization.login}" %>
   </div>
 
   <div class="col-10 col-md-10 d-flex flex-column">
@@ -8,7 +8,7 @@
       <strong class="search-result-title"><%= organization.title %></strong>
     <% end %>
 
-    <span class="text-gray css-truncate css-truncate-target"> <%= organization.login %></span>
+    <span class="text-gray css-truncate css-truncate-target"> <%= organization.github_organization.login %></span>
     <span class="text-gray css-truncate css-truncate-target"><%= t('views.stafftools.organizations.added') %> <%= local_time_ago(organization.created_at) %></span>
   </div>
 </div>

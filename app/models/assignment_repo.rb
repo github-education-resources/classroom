@@ -2,8 +2,9 @@
 
 class AssignmentRepo < ApplicationRecord
   include AssignmentRepoable
+  include StafftoolsSearchable
 
-  update_index("assignment_repo#assignment_repo") { self }
+  define_pg_search(columns: %i[id github_repo_id])
 
   # TODO: remove this enum (dead code)
   enum configuration_state: %i[not_configured configuring configured]

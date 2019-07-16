@@ -15,6 +15,23 @@ RSpec.describe AssignmentInvitation, type: :model do
     expect(assignment_invitation.key).to_not be_nil
   end
 
+  describe ".search" do
+    it "searches by id" do
+      results = AssignmentInvitation.search(invitation.id)
+      expect(results.to_a).to include(invitation)
+    end
+
+    it "searches by key" do
+      results = AssignmentInvitation.search(invitation.key)
+      expect(results.to_a).to include(invitation)
+    end
+
+    it "does not return the assignment when it shouldn't" do
+      results = AssignmentInvitation.search("spaghetto")
+      expect(results.to_a).to_not include(invitation)
+    end
+  end
+
   describe "#status" do
     it "should create an invite status for a user when one does not exist" do
       expect(InviteStatus).to receive(:create).with(user: user, assignment_invitation: invitation)
