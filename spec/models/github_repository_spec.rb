@@ -263,12 +263,12 @@ describe GitHubRepository do
     end
 
     describe "#empty?", :vcr do
-      it "returns false when there are commits" do
+      it "returns false when the repo has content" do
         github_repository = GitHubRepository.new(@client, 35_079_964)
         expect(github_repository.empty?).to be_falsey
       end
 
-      it "returns true when there are no commits" do
+      it "returns true when the repo has no content" do
         github_repository = GitHubRepository.new(@client, 141_328_892)
         expect(github_repository.empty?).to be_truthy
       end
