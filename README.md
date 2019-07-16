@@ -166,7 +166,11 @@ After you register your OAuth application, you should fill in the homepage url w
 
 To obtain your GitHub User ID for the `NON_STAFF_GITHUB_ADMIN_IDS` field, go to `https://api.github.com/users/your_username`
 
-To obtain your `Google Client ID/Secret` you will need to [create a new web application](http://console.developers.google.com). When creating credientals choose `OAuth Client ID`, then fill in the `Authorized JavaScript origins` with `http://localhost:5000` and the `Authorized redirect URIs` with `http://localhost:5000/auth/github/callback`.
+To obtain your `Google Client ID/Secret` you will need to [create a new web application](http://console.developers.google.com). When creating credientals choose `OAuth Client ID`, then fill in the `Authorized JavaScript origins` with `http://localhost:5000` and the `Authorized redirect URIs` with `http://localhost:5000/auth/github/callback`. 
+
+After creating your Google credientials, add the Google Classroom scopes of:
+* `https://www.googleapis.com/auth/classroom.courses.readonly`
+* `https://www.googleapis.com/auth/classroom.rosters.readonly`
 
 ### Testing environment variables
 
