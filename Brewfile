@@ -6,6 +6,7 @@ tap "github/bootstrap"
 cask "docker"
 cask "ngrok"
 
+brew "hivemind"
 brew "nginx", restart_service: :changed
 brew "postgresql@9.4"
 brew "terminal-notifier"
