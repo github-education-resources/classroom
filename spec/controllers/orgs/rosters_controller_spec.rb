@@ -251,7 +251,11 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
         context "when there is an exixting lti configuration" do
           before do
-            create(:lti_configuration, organization: organization)
+            create(:lti_configuration,
+              organization: organization,
+              consumer_key: "hello",
+              shared_secret: "hello"
+            )
             get :select_google_classroom, params: {
               id: organization.slug
             }
@@ -346,7 +350,11 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
         context "when there is an exixting lti configuration" do
           before do
-            create(:lti_configuration, organization: organization)
+            create(:lti_configuration,
+              organization: organization,
+              consumer_key: "hello",
+              shared_secret: "hello"
+            )
             get :search_google_classroom, params: {
               id: organization.slug,
               query: ""
@@ -873,7 +881,11 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
         context "when there is an exixting lti configuration" do
           before do
-            create(:lti_configuration, organization: organization)
+            create(:lti_configuration,
+              organization: organization,
+              consumer_key: "hello",
+              shared_secret: "hello"
+            )
             patch :import_from_google_classroom, params: {
               id: organization.slug,
               course_id: "1234"
@@ -1020,7 +1032,11 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
         context "when there is an exixting lti configuration" do
           before do
-            create(:lti_configuration, organization: organization)
+            create(:lti_configuration,
+              organization: organization,
+              consumer_key: "hello",
+              shared_secret: "hello"
+            )
             patch :sync_google_classroom, params: {
               id: organization.slug
             }
@@ -1120,7 +1136,11 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
         context "when there is an exixting lti configuration" do
           before do
-            create(:lti_configuration, organization: organization)
+            create(:lti_configuration,
+              organization: organization,
+              consumer_key: "hello",
+              shared_secret: "hello"
+            )
             patch :unlink_google_classroom, params: { id: organization.slug }
           end
 
