@@ -7,7 +7,7 @@
 
   <div class="col-10 col-md-10 d-flex flex-column">
     <%= link_to stafftools_repo_access_path(repo_access.id) do %>
-      <strong class="search-result-title">@<%= t('views.stafftools.repo_accesses.repo_access_info', user_login: repo_access.user_login, organization_login: repo_access.organization_login) %></strong>
+      <strong class="search-result-title">@<%= t('views.stafftools.repo_accesses.repo_access_info', user_login: repo_access.user_login, organization_login: repo_access.organization.github_organization.login) %></strong>
     <% end %>
 
     <span class="text-gray css-truncate css-truncate-target"><%= t('views.stafftools.repo_accesses.created') %> <%= local_time_ago(repo_access.created_at) %></span>

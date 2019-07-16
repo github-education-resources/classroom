@@ -24,7 +24,7 @@ RSpec.describe GroupAssignmentRepo, type: :model do
     let(:group) { create(:group, grouping: grouping, github_team_id: github_team_id, repo_accesses: [repo_access]) }
     subject { create(:group_assignment_repo, group_assignment: group_assignment, group: group, github_repo_id: 42) }
 
-    describe ".search" do
+    describe ".search", :vcr do
       let(:searchable_repo) { create(:group_assignment_repo, group_assignment: group_assignment) }
 
       before do
