@@ -72,7 +72,7 @@ gem "ruby-progressbar",    "~> 1.8", ">= 1.8.1", require: false
 gem "kramdown",            "~> 1.17.0"
 
 gem "sass-rails", "~> 5.0", ">= 5.0.6"
-gem "sidekiq",    "~> 5.0", ">= 5.0.4"
+gem "sidekiq",    "~> 5.2", ">= 5.2.7"
 gem "sprockets",  "~> 3.7", ">= 3.7.2"
 
 gem "turbolinks", "~> 2.5", ">= 2.5.4"
