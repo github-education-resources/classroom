@@ -161,7 +161,11 @@ class GitHubRepository < GitHubResource
   end
 
   def empty?
-    number_of_commits.zero?
+    GitHub::Errors.with_error_handling do
+      @client.contents(full_name).empty?
+    end
+  rescue GitHub::Error
+    return true
   end
 
   def commits_url(branch)

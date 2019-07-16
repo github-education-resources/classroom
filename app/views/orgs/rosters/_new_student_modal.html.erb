@@ -34,7 +34,7 @@
       <h2 class="h4 mb-2">Manually add students</h2>
 
       <div>
-        <%= form_tag roster_path(current_organization), method: :post do |f| %>
+        <%= form_tag add_students_roster_path(current_organization), method: :patch do |f| %>
         <div class="Box">
           <dl class="Box-body <%= view.form_class_for(:roster_entries) %> mb-0">
             <dt class="text-gray mb-1">Enter your list of students' identifiers, <strong>one per line</strong>.</dt>
@@ -49,7 +49,7 @@
         </div>
 
           <div class="d-flex flex-items-center border-top pt-5">
-            <%= submit_tag 'Create roster', class: 'btn btn-primary mr-3' %>
+            <%= submit_tag 'Add roster entries', class: 'btn btn-primary mr-3' %>
           </div>
         <% end %>
       </div>

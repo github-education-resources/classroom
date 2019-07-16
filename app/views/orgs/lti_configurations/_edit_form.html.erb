@@ -1,0 +1,20 @@
+<% allow_cancel = local_assigns.fetch(:allow_cancel, false) %>
+
+<%= form_with model: @current_lti_configuration, url: lti_configuration_path, method: :patch do |f| %>
+  <div class="form-group">
+    <dt><label>Learning Management System URL</label></dt>
+    <dt>Adding a url to your LMS allows you to easily open your LMS through GitHub Classroom.</p><dt>
+    <dd><%= f.text_field :lms_link, placeholder: "Learning Management System URL", class: "form-control input-block" %></dd>
+  </div>
+
+  <br>
+
+  <div class="form-group">
+    <%= submit_tag "Save changes", class: "btn btn-primary" %>
+    <% if allow_cancel %>
+      <%= link_to lti_configuration_path(current_organization), method: :get do %>
+        <span class="btn">Cancel</span>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

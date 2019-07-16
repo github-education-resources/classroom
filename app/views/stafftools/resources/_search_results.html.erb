@@ -1,9 +1,10 @@
 <% unless resources.nil? %>
-  <% if resources.total_count > 0 %>
-    <% resource_groups = resources.group_by {|r| r._data['_type']}  %>
+  <% any_results = resources.any? {|k, v| v.any? } %>
+  <% if any_results %>
+    <% resources.each do |name, resources| %>
+      <% next unless resources.any? %>
 
-    <% resource_groups.each do |name, resources| %>
-      <h4><%= name.capitalize.humanize.pluralize %></h4>
+      <h4><%= name %></h4>
 
       <ul class="classroom-resources">
         <% resources.each do |resource| %>
@@ -11,8 +12,6 @@
         <% end %>
       </ul>
     <% end %>
-
-    <%= render partial: 'shared/pagination', locals: { collection: resources } %>
   <% else %>
     <div class="blankslate">
       <%= octicon 'search', height: 22 %>
