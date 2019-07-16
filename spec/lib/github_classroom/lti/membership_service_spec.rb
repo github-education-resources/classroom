@@ -8,7 +8,7 @@ describe GitHubClassroom::LTI::MembershipService do
   let(:shared_secret) { "valid_shared_secret" }
 
   # Official LTI reference tool consumer specifically for testing purposes. Response will be stored in VCR.
-  let(:endpoint) { "http://lti.tools/saltire/tc-membership.php/context/9hdod30uhcnf2me5qoee93ahr7" }
+  let(:endpoint) { "http://ltiapps.net/test/tc-memberships.php/context/4e0b4a729e8429355ec09d86c5d32439" }
 
   describe "membership", :vcr do
     context "valid authentication" do

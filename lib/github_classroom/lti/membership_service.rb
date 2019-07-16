@@ -3,7 +3,7 @@
 module GitHubClassroom
   module LTI
     class MembershipService
-      include RequestSigning
+      include Mixins::RequestSigning
 
       def initialize(endpoint, consumer_key, secret)
         @endpoint = endpoint
@@ -12,16 +12,19 @@ module GitHubClassroom
       end
 
       def students
-        filtered_membership(roles: %w[Student Learner])
+        membership(roles: %w[Student Learner])
       end
 
       def instructors
-        filtered_membership(roles: ["Instructor"])
+        membership(roles: %w[Instructor Admin])
       end
 
-      def membership
+      def membership(roles: [])
         req_headers = { "Accept": "application/vnd.ims.lis.v2.membershipcontainer+json" }
-        response = signed_request(@endpoint, @consumer_key, @secret, headers: req_headers).get
+        request = signed_request(@endpoint, @consumer_key, @secret,
+          query: { role: roles.join(",") },
+          headers: req_headers)
+        response = request.get
 
         json_membership = JSON.parse(response.body)
         parsed_membership = parse_membership(json_membership)
@@ -31,23 +34,10 @@ module GitHubClassroom
 
       private
 
-      def filtered_membership(roles: nil)
-        unfiltered_membership = membership
-        return unfiltered_membership unless roles
-
-        unfiltered_membership.select do |membership|
-          # LMS is allowed to prefix a role with anything it wants
-          # so the filter method simply matches on substrings
-          roles.any? do |desired_role|
-            membership.role.any? do |actual_role|
-              actual_role.include? desired_role
-            end
-          end
-        end
-      end
-
       def parse_membership(json_membership)
         unparsed_memberships = json_membership.dig("pageOf", "membershipSubject", "membership")
+        raise "Unexpected json object given" unless unparsed_memberships
+
         unparsed_memberships.map do |unparsed_membership|
           membership_hash = unparsed_membership.deep_transform_keys { |key| key.underscore.to_sym }
           member_hash = membership_hash[:member]
