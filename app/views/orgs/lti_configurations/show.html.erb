@@ -17,7 +17,7 @@
           your Learning Management System with the following credentials generated below
           by GitHub Classroom.</p>
 
-          Consumer Key
+          <dt><label>Consumer Key</label></dt>
           <div class="input-group">
             <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "consumer-key-#{current_organization.github_id}", value: current_organization.lti_configuration.consumer_key, readonly: 'readonly' %>
             <span class="input-group-button">
@@ -30,9 +30,23 @@
 
           <br>
 
-          Shared Secret
+          <dt><label>Shared Secret</label></dt>
           <div class="input-group">
             <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "shared-secret-#{current_organization.github_id}", value: current_organization.lti_configuration.shared_secret, readonly: 'readonly' %>
+            <span class="input-group-button">
+              <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#shared-secret-#{current_organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
+                <%= octicon 'clippy' %>
+                Copy
+              </button>
+            </span>
+          </div>
+
+          <br>
+
+          <dt><label>Application Auto-Configuration URL</label></dt>
+          <dt>On those LMSs which support it, paste in this link to automatically set up Classroom.</p><dt>
+          <div class="input-group">
+            <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "autoconfigure-url-#{current_organization.github_id}", value: autoconfigure_lti_configuration_url, readonly: 'readonly' %>
             <span class="input-group-button">
               <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#shared-secret-#{current_organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
                 <%= octicon 'clippy' %>
