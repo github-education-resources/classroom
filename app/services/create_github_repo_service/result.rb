@@ -9,12 +9,12 @@ class CreateGitHubRepoService
       end
     end
 
-    def self.success(repo)
-      new(:success, repo: repo)
+    def self.success(repo, entity)
+      new(:success, repo: repo, entity: entity)
     end
 
-    def self.failed(error)
-      new(:failed, error: error)
+    def self.failed(error, entity)
+      new(:failed, error: error, entity: entity)
     end
 
     def self.pending

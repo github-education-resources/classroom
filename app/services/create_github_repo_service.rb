@@ -35,12 +35,12 @@ class CreateGitHubRepoService
 
     stats_sender.timing(start)
     stats_sender.report(:success)
-    Result.success(assignment_repo)
+    Result.success(assignment_repo, entity)
   rescue Result::Error => error
     repo_id = assignment_repo&.github_repo_id || github_repository&.id
     delete_github_repository(repo_id)
     stats_sender.report(:failure)
-    Result.failed(error.message)
+    Result.failed(error.message, entity)
   end
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize

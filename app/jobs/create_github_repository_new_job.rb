@@ -17,7 +17,7 @@ class CreateGitHubRepositoryNewJob < ApplicationJob
     result = service.perform
     raise CreateGitHubRepoService::Result::Error, result.error if result.failed?
   rescue CreateGitHubRepoService::Result::Error => error
-    handle_error(error, service, retries)
+    handle_error(error.message, service, retries)
   end
 
   private
@@ -26,7 +26,7 @@ class CreateGitHubRepositoryNewJob < ApplicationJob
   # or broadcasts a failure to the user
   #
   def handle_error(err, service, retries)
-    logger.warn(err.message)
+    logger.warn(err)
     if retries.positive?
       service.invite_status.waiting!
       CreateGitHubRepositoryNewJob.perform_later(service.assignment, service.collaborator, retries: retries - 1)
