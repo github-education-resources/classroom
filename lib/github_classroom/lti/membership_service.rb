@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "mixins/request_signing"
-
 module GitHubClassroom
   module LTI
     class MembershipService
-      include RequestSigning
+      include Mixins::RequestSigning
 
       def initialize(endpoint, consumer_key, secret)
         @endpoint = endpoint
