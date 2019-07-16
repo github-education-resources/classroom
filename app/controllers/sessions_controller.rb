@@ -54,8 +54,9 @@ class SessionsController < ApplicationController
   # rubocop:disable AbcSize
   def lti_launch
     auth_hash = request.env["omniauth.auth"]
-    message_store = GitHubClassroom.lti_message_store(
-      consumer_key: auth_hash.credentials.token
+    message_store = GitHubClassroom::LTI::MessageStore.new(
+      consumer_key: auth_hash.credentials.token,
+      redis_store:  GitHubClassroom.redis
     )
 
     message = GitHubClassroom::LTI::MessageStore.construct_message(auth_hash.extra.raw_info)
