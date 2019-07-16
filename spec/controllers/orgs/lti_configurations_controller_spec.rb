@@ -92,7 +92,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       end
 
       context "with an existing roster" do
-        before do 
+        before do
           organization.roster = create(:roster)
           organization.save!
           organization.reload
@@ -102,7 +102,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
           post :create, params: { id: organization.slug }
           expect(response).to redirect_to(edit_organization_path(organization))
           expect(flash[:alert]).to eq(
-            "LMS configuration could not be processed as you already have a roster. Please delete roster and try again."
+            "LMS configuration failed as you already have a roster. Please delete roster and try again."
           )
         end
       end

@@ -405,7 +405,7 @@ module Orgs
     def google_classroom_ensure_no_roster
       return unless current_organization.roster
       redirect_to edit_organization_path(current_organization),
-        alert: "Google Classroom could not be connected as you already have a roster. Please delete roster and try again."
+        alert: "Google Classroom connection failed as you already have a roster. Please delete roster and try again."
     end
   end
 end

@@ -228,7 +228,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
         context "when user is authorized with google" do
           before do
             Roster.destroy_all
-            
+
             # Stub google authentication again
             client = Signet::OAuth2::Client.new
             allow_any_instance_of(Orgs::RostersController)
@@ -269,15 +269,15 @@ RSpec.describe Orgs::RostersController, type: :controller do
               .to receive(:list_courses)
               .and_return(response)
 
-              get :select_google_classroom, params: {
-                id: organization.slug
-              }
+            get :select_google_classroom, params: {
+              id: organization.slug
+            }
           end
 
           it "alerts user that there is an existing roster" do
             expect(response).to redirect_to(edit_organization_path(organization))
             expect(flash[:alert]).to eq(
-              "Google Classroom could not be connected as you already have a roster. Please delete roster and try again."
+              "Google Classroom connection failed as you already have a roster. Please delete roster and try again."
             )
           end
         end

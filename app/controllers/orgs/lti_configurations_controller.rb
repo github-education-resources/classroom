@@ -98,7 +98,7 @@ module Orgs
     def ensure_no_roster
       return unless current_organization.roster
       redirect_to edit_organization_path(current_organization),
-        alert: "LMS configuration could not be processed as you already have a roster. Please delete roster and try again."
+        alert: "LMS configuration failed as you already have a roster. Please delete roster and try again."
     end
   end
 end
