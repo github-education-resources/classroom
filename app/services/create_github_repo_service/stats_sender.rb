@@ -43,15 +43,15 @@ class CreateGitHubRepoService
     end
 
     # exercise based messages
-    def repo_creation_failed
+    def repository_creation_failed
       GitHubClassroom.statsd.increment("#{root_prefix}.create.repo.fail")
     end
 
-    def adding_collaborator_failed
+    def collaborator_addition_failed
       GitHubClassroom.statsd.increment("#{root_prefix}.create.adding_collaborator.fail")
     end
 
-    def importing_starter_code_failed
+    def starter_code_import_failed
       GitHubClassroom.statsd.increment("#{root_prefix}.create.importing_starter_code.fail")
     end
 

@@ -33,6 +33,7 @@ class CreateGitHubRepositoryNewJob < ApplicationJob
     else
       service.invite_status.errored_creating_repo!
       CreateGitHubRepoService::Broadcaster.call(service.entity, err, :error)
+      service.report_error(err)
     end
   end
 end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable ClassLength
 class CreateGitHubRepoService
   attr_reader :entity, :stats_sender
   delegate :assignment, :collaborator, :organization, :invite_status, to: :entity
@@ -39,7 +40,6 @@ class CreateGitHubRepoService
   rescue Result::Error => error
     repo_id = assignment_repo&.github_repo_id || github_repository&.id
     delete_github_repository(repo_id)
-    stats_sender.report(:failure)
     Result.failed(error.message, entity)
   end
   # rubocop:enable MethodLength
@@ -136,6 +136,21 @@ class CreateGitHubRepoService
     raise Result::Error.new errors(:collaborator_addition_failed), error.message
   end
 
+  # Maps the type of error to a Datadog error
+  #
+  def report_error(err)
+    case err
+    when /^#{errors(:repository_creation_failed)}/
+      stats_sender.report(:repository_creation_failed)
+    when /^#{errors(:collaborator_addition_failed)}/
+      stats_sender.report(:collaborator_addition_failed)
+    when /^#{errors(:starter_code_import_failed)}/
+      stats_sender.report(:starter_code_import_failed)
+    else
+      stats_sender.report(:failure)
+    end
+  end
+
   private
 
   # Internal: Creates a new team on GitHub and adds it to the repository.
@@ -188,4 +203,6 @@ class CreateGitHubRepoService
   # rubocop:enable LineLength
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize
+
 end
+# rubocop:enable ClassLength

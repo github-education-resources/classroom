@@ -556,7 +556,6 @@ RSpec.describe CreateGitHubRepoService do
             .to_return(body: "{}", status: 401)
 
           expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.Unauthorized")
-          expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.fail")
           service.perform
         end
 
