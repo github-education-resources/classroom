@@ -81,7 +81,7 @@ RSpec.describe CreateGitHubRepositoryNewJob, type: :job do
        ERROR
           expect_any_instance_of(subject)
             .to receive(:handle_error)
-                  .with(error_message, instance_of(CreateGitHubRepoService), anything)
+            .with(error_message, instance_of(CreateGitHubRepoService), anything)
           subject.perform_now(assignment, student)
         end
 
@@ -95,7 +95,7 @@ RSpec.describe CreateGitHubRepositoryNewJob, type: :job do
           error_message = "GitHub repository could not be created, please try again."
           expect_any_instance_of(subject)
             .to receive(:handle_error)
-                  .with(error_message, instance_of(CreateGitHubRepoService), anything)
+            .with(error_message, instance_of(CreateGitHubRepoService), anything)
           subject.perform_now(assignment, student)
         end
 
@@ -109,7 +109,7 @@ RSpec.describe CreateGitHubRepositoryNewJob, type: :job do
           error_message = "Assignment could not be created, please try again."
           expect_any_instance_of(subject)
             .to receive(:handle_error)
-                  .with(error_message, instance_of(CreateGitHubRepoService), anything)
+            .with(error_message, instance_of(CreateGitHubRepoService), anything)
           subject.perform_now(assignment, student)
         end
 
@@ -123,7 +123,7 @@ RSpec.describe CreateGitHubRepositoryNewJob, type: :job do
           error_message = "We were not able to add the user to the Assignment, please try again."
           expect_any_instance_of(subject)
             .to receive(:handle_error)
-                  .with(error_message, instance_of(CreateGitHubRepoService), anything)
+            .with(error_message, instance_of(CreateGitHubRepoService), anything)
           subject.perform_now(assignment, student)
         end
 
@@ -139,7 +139,7 @@ RSpec.describe CreateGitHubRepositoryNewJob, type: :job do
           error_message = "We were not able to import you the starter code to your Assignment, please try again."
           expect_any_instance_of(subject)
             .to receive(:handle_error)
-                  .with(error_message, instance_of(CreateGitHubRepoService), anything)
+            .with(error_message, instance_of(CreateGitHubRepoService), anything)
           subject.perform_now(assignment, student)
         end
       end
@@ -150,10 +150,10 @@ RSpec.describe CreateGitHubRepositoryNewJob, type: :job do
       invite_status.waiting!
       allow_any_instance_of(CreateGitHubRepoService)
         .to receive(:create_assignment_repo!)
-              .and_raise(
-                CreateGitHubRepoService::Result::Error,
-                service.send(:errors, :default)
-              )
+        .and_raise(
+          CreateGitHubRepoService::Result::Error,
+          service.send(:errors, :default)
+        )
     end
 
     it "logs the error on failure" do
@@ -164,7 +164,7 @@ RSpec.describe CreateGitHubRepositoryNewJob, type: :job do
     it "enqueues a new job if retries are positive" do
       expect { subject.perform_now(assignment, student, retries: 2) }
         .to have_enqueued_job(CreateGitHubRepositoryNewJob)
-              .with(assignment, student, retries: 1)
+        .with(assignment, student, retries: 1)
     end
 
     it "sets invite_status to be #error_creating_repo if retries are exhausted" do
@@ -176,11 +176,11 @@ RSpec.describe CreateGitHubRepositoryNewJob, type: :job do
       allow(CreateGitHubRepoService::Broadcaster).to receive(:call).with(anything, :create_repo, :text)
       expect(CreateGitHubRepoService::Broadcaster)
         .to receive(:call)
-              .with(
-                instance_of(CreateGitHubRepoService::Individual),
-                "Assignment could not be created, please try again.",
-                :error
-              )
+        .with(
+          instance_of(CreateGitHubRepoService::Individual),
+          "Assignment could not be created, please try again.",
+          :error
+        )
       subject.perform_now(assignment, student)
     end
   end
