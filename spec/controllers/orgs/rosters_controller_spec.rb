@@ -274,7 +274,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
           it "alerts user that there is an exisiting config" do
             expect(flash[:alert]).to eq(
-              "An existing configuration exists. Please remove configuration before creating a new one."
+              "A LMS configuration already exists. Please remove configuration before creating a new one."
             )
           end
         end
@@ -372,7 +372,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
             it "alerts user that there is an exisiting config" do
               expect(response).to redirect_to(edit_organization_path(organization))
               expect(flash[:alert]).to eq(
-                "An existing configuration exists. Please remove configuration before creating a new one."
+                "A LMS configuration already exists. Please remove configuration before creating a new one."
               )
             end
           end
@@ -902,7 +902,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
             it "alerts user that there is an exisiting config" do
               expect(response).to redirect_to(edit_organization_path(organization))
               expect(flash[:alert]).to eq(
-                "An existing configuration exists. Please remove configuration before creating a new one."
+                "A LMS configuration already exists. Please remove configuration before creating a new one."
               )
             end
           end

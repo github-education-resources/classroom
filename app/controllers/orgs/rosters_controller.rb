@@ -271,7 +271,7 @@ module Orgs
     def ensure_no_lti_configuration
       return unless current_organization.lti_configuration
       redirect_to edit_organization_path(current_organization),
-        alert: "An existing configuration exists. Please remove configuration before creating a new one."
+        alert: "A LMS configuration already exists. Please remove configuration before creating a new one."
     end
 
     # An unlinked user is a user who:
