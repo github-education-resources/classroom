@@ -249,8 +249,20 @@ RSpec.describe Orgs::RostersController, type: :controller do
           end
         end
 
-        context "when there is an exixting lti configuration" do
+        context "when there is an existing lti configuration" do
           before do
+            # Stub google authentication again
+            client = Signet::OAuth2::Client.new
+            allow_any_instance_of(Orgs::RostersController)
+              .to receive(:user_google_classroom_credentials)
+              .and_return(client)
+
+            # Stub list courses response
+            response = GoogleAPI::ListCoursesResponse.new
+            allow_any_instance_of(GoogleAPI::ClassroomService)
+              .to receive(:list_courses)
+              .and_return(response)
+
             create(:lti_configuration,
               organization: organization,
               consumer_key: "hello",
@@ -261,14 +273,9 @@ RSpec.describe Orgs::RostersController, type: :controller do
           end
 
           it "alerts user that there is an exisiting config" do
-            expect(response).to redirect_to(edit_organization_path(organization))
             expect(flash[:alert]).to eq(
               "An existing configuration exists. Please remove configuration before creating a new one."
             )
-          end
-
-          after do
-            LtiConfiguration.destroy_all
           end
         end
 
@@ -349,29 +356,25 @@ RSpec.describe Orgs::RostersController, type: :controller do
             }
             expect(request).to render_template(partial: "orgs/rosters/_google_classroom_collection")
           end
-        end
 
-        context "when there is an exixting lti configuration" do
-          before do
-            create(:lti_configuration,
-              organization: organization,
-              consumer_key: "hello",
-              shared_secret: "hello")
-            get :search_google_classroom, params: {
-              id: organization.slug,
-              query: ""
-            }
-          end
+          context "when there is an existing lti configuration" do
+            before do
+              create(:lti_configuration,
+                organization: organization,
+                consumer_key: "hello",
+                shared_secret: "hello")
+              get :search_google_classroom, params: {
+                id: organization.slug,
+                query: ""
+              }
+            end
 
-          it "alerts user that there is an exisiting config" do
-            expect(response).to redirect_to(edit_organization_path(organization))
-            expect(flash[:alert]).to eq(
-              "An existing configuration exists. Please remove configuration before creating a new one."
-            )
-          end
-
-          after do
-            LtiConfiguration.destroy_all
+            it "alerts user that there is an exisiting config" do
+              expect(response).to redirect_to(edit_organization_path(organization))
+              expect(flash[:alert]).to eq(
+                "An existing configuration exists. Please remove configuration before creating a new one."
+              )
+            end
           end
         end
 
@@ -883,29 +886,25 @@ RSpec.describe Orgs::RostersController, type: :controller do
               end
             end
           end
-        end
 
-        context "when there is an exixting lti configuration" do
-          before do
-            create(:lti_configuration,
-              organization: organization,
-              consumer_key: "hello",
-              shared_secret: "hello")
-            patch :import_from_google_classroom, params: {
-              id: organization.slug,
-              course_id: "1234"
-            }
-          end
+          context "when there is an existing lti configuration" do
+            before do
+              create(:lti_configuration,
+                organization: organization,
+                consumer_key: "hello",
+                shared_secret: "hello")
+              patch :import_from_google_classroom, params: {
+                id: organization.slug,
+                course_id: "1234"
+              }
+            end
 
-          it "alerts user that there is an exisiting config" do
-            expect(response).to redirect_to(edit_organization_path(organization))
-            expect(flash[:alert]).to eq(
-              "An existing configuration exists. Please remove configuration before creating a new one."
-            )
-          end
-
-          after do
-            LtiConfiguration.destroy_all
+            it "alerts user that there is an exisiting config" do
+              expect(response).to redirect_to(edit_organization_path(organization))
+              expect(flash[:alert]).to eq(
+                "An existing configuration exists. Please remove configuration before creating a new one."
+              )
+            end
           end
         end
 
@@ -1039,29 +1038,6 @@ RSpec.describe Orgs::RostersController, type: :controller do
           end
         end
 
-        context "when there is an exixting lti configuration" do
-          before do
-            create(:lti_configuration,
-              organization: organization,
-              consumer_key: "hello",
-              shared_secret: "hello")
-            patch :sync_google_classroom, params: {
-              id: organization.slug
-            }
-          end
-
-          it "alerts user that there is an exisiting config" do
-            expect(response).to redirect_to(edit_organization_path(organization))
-            expect(flash[:alert]).to eq(
-              "An existing configuration exists. Please remove configuration before creating a new one."
-            )
-          end
-
-          after do
-            LtiConfiguration.destroy_all
-          end
-        end
-
         context "when user is not authorized with google" do
           before do
             allow_any_instance_of(Orgs::RostersController)
@@ -1143,27 +1119,6 @@ RSpec.describe Orgs::RostersController, type: :controller do
           it "flashes success message" do
             message = "Removed link to Google Classroom. No students were removed from your roster."
             expect(flash[:success]).to eq(message)
-          end
-        end
-
-        context "when there is an exixting lti configuration" do
-          before do
-            create(:lti_configuration,
-              organization: organization,
-              consumer_key: "hello",
-              shared_secret: "hello")
-            patch :unlink_google_classroom, params: { id: organization.slug }
-          end
-
-          it "alerts user that there is an exisiting config" do
-            expect(response).to redirect_to(edit_organization_path(organization))
-            expect(flash[:alert]).to eq(
-              "An existing configuration exists. Please remove configuration before creating a new one."
-            )
-          end
-
-          after do
-            LtiConfiguration.destroy_all
           end
         end
 

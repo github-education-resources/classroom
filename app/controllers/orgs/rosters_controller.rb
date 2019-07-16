@@ -34,8 +34,6 @@ module Orgs
       import_from_google_classroom
       select_google_classroom
       search_google_classroom
-      sync_google_classroom
-      unlink_google_classroom
     ]
 
     helper_method :current_roster, :unlinked_users, :authorize_google_classroom
