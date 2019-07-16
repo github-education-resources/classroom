@@ -132,7 +132,7 @@ class AssignmentsController < ApplicationController
   def set_filter_options
     @assignment_sort_modes = RosterEntry.sort_modes
 
-    @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
+    @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.second
     @query = params[:query]
 
     @assignment_sort_modes_links = @assignment_sort_modes.keys.map do |mode|
