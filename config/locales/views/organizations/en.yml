@@ -36,7 +36,7 @@ en:
       delete_submit: 'Reset and remove this classroom'
       danger_zone: 'The Danger Zone'
       archived_classrooms: 'Archived Classrooms'
-      archive_description: 'Marks the classroom as archived. Will appear in separate section away from active classrooms.'
+      archive_description: 'Marks the classroom as archived. The classroom will be moved to the archived section away from your active classrooms.'
       archive_submit: 'Archive Classroom'
       unarchive_submit: 'Unarchive Classroom'
       classroom_settings: 'Classroom settings'
