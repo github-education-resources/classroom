@@ -6,7 +6,6 @@ class AssignmentRepo < ApplicationRecord
   include Sortable
   include Searchable
 
-
   define_pg_search(columns: %i[id github_repo_id])
 
   # TODO: remove this enum (dead code)
