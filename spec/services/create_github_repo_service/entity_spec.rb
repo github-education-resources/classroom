@@ -15,7 +15,7 @@ RSpec.describe CreateGitHubRepoService::Entity do
       expect(described_class.build(assignment, collaborator)).to be_an_instance_of(CreateGitHubRepoService::Team)
     end
   end
-  describe "#owner", :vcr do
+  describe "#organization_login", :vcr do
     let(:organization) { classroom_org }
     let(:student)      { classroom_student }
     let(:assignment) do
@@ -30,7 +30,7 @@ RSpec.describe CreateGitHubRepoService::Entity do
     end
     let(:entity) { described_class.new(assignment, student) }
     it "is the organization login name" do
-      expect(entity.owner).to eq(organization.github_organization.login)
+      expect(entity.organization_login).to eq(organization.github_organization.login)
     end
   end
 end

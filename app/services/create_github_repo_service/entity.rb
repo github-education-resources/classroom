@@ -28,8 +28,8 @@ class CreateGitHubRepoService
       "#{assignment.slug}-#{slug}"
     end
 
-    def owner
-      @owner ||= organization.github_organization.login
+    def organization_login
+      @organization_login ||= organization.github_organization.login
     end
 
     def assignment_type
@@ -50,7 +50,7 @@ class CreateGitHubRepoService
       suffix_count = 0
 
       loop do
-        name = "#{owner}/#{suffixed_repo_name(suffix_count)}"
+        name = "#{organization_login}/#{suffixed_repo_name(suffix_count)}"
         break unless GitHubRepository.present?(organization.github_client, name)
 
         suffix_count += 1
