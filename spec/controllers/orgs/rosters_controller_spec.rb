@@ -227,6 +227,8 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
         context "when user is authorized with google" do
           before do
+            Roster.destroy_all
+
             # Stub google authentication again
             client = Signet::OAuth2::Client.new
             allow_any_instance_of(Orgs::RostersController)
@@ -246,6 +248,38 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
           it "succeeds" do
             expect(response).to have_http_status(:success)
+          end
+        end
+
+        context "when there is an existing roster" do
+          before do
+            organization.roster = create(:roster)
+            organization.save!
+            organization.reload
+
+            # Stub google authentication again
+            client = Signet::OAuth2::Client.new
+            allow_any_instance_of(Orgs::RostersController)
+              .to receive(:user_google_classroom_credentials)
+              .and_return(client)
+
+            # Stub list courses response
+            response = GoogleAPI::ListCoursesResponse.new
+            allow_any_instance_of(GoogleAPI::ClassroomService)
+              .to receive(:list_courses)
+              .and_return(response)
+
+            get :select_google_classroom, params: {
+              id: organization.slug
+            }
+          end
+
+          it "alerts user that there is an existing roster" do
+            expect(response).to redirect_to(edit_organization_path(organization))
+            expect(flash[:alert]).to eq(
+              "We are unable to link your classroom organization to Google Classroom"\
+              "because a roster already exists. Please delete your current roster and try again."
+            )
           end
         end
 
