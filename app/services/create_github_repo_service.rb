@@ -183,25 +183,25 @@ class CreateGitHubRepoService
   # Internal: Method for error messages, modifies error messages based on the type of assignment.
   #
   # error_message - A symbol for getting the  appropriate error message.
-  # rubocop:disable LineLength
   # rubocop:disable MethodLength
-  # rubocop:disable AbcSize
   def errors(error_message, options = {})
-    messages = {
-      default: "#{entity.assignment_type.humanize} could not be created, please try again.",
-      repository_creation_failed: "GitHub repository could not be created, please try again.",
-      starter_code_import_failed: "We were not able to import you the starter code to your #{entity.assignment_type.humanize}, please try again.",
-      collaborator_addition_failed: "We were not able to add the #{entity.humanize} to the #{entity.assignment_type.humanize}, please try again.",
-      private_repos_not_available: <<-ERROR
+    case error_message
+    when :repository_creation_failed
+      "GitHub repository could not be created, please try again."
+    when :starter_code_import_failed
+      "We were not able to import you the starter code to your #{entity.assignment_type.humanize}, please try again."
+    when :collaborator_addition_failed
+      "We were not able to add the #{entity.humanize} to the #{entity.assignment_type.humanize}, please try again."
+    when :private_repos_not_available
+      <<-ERROR
       Cannot make this private assignment, your limit of #{options[:private_repos]}
        #{'repository'.pluralize(options[:private_repos])} has been reached. You can request
        a larger plan for free at https://education.github.com/discount
        ERROR
-    }
-    messages[error_message] || messages[:default]
+    else
+      "#{entity.assignment_type.humanize} could not be created, please try again."
+    end
   end
-  # rubocop:enable LineLength
   # rubocop:enable MethodLength
-  # rubocop:enable AbcSize
 end
 # rubocop:enable ClassLength
