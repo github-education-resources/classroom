@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CreateGitHubRepoService
-  class Entity
+  class Exercise
     def self.build(assignment, collaborator)
       if collaborator.is_a?(User)
         Individual.new(assignment, collaborator)
@@ -67,7 +67,7 @@ class CreateGitHubRepoService
     end
   end
 
-  class Individual < Entity
+  class Individual < Exercise
     def repos
       assignment.assignment_repos
     end
@@ -85,7 +85,7 @@ class CreateGitHubRepoService
     end
   end
 
-  class Team < Entity
+  class Team < Exercise
     def repos
       assignment.group_assignment_repos
     end

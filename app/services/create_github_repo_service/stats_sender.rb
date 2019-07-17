@@ -6,9 +6,9 @@
 class CreateGitHubRepoService
   class StatsSender
     class InvalidStatError < StandardError; end
-    attr_reader :entity
-    def initialize(entity)
-      @entity = entity
+    attr_reader :exercise
+    def initialize(exercise)
+      @exercise = exercise
     end
 
     # Public: Method for reporting a stat to GitHubClassroom.statsd,
@@ -66,7 +66,7 @@ class CreateGitHubRepoService
     end
 
     def root_prefix
-      entity.stat_prefix
+      exercise.stat_prefix
     end
   end
 end

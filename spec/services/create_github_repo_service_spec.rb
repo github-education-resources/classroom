@@ -25,7 +25,7 @@ RSpec.describe CreateGitHubRepoService do
       it "creates a new github repo" do
         expect_any_instance_of(GitHubOrganization)
           .to receive(:create_repository)
-          .with(service.entity.repo_name, anything)
+          .with(service.exercise.repo_name, anything)
         service.create_github_repository!
       end
       it "raises a Result::Error" do
@@ -43,7 +43,7 @@ RSpec.describe CreateGitHubRepoService do
       it "gets correct github_repository attributes and saves the repo" do
         github_repository = double(id: 1, node_id: 1)
         assignment_repo = double("save!": true)
-        expect(service.entity)
+        expect(service.exercise)
           .to receive_message_chain(:repos, :build)
           .with(
             hash_including(
@@ -168,8 +168,8 @@ RSpec.describe CreateGitHubRepoService do
         allow(github_repository)
           .to receive(:invite)
           .and_return(invitation)
-        allow(service.entity).to receive_message_chain("collaborator.github_user.login").with(anything)
-        expect(service.entity)
+        allow(service.exercise).to receive_message_chain("collaborator.github_user.login").with(anything)
+        expect(service.exercise)
           .to receive_message_chain("collaborator.github_user.accept_repository_invitation")
           .with(invitation.id)
         service.add_collaborator_to_github_repository!(github_repository)
@@ -225,8 +225,8 @@ RSpec.describe CreateGitHubRepoService do
         it "changes invite status if no starter code" do
           allow(service.assignment).to receive(:starter_code?).and_return(false)
           expect(service.invite_status).to receive(:completed!)
-          expect(subject::Broadcaster).to receive(:call).with(service.entity, :create_repo, :text)
-          expect(subject::Broadcaster).to receive(:call).with(service.entity, :repository_creation_complete, :text)
+          expect(subject::Broadcaster).to receive(:call).with(service.exercise, :create_repo, :text)
+          expect(subject::Broadcaster).to receive(:call).with(service.exercise, :repository_creation_complete, :text)
           service.perform
         end
 
@@ -248,7 +248,7 @@ RSpec.describe CreateGitHubRepoService do
             service = CreateGitHubRepoService.new(assignment, student)
             service.perform
             expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
-              .with(body: /^.*#{service.entity.repo_name}.*$/)
+              .with(body: /^.*#{service.exercise.repo_name}.*$/)
           end
         end
       end
@@ -340,7 +340,7 @@ RSpec.describe CreateGitHubRepoService do
       it "creates a new github repo" do
         expect_any_instance_of(GitHubOrganization)
           .to receive(:create_repository)
-          .with(service.entity.repo_name, anything)
+          .with(service.exercise.repo_name, anything)
         service.create_github_repository!
       end
       it "raises a Result::Error" do
@@ -358,7 +358,7 @@ RSpec.describe CreateGitHubRepoService do
       it "gets correct github_repository attributes and saves the repo" do
         github_repository = double(id: 1, node_id: 1)
         assignment_repo = double("save!": true)
-        expect(service.entity)
+        expect(service.exercise)
           .to receive_message_chain(:repos, :build)
           .with(
             hash_including(
@@ -512,8 +512,8 @@ RSpec.describe CreateGitHubRepoService do
         it "changes invite status if no starter code" do
           allow(service.assignment).to receive(:starter_code?).and_return(false)
           expect(service.invite_status).to receive(:completed!)
-          expect(subject::Broadcaster).to receive(:call).with(service.entity, :create_repo, :text)
-          expect(subject::Broadcaster).to receive(:call).with(service.entity, :repository_creation_complete, :text)
+          expect(subject::Broadcaster).to receive(:call).with(service.exercise, :create_repo, :text)
+          expect(subject::Broadcaster).to receive(:call).with(service.exercise, :repository_creation_complete, :text)
           service.perform
         end
 
@@ -535,7 +535,7 @@ RSpec.describe CreateGitHubRepoService do
             service = CreateGitHubRepoService.new(group_assignment, group)
             service.perform
             expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
-              .with(body: /^.*#{service.entity.repo_name}.*$/)
+              .with(body: /^.*#{service.exercise.repo_name}.*$/)
           end
         end
       end

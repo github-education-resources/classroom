@@ -32,7 +32,7 @@ class CreateGitHubRepositoryNewJob < ApplicationJob
       CreateGitHubRepositoryNewJob.perform_later(service.assignment, service.collaborator, retries: retries - 1)
     else
       service.invite_status.errored_creating_repo!
-      CreateGitHubRepoService::Broadcaster.call(service.entity, err, :error)
+      CreateGitHubRepoService::Broadcaster.call(service.exercise, err, :error)
       service.report_error(err)
     end
   end

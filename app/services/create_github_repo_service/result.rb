@@ -9,23 +9,23 @@ class CreateGitHubRepoService
       end
     end
 
-    def self.success(repo, entity)
-      new(:success, repo: repo, entity: entity)
+    def self.success(repo, exercise)
+      new(:success, repo: repo, exercise: exercise)
     end
 
-    def self.failed(error, entity)
-      new(:failed, error: error, entity: entity)
+    def self.failed(error, exercise)
+      new(:failed, error: error, exercise: exercise)
     end
 
     def self.pending
       new(:pending)
     end
 
-    attr_reader :error, :entity, :status, :repo
+    attr_reader :error, :exercise, :status, :repo
 
-    def initialize(status, entity: nil, error: nil, repo: nil)
+    def initialize(status, exercise: nil, error: nil, repo: nil)
       @status          = status
-      @entity          = entity
+      @exercise        = exercise
       @error           = error
       @repo            = repo
     end

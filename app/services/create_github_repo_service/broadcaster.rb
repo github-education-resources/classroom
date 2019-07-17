@@ -9,14 +9,14 @@ class CreateGitHubRepoService
       importing_starter_code: "Importing starter code."
     }.freeze
 
-    attr_reader :entity, :message, :message_type, :repo_url
+    attr_reader :exercise, :message, :message_type, :repo_url
 
-    def self.call(entity, message, message_type, repo_url = nil)
-      new(entity, message, message_type, repo_url).call
+    def self.call(exercise, message, message_type, repo_url = nil)
+      new(exercise, message, message_type, repo_url).call
     end
 
-    def initialize(entity, message, message_type, repo_url = nil)
-      @entity = entity
+    def initialize(exercise, message, message_type, repo_url = nil)
+      @exercise = exercise
       @message = message
       @message_type = message_type
       @repo_url = repo_url
@@ -33,7 +33,7 @@ class CreateGitHubRepoService
     end
 
     def channel_class
-      if entity.user?
+      if exercise.user?
         RepositoryCreationStatusChannel
       else
         GroupRepositoryCreationStatusChannel
@@ -42,7 +42,7 @@ class CreateGitHubRepoService
 
     def message_hash
       {}.tap do |msg|
-        msg[:status] = entity.status
+        msg[:status] = exercise.status
         msg[:repo_url] = repo_url if repo_url.present?
         msg[message_type] = MESSAGES.fetch(message) { message }
       end
@@ -50,8 +50,8 @@ class CreateGitHubRepoService
 
     def channel_hash
       {}.tap do |msg|
-        msg["#{entity.humanize}_id".to_sym] = entity.collaborator.id
-        msg["#{entity.assignment_type}_id".to_sym] = entity.assignment.id
+        msg["#{exercise.humanize}_id".to_sym] = exercise.collaborator.id
+        msg["#{exercise.assignment_type}_id".to_sym] = exercise.assignment.id
       end
     end
   end

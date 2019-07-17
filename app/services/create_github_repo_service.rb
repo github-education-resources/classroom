@@ -2,12 +2,12 @@
 
 # rubocop:disable ClassLength
 class CreateGitHubRepoService
-  attr_reader :entity, :stats_sender
-  delegate :assignment, :collaborator, :organization, :invite_status, to: :entity
+  attr_reader :exercise, :stats_sender
+  delegate :assignment, :collaborator, :organization, :invite_status, to: :exercise
 
   def initialize(assignment, collaborator)
-    @entity = Entity.build(assignment, collaborator)
-    @stats_sender = StatsSender.new(@entity)
+    @exercise = Exercise.build(assignment, collaborator)
+    @stats_sender = StatsSender.new(@exercise)
   end
 
   # rubocop:disable MethodLength
@@ -15,7 +15,7 @@ class CreateGitHubRepoService
   def perform
     start = Time.zone.now
     invite_status.creating_repo!
-    Broadcaster.call(entity, :create_repo, :text)
+    Broadcaster.call(exercise, :create_repo, :text)
 
     verify_organization_has_private_repos_available!
 
@@ -27,20 +27,20 @@ class CreateGitHubRepoService
     if assignment.starter_code?
       push_starter_code!(github_repository)
       invite_status.importing_starter_code!
-      Broadcaster.call(entity, :importing_starter_code, :text, assignment_repo&.github_repository&.html_url)
+      Broadcaster.call(exercise, :importing_starter_code, :text, assignment_repo&.github_repository&.html_url)
       stats_sender.report(:import_started)
     else
       invite_status.completed!
-      Broadcaster.call(entity, :repository_creation_complete, :text)
+      Broadcaster.call(exercise, :repository_creation_complete, :text)
     end
 
     stats_sender.timing(start)
     stats_sender.report(:success)
-    Result.success(assignment_repo, entity)
+    Result.success(assignment_repo, exercise)
   rescue Result::Error => error
     repo_id = assignment_repo&.github_repo_id || github_repository&.id
     delete_github_repository(repo_id)
-    Result.failed(error.message, entity)
+    Result.failed(error.message, exercise)
   end
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize
@@ -51,10 +51,10 @@ class CreateGitHubRepoService
   def create_github_repository!
     options = {
       private: assignment.private?,
-      description: "#{entity.repo_name} created by GitHub Classroom"
+      description: "#{exercise.repo_name} created by GitHub Classroom"
     }
 
-    organization.github_organization.create_repository(entity.repo_name, options)
+    organization.github_organization.create_repository(exercise.repo_name, options)
   rescue GitHub::Error => error
     raise Result::Error.new errors(:repository_creation_failed), error.message
   end
@@ -71,8 +71,8 @@ class CreateGitHubRepoService
       github_repo_id: github_repository.id,
       github_global_relay_id: github_repository.node_id
     }
-    assignment_repo_attrs[entity.humanize] = entity.collaborator
-    assignment_repo = entity.repos.build(assignment_repo_attrs)
+    assignment_repo_attrs[exercise.humanize] = exercise.collaborator
+    assignment_repo = exercise.repos.build(assignment_repo_attrs)
     assignment_repo.save!
     assignment_repo
   rescue ActiveRecord::RecordInvalid => error
@@ -131,7 +131,7 @@ class CreateGitHubRepoService
   #
   # Returns true if collaborator added or raises a Result::Error.
   def add_collaborator_to_github_repository!(github_repository)
-    if entity.user?
+    if exercise.user?
       add_user_to_github_repository!(github_repository)
     else
       add_group_to_github_repository!(github_repository)
@@ -163,7 +163,7 @@ class CreateGitHubRepoService
   #
   # Returns true if collaborator added or raises a GitHub::Error.
   def add_group_to_github_repository!(github_repository)
-    github_team = GitHubTeam.new(organization.github_client, entity.collaborator.github_team_id)
+    github_team = GitHubTeam.new(organization.github_client, exercise.collaborator.github_team_id)
     github_team.add_team_repository(github_repository.full_name, repository_permissions)
   end
 
@@ -174,13 +174,13 @@ class CreateGitHubRepoService
   #
   # Returns true if collaborator added or raises a GitHub::Error.
   def add_user_to_github_repository!(github_repository)
-    invitation = github_repository.invite(entity.slug, repository_permissions)
-    entity.collaborator.github_user.accept_repository_invitation(invitation.id) if invitation.present?
+    invitation = github_repository.invite(exercise.slug, repository_permissions)
+    exercise.collaborator.github_user.accept_repository_invitation(invitation.id) if invitation.present?
   end
 
   def repository_permissions
     {}.tap do |options|
-      options[:permission] = "admin" if entity.admin?
+      options[:permission] = "admin" if exercise.admin?
     end
   end
 
@@ -193,9 +193,9 @@ class CreateGitHubRepoService
     when :repository_creation_failed
       "GitHub repository could not be created, please try again."
     when :starter_code_import_failed
-      "We were not able to import you the starter code to your #{entity.assignment_type.humanize}, please try again."
+      "We were not able to import you the starter code to your #{exercise.assignment_type.humanize}, please try again."
     when :collaborator_addition_failed
-      "We were not able to add the #{entity.humanize} to the #{entity.assignment_type.humanize}, please try again."
+      "We were not able to add the #{exercise.humanize} to the #{exercise.assignment_type.humanize}, please try again."
     when :private_repos_not_available
       <<-ERROR
       Cannot make this private assignment, your limit of #{options[:private_repos]}
@@ -203,7 +203,7 @@ class CreateGitHubRepoService
        a larger plan for free at https://education.github.com/discount
        ERROR
     else
-      "#{entity.assignment_type.humanize} could not be created, please try again."
+      "#{exercise.assignment_type.humanize} could not be created, please try again."
     end
   end
   # rubocop:enable MethodLength
