@@ -277,7 +277,8 @@ RSpec.describe Orgs::RostersController, type: :controller do
           it "alerts user that there is an existing roster" do
             expect(response).to redirect_to(edit_organization_path(organization))
             expect(flash[:alert]).to eq(
-              "Google Classroom connection failed as you already have a roster. Please delete roster and try again."
+              "We are unable to link your classroom organization to Google Classroom"\
+              "because a roster already exists. Please delete your current roster and try again."
             )
           end
         end

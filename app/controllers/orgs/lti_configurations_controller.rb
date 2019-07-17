@@ -98,7 +98,8 @@ module Orgs
     def ensure_no_roster
       return unless current_organization.roster
       redirect_to edit_organization_path(current_organization),
-        alert: "LMS configuration failed as you already have a roster. Please delete roster and try again."
+        alert: "We are unable to link your classroom organization to an LMS"\
+          "because a roster already exists. Please delete your current roster and try again."
     end
   end
 end

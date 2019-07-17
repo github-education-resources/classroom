@@ -102,7 +102,8 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
           post :create, params: { id: organization.slug }
           expect(response).to redirect_to(edit_organization_path(organization))
           expect(flash[:alert]).to eq(
-            "LMS configuration failed as you already have a roster. Please delete roster and try again."
+            "We are unable to link your classroom organization to an LMS"\
+            "because a roster already exists. Please delete your current roster and try again."
           )
         end
       end
