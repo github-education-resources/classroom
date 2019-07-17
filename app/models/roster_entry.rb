@@ -29,8 +29,8 @@ class RosterEntry < ApplicationRecord
 
   def self.sort_modes
     {
-      "Created at" => :order_by_repo_created_at,
-      "Student identifier" => :order_by_student_identifier
+      "Student identifier" => :order_by_student_identifier,
+      "Created at" => :order_by_repo_created_at
     }
   end
 
