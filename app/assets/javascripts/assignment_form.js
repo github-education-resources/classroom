@@ -9,7 +9,8 @@ function importOptions(starterCodeFieldValue) {
 
 function removeErrorBox() {
   errorBoxes = document.getElementsByClassName("error");
-  for (let errorBox of errorBoxes) {
+  for (var i = 0; i < errorBoxes.length; i++) {
+    errorBox = errorBoxes[i]
     if (errorBox.innerText == "Starter code repository is not a template repository. Make it a template repository to use template cloning.") {
       errorBox.style.display = 'none';
     }
