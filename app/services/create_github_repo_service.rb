@@ -131,7 +131,11 @@ class CreateGitHubRepoService
   #
   # Returns true if collaborator added or raises a Result::Error.
   def add_collaborator_to_github_repository!(github_repository)
-    send("add_#{entity.humanize}_to_github_repository!", github_repository)
+    if entity.user?
+      add_user_to_github_repository!(github_repository)
+    else
+      add_group_to_github_repository!(github_repository)
+    end
   rescue GitHub::Error => error
     raise Result::Error.new errors(:collaborator_addition_failed), error.message
   end

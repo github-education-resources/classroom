@@ -9,11 +9,12 @@ class CreateGitHubRepoService
       importing_starter_code: "Importing starter code."
     }.freeze
 
+    attr_reader :entity, :message, :message_type, :repo_url
+
     def self.call(entity, message, message_type, repo_url = nil)
       new(entity, message, message_type, repo_url).call
     end
 
-    attr_reader :entity, :message, :message_type, :repo_url
     def initialize(entity, message, message_type, repo_url = nil)
       @entity = entity
       @message = message
