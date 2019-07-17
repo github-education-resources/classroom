@@ -13,7 +13,7 @@
           </span>
           <div class='flex-justify-between'>
             <% if current_organization.lti_configuration %>
-              <%= link_to "Sync from LMS", import_from_lms_roster_path, method: :patch, remote: true, class: "btn btn-primary btn-sm" %>
+              <%= link_to "Sync from LMS", import_from_lms_roster_path, remote: true, method: :get, class: "btn btn-primary btn-sm" %>
             <% else %>
               <span class="btn btn-primary btn-sm", role="button" data-remodal-target="new-student-modal">Update students</span>
             <% end %>

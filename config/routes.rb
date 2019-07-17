@@ -87,12 +87,12 @@ Rails.application.routes.draw do
           patch :delete_entry
           patch :add_students
           patch :remove_organization
-          patch :import_from_lms
           patch :import_from_google_classroom
           patch :sync_google_classroom
           patch :unlink_google_classroom
           get   :select_google_classroom
           get   :search_google_classroom
+          get   :import_from_lms
         end
 
         resource :lti_configuration, controller: "orgs/lti_configurations" do

@@ -17,6 +17,7 @@ module Orgs
       create
       select_google_classroom
       import_from_google_classroom
+      import_from_lms
       search_google_classroom
     ]
     before_action :redirect_if_roster_exists, only: [:new]
@@ -198,21 +199,27 @@ module Orgs
 
       membership = membership_service.membership
       members = membership.map(&:member)
-      identifiers = {
+      @identifiers = {
         "User IDs": members.map(&:user_id),
         "Names": members.map(&:name),
         "Emails": members.map(&:email)
       }
 
       respond_to do |format|
-        format.js do
-          render partial: "orgs/rosters/show_select_identifier_modal", locals: {
-            roster: current_roster,
-            organization: current_organization,
-            identifiers: identifiers
-          }
-        end
+        format.js
+        format.html
       end
+
+      #respond_to do |format|
+      #  format.html
+      #  format.js do
+      #    render partial: "orgs/rosters/show_select_identifier_modal", locals: {
+      #      roster: current_roster,
+      #      organization: current_organization,
+      #      identifiers: identifiers
+      #    }
+      #  end
+      #end
     end
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize

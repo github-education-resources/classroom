@@ -17,20 +17,16 @@
           class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
         %>
       </div>
-
-      <div class="f4 text-gray text-italic">or...</div>
     <% end %>
     <% if lti_launch_enabled? %>
       <div class="my-3">
         <h2 class="h3 mb-2">Import from</h2>
 
         <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Learning Management System",
-          new_lti_configuration_path,
+          import_from_lms_roster_path,
           class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
         %>
       </div>
-
-      <div class="f4 text-gray text-italic">or...</div>
     <% end %>
 
     <div class="my-3">
