@@ -8,9 +8,12 @@ class AssignmentRepo
     REPOSITORY_STARTER_CODE_IMPORT_FAILED   = "We were not able to import you the starter code to your assignment, please try again." # rubocop:disable LineLength
     REPOSITORY_COLLABORATOR_ADDITION_FAILED = "We were not able to add you to the Assignment as a collaborator, please try again." # rubocop:disable LineLength
     REPOSITORY_CREATION_COMPLETE            = "Your GitHub repository was created."
+    TEMPLATE_REPOSITORY_CREATION_FAILED     = "GitHub repository could not be created from template, please try again."
     IMPORT_ONGOING                          = "Your GitHub repository is importing starter code."
     CREATE_REPO                             = "Creating GitHub repository."
     IMPORT_STARTER_CODE                     = "Importing starter code."
+    GITHUB_API_HOST                         = "https://api.github.com"
+    TEMPLATE_REPOS_API_PREVIEW              = "application/vnd.github.baptiste-preview"
 
     attr_reader :assignment, :user, :organization, :invite_status, :reporter
     delegate :broadcast_message, :report_time, :report_error, to: :reporter
@@ -32,8 +35,7 @@ class AssignmentRepo
       @reporter = Reporter.new(self)
     end
 
-    # rubocop:disable MethodLength
-    # rubocop:disable AbcSize
+    # rubocop:disable MethodLength, AbcSize, CyclomaticComplexity, PerceivedComplexity
     def perform
       start = Time.zone.now
       invite_status.creating_repo!
@@ -44,7 +46,15 @@ class AssignmentRepo
       )
       verify_organization_has_private_repos_available!
 
-      github_repository = create_github_repository!
+      github_repository = if assignment.organization.feature_enabled?(:template_repos) && assignment.use_template_repos?
+                            create_github_repository_from_template!
+                          else
+                            create_github_repository!
+                          end
+
+      if assignment.use_template_repos?
+        GitHubClassroom.statsd.increment("exercise_repo.create.repo.with_templates.success")
+      end
 
       assignment_repo = assignment.assignment_repos.build(
         github_repo_id: github_repository.id,
@@ -54,9 +64,7 @@ class AssignmentRepo
 
       add_user_to_repository!(assignment_repo.github_repo_id)
 
-      if assignment.starter_code?
-        push_starter_code!(assignment_repo.github_repo_id)
-      end
+      push_starter_code!(assignment_repo.github_repo_id) if assignment.use_importer?
 
       begin
         assignment_repo.save!
@@ -68,7 +76,7 @@ class AssignmentRepo
 
       GitHubClassroom.statsd.increment("v2_exercise_repo.create.success")
       GitHubClassroom.statsd.increment("exercise_repo.create.success")
-      if assignment.starter_code?
+      if assignment.use_importer?
         invite_status.importing_starter_code!
         broadcast_message(
           message: IMPORT_STARTER_CODE,
@@ -132,6 +140,27 @@ class AssignmentRepo
       true
     end
 
+    # Public: Clone the GitHub template repository for the AssignmentRepo.
+    #
+    # Returns an Integer ID or raises a Result::Error
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    def create_github_repository_from_template!
+      GitHubClassroom.statsd.increment("exercise_repo.create.repo.with_templates.started")
+      client = assignment.creator.github_client
+      repository_name = generate_github_repository_name
+      options = {
+        name: repository_name,
+        owner: organization.github_organization.login,
+        private: assignment.private?,
+        description: "#{repository_name} created by GitHub Classroom",
+        accept: TEMPLATE_REPOS_API_PREVIEW
+      }
+
+      client.post("#{GITHUB_API_HOST}/repositories/#{assignment.starter_code_repo_id}/generate", options)
+    rescue GitHub::Error => error
+      raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
+    end
+
     # Public: Push starter code to the newly created GitHub
     # repository.
     #
@@ -153,8 +182,6 @@ class AssignmentRepo
     # Public: Ensure that we can make a private repository on GitHub.
     #
     # Returns True or raises a Result::Error with a helpful message.
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable MethodLength
     def verify_organization_has_private_repos_available!
       return true if assignment.public?
 
