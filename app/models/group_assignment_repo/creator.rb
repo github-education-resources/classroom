@@ -48,6 +48,10 @@ class GroupAssignmentRepo
         github_repository = create_github_repository!
       end
 
+      if group_assignment.use_template_repos?
+        GitHubClassroom.statsd.increment("group_exercise_repo.create.repo.with_templates.success")
+      end
+
       group_assignment_repo = group_assignment.group_assignment_repos.build(
         github_repo_id: github_repository.id,
         github_global_relay_id: github_repository.node_id,
@@ -117,7 +121,6 @@ class GroupAssignmentRepo
       }
 
       client.post("#{GITHUB_API_HOST}/repositories/#{group_assignment.starter_code_repo_id}/generate", options)
-      GitHubClassroom.statsd.increment("group_exercise_repo.create.repo.with_templates.success")
     rescue GitHub::Error => error
       GitHubClassroom.statsd.increment("group_exercise_repo.create.repo.with_templates.failed")
       raise Result::Error.new TEMPLATE_REPOSITORY_CREATION_FAILED, error.message
