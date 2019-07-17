@@ -203,6 +203,5 @@ class CreateGitHubRepoService
   # rubocop:enable LineLength
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize
-
 end
 # rubocop:enable ClassLength
