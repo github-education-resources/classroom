@@ -172,6 +172,48 @@ module Orgs
         end
       end
     end
+
+    def import_from_lms
+      lti_configuration = current_organization.lti_configuration
+      redirect_to new_lti_configuration_path(current_organization) unless lti_configuration
+
+      # TODO: the membership_service_url is consistent accross launches for a given LMS course,
+      # so we should persist that url in postgres for a configuration so we don't have to look up
+      # via a nonce stored on the temporary session
+      lti_message_service = GitHubClassroom.lti_message_store(consumer_key: lti_configuration.consumer_key)
+      raise "LTI nonce not found on session -- Please launch from your LMS" unless session[:lti_nonce]
+
+      lti_message = lti_message_service.get_message(session[:lti_nonce])
+      raise "No message found for nonce for lti_configuration" unless lti_message
+
+      membership_service_url = lti_message.custom_params["custom_context_memberships_url"]
+      raise "Membership service url not found on given lti message" unless membership_service_url
+      ## end TODO
+
+      membership_service = GitHubClassroom::LTI::MembershipService.new(
+        membership_service_url,
+        lti_configuration.consumer_key,
+        lti_configuration.shared_secret
+      )
+
+      membership = membership_service.membership
+      members = membership.map(&:member)
+      identifiers = {
+        "User IDs": members.map(&:user_id),
+        "Names": members.map(&:name),
+        "Emails": members.map(&:email)
+      }
+
+      respond_to do |format|
+        format.js do
+          render partial: "orgs/rosters/show_select_identifier_modal", locals: {
+            roster: current_roster,
+            organization: current_organization,
+            identifiers: identifiers
+          }
+        end
+      end
+    end
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
 

@@ -87,6 +87,7 @@ Rails.application.routes.draw do
           patch :delete_entry
           patch :add_students
           patch :remove_organization
+          patch :import_from_lms
           patch :import_from_google_classroom
           patch :sync_google_classroom
           patch :unlink_google_classroom
