@@ -1,0 +1,12 @@
+(function() {
+  $('[data-remodal-id=select-identifier-modal]').replaceWith(
+    "<%= j render partial: 'orgs/rosters/select_identifier_modal', locals: {
+      roster: roster,
+      organization: organization,
+      identifiers: identifiers
+    } %>"
+  )
+
+  var inst = $('[data-remodal-id=select-identifier-modal]').remodal();
+  inst.open();
+})();
