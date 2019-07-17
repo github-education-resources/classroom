@@ -4,6 +4,10 @@ module Orgs
   class LtiConfigurationsController < Orgs::Controller
     before_action :ensure_lti_launch_flipper_is_enabled
     before_action :ensure_current_lti_configuration, except: %i[new create]
+    before_action :ensure_no_roster, only: [:create]
+
+    skip_before_action :authenticate_user!, only: :autoconfigure
+    skip_before_action :ensure_current_organization_visible_to_current_user, only: :autoconfigure
 
     # rubocop:disable Metrics/MethodLength
     def create
@@ -44,6 +48,39 @@ module Orgs
       redirect_to edit_organization_path(id: current_organization), alert: "LTI configuration deleted."
     end
 
+    # rubocop:disable Metrics/MethodLength
+    def autoconfigure
+      builder = GitHubClassroom::LTI::ConfigurationBuilder.new("GitHub Classroom", auth_lti_launch_url)
+
+      builder.add_attributes(
+        description: "Sync your GitHub Classroom organization with your Learning Management System.",
+        icon: "https://classroom.github.com/favicon.ico",
+        vendor_name: "GitHub Classroom",
+        vendor_url: "https://classroom.github.com/"
+      )
+
+      ## LMS Specific Attributes ##
+      # Note: LMS's will ignore vendor identifiers they do not understand
+
+      # Canvas will not display an LTI application
+      # unless specify a course_navigation location.
+      builder.add_vendor_attributes(
+        "canvas.instructure.com",
+        privacy_level: "public",
+        custom_fields: {
+          custom_context_membership_url: "$ToolProxyBinding.memberships.url"
+        },
+        course_navigation: {
+          windowTarget: "_blank",
+          visibility: "admins", # only show the application to instructors
+          enabled: "true"
+        }
+      )
+
+      render xml: builder.to_xml, status: :ok
+    end
+    # rubocop:enable Metrics/MethodLength
+
     private
 
     def current_lti_configuration
@@ -56,6 +93,13 @@ module Orgs
 
     def lti_configuration_params
       params.require(:lti_configuration).permit(:lms_link)
+    end
+
+    def ensure_no_roster
+      return unless current_organization.roster
+      redirect_to edit_organization_path(current_organization),
+        alert: "We are unable to link your classroom organization to an LMS"\
+          "because a roster already exists. Please delete your current roster and try again."
     end
   end
 end

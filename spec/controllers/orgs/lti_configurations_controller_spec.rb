@@ -90,6 +90,23 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         expect(organization.lti_configuration).to_not be_nil
         expect(response).to redirect_to(lti_configuration_path(organization))
       end
+
+      context "with an existing roster" do
+        before do
+          organization.roster = create(:roster)
+          organization.save!
+          organization.reload
+        end
+
+        it "alerts user that there is an existing roster" do
+          post :create, params: { id: organization.slug }
+          expect(response).to redirect_to(edit_organization_path(organization))
+          expect(flash[:alert]).to eq(
+            "We are unable to link your classroom organization to an LMS"\
+            "because a roster already exists. Please delete your current roster and try again."
+          )
+        end
+      end
     end
 
     context "with flipper disabled" do
@@ -176,6 +193,45 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       it "returns a not_found" do
         options = { lms_link: "https://github.com" }
         patch :update, params: { id: organization.slug, lti_configuration: options }
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  describe "GET #autoconfigure", :vcr do
+    context "with flipper on" do
+      before(:each) do
+        GitHubClassroom.flipper[:lti_launch].enable
+      end
+
+      context "with existing lti_configuration" do
+        before(:each) do
+          post :create, params: { id: organization.slug }
+        end
+
+        it "returns an xml configuration" do
+          get :autoconfigure, params: { id: organization.slug }
+          expect(response).to have_http_status(:success)
+          expect(response.content_type).to eq "application/xml"
+        end
+      end
+
+      context "with no existing lti_configuration" do
+        it "does not generate an xml configuration" do
+          patch :autoconfigure, params: { id: organization.slug }
+          expect(response).to redirect_to(new_lti_configuration_path(organization))
+          expect(organization.lti_configuration).to be_nil
+        end
+      end
+    end
+
+    context "with flipper disabled" do
+      before(:each) do
+        GitHubClassroom.flipper[:lti_launch].disable
+      end
+
+      it "returns a not_found" do
+        get :autoconfigure, params: { id: organization.slug }
         expect(response).to have_http_status(:not_found)
       end
     end
