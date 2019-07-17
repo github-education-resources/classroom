@@ -189,7 +189,7 @@ class OrganizationsController < Orgs::Controller
   def add_archive_params
     org_params = params[:organization]
     if org_params[:archived] == "true"
-      org_params[:archived_at] = Time.now
+      org_params[:archived_at] = Time.zone.now
     elsif org_params[:archived] == "false"
       org_params[:archived_at] = nil
     end
