@@ -34,6 +34,11 @@ en:
       delete_classroom_consequences_html: "This action <strong>CANNOT</strong> be undone. Please note that reseting and removing this classroom will delete all repositories and teams created by this classroom in the <strong>%{organization}</strong> account."
       delete_confirm: 'Please type the name of the classroom to confirm'
       delete_submit: 'Reset and remove this classroom'
+      danger_zone: 'The Danger Zone'
+      archived_classrooms: 'Archived Classrooms'
+      archive_description: 'Marks the classroom as archived. Will appear in separate section away from active classrooms.'
+      archive_submit: 'Archive Classroom'
+      unarchive_submit: 'Unarchive Classroom'
       classroom_settings: 'Classroom settings'
       classroom_profile: 'Classroom profile'
       student_identifiers: 'Student identifiers'
