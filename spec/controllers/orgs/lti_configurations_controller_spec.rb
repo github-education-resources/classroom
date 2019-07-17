@@ -90,6 +90,23 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         expect(organization.lti_configuration).to_not be_nil
         expect(response).to redirect_to(lti_configuration_path(organization))
       end
+
+      context "with an existing roster" do
+        before do
+          organization.roster = create(:roster)
+          organization.save!
+          organization.reload
+        end
+
+        it "alerts user that there is an existing roster" do
+          post :create, params: { id: organization.slug }
+          expect(response).to redirect_to(edit_organization_path(organization))
+          expect(flash[:alert]).to eq(
+            "We are unable to link your classroom organization to an LMS"\
+            "because a roster already exists. Please delete your current roster and try again."
+          )
+        end
+      end
     end
 
     context "with flipper disabled" do
