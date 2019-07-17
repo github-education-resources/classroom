@@ -25,26 +25,29 @@
 
       <div class="boxed-group dangerzone">
         <h3><%= t('views.organizations.danger_zone') %></h3>
-        <div class="boxed-group-inner pt-2 clearfix">
-          <p><%= t('views.organizations.theres_no_going_back') %></p>
-          <p>
-            <a data-remodal-target="reset-and-remove-organization" class="btn btn-danger"><%= t('views.organizations.delete_submit') %></a>
-          </p>
-        </div>
-        <div class="boxed-group-inner pt-2 clearfix">
-          <%= t('views.organizations.archive_description') %>
-          <% if current_organization.archived_at %>
-            <%= form_for current_organization do |f| %>
-              <%= f.hidden_field :archived, value: false %>
-              <%= f.submit t('views.organizations.unarchive_submit'), class: "btn btn-danger" %>
-            <% end %>
-          <% else %>
-            <%= form_for current_organization do |f| %>
-              <%= f.hidden_field :archived, value: true %>
-              <%= f.submit t('views.organizations.archive_submit'), class: "btn btn-danger" %>
-            <% end %>
-          <% end %>
-        </div>
+        <div class="boxed-group-inner">
+          <ul>
+            <li class="Box-row">
+              <p><%= t('views.organizations.theres_no_going_back') %></p>
+              <p>
+                <a data-remodal-target="reset-and-remove-organization" class="btn btn-danger"><%= t('views.organizations.delete_submit') %></a>
+              </p>
+            </li>
+            <li class="Box-row">
+              <p><%= t('views.organizations.archive_description') %></p>
+              <% if current_organization.archived_at %>
+                <%= form_for current_organization do |f| %>
+                  <%= f.hidden_field :archived, value: false %>
+                  <%= f.submit t('views.organizations.unarchive_submit'), class: "btn btn-danger" %>
+                <% end %>
+              <% else %>
+                <%= form_for current_organization do |f| %>
+                  <%= f.hidden_field :archived, value: true %>
+                  <%= f.submit t('views.organizations.archive_submit'), class: "btn btn-danger" %>
+                <% end %>
+              <% end %>
+            </li>
+          </ul>
       </div>
 
     </div>
