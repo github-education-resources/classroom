@@ -2,6 +2,13 @@
 
 class CreateGitHubRepoService
   class Broadcaster
+    MESSAGES = {
+      repository_creation_complete: "Your GitHub repository was created.",
+      import_ongoing: "Your GitHub repository is importing starter code.",
+      create_repo: "Creating GitHub repository.",
+      importing_starter_code: "Importing starter code."
+    }.freeze
+
     def self.call(entity, message, message_type, repo_url = nil)
       new(entity, message, message_type, repo_url).call
     end
@@ -36,7 +43,7 @@ class CreateGitHubRepoService
       {}.tap do |msg|
         msg[:status] = entity.status
         msg[:repo_url] = repo_url if repo_url.present?
-        msg[message_type] = message_type == :error ? message : messages[message]
+        msg[message_type] = MESSAGES.fetch(message) { message }
       end
     end
 
@@ -45,15 +52,6 @@ class CreateGitHubRepoService
         msg["#{entity.humanize}_id".to_sym] = entity.collaborator.id
         msg["#{entity.assignment_type}_id".to_sym] = entity.assignment.id
       end
-    end
-
-    def messages
-      {
-        repository_creation_complete: "Your GitHub repository was created.",
-        import_ongoing: "Your GitHub repository is importing starter code.",
-        create_repo: "Creating GitHub repository.",
-        importing_starter_code: "Importing starter code."
-      }
     end
   end
 end
