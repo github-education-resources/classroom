@@ -58,7 +58,7 @@ class SessionsController < ApplicationController
       consumer_key: auth_hash.credentials.token
     )
 
-    message = GitHubClassroom::LtiMessageStore.construct_message(auth_hash.extra.raw_info)
+    message = GitHubClassroom::LTI::MessageStore.construct_message(auth_hash.extra.raw_info)
     raise("invalid lti launch message") unless message_store.message_valid?(message)
 
     nonce = message_store.save_message(message)

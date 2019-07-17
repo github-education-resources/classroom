@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190710202356) do
+ActiveRecord::Schema.define(version: 20190716211230) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -169,9 +169,10 @@ ActiveRecord::Schema.define(version: 20190710202356) do
     t.text "consumer_key", null: false
     t.text "shared_secret", null: false
     t.text "lms_link"
-    t.bigint "organization_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "organization_id"
+    t.string "context_membership_url"
     t.index ["consumer_key"], name: "index_lti_configurations_on_consumer_key", unique: true
     t.index ["organization_id"], name: "index_lti_configurations_on_organization_id"
   end

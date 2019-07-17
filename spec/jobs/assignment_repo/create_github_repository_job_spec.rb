@@ -134,7 +134,8 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           text: subject::IMPORT_STARTER_CODE,
           status: "importing_starter_code",
           status_text: "Import started",
-          repo_url: "https://github.com/#{organization.github_organization.login}/learn-elm-EDONTestTeacher"
+          repo_url: "https://github.com/#{organization.github_organization.login}/learn-elm-"\
+            "#{teacher.github_user.login}"
         )
     end
 
@@ -146,8 +147,7 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
     end
 
     it "tracks how long it too to be created" do
-      expect(GitHubClassroom.statsd).to receive(:timing).with("exercise_repo.create.time", anything)
-      expect(GitHubClassroom.statsd).to receive(:timing).with("v2_exercise_repo.create.time", anything)
+      expect(GitHubClassroom.statsd).to receive(:timing).with("exercise_repo.create.time.with_importer", anything)
       subject.perform_now(assignment, teacher)
     end
   end

@@ -75,8 +75,7 @@ class GroupAssignmentRepo
         broadcast_message(CREATE_COMPLETE)
       end
 
-      duration_in_millseconds = (Time.zone.now - start) * 1_000
-      GitHubClassroom.statsd.timing("exercise_repo.create.time", duration_in_millseconds)
+      report_time(start, group_assignment)
       GitHubClassroom.statsd.increment("exercise_repo.create.success")
 
       Result.success(group_assignment_repo)
