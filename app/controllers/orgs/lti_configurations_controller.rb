@@ -4,6 +4,7 @@ module Orgs
   class LtiConfigurationsController < Orgs::Controller
     before_action :ensure_lti_launch_flipper_is_enabled
     before_action :ensure_current_lti_configuration, except: %i[new create]
+    before_action :ensure_no_roster, only: [:create]
 
     skip_before_action :authenticate_user!, only: :autoconfigure
     skip_before_action :ensure_current_organization_visible_to_current_user, only: :autoconfigure
@@ -92,6 +93,13 @@ module Orgs
 
     def lti_configuration_params
       params.require(:lti_configuration).permit(:lms_link)
+    end
+
+    def ensure_no_roster
+      return unless current_organization.roster
+      redirect_to edit_organization_path(current_organization),
+        alert: "We are unable to link your classroom organization to an LMS"\
+          "because a roster already exists. Please delete your current roster and try again."
     end
   end
 end
