@@ -8,11 +8,14 @@ class GroupAssignmentRepo
     REPOSITORY_STARTER_CODE_IMPORT_FAILED   = "We were not able to import you the starter code to your group assignment, please try again." # rubocop:disable LineLength
     REPOSITORY_TEAM_ADDITION_FAILED         = "We were not able to add the team to the repository, please try again." # rubocop:disable LineLength
     REPOSITORY_CREATION_COMPLETE            = "Your GitHub repository was created."
+    TEMPLATE_REPOSITORY_CREATION_FAILED     = "GitHub repository could not be created from template, please try again."
     IMPORT_ONGOING                          = "Your GitHub repository is importing starter code."
     CREATE_REPO         = "Creating repository"
     ADDING_COLLABORATOR = "Adding collaborator"
     IMPORT_STARTER_CODE = "Importing starter code"
     CREATE_COMPLETE     = "Your GitHub repository was created."
+    GITHUB_API_HOST     = "https://api.github.com"
+    TEMPLATE_REPOS_API_PREVIEW = "application/vnd.github.baptiste-preview"
 
     def self.perform(group_assignment:, group:)
       new(group_assignment: group_assignment, group: group).perform
@@ -32,14 +35,22 @@ class GroupAssignmentRepo
     # Creates a GroupAssignmentRepo with an associated GitHub repo
     # If creation fails, it deletes the GitHub repo
     #
-    # rubocop:disable MethodLength
-    # rubocop:disable AbcSize
+    # rubocop:disable MethodLength, AbcSize, CyclomaticComplexity, PerceivedComplexity
     def perform
       start = Time.zone.now
       invite_status.creating_repo!
       broadcast_message(CREATE_REPO)
       verify_organization_has_private_repos_available!
-      github_repository = create_github_repository!
+
+      if group_assignment.organization.feature_enabled?(:template_repos) && group_assignment.use_template_repos?
+        github_repository = create_github_repository_from_template!
+      else
+        github_repository = create_github_repository!
+      end
+
+      if group_assignment.use_template_repos?
+        GitHubClassroom.statsd.increment("group_exercise_repo.create.repo.with_templates.success")
+      end
 
       group_assignment_repo = group_assignment.group_assignment_repos.build(
         github_repo_id: github_repository.id,
@@ -49,9 +60,7 @@ class GroupAssignmentRepo
 
       add_team_to_github_repository!(github_repository.id)
 
-      if group_assignment.starter_code?
-        push_starter_code!(group_assignment_repo.github_repo_id)
-      end
+      push_starter_code!(group_assignment_repo.github_repo_id) if group_assignment.use_importer?
 
       begin
         group_assignment_repo.save!
@@ -63,7 +72,7 @@ class GroupAssignmentRepo
       GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.success")
       GitHubClassroom.statsd.increment("group_exercise_repo.create.success")
 
-      if group_assignment.starter_code?
+      if group_assignment.use_importer?
         invite_status.importing_starter_code!
         broadcast_message(
           IMPORT_STARTER_CODE,
@@ -98,6 +107,25 @@ class GroupAssignmentRepo
       raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
     end
 
+    # rubocop:disable MethodLength, AbcSize
+    def create_github_repository_from_template!
+      GitHubClassroom.statsd.increment("group_exercise_repo.create.repo.with_templates.started")
+      repository_name = generate_github_repository_name
+      client = group_assignment.creator.github_client
+      options = {
+        name: repository_name,
+        owner: organization.github_organization.login,
+        private: group_assignment.private?,
+        description: "#{repository_name} created by GitHub Classroom",
+        accept: TEMPLATE_REPOS_API_PREVIEW
+      }
+
+      client.post("#{GITHUB_API_HOST}/repositories/#{group_assignment.starter_code_repo_id}/generate", options)
+    rescue GitHub::Error => error
+      GitHubClassroom.statsd.increment("group_exercise_repo.create.repo.with_templates.failed")
+      raise Result::Error.new TEMPLATE_REPOSITORY_CREATION_FAILED, error.message
+    end
+
     def add_team_to_github_repository!(github_repository_id)
       github_repository = GitHubRepository.new(organization.github_client, github_repository_id)
       github_team       = GitHubTeam.new(organization.github_client, group.github_team_id)
@@ -125,8 +153,6 @@ class GroupAssignmentRepo
       true
     end
 
-    # rubocop:disable MethodLength
-    # rubocop:disable Metrics/AbcSize
     def verify_organization_has_private_repos_available!
       return true if group_assignment.public?
 

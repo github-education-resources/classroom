@@ -3,6 +3,7 @@
 class Assignment < ApplicationRecord
   include Flippable
   include GitHubPlan
+  include StarterCodeImportable
   include ValidatesNotReservedWord
   include StafftoolsSearchable
 
@@ -39,8 +40,11 @@ class Assignment < ApplicationRecord
   validate :uniqueness_of_slug_across_organization
   validate :starter_code_repository_not_empty
 
+  validate :starter_code_repository_is_template
+
   alias_attribute :invitation, :assignment_invitation
   alias_attribute :repos, :assignment_repos
+  alias_attribute :template_repos_enabled?, :template_repos_enabled
 
   def private?
     !public_repo
@@ -48,15 +52,6 @@ class Assignment < ApplicationRecord
 
   def public?
     public_repo
-  end
-
-  def starter_code?
-    starter_code_repo_id.present?
-  end
-
-  def starter_code_repository
-    return unless starter_code?
-    @starter_code_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id)
   end
 
   def to_param
