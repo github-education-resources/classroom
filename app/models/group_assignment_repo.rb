@@ -35,8 +35,8 @@ class GroupAssignmentRepo < ApplicationRecord
 
   def self.sort_modes
     {
-      "Created at" => :order_by_repo_created_at,
-      "Team name" => :order_by_team_name
+      "Team name" => :order_by_team_name,
+      "Created at" => :order_by_repo_created_at
     }
   end
 

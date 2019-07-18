@@ -33,8 +33,8 @@ class AssignmentRepo < ApplicationRecord
 
   def self.sort_modes
     {
-      "Created at" => :order_by_created_at,
-      "GitHub login" => :order_by_github_login
+      "GitHub login" => :order_by_github_login,
+      "Created at" => :order_by_created_at
     }
   end
 
