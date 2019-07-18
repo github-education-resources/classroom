@@ -209,6 +209,102 @@ RSpec.describe Orgs::RostersController, type: :controller do
     end
   end
 
+  describe "GET #import_lms_roster", :vcr do
+    before do
+      sign_in_as(user)
+    end
+
+    context "with lti launch enabled" do
+      before(:each) do
+        GitHubClassroom.flipper[:lti_launch].enable
+      end
+
+      after(:each) do
+        GitHubClassroom.flipper[:lti_launch].disable
+      end
+
+      context "with existing LMS" do
+        let(:lti_configuration) { create(:lti_configuration, organization: organization) }
+
+        context "with context_membership_url" do
+          before(:each) do
+            LtiConfiguration
+              .any_instance
+              .stub(:context_membership_url)
+              .and_return("http://www.example.com")
+          end
+
+          context "fetching roster succeeds" do
+            let(:students) { [] }
+            before(:each) do
+              GitHubClassroom::LTI::MembershipService
+                .any_instance
+                .stub(:students)
+                .and_return(students)
+            end
+
+            it "format.html: succeeds" do
+              get :import_from_lms, params: { id: lti_configuration.organization.slug }
+              expect(response).to have_http_status(:ok)
+              expect(flash[:alert]).to be_nil
+            end
+
+            it "format.js: succeeds" do
+              get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
+              expect(response).to have_http_status(:ok)
+              expect(flash[:alert]).to be_nil
+            end
+          end
+
+          context "fetching roster fails" do
+            before(:each) do
+              GitHubClassroom::LTI::MembershipService
+                .any_instance
+                .stub(:students)
+                .and_raise
+            end
+
+            it "format.html: presents an error message to the user" do
+              get :import_from_lms, params: { id: lti_configuration.organization.slug }
+              expect(flash[:alert]).to be_present
+            end
+
+            it "format.js: presents an error message to the user" do
+              get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
+              expect(flash[:alert]).to be_present
+            end
+          end
+        end
+
+        context "without context_membership_service_url" do
+          it "format.html: presents an error message to the user" do
+            get :import_from_lms, params: { id: lti_configuration.organization.slug }
+            expect(flash[:alert]).to be_present
+          end
+
+          it "format.js: presents an error message to the user" do
+            get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
+            expect(flash[:alert]).to be_present
+          end
+        end
+      end
+
+      context "with no existing LMS" do
+        it "Redirects to new LTI configuration page" do
+          get :import_from_lms, params: { id: organization.slug }
+          expect(response).to redirect_to(new_lti_configuration_path)
+        end
+      end
+    end
+
+    context "with lti launch disabled" do
+      it "404s" do
+        get :import_from_lms, params: { id: organization.slug }
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
   describe "GET #select_google_classroom", :vcr do
     before do
       sign_in_as(user)

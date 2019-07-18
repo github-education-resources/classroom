@@ -9,8 +9,8 @@ class LtiConfiguration < ApplicationRecord
   end
 
   def context_membership_url(use_cache: true, nonce: nil)
-    cached_value = self[:context_membership_url]
-    return cached_value if use_cache && cached_value
+    cached_value = self[:context_membership_url] if use_cache
+    return cached_value if cached_value
 
     message_store = GitHubClassroom.lti_message_store(consumer_key: consumer_key)
     message = message_store.get_message(nonce)

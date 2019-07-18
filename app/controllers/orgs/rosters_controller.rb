@@ -201,17 +201,29 @@ module Orgs
         lti_configuration.shared_secret
       )
 
-      membership = membership_service.membership
-      members = membership.map(&:member)
-      @identifiers = {
-        "User IDs": members.map(&:user_id),
-        "Names": members.map(&:name),
-        "Emails": members.map(&:email)
-      }
+      begin
+        membership = membership_service.students
 
-      respond_to do |format|
-        format.js
-        format.html
+        members = membership.map(&:member)
+        @identifiers = {
+          "User IDs": members.map(&:user_id),
+          "Names": members.map(&:name),
+          "Emails": members.map(&:email)
+        }
+
+        respond_to do |format|
+          format.js
+          format.html
+        end
+      rescue
+        err = "Unable to fetch membership from your Learning Management System at this time. Please try again later."
+
+        return respond_to do |f|
+          f.js { flash.now[:alert] = err }
+          f.html do
+            return redirect_to roster_path(current_organization), alert: err
+          end
+        end
       end
     end
     # rubocop:enable Metrics/MethodLength
