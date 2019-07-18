@@ -35,13 +35,13 @@ RSpec.describe CreateGitHubRepoService::StatsSender do
       it "when message is :collaborator_addition_failed" do
         expect(GitHubClassroom.statsd)
           .to receive(:increment)
-                .with("group_exercise_repo.create.adding_collaborator.fail")
+          .with("group_exercise_repo.create.adding_collaborator.fail")
         stats_sender.report_with_exercise_prefix(:collaborator_addition_failed)
       end
       it "when message is :starter_code_import_failed" do
         expect(GitHubClassroom.statsd)
           .to receive(:increment)
-                .with("group_exercise_repo.create.importing_starter_code.fail")
+          .with("group_exercise_repo.create.importing_starter_code.fail")
         stats_sender.report_with_exercise_prefix(:starter_code_import_failed)
       end
       it "when message is :import_started" do
@@ -62,7 +62,7 @@ RSpec.describe CreateGitHubRepoService::StatsSender do
         it "when message is :starter_code_import_failed" do
           expect(GitHubClassroom.statsd)
             .to receive(:increment)
-                  .with("exercise_repo.create.importing_starter_code.fail")
+            .with("exercise_repo.create.importing_starter_code.fail")
           stats_sender.report_with_exercise_prefix(:starter_code_import_failed)
         end
         it "when message is :import_started" do
