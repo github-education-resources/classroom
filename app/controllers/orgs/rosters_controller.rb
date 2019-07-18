@@ -17,7 +17,6 @@ module Orgs
       create
       select_google_classroom
       import_from_google_classroom
-      import_from_lms
       search_google_classroom
     ]
     before_action :redirect_if_roster_exists, only: [:new]
@@ -34,9 +33,9 @@ module Orgs
     before_action :google_classroom_ensure_no_roster, only: %i[
       select_google_classroom
     ]
-    before_action :ensure_lti_launch_flipper_is_enabled, only: [:import_from_lms]
-
     helper_method :current_roster, :unlinked_users, :authorize_google_classroom
+
+    depends_on :lti
 
     # rubocop:disable AbcSize
     def show
@@ -178,54 +177,6 @@ module Orgs
       end
     end
 
-    def import_from_lms
-      lti_configuration = current_organization.lti_configuration
-      return redirect_to new_lti_configuration_path(current_organization) unless lti_configuration
-
-      membership_service_url = lti_configuration.context_membership_url(nonce: session[:lti_nonce])
-      unless membership_service_url
-        err = "GitHub Classroom is not configured properly on your Learning Management System.
-        Please ensure the integration is configured properly and try again."
-
-        return respond_to do |f|
-          f.js { flash.now[:alert] = err }
-          f.html do
-            return redirect_to roster_path(current_organization), alert: err
-          end
-        end
-      end
-
-      membership_service = GitHubClassroom::LTI::MembershipService.new(
-        membership_service_url,
-        lti_configuration.consumer_key,
-        lti_configuration.shared_secret
-      )
-
-      begin
-        membership = membership_service.students
-
-        members = membership.map(&:member)
-        @identifiers = {
-          "User IDs": members.map(&:user_id),
-          "Names": members.map(&:name),
-          "Emails": members.map(&:email)
-        }
-
-        respond_to do |format|
-          format.js
-          format.html
-        end
-      rescue
-        err = "Unable to fetch membership from your Learning Management System at this time. Please try again later."
-
-        return respond_to do |f|
-          f.js { flash.now[:alert] = err }
-          f.html do
-            return redirect_to roster_path(current_organization), alert: err
-          end
-        end
-      end
-    end
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
 
