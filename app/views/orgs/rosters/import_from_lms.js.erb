@@ -1,4 +1,7 @@
 (function() {
+  <% if flash[:alert] %>
+    $('#flash-messages').html("<%= j render 'shared/flash_messages' %>");
+  <% else %>
   $('[data-remodal-id=select-identifier-modal]').replaceWith(
     "<%= j render partial: 'orgs/rosters/select_identifier_modal', locals: {
       roster: current_roster,
@@ -8,4 +11,5 @@
 
   var inst = $('[data-remodal-id=select-identifier-modal]').remodal();
   inst.open();
+  <% end %>
 })();

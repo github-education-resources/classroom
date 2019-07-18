@@ -34,6 +34,7 @@ module Orgs
     before_action :google_classroom_ensure_no_roster, only: %i[
       select_google_classroom
     ]
+    before_action :ensure_lti_launch_flipper_is_enabled, only: [:import_from_lms]
 
     helper_method :current_roster, :unlinked_users, :authorize_google_classroom
 
@@ -183,9 +184,15 @@ module Orgs
 
       membership_service_url = lti_configuration.context_membership_url(nonce: session[:lti_nonce])
       unless membership_service_url
-        return redirect_to roster_path(current_organization),
-          alert: "GitHub Classroom is not configured properly on your Learning Management System. Please ensure
-          the integration is configured properly and try again."
+        err = "GitHub Classroom is not configured properly on your Learning Management System.
+        Please ensure the integration is configured properly and try again."
+
+        return respond_to do |f|
+          f.js { flash.now[:alert] = err }
+          f.html do
+            return redirect_to roster_path(current_organization), alert: err
+          end
+        end
       end
 
       membership_service = GitHubClassroom::LTI::MembershipService.new(
