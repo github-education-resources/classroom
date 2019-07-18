@@ -91,6 +91,20 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         expect(response).to redirect_to(lti_configuration_path(organization))
       end
 
+      context "with existing google classrom" do
+        before do
+          organization.update_attributes(google_course_id: "1234")
+        end
+
+        it "alerts user about existing configuration" do
+          get :create, params: { id: organization.slug }
+          expect(response).to redirect_to(edit_organization_path(organization))
+          expect(flash[:alert]).to eq(
+            "A Google Classroom configuration exists. Please remove configuration before creating a new one."
+          )
+        end
+      end
+
       context "with an existing roster" do
         before do
           organization.roster = create(:roster)

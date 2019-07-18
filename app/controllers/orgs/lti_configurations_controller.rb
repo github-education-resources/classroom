@@ -3,6 +3,7 @@
 module Orgs
   class LtiConfigurationsController < Orgs::Controller
     before_action :ensure_lti_launch_flipper_is_enabled
+    before_action :ensure_no_google_classroom, only: %i[create]
     before_action :ensure_current_lti_configuration, except: %i[new create]
     before_action :ensure_no_roster, only: [:create]
 
@@ -93,6 +94,12 @@ module Orgs
 
     def lti_configuration_params
       params.require(:lti_configuration).permit(:lms_link)
+    end
+
+    def ensure_no_google_classroom
+      return unless current_organization.google_course_id
+      redirect_to edit_organization_path(current_organization),
+        alert: "A Google Classroom configuration exists. Please remove configuration before creating a new one."
     end
 
     def ensure_no_roster
