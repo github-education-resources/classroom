@@ -49,7 +49,6 @@ class GitHubOrganization < GitHubResource
         @id,
         description: "#{team_name} created by GitHub Classroom",
         name: team_name,
-        permission: "push"
       )
     end
 
