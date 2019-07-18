@@ -259,6 +259,9 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
             # Stub google authentication again
             client = Signet::OAuth2::Client.new
+            allow_any_instance_of(Orgs::RostersController)
+              .to receive(:user_google_classroom_credentials)
+              .and_return(client)
 
             # Stub list courses response
             response = GoogleAPI::ListCoursesResponse.new
