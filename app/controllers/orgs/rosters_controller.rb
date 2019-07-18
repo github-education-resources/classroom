@@ -31,6 +31,9 @@ module Orgs
       sync_google_classroom
       unlink_google_classroom
     ]
+    before_action :google_classroom_ensure_no_roster, only: %i[
+      select_google_classroom
+    ]
 
     helper_method :current_roster, :unlinked_users, :authorize_google_classroom
 
@@ -429,6 +432,13 @@ module Orgs
 
     def redirect_if_roster_exists
       redirect_to roster_url(current_organization) if current_organization.roster.present?
+    end
+
+    def google_classroom_ensure_no_roster
+      return unless current_organization.roster
+      redirect_to edit_organization_path(current_organization),
+        alert: "We are unable to link your classroom organization to Google Classroom"\
+          "because a roster already exists. Please delete your current roster and try again."
     end
   end
 end
