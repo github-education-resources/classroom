@@ -1,41 +1,38 @@
 <div class="remodal-bg">
-  <%= render 'organizations/organization_banner' %>
+  <%= render 'organizations/organization_banner', settings: true %>
 
-  <div class="columns">
-    <div class="one-fourth column">
-      <%= render partial: 'organizations/side_menu' %>
-    </div>
-    <div class="three-fourths column">
-
-      <div class="boxed-group">
-        <h3><%= t('views.organizations.profile_information') %></h3>
-        <div class="boxed-group-inner clearfix">
-          <%= form_for current_organization do |f| %>
-            <%= render 'shared/error_messages', object: f.object %>
-            <dl class="form">
-              <dt><%= f.label :title %></dt>
-              <dd><%= f.text_field :title, class: 'textfield form-control input-contrast input-block' %></dd>
-            </dl>
-            <div class="form-actions">
-              <%= f.submit t('views.organizations.save_changes'), class: 'btn btn-primary' %>
-            </div>
-          <% end %>
-        </div>
+  <div class="d-md-flex gutter-md">
+    <div class="col-md-3">
+      <div class="my-3">
+        <%= render partial: 'organizations/side_menu' %>
       </div>
+    </div>
+    <div class="col-md-9">
+      <div class="Subhead mt-3">
+        <h1 class="Subhead-heading"><%= t('views.organizations.profile_information') %></h1>
+      </div>
+      <%= form_for current_organization do |f| %>
+        <%= render 'shared/error_messages', object: f.object %>
+        <dl class="form">
+          <dt class="mb-2"><%= f.label :title %></dt>
+          <dd><%= f.text_field :title, class: 'textfield form-control col-12 col-md-6' %></dd>
+        </dl>
+        <%= f.submit t('views.organizations.save_changes'), class: 'btn btn-primary' %>
+      <% end %>
 
-      <div class="boxed-group dangerzone">
-        <h3><%= t('views.organizations.delete_submit') %></h3>
-        <div class="boxed-group-inner pt-2 clearfix">
+      <div class="Box Box--condensed mt-5">
+        <div class="Box-header bg-red">
+          <h2 class="Box-title text-white"><%= t('views.organizations.delete_submit') %></h2>
+        </div>
+        <div class="Box-body">
           <p><%= t('views.organizations.theres_no_going_back') %></p>
           <p>
             <a data-remodal-target="reset-and-remove-organization" class="btn btn-danger"><%= t('views.organizations.delete_submit') %></a>
           </p>
         </div>
       </div>
-
     </div>
   </div>
-
 
   <%= render partial: 'organizations/reset_and_remove_organization_modal' %>
 </div>
