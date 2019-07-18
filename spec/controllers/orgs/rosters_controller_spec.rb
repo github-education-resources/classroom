@@ -271,6 +271,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
             it "format.js: presents an error message to the user" do
               get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
+              expect(response.status).to be(428)
               expect(flash[:alert]).to be_present
             end
           end
@@ -284,6 +285,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
           it "format.js: presents an error message to the user" do
             get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
+            expect(response.status).to be(428)
             expect(flash[:alert]).to be_present
           end
         end

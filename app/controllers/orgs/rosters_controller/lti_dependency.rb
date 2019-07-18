@@ -62,8 +62,11 @@ module Orgs
 
     def handle_lms_import_error(err)
       respond_to do |f|
-        f.js { flash.now[:alert] = err.message }
         f.html { redirect_to roster_path(current_organization), alert: err.message }
+        f.js do
+          flash.now[:alert] = err.message
+          render :import_from_lms, status: :precondition_required
+        end
       end
     end
   end
