@@ -1,8 +1,14 @@
 <% content_for :organization_invitation_banner do %>
   <div class="organization-banner" style="background-image: <%= organization.geo_pattern_data_uri %>">
-    <div class="container-lg">
-      <h1 class="organization-name"><%= organization.title %></h1>
-      <p class="organization-login"><%= link_to "@#{organization.github_organization.login}", organization.github_organization.html_url %></p>
+    <div class="container-lg p-responsive">
+      <div class="py-3 pt-md-4">
+        <div class="d-md-flex flex-justify-between">
+          <div class="flex-auto">
+            <h1><%= link_to organization.title, organization, class: "text-white no-underline" %></h1>
+            <p class="f5 mb-md-0"><%= link_to "#{organization.github_organization.login}", organization.github_organization.html_url, class: "text-white no-underline" %></p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 <% end %>
