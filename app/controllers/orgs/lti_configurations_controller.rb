@@ -5,6 +5,7 @@ module Orgs
     before_action :ensure_lti_launch_flipper_is_enabled
     before_action :ensure_no_google_classroom, only: %i[create]
     before_action :ensure_current_lti_configuration, except: %i[new create]
+    before_action :ensure_no_roster, only: [:create]
 
     skip_before_action :authenticate_user!, only: :autoconfigure
     skip_before_action :ensure_current_organization_visible_to_current_user, only: :autoconfigure
@@ -99,6 +100,13 @@ module Orgs
       return unless current_organization.google_course_id
       redirect_to edit_organization_path(current_organization),
         alert: "A Google Classroom configuration exists. Please remove configuration before creating a new one."
+    end
+    
+    def ensure_no_roster
+      return unless current_organization.roster
+      redirect_to edit_organization_path(current_organization),
+        alert: "We are unable to link your classroom organization to an LMS"\
+          "because a roster already exists. Please delete your current roster and try again."
     end
   end
 end
