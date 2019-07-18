@@ -101,7 +101,7 @@ module Orgs
       redirect_to edit_organization_path(current_organization),
         alert: "A Google Classroom configuration exists. Please remove configuration before creating a new one."
     end
-    
+
     def ensure_no_roster
       return unless current_organization.roster
       redirect_to edit_organization_path(current_organization),

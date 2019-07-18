@@ -102,7 +102,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
           expect(flash[:alert]).to eq(
             "A Google Classroom configuration exists. Please remove configuration before creating a new one."
           )
-        end 
+        end
       end
 
       context "with an existing roster" do
