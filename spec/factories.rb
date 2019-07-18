@@ -125,6 +125,5 @@ FactoryBot.define do
     consumer_key { SecureRandom.uuid }
     shared_secret { SecureRandom.uuid }
     lms_link { "www.example.com" }
-    type { "other" }
   end
 end
