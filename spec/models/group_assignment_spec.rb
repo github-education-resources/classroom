@@ -264,4 +264,28 @@ RSpec.describe GroupAssignment, type: :model do
       end
     end
   end
+
+  describe "grouping" do
+    let(:organization) { classroom_org }
+    let(:grouping)     { build(:grouping, organization: organization) }
+    let(:group_assignment) { build(:group_assignment, title: "Test 1", organization: organization, grouping: grouping) }
+
+    context "group_assignment validation fails" do
+      before(:each) do
+        group_assignment.update_attributes(title: "")
+      end
+
+      it "does not persist the grouping" do
+        expect(group_assignment.save).to be false
+        expect(group_assignment.grouping.persisted?).to be false
+      end
+    end
+
+    context "group_assignment validation passes" do
+      it "persists the grouping" do
+        expect(group_assignment.save).to be true
+        expect(group_assignment.grouping.persisted?).to be true
+      end
+    end
+  end
 end
