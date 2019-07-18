@@ -35,27 +35,29 @@
               <strong><%= t('views.organizations.delete_title') %></strong>
               <p><%= t('views.organizations.theres_no_going_back') %></p>
             </li>
-            <li class="Box-row">
-              <% if current_organization.archived_at %>
-                <div class="details-reset details-overlay">
-                  <%= form_for current_organization do |f| %>
-                    <%= f.hidden_field :archived, value: false %>
-                    <%= f.submit t('views.organizations.unarchive_submit'), class: "btn btn-danger boxed-action" %>
-                  <% end %>
-                </div>
-                <strong><%= t('views.organizations.unarchive_title') %></strong>
-                <p><%= t('views.organizations.unarchive_description') %></p>
-              <% else %>
-                <div class="details-reset details-overlay">
-                  <%= form_for current_organization do |f| %>
-                    <%= f.hidden_field :archived, value: true %>
-                    <%= f.submit t('views.organizations.archive_submit'), class: "btn btn-danger boxed-action" %>
-                  <% end %>
-                </div>
-                <strong><%= t('views.organizations.archive_title') %></strong>
-                <p><%= t('views.organizations.archive_description') %></p>
-              <% end %>
-            </li>
+            <% if current_organization.feature_enabled?(:archive_repos) %>
+              <li class="Box-row">
+                <% if current_organization.archived_at %>
+                  <div class="details-reset details-overlay">
+                    <%= form_for current_organization do |f| %>
+                      <%= f.hidden_field :archived, value: false %>
+                      <%= f.submit t('views.organizations.unarchive_submit'), class: "btn btn-danger boxed-action" %>
+                    <% end %>
+                  </div>
+                  <strong><%= t('views.organizations.unarchive_title') %></strong>
+                  <p><%= t('views.organizations.unarchive_description') %></p>
+                <% else %>
+                  <div class="details-reset details-overlay">
+                    <%= form_for current_organization do |f| %>
+                      <%= f.hidden_field :archived, value: true %>
+                      <%= f.submit t('views.organizations.archive_submit'), class: "btn btn-danger boxed-action" %>
+                    <% end %>
+                  </div>
+                  <strong><%= t('views.organizations.archive_title') %></strong>
+                  <p><%= t('views.organizations.archive_description') %></p>
+                <% end %>
+              </li>
+            <% end %>
           </ul>
       </div>
 
