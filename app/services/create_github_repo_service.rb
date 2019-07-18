@@ -28,14 +28,14 @@ class CreateGitHubRepoService
       push_starter_code!(github_repository)
       invite_status.importing_starter_code!
       Broadcaster.call(exercise, :importing_starter_code, :text, assignment_repo&.github_repository&.html_url)
-      stats_sender.report(:import_started)
+      stats_sender.report_with_exercise_prefix(:import_started)
     else
       invite_status.completed!
       Broadcaster.call(exercise, :repository_creation_complete, :text)
     end
 
     stats_sender.timing(start)
-    stats_sender.report(:success)
+    stats_sender.report_default(:success)
     Result.success(assignment_repo, exercise)
   rescue Result::Error => error
     repo_id = assignment_repo&.github_repo_id || github_repository&.id
@@ -145,13 +145,13 @@ class CreateGitHubRepoService
   def report_error(err)
     case err
     when /^#{errors(:repository_creation_failed)}/
-      stats_sender.report(:repository_creation_failed)
+      stats_sender.report_with_exercise_prefix(:repository_creation_failed)
     when /^#{errors(:collaborator_addition_failed)}/
-      stats_sender.report(:collaborator_addition_failed)
+      stats_sender.report_with_exercise_prefix(:collaborator_addition_failed)
     when /^#{errors(:starter_code_import_failed)}/
-      stats_sender.report(:starter_code_import_failed)
+      stats_sender.report_with_exercise_prefix(:starter_code_import_failed)
     else
-      stats_sender.report(:failure)
+      stats_sender.report_default(:failure)
     end
   end
 
