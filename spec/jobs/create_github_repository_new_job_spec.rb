@@ -177,7 +177,7 @@ RSpec.describe CreateGitHubRepositoryNewJob, type: :job do
       expect(CreateGitHubRepoService::Broadcaster)
         .to receive(:call)
         .with(
-          instance_of(CreateGitHubRepoService::Individual),
+          instance_of(CreateGitHubRepoService::IndividualExercise),
           "Assignment could not be created, please try again.",
           :error
         )

@@ -4,9 +4,9 @@ class CreateGitHubRepoService
   class Exercise
     def self.build(assignment, collaborator)
       if collaborator.is_a?(User)
-        Individual.new(assignment, collaborator)
+        IndividualExercise.new(assignment, collaborator)
       else
-        Team.new(assignment, collaborator)
+        GroupExercise.new(assignment, collaborator)
       end
     end
 
@@ -37,7 +37,7 @@ class CreateGitHubRepoService
     end
 
     def user?
-      is_a?(Individual)
+      is_a?(IndividualExercise)
     end
 
     def admin?
@@ -64,42 +64,6 @@ class CreateGitHubRepoService
 
       suffix = "-#{suffix_count}"
       default_repo_name.truncate(100 - suffix.length, omission: "") + suffix
-    end
-  end
-
-  class Individual < Exercise
-    def repos
-      assignment.assignment_repos
-    end
-
-    def slug
-      collaborator.github_user.login(use_cache: false)
-    end
-
-    def humanize
-      "user"
-    end
-
-    def stat_prefix
-      "exercise_repo"
-    end
-  end
-
-  class Team < Exercise
-    def repos
-      assignment.group_assignment_repos
-    end
-
-    def slug
-      collaborator.github_team.slug_no_cache
-    end
-
-    def humanize
-      "group"
-    end
-
-    def stat_prefix
-      "group_exercise_repo"
     end
   end
 end
