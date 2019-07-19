@@ -4,6 +4,7 @@ class RosterEntry < ApplicationRecord
   class IdentifierCreationError < StandardError; end
 
   include Sortable
+  include Searchable
 
   belongs_to :roster
   belongs_to :user, optional: true
@@ -27,11 +28,17 @@ class RosterEntry < ApplicationRecord
 
   scope :order_by_student_identifier, ->(_context = nil) { order(identifier: :asc) }
 
+  scope :search_by_student_identifier, ->(query) { where("identifier ILIKE ?", "%#{query}%") }
+
   def self.sort_modes
     {
       "Student identifier" => :order_by_student_identifier,
       "Created at" => :order_by_repo_created_at
     }
+  end
+
+  def self.search_mode
+    :search_by_student_identifier
   end
 
   # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity

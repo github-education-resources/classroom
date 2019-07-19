@@ -26,11 +26,40 @@ RSpec.describe RosterEntry, type: :model do
     end
   end
 
+  describe "searching" do
+    let(:roster) { create(:roster) }
+
+    let(:entry_one) { create(:roster_entry, roster: roster, identifier: "a entry") }
+    let(:entry_two) { create(:roster_entry, roster: roster, identifier: "b entry") }
+
+    context "filter_by_search" do
+      it "filter_by_search searches by 'identifier'" do
+        roster.roster_entries.first.destroy # Ignore the default entry here
+
+        query = entry_one.identifier
+        expected = [entry_one]
+        actual = RosterEntry.where(roster: roster).filter_by_search(query)
+
+        expect(actual).to eq(expected)
+      end
+
+      it "returns multiple results when there are multiple matches" do
+        roster.roster_entries.first.destroy # Ignore the default entry here
+
+        query = "entry"
+        expected = [entry_one, entry_two]
+        actual = RosterEntry.where(roster: roster).filter_by_search(query)
+
+        expect(actual).to eq(expected)
+      end
+    end
+  end
+
   describe "ordering" do
     let(:organization) { classroom_org                                   }
     let(:assignment)   { create(:assignment, organization: organization) }
 
-    let(:roster)   { create(:roster) }
+    let(:roster) { create(:roster) }
 
     let(:student1) { create(:user) }
     let(:student2) { create(:user) }
