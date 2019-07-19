@@ -120,7 +120,7 @@ RSpec.describe Assignment, type: :model do
     end
   end
 
-  describe "#starter_code_repository_not_empty" do
+  describe "#starter_code_repository_not_empty", :vcr do
     let(:organization) { classroom_org }
 
     before do

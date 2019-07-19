@@ -233,8 +233,7 @@ class GitHubRepository < GitHubResource
   def template?
     options = { accept: TEMPLATE_REPOS_API_PREVIEW }
     endpoint_url = "#{GITHUB_API_HOST}/repositories/#{@id}"
-    repo = @client.get(endpoint_url, options)
-    repo.is_template
+    repo = @client.get(endpoint_url, options).is_template
   end
 
   private
