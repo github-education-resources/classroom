@@ -185,9 +185,9 @@ class GroupAssignmentRepo
     private
 
     def repository_permissions
-      {}.tap do |options|
-        options[:permission] = "admin" if group_assignment.students_are_repo_admins?
-      end
+      {
+        permission: group_assignment.students_are_repo_admins? ? "admin" : "push"
+      }
     end
 
     # rubocop:disable AbcSize
