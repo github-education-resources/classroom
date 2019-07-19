@@ -4,6 +4,8 @@ require "google/apis/classroom_v1"
 
 # rubocop:disable Metrics/ClassLength
 class OrganizationsController < Orgs::Controller
+  depends_on :google_classroom
+
   before_action :ensure_team_management_flipper_is_enabled, only: [:show_groupings]
 
   before_action :authorize_organization_addition,     only: [:create]
@@ -122,26 +124,7 @@ class OrganizationsController < Orgs::Controller
   end
   # rubocop:enable MethodLength
 
-  def select_google_classroom
-    @google_classroom_courses = fetch_all_google_classrooms
-  end
-
   private
-
-  # Fetches all courses for a Google Account
-  def fetch_all_google_classrooms
-    next_page = nil
-    courses = []
-    loop do
-      response = @google_classroom_service.list_courses(page_size: 20, page_token: next_page)
-      courses.push(*response.courses)
-
-      next_page = response.next_page_token
-      break unless next_page
-    end
-
-    courses
-  end
 
   def authorize_organization_addition
     new_github_organization = github_organization_from_params
@@ -201,9 +184,19 @@ class OrganizationsController < Orgs::Controller
   end
 
   def update_organization_params
+    add_archive_params
     params
       .require(:organization)
-      .permit(:title)
+      .permit(:title, :archived_at)
+  end
+
+  def add_archive_params
+    org_params = params[:organization]
+    if org_params[:archived] == "true"
+      org_params[:archived_at] = Time.zone.now
+    elsif org_params[:archived] == "false"
+      org_params[:archived_at] = nil
+    end
   end
 
   def verify_user_belongs_to_organization

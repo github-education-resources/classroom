@@ -34,13 +34,8 @@ class GroupAssignmentsController < ApplicationController
   # rubocop:disable AbcSize
   # rubocop:disable MethodLength
   def show
-    matching_groups = @group_assignment.grouping.groups
-    if search_assignments_enabled? && @query.present?
-      matching_groups = matching_groups.where("title ILIKE ?", "%#{@query}%")
-    end
-
-    @group_assignment_repos = GroupAssignmentRepo
-      .where(group_assignment: @group_assignment, group_id: matching_groups.ids)
+    @group_assignment_repos = @group_assignment.group_assignment_repos
+      .filter_by_search(@query)
       .order_by_sort_mode(@current_sort_mode)
       .order(:id)
       .page(params[@pagination_key])
@@ -123,7 +118,8 @@ class GroupAssignmentsController < ApplicationController
         :max_members,
         :students_are_repo_admins,
         :invitations_enabled,
-        :max_teams
+        :max_teams,
+        :template_repos_enabled
       )
       .merge(
         creator: current_user,
@@ -198,7 +194,8 @@ class GroupAssignmentsController < ApplicationController
         :students_are_repo_admins,
         :deadline,
         :invitations_enabled,
-        :max_teams
+        :max_teams,
+        :template_repos_enabled
       )
       .merge(starter_code_repo_id: starter_code_repo_id_param)
   end

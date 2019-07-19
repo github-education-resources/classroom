@@ -33,7 +33,16 @@ en:
       delete_org_consequences_html: "This action <strong>CANNOT</strong> be undone. Please note that reseting and removing this classroom will delete all repositories and teams under the <strong>%{organization}</strong> account that were created by GitHub Classroom."
       delete_classroom_consequences_html: "This action <strong>CANNOT</strong> be undone. Please note that reseting and removing this classroom will delete all repositories and teams created by this classroom in the <strong>%{organization}</strong> account."
       delete_confirm: 'Please type the name of the classroom to confirm'
-      delete_submit: 'Reset and remove this classroom'
+      delete_title: 'Reset and remove this classroom'
+      delete_submit: 'Remove classroom'
+      danger_zone: 'The Danger Zone'
+      archived_classrooms: 'Archived classrooms'
+      archive_description: 'Mark this classroom as archived. The classroom will be moved to the archived section away from your active classrooms. Nothing will be deleted and this can be undone.'
+      archive_title: 'Archive this classroom'
+      archive_submit: 'Archive classroom'
+      unarchive_description: 'Mark this classroom as unarchived. It will return to your classroom dashboard.'
+      unarchive_title: 'Unarchive this classroom'
+      unarchive_submit: 'Unarchive classroom'
       classroom_settings: 'Classroom settings'
       classroom_profile: 'Classroom profile'
       student_identifiers: 'Student identifiers'

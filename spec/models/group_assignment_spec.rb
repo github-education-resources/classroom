@@ -208,4 +208,84 @@ RSpec.describe GroupAssignment, type: :model do
       expect { group_assignment.save! }.not_to raise_error
     end
   end
+
+  describe "#starter_code_repository_is_template", :vcr do
+    let(:organization) { classroom_org }
+    let(:client) { oauth_client }
+    let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
+    let(:group_assignment) { build(:group_assignment, organization: organization, title: "Group Assignment 1") }
+    let(:github_repository) do
+      github_organization.create_repository("Group Assignment 1 Template", private: true, auto_init: true)
+    end
+
+    after(:each) do
+      client.delete_repository(github_repository.id)
+    end
+
+    context "group assignment is using template repos to import" do
+      before do
+        group_assignment.update(template_repos_enabled: true)
+      end
+
+      it "does not raise an error when starter code repo is a template repo" do
+        client.patch(
+          "https://api.github.com/repositories/#{github_repository.id}",
+          is_template: true,
+          accept: "application/vnd.github.baptiste-preview"
+        )
+        group_assignment.assign_attributes(starter_code_repo_id: github_repository.id)
+        expect { group_assignment.save! }.not_to raise_error
+      end
+
+      it "raises an error when starter code repository is not a template repo" do
+        client.patch(
+          "https://api.github.com/repositories/#{github_repository.id}",
+          is_template: false,
+          accept: "application/vnd.github.baptiste-preview"
+        )
+        group_assignment.assign_attributes(starter_code_repo_id: github_repository.id)
+        expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Starter code"\
+          " repository is not a template repository. Make it a template repository to use template cloning.")
+      end
+    end
+
+    context "group assignment is not using template repos to import" do
+      before do
+        group_assignment.update(template_repos_enabled: false)
+      end
+
+      it "does not raise error when using importer" do
+        group_assignment.assign_attributes(starter_code_repo_id: github_repository.id)
+        expect { group_assignment.save! }.not_to raise_error
+      end
+
+      it "does not raise error when not using starter code" do
+        expect { group_assignment.save! }.not_to raise_error
+      end
+    end
+  end
+
+  describe "grouping" do
+    let(:organization) { classroom_org }
+    let(:grouping)     { build(:grouping, organization: organization) }
+    let(:group_assignment) { build(:group_assignment, title: "Test 1", organization: organization, grouping: grouping) }
+
+    context "group_assignment validation fails" do
+      before(:each) do
+        group_assignment.update_attributes(title: "")
+      end
+
+      it "does not persist the grouping" do
+        expect(group_assignment.save).to be false
+        expect(group_assignment.grouping.persisted?).to be false
+      end
+    end
+
+    context "group_assignment validation passes" do
+      it "persists the grouping" do
+        expect(group_assignment.save).to be true
+        expect(group_assignment.grouping.persisted?).to be true
+      end
+    end
+  end
 end
