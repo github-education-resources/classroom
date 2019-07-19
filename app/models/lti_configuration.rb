@@ -4,7 +4,7 @@ class LtiConfiguration < ApplicationRecord
   belongs_to :organization
 
   enum lms_type: [
-    :other
+    :other,
     :blackboard,
     :canvas,
     :moodle,
