@@ -38,7 +38,8 @@ module Orgs
     before_action :google_classroom_ensure_no_roster, only: %i[
       select_google_classroom
     ]
-    helper_method :current_roster, :unlinked_users, :authorize_google_classroom
+
+    helper_method :current_roster, :unlinked_users
 
     depends_on :lti
 
@@ -384,31 +385,6 @@ module Orgs
       end
 
       courses
-    end
-
-    # Authorizes current user through Google and sets google_classroom_service
-    # Used as a before_action before routes which require Google authorization
-    def authorize_google_classroom
-      google_classroom_client = GitHubClassroom.google_classroom_client
-      unless user_google_classroom_credentials
-        login_hint = current_user.github_user.login
-        redirect_to google_classroom_client.get_authorization_url(login_hint: login_hint, request: request)
-      end
-
-      @google_classroom_service = Google::Apis::ClassroomV1::ClassroomService.new
-      @google_classroom_service.client_options.application_name = "GitHub Classroom"
-      @google_classroom_service.authorization = user_google_classroom_credentials
-    end
-
-    # Helper method for getting current user's google classroom credentials
-    def user_google_classroom_credentials
-      google_classroom_client = GitHubClassroom.google_classroom_client
-      user_id = current_user.uid.to_s
-
-      google_classroom_client.get_credentials(user_id, request)
-    rescue Signet::AuthorizationError
-      # Will reauthorize upstream
-      nil
     end
 
     def redirect_if_roster_exists

@@ -117,7 +117,8 @@ class GroupAssignmentRepo
         owner: organization.github_organization.login,
         private: group_assignment.private?,
         description: "#{repository_name} created by GitHub Classroom",
-        accept: TEMPLATE_REPOS_API_PREVIEW
+        accept: TEMPLATE_REPOS_API_PREVIEW,
+        include_all_branches: true
       }
 
       client.post("#{GITHUB_API_HOST}/repositories/#{group_assignment.starter_code_repo_id}/generate", options)
@@ -184,9 +185,9 @@ class GroupAssignmentRepo
     private
 
     def repository_permissions
-      {}.tap do |options|
-        options[:permission] = "admin" if group_assignment.students_are_repo_admins?
-      end
+      {
+        permission: group_assignment.students_are_repo_admins? ? "admin" : "push"
+      }
     end
 
     # rubocop:disable AbcSize
