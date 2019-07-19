@@ -173,7 +173,7 @@ ActiveRecord::Schema.define(version: 20190718211229) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "context_membership_url"
-    t.integer "lms_type", default: 0, null: false
+    t.integer "lms_type", default: 5, null: false
     t.index ["consumer_key"], name: "index_lti_configurations_on_consumer_key", unique: true
     t.index ["organization_id"], name: "index_lti_configurations_on_organization_id"
   end
