@@ -7,7 +7,6 @@ module Orgs
   class RostersController < Orgs::Controller
     before_action :ensure_google_classroom_roster_import_is_enabled, only: %i[
       import_from_google_classroom
-      select_google_classroom
       search_google_classroom
       sync_google_classroom
       unlink_google_classroom
@@ -15,7 +14,6 @@ module Orgs
     before_action :ensure_current_roster, except: %i[
       new
       create
-      select_google_classroom
       import_from_google_classroom
       search_google_classroom
     ]
@@ -25,13 +23,9 @@ module Orgs
     before_action :ensure_allowed_to_access_grouping, only:   [:show]
     before_action :authorize_google_classroom, only:   %i[
       import_from_google_classroom
-      select_google_classroom
       search_google_classroom
       sync_google_classroom
       unlink_google_classroom
-    ]
-    before_action :google_classroom_ensure_no_roster, only: %i[
-      select_google_classroom
     ]
 
     helper_method :current_roster, :unlinked_users, :authorize_google_classroom
@@ -177,10 +171,6 @@ module Orgs
     end
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
-
-    def select_google_classroom
-      @google_classroom_courses = fetch_all_google_classrooms
-    end
 
     def search_google_classroom
       courses_found = fetch_all_google_classrooms.select do |course|

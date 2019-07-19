@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "google/apis/classroom_v1"
+
 # rubocop:disable Metrics/ClassLength
 class OrganizationsController < Orgs::Controller
   before_action :ensure_team_management_flipper_is_enabled, only: [:show_groupings]
@@ -120,7 +122,26 @@ class OrganizationsController < Orgs::Controller
   end
   # rubocop:enable MethodLength
 
+  def select_google_classroom
+    @google_classroom_courses = fetch_all_google_classrooms
+  end
+
   private
+
+  # Fetches all courses for a Google Account
+  def fetch_all_google_classrooms
+    next_page = nil
+    courses = []
+    loop do
+      response = @google_classroom_service.list_courses(page_size: 20, page_token: next_page)
+      courses.push(*response.courses)
+
+      next_page = response.next_page_token
+      break unless next_page
+    end
+
+    courses
+  end
 
   def authorize_organization_addition
     new_github_organization = github_organization_from_params

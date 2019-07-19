@@ -54,7 +54,7 @@ en:
       group_assignment: 'Group assignment'
       group_assignment_desc: 'Participants form teams that work together on a shared repository.'
       create_group_assignment: 'Create a group assignment'
-      setup_your_classroom: 'Setup your classroom'
+      setup_your_classroom: 'Set up your classroom'
       give_descriptive_name: 'Please give your classroom a more descriptive name'
       set_of_teams: 'Set of teams'
       no_teams: "This classroom doesn't have any sets of teams yet."

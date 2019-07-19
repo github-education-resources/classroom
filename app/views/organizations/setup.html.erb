@@ -4,6 +4,37 @@
   </div>
 
   <div class="col-md-6">
+    <div class="my-3">
+      <h2 class="h3 mb-2">Import from</h2>
+
+      <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Google Classroom",
+        select_google_classroom_organization_path(current_organization),
+        class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+      %>
+
+      <%= link_to image_tag('canvas-logo.png', size: "25", class:"mr-2") + "Canvas",
+        new_lti_configuration_path(current_organization),
+        class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+      %>
+
+       <%= link_to image_tag('moodle-logo.png', height: "25", class:"mr-2"),
+        new_lti_configuration_path(current_organization),
+        class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+      %>
+
+       <%= link_to image_tag('brightspace-logo.png', height: "30", class:"mr-2"),
+        new_lti_configuration_path(current_organization),
+        class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+      %>
+    </div>
+  </div>
+
+  <div class="col-md-6 my-sm-5">
+    <div class="f4 text-gray text-italic">or...</div>
+  </div>
+
+  <div class="col-md-6">
+    <h2 class="h3 mb-2">Manually create your classroom</div>
     <%= form_for current_organization, url: { action: :setup_organization } do |f| %>
       <%= render 'shared/error_messages', object: f.object %>
       <dl class="form-group">
