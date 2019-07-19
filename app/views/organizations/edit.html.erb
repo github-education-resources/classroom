@@ -35,7 +35,7 @@
               <strong><%= t('views.organizations.delete_title') %></strong>
               <p><%= t('views.organizations.theres_no_going_back') %></p>
             </li>
-            <% if current_organization.feature_enabled?(:archive_repos) %>
+            <% if archive_classrooms_enabled? %>
               <li class="Box-row">
                 <% if current_organization.archived_at %>
                   <div class="details-reset details-overlay">
