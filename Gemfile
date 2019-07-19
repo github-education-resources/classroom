@@ -12,6 +12,7 @@ gem "rails", "~> 5.1", ">= 5.1.7"
 
 gem "autoprefixer-rails", "~> 7.1", ">= 7.1.3"
 
+gem "barnes"
 gem "bootsnap", "~> 1.1", ">= 1.1.2", require: false
 
 gem "chewy", "~> 5.0.0"
