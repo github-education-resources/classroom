@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 module StarterCodeImportable
-  GITHUB_API_HOST = "https://api.github.com"
-  TEMPLATE_REPOS_API_PREVIEW = "application/vnd.github.baptiste-preview"
-
   extend ActiveSupport::Concern
 
   def starter_code?
