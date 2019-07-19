@@ -29,6 +29,18 @@
 
       <div class="my-3 f5 text-gray text-italic">or...</div>
     <% end %>
+    <% if lti_launch_enabled? %>
+      <div class="my-3">
+        <h2 class="h4 mb-2">Import from</h2>
+
+        <%= link_to image_tag('google-classroom-logo.png', size: "15", class:"mr-2") + "Learning Management System",
+          lti_configuration_path(current_organization),
+          class: "btn btn-sm btn-secondary d-inline-flex flex-items-center mb-2"
+        %>
+      </div>
+
+      <div class="f5 text-gray text-italic">or...</div>
+    <% end %>
 
     <div class="my-3">
       <h2 class="h4 mb-2">Manually add students</h2>

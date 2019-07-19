@@ -28,7 +28,6 @@ module GitHubClassroom
 
         json_membership = JSON.parse(response.body)
         parsed_membership = parse_membership(json_membership)
-
         parsed_membership
       end
 
@@ -36,7 +35,7 @@ module GitHubClassroom
 
       def parse_membership(json_membership)
         unparsed_memberships = json_membership.dig("pageOf", "membershipSubject", "membership")
-        raise "Unexpected json object given" unless unparsed_memberships
+        raise JSON::ParserError unless unparsed_memberships
 
         unparsed_memberships.map do |unparsed_membership|
           membership_hash = unparsed_membership.deep_transform_keys { |key| key.underscore.to_sym }

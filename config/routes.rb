@@ -92,6 +92,7 @@ Rails.application.routes.draw do
           patch :unlink_google_classroom
           get   :select_google_classroom
           get   :search_google_classroom
+          get   :import_from_lms
         end
 
         resource :lti_configuration, controller: "orgs/lti_configurations" do
