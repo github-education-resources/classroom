@@ -107,4 +107,58 @@ RSpec.describe AssignmentRepo, type: :model do
       end
     end
   end
+
+  describe "is sortable", :vcr do
+    let(:assignment_repo_one) { create(:assignment_repo, assignment: assignment) }
+    let(:assignment_repo_two) { create(:assignment_repo, assignment: assignment) }
+
+    # TODO: we don't have cached github attributes on the user factory
+    # but adding them messes up a ... lot ... of casettes.
+    before(:each) do
+      assignment_repo_one.user.github_login = "ONE"
+      assignment_repo_two.user.github_login = "TWO"
+
+      assignment_repo_one.user.save!
+      assignment_repo_two.user.save!
+    end
+
+    after(:each) do
+    end
+
+    it "order_by_sort_mode sorts by 'Team name'" do
+      expected_ordering = [assignment_repo_one, assignment_repo_two].sort_by { |repo| repo.user.github_login }
+      actual_ordering = AssignmentRepo.where(assignment: assignment).order_by_sort_mode("GitHub login")
+
+      expect(actual_ordering).to eq(expected_ordering)
+    end
+
+    it "order_by_sort_mode sorts by 'Created at'" do
+      expected_ordering = [assignment_repo_one, assignment_repo_two].sort_by(&:created_at)
+      actual_ordering = AssignmentRepo.where(assignment: assignment).order_by_sort_mode("Created at")
+
+      expect(actual_ordering).to eq(expected_ordering)
+    end
+  end
+
+  describe "is searchable", :vcr do
+    let(:assignment_repo_one) { create(:assignment_repo, assignment: assignment) }
+    let(:assignment_repo_two) { create(:assignment_repo, assignment: assignment) }
+
+    before(:each) do
+      assignment_repo_one.user.github_login = "ONE"
+      assignment_repo_two.user.github_login = "TWO"
+
+      assignment_repo_one.user.save!
+      assignment_repo_two.user.save!
+    end
+
+    it "filter_by_search searches by 'GitHub login'" do
+      query = assignment_repo_one.user.github_login
+
+      expected = [assignment_repo_one, assignment_repo_two].select { |r| r.user.github_login == query }
+      actual = AssignmentRepo.where(assignment: assignment).filter_by_search(query)
+
+      expect(actual).to eq(expected)
+    end
+  end
 end
