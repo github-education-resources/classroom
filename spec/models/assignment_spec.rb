@@ -155,4 +155,60 @@ RSpec.describe Assignment, type: :model do
       expect { assignment.save! }.not_to raise_error
     end
   end
+
+  describe "#starter_code_repository_is_template", :vcr do
+    let(:organization) { classroom_org }
+    let(:client) { oauth_client }
+    let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
+    let(:assignment) { build(:assignment, organization: organization, title: "Assignment") }
+    let(:github_repository) do
+      github_organization.create_repository("Assignment 1 Template", private: true, auto_init: true)
+    end
+
+    after do
+      client.delete_repository(github_repository.id)
+    end
+
+    context "assignment is using template repos to import" do
+      before do
+        assignment.update(template_repos_enabled: true)
+      end
+
+      it "does not raise an error when starter code repo is a template repo" do
+        client.patch(
+          "https://api.github.com/repositories/#{github_repository.id}",
+          is_template: true,
+          accept: "application/vnd.github.baptiste-preview"
+        )
+        assignment.assign_attributes(starter_code_repo_id: github_repository.id)
+        expect { assignment.save! }.not_to raise_error
+      end
+
+      it "raises an error when starter code repository is not a template repo" do
+        client.patch(
+          "https://api.github.com/repositories/#{github_repository.id}",
+          is_template: false,
+          accept: "application/vnd.github.baptiste-preview"
+        )
+        assignment.assign_attributes(starter_code_repo_id: github_repository.id)
+        expect { assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Starter code "\
+          "repository is not a template repository. Make it a template repository to use template cloning.")
+      end
+    end
+
+    context "assignment is not using template repos to import" do
+      before do
+        assignment.update(template_repos_enabled: false)
+      end
+
+      it "does not raise error when using importer" do
+        assignment.assign_attributes(starter_code_repo_id: github_repository.id)
+        expect { assignment.save! }.not_to raise_error
+      end
+
+      it "does not raise error when not using starter code" do
+        expect { assignment.save! }.not_to raise_error
+      end
+    end
+  end
 end
