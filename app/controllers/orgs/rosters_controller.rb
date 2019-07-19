@@ -41,6 +41,8 @@ module Orgs
 
     helper_method :current_roster, :unlinked_users
 
+    depends_on :lti
+
     # rubocop:disable AbcSize
     def show
       @google_course_name = current_organization_google_course_name
@@ -180,6 +182,7 @@ module Orgs
         end
       end
     end
+
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
 
