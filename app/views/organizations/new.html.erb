@@ -12,7 +12,6 @@
   <% else %>
     <%= form_for @organization do |f| %>
       <%= render 'shared/error_messages', object: f.object %>
-
       <div class="d-flex flex-wrap gutter">
         <% @users_github_organizations.each do |org| %>
           <div class="col-6 col-md-4 col-lg-3">
