@@ -153,7 +153,8 @@ class AssignmentRepo
         owner: organization.github_organization.login,
         private: assignment.private?,
         description: "#{repository_name} created by GitHub Classroom",
-        accept: TEMPLATE_REPOS_API_PREVIEW
+        accept: TEMPLATE_REPOS_API_PREVIEW,
+        include_all_branches: true
       }
 
       client.post("#{GITHUB_API_HOST}/repositories/#{assignment.starter_code_repo_id}/generate", options)

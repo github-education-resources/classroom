@@ -40,6 +40,7 @@ preload_app!
 #
 before_fork do
   ActiveRecord::Base.connection_pool.disconnect! if defined?(ActiveRecord)
+  Barnes.start
 end
 
 # The code in the `on_worker_boot` will be called if you are using

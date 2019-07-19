@@ -6,6 +6,7 @@ class AssignmentsController < ApplicationController
   include StarterCode
 
   before_action :set_assignment, except: %i[new create]
+  before_action :set_list_type,      only: %i[show]
   before_action :set_filter_options, only: %i[show]
   before_action :set_unlinked_users, only: %i[show]
 
@@ -32,28 +33,27 @@ class AssignmentsController < ApplicationController
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
   def show
-    @assignment_repos = AssignmentRepo
-      .where(assignment: @assignment)
-      .order(:id)
-      .page(params[:page])
+    # TODO: split into two actions/views (on whether a roster_entry is present or not)
+    if @list_type == :assignment_repos
+      @assignment_repos = @assignment.assignment_repos
+        .filter_by_search(@query)
+        .order_by_sort_mode(@current_sort_mode)
+        .order(:id)
+        .page(params[:page])
 
-    return unless @organization.roster
+    elsif @list_type == :roster_entries
+      @roster_entries = @organization.roster.roster_entries
+        .filter_by_search(@query)
+        .page(params[:students_page])
+        .order_for_view(@assignment)
+        .order_by_sort_mode(@current_sort_mode, assignment: @assignment)
+        .order(:id)
 
-    roster_entries = @organization.roster.roster_entries
-    if search_assignments_enabled? && @query.present?
-      roster_entries = roster_entries.where("identifier ILIKE ?", "%#{@query}%")
+      @unlinked_user_repos = AssignmentRepo
+        .where(assignment: @assignment, user: @unlinked_users)
+        .order(:id)
+        .page(params[:unlinked_accounts_page])
     end
-
-    @roster_entries = roster_entries
-      .page(params[:students_page])
-      .order_for_view(@assignment)
-      .order_by_sort_mode(@current_sort_mode, assignment: @assignment)
-      .order(:id)
-
-    @unlinked_user_repos = AssignmentRepo
-      .where(assignment: @assignment, user: @unlinked_users)
-      .order(:id)
-      .page(params[:unlinked_accounts_page])
 
     respond_to do |format|
       format.html
@@ -129,8 +129,12 @@ class AssignmentsController < ApplicationController
     @assignment = @organization.assignments.includes(:assignment_invitation).find_by!(slug: params[:id])
   end
 
+  def set_list_type
+    @list_type = @organization.roster ? :roster_entries : :assignment_repos
+  end
+
   def set_filter_options
-    @assignment_sort_modes = RosterEntry.sort_modes
+    @assignment_sort_modes = @list_type == :roster_entries ? RosterEntry.sort_modes : AssignmentRepo.sort_modes
 
     @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
     @query = params[:query]

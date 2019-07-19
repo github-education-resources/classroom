@@ -1,7 +1,13 @@
-<% if roster_entries.present? %>
+<% if list_type == :roster_entries && roster_entries.present? %>
   <% roster_entries.each do |entry| %>
     <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
       url: organization_assignment_roster_entry_path(organization, assignment, entry)
+    } %>
+  <% end %>
+<% elsif list_type == :assignment_repos && assignment_repos.present? %>
+  <% assignment_repos.each do |assignment_repo| %>
+    <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
+      url: organization_assignment_assignment_repo_path(organization, assignment, assignment_repo)
     } %>
   <% end %>
 <% else %>
