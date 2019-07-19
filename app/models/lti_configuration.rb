@@ -20,6 +20,8 @@ class LtiConfiguration < ApplicationRecord
     return nil unless membership_url
 
     self[:context_membership_url] = membership_url
+    save!
+
     membership_url
   end
 end
