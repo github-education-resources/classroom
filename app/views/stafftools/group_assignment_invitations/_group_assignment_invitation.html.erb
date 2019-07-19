@@ -7,7 +7,7 @@
 
   <div class="col-10 col-md-10 d-flex flex-column">
     <%= link_to stafftools_group_assignment_invitation_path(group_assignment_invitation.id) do %>
-      <strong class="search-result-title">Group assignment invitation for <%= group_assignment_invitation.group_assignment_title %></strong>
+      <strong class="search-result-title">Group assignment invitation for <%= group_assignment_invitation.group_assignment.title %></strong>
     <% end %>
 
     <span class="text-gray css-truncate css-truncate-target">Created <%= local_time_ago(group_assignment_invitation.created_at) %></span>
