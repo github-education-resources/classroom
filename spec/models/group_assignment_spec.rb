@@ -213,16 +213,12 @@ RSpec.describe GroupAssignment, type: :model do
     let(:organization) { classroom_org }
     let(:client) { oauth_client }
     let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
-    let(:group_assignment) { build(:group_assignment, organization: organization, title: "Group Assignment 1") }
+    let(:group_assignment) { build(:group_assignment, organization: organization, title: "Group Assignment") }
     let(:github_repository) do
-      github_organization.create_repository("Group Assignment 1 Template", private: true, auto_init: true)
+      github_organization.create_repository("#{Faker::Company.name} Template", private: true, auto_init: true)
     end
 
-    after(:each) do
-      client.delete_repository(github_repository.id)
-    end
-
-    context "group assignment is using template repos to import" do
+    context "group_assignment is using template repos to import" do
       before do
         group_assignment.update(template_repos_enabled: true)
       end
@@ -237,30 +233,33 @@ RSpec.describe GroupAssignment, type: :model do
         expect { group_assignment.save! }.not_to raise_error
       end
 
-      it "raises an error when starter code repository is not a template repo" do
-        client.patch(
-          "https://api.github.com/repositories/#{github_repository.id}",
-          is_template: false,
-          accept: "application/vnd.github.baptiste-preview"
-        )
-        group_assignment.assign_attributes(starter_code_repo_id: github_repository.id)
-        expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Starter code"\
-          " repository is not a template repository. Make it a template repository to use template cloning.")
-      end
-    end
+      context "starter code repository is not a template" do
+        context "user has permission to change repo's template settings" do
+          before do
+            client.patch(
+              "https://api.github.com/repositories/#{github_repository.id}",
+              is_template: false,
+              accept: "application/vnd.github.baptiste-preview"
+            )
+          end
 
-    context "group assignment is not using template repos to import" do
-      before do
-        group_assignment.update(template_repos_enabled: false)
-      end
+          it "makes the repo a template and passes validation" do
+            group_assignment.assign_attributes(starter_code_repo_id: github_repository.id)
+            expect { group_assignment.save! }.not_to raise_error
+            expect(github_repository.template?).to be true
+          end
+        end
 
-      it "does not raise error when using importer" do
-        group_assignment.assign_attributes(starter_code_repo_id: github_repository.id)
-        expect { group_assignment.save! }.not_to raise_error
-      end
+        context "user does not have permission to change repo's template settings" do
+          let(:github_repository) { GitHubRepository.new(client, 8514) }
 
-      it "does not raise error when not using starter code" do
-        expect { group_assignment.save! }.not_to raise_error
+          it "raises an error and fails validation" do
+            group_assignment.assign_attributes(starter_code_repo_id: github_repository.id)
+            expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Starter "\
+              "code repository is not a template and we could not change the settings on your behalf. Repository must"\
+              " be a template repository to use template cloning.")
+          end
+        end
       end
     end
   end

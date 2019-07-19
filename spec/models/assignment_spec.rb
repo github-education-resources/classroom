@@ -162,11 +162,7 @@ RSpec.describe Assignment, type: :model do
     let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
     let(:assignment) { build(:assignment, organization: organization, title: "Assignment") }
     let(:github_repository) do
-      github_organization.create_repository("Assignment 1 Template", private: true, auto_init: true)
-    end
-
-    after do
-      client.delete_repository(github_repository.id)
+      github_organization.create_repository("#{Faker::Company.name} Template", private: true, auto_init: true)
     end
 
     context "assignment is using template repos to import" do
@@ -184,15 +180,33 @@ RSpec.describe Assignment, type: :model do
         expect { assignment.save! }.not_to raise_error
       end
 
-      it "raises an error when starter code repository is not a template repo" do
-        client.patch(
-          "https://api.github.com/repositories/#{github_repository.id}",
-          is_template: false,
-          accept: "application/vnd.github.baptiste-preview"
-        )
-        assignment.assign_attributes(starter_code_repo_id: github_repository.id)
-        expect { assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Starter code "\
-          "repository is not a template repository. Make it a template repository to use template cloning.")
+      context "starter code repository is not a template" do
+        context "user has permission to change repo's template settings" do
+          before do
+            client.patch(
+              "https://api.github.com/repositories/#{github_repository.id}",
+              is_template: false,
+              accept: "application/vnd.github.baptiste-preview"
+            )
+          end
+
+          it "makes the repo a template and passes validation" do
+            assignment.assign_attributes(starter_code_repo_id: github_repository.id)
+            expect { assignment.save! }.not_to raise_error
+            expect(github_repository.template?).to be true
+          end
+        end
+
+        context "user does not have permission to change repo's template settings" do
+          let(:github_repository) { GitHubRepository.new(client, 8514) }
+
+          it "raises an error and fails validation" do
+            assignment.assign_attributes(starter_code_repo_id: github_repository.id)
+            expect { assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Starter code "\
+              "repository is not a template and we could not change the settings on your behalf. Repository must be a "\
+              "template repository to use template cloning.")
+          end
+        end
       end
     end
 

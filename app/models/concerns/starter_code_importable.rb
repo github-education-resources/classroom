@@ -26,14 +26,26 @@ module StarterCodeImportable
   def starter_code_repository_is_template
     return unless use_template_repos?
 
-    options = { accept: TEMPLATE_REPOS_API_PREVIEW }
-    endpoint_url = "#{GITHUB_API_HOST}/repositories/#{starter_code_repo_id}"
-    starter_code_github_repository = creator.github_client.get(endpoint_url, options)
+    return if starter_code_repository.template?
 
-    return if starter_code_github_repository.is_template
+    make_starter_code_repository_a_template!
+  end
+
+  private
+
+  # rubocop:disable Metrics/MethodLength
+  def make_starter_code_repository_a_template!
+    options = { accept: TEMPLATE_REPOS_API_PREVIEW, is_template: true }
+    endpoint_url = "#{GITHUB_API_HOST}/repositories/#{starter_code_repo_id}"
+
+    GitHub::Errors.with_error_handling do
+      creator.github_client.patch(endpoint_url, options)
+    end
+  rescue GitHub::Error
     errors.add(
       :starter_code_repository,
-      "is not a template repository. Make it a template repository to use template cloning."
+      "is not a template and we could not change the settings on your behalf. Repository must be a template "\
+        "repository to use template cloning."
     )
   end
 end
