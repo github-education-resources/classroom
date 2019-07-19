@@ -162,7 +162,7 @@ RSpec.describe Assignment, type: :model do
     let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
     let(:assignment) { build(:assignment, organization: organization, title: "Assignment") }
     let(:github_repository) do
-      github_organization.create_repository("Assignment 1 Template", private: true, auto_init: true)
+      github_organization.create_repository("#{Faker::Team.name} Template", private: true, auto_init: true)
     end
 
     after do
