@@ -261,7 +261,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
               GitHubClassroom::LTI::MembershipService
                 .any_instance
                 .stub(:students)
-                .and_raise
+                .and_raise(JSON::ParserError)
             end
 
             it "format.html: presents an error message to the user" do
@@ -271,7 +271,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
             it "format.js: presents an error message to the user" do
               get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
-              expect(response.status).to be(428)
+              expect(response.status).to be(422)
               expect(flash[:alert]).to be_present
             end
           end
@@ -285,7 +285,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
           it "format.js: presents an error message to the user" do
             get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
-            expect(response.status).to be(428)
+            expect(response.status).to be(422)
             expect(flash[:alert]).to be_present
           end
         end

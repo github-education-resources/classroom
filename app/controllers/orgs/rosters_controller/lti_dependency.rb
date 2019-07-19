@@ -27,8 +27,7 @@ module Orgs
     private
 
     def ensure_lti_configuration
-      lti_configuration = current_organization.lti_configuration
-      redirect_to new_lti_configuration_path(current_organization) unless lti_configuration
+      redirect_to new_lti_configuration_path(current_organization) unless current_organization.lti_configuration
     end
 
     # rubocop:disable Metrics/MethodLength
@@ -50,7 +49,7 @@ module Orgs
 
       begin
         membership_service.students
-      rescue
+      rescue Faraday::ClientError, JSON::ParserError
         msg = "GitHub Classroom is unable to fetch membership from your Learning Management System at this time.
         Please try again later."
 
@@ -65,7 +64,7 @@ module Orgs
         f.html { redirect_to roster_path(current_organization), alert: err.message }
         f.js do
           flash.now[:alert] = err.message
-          render :import_from_lms, status: :precondition_required
+          render :import_from_lms, status: :unprocessable_entity
         end
       end
     end
