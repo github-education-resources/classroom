@@ -3,6 +3,8 @@
 class AssignmentRepo < ApplicationRecord
   include AssignmentRepoable
   include StafftoolsSearchable
+  include Sortable
+  include Searchable
 
   define_pg_search(columns: %i[id github_repo_id])
 
@@ -23,6 +25,22 @@ class AssignmentRepo < ApplicationRecord
   delegate :github_user,                    to: :user
   delegate :default_branch, :commits,       to: :github_repository
   delegate :github_team_id,                 to: :repo_access, allow_nil: true
+
+  scope :order_by_created_at, ->(_context = nil) { order(:created_at) }
+  scope :order_by_github_login, ->(_context = nil) { joins(:user).order("users.github_login") }
+
+  scope :search_by_github_login, ->(query) { joins(:user).where("users.github_login ILIKE ?", "%#{query}%") }
+
+  def self.sort_modes
+    {
+      "GitHub login" => :order_by_github_login,
+      "Created at" => :order_by_created_at
+    }
+  end
+
+  def self.search_mode
+    :search_by_github_login
+  end
 
   # Public: This method is used for legacy purposes
   # until we can get the transition finally completed
