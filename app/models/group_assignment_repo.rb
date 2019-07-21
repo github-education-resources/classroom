@@ -2,8 +2,9 @@
 
 class GroupAssignmentRepo < ApplicationRecord
   include AssignmentRepoable
-  include Sortable
   include StafftoolsSearchable
+  include Sortable
+  include Searchable
 
   define_pg_search(columns: %i[id github_repo_id])
 
@@ -30,11 +31,17 @@ class GroupAssignmentRepo < ApplicationRecord
   scope :order_by_repo_created_at, ->(_context = nil) { order(:created_at) }
   scope :order_by_team_name, ->(_context = nil) { joins(:group).order("title asc") }
 
+  scope :search_by_team_name, ->(query) { joins(:group).where("title ILIKE ?", "%#{query}%") }
+
   def self.sort_modes
     {
-      "Created at" => :order_by_repo_created_at,
-      "Team name" => :order_by_team_name
+      "Team name" => :order_by_team_name,
+      "Created at" => :order_by_repo_created_at
     }
+  end
+
+  def self.search_mode
+    :search_by_team_name
   end
 
   def github_team

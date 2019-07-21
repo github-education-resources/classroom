@@ -55,7 +55,7 @@
           </div>
           <span id='students-span'>
               <% if @roster_entries.present? %>
-                <%= render partial: 'assignments/filterable_assignment_roster_list' %>
+                <%= render partial: 'assignments/filterable_assignment_roster_list', locals: { list_type: :roster_entries } %>
               <% else %>
                 <div class="blankslate">
                   <h3>"<%= @assignment.title %>" does not have any repositories.</h3>
@@ -80,10 +80,7 @@
       </div>
     <% else %>
       <% if @assignment_repos.present? %>
-        <% @assignment_repos.each do |assignment_repo| %>
-          <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: { url: organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo) } %>
-        <% end %>
-        <%= render partial: 'shared/pagination', locals: { collection: @assignment_repos } %>
+        <%= render partial: 'assignments/filterable_assignment_roster_list', locals: { list_type: :assignment_repos } %>
       <% else %>
         <div class="blankslate">
           <h3>"<%= @assignment.title %>" does not have any repositories.</h3>

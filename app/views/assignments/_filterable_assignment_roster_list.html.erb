@@ -1,15 +1,22 @@
+<% list_type = local_assigns.fetch(:list_type) %>
+
 <% if search_assignments_enabled? %>
   <div class='TableObject'>
     <div class='TableObject-item TableObject-item--primary'>
       <%= form_tag organization_assignment_path, id: 'js-search-form', method: :get, remote: true do %>
-        <%= text_field_tag :query, @query, class: 'input-block form-control', placeholder: 'Search by student identifier', autofocus: true, autocomplete: :off, id: 'repo-search-query-field' %>
+        <% if list_type == :roster_entries %>
+          <% placeholder = 'Search by student identifier' %>
+        <% elsif list_type == :assignment_repos %>
+          <% placeholder = 'Search by GitHub login' %>
+        <% end %>
+        <%= text_field_tag :query, @query, class: 'input-block form-control', placeholder: placeholder, autofocus: true, autocomplete: :off, id: 'repo-search-query-field' %>
         <%= hidden_field_tag :sort_assignment_repos_by, @current_sort_mode, id: 'sort-mode-field' %>
       <% end %>
     </div>
     <div class='TableObject-item'>
       <div id="select-menu-container">
         <%= render partial: 'shared/select_menu',
-          locals: { 
+          locals: {
             title: 'Sort assignments by:',
             options: @assignment_sort_modes.keys,
             option_links: @assignment_sort_modes_links,
@@ -23,13 +30,19 @@
 <% end %>
 
 <div class='assignment-repo-list' id='assignment-repo-list'>
-  <%= render partial: 'assignments/assignment_roster_list', locals: {
-    organization: @organization,
-    assignment: @assignment,
-    roster_entries: @roster_entries
-  } %>
+    <%= render partial: 'assignments/assignment_roster_list', locals: {
+      organization: @organization,
+      assignment: @assignment,
+      list_type: @list_type,
+      roster_entries: @roster_entries,
+      assignment_repos: @assignment_repos,
+    } %>
 </div>
 
 <div id='assignment-repo-pagination'>
-  <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :students_page } %>
+  <% if list_type == :roster_entries %>
+    <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :students_page } %>
+  <% else %>
+    <%= render partial: 'shared/pagination', locals: { collection: @assignment_repos, param_name: :page } %>
+  <% end %>
 </div>
