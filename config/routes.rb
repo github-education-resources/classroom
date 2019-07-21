@@ -5,7 +5,6 @@ require "staff_constraint"
 require "googleauth"
 
 Rails.application.routes.draw do
-  mount Peek::Railtie => "/peek"
   mount ActionCable.server => "/cable"
 
   root to: "pages#home"

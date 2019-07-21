@@ -81,11 +81,11 @@ main {
 }
 
 .site-nav {
-  a {
+  a:not(.dropdown-item) {
     color: rgba(255, 255, 255, 0.5);
   }
 
-  a:hover {
+  a:hover:not(.dropdown-item) {
     color: rgba(255, 255, 255, 1);
   }
 }

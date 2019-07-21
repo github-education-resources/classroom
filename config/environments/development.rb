@@ -30,10 +30,6 @@ Rails.application.configure do
 
     memcached_url      = "localhost:22322"
     config.cache_store = :dalli_store, memcached_url, dalli_store_config
-
-    config.peek.adapter = :memcache, {
-      client: Dalli::Client.new(memcached_url)
-    }
   else
     config.action_controller.perform_caching = false
 

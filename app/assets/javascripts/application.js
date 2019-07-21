@@ -28,10 +28,6 @@
 //
 //= require dragula/dist/dragula
 //
-//= require peek
-//= require peek/views/dalli
-//= require peek/views/performance_bar
-//
 //= require clipboard/dist/clipboard
 //
 //= require transliteration/lib/browser/transliteration

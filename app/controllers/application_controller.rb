@@ -9,6 +9,10 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate_user! # authentication_dependency
 
+  before_action do
+    Rack::MiniProfiler.authorize_request if logged_in? && current_user.staff?
+  end
+
   helper_method :current_user, :logged_in?, :true_user, :log_out # authentication_dependency
   helper_method :team_management_enabled? # feature_flags_dependency
 
@@ -29,10 +33,6 @@ class ApplicationController < ActionController::Base
 
     flash[:alert] = "Cannot verify CSRF Token Authenticity"
     redirect_to url
-  end
-
-  def peek_enabled?
-    logged_in? && current_user.staff?
   end
 
   def failbot_context

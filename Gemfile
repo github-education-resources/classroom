@@ -22,6 +22,7 @@ gem "dalli", "~> 2.7", ">= 2.7.6"
 
 gem "failbot_rails",      "~> 0.5.0"
 gem "faraday-http-cache", "~> 2.0"
+gem "flamegraph",         "~> 0.9.5"
 gem "flipper",            "~> 0.10.2"
 gem "flipper-redis",      "~> 0.10.2"
 gem "flipper-ui",         "~> 0.10.2"
@@ -51,13 +52,6 @@ gem "octokit", github: "octokit/octokit.rb", ref: "ffae5ddd6fd9da6f4538ca7adeb5d
 gem "octopoller",      "~> 0.1"
 gem "omniauth-github", "~> 1.3"
 
-gem "peek",                 "~> 1.0", ">= 1.0.1"
-gem "peek-dalli",           "1.1.3.4.g0a68e1f"
-gem "peek-gc",              "~> 0.0.2"
-gem "peek-git",             "~> 1.0", ">= 1.0.2"
-gem "peek-performance_bar", "1.2"
-gem "peek-pg",              "~> 1.3"
-gem "peek-sidekiq",         "1.0.0.4.g261c857"
 gem "pg",                   "~> 1.1.4"
 gem "pg_search",            "~> 2.2"
 gem "pry-byebug",           "~> 3.5"
@@ -67,6 +61,7 @@ gem "puma",                 "~> 4.0", ">= 4.0.1"
 gem "rack-canonical-host", "~> 0.2.3"
 gem "rack-rewrite",        "~> 1.5.0"
 gem "rack-timeout",        "~> 0.4.2", require: false
+gem "rack-mini-profiler",  "~> 1.0", ">= 1.0.2"
 gem "rails-i18n",          "~> 5.0", ">= 5.0.1"
 gem "redis-namespace",     "~> 1.5", ">= 1.5.3"
 gem "ruby-progressbar",    "~> 1.8", ">= 1.8.1", require: false
@@ -75,6 +70,7 @@ gem "kramdown",            "~> 1.17.0"
 
 gem "sass-rails", "~> 5.0", ">= 5.0.6"
 gem "sidekiq",    "~> 5.2", ">= 5.2.7"
+gem "stackprof",  "~> 0.2.12"
 gem "sprockets",  "~> 3.7", ">= 3.7.2"
 
 gem "turbolinks", "~> 2.5", ">= 2.5.4"

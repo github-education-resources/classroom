@@ -74,10 +74,6 @@ Rails.application.configure do
                        memcachedcloud_servers,
                        dalli_store_name_and_password.merge(dalli_store_config)
 
-  config.peek.adapter = :memcache, {
-    client: Dalli::Client.new(memcachedcloud_servers, dalli_store_name_and_password)
-  }
-
   # Use a real queuing backend for Active Job (and separate queues per environment)
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "git_hub_classroom_#{Rails.env}"
