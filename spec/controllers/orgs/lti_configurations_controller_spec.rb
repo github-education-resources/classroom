@@ -113,10 +113,16 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         GitHubClassroom.flipper[:lti_launch].enable
       end
 
-      it "creates lti_configuration" do
-        post :create, params: { id: organization.slug }
+      it "creates lti_configuration if lms_type is set" do
+        post :create, params: { id: organization.slug, lti_configuration: { lms_type: :other } }
         expect(organization.lti_configuration).to_not be_nil
         expect(response).to redirect_to(lti_configuration_path(organization))
+      end
+
+      it "redirects to :new if lms_type is unset" do
+        post :create, params: { id: organization.slug }
+        expect(organization.lti_configuration).to be_nil
+        expect(response).to redirect_to(new_lti_configuration_path(organization))
       end
 
       context "with existing google classrom" do
@@ -205,12 +211,14 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
 
       context "with existing lti_configuration" do
         before(:each) do
-          post :create, params: { id: organization.slug }
+          create(:lti_configuration, organization: organization)
         end
 
         it "updates with new LMS url" do
           options = { lms_link: "https://github.com" }
           patch :update, params: { id: organization.slug, lti_configuration: options }
+
+          organization.lti_configuration.reload
           expect(organization.lti_configuration.lms_link).to eq("https://github.com")
           expect(flash[:success]).to eq("The configuration was sucessfully updated.")
           expect(response).to redirect_to(lti_configuration_path(organization))
@@ -248,7 +256,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
 
       context "with existing lti_configuration" do
         before(:each) do
-          post :create, params: { id: organization.slug }
+          create(:lti_configuration, organization: organization)
         end
 
         it "returns an xml configuration" do
