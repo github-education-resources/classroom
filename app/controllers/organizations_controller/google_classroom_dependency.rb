@@ -29,6 +29,14 @@ class OrganizationsController < Orgs::Controller
     redirect_to roster_path(current_organization)
   end
 
+  def current_organization_google_course_name
+    return unless current_organization.google_course_id
+    course = @google_classroom_service.get_course(current_organization.google_course_id)
+    course&.name
+  rescue Google::Apis::Error
+    nil
+  end
+
   private
 
   def fetch_all_google_classrooms

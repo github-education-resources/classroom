@@ -100,6 +100,8 @@ class OrganizationsController < Orgs::Controller
 
   def setup_organization
     if current_organization.update_attributes(update_organization_params)
+      google_course_name = { title: current_organization_google_course_name }
+      current_organization.update_attributes(google_course_name)
       redirect_to invite_organization_path(current_organization)
     else
       render :setup
@@ -184,10 +186,9 @@ class OrganizationsController < Orgs::Controller
   end
 
   def update_organization_params
-    add_archive_params
+    # add_archive_params
     params
-      .require(:organization)
-      .permit(:title, :archived_at)
+      .permit(:title, :archived_at, :google_course_id)
   end
 
   def add_archive_params

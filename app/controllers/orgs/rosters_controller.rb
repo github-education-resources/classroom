@@ -178,20 +178,6 @@ module Orgs
 
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
-
-    def search_google_classroom
-      courses_found = fetch_all_google_classrooms.select do |course|
-        course.name.downcase.include? params[:query].downcase
-      end
-
-      respond_to do |format|
-        format.html do
-          render partial: "orgs/rosters/google_classroom_collection",
-                 locals: { courses: courses_found }
-        end
-      end
-    end
-
     def import_from_google_classroom
       students = list_google_classroom_students(params[:course_id])
       return unless students
@@ -317,16 +303,6 @@ module Orgs
       end
 
       mapping
-    end
-
-    # Returns name of the linked google course to current organization (for syncing rosters)
-    def current_organization_google_course_name
-      return unless current_organization.google_course_id
-      authorize_google_classroom
-      course = @google_classroom_service.get_course(current_organization.google_course_id)
-      course&.name
-    rescue Google::Apis::Error
-      nil
     end
 
     # Returns list of students in a google classroom with error checking
