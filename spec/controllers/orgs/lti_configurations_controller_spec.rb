@@ -38,6 +38,34 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
     end
   end
 
+  describe "GET #info", :vcr do
+    context "with flipper disabled" do
+      before(:each) do
+        GitHubClassroom.flipper[:lti_launch].disable
+      end
+
+      it "returns not_found" do
+        get :info, params: { id: organization.slug }
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context "with flipper enabled" do
+      before(:each) do
+        GitHubClassroom.flipper[:lti_launch].enable
+        get :info, params: { id: organization.slug }
+      end
+
+      it "returns success status" do
+        expect(response).to have_http_status(:success)
+      end
+
+      it "renders new template" do
+        expect(response).to render_template(:info)
+      end
+    end
+  end
+
   describe "GET #show", :vcr do
     context "with flipper disabled" do
       before(:each) do
@@ -73,7 +101,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       context "with no existing lti_configuration" do
         it "redirects to new" do
           get :show, params: { id: organization.slug }
-          expect(response).to redirect_to(new_lti_configuration_path(organization))
+          expect(response).to redirect_to(info_lti_configuration_path(organization))
         end
       end
     end
@@ -193,7 +221,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         it "does not update or create" do
           options = { lms_link: "https://github.com" }
           patch :update, params: { id: organization.slug, lti_configuration: options }
-          expect(response).to redirect_to(new_lti_configuration_path(organization))
+          expect(response).to redirect_to(info_lti_configuration_path(organization))
           expect(organization.lti_configuration).to be_nil
         end
       end
@@ -233,7 +261,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       context "with no existing lti_configuration" do
         it "does not generate an xml configuration" do
           patch :autoconfigure, params: { id: organization.slug }
-          expect(response).to redirect_to(new_lti_configuration_path(organization))
+          expect(response).to redirect_to(info_lti_configuration_path(organization))
           expect(organization.lti_configuration).to be_nil
         end
       end
