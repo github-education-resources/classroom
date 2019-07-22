@@ -5,6 +5,8 @@ class GitHubRepository < GitHubResource
   depends_on :import
 
   DEFAULT_LABEL_COLOR = "ffffff"
+  GITHUB_API_HOST = "https://api.github.com"
+  TEMPLATE_REPOS_API_PREVIEW = "application/vnd.github.baptiste-preview"
 
   # NOTE: LEGACY, DO NOT REMOVE.
   # This is needed for the lib/collab_migration.rb
@@ -226,6 +228,12 @@ class GitHubRepository < GitHubResource
 
       clone_url.to_s
     end
+  end
+
+  def template?
+    options = { accept: TEMPLATE_REPOS_API_PREVIEW, headers: GitHub::APIHeaders.no_cache_no_store }
+    endpoint_url = "#{GITHUB_API_HOST}/repositories/#{@id}"
+    @client.get(endpoint_url, options).is_template
   end
 
   private

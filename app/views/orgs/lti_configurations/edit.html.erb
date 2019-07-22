@@ -12,8 +12,10 @@
         </div>
 
         <div class="site-content-body markdown-body">
-          <%= render partial: "orgs/lti_configurations/edit_form", locals: {
-            allow_cancel: true
+          <%= render partial: "orgs/lti_configurations/form", locals: {
+            allow_cancel: true,
+            model: @current_lti_configuration,
+            method: :patch
           } %>
         </div>
       </div>
