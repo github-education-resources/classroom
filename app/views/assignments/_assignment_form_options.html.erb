@@ -52,13 +52,14 @@
   <% if @organization.feature_enabled?(:template_repos) %>
     <div id="import-options" style=<%= "display:none;" if not @assignment.starter_code? %>>
       <div class="form-checkbox">
-        <label><%= f.radio_button :template_repos_enabled, true, checked: (true if @assignment.new_record? || @assignment.template_repos_enabled?) %> Import starter code using a template repository (recommended)</label>
+        <label><%= f.radio_button :template_repos_enabled, true, checked: (true if @assignment.new_record? || @assignment.template_repos_enabled?) %> Import starter code using a template repository</label>
+        <span class="Label border border-green text-gray-dark">Beta</span>
         <span class="note">Starter code repository should be a <%= link_to "template repository", "https://help.github.com/en/articles/creating-a-template-repository", target: "_blank" %>. Increases student repository creation and code import speed dramatically.</span>
       </div>
 
       <div class="form-checkbox">
         <label><%= f.radio_button :template_repos_enabled, false %> Import starter code using source importer</label>
-        <span class="note">Slower than template repository method, but copies branches from starter code repository.</span>
+        <span class="note">Slower than template repository method, but the repository doesn't need to be a template.</span>
       </div>
     </div>
   <% end %>
