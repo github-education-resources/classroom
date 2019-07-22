@@ -114,6 +114,25 @@ RSpec.describe GroupAssignmentRepo, type: :model do
       end
     end
 
+    describe "is searchable", :vcr do
+      # rubocop:disable Metrics/LineLength
+      let(:github_team_id_two) { organization.github_organization.create_team(Faker::Team.name[0..39]).id }
+      let(:group_two) { create(:group, grouping: grouping, github_team_id: github_team_id_two, repo_accesses: [repo_access]) }
+
+      let(:group_assignment_repo_one) { create(:group_assignment_repo, group_assignment: group_assignment, group: group, github_repo_id: 1) }
+      let(:group_assignment_repo_two) { create(:group_assignment_repo, group_assignment: group_assignment, group: group_two, github_repo_id: 2) }
+      # rubocop:enable Metrics/LineLength
+
+      it "filter_by_sort_mode searches by 'Team name'" do
+        query = group_assignment_repo_one.group.title
+
+        expected = [group_assignment_repo_one, group_assignment_repo_two].select { |r| r.group.title == query }
+        actual = GroupAssignmentRepo.where(group_assignment: group_assignment).filter_by_search(query)
+
+        expect(actual).to eq(expected)
+      end
+    end
+
     describe "#github_team" do
       it "returns the github team of the group" do
         expect(subject.github_team).to be(group.github_team)

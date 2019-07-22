@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190716211230) do
+ActiveRecord::Schema.define(version: 20190718211229) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -173,6 +173,7 @@ ActiveRecord::Schema.define(version: 20190716211230) do
     t.datetime "updated_at", null: false
     t.bigint "organization_id"
     t.string "context_membership_url"
+    t.text "lms_type", default: "other", null: false
     t.index ["consumer_key"], name: "index_lti_configurations_on_consumer_key", unique: true
     t.index ["organization_id"], name: "index_lti_configurations_on_organization_id"
   end
@@ -197,6 +198,7 @@ ActiveRecord::Schema.define(version: 20190716211230) do
     t.string "github_global_relay_id"
     t.bigint "organization_webhook_id"
     t.string "google_course_id"
+    t.datetime "archived_at"
     t.index ["deleted_at"], name: "index_organizations_on_deleted_at"
     t.index ["github_id"], name: "index_organizations_on_github_id"
     t.index ["google_course_id"], name: "index_organizations_on_google_course_id"
