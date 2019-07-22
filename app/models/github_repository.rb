@@ -164,7 +164,7 @@ class GitHubRepository < GitHubResource
 
   def empty?
     GitHub::Errors.with_error_handling do
-      @client.contents(full_name).empty?
+      @client.contents(@id).empty?
     end
   rescue GitHub::Error
     return true
