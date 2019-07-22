@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 module LtiConfigurationHelper
-  def lms_type_select_options(default_name: "Other Learning Management System")
-    LtiConfiguration.lms_types.collect do |k, v|
+  def lms_type_select_options
+    LtiConfiguration.lms_types.map do |k, v|
       if k == "other"
-        [default_name, k]
+        ["Other Learning Management System", k]
       else
         [v, k]
       end
