@@ -13,7 +13,6 @@ class OrganizationsController < Orgs::Controller
   ]
   before_action :ensure_no_lti_configuration, only: %i[
     select_google_classroom
-    search_google_classroom
   ]
   before_action :google_classroom_ensure_no_roster, only: %i[
     select_google_classroom
@@ -24,7 +23,7 @@ class OrganizationsController < Orgs::Controller
   end
 
   def search_google_classroom
-    courses_found = fetch_all_google_classrooms.select do |course|
+    courses_found = fetch_all_google_classrooms do |course|
       course.name.downcase.include? params[:query].downcase
     end
 

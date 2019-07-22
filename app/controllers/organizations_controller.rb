@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "google/apis/classroom_v1"
-
 # rubocop:disable Metrics/ClassLength
 class OrganizationsController < Orgs::Controller
   depends_on :google_classroom
