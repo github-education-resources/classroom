@@ -61,6 +61,7 @@ class OrganizationsController < Orgs::Controller
   def update
     if current_organization.update_attributes(update_organization_params)
       flash[:success] = "Organization \"#{current_organization.title}\" updated"
+      current_organization.save!
       redirect_to current_organization
     else
       render :edit
@@ -188,6 +189,7 @@ class OrganizationsController < Orgs::Controller
   def update_organization_params
     add_archive_params
     params
+      .require(:organization)
       .permit(:title, :archived_at, :google_course_id)
   end
 
