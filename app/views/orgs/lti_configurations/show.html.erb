@@ -1,6 +1,8 @@
 <div class="remodal-bg">
   <%= render 'organizations/organization_banner' %>
 
+  <% lms_name = current_lti_configuration.lms_name(default_name: "your Learning Management System") %>
+
   <div class="columns">
     <div class="one-fourth column">
       <%= render partial: 'organizations/side_menu' %>
@@ -8,18 +10,18 @@
     <div class="three-fourths column">
       <div class="site-content">
         <div class="site-content-cap">
-          <h2 class="site-content-heading">Learning Management System Configuration</h2>
+          <h2 class="site-content-heading">Connect to <%= lms_name %></h2>
         </div>
 
         <div class="site-content-body markdown-body">
-          <h3>Configure GitHub Classroom in your LMS</h3>
+          <h3>Connect GitHub Classroom to <%= lms_name %></h3>
           <p>You or your system administrator will need to add a new application to
-          your Learning Management System with the following credentials generated below
+          <%= lms_name %> with the following credentials generated below
           by GitHub Classroom.</p>
 
           <dt><label>Consumer Key</label></dt>
           <div class="input-group">
-            <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "consumer-key-#{current_organization.github_id}", value: current_organization.lti_configuration.consumer_key, readonly: 'readonly' %>
+            <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "consumer-key-#{current_organization.github_id}", value: current_lti_configuration.consumer_key, readonly: 'readonly' %>
             <span class="input-group-button">
               <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#consumer-key-#{current_organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
                 <%= octicon 'clippy' %>
@@ -32,7 +34,7 @@
 
           <dt><label>Shared Secret</label></dt>
           <div class="input-group">
-            <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "shared-secret-#{current_organization.github_id}", value: current_organization.lti_configuration.shared_secret, readonly: 'readonly' %>
+            <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "shared-secret-#{current_organization.github_id}", value: current_lti_configuration.shared_secret, readonly: 'readonly' %>
             <span class="input-group-button">
               <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#shared-secret-#{current_organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
                 <%= octicon 'clippy' %>
@@ -44,7 +46,7 @@
           <br>
 
           <dt><label>Application Auto-Configuration URL</label></dt>
-          <dt>On those LMSs which support it, paste in this link to automatically set up Classroom.</p><dt>
+          <dt>If <%= lms_name %> supports the capability, paste in this link to automatically set up Classroom.<dt>
           <div class="input-group">
             <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "autoconfigure-url-#{current_organization.github_id}", value: autoconfigure_lti_configuration_url, readonly: 'readonly' %>
             <span class="input-group-button">
@@ -57,18 +59,18 @@
         </div>
 
         <div class="boxed-group dangerzone">
-          <h3>Delete LMS Configuration</h3>
+          <h3>Delete Connection to <%= lms_name %></h3>
           <div class="boxed-group-inner pt-2 clearfix">
             <p>
-              Deleting the LMS configuration will not delete all students.
+              Deleting this classroom's connection to <%= lms_name %> will not delete your roster.
             </p>
             <p>
-              This will not delete assignments, assignment repos, or submissions.
+              Assignments, assignment repos, and students will be unaffected.
             </p>
-              After deleting your LMS, you will not be able to sync your roster anymore.
+              You will not be able to sync this classroom's roster, assignments, and submissions with <%= lms_name %> going forward.
             </p>
             <p>
-              <%= button_to "Delete LMS Configuration", lti_configuration_path(current_organization), method: :delete, class: 'btn btn-danger'%>
+              <%= button_to "Disconnect from #{lms_name}", lti_configuration_path(current_organization), method: :delete, class: 'btn btn-danger'%>
             </p>
           </div>
       </div>

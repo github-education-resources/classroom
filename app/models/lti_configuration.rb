@@ -3,6 +3,8 @@
 class LtiConfiguration < ApplicationRecord
   belongs_to :organization
 
+  validates :lms_type, presence: true
+
   enum lms_type: {
     canvas: "Canvas",
     blackboard: "Blackboard",
