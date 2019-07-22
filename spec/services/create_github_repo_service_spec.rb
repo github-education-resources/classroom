@@ -479,7 +479,9 @@ RSpec.describe CreateGitHubRepoService do
     describe "#add_group_to_github_repository!" do
       it "creates a new github team" do
         github_repository = double(full_name: "test/test")
-        expect_any_instance_of(GitHubTeam).to receive(:add_team_repository).with(github_repository.full_name, {permission: "push"})
+        expect_any_instance_of(GitHubTeam)
+          .to receive(:add_team_repository)
+          .with(github_repository.full_name, permission: "push")
         service.add_collaborator_to_github_repository!(github_repository)
       end
     end
