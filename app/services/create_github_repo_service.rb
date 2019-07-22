@@ -2,6 +2,9 @@
 
 # rubocop:disable ClassLength
 class CreateGitHubRepoService
+  GITHUB_API_HOST                         = "https://api.github.com"
+  TEMPLATE_REPOS_API_PREVIEW              = "application/vnd.github.baptiste-preview"
+
   attr_reader :exercise, :stats_sender
   delegate :assignment, :collaborator, :organization, :invite_status, to: :exercise
 
@@ -19,12 +22,18 @@ class CreateGitHubRepoService
 
     verify_organization_has_private_repos_available!
 
-    github_repository = create_github_repository!
+    github_repository =
+      if exercise.use_template_repos?
+        create_github_repository_from_template!
+      else
+        create_github_repository!
+      end
+
     assignment_repo = create_assignment_repo!(github_repository)
 
     add_collaborator_to_github_repository!(github_repository)
 
-    if assignment.starter_code?
+    if assignment.use_importer?
       push_starter_code!(github_repository)
       invite_status.importing_starter_code!
       Broadcaster.call(exercise, :importing_starter_code, :text, assignment_repo&.github_repository&.html_url)
@@ -58,6 +67,35 @@ class CreateGitHubRepoService
   rescue GitHub::Error => error
     raise Result::Error.new errors(:repository_creation_failed), error.message
   end
+
+  # Public: Clone the GitHub template repository for the Assignment.
+  #
+  # Returns an Integer ID or raises a Result::Error
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
+  def create_github_repository_from_template!
+    stats_sender.report_with_exercise_prefix(:import_with_templates_started)
+    client = assignment.creator.github_client
+    options = {
+      name: exercise.repo_name,
+      owner: exercise.organization_login,
+      private: assignment.private?,
+      description: "#{exercise.repo_name} created by GitHub Classroom",
+      accept: TEMPLATE_REPOS_API_PREVIEW,
+      include_all_branches: true
+    }
+
+    github_repository = client.post(
+      "#{GITHUB_API_HOST}/repositories/#{assignment.starter_code_repo_id}/generate",
+      options
+    )
+    stats_sender.report_with_exercise_prefix(:import_with_templates_success)
+    github_repository
+  rescue GitHub::Error => error
+    raise Result::Error.new errors(:template_repository_creation_failed), error.message
+  end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   # Public: Creates a new AssignmentRepo/GroupAssignmentRepo object
   #         with github_repository id and relay id.
@@ -105,7 +143,7 @@ class CreateGitHubRepoService
   # Public: Ensure that we can make a private repository on GitHub.
   #
   # Returns True or raises a Result::Error with a helpful message.
-  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable AbcSize
   def verify_organization_has_private_repos_available!
     return true if assignment.public?
 
@@ -121,7 +159,7 @@ class CreateGitHubRepoService
     return true if owned_private_repos < private_repos
     raise Result::Error, errors(:private_repos_not_available, github_organization_plan)
   end
-  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable AbcSize
 
   # Public: Add user/team to the GitHubRepository based on the type of assignment.
   #         Calls #add_user_to_github_repository! if it is an Assignment.
@@ -142,10 +180,13 @@ class CreateGitHubRepoService
 
   # Maps the type of error to a Datadog error
   #
+  # rubocop:disable MethodLength
   def report_error(err)
     case err
     when /^#{errors(:repository_creation_failed)}/
       stats_sender.report_with_exercise_prefix(:repository_creation_failed)
+    when /^#{errors(:template_repository_creation_failed)}/
+      stats_sender.report_with_exercise_prefix(:template_repository_creation_failed)
     when /^#{errors(:collaborator_addition_failed)}/
       stats_sender.report_with_exercise_prefix(:collaborator_addition_failed)
     when /^#{errors(:starter_code_import_failed)}/
@@ -154,6 +195,7 @@ class CreateGitHubRepoService
       stats_sender.report_default(:failure)
     end
   end
+  # rubocop:enable MethodLength
 
   private
 
@@ -192,6 +234,8 @@ class CreateGitHubRepoService
     case error_message
     when :repository_creation_failed
       "GitHub repository could not be created, please try again."
+    when :template_repository_creation_failed
+      "GitHub repository could not be created from template, please try again."
     when :starter_code_import_failed
       "We were not able to import you the starter code to your #{exercise.assignment_type.humanize}, please try again."
     when :collaborator_addition_failed
