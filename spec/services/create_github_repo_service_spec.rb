@@ -323,7 +323,7 @@ RSpec.describe CreateGitHubRepoService do
   describe "for GroupAssignment", :vcr do
     let(:repo_access)    { RepoAccess.create(user: student, organization: organization) }
     let(:grouping)       { create(:grouping, organization: organization) }
-    let(:github_team_id) { 3_284_880 }
+    let(:github_team_id) { organization.github_organization.create_team(Faker::Team.name).id }
     let(:group)          { create(:group, grouping: grouping, github_team_id: github_team_id) }
     let(:group_assignment) do
       create(
