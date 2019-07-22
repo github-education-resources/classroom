@@ -25,6 +25,12 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
 
     context "organization has private repos" do
       it "returns true" do
+        allow_any_instance_of(GitHubOrganization)
+          .to receive(:plan)
+          .and_return(
+            owned_private_repos: 1,
+            private_repos: 2
+          )
         expect(creator.verify_organization_has_private_repos_available!).to eq(true)
       end
     end
@@ -216,6 +222,18 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
     end
 
     describe "unsuccessful creation" do
+      let(:assignment) do
+        options = {
+          title: "Learn Elm",
+          starter_code_repo_id: 1_062_897,
+          organization: organization,
+          students_are_repo_admins: true,
+          public_repo: true
+        }
+
+        create(:assignment, options)
+      end
+
       it "fails when the repository could not be created" do
         stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
           .to_return(body: "{}", status: 401)
