@@ -1,0 +1,22 @@
+<% method = local_assigns.fetch(:method) %>
+<% model = local_assigns.fetch(:model) %>
+<% allow_cancel = local_assigns.fetch(:allow_cancel, false) %>
+
+<%= form_with model: model, url: lti_configuration_path, method: method do |f| %>
+  <div class="form-group">
+    <dt><label>Learning Management System Provider</label></dt>
+    <dt>What platform does your institution use for its Learning Management System?</dt>
+    <dd><%= f.select :lms_type, lms_type_select_options, { prompt: "Select from the options listed" }, { class: "form-select" } %></dd>
+  </div>
+
+  <br>
+
+  <div class="form-group">
+    <%= submit_tag "Save changes", class: "btn btn-primary" %>
+    <% if allow_cancel %>
+      <%= link_to lti_configuration_path(current_organization), method: :get do %>
+        <span class="btn">Cancel</span>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
