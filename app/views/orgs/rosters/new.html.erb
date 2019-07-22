@@ -33,7 +33,7 @@
 
 
     <div class="my-3">
-      <% if !current_organization.lti_configuration %>
+      <% if !current_organization.lti_configuration && !current_organization.google_course_id %>
         <h2 class="h3 mb-2">Manually add students</h2>
         <div>
           <%= form_tag roster_path(current_organization), method: :post do |f| %>

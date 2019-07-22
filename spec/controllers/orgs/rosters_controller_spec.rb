@@ -958,5 +958,3 @@ RSpec.describe Orgs::RostersController, type: :controller do
     end
   end
 end
-
-
