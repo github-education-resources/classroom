@@ -3,7 +3,21 @@
 require "google/apis/classroom_v1"
 
 class OrganizationsController < Orgs::Controller
-  before_action :authorize_google_classroom 
+  before_action :ensure_google_classroom_roster_import_is_enabled, only: %i[
+    select_google_classroom
+    search_google_classroom
+  ]
+  before_action :authorize_google_classroom, only: %i[
+    select_google_classroom
+    search_google_classroom
+  ]
+  before_action :ensure_no_lti_configuration, only: %i[
+    select_google_classroom
+    search_google_classroom
+  ]
+  before_action :google_classroom_ensure_no_roster, only: %i[
+    select_google_classroom
+  ]
 
   def select_google_classroom
     @google_classroom_courses = fetch_all_google_classrooms
@@ -29,6 +43,8 @@ class OrganizationsController < Orgs::Controller
     redirect_to roster_path(current_organization)
   end
 
+  private
+
   def current_organization_google_course_name
     return unless current_organization.google_course_id
     course = @google_classroom_service.get_course(current_organization.google_course_id)
@@ -36,8 +52,6 @@ class OrganizationsController < Orgs::Controller
   rescue Google::Apis::Error
     nil
   end
-
-  private
 
   def fetch_all_google_classrooms
     next_page = nil
@@ -51,5 +65,18 @@ class OrganizationsController < Orgs::Controller
     end
 
     courses
+  end
+
+  def google_classroom_ensure_no_roster
+    return unless current_organization.roster
+    redirect_to edit_organization_path(current_organization),
+      alert: "We are unable to link your classroom organization to Google Classroom "\
+        "because a roster already exists. Please delete your current roster and try again."
+  end
+
+  def ensure_no_lti_configuration
+    return unless current_organization.lti_configuration
+    redirect_to edit_organization_path(current_organization),
+      alert: "A LMS configuration already exists. Please remove configuration before creating a new one."
   end
 end

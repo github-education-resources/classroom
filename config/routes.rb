@@ -82,6 +82,7 @@ Rails.application.routes.draw do
         delete "users/:user_id",      to: "organizations#remove_user", as: "remove_user"
         get    :select_google_classroom
         get    :search_google_classroom
+        patch  :unlink_google_classroom
 
         resource :roster, only: %i[show new create], controller: "orgs/rosters" do
           patch :link
@@ -91,7 +92,6 @@ Rails.application.routes.draw do
           patch :remove_organization
           patch :import_from_google_classroom
           patch :sync_google_classroom
-          patch :unlink_google_classroom
           get   :import_from_lms
         end
 
