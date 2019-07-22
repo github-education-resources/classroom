@@ -91,6 +91,7 @@ module Orgs
     def current_lti_configuration
       @current_lti_configuration ||= current_organization.lti_configuration
     end
+    helper_method :current_lti_configuration
 
     def ensure_current_lti_configuration
       redirect_to info_lti_configuration_path(current_organization) unless current_lti_configuration
