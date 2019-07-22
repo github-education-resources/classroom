@@ -64,70 +64,153 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
 
   describe "::perform", :vcr do
     describe "successful creation" do
-      let(:assignment) do
-        options = {
-          title: "Learn Elm",
-          starter_code_repo_id: 1_062_897,
-          organization: organization,
-          students_are_repo_admins: true,
-          public_repo: true
-        }
+      context "with source importer" do
+        let(:assignment) do
+          options = {
+            title: "Learn Elm",
+            starter_code_repo_id: 1_062_897,
+            organization: organization,
+            students_are_repo_admins: true,
+            public_repo: true
+          }
 
-        create(:assignment, options)
-      end
-
-      after(:each) do
-        AssignmentRepo.destroy_all
-      end
-
-      it "creates an AssignmentRepo as an outside_collaborator" do
-        result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
-
-        expect(result.success?).to be_truthy
-        expect(result.assignment_repo.assignment).to eql(assignment)
-        expect(result.assignment_repo.user).to eql(student)
-        expect(result.assignment_repo.github_global_relay_id).to be_truthy
-      end
-
-      it "creates an AssignmentRepo as a member" do
-        result = AssignmentRepo::Creator.perform(assignment: assignment, user: teacher)
-
-        expect(result.success?).to be_truthy
-        expect(result.assignment_repo.assignment).to eql(assignment)
-        expect(result.assignment_repo.user).to eql(teacher)
-        expect(result.assignment_repo.github_global_relay_id).to be_truthy
-      end
-
-      it "tracks the how long it too to be created" do
-        expect(GitHubClassroom.statsd).to receive(:timing).with("exercise_repo.create.time.with_importer", anything)
-        AssignmentRepo::Creator.perform(assignment: assignment, user: student)
-      end
-
-      it "tracks create success stat" do
-        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.import.started")
-        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.success")
-        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
-        AssignmentRepo::Creator.perform(assignment: assignment, user: student)
-      end
-
-      context "github repository with the same name already exists" do
-        before do
-          result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
-          assignment_repo = result.assignment_repo
-
-          @original_repository = organization.github_client.repository(assignment_repo.github_repo_id)
-          assignment_repo.delete
+          create(:assignment, options)
         end
 
-        after do
-          organization.github_client.delete_repository(@original_repository.id)
+        after(:each) do
           AssignmentRepo.destroy_all
         end
 
-        it "new repository name has expected suffix" do
+        it "creates an AssignmentRepo as an outside_collaborator" do
+          result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
+
+          expect(result.success?).to be_truthy
+          expect(result.assignment_repo.assignment).to eql(assignment)
+          expect(result.assignment_repo.user).to eql(student)
+          expect(result.assignment_repo.github_global_relay_id).to be_truthy
+        end
+
+        it "creates an AssignmentRepo as a member" do
+          result = AssignmentRepo::Creator.perform(assignment: assignment, user: teacher)
+
+          expect(result.success?).to be_truthy
+          expect(result.assignment_repo.assignment).to eql(assignment)
+          expect(result.assignment_repo.user).to eql(teacher)
+          expect(result.assignment_repo.github_global_relay_id).to be_truthy
+        end
+
+        it "tracks the how long it too to be created" do
+          expect(GitHubClassroom.statsd).to receive(:timing).with("exercise_repo.create.time.with_importer", anything)
           AssignmentRepo::Creator.perform(assignment: assignment, user: student)
-          expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
-            .with(body: /^.*#{@original_repository.name}-1.*$/)
+        end
+
+        it "tracks create success stat" do
+          expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.import.started")
+          expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.success")
+          expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
+          AssignmentRepo::Creator.perform(assignment: assignment, user: student)
+        end
+
+        context "github repository with the same name already exists" do
+          before do
+            result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
+            assignment_repo = result.assignment_repo
+
+            @original_repository = organization.github_client.repository(assignment_repo.github_repo_id)
+            assignment_repo.delete
+          end
+
+          after do
+            organization.github_client.delete_repository(@original_repository.id)
+            AssignmentRepo.destroy_all
+          end
+
+          it "new repository name has expected suffix" do
+            AssignmentRepo::Creator.perform(assignment: assignment, user: student)
+            expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
+              .with(body: /^.*#{@original_repository.name}-1.*$/)
+          end
+        end
+      end
+
+      context "using template repos" do
+        let(:client) { oauth_client }
+        let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
+        let(:github_repository) do
+          options = {
+            private: true,
+            is_template: true,
+            auto_init: true,
+            accept: "application/vnd.github.baptiste-preview"
+          }
+          github_organization.create_repository("#{Faker::Company.name} Template", options)
+        end
+        let(:assignment) do
+          options = {
+            title: "Learn Elm",
+            starter_code_repo_id: github_repository.id,
+            organization: organization,
+            students_are_repo_admins: true,
+            public_repo: true,
+            template_repos_enabled: true
+          }
+          create(:assignment, options)
+        end
+
+        after(:each) do
+          client.delete_repository(github_repository.id)
+          AssignmentRepo.destroy_all
+        end
+
+        it "creates an AssignmentRepo as an outside_collaborator" do
+          result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
+
+          expect(result.success?).to be_truthy
+          expect(result.assignment_repo.assignment).to eql(assignment)
+          expect(result.assignment_repo.user).to eql(student)
+          expect(result.assignment_repo.github_global_relay_id).to be_truthy
+        end
+
+        it "creates an AssignmentRepo as a member" do
+          result = AssignmentRepo::Creator.perform(assignment: assignment, user: teacher)
+
+          expect(result.success?).to be_truthy
+          expect(result.assignment_repo.assignment).to eql(assignment)
+          expect(result.assignment_repo.user).to eql(teacher)
+          expect(result.assignment_repo.github_global_relay_id).to be_truthy
+        end
+
+        it "tracks the how long it too to be created" do
+          expect(GitHubClassroom.statsd).to receive(:timing).with("exercise_repo.create.time.with_templates", anything)
+          AssignmentRepo::Creator.perform(assignment: assignment, user: student)
+        end
+
+        it "tracks create success stat" do
+          expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.repo.with_templates.success")
+          expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.success")
+          expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
+          AssignmentRepo::Creator.perform(assignment: assignment, user: student)
+        end
+
+        context "github repository with the same name already exists" do
+          before do
+            result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
+            assignment_repo = result.assignment_repo
+
+            @original_repository = organization.github_client.repository(assignment_repo.github_repo_id)
+            assignment_repo.delete
+          end
+
+          after do
+            organization.github_client.delete_repository(@original_repository.id)
+            AssignmentRepo.destroy_all
+          end
+
+          it "new repository name has expected suffix" do
+            AssignmentRepo::Creator.perform(assignment: assignment, user: student)
+            expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
+              .with(body: /^.*#{@original_repository.name}-1.*$/)
+          end
         end
       end
     end
