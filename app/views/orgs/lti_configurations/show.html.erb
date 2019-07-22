@@ -46,7 +46,7 @@
           <br>
 
           <dt><label>Application Auto-Configuration URL</label></dt>
-          <dt>On those LMSs which support it, paste in this link to automatically set up Classroom.</p><dt>
+          <dt>If <%= lms_name %> supports the capability, paste in this link to automatically set up Classroom.<dt>
           <div class="input-group">
             <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "autoconfigure-url-#{current_organization.github_id}", value: autoconfigure_lti_configuration_url, readonly: 'readonly' %>
             <span class="input-group-button">
