@@ -55,8 +55,6 @@ env:
     - WEBHOOK_SECRET=abcdefg
     - API_SECRET=abcdefg
   matrix:
-    - CI_NODE_INDEX=0 DB_VERSION=9.4
-    - CI_NODE_INDEX=1 DB_VERSION=9.4
     - CI_NODE_INDEX=0 DB_VERSION=10
     - CI_NODE_INDEX=1 DB_VERSION=10
 
