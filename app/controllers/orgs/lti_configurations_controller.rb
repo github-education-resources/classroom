@@ -35,6 +35,11 @@ module Orgs
       @lti_configuration = LtiConfiguration.new(lms_type: nil)
     end
 
+    def info
+      lms_type = params[:lms_type] || nil
+      @lti_configuration = LtiConfiguration.new(lms_type: lms_type)
+    end
+
     def edit; end
 
     def update
@@ -115,7 +120,7 @@ module Orgs
     end
 
     def ensure_lms_type
-      return if params.dig(:lti_configuration, :lms_type)
+      return if params.dig(:lti_configuration, :lms_type).present?
       redirect_to new_lti_configuration_path(current_organization)
     end
   end
