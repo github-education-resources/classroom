@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "google/apis/classroom_v1"
+
 module Orgs
   class Controller < ApplicationController
     before_action :ensure_current_organization
@@ -29,6 +31,15 @@ module Orgs
       @current_organization = Organization.find_by!(slug: organization_id)
     end
     helper_method :current_organization
+
+    def current_organization_google_course_name
+      return unless current_organization.google_course_id
+      course = @google_classroom_service.get_course(current_organization.google_course_id)
+      course&.name
+    rescue Google::Apis::Error
+      nil
+    end
+    helper_method :current_organization_google_course_name
 
     def failbot_context
       super unless current_organization.nil?
