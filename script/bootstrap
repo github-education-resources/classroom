@@ -7,7 +7,7 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-# Make sure the system has both rbenv 
+# Make sure the system has both rbenv
 # and nodenv installed previously, otherwise we can't
 # ensure dependencies install correctly.
 if ! [ -f "$(which rbenv)" ]; then
@@ -42,12 +42,12 @@ if [ "$(uname -s)" = "Darwin" ]; then
     brew bundle
 
     # According to homebrew, postgresql@9.4 is pinned and as
-    # such is keg-only, which means it is not symlinked into 
-    # /usr/local automatically. We link it to the user's PATH, 
+    # such is keg-only, which means it is not symlinked into
+    # /usr/local automatically. We link it to the user's PATH,
     # if no other version other exists locally.
     if ! [ -f "$(which postgres)" ]; then
-      echo "No existing postgresql installation detected. Linking postgresql@9.4 to PATH..."
-      brew link --force postgresql@9.4
+      echo "No existing postgresql installation detected. Linking postgresql@10 to PATH..."
+      brew link --force postgresql@10
     fi
 
     brew setup-nginx-conf classroom . config/dev/nginx.conf.erb
