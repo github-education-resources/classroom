@@ -288,11 +288,7 @@ describe GitHubRepository do
 
       context "repository is a template" do
         before(:each) do
-          client.patch(
-            "https://api.github.com/repositories/#{github_repository.id}",
-            is_template: true,
-            accept: "application/vnd.github.baptiste-preview"
-          )
+          client.edit_repository(github_repository.full_name, is_template: true)
         end
 
         it "returns true" do
@@ -302,11 +298,7 @@ describe GitHubRepository do
 
       context "repository is not a template" do
         before(:each) do
-          client.patch(
-            "https://api.github.com/repositories/#{github_repository.id}",
-            is_template: false,
-            accept: "application/vnd.github.baptiste-preview"
-          )
+          client.edit_repository(github_repository.full_name, is_template: false)
         end
 
         it "returns false" do

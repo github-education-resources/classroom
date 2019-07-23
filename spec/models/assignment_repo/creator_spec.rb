@@ -146,8 +146,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
           options = {
             private: true,
             is_template: true,
-            auto_init: true,
-            accept: "application/vnd.github.baptiste-preview"
+            auto_init: true
           }
           github_organization.create_repository("#{Faker::Company.name} Template", options)
         end

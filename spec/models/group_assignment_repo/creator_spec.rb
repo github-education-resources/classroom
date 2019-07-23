@@ -157,7 +157,6 @@ RSpec.describe GroupAssignmentRepo::Creator do
           options = {
             private: true,
             is_template: true,
-            accept: "application/vnd.github.baptiste-preview",
             auto_init: true
           }
           github_organization.create_repository("#{Faker::Company.name} Template", options)
