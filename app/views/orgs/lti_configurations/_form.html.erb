@@ -12,11 +12,11 @@
   <br>
 
   <div class="form-group">
-    <%= submit_tag "Save changes", class: "btn btn-primary" %>
-    <% if allow_cancel %>
-      <%= link_to lti_configuration_path(current_organization), method: :get do %>
-        <span class="btn">Cancel</span>
+    <div class="d-flex flex-items-center border-top pt-5">
+      <%= submit_tag "Save changes", class: "btn btn-primary mr-3" %>
+      <% if allow_cancel %>
+        <%= link_to 'Cancel', :back, class: 'btn-link' %>
       <% end %>
-    <% end %>
+    </div>
   </div>
 <% end %>
