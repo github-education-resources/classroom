@@ -1,26 +1,19 @@
 <div class="remodal-bg">
   <%= render 'organizations/organization_banner' %>
 
-  <div class="columns">
-    <div class="one-fourth column">
-      <%= render partial: 'organizations/side_menu' %>
+  <div class="site-content">
+    <div class="site-content-cap">
+      <h2 class="site-content-heading">Set up your Learning Management System</h2>
     </div>
-    <div class="three-fourths column">
-      <div class="site-content">
-        <div class="site-content-cap">
-          <h2 class="site-content-heading">Set up your Learning Management System</h2>
-        </div>
 
-        <div class="site-content-body markdown-body">
-          <p>Before you can configure your Learning Management System to connect to GitHub Classroom,
-          we need a few more details.</p>
-          <%= render partial: "orgs/lti_configurations/form", locals: {
-            allow_cancel: true,
-            model: @lti_configuration,
-            method: :post
-          } %>
-        </div>
-      </div>
+    <div class="site-content-body markdown-body">
+      <p>Before you can configure your Learning Management System to connect to GitHub Classroom,
+      we need a few more details.</p>
+      <%= render partial: "orgs/lti_configurations/form", locals: {
+        allow_cancel: true,
+        model: @lti_configuration,
+        method: :post
+      } %>
     </div>
   </div>
 </div>
