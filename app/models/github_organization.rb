@@ -179,7 +179,7 @@ class GitHubOrganization < GitHubResource
 
   def github_template_repo_default_options
     {
-      owner:         @login,
+      owner: @login,
       include_all_branches: true
     }
   end
