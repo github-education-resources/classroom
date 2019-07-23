@@ -43,7 +43,6 @@ class GroupAssignmentRepo
         elsif group_assignment.use_template_repos?
           GitHubClassroom.statsd.timing("group_exercise_repo.create.time.with_templates", duration_in_millseconds)
         else
-          GitHubClassroom.statsd.timing("v2_group_exercise_repo.create.time", duration_in_millseconds)
           GitHubClassroom.statsd.timing("group_exercise_repo.create.time", duration_in_millseconds)
         end
       end

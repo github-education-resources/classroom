@@ -263,7 +263,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
 
     it "sends an event to statsd" do
-      expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_invitation.accept")
+      expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_invitation.accept")
 
       allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result)
 
@@ -278,7 +278,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       end
 
       it "records error stat" do
-        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_invitation.fail")
+        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_invitation.fail")
         patch :accept, params: { id: invitation.key }
       end
 
@@ -295,7 +295,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
     context "with import resiliency enabled" do
       it "sends an event to statsd" do
-        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_invitation.accept")
+        expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_invitation.accept")
 
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
           .with(user)
@@ -407,13 +407,13 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         end
 
         it "reports an error was retried" do
-          expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.retry")
+          expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.retry")
           post :create_repo, params: { id: invitation.key }
         end
 
         it "reports an error importing was retried" do
           invite_status.errored_importing_starter_code!
-          expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.import.retry")
+          expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.import.retry")
           post :create_repo, params: { id: invitation.key }
         end
       end
