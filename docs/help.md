@@ -6,6 +6,7 @@
 * [Controlling assignment repo settings with the Probot Settings app](/help/probot-settings)
 * [Creating group assignments](/help/create-group-assignments)
 * [Upgrading your organization](/help/upgrade-your-organization)
+* [Connecting to a Learning Management System](/help/connect-to-lms)
 
 ### Workflows, case studies, best practices, and more from the GitHub blog
 
