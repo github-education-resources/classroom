@@ -54,7 +54,7 @@
       <div class="form-checkbox">
         <label><%= f.radio_button :template_repos_enabled, true, checked: (true if @assignment.new_record? || @assignment.template_repos_enabled?) %> Import starter code using a template repository</label>
         <span class="Label border border-green text-gray-dark">Beta</span>
-        <span class="note">Starter code repository should be a <%= link_to "template repository", "https://help.github.com/en/articles/creating-a-template-repository", target: "_blank" %>. Increases student repository creation and code import speed dramatically.</span>
+        <span class="note">Repository creation and import speed increases dramatically. Starter code repository should be a <%= link_to "template repository", "https://help.github.com/en/articles/creating-a-template-repository", target: "_blank" %>. Classroom will attempt to make the repository a template if it isn't already.</span>
       </div>
 
       <div class="form-checkbox">

@@ -11,7 +11,7 @@ function removeErrorBox() {
   errorBoxes = document.getElementsByClassName("error");
   for (var i = 0; i < errorBoxes.length; i++) {
     errorBox = errorBoxes[i]
-    if (errorBox.innerText == "Starter code repository is not a template repository. Make it a template repository to use template cloning.") {
+    if (errorBox.innerText == "Starter code repository is not a template repository and we could not change the setting on your behalf. Repository must be a template repository to use template cloning.") {
       errorBox.style.display = 'none';
     }
   }
