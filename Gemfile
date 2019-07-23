@@ -47,7 +47,7 @@ gem "local_time", "~> 2.0"
 
 gem "oauth",           "~> 0.5.4"
 gem "octicons_helper", "~> 2.1"
-gem "octokit", github: "octokit/octokit.rb", ref: "ffae5ddd6fd9da6f4538ca7adeb5d1768011610b"
+gem "octokit", github: "octokit/octokit.rb"
 gem "octopoller",      "~> 0.1"
 gem "omniauth-github", "~> 1.3"
 
