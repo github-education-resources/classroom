@@ -273,5 +273,46 @@ describe GitHubRepository do
         expect(github_repository.empty?).to be_truthy
       end
     end
+
+    describe "#template?", :vcr do
+      let(:organization) { classroom_org }
+      let(:client) { oauth_client }
+      let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
+      let(:github_repository) do
+        github_organization.create_repository("Assignment 5", private: true, auto_init: true)
+      end
+
+      after(:each) do
+        github_organization.delete_repository(github_repository.id)
+      end
+
+      context "repository is a template" do
+        before(:each) do
+          client.patch(
+            "https://api.github.com/repositories/#{github_repository.id}",
+            is_template: true,
+            accept: "application/vnd.github.baptiste-preview"
+          )
+        end
+
+        it "returns true" do
+          expect(github_repository.template?).to be true
+        end
+      end
+
+      context "repository is not a template" do
+        before(:each) do
+          client.patch(
+            "https://api.github.com/repositories/#{github_repository.id}",
+            is_template: false,
+            accept: "application/vnd.github.baptiste-preview"
+          )
+        end
+
+        it "returns false" do
+          expect(github_repository.template?).to be false
+        end
+      end
+    end
   end
 end

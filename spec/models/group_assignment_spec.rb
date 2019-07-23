@@ -173,7 +173,7 @@ RSpec.describe GroupAssignment, type: :model do
     end
   end
 
-  describe "#starter_code_repository_not_empty" do
+  describe "#starter_code_repository_not_empty", :vcr do
     let(:organization) { classroom_org }
 
     before do
@@ -215,7 +215,7 @@ RSpec.describe GroupAssignment, type: :model do
     let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
     let(:group_assignment) { build(:group_assignment, organization: organization, title: "Group Assignment 1") }
     let(:github_repository) do
-      github_organization.create_repository("Group Assignment 1 Template", private: true, auto_init: true)
+      github_organization.create_repository("#{Faker::Team.name} Template", private: true, auto_init: true)
     end
 
     after(:each) do
