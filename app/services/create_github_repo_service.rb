@@ -222,7 +222,7 @@ class CreateGitHubRepoService
 
   def repository_permissions
     {}.tap do |options|
-      options[:permission] = "admin" if exercise.admin?
+      options[:permission] = exercise.admin? ? "admin" : "push"
     end
   end
 
