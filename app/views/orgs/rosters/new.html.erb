@@ -14,17 +14,24 @@
       <div class="my-3">
         <h2 class="h3 mb-2">Import from</h2>
 
-        <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Google Classroom",
-          import_from_google_classroom_roster_path(current_organization),
-          class: "btn btn-secondary d-inline-flex flex-items-center mb-3",
-          method: :patch
-        %>
-
-        <% if lti_launch_enabled? %>
-          <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Learning Management System",
-            import_from_lms_roster_path,
-            class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+        <% if current_organization.google_course_id %>
+          <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Google Classroom",
+            import_from_google_classroom_roster_path(current_organization),
+            class: "btn btn-secondary d-inline-flex flex-items-center mb-3",
+            method: :patch
           %>
+        <% elsif lti_launch_enabled? %>
+          <% if current_organization.lti_configuration.lms_type == "other" %>
+            <%= link_to "Learning Management System",
+              import_from_lms_roster_path,
+              class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+            %>
+          <% else %>
+            <%= link_to image_tag(current_organization.lti_configuration.lms_type+'-logo.png', size: "25", class:"mr-2") + current_organization.lti_configuration.lms_name,
+              import_from_lms_roster_path,
+              class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+            %>
+          <% end %>
         <% end %>
       </div>
     <% end %>
