@@ -12,7 +12,7 @@ class GoogleClassroomCourse
   end
 
   def students
-    response = @google_classroom_service.list_course_students(course_id)
+    response = @google_classroom_service.list_course_students(@course_id)
     response.students ||= []
     response.students
   rescue Google::Apis::AuthorizationError

@@ -97,9 +97,9 @@ Rails.application.routes.draw do
         end
 
         scope :google_classrooms do
-          root "orgs/google_classroom_configurations#index", as: :index
-          post "google_classrooms/create", to: "orgs/google_classroom_configurations#create"
+          root "orgs/google_classroom_configurations#index", as: :root
           get  "google_classrooms/search", to: "orgs/google_classroom_configurations#search"
+          post "google_classrooms/create", to: "orgs/google_classroom_configurations#create"
         end
       end
 

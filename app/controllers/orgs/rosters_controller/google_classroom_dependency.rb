@@ -17,7 +17,6 @@ module Orgs
         flash[:warning] = "No students were found in your Google Classroom. Please add students and try again."
         redirect_to roster_path(current_organization)
       else
-        current_organization.update(google_course_id: params[:course_id])
         add_google_classroom_students(students)
       end
     end
@@ -44,12 +43,12 @@ module Orgs
 
     def ensure_google_classroom_is_linked
       return unless current_organization.google_course_id.nil?
-      redirect_to google_classrooms_organization_path(current_organization),
+      redirect_to google_classrooms_select_organization_path(current_organization),
         alert: "Please link a Google Classroom before syncing a roster."
     end
 
     def set_google_classroom
-      @google_classroom = GoogleClassroom.new(@google_classroom_service, current_organization.google_course_id)
+      @google_classroom_course = GoogleClassroomCourse.new(@google_classroom_service, current_organization.google_course_id)
     end
 
     def ensure_no_lti_configuration

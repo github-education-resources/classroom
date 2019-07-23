@@ -4,9 +4,7 @@ require "google/apis/classroom_v1"
 
 module Orgs
   class GoogleClassroomConfigurationsController < Orgs::Controller
-    before_action :authorize_google_classroom, only: %i[index search show]
-    skip_before_action :authenticate_user!, only: :index
-    skip_before_action :ensure_current_organization_visible_to_current_user, only: :index
+    before_action :authorize_google_classroom, only: %i[create search index]
 
     def create
       current_organization.update(google_course_id: params[:course_id])
@@ -14,10 +12,6 @@ module Orgs
       flash[:success] = "Google Classroom integration was succesfully configured."
       redirect_to new_roster_path(current_organization)
     end
-
-    def show; end
-
-    def edit; end
 
     def search
       courses_found = fetch_all_google_classrooms.select do |course|
