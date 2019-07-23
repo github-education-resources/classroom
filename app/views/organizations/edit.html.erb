@@ -31,6 +31,7 @@
         <% elsif current_organization.google_course_id %>
           <%= render partial: "google_classroom" %>
         <% else %>
+          <%= render partial: "new_lms"%>
         <% end %>
       </div>
 
