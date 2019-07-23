@@ -8,7 +8,6 @@ module Orgs
     before_action :ensure_google_classroom_roster_import_is_enabled, only: %i[
       import_from_google_classroom
       sync_google_classroom
-      unlink_google_classroom
     ]
     before_action :ensure_current_roster, except: %i[
       new
@@ -22,14 +21,13 @@ module Orgs
     before_action :authorize_google_classroom, only:   %i[
       import_from_google_classroom
       sync_google_classroom
-      unlink_google_classroom
     ]
     before_action :ensure_no_lti_configuration, only:   %i[
       import_from_google_classroom
       select_google_classroom
     ]
     before_action :google_classroom_ensure_no_roster, only: %i[
-      select_google_classroom
+      import_from_google_classroom
     ]
 
     helper_method :current_roster, :unlinked_users
@@ -38,6 +36,7 @@ module Orgs
 
     # rubocop:disable AbcSize
     def show
+      authorize_google_classroom
       @google_course_name = current_organization_google_course_name
 
       @roster_entries = current_roster.roster_entries
@@ -179,14 +178,14 @@ module Orgs
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
     def import_from_google_classroom
-      students = list_google_classroom_students(params[:course_id])
+      authorize_google_classroom
+      students = list_google_classroom_students(current_organization.google_course_id)
       return unless students
 
       if students.blank?
         flash[:warning] = "No students were found in your Google Classroom. Please add students and try again."
         redirect_to roster_path(current_organization)
       else
-        current_organization.update(google_course_id: params[:course_id])
         add_google_classroom_students(students)
       end
     end
@@ -308,6 +307,7 @@ module Orgs
     # Returns list of students in a google classroom with error checking
     # rubocop:disable Metrics/MethodLength
     def list_google_classroom_students(course_id)
+      puts(course_id)
       response = @google_classroom_service.list_course_students(course_id)
       response.students ||= []
       response.students

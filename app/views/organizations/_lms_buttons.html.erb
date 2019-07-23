@@ -1,0 +1,29 @@
+<div class="container-lg clearfix">
+  <div class="col-6">
+    <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Google Classroom",
+      select_google_classroom_organization_path(current_organization),
+      class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+    %>
+  </div>
+
+  <div class="col-6">
+    <%= link_to image_tag('canvas-logo.png', size: "25", class:"mr-2") + "Canvas",
+      info_lti_configuration_path(current_organization),
+      class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+    %>
+  </div>
+
+  <div class="col-6">
+    <%= link_to image_tag('moodle-logo.png', height: "25", class:"mr-2"),
+      info_lti_configuration_path(current_organization),
+      class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+    %>
+  </div>
+
+  <div class="col-6">
+    <%= link_to image_tag('brightspace-logo.png', height: "30", class:"mr-2"),
+      info_lti_configuration_path(current_organization),
+      class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+    %>
+  </div>
+</div>

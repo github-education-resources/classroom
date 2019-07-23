@@ -3,9 +3,6 @@
 }
 
 body {
-  font: 13px/1.4 Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
-  background-color: #f3f4f6;
-
   &.site {
     display: flex;
     min-height: 100vh;
@@ -127,6 +124,17 @@ main {
     color: #2f363d;
     border-top: 3px solid #444d56;
     background-color: #fafbfc;
+  }
+}
+
+.organization-lms-button{
+  align-items: center;
+
+  .btn{
+    width: 20em;
+    height: 5em;
+    padding: 1em;
+    justify-content: center;
   }
 }
 

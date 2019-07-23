@@ -98,8 +98,9 @@ class OrganizationsController < Orgs::Controller
   def setup; end
 
   def setup_organization
-    if current_organization.update_attributes(update_organization_params)
-      if current_organization.google_course_id && GithubClassroom.flipper[:google_classroom_roster_import]
+    if current_organization.update_attributes(setup_organization_params)
+      if current_organization.google_course_id
+        authorize_google_classroom
         google_course_name = { title: current_organization_google_course_name }
         current_organization.update_attributes(google_course_name)
       end
@@ -184,6 +185,10 @@ class OrganizationsController < Orgs::Controller
 
   def paginate_users_github_organizations
     @users_github_organizations = Kaminari.paginate_array(@users_github_organizations).page(params[:page]).per(24)
+  end
+
+  def setup_organization_params
+    params.permit(:title, :google_course_id)
   end
 
   def update_organization_params

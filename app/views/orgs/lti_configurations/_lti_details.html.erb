@@ -1,0 +1,27 @@
+<% @lti_configuration = current_organization.lti_configuration %>
+<p>You are currently connected to <strong><%= current_organization.lti_configuration.lms_name %></strong>.</p>
+<div>
+  <dt><label>Consumer Key</label></dt>
+  <div class="input-group">
+    <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "consumer-key-#{current_organization.github_id}", value: @lti_configuration.consumer_key, readonly: 'readonly' %>
+    <span class="input-group-button">
+      <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#consumer-key-#{current_organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
+        <%= octicon 'clippy' %>
+        Copy
+      </button>
+    </span>
+  </div>
+
+  <br>
+
+  <dt><label>Shared Secret</label></dt>
+  <div class="input-group">
+    <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "shared-secret-#{current_organization.github_id}", value: @lti_configuration.shared_secret, readonly: 'readonly' %>
+    <span class="input-group-button">
+      <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#shared-secret-#{current_organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
+        <%= octicon 'clippy' %>
+        Copy
+      </button>
+    </span>
+  </div>
+</div>

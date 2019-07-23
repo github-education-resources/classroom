@@ -33,6 +33,7 @@ module Orgs
     helper_method :current_organization
 
     def current_organization_google_course_name
+      authorize_google_classroom
       return unless current_organization.google_course_id
       course = @google_classroom_service.get_course(current_organization.google_course_id)
       course&.name

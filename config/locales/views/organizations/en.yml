@@ -45,6 +45,7 @@ en:
       unarchive_submit: 'Unarchive classroom'
       classroom_settings: 'Classroom settings'
       classroom_profile: 'Classroom profile'
+      lms_integration: 'Learning Management System'
       student_identifiers: 'Student identifiers'
       team_management: 'Team management'
       invite_other_admin: 'Invite other administrators'

@@ -15,19 +15,17 @@
         <h2 class="h3 mb-2">Import from</h2>
 
         <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Google Classroom",
-          select_google_classroom_roster_path,
-          class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+          import_from_google_classroom_roster_path(current_organization),
+          class: "btn btn-secondary d-inline-flex flex-items-center mb-3",
+          method: :patch
         %>
-      </div>
-    <% end %>
-    <% if lti_launch_enabled? %>
-      <div class="my-3">
-        <h2 class="h3 mb-2">Import from</h2>
 
-        <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Learning Management System",
-          import_from_lms_roster_path,
-          class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
-        %>
+        <% if lti_launch_enabled? %>
+          <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Learning Management System",
+            import_from_lms_roster_path,
+            class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+          %>
+        <% end %>
       </div>
     <% end %>
 
