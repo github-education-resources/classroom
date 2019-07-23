@@ -14,7 +14,7 @@ class LtiConfiguration < ApplicationRecord
   }, _prefix: true
 
   def lms_name(default_name: "Other Learning Management System")
-    return default_name unless lms_type
+    return default_name if lms_type.blank?
     return default_name if lms_type_other?
     LtiConfiguration.lms_types[lms_type]
   end

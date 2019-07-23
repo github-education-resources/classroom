@@ -36,7 +36,7 @@ module Orgs
     end
 
     def info
-      lms_type = params[:lms_type] || nil
+      lms_type = params[:lms_type]
       @lti_configuration = LtiConfiguration.new(lms_type: lms_type)
     end
 
