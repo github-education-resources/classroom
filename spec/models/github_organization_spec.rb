@@ -61,7 +61,12 @@ describe GitHubOrganization do
     let(:client) { oauth_client }
     let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
     let(:template_repository) do
-      github_organization.create_repository("#{Faker::Team.name} Template", private: true, auto_init: true, is_template: true)
+      github_organization.create_repository(
+        "#{Faker::Team.name} Template",
+        private: true,
+        auto_init: true,
+        is_template: true
+      )
     end
 
     after(:each) do

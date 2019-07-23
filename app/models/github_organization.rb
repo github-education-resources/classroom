@@ -44,7 +44,7 @@ class GitHubOrganization < GitHubResource
       @client.create_repository_from_template(template_repo_id, repo_name, repo_options)
     end
 
-    GitHubRepository.new(@client, repo.id)    
+    GitHubRepository.new(@client, repo.id)
   end
 
   def delete_repository(repo_id)
