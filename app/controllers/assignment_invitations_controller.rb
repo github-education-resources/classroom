@@ -17,12 +17,12 @@ class AssignmentInvitationsController < ApplicationController
     case result.status
     when :success
       current_invitation_status.completed! if current_invitation_status.unaccepted?
-      GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
+      GitHubClassroom.statsd.increment("exercise_invitation.accept")
     when :pending
       current_invitation_status.accepted!
-      GitHubClassroom.statsd.increment("v2_exercise_invitation.accept")
+      GitHubClassroom.statsd.increment("exercise_invitation.accept")
     when :failed
-      GitHubClassroom.statsd.increment("v2_exercise_invitation.fail")
+      GitHubClassroom.statsd.increment("exercise_invitation.fail")
       current_invitation_status.unaccepted!
       flash[:error] = result.error
     end
@@ -43,9 +43,9 @@ class AssignmentInvitationsController < ApplicationController
       assignment_repo = AssignmentRepo.find_by(assignment: current_assignment, user: current_user)
       assignment_repo&.destroy if assignment_repo&.github_repository&.empty?
       if current_invitation_status.errored_creating_repo?
-        GitHubClassroom.statsd.increment("v2_exercise_repo.create.retry")
+        GitHubClassroom.statsd.increment("exercise_repo.create.retry")
       elsif current_invitation_status.errored_importing_starter_code?
-        GitHubClassroom.statsd.increment("v2_exercise_repo.import.retry")
+        GitHubClassroom.statsd.increment("exercise_repo.import.retry")
       end
       current_invitation_status.waiting!
       if unified_repo_creators_enabled?

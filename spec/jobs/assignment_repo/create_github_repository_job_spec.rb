@@ -141,7 +141,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
 
     it "tracks create success stat" do
       expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
-      expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.success")
       expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.import.started")
       subject.perform_now(assignment, teacher)
     end
@@ -157,7 +156,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       stub_request(:post, github_url("/organizations/#{organization.github_id}/repos"))
         .to_return(body: "{}", status: 401)
       expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.repo.fail")
-      expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.repo.fail")
       expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.Unauthorized")
       subject.perform_now(assignment, student)
     end
@@ -257,9 +255,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           .with("exercise_repo.create.importing_starter_code.fail")
         expect(GitHubClassroom.statsd)
           .to receive(:increment)
-          .with("v2_exercise_repo.create.importing_starter_code.fail")
-        expect(GitHubClassroom.statsd)
-          .to receive(:increment)
           .with("github.error.Unauthorized")
         subject.perform_now(assignment, student)
       end
@@ -305,7 +300,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
         stub_request(:put, repo_invitation_regex)
           .to_return(body: "{}", status: 401)
         expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.adding_collaborator.fail")
-        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.adding_collaborator.fail")
         expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.Unauthorized")
         subject.perform_now(assignment, student)
       end
@@ -348,7 +342,6 @@ RSpec.describe AssignmentRepo::CreateGitHubRepositoryJob, type: :job do
       it "fails to save the AssignmentRepo and reports" do
         allow_any_instance_of(AssignmentRepo).to receive(:save!).and_raise(ActiveRecord::RecordInvalid)
         expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.fail")
-        expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.fail")
         subject.perform_now(assignment, student)
       end
     end

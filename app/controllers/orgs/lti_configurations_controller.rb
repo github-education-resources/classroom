@@ -3,9 +3,10 @@
 module Orgs
   class LtiConfigurationsController < Orgs::Controller
     before_action :ensure_lti_launch_flipper_is_enabled
-    before_action :ensure_no_google_classroom, only: %i[create]
-    before_action :ensure_current_lti_configuration, except: %i[new create]
-    before_action :ensure_no_roster, only: [:create]
+    before_action :ensure_current_lti_configuration, except: %i[info new create]
+    before_action :ensure_no_google_classroom, only: %i[new create]
+    before_action :ensure_no_roster, only: %i[new create]
+    before_action :ensure_lms_type, only: %i[create]
 
     skip_before_action :authenticate_user!, only: :autoconfigure
     skip_before_action :ensure_current_organization_visible_to_current_user, only: :autoconfigure
@@ -14,6 +15,7 @@ module Orgs
     def create
       lti_configuration = LtiConfiguration.create(
         organization: current_organization,
+        lms_type: lti_configuration_params[:lms_type],
         consumer_key: SecureRandom.uuid,
         shared_secret: SecureRandom.uuid
       )
@@ -21,7 +23,7 @@ module Orgs
       if lti_configuration.present?
         redirect_to lti_configuration_path(current_organization)
       else
-        redirect_to new_lti_configuration_path(current_lti_configuration),
+        redirect_to info_lti_configuration_path(current_lti_configuration),
           alert: "There was a problem creating the configuration. Please try again later."
       end
     end
@@ -29,7 +31,14 @@ module Orgs
 
     def show; end
 
-    def new; end
+    def new
+      @lti_configuration = LtiConfiguration.new(lms_type: nil)
+    end
+
+    def info
+      lms_type = params[:lms_type]
+      @lti_configuration = LtiConfiguration.new(lms_type: lms_type)
+    end
 
     def edit; end
 
@@ -87,13 +96,14 @@ module Orgs
     def current_lti_configuration
       @current_lti_configuration ||= current_organization.lti_configuration
     end
+    helper_method :current_lti_configuration
 
     def ensure_current_lti_configuration
-      redirect_to new_lti_configuration_path(current_organization) unless current_lti_configuration
+      redirect_to info_lti_configuration_path(current_organization) unless current_lti_configuration
     end
 
     def lti_configuration_params
-      params.require(:lti_configuration).permit(:lms_link)
+      params.require(:lti_configuration).permit(:lms_link, :lms_type)
     end
 
     def ensure_no_google_classroom
@@ -107,6 +117,11 @@ module Orgs
       redirect_to edit_organization_path(current_organization),
         alert: "We are unable to link your classroom organization to an LMS"\
           "because a roster already exists. Please delete your current roster and try again."
+    end
+
+    def ensure_lms_type
+      return if params.dig(:lti_configuration, :lms_type).present?
+      redirect_to new_lti_configuration_path(current_organization)
     end
   end
 end
