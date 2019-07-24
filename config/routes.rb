@@ -96,6 +96,7 @@ Rails.application.routes.draw do
         end
 
         resource :lti_configuration, controller: "orgs/lti_configurations" do
+          get :info
           get :autoconfigure
         end
       end

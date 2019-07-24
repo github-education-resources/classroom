@@ -323,7 +323,7 @@ RSpec.describe CreateGitHubRepoService do
   describe "for GroupAssignment", :vcr do
     let(:repo_access)    { RepoAccess.create(user: student, organization: organization) }
     let(:grouping)       { create(:grouping, organization: organization) }
-    let(:github_team_id) { 3_284_880 }
+    let(:github_team_id) { organization.github_organization.create_team(Faker::Team.name).id }
     let(:group)          { create(:group, grouping: grouping, github_team_id: github_team_id) }
     let(:group_assignment) do
       create(
@@ -479,7 +479,9 @@ RSpec.describe CreateGitHubRepoService do
     describe "#add_group_to_github_repository!" do
       it "creates a new github team" do
         github_repository = double(full_name: "test/test")
-        expect_any_instance_of(GitHubTeam).to receive(:add_team_repository).with(github_repository.full_name, {})
+        expect_any_instance_of(GitHubTeam)
+          .to receive(:add_team_repository)
+          .with(github_repository.full_name, permission: "push")
         service.add_collaborator_to_github_repository!(github_repository)
       end
     end

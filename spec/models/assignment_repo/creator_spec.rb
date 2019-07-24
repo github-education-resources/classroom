@@ -112,7 +112,6 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
 
         it "tracks create success stat" do
           expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.import.started")
-          expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.success")
           expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
           AssignmentRepo::Creator.perform(assignment: assignment, user: student)
         end
@@ -146,8 +145,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
           options = {
             private: true,
             is_template: true,
-            auto_init: true,
-            accept: "application/vnd.github.baptiste-preview"
+            auto_init: true
           }
           github_organization.create_repository("#{Faker::Company.name} Template", options)
         end
@@ -193,7 +191,6 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
 
         it "tracks create success stat" do
           expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.repo.with_templates.success")
-          expect(GitHubClassroom.statsd).to receive(:increment).with("v2_exercise_repo.create.success")
           expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
           AssignmentRepo::Creator.perform(assignment: assignment, user: student)
         end

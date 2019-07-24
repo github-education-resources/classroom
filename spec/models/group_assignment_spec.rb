@@ -173,7 +173,7 @@ RSpec.describe GroupAssignment, type: :model do
     end
   end
 
-  describe "#starter_code_repository_not_empty" do
+  describe "#starter_code_repository_not_empty", :vcr do
     let(:organization) { classroom_org }
 
     before do
@@ -215,7 +215,7 @@ RSpec.describe GroupAssignment, type: :model do
     let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
     let(:group_assignment) { build(:group_assignment, organization: organization, title: "Group Assignment 1") }
     let(:github_repository) do
-      github_organization.create_repository("Group Assignment 1 Template", private: true, auto_init: true)
+      github_organization.create_repository("#{Faker::Team.name} Template", private: true, auto_init: true)
     end
 
     after(:each) do
@@ -228,21 +228,13 @@ RSpec.describe GroupAssignment, type: :model do
       end
 
       it "does not raise an error when starter code repo is a template repo" do
-        client.patch(
-          "https://api.github.com/repositories/#{github_repository.id}",
-          is_template: true,
-          accept: "application/vnd.github.baptiste-preview"
-        )
+        client.edit_repository(github_repository.full_name, is_template: true)
         group_assignment.assign_attributes(starter_code_repo_id: github_repository.id)
         expect { group_assignment.save! }.not_to raise_error
       end
 
       it "raises an error when starter code repository is not a template repo" do
-        client.patch(
-          "https://api.github.com/repositories/#{github_repository.id}",
-          is_template: false,
-          accept: "application/vnd.github.baptiste-preview"
-        )
+        client.edit_repository(github_repository.full_name, is_template: false)
         group_assignment.assign_attributes(starter_code_repo_id: github_repository.id)
         expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Starter code"\
           " repository is not a template repository. Make it a template repository to use template cloning.")
