@@ -90,6 +90,8 @@ class OrganizationsController < Orgs::Controller
 
   def new_assignment; end
 
+  def link_lms; end
+
   def invite; end
 
   def setup; end
