@@ -44,6 +44,10 @@ class CreateGitHubRepoService
       assignment.students_are_repo_admins?
     end
 
+    def use_template_repos?
+      assignment.organization.feature_enabled?(:template_repos) && assignment.use_template_repos?
+    end
+
     private
 
     def generate_repo_name
