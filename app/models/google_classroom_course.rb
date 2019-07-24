@@ -14,7 +14,7 @@ class GoogleClassroomCourse
 
   def students
     response = @google_classroom_service.list_course_students(@course_id)
-    return [] unless defined? response.students && respoonse.students.present?
+    return [] unless defined? response.students
     response.students ||= []
     response.students
   end

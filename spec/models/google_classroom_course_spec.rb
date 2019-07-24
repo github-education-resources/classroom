@@ -30,7 +30,6 @@ RSpec.describe Roster, type: :model do
 
       google_classroom_service = GoogleAPI::ClassroomService.new
       course = GoogleClassroomCourse.new(google_classroom_service, "5555")
-
       expect(course.students).to eq([])
     end
   end
