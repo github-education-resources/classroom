@@ -103,7 +103,6 @@ RSpec.describe GroupAssignmentRepo::Creator do
         end
 
         it "tracks create success stat" do
-          expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.success")
           expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.create.success")
           expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.import.started")
           expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
@@ -194,7 +193,6 @@ RSpec.describe GroupAssignmentRepo::Creator do
         it "tracks create success stat" do
           expect(GitHubClassroom.statsd).to receive(:increment)
             .with("group_exercise_repo.create.repo.with_templates.success")
-          expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.success")
           expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.create.success")
           expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
           GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
