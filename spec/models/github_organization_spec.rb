@@ -56,6 +56,29 @@ describe GitHubOrganization do
     end
   end
 
+  describe "#create_repository_from_template", :vcr do
+    let(:organization) { classroom_org }
+    let(:client) { oauth_client }
+    let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
+    let(:template_repository) do
+      github_organization.create_repository(
+        "#{Faker::Team.name} Template",
+        private: true,
+        auto_init: true,
+        is_template: true
+      )
+    end
+
+    after(:each) do
+      @client.delete_repository(template_repository.id)
+    end
+
+    it "successfully creates a github repository for the organization using a template" do
+      @github_organization.create_repository_from_template(template_repository.id, "Cloned repo")
+      expect(WebMock).to have_requested(:post, github_url("/repositories/#{template_repository.id}/generate"))
+    end
+  end
+
   describe "#create_team", :vcr do
     before do
       @github_team = @github_organization.create_team("Team")
