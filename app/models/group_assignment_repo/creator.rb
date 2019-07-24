@@ -67,7 +67,6 @@ class GroupAssignmentRepo
         raise Result::Error.new DEFAULT_ERROR_MESSAGE, error.message
       end
 
-      GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.success")
       GitHubClassroom.statsd.increment("group_exercise_repo.create.success")
 
       if group_assignment.use_importer?

@@ -72,7 +72,6 @@ class AssignmentRepo
       end
       report_time(start, assignment)
 
-      GitHubClassroom.statsd.increment("v2_exercise_repo.create.success")
       GitHubClassroom.statsd.increment("exercise_repo.create.success")
       if assignment.use_importer?
         invite_status.importing_starter_code!

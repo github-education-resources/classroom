@@ -300,6 +300,10 @@ RSpec.describe Orgs::RostersController, type: :controller do
     end
 
     context "with lti launch disabled" do
+      before do
+        GitHubClassroom.flipper[:lti_launch].disable
+      end
+
       it "404s" do
         get :import_from_lms, params: { id: organization.slug }
         expect(response).to have_http_status(:not_found)
