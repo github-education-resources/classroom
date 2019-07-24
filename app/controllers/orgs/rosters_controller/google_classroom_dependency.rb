@@ -10,7 +10,7 @@ module Orgs
     before_action :google_classroom_ensure_no_roster, only: :import_from_google_classroom
 
     def import_from_google_classroom
-      students = @google_classroom_course.students
+      students = list_google_classroom_students
       return unless students
 
       if students.blank?
@@ -28,7 +28,7 @@ module Orgs
         return
       end
 
-      latest_students = @google_classroom_course.students
+      latest_students = list_google_classroom_students
       latest_student_ids = latest_students.collect(&:user_id)
       current_student_ids = current_roster.roster_entries.collect(&:google_user_id)
 
@@ -43,7 +43,7 @@ module Orgs
 
     def ensure_google_classroom_is_linked
       return unless current_organization.google_course_id.nil?
-      redirect_to google_classrooms_select_organization_path(current_organization),
+      redirect_to google_classrooms_index_organization_path(current_organization),
         alert: "Please link a Google Classroom before syncing a roster."
     end
 
@@ -59,9 +59,8 @@ module Orgs
 
     # Returns list of students in a google classroom with error checking
     # rubocop:disable Metrics/MethodLength
-    # TODO use GoogleClassroom
-    def list_google_classroom_students(course_id)
-      GoogleClassroomCourse.new(@google_classroom_service, course_id).students || []
+    def list_google_classroom_students
+      @google_classroom_course.students || []
     rescue Google::Apis::AuthorizationError
       google_classroom_client = GitHubClassroom.google_classroom_client
       login_hint = current_user.github_user.login
