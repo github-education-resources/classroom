@@ -3,77 +3,72 @@
 
   <% lms_name = current_lti_configuration.lms_name(default_name: "your Learning Management System") %>
 
-  <div class="columns">
-    <div class="one-fourth column">
-      <%= render partial: 'organizations/side_menu' %>
+  <div class="site-content">
+    <div class="site-content-cap">
+      <h2 class="site-content-heading">Connect to <%= lms_name %></h2>
     </div>
-    <div class="three-fourths column">
-      <div class="site-content">
-        <div class="site-content-cap">
-          <h2 class="site-content-heading">Connect to <%= lms_name %></h2>
-        </div>
 
-        <div class="site-content-body markdown-body">
-          <h3>Connect GitHub Classroom to <%= lms_name %></h3>
-          <p>You or your system administrator will need to add a new application to
-          <%= lms_name %> with the following credentials generated below
-          by GitHub Classroom.</p>
+    <div class="site-content-body markdown-body">
+      <h3>Connect GitHub Classroom to <%= lms_name %></h3>
+      <p>You or your system administrator will need to add a new application to
+      <%= lms_name %> with the following credentials generated below
+      by GitHub Classroom. Check out our
+      <%= link_to "step-by-step guide for configuing GitHub Classroom with #{lms_name}.", "https://www.youtube.com/watch?v=dQw4w9WgXcQ" %>
+      </p>
 
-          <dt><label>Consumer Key</label></dt>
-          <div class="input-group">
-            <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "consumer-key-#{current_organization.github_id}", value: current_lti_configuration.consumer_key, readonly: 'readonly' %>
-            <span class="input-group-button">
-              <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#consumer-key-#{current_organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
-                <%= octicon 'clippy' %>
-                Copy
-              </button>
-            </span>
-          </div>
+      <dt><label>Consumer Key</label></dt>
+      <div class="input-group">
+        <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "consumer-key-#{current_organization.github_id}", value: current_lti_configuration.consumer_key, readonly: 'readonly' %>
+        <span class="input-group-button">
+          <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#consumer-key-#{current_organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
+            <%= octicon 'clippy' %>
+            Copy
+          </button>
+        </span>
+      </div>
 
-          <br>
+      <br>
 
-          <dt><label>Shared Secret</label></dt>
-          <div class="input-group">
-            <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "shared-secret-#{current_organization.github_id}", value: current_lti_configuration.shared_secret, readonly: 'readonly' %>
-            <span class="input-group-button">
-              <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#shared-secret-#{current_organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
-                <%= octicon 'clippy' %>
-                Copy
-              </button>
-            </span>
-          </div>
+      <dt><label>Shared Secret</label></dt>
+      <div class="input-group">
+        <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "shared-secret-#{current_organization.github_id}", value: current_lti_configuration.shared_secret, readonly: 'readonly' %>
+        <span class="input-group-button">
+          <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#shared-secret-#{current_organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
+            <%= octicon 'clippy' %>
+            Copy
+          </button>
+        </span>
+      </div>
 
-          <br>
+      <br>
 
-          <dt><label>Application Auto-Configuration URL</label></dt>
-          <dt>If <%= lms_name %> supports the capability, paste in this link to automatically set up Classroom.<dt>
-          <div class="input-group">
-            <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "autoconfigure-url-#{current_organization.github_id}", value: autoconfigure_lti_configuration_url, readonly: 'readonly' %>
-            <span class="input-group-button">
-              <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#shared-secret-#{current_organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
-                <%= octicon 'clippy' %>
-                Copy
-              </button>
-            </span>
-          </div>
-        </div>
-
-        <div class="boxed-group dangerzone pb-3">
-          <h3>Delete Connection to <%= lms_name %></h3>
-          <div class="boxed-group-inner pt-2 clearfix">
-            <p>
-              Deleting this classroom's connection to <%= lms_name %> will not delete your roster.
-            </p>
-            <p>
-              Assignments, assignment repos, and students will be unaffected.
-            </p>
-              You will not be able to sync this classroom's roster, assignments, and submissions with <%= lms_name %> going forward.
-            </p>
-            <p>
-              <%= button_to "Disconnect from #{lms_name}", lti_configuration_path(current_organization), method: :delete, class: 'btn btn-danger'%>
-            </p>
-          </div>
+      <dt><label>Application Auto-Configuration URL</label></dt>
+      <dt>If <%= lms_name %> supports the capability, paste in this link to automatically set up Classroom.<dt>
+      <div class="input-group">
+        <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "autoconfigure-url-#{current_organization.github_id}", value: autoconfigure_lti_configuration_url, readonly: 'readonly' %>
+        <span class="input-group-button">
+          <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#shared-secret-#{current_organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
+            <%= octicon 'clippy' %>
+            Copy
+          </button>
+        </span>
       </div>
     </div>
+
+    <div class="boxed-group dangerzone pb-3">
+      <h3>Delete Connection to <%= lms_name %></h3>
+      <div class="boxed-group-inner pt-2 clearfix">
+        <p>
+          Deleting this classroom's connection to <%= lms_name %> will not delete your roster.
+        </p>
+        <p>
+          Assignments, assignment repos, and students will be unaffected.
+        </p>
+          You will not be able to sync this classroom's roster, assignments, and submissions with <%= lms_name %> going forward.
+        </p>
+        <p>
+          <%= button_to "Disconnect from #{lms_name}", lti_configuration_path(current_organization), method: :delete, class: 'btn btn-danger'%>
+        </p>
+      </div>
   </div>
 </div>
