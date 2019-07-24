@@ -90,7 +90,9 @@ class OrganizationsController < Orgs::Controller
 
   def new_assignment; end
 
-  def link_lms; end
+  def link_lms
+    not_found unless lti_launch_enabled?
+  end
 
   def invite; end
 

@@ -294,7 +294,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
       context "with no existing LMS" do
         it "Redirects to link LTI configuration page" do
           get :import_from_lms, params: { id: organization.slug }
-          expect(response).to redirect_to(link_lms_configuration_path)
+          expect(response).to redirect_to(link_lms_organization_path)
         end
       end
     end
