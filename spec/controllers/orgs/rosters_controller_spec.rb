@@ -770,7 +770,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
         end
       end
 
-      # TODO with google classroom not linked
+      # TODO: with google classroom not linked
       after do
         GitHubClassroom.flipper[:google_classroom_roster_import].disable
       end

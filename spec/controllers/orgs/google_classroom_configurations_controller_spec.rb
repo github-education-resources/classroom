@@ -20,7 +20,7 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
       end
 
       context "when the user is authorized" do
-        before do 
+        before do
           client = Signet::OAuth2::Client.new
           allow_any_instance_of(ApplicationController)
             .to receive(:user_google_classroom_credentials)
@@ -31,20 +31,20 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
             .to receive(:list_courses)
             .and_return(response)
 
-          get :index, params:{
+          get :index, params: {
             id: organization.slug
           }
         end
-      end 
+      end
 
-      context "when user is not authorized" do 
+      context "when user is not authorized" do
         before do
           # Stub google authentication again
           allow_any_instance_of(ApplicationController)
-          .to receive(:user_google_classroom_credentials)
-          .and_return(nil)
+            .to receive(:user_google_classroom_credentials)
+            .and_return(nil)
 
-          get :index, params:{
+          get :index, params: {
             id: organization.slug
           }
         end
@@ -60,9 +60,9 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
     end
 
     context "with flipper off" do
-      before do 
+      before do
         GitHubClassroom.flipper[:google_classroom_roster_import].disable
-        get :index, params:{
+        get :index, params: {
           id: organization.slug
         }
       end
@@ -72,7 +72,7 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
       end
     end
   end
-  
+
   describe "#create", :vcr do
     context "with flipper on" do
       before(:each) do
@@ -80,14 +80,14 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
       end
 
       context "when the user is authorized" do
-        before do 
+        before do
           # Stub google authentication again
           client = Signet::OAuth2::Client.new
           allow_any_instance_of(ApplicationController)
             .to receive(:user_google_classroom_credentials)
             .and_return(client)
 
-          post :create, params:{
+          post :create, params: {
             id: organization.slug,
             course_id: 6464
           }
@@ -106,7 +106,7 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
             .to receive(:user_google_classroom_credentials)
             .and_return(nil)
 
-          post :create, params:{
+          post :create, params: {
             id: organization.slug,
             course_id: 6464
           }
@@ -125,7 +125,7 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
     context "with flipper off" do
       before do
         GitHubClassroom.flipper[:google_classroom_roster_import].disable
-        post :create, params:{
+        post :create, params: {
           id: organization.slug,
           course_id: 6464
         }
@@ -144,7 +144,7 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
       end
 
       context "when the user is authorized" do
-        before do 
+        before do
           # Stub google authentication again
           client = Signet::OAuth2::Client.new
           allow_any_instance_of(ApplicationController)
@@ -183,8 +183,8 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
           expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
         end
       end
-      
-      after(:each) do 
+
+      after(:each) do
         GitHubClassroom.flipper[:google_classroom_roster_import].disable
       end
     end
