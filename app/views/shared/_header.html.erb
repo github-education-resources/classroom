@@ -7,52 +7,32 @@
 
       <ul class="list-style-none d-flex flex-justify-center">
         <% if logged_in? %>
-          <li class="mx-3">
-            <%= link_to 'https://education.github.com/forum', class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.community_discussion') do %>
-              <%= octicon 'comment-discussion' %>
-            <% end %>
-          </li>
-
-
-          <li class="mx-3">
-            <%= link_to 'https://github.com/education/classroom/issues', class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.report_bug') do %>
-              <%= octicon 'bug' %>
-            <% end %>
-          </li>
-
-          <li class="mx-3">
-            <%= link_to 'https://github.com/education/classroom/pulls?q=is%3Apr+is%3Amerged+sort%3Aupdated-desc', target: '_blank', class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.changelog') do %>
-              <%= octicon 'git-pull-request' %>
-            <% end %>
-          </li>
-
-          <li class="mx-3">
-            <%= link_to help_path, class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.help') do %>
-              <%= octicon 'question' %>
-            <% end %>
-          </li>
-
-          <li class="mx-3">
-            <% if impersonating?(current_user, true_user) %>
-              <%= link_to stop_impersonating_stafftools_user_path(current_user), class: 'tooltipped tooltipped-s', method: :delete, 'aria-label' => t('views.shared.stop_impersonating', user: current_user.github_user.login) do %>
-                <div class="avatar-parent-child left">
-                  <%= image_tag current_user.github_user.github_avatar_url(40), class: 'avatar', alt: "@#{current_user.github_user.login}", height: 20, width: 20 %>
-                  <%= image_tag true_user.github_user.github_avatar_url(20), class: 'avatar avatar-child', alt: "@#{true_user.github_user.login}", height: 10, width: 10 %>
-                </div>
-              <% end %>
-            <% else %>
-              <%= link_to current_user.github_user.html_url, class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.view_gh_profile') do %>
-                <%= image_tag current_user.github_user.github_avatar_url(40), class: 'avatar', alt: "@#{current_user.github_user.login}", height: 20, width: 20 %>
-              <% end %>
-            <% end %>
-          </li>
-
           <li class="ml-3">
-            <%= link_to logout_path, method: :post, class: 'tooltipped tooltipped-s', 'aria-label' => t('views.shared.sign_out') do %>
-              <%= octicon 'sign-out' %>
-            <% end %>
-          </li>
+            <details class="dropdown details-reset details-overlay d-inline-block">
+              <summary aria-haspopup="true">
+                <%= image_tag current_user.github_user.github_avatar_url(40), class: 'avatar', alt: "@#{current_user.github_user.login}", height: 20, width: 20 %>
+                <div class="dropdown-caret mt-1"></div>
+              </summary>
 
+              <div role="menu" class="dropdown-menu dropdown-menu-sw mt-2" style="width: 180px">
+                <%= link_to current_user.github_user.html_url, class: "dropdown-item", role: "menuitem" do %>
+                  <%= t("views.shared.signed_in_as") %> <strong><%= current_user.github_user.login %></strong>
+                <% end %>
+
+                <div role="none" class="dropdown-divider"></div>
+
+                <%= link_to t("views.shared.your_classrooms"), organizations_path, class: "dropdown-item", role: "menuitem" %>
+                <%= link_to t("views.shared.community_discussion"), "https://education.github.com/forum", class: "dropdown-item", role: "menuitem" %>
+                <%= link_to t("views.shared.report_bug"), 'https://github.com/education/classroom/issues', class: "dropdown-item", role: "menuitem" %>
+                <%= link_to t("views.shared.changelog"), 'https://github.com/education/classroom/pulls?q=is%3Apr+is%3Amerged+sort%3Aupdated-desc', class: "dropdown-item", role: "menuitem", target: '_blank' %>
+
+                <div role="none" class="dropdown-divider"></div>
+
+                <%= link_to t("views.shared.help"), help_path, class: "dropdown-item", role: 'menuitem' %>
+                <%= link_to t("views.shared.sign_out"), logout_path, method: :post, class: "dropdown-item dropdown-signout", role: 'menuitem' %>
+              </div>
+            </details>
+          </li>
         <% else %>
           <li class="ml-3"><%= link_to t('views.shared.sign_in'), login_path %></li>
         <% end %>
@@ -60,7 +40,3 @@
     </nav>
   </div>
 </header>
-
-<% if controller_path.split('/').first == 'stafftools' %>
-  <div class="stafftools-border"></div>
-<% end %>

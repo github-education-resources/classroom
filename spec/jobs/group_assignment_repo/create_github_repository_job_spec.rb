@@ -129,7 +129,6 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
           it "tracks create success and import started" do
             expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.create.success")
             expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
-            expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.success")
             expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.import.started")
           end
 
@@ -196,7 +195,6 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             it "tracks create success" do
               expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.create.success")
               expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.import.started")
-              expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.success")
               expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
             end
 
@@ -274,7 +272,6 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
               expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.create.fail")
               expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.InternalServerError")
               expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.fail")
-              expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.fail")
             end
 
             it "logs error" do
@@ -334,7 +331,6 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
               expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.create.fail")
               expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.InternalServerError")
               expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.fail")
-              expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.fail")
             end
 
             it "logs error" do
@@ -401,7 +397,6 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
               expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.create.fail")
               expect(GitHubClassroom.statsd).to receive(:increment).with("github.error.InternalServerError")
               expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.fail")
-              expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.fail")
             end
 
             it "logs error" do
@@ -459,7 +454,6 @@ RSpec.describe GroupAssignmentRepo::CreateGitHubRepositoryJob, type: :job do
             it "tracks create fail" do
               expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_repo.create.fail")
               expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.fail")
-              expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_repo.create.fail")
             end
           end
         end
