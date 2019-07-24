@@ -9,7 +9,6 @@ class GoogleClassroomCourse
 
   def name
     course = @google_classroom_service.get_course(@course_id)
-    binding.pry
     course&.name
   end
 
