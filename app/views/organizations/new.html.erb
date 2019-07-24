@@ -13,9 +13,9 @@
     <%= form_for @organization do |f| %>
       <%= render 'shared/error_messages', object: f.object %>
 
-      <div class="d-flex flex-wrap gutter">
+      <div class="d-flex flex-wrap gutter-spacious">
         <% @users_github_organizations.each do |org| %>
-          <div class="col-6 col-md-4 col-lg-3">
+          <div class="col-6 col-md-4 col-lg-3 mb-6">
             <% if org[:role] == 'admin' && (!org[:classroom].present? || multiple_classrooms_per_org_enabled?) %>
               <%= render partial: 'organization_select', locals: { org: org } %>
             <% else %>
@@ -23,7 +23,7 @@
             <% end %>
           </div>
         <% end %>
-        <div class="col-6 col-md-4 col-lg-3">
+        <div class="col-6 col-md-4 col-lg-3 mb-6">
           <a href="<%= "https://github.com/settings/connections/applications/#{Rails.application.secrets.github_client_id}" %>" target="_blank" class="d-flex flex-column flex-justify-center height-full border text-center text-bold p-5">
             <span class="organization-grant-access-text"><%= t('views.organizations.grant_organization_access').html_safe %></span>
           </a>
