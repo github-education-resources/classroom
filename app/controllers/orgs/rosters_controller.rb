@@ -251,7 +251,6 @@ module Orgs
     end
 
     # Returns name of the linked google course to current organization (for syncing rosters)
-    # TODO use GoogleClassroom
     def current_organization_google_course_name
       return unless current_organization.google_course_id
 
