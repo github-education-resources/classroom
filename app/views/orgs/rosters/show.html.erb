@@ -12,8 +12,12 @@
             Classroom roster
           </span>
           <div class='flex-justify-between'>
-            <span class="btn btn-primary btn-sm", role="button" data-remodal-target="new-student-modal">Update students</span>
-             <span class="btn btn-primary btn-sm", role="button" data-remodal-target="download-csv-modal">Download</span>
+            <% if current_organization.lti_configuration %>
+              <%= link_to "Sync from LMS", import_from_lms_roster_path, remote: true, method: :get, class: "btn btn-primary btn-sm" %>
+            <% else %>
+              <span class="btn btn-primary btn-sm", role="button" data-remodal-target="new-student-modal">Update students</span>
+            <% end %>
+            <span class="btn btn-primary btn-sm", role="button" data-remodal-target="download-csv-modal">Download</span>
           </div>
         </h3>
 
@@ -76,3 +80,4 @@
 <%= render partial: 'new_student_modal', locals: { roster: current_roster, google_course_name: @google_course_name } %>
 <%= render partial: 'download_csv_modal', locals: { roster: current_roster, organization: current_organization } %>
 <%= render partial: 'remove_roster_modal', locals: { roster: current_roster, organization: current_organization } %>
+<%= render partial: 'select_identifier_modal', locals: { roster: current_roster, organization: current_organization } %>

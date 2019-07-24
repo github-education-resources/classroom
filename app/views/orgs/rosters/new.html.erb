@@ -17,34 +17,48 @@
           class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
         %>
       </div>
+    <% end %>
+    <% if lti_launch_enabled? %>
+      <div class="my-3">
+        <h2 class="h3 mb-2">Import from</h2>
 
-      <div class="f4 text-gray text-italic">or...</div>
+        <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Learning Management System",
+          import_from_lms_roster_path,
+          class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+        %>
+      </div>
     <% end %>
 
+
     <div class="my-3">
-      <h2 class="h3 mb-2">Manually add students</h2>
+      <% if !current_organization.lti_configuration %>
+        <h2 class="h3 mb-2">Manually add students</h2>
+        <div>
+          <%= form_tag roster_path(current_organization), method: :post do |f| %>
+            <div class="Box">
+              <dl class="Box-body <%= view.form_class_for(:roster_entries) %> mb-0">
+                <dt class="text-gray mb-1">Enter your list of students' identifiers, <strong>one per line</strong>.</dt>
+                <dd><%= text_area_tag(:identifiers, '', class: 'form-control input-block', id: 'entries-field', required: true) %></dd>
+                <%= render('shared/form_error', errors: view.error_message_for(:roster_entries)) if view.errors_for?(:roster_entries) %>
+              </dl>
 
-      <div>
-        <%= form_tag roster_path(current_organization), method: :post do |f| %>
-          <div class="Box">
-            <dl class="Box-body <%= view.form_class_for(:roster_entries) %> mb-0">
-              <dt class="text-gray mb-1">Enter your list of students' identifiers, <strong>one per line</strong>.</dt>
-              <dd><%= text_area_tag(:identifiers, '', class: 'form-control input-block', id: 'entries-field', required: true) %></dd>
-              <%= render('shared/form_error', errors: view.error_message_for(:roster_entries)) if view.errors_for?(:roster_entries) %>
-            </dl>
-
-            <div class="Box-footer bg-gray">
-              <label class='btn btn-secondary btn-sm' for="file-upload">Upload a CSV or text file</label>
-              <%= file_field_tag :identifiers_file, style: 'display: none', id: 'file-upload', onchange: 'onIdentifiersUploaded()' %>
+              <div class="Box-footer bg-gray">
+                <label class='btn btn-secondary btn-sm' for="file-upload">Upload a CSV or text file</label>
+                <%= file_field_tag :identifiers_file, style: 'display: none', id: 'file-upload', onchange: 'onIdentifiersUploaded()' %>
+              </div>
             </div>
-          </div>
 
-          <div class="d-flex flex-items-center border-top pt-5">
-            <%= submit_tag 'Create roster', class: 'btn btn-primary mr-3' %>
-            <%= link_to 'Skip', organization_path(current_organization), class: 'btn-link' %>
-          </div>
-        <% end %>
-      </div>
+            <div class="d-flex flex-items-center border-top pt-5">
+              <%= submit_tag 'Create roster', class: 'btn btn-primary mr-3' %>
+              <%= link_to 'Skip', organization_path(current_organization), class: 'btn-link' %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="d-flex flex-items-center border-top pt-5">
+          <%= link_to 'Skip', organization_path(current_organization), class: 'btn-link' %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

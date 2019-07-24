@@ -48,8 +48,7 @@ class GitHubOrganization < GitHubResource
       @client.create_team(
         @id,
         description: "#{team_name} created by GitHub Classroom",
-        name: team_name,
-        permission: "push"
+        name: team_name
       )
     end
 

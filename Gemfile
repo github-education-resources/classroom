@@ -12,6 +12,7 @@ gem "rails", "~> 5.1", ">= 5.1.7"
 
 gem "autoprefixer-rails", "~> 7.1", ">= 7.1.3"
 
+gem "barnes"
 gem "bootsnap", "~> 1.1", ">= 1.1.2", require: false
 
 gem "chewy", "~> 5.0.0"
@@ -46,7 +47,7 @@ gem "local_time", "~> 2.0"
 
 gem "oauth",           "~> 0.5.4"
 gem "octicons_helper", "~> 2.1"
-gem "octokit", github: "octokit/octokit.rb", ref: "ffae5ddd6fd9da6f4538ca7adeb5d1768011610b"
+gem "octokit", github: "octokit/octokit.rb"
 gem "octopoller",      "~> 0.1"
 gem "omniauth-github", "~> 1.3"
 

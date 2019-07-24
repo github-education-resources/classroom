@@ -38,6 +38,34 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
     end
   end
 
+  describe "GET #info", :vcr do
+    context "with flipper disabled" do
+      before(:each) do
+        GitHubClassroom.flipper[:lti_launch].disable
+      end
+
+      it "returns not_found" do
+        get :info, params: { id: organization.slug }
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context "with flipper enabled" do
+      before(:each) do
+        GitHubClassroom.flipper[:lti_launch].enable
+        get :info, params: { id: organization.slug }
+      end
+
+      it "returns success status" do
+        expect(response).to have_http_status(:success)
+      end
+
+      it "renders new template" do
+        expect(response).to render_template(:info)
+      end
+    end
+  end
+
   describe "GET #show", :vcr do
     context "with flipper disabled" do
       before(:each) do
@@ -73,7 +101,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       context "with no existing lti_configuration" do
         it "redirects to new" do
           get :show, params: { id: organization.slug }
-          expect(response).to redirect_to(new_lti_configuration_path(organization))
+          expect(response).to redirect_to(info_lti_configuration_path(organization))
         end
       end
     end
@@ -85,10 +113,30 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         GitHubClassroom.flipper[:lti_launch].enable
       end
 
-      it "creates lti_configuration" do
-        post :create, params: { id: organization.slug }
+      it "creates lti_configuration if lms_type is set" do
+        post :create, params: { id: organization.slug, lti_configuration: { lms_type: :other } }
         expect(organization.lti_configuration).to_not be_nil
         expect(response).to redirect_to(lti_configuration_path(organization))
+      end
+
+      it "redirects to :new if lms_type is unset" do
+        post :create, params: { id: organization.slug }
+        expect(organization.lti_configuration).to be_nil
+        expect(response).to redirect_to(new_lti_configuration_path(organization))
+      end
+
+      context "with existing google classrom" do
+        before do
+          organization.update_attributes(google_course_id: "1234")
+        end
+
+        it "alerts user about existing configuration" do
+          get :create, params: { id: organization.slug }
+          expect(response).to redirect_to(edit_organization_path(organization))
+          expect(flash[:alert]).to eq(
+            "A Google Classroom configuration exists. Please remove configuration before creating a new one."
+          )
+        end
       end
 
       context "with an existing roster" do
@@ -163,12 +211,14 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
 
       context "with existing lti_configuration" do
         before(:each) do
-          post :create, params: { id: organization.slug }
+          create(:lti_configuration, organization: organization)
         end
 
         it "updates with new LMS url" do
           options = { lms_link: "https://github.com" }
           patch :update, params: { id: organization.slug, lti_configuration: options }
+
+          organization.lti_configuration.reload
           expect(organization.lti_configuration.lms_link).to eq("https://github.com")
           expect(flash[:success]).to eq("The configuration was sucessfully updated.")
           expect(response).to redirect_to(lti_configuration_path(organization))
@@ -179,7 +229,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         it "does not update or create" do
           options = { lms_link: "https://github.com" }
           patch :update, params: { id: organization.slug, lti_configuration: options }
-          expect(response).to redirect_to(new_lti_configuration_path(organization))
+          expect(response).to redirect_to(info_lti_configuration_path(organization))
           expect(organization.lti_configuration).to be_nil
         end
       end
@@ -206,7 +256,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
 
       context "with existing lti_configuration" do
         before(:each) do
-          post :create, params: { id: organization.slug }
+          create(:lti_configuration, organization: organization)
         end
 
         it "returns an xml configuration" do
@@ -219,7 +269,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       context "with no existing lti_configuration" do
         it "does not generate an xml configuration" do
           patch :autoconfigure, params: { id: organization.slug }
-          expect(response).to redirect_to(new_lti_configuration_path(organization))
+          expect(response).to redirect_to(info_lti_configuration_path(organization))
           expect(organization.lti_configuration).to be_nil
         end
       end

@@ -33,8 +33,18 @@ class ApplicationController
   end
   helper_method :search_assignments_enabled?
 
+  def archive_classrooms_enabled?
+    logged_in? && current_user.feature_enabled?(:archive_classrooms)
+  end
+  helper_method :archive_classrooms_enabled?
+
   def lti_launch_enabled?
     GitHubClassroom.flipper[:lti_launch].enabled? || (logged_in? && current_user.feature_enabled?(:lti_launch))
   end
   helper_method :lti_launch_enabled?
+
+  def unified_repo_creators_enabled?
+    GitHubClassroom.flipper[:unified_repo_creators].enabled?
+  end
+  helper_method :unified_repo_creators_enabled?
 end

@@ -40,6 +40,7 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
+  # rubocop:disable PerceivedComplexity
   def create_repo
     job_started =
       if group_invite_status.accepted? || group_invite_status.errored?
@@ -51,7 +52,11 @@ class GroupAssignmentInvitationsController < ApplicationController
           @group_assignment_repo = nil
           report_retry
           group_invite_status.waiting!
-          GroupAssignmentRepo::CreateGitHubRepositoryJob.perform_later(group_assignment, group, retries: 3)
+          if unified_repo_creators_enabled?
+            CreateGitHubRepositoryNewJob.perform_later(group_assignment, group, retries: 3)
+          else
+            GroupAssignmentRepo::CreateGitHubRepositoryJob.perform_later(group_assignment, group, retries: 3)
+          end
           true
         end
       else
@@ -65,6 +70,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable MethodLength
+  # rubocop:enable PerceivedComplexity
 
   def progress
     render json: {
@@ -181,7 +187,7 @@ class GroupAssignmentInvitationsController < ApplicationController
       flash[:error] = result.error
       redirect_to group_assignment_invitation_path
     when :success, :pending
-      GitHubClassroom.statsd.increment("v2_group_exercise_invitation.accept")
+      GitHubClassroom.statsd.increment("group_exercise_invitation.accept")
       route_based_on_status
     end
   end
@@ -192,14 +198,14 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   def report_retry
     if group_invite_status.errored_creating_repo?
-      GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.retry")
+      GitHubClassroom.statsd.increment("group_exercise_repo.create.retry")
     elsif group_invite_status.errored_importing_starter_code?
-      GitHubClassroom.statsd.increment("v2_group_exercise_repo.import.retry")
+      GitHubClassroom.statsd.increment("group_exercise_repo.import.retry")
     end
   end
 
   def report_invitation_failure
-    GitHubClassroom.statsd.increment("v2_group_exercise_invitation.fail")
+    GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
   end
 
   ## Resource Helpers

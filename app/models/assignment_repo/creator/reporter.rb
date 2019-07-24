@@ -36,10 +36,11 @@ class AssignmentRepo
       #
       def report_time(start_time, assignment)
         duration_in_millseconds = (Time.zone.now - start_time) * 1_000
-        if assignment.starter_code?
+        if assignment.use_importer?
           GitHubClassroom.statsd.timing("exercise_repo.create.time.with_importer", duration_in_millseconds)
+        elsif assignment.use_template_repos?
+          GitHubClassroom.statsd.timing("exercise_repo.create.time.with_templates", duration_in_millseconds)
         else
-          GitHubClassroom.statsd.timing("v2_exercise_repo.create.time", duration_in_millseconds)
           GitHubClassroom.statsd.timing("exercise_repo.create.time", duration_in_millseconds)
         end
       end
@@ -47,25 +48,21 @@ class AssignmentRepo
       # Maps the type of error to a Datadog error
       #
       # rubocop:disable MethodLength
-      # rubocop:disable AbcSize
       def report_error(err)
         case err.message
         when /^#{REPOSITORY_CREATION_FAILED}/
-          GitHubClassroom.statsd.increment("v2_exercise_repo.create.repo.fail")
           GitHubClassroom.statsd.increment("exercise_repo.create.repo.fail")
         when /^#{REPOSITORY_COLLABORATOR_ADDITION_FAILED}/
-          GitHubClassroom.statsd.increment("v2_exercise_repo.create.adding_collaborator.fail")
           GitHubClassroom.statsd.increment("exercise_repo.create.adding_collaborator.fail")
         when /^#{REPOSITORY_STARTER_CODE_IMPORT_FAILED}/
-          GitHubClassroom.statsd.increment("v2_exercise_repo.create.importing_starter_code.fail")
           GitHubClassroom.statsd.increment("exercise_repo.create.importing_starter_code.fail")
+        when /^#{TEMPLATE_REPOSITORY_CREATION_FAILED}/
+          GitHubClassroom.statsd.increment("exercise_repo.create.repo.with_templates.failed")
         else
-          GitHubClassroom.statsd.increment("v2_exercise_repo.create.fail")
           GitHubClassroom.statsd.increment("exercise_repo.create.fail")
         end
       end
       # rubocop:enable MethodLength
-      # rubocop:enable AbcSize
     end
   end
 end
