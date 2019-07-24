@@ -57,7 +57,9 @@ class OrganizationsController < Orgs::Controller
   end
 
   def update
-    if current_organization.update_attributes(update_organization_params)
+    result = Organization::Editor.perform(organization: current_organization, options: update_organization_params.to_h)
+
+    if result.success?
       flash[:success] = "Organization \"#{current_organization.title}\" updated"
       redirect_to current_organization
     else
@@ -180,19 +182,9 @@ class OrganizationsController < Orgs::Controller
   end
 
   def update_organization_params
-    add_archive_params
     params
       .require(:organization)
-      .permit(:title, :archived_at)
-  end
-
-  def add_archive_params
-    org_params = params[:organization]
-    if org_params[:archived] == "true"
-      org_params[:archived_at] = Time.zone.now
-    elsif org_params[:archived] == "false"
-      org_params[:archived_at] = nil
-    end
+      .permit(:title, :archived)
   end
 
   def verify_user_belongs_to_organization
