@@ -18,13 +18,13 @@
     <div class="loading-indicator" style="display: none;"></div>
 
     <%= render 'peek/bar' %>
-    <main>
+    <main class="bg-gray-light">
       <%= render 'shared/message_of_the_day' %>
       <%= render 'shared/header' %>
 
       <%= yield :organization_banner %>
 
-      <div id="flash-messages">
+      <div id="flash-messages" class="container-lg p-responsive">
         <%= render 'shared/flash_messages' %>
       </div>
 

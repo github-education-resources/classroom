@@ -1,9 +1,0 @@
-.btn-primary {
-  @include btn-solid($text-white, #69c387, #519568);
-  border-color: #55926a;
-
-  &:hover {
-    @include btn-solid($text-white, #5da976, #468059);
-    border-color: #477958;
-  };
-}
