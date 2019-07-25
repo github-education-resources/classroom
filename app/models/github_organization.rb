@@ -37,6 +37,16 @@ class GitHubOrganization < GitHubResource
     GitHubRepository.new(@client, repo.id)
   end
 
+  def create_repository_from_template(template_repo_id, repo_name, users_repo_options = {})
+    repo_options = github_template_repo_default_options.merge(users_repo_options)
+
+    repo = GitHub::Errors.with_error_handling do
+      @client.create_repository_from_template(template_repo_id, repo_name, repo_options)
+    end
+
+    GitHubRepository.new(@client, repo.id)
+  end
+
   def delete_repository(repo_id)
     GitHub::Errors.with_error_handling do
       @client.delete_repository(repo_id)
@@ -164,6 +174,13 @@ class GitHubOrganization < GitHubResource
       has_wiki:      true,
       has_downloads: true,
       organization:  @id
+    }
+  end
+
+  def github_template_repo_default_options
+    {
+      owner: @login,
+      include_all_branches: true
     }
   end
 

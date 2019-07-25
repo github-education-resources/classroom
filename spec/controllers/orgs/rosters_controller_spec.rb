@@ -292,14 +292,18 @@ RSpec.describe Orgs::RostersController, type: :controller do
       end
 
       context "with no existing LMS" do
-        it "Redirects to new LTI configuration page" do
+        it "Redirects to link LTI configuration page" do
           get :import_from_lms, params: { id: organization.slug }
-          expect(response).to redirect_to(new_lti_configuration_path)
+          expect(response).to redirect_to(link_lms_organization_path)
         end
       end
     end
 
     context "with lti launch disabled" do
+      before do
+        GitHubClassroom.flipper[:lti_launch].disable
+      end
+
       it "404s" do
         get :import_from_lms, params: { id: organization.slug }
         expect(response).to have_http_status(:not_found)

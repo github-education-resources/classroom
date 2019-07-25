@@ -14,8 +14,6 @@ class GroupAssignmentRepo
     ADDING_COLLABORATOR = "Adding collaborator"
     IMPORT_STARTER_CODE = "Importing starter code"
     CREATE_COMPLETE     = "Your GitHub repository was created."
-    GITHUB_API_HOST     = "https://api.github.com"
-    TEMPLATE_REPOS_API_PREVIEW = "application/vnd.github.baptiste-preview"
 
     def self.perform(group_assignment:, group:)
       new(group_assignment: group_assignment, group: group).perform
@@ -69,7 +67,6 @@ class GroupAssignmentRepo
         raise Result::Error.new DEFAULT_ERROR_MESSAGE, error.message
       end
 
-      GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.success")
       GitHubClassroom.statsd.increment("group_exercise_repo.create.success")
 
       if group_assignment.use_importer?
@@ -111,17 +108,13 @@ class GroupAssignmentRepo
     def create_github_repository_from_template!
       GitHubClassroom.statsd.increment("group_exercise_repo.create.repo.with_templates.started")
       repository_name = generate_github_repository_name
-      client = group_assignment.creator.github_client
+      template_repo_id = group_assignment.starter_code_repo_id
       options = {
-        name: repository_name,
-        owner: organization.github_organization.login,
         private: group_assignment.private?,
-        description: "#{repository_name} created by GitHub Classroom",
-        accept: TEMPLATE_REPOS_API_PREVIEW,
-        include_all_branches: true
+        description: "#{repository_name} created by GitHub Classroom"
       }
 
-      client.post("#{GITHUB_API_HOST}/repositories/#{group_assignment.starter_code_repo_id}/generate", options)
+      organization.github_organization.create_repository_from_template(template_repo_id, repository_name, options)
     rescue GitHub::Error => error
       GitHubClassroom.statsd.increment("group_exercise_repo.create.repo.with_templates.failed")
       raise Result::Error.new TEMPLATE_REPOSITORY_CREATION_FAILED, error.message
