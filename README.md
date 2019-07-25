@@ -158,7 +158,7 @@ ENV Variable | Description |
 `GITHUB_CLIENT_SECRET`| the GitHub Application Client Secret.
 `NON_STAFF_GITHUB_ADMIN_IDS` | GitHub `user_ids` of users to be granted staff level access.
 `GOOGLE_CLIENT_ID` | the Google Client ID
-`GOOGLE_CLIENT_SECRET=` | the Google Client Secret
+`GOOGLE_CLIENT_SECRET` | the Google Client Secret
 
 To obtain your `GitHub Client ID/Secret` you need to [register a new OAuth application](https://github.com/settings/applications/new).
 
