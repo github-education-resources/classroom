@@ -4,47 +4,45 @@
   <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
   <h2 class="remodal-header text-left">Add students to your Roster</h2>
 
-  <% if @google_course_name && google_classroom_roster_import_enabled? %>
     <div class="my-3">
-      <h3 class="h4 mb-2">Sync with Google Classroom</h3>
-      <div class="f5 mt-2 d-block">Linked with <strong><%= @google_course_name %></strong></div>
-      <%= link_to sync_google_classroom_roster_path, method: :patch, class: "btn btn-sm mt-4" do %>
-        Update Sync
+      <% if google_classroom_roster_import_enabled? || lti_launch_enabled? %>
+        <p>GitHub Classroom is able to automatically import your roster from your institution. If you
+        would rather manage your roster manually, you can still do that, too.</p>
       <% end %>
+      <% if google_classroom_roster_import_enabled? && !current_organization.lti_configuration %>
+        <% if current_organization.google_course_id? %>
+          <h3 class="h4 mb-2">Sync with Google Classroom</h3>
+          <div class="f5 mt-2 d-block">Linked with <strong><%= @google_course_name %></strong></div>
+          <%= link_to sync_google_classroom_roster_path, method: :patch, class: "btn btn-sm mt-4" do %>
+            Update Sync
+          <% end %>
 
-      <%= link_to unlink_google_classroom_roster_path, method: :patch, class: "btn btn-sm btn-danger mt-4 ml-2" do %>
-        Remove Link
+          <%= link_to unlink_google_classroom_roster_path, method: :patch, class: "btn btn-sm btn-danger mt-4 ml-2" do %>
+            Remove Link
+          <% end %>
+        <% else %>
+          <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Import from Google Classroom",
+            select_google_classroom_roster_path,
+            class: "btn btn-secondary btn-sm d-inline-flex flex-items-center mb-3"
+          %>
+        <% end%>
+      <% end %>
+      <% if lti_launch_enabled? && !current_organization.google_course_id %>
+        <% lms_name = "a Learning Management System" %>
+        <% if current_organization.lti_configuration %>
+          <% lms_name = current_organization.lti_configuration.lms_name(default_name: lms_name) %>
+          <p>It looks like you are connected to <%= lms_name %>. GitHub Classroom can automatically import your roster for you!</p>
+        <% end %>
+
+        <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Import from #{lms_name}",
+          import_from_lms_roster_path,
+          class: "btn btn-secondary btn-sm d-inline-flex flex-items-center mb-3"
+        %>
       <% end %>
     </div>
-  <% else %>
-    <% if google_classroom_roster_import_enabled? %>
-      <div class="my-3">
-        <h2 class="h4 mb-2">Import from</h2>
-
-        <%= link_to image_tag('google-classroom-logo.png', size: "15", class:"mr-2") + "Google Classroom",
-          select_google_classroom_roster_path,
-          class: "btn btn-sm btn-secondary d-inline-flex flex-items-center mb-2"
-        %>
-      </div>
-
-      <div class="my-3 f5 text-gray text-italic">or...</div>
-    <% end %>
-    <% if lti_launch_enabled? %>
-      <div class="my-3">
-        <h2 class="h4 mb-2">Import from</h2>
-
-        <%= link_to image_tag('google-classroom-logo.png', size: "15", class:"mr-2") + "Learning Management System",
-          lti_configuration_path(current_organization),
-          class: "btn btn-sm btn-secondary d-inline-flex flex-items-center mb-2"
-        %>
-      </div>
-
-      <div class="f5 text-gray text-italic">or...</div>
-    <% end %>
 
     <div class="my-3">
       <h2 class="h4 mb-2">Manually add students</h2>
-
       <div>
         <%= form_tag add_students_roster_path(current_organization), method: :patch do |f| %>
         <div class="Box">
@@ -66,5 +64,4 @@
         <% end %>
       </div>
     </div>
-  <% end %>
 </div>

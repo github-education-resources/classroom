@@ -11,20 +11,20 @@
       <p>Let's set up a roster so you can easily track student progress on your dashboard. You can always come back and complete this step later.</p>
     </div>
     <div class="my-3">
-      <% if google_classroom_roster_import_enabled? %>
+      <% if google_classroom_roster_import_enabled? && !current_organization.lti_configuration %>
         <% if current_organization.google_course_id? %>
-          It looks like you are connected to Google Classroom. GitHub Classroom can automatically import your roster for you!
+          <p>It looks like you are connected to Google Classroom. GitHub Classroom can automatically import your roster for you!</p>
         <% end %>
         <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Import from Google Classroom",
           select_google_classroom_roster_path,
           class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
         %>
       <% end %>
-      <% if lti_launch_enabled? %>
+      <% if lti_launch_enabled? && !current_organization.google_course_id %>
         <% lms_name = "your Learning Management System" %>
         <% if current_organization.lti_configuration %>
           <% lms_name = current_organization.lti_configuration.lms_name(default_name: lms_name) %>
-          It looks like you are connected to <%= lms_name %>. GitHub Classroom can automatically import your roster for you!
+          <p>It looks like you are connected to <%= lms_name %>. GitHub Classroom can automatically import your roster for you!</p>
         <% end %>
 
         <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Import from #{lms_name}",
@@ -32,7 +32,6 @@
           class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
         %>
       <% end %>
-
     </div>
 
     <div class="my-3">
