@@ -12,6 +12,6 @@ class FormView < ViewModel
   end
 
   def form_class_for(field)
-    "form#{errors_for?(field) ? ' errored primer-new' : ''}"
+    "form-group#{errors_for?(field) ? ' errored primer-new' : ''}"
   end
 end

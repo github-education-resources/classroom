@@ -1,5 +1,7 @@
 <% view = FormView.new(subject: @roster) %>
 
+<%= render 'organizations/organization_banner', settings: true %>
+
 <div class="site-content">
   <div class="site-content-cap">
     <h1 class="site-content-heading">Add students</h1>
@@ -8,27 +10,29 @@
     <div class="markdown-body">
       <p>Let's set up a roster so you can easily track student progress on your dashboard. You can always come back and complete this step later.</p>
     </div>
-    <% if google_classroom_roster_import_enabled? %>
-      <div class="my-3">
-        <h2 class="h3 mb-2">Import from</h2>
-
-        <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Google Classroom",
+    <div class="my-3">
+      <% if google_classroom_roster_import_enabled? && !current_organization.lti_configuration %>
+        <% if current_organization.google_course_id? %>
+          <p>It looks like you are connected to Google Classroom. GitHub Classroom can automatically import your roster for you!</p>
+        <% end %>
+        <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Import from Google Classroom",
           select_google_classroom_roster_path,
           class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
         %>
-      </div>
-    <% end %>
-    <% if lti_launch_enabled? %>
-      <div class="my-3">
-        <h2 class="h3 mb-2">Import from</h2>
+      <% end %>
+      <% if lti_launch_enabled? && !current_organization.google_course_id %>
+        <% lms_name = "your Learning Management System" %>
+        <% if current_organization.lti_configuration %>
+          <% lms_name = current_organization.lti_configuration.lms_name(default_name: lms_name) %>
+          <p>It looks like you are connected to <%= lms_name %>. GitHub Classroom can automatically import your roster for you!</p>
+        <% end %>
 
-        <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Learning Management System",
+        <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Import from #{lms_name}",
           import_from_lms_roster_path,
           class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
         %>
-      </div>
-    <% end %>
-
+      <% end %>
+    </div>
 
     <div class="my-3">
       <% if !current_organization.lti_configuration %>
