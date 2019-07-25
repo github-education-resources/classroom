@@ -93,7 +93,7 @@
     </dl>
     <dl class="<%= view.form_class_for(:deadline) %>">
       <dt><label>Deadline</label></dt>
-      <dd><%= f.text_field :deadline, class: 'jquery-datetimepicker form-control input-block', value: DeadlineFormatHelper.convert(f.object.deadline) %></dd>
+      <dd><%= f.text_field :deadline, class: 'jquery-datetimepicker form-control input-block', value: DeadlineFormatHelper.convert(f.object.deadline), autocomplete: :off %></dd>
       <%= render('shared/form_error', errors: view.error_message_for(:deadline)) if view.errors_for?(:deadline) %>
       <p class="f6 text-gray my-2">After the deadline, GitHub Classroom will save the latest commit from each repo as a submission. Submission commits are viewable on the assignment page.</p>
     </dl>
