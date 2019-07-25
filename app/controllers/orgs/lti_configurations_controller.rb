@@ -53,9 +53,10 @@ module Orgs
     end
 
     def destroy
+      lms_name = current_lti_configuration.lms_name(default_name: "your Learning Management System")
       current_lti_configuration.destroy!
 
-      redirect_to edit_organization_path(id: current_organization), alert: "LTI configuration deleted."
+      redirect_to edit_organization_path(current_organization), alert: "Classroom is now disconnected from #{lms_name}."
     end
 
     # rubocop:disable Metrics/MethodLength
