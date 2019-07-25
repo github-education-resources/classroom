@@ -11,7 +11,7 @@
     <div class="my-3">
       <h2 class="h3 mb-2">Select the Google Classroom roster you want to link</h2>
 
-      <%= form_tag search_google_classroom_roster_path, id: 'js-search-form', class: 'form-block col-md-4 py-2', method: :get, remote: true do %>
+      <%= form_tag google_classrooms_search_organization_path, id: 'js-search-form', class: 'form-block col-md-4 py-2', method: :get, remote: true do %>
         <%= text_field_tag :query, params[:query], class: 'form-control width-full', placeholder: 'Search Google Classrooms...', autofocus: true, autocomplete: :off %>
       <% end %>
 
