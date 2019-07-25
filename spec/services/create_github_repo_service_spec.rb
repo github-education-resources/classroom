@@ -39,6 +39,66 @@ RSpec.describe CreateGitHubRepoService do
           )
       end
     end
+
+    describe "#create_github_repository_from_template!" do
+      let(:client) { oauth_client }
+      let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
+
+      let(:github_repository) do
+        options = {
+          private: false,
+          is_template: true,
+          auto_init: true,
+          accept: "application/vnd.github.baptiste-preview"
+        }
+        github_organization.create_repository("#{Faker::Company.name} Template", options)
+      end
+
+      let(:assignment) do
+        options = {
+          title: "Learn Elm",
+          starter_code_repo_id: github_repository.id,
+          organization: organization,
+          students_are_repo_admins: true,
+          public_repo: true,
+          template_repos_enabled: true
+        }
+        create(:assignment, options)
+      end
+
+      let(:service) { described_class.new(assignment, student) }
+
+      after(:each) do
+        client.delete_repository(github_repository.id)
+        AssignmentRepo.destroy_all
+      end
+
+      it "sends a request to OctoKit::Client via assignment.creator.github_client with correct params" do
+        expect(service.assignment.creator.github_client)
+          .to receive(:post).with(
+            "https://api.github.com/repositories/#{github_repository.id}/generate",
+            hash_including(
+              name: service.exercise.repo_name,
+              owner: github_organization.login,
+              accept: "application/vnd.github.baptiste-preview",
+              include_all_branches: true
+            )
+          )
+        service.create_github_repository_from_template!
+      end
+
+      it "raises a Result::Error if repository not created" do
+        allow(service.assignment.creator.github_client)
+          .to receive(:post)
+          .and_raise(GitHub::Error, "Could not created GitHub repository")
+        expect { service.create_github_repository_from_template! }
+          .to raise_error(
+            subject::Result::Error,
+            "GitHub repository could not be created from template, please try again. (Could not created GitHub repository)" # rubocop:disable LineLength
+          )
+      end
+    end
+
     describe "#create_assignment_repo!" do
       it "gets correct github_repository attributes and saves the repo" do
         github_repository = double(id: 1, node_id: 1)
@@ -176,18 +236,122 @@ RSpec.describe CreateGitHubRepoService do
       end
     end
 
+    describe "#report_error" do
+      it "when error is :repository_creation_failed" do
+        expect(service.stats_sender).to receive(:report_with_exercise_prefix).with(:repository_creation_failed)
+        service.report_error(service.send(:errors, :repository_creation_failed))
+      end
+
+      it "when error is :template_repository_creation_failed" do
+        expect(service.stats_sender).to receive(:report_with_exercise_prefix).with(:template_repository_creation_failed)
+        service.report_error(service.send(:errors, :template_repository_creation_failed))
+      end
+
+      it "when error is :collaborator_addition_failed" do
+        expect(service.stats_sender).to receive(:report_with_exercise_prefix).with(:collaborator_addition_failed)
+        service.report_error(service.send(:errors, :collaborator_addition_failed))
+      end
+
+      it "when error is :starter_code_import_failed" do
+        expect(service.stats_sender).to receive(:report_with_exercise_prefix).with(:starter_code_import_failed)
+        service.report_error(service.send(:errors, :starter_code_import_failed))
+      end
+    end
+
     describe "#perform", :vcr do
       describe "successful creation" do
-        let(:assignment) do
-          options = {
-            title: "Learn Elm",
-            starter_code_repo_id: 1_062_897,
-            organization: organization,
-            students_are_repo_admins: true,
-            public_repo: true
-          }
+        describe "with importer" do
+          let(:assignment) do
+            options = {
+              title: "Learn Elm",
+              organization: organization,
+              students_are_repo_admins: true,
+              starter_code_repo_id: 1_062_897,
+              public_repo: true
+            }
+            create(:assignment, options)
+          end
+          it "tracks the how long it too to be created" do
+            expect(GitHubClassroom.statsd).to receive(:timing).with("exercise_repo.create.time.with_importer", anything)
+            service.perform
+          end
 
-          create(:assignment, options)
+          it "tracks create success stat" do
+            expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
+            expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.import.started")
+            service.perform
+          end
+        end
+
+        describe "with template repos" do
+          let(:client) { oauth_client }
+          let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
+          let(:github_repository) do
+            options = {
+              private: false,
+              is_template: true,
+              auto_init: true,
+              accept: "application/vnd.github.baptiste-preview"
+            }
+            github_organization.create_repository("#{Faker::Company.name} Template", options)
+          end
+          let(:assignment) do
+            options = {
+              title: "Learn Elm",
+              starter_code_repo_id: github_repository.id,
+              organization: organization,
+              students_are_repo_admins: true,
+              public_repo: true,
+              template_repos_enabled: true
+            }
+            create(:assignment, options)
+          end
+          let(:service) { subject.new(assignment, student) }
+          before(:each) do
+            allow(service.exercise).to receive(:use_template_repos?).and_return(true)
+          end
+          after(:each) do
+            client.delete_repository(github_repository.id)
+            AssignmentRepo.destroy_all
+          end
+
+          it "tracks the how long it too to be created" do
+            expect(GitHubClassroom.statsd)
+              .to receive(:timing)
+              .with("exercise_repo.create.time.with_templates", anything)
+            service.perform
+          end
+
+          it "tracks create success stat" do
+            expect(GitHubClassroom.statsd)
+              .to receive(:increment)
+              .with("exercise_repo.create.repo.with_templates.started")
+            expect(GitHubClassroom.statsd)
+              .to receive(:increment)
+              .with("exercise_repo.create.repo.with_templates.success")
+            expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
+            service.perform
+          end
+        end
+
+        describe "without starter code" do
+          let(:assignment) do
+            options = {
+              title: "Learn Elm",
+              organization: organization,
+              students_are_repo_admins: true,
+              public_repo: true
+            }
+
+            create(:assignment, options)
+          end
+          it "changes invite status if no starter code" do
+            allow(service.assignment).to receive(:starter_code?).and_return(false)
+            expect(service.invite_status).to receive(:completed!)
+            expect(subject::Broadcaster).to receive(:call).with(service.exercise, :create_repo, :text)
+            expect(subject::Broadcaster).to receive(:call).with(service.exercise, :repository_creation_complete, :text)
+            service.perform
+          end
         end
 
         after(:each) do
@@ -209,25 +373,6 @@ RSpec.describe CreateGitHubRepoService do
           expect(result.repo.assignment).to eql(assignment)
           expect(result.repo.user).to eql(teacher)
           expect(result.repo.github_global_relay_id).to be_truthy
-        end
-
-        it "tracks the how long it too to be created" do
-          expect(GitHubClassroom.statsd).to receive(:timing).with("exercise_repo.create.time", anything)
-          service.perform
-        end
-
-        it "tracks create success stat" do
-          expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
-          expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.import.started")
-          service.perform
-        end
-
-        it "changes invite status if no starter code" do
-          allow(service.assignment).to receive(:starter_code?).and_return(false)
-          expect(service.invite_status).to receive(:completed!)
-          expect(subject::Broadcaster).to receive(:call).with(service.exercise, :create_repo, :text)
-          expect(subject::Broadcaster).to receive(:call).with(service.exercise, :repository_creation_complete, :text)
-          service.perform
         end
 
         context "github repository with the same name already exists" do
@@ -323,7 +468,7 @@ RSpec.describe CreateGitHubRepoService do
   describe "for GroupAssignment", :vcr do
     let(:repo_access)    { RepoAccess.create(user: student, organization: organization) }
     let(:grouping)       { create(:grouping, organization: organization) }
-    let(:github_team_id) { 3_284_880 }
+    let(:github_team_id) { organization.github_organization.create_team(Faker::Team.name).id }
     let(:group)          { create(:group, grouping: grouping, github_team_id: github_team_id) }
     let(:group_assignment) do
       create(
@@ -354,6 +499,67 @@ RSpec.describe CreateGitHubRepoService do
           )
       end
     end
+
+    describe "#create_github_repository_from_template!" do
+      let(:client) { oauth_client }
+      let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
+
+      let(:github_repository) do
+        options = {
+          private: false,
+          is_template: true,
+          auto_init: true,
+          accept: "application/vnd.github.baptiste-preview"
+        }
+        github_organization.create_repository("#{Faker::Company.name} Template", options)
+      end
+
+      let(:group_assignment) do
+        options = {
+          title: "Learn JavaScript",
+          starter_code_repo_id: github_repository.id,
+          organization: organization,
+          students_are_repo_admins: true,
+          public_repo: true,
+          grouping: grouping,
+          template_repos_enabled: true
+        }
+        create(:group_assignment, options)
+      end
+
+      let(:service) { described_class.new(group_assignment, group) }
+
+      after(:each) do
+        client.delete_repository(github_repository.id)
+        GroupAssignmentRepo.destroy_all
+      end
+
+      it "sends a request to OctoKit::Client via assignment.creator.github_client with correct params" do
+        expect(service.assignment.creator.github_client)
+          .to receive(:post).with(
+            "https://api.github.com/repositories/#{github_repository.id}/generate",
+            hash_including(
+              name: service.exercise.repo_name,
+              owner: github_organization.login,
+              accept: "application/vnd.github.baptiste-preview",
+              include_all_branches: true
+            )
+          )
+        service.create_github_repository_from_template!
+      end
+
+      it "raises a Result::Error if repository not created" do
+        allow(service.assignment.creator.github_client)
+          .to receive(:post)
+          .and_raise(GitHub::Error, "Could not created GitHub repository")
+        expect { service.create_github_repository_from_template! }
+          .to raise_error(
+            subject::Result::Error,
+            "GitHub repository could not be created from template, please try again. (Could not created GitHub repository)" # rubocop:disable LineLength
+          )
+      end
+    end
+
     describe "#create_assignment_repo!" do
       it "gets correct github_repository attributes and saves the repo" do
         github_repository = double(id: 1, node_id: 1)
@@ -479,8 +685,32 @@ RSpec.describe CreateGitHubRepoService do
     describe "#add_group_to_github_repository!" do
       it "creates a new github team" do
         github_repository = double(full_name: "test/test")
-        expect_any_instance_of(GitHubTeam).to receive(:add_team_repository).with(github_repository.full_name, {})
+        expect_any_instance_of(GitHubTeam)
+          .to receive(:add_team_repository)
+          .with(github_repository.full_name, permission: "push")
         service.add_collaborator_to_github_repository!(github_repository)
+      end
+    end
+
+    describe "#report_error" do
+      it "when error is :repository_creation_failed" do
+        expect(service.stats_sender).to receive(:report_with_exercise_prefix).with(:repository_creation_failed)
+        service.report_error(service.send(:errors, :repository_creation_failed))
+      end
+
+      it "when error is :template_repository_creation_failed" do
+        expect(service.stats_sender).to receive(:report_with_exercise_prefix).with(:template_repository_creation_failed)
+        service.report_error(service.send(:errors, :template_repository_creation_failed))
+      end
+
+      it "when error is :collaborator_addition_failed" do
+        expect(service.stats_sender).to receive(:report_with_exercise_prefix).with(:collaborator_addition_failed)
+        service.report_error(service.send(:errors, :collaborator_addition_failed))
+      end
+
+      it "when error is :starter_code_import_failed" do
+        expect(service.stats_sender).to receive(:report_with_exercise_prefix).with(:starter_code_import_failed)
+        service.report_error(service.send(:errors, :starter_code_import_failed))
       end
     end
 

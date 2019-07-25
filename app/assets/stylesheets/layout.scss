@@ -81,33 +81,12 @@ main {
 }
 
 .site-nav {
-  a {
+  a:not(.dropdown-item) {
     color: rgba(255, 255, 255, 0.5);
   }
 
-  a:hover {
+  a:hover:not(.dropdown-item) {
     color: rgba(255, 255, 255, 1);
-  }
-}
-
-.organization-banner {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  color: #fff;
-  background-color: #5fb27b;
-
-  .btn {
-    float: right;
-    margin-top: 1.7rem;
-  }
-
-  @media screen and (max-width: 40em) {
-    padding-right: 1rem;
-    padding-left: 1rem;
-
-    .btn {
-      display: none;
-    }
   }
 }
 
@@ -137,6 +116,20 @@ main {
     color: inherit;
   }
 }
+
+.organization-nav {
+  border-bottom: none;
+
+  .tabnav-tab {
+    color: #f6f8fa;
+  }
+  .tabnav-tab.selected {
+    color: #2f363d;
+    border-top: 3px solid #444d56;
+    background-color: #fafbfc;
+  }
+}
+
 
 .site-content,
 .menu {
@@ -397,12 +390,6 @@ hr {
   @media screen and (max-width: 40em) {
     margin-left: 15px;
   }
-}
-
-.site-footer {
-  padding-top: 2em;
-  padding-bottom: 2em;
-  color: #777;
 }
 
 .made-with-heart {

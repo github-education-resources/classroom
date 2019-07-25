@@ -1,0 +1,13 @@
+<% view = FormView.new(subject: roster) %>
+<% course_name = local_assigns.fetch(:course_name, "Google Classroom") %>
+
+<div class="remodal text-left" data-remodal-id="sync-google-roster-modal">
+  <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
+  <h2 class="remodal-header text-left">Import students from Google Classroom</h2>
+
+  <div class="my-3">
+    <div class="f5 mt-2 d-block">Linked to <strong><%= course_name %></strong></div>
+    <%= link_to "Sync roster", sync_google_classroom_roster_path, method: :patch, class: "btn btn-sm mt-4" %>
+    <%= link_to "Disconnect from Google Classroom", unlink_google_classroom_roster_path, method: :patch, class: "btn btn-sm btn-danger mt-4 ml-2" %>
+  </div>
+</div>
