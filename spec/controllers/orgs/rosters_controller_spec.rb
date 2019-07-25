@@ -753,20 +753,30 @@ RSpec.describe Orgs::RostersController, type: :controller do
       end
 
       context "when there is no google classroom course linked" do
-        before do
-          patch :import_from_google_classroom, params: {
-            id: organization.slug
-          }
-        end
+        context "when user is authorized with google" do
+          before do
+            # Stub google authentication
+            client = Signet::OAuth2::Client.new
+            allow_any_instance_of(ApplicationController)
+              .to receive(:user_google_classroom_credentials)
+              .and_return(client)
+          end
 
-        it "redirects to google classroom selection route" do
-          expect(response).to redirect_to(google_classrooms_index_organization_path(organization))
-        end
+          it "redirects to google classroom selection route" do
+            patch :import_from_google_classroom, params: {
+              id: organization.slug
+            }
+            expect(response).to redirect_to(google_classrooms_index_organization_path(organization))
+          end
 
-        it "sets flash message" do
-          expect(flash[:alert]).to eq(
-            "Please link a Google Classroom before syncing a roster."
-          )
+          it "sets flash message" do
+            patch :import_from_google_classroom, params: {
+              id: organization.slug
+            }
+            expect(flash[:alert]).to eq(
+              "Please link a Google Classroom before syncing a roster."
+            )
+          end
         end
       end
 
