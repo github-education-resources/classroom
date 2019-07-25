@@ -8,7 +8,7 @@ git_source(:github) do |repo_name|
 end
 
 ruby File.read(File.expand_path("../.ruby-version", __FILE__)).chomp
-gem "rails", "~> 5.1", ">= 5.1.7"
+gem "rails", "~> 5.2.3"
 
 gem "autoprefixer-rails", "~> 7.1", ">= 7.1.3"
 
@@ -89,8 +89,8 @@ end
 
 group :development, :test do
   gem "awesome_print",            "~> 1.8", require: "ap"
-  gem "bullet",                   "~> 5.6", ">= 5.6.1"
-  gem "dotenv-rails",             "~> 2.2", ">= 2.2.1"
+  gem "bullet",                   "~> 6.0.1"
+  gem "dotenv-rails",             "~> 2.7.4"
   gem "fuubar",                   "~> 2.4.0"
   gem "guard-rspec",              "~> 4.7", ">= 4.7.3", require: false
   gem "knapsack",                 "~> 1.14", ">= 1.14.1"
@@ -106,7 +106,7 @@ end
 
 group :production do
   gem "dogstatsd-ruby",     "~> 3.0"
-  gem "lograge",            "~> 0.6.0"
+  gem "lograge",            "~> 0.11.2"
   gem "newrelic_rpm",       "~> 4.4", ">= 4.4.0.336"
   gem "pinglish",           "~> 0.2.1"
   gem "puma_worker_killer", "~> 0.1.1"
