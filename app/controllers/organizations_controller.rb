@@ -188,7 +188,7 @@ class OrganizationsController < Orgs::Controller
   def update_organization_params
     params
       .require(:organization)
-      .permit(:title, :archived)
+      .permit(:title, :archived, :repo_visibility)
   end
 
   def verify_user_belongs_to_organization

@@ -51,8 +51,9 @@ class Organization
 
     def perform
       update_archive_setting(@options)
+      update_repo_visiblity(@options)
 
-      @organization.update_attributes(@options.except(:archived))
+      @organization.update_attributes(@options.except(:archived, :repo_visibility))
       raise Result::Error, @organization.errors.full_messages.join("\n") unless @organization.valid?
 
       Result.success(@organization)
@@ -73,6 +74,13 @@ class Organization
       else
         @organization.update(archived_at: nil)
       end
+    end
+
+    def update_repo_visiblity(options)
+      visibility = options[:repo_visibility]
+      return if visibility.nil?
+
+      Organization::ClassroomVisibilityJob.perform_later(@organization, visibility)
     end
   end
 end
