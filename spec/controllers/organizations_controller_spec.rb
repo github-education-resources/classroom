@@ -315,6 +315,28 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
+  describe "GET #link_lms", :vcr do
+    context "with lti launch enabled" do
+      before(:each) { GitHubClassroom.flipper[:lti_launch].enable }
+      after(:each)  { GitHubClassroom.flipper[:lti_launch].disable }
+
+      it "renders the LMS selection page" do
+        get :link_lms, params: { id: organization.slug }
+        expect(response).to have_http_status(:ok)
+        expect(response).to render_template(:link_lms)
+      end
+    end
+
+    context "without lti launch disabled" do
+      before(:each) { GitHubClassroom.flipper[:lti_launch].disable }
+
+      it "returns not found" do
+        get :link_lms, params: { id: organization.slug }
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
   describe "GET #invite", :vcr do
     it "returns success and sets the organization" do
       get :invite, params: { id: organization.slug }

@@ -28,7 +28,12 @@
 
     <% if action_name == 'invite' %>
       <div class="form-actions">
-        <%= button_to t('views.organizations.continue'), new_roster_path(current_organization), class: 'btn btn-primary right', method: :get %>
+        <% next_step = new_roster_path(current_organization) %>
+        <% if lti_launch_enabled? %>
+          <% next_step = link_lms_organization_path(current_organization) %>
+        <% end %>
+
+        <%= button_to t('views.organizations.continue'), next_step, class: 'btn btn-primary right', method: :get %>
       </div>
     <% end %>
   </div>

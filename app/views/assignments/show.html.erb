@@ -29,7 +29,7 @@
 
       <%= render partial: 'shared/open_on_assistant_modal', locals: {
         assistant_url: assistant_organization_assignment_url,
-        enabled: @assignment_repos.present?
+        enabled: @assignment.assignment_repos.any?
       } %>
 
       <div class="text-right mt-3 pl-2 settings">

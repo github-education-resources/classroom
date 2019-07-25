@@ -73,6 +73,7 @@ Rails.application.routes.draw do
       end
 
       member do
+        get   :link_lms
         get   :invite
         get   :new_assignment, path: "new-assignment"
         get   :setup

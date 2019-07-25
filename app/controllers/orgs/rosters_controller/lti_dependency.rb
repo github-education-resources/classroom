@@ -27,7 +27,7 @@ module Orgs
     private
 
     def ensure_lti_configuration
-      redirect_to new_lti_configuration_path(current_organization) unless current_organization.lti_configuration
+      redirect_to link_lms_organization_path(current_organization) unless current_organization.lti_configuration
     end
 
     # rubocop:disable Metrics/MethodLength
