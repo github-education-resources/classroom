@@ -1,30 +1,36 @@
 <%= render 'organizations/organization_banner' %>
 
-<div class="site-content">
-  <div class="site-content-cap">
-    <h2 class="site-content-heading"><%= t('views.organizations.new_assignment') %></h2>
-  </div>
+<h1 class="f2 text-normal mt-5 mb-3"><%= t('views.organizations.new_assignment') %></h1>
 
-  <div class="site-content-body">
-    <div class="columns d-table col-12 clearfix  d-flex flex-wrap flex-content-between">
-      <div class="col-md-6 float-left mx-auto  text-center p-2  d-sm-block">
-        <span class="assignment-icon assignment-icon-individual">
+<div class="Box">
+  <div>
+    <div class="Box-row d-md-flex flex-justify-between flex-items-center">
+      <div class="d-flex">
+        <span class="assignment-icon assignment-icon-individual mr-3">
           <%= octicon 'person', height: 22 %>
         </span>
-        <h3 class="assignment-option-name"><%= t('views.organizations.individual_assignment') %></h3>
-        <p class="assignment-option-description"><%= t('views.organizations.individual_assignment_desc') %></p>
-
+        <div>
+          <h2 class="h3"><%= link_to t('views.organizations.individual_assignment'), new_organization_assignment_path(current_organization) %></h2>
+          <p><%= t('views.organizations.individual_assignment_desc') %></p>
+        </div>
+      </div>
+      <div>
         <%= link_to new_organization_assignment_path(current_organization), class: 'btn btn-primary', role: 'button' do %>
           <%= t('views.organizations.create_individual_assignment') %>
         <% end %>
       </div>
-      <div class="col-md-6 float-left mx-auto text-center p-2 d-sm-block">
-        <span class="assignment-icon assignment-icon-group">
+    </div>
+    <div class="Box-row d-md-flex flex-justify-between flex-items-center">
+      <div class="d-flex">
+        <span class="assignment-icon assignment-icon-group mr-3">
           <%= octicon 'organization', height: 22 %>
         </span>
-        <h3 class="assignment-option-name"><%= t('views.organizations.group_assignment') %></h3>
-        <p class="assignment-option-description"><%= t('views.organizations.group_assignment_desc') %></p>
-
+        <div>
+          <h2 class="h3"><%= link_to t('views.organizations.group_assignment'), new_organization_group_assignment_path(current_organization) %></h2>
+          <p><%= t('views.organizations.group_assignment_desc') %></p>
+        </div>
+      </div>
+      <div>
         <%= link_to new_organization_group_assignment_path(current_organization), class: 'btn btn-primary', role: 'button' do %>
           <%= t('views.organizations.create_group_assignment') %>
         <% end %>

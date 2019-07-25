@@ -12,8 +12,6 @@ class AssignmentRepo
     IMPORT_ONGOING                          = "Your GitHub repository is importing starter code."
     CREATE_REPO                             = "Creating GitHub repository."
     IMPORT_STARTER_CODE                     = "Importing starter code."
-    GITHUB_API_HOST                         = "https://api.github.com"
-    TEMPLATE_REPOS_API_PREVIEW              = "application/vnd.github.baptiste-preview"
 
     attr_reader :assignment, :user, :organization, :invite_status, :reporter
     delegate :broadcast_message, :report_time, :report_error, to: :reporter
@@ -145,18 +143,14 @@ class AssignmentRepo
     # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     def create_github_repository_from_template!
       GitHubClassroom.statsd.increment("exercise_repo.create.repo.with_templates.started")
-      client = assignment.creator.github_client
       repository_name = generate_github_repository_name
+      template_repo_id = assignment.starter_code_repo_id
       options = {
-        name: repository_name,
-        owner: organization.github_organization.login,
         private: assignment.private?,
-        description: "#{repository_name} created by GitHub Classroom",
-        accept: TEMPLATE_REPOS_API_PREVIEW,
-        include_all_branches: true
+        description: "#{repository_name} created by GitHub Classroom"
       }
 
-      client.post("#{GITHUB_API_HOST}/repositories/#{assignment.starter_code_repo_id}/generate", options)
+      organization.github_organization.create_repository_from_template(template_repo_id, repository_name, options)
     rescue GitHub::Error => error
       raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
     end

@@ -28,7 +28,7 @@
 
     <% if action_name == 'invite' %>
       <div class="form-actions">
-        <%= link_to t('views.organizations.continue'), new_roster_path(current_organization), class: 'btn btn-primary right' %>
+        <%= button_to t('views.organizations.continue'), new_roster_path(current_organization), class: 'btn btn-primary right', method: :get %>
       </div>
     <% end %>
   </div>
