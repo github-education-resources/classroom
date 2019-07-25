@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GoogleClassroomCourse
-  attr_accessor :name, :students
+  attr_reader :name, :students
   def initialize(google_classroom_service, course_id)
     @google_classroom_service = google_classroom_service
     @course_id = course_id
