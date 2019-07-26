@@ -19,4 +19,4 @@ test -z "$RACK_ENV" &&
   RACK_ENV='development'
 
 # boot the app and any other necessary processes.
-hivemind Procfile.dev
+overmind s -f Procfile.dev
