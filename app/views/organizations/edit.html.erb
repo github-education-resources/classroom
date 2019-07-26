@@ -32,8 +32,7 @@
             <%= link_to "Connection Settings", lti_configuration_path(current_organization) %>
           <% elsif google_classroom_roster_import_enabled? && current_organization.google_course_id %>
             <p>You are currently connected to <strong>Google Classroom</strong>.</p>
-            <p>Linked classroom: <strong><%= @google_classroom_course.name %></strong></p>
-          <% else %>
+          <% else lti_launch_enabled? || google_classroom_roster_import_enabled? %>
             <p>You are currently not connected to a Learning Management System. Connect to this Classroom via</p>
             <%= link_to "Google Classroom",
               select_google_classroom_roster_path,

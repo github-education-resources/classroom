@@ -48,9 +48,7 @@ class OrganizationsController < Orgs::Controller
       .page(params[:page])
   end
 
-  def edit
-    get_google_course_name
-  end
+  def edit; end
 
   def invitation; end
 
@@ -129,16 +127,6 @@ class OrganizationsController < Orgs::Controller
   # rubocop:enable MethodLength
 
   private
-
-  def get_google_course_name
-    if current_organization.google_course_id
-      authorize_google_classroom
-      @google_classroom_course = GoogleClassroomCourse.new(
-        @google_classroom_service,
-        current_organization.google_course_id
-      )
-    end
-  end
 
   def authorize_organization_addition
     new_github_organization = github_organization_from_params
