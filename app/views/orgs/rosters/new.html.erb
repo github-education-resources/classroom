@@ -24,7 +24,8 @@
         <% elsif current_organization.google_course_id %>
           <p>It looks like you are connected to Google Classroom. GitHub Classroom can automatically import your roster for you!</p>
           <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Import from Google Classroom",
-            google_classrooms_index_organization_path,
+            import_from_google_classroom_roster_path(current_organization),
+            method: :patch, 
             class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
           %>
         <% else %>

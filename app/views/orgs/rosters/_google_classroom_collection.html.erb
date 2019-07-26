@@ -1,4 +1,4 @@
-<%= form_tag google_classrooms_create_organization_path(current_organization), method: :post do |f| %>
+<%= form_tag import_from_google_classroom_roster_path, method: :patch do |f| %>
   <div class="Box overflow-scroll">
     <ul>
       <% courses.each_with_index do |course, i| %>
@@ -21,7 +21,7 @@
   </div>
 
   <div class="d-flex flex-items-center border-top pt-5">
-    <%= submit_tag 'Link to Google Classroom', class: 'btn btn-primary mr-3' %>
-    <%= link_to 'Skip', new_roster_path(current_organization), class: 'btn-link' %>
+    <%= submit_tag 'Import roster', class: 'btn btn-primary mr-3' %>
+    <%= link_to 'Skip', organization_path(current_organization), class: 'btn-link' %>
   </div>
 <% end %>
