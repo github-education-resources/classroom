@@ -101,6 +101,7 @@ Rails.application.routes.draw do
           root "orgs/google_classroom_configurations#index", as: :google_classrooms_index
           get  "google_classrooms/search", to: "orgs/google_classroom_configurations#search"
           post "google_classrooms/create", to: "orgs/google_classroom_configurations#create"
+          delete "google_classrooms/delete", to: "orgs/google_classroom_configurations#destroy"
         end
       end
 

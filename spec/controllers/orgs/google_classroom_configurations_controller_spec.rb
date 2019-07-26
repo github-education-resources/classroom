@@ -203,4 +203,17 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
       end
     end
   end
+
+  describe "#destroy", :vcr do
+    before do
+      organization.update(google_course_id: "3333")
+      delete :destroy, params: {
+        id: organization.slug
+      }
+      organization.reload
+    end
+
+      expect(organization.google_course_id).to be_nil
+    end
+  end
 end
