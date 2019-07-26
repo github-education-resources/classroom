@@ -3,11 +3,11 @@
 require "rails_helper"
 
 RSpec.describe DestroyResourceJob, type: :job do
-  let(:organization) { classroom_org }
-
   it "destroys the resource", :vcr do
-    expect do
-      DestroyResourceJob.perform_now(organization)
-    end.to change { Organization.exists?(classroom_org.id) }
+    organization = classroom_org
+
+    DestroyResourceJob.perform_now(organization)
+
+    expect(Organization.exists?(organization.id)).to eq(false)
   end
 end
