@@ -14,9 +14,13 @@ module API
 
     def clone_url
       repo = AssignmentRepo.where(assignment: @assignment, id: params[:assignment_repo_id]).first
-      render json: {
-        temp_clone_url: repo.github_repository.temp_clone_url
-      }
+      if repo.present?
+        render json: {
+          temp_clone_url: repo.github_repository.temp_clone_url
+        }
+      else
+        render json: { "error": "not_found" }, status: :not_found
+      end
     end
 
     private
