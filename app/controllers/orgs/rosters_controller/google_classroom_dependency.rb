@@ -93,7 +93,7 @@ module Orgs
     def google_classroom_ensure_no_roster
       return unless current_organization.roster
       redirect_to edit_organization_path(current_organization),
-        alert: "We are unable to link your classroom organization to Google Classroom"\
+        alert: "We are unable to link your classroom organization to Google Classroom "\
           "because a roster already exists. Please delete your current roster and try again."
     end
   end

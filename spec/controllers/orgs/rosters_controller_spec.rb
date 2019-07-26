@@ -724,7 +724,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
             it "sets error message" do
               expect(flash[:alert]).to eq(
-                "We are unable to link your classroom organization to Google Classroom"\
+                "We are unable to link your classroom organization to Google Classroom "\
                 "because a roster already exists. Please delete your current roster and try again."
               )
             end
