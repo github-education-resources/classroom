@@ -213,6 +213,7 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
       organization.reload
     end
 
+    it "deletes google classroom" do
       expect(organization.google_course_id).to be_nil
     end
   end
