@@ -6,8 +6,8 @@ RSpec.describe DestroyResourceJob, type: :job do
   let(:organization) { classroom_org }
 
   it "destroys the resource", :vcr do
-    assert_performed_with(job: DestroyResourceJob, args: [organization], queue: "trash_can") do
-      DestroyResourceJob.perform_later(organization)
-    end
+    expect do
+      DestroyResourceJob.perform_now(organization)
+    end.to change { Organization.exists?(classroom_org.id) }
   end
 end
