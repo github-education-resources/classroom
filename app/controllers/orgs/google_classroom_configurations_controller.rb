@@ -35,7 +35,7 @@ module Orgs
       current_organization.update!(google_course_id: nil)
       flash[:success] = "Removed link to Google Classroom. No students were removed from your roster."
 
-      redirect_to roster_path(current_organization)
+      redirect_to organization_path(current_organization)
     end
 
     private
