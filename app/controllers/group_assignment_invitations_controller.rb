@@ -86,7 +86,7 @@ class GroupAssignmentInvitationsController < ApplicationController
 
     redirect_to group_assignment_invitation_url(invitation)
   rescue ActiveRecord::ActiveRecordError
-    flash[:error] = "An error occured, please try again!"
+    flash[:error] = "An error occurred, please try again!"
   end
 
   private

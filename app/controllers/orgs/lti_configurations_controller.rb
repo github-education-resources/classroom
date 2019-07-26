@@ -45,7 +45,7 @@ module Orgs
 
     def update
       if current_lti_configuration.update_attributes(lti_configuration_params)
-        flash[:success] = "The configuration was sucessfully updated."
+        flash[:success] = "The configuration was successfully updated."
         redirect_to lti_configuration_path(current_organization)
       else
         flash[:error] = "The configuration could not be updated at this time. Please try again."

@@ -125,7 +125,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         expect(response).to redirect_to(new_lti_configuration_path(organization))
       end
 
-      context "with existing google classrom" do
+      context "with existing google classroom" do
         before do
           organization.update_attributes(google_course_id: "1234")
         end
@@ -220,7 +220,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
 
           organization.lti_configuration.reload
           expect(organization.lti_configuration.lms_link).to eq("https://github.com")
-          expect(flash[:success]).to eq("The configuration was sucessfully updated.")
+          expect(flash[:success]).to eq("The configuration was successfully updated.")
           expect(response).to redirect_to(lti_configuration_path(organization))
         end
       end

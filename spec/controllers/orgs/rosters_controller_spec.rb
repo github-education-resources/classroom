@@ -755,7 +755,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
       end
 
       it "sets flash message" do
-        expect(flash[:error]).to eq("An error has occured. Please try again.")
+        expect(flash[:error]).to eq("An error has occurred. Please try again.")
       end
 
       it "creates no roster entries" do

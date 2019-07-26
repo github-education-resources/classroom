@@ -130,7 +130,7 @@ RSpec.describe CreateGitHubRepoService do
       it "returns true if github_repo_id is nil" do
         expect(service.delete_github_repository(nil)).to be(true)
       end
-      it "returns true if github repository sucessfully deleted" do
+      it "returns true if github repository successfully deleted" do
         allow_any_instance_of(GitHubOrganization).to receive(:delete_repository).with(anything).and_return(true)
         expect(service.delete_github_repository(1)).to be(true)
       end
@@ -591,7 +591,7 @@ RSpec.describe CreateGitHubRepoService do
       it "returns true if github_repo_id is nil" do
         expect(service.delete_github_repository(nil)).to be(true)
       end
-      it "returns true if github repository sucessfully deleted" do
+      it "returns true if github repository successfully deleted" do
         allow_any_instance_of(GitHubOrganization).to receive(:delete_repository).with(anything).and_return(true)
         expect(service.delete_github_repository(1)).to be(true)
       end

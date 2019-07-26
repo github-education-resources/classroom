@@ -126,7 +126,7 @@ class Organization
     end
 
     # Internal: Set the default repository permission so that students
-    # don't accidently see other repos.
+    # don't accidentally see other repos.
     #
     # Returns nil or raises a Result::Error
     def update_default_repository_permission_to_none!(organization)
