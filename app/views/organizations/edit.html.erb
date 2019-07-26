@@ -34,7 +34,7 @@
           <% else lti_launch_enabled? || google_classroom_roster_import_enabled? %>
             <p>You are currently not connected to a Learning Management System. Connect to this Classroom via</p>
             <%= link_to "Google Classroom",
-              select_google_classroom_roster_path,
+              google_classrooms_index_organization_path,
               class: "btn btn-sm btn-secondary d-inline-flex flex-items-center mb-2 mr-1"
             %>
             <% LtiConfiguration.lms_types.each_pair do |lms_type, lms_name| %>
