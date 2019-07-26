@@ -11,31 +11,36 @@
       <p>Let's set up a roster so you can easily track student progress on your dashboard. You can always come back and complete this step later.</p>
     </div>
     <div class="my-3">
-      <% if google_classroom_roster_import_enabled? && !current_organization.lti_configuration %>
-        <% if current_organization.google_course_id? %>
-          <p>It looks like you are connected to Google Classroom. GitHub Classroom can automatically import your roster for you!</p>
-        <% end %>
-        <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Import from Google Classroom",
-          select_google_classroom_roster_path,
-          class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
-        %>
-      <% end %>
-      <% if lti_launch_enabled? && !current_organization.google_course_id %>
-        <% lms_name = "your Learning Management System" %>
+      <% if google_classroom_roster_import_enabled? || lti_launch_enabled? %>
+        <h2 class="h3 mb-2">Import students from your institution</h2>
         <% if current_organization.lti_configuration %>
-          <% lms_name = current_organization.lti_configuration.lms_name(default_name: lms_name) %>
+          <% lms_name = current_organization.lti_configuration.lms_name(default_name: "your Learning Management System") %>
           <p>It looks like you are connected to <%= lms_name %>. GitHub Classroom can automatically import your roster for you!</p>
-        <% end %>
 
-        <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Import from #{lms_name}",
-          import_from_lms_roster_path,
-          class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
-        %>
+          <%= link_to image_tag('other-logo.png', size: "25", class:"mr-2") + "Import from #{lms_name}",
+            import_from_lms_roster_path,
+            class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+          %>
+        <% elsif current_organization.google_course_id %>
+          <p>It looks like you are connected to Google Classroom. GitHub Classroom can automatically import your roster for you!</p>
+          <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Import from Google Classroom",
+            select_google_classroom_roster_path,
+            class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+          %>
+        <% else %>
+          <p>GitHub Classroom is able to automatically import your roster from your institution. If you
+          would rather manage your roster manually, you can still do that, too.</p>
+
+          <%= link_to image_tag('other-logo.png', size: "25", class:"mr-2") + "Import from a Learning Management System",
+            link_lms_organization_path,
+            class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
+          %>
+        <% end %>
       <% end %>
     </div>
 
     <div class="my-3">
-      <% if !current_organization.lti_configuration %>
+      <% if !current_organization.lti_configuration && !current_organization.google_course_id %>
         <h2 class="h3 mb-2">Manually add students</h2>
         <div>
           <%= form_tag roster_path(current_organization), method: :post do |f| %>
