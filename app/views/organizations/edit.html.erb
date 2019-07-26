@@ -57,10 +57,10 @@
             <% if current_organization.google_course_id %>
               <li class="Box-row">
                 <div class="details-reset details-overlay">
-                  <%= button_to "Delete Google Classroom", google_classrooms_delete_organization_path, method: :delete, class: "btn btn-danger boxed-action"%>
+                  <%= button_to "Unlink Google Classroom", google_classrooms_delete_organization_path, method: :delete, class: "btn btn-danger boxed-action"%>
                 </div>
-                <strong>Delete Google Classroom</strong>
-                <p>Removing Google Classroom will not remove any students and assignments from GitHub Classoom.</p>
+                <strong>Unlink Google Classroom</strong>
+                <p>Unlinking Google Classroom will not remove any students and assignments from GitHub Classoom.</p>
               </li>
             <% end %>
             <% if archive_classrooms_enabled? %>
