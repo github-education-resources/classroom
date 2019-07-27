@@ -87,6 +87,7 @@ class CreateGitHubRepoService
     stats_sender.report_with_exercise_prefix(:import_with_templates_success)
     github_repository
   rescue GitHub::Error => error
+    Failbot.report!(error)
     raise Result::Error.new errors(:template_repository_creation_failed), error.message
   end
   # rubocop:enable Metrics/MethodLength
