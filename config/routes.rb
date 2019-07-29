@@ -95,6 +95,7 @@ Rails.application.routes.draw do
         resource :lti_configuration, controller: "orgs/lti_configurations" do
           get :info
           get :autoconfigure
+          get :complete
         end
 
         scope :google_classrooms do

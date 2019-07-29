@@ -93,6 +93,8 @@ module Orgs
     end
     # rubocop:enable Metrics/MethodLength
 
+    def complete; end
+
     private
 
     def current_lti_configuration
