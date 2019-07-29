@@ -2,11 +2,12 @@
 
 class LtiConfiguration
   class BrightspaceSettings < GenericSettings
-    def initialize
-      super(
-        platform_name: "Brightspace",
-        icon: "brightspace-logo.png"
-      )
+    def platform_name
+      "Brightspace"
+    end
+
+    def icon
+      "brightspace-logo.png"
     end
   end
 end

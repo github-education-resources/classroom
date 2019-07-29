@@ -2,14 +2,24 @@
 
 class LtiConfiguration
   class CanvasSettings < GenericSettings
-    def initialize
-      super(
-        platform_name: "Canvas",
-        icon: "canvas-logo.png",
-        vendor_domain: "canvas.instructure.com",
-        supports_autoconfiguration: true,
-        supports_membership_service: true
-      )
+    def platform_name
+      "Canvas"
+    end
+
+    def icon
+      "canvas-logo.png"
+    end
+
+    def supports_autoconfiguration?
+      true
+    end
+
+    def supports_membership_service?
+      true
+    end
+
+    def vendor_domain
+      "canvas.instructure.com"
     end
 
     # rubocop:disable Metrics/MethodLength

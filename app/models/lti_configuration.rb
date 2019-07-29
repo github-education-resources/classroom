@@ -6,8 +6,8 @@ class LtiConfiguration < ApplicationRecord
   validates :lms_type, presence: true
 
   delegate :icon, to: :lms_settings, prefix: :lms
-  delegate :supports_autoconfiguration, to: :lms_settings
-  delegate :supports_membership_service, to: :lms_settings
+  delegate :supports_autoconfiguration?, to: :lms_settings
+  delegate :supports_membership_service?, to: :lms_settings
 
   enum lms_type: {
     canvas: "Canvas",
@@ -23,7 +23,7 @@ class LtiConfiguration < ApplicationRecord
   end
 
   def lms_name(default_name: "Other Learning Management System")
-    lms_settings.platform_name(default_name)
+    lms_settings.platform_name || default_name
   end
 
   def context_membership_url(use_cache: true, nonce: nil)
@@ -44,7 +44,7 @@ class LtiConfiguration < ApplicationRecord
   end
 
   def xml_configuration(launch_url)
-    return nil unless supports_autoconfiguration
+    return unless supports_autoconfiguration?
 
     builder = GitHubClassroom::LTI::ConfigurationBuilder.new("GitHub Classroom", launch_url)
 

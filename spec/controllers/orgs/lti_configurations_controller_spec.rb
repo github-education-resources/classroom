@@ -255,7 +255,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       end
 
       context "with autoconfiguration enabled" do
-        before(:each) { LtiConfiguration.any_instance.stub(:supports_autoconfiguration).and_return(true) }
+        before(:each) { LtiConfiguration.any_instance.stub(:supports_autoconfiguration?).and_return(true) }
 
         it "returns an xml configuration" do
           get :autoconfigure, params: { id: organization.slug }
@@ -265,7 +265,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       end
 
       context "with autoconfiguration disabled" do
-        before(:each) { LtiConfiguration.any_instance.stub(:supports_autoconfiguration).and_return(false) }
+        before(:each) { LtiConfiguration.any_instance.stub(:supports_autoconfiguration?).and_return(false) }
 
         it "does not return an xml configuration" do
           get :autoconfigure, params: { id: organization.slug }

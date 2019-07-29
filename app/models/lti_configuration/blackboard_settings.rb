@@ -2,11 +2,12 @@
 
 class LtiConfiguration
   class BlackboardSettings < GenericSettings
-    def initialize
-      super(
-        platform_name: "Blackboard",
-        icon: "blackboard-logo.png"
-      )
+    def platform_name
+      "Blackboard"
+    end
+
+    def icon
+      "blackboard-logo.png"
     end
   end
 end

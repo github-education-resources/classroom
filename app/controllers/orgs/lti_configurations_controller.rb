@@ -61,7 +61,7 @@ module Orgs
     end
 
     def autoconfigure
-      not_found unless current_lti_configuration.supports_autoconfiguration
+      not_found unless current_lti_configuration.supports_autoconfiguration?
 
       xml_configuration = current_lti_configuration.xml_configuration(auth_lti_launch_url)
       render xml: xml_configuration, status: :ok
