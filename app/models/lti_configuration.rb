@@ -43,6 +43,22 @@ class LtiConfiguration < ApplicationRecord
     membership_url
   end
 
+  def xml_configuration(launch_url)
+    return nil unless supports_autoconfiguration
+
+    builder = GitHubClassroom::LTI::ConfigurationBuilder.new("GitHub Classroom", launch_url)
+
+    builder.add_attributes(
+      description: "Sync your GitHub Classroom organization with your Learning Management System.",
+      icon: "https://classroom.github.com/favicon.ico",
+      vendor_name: "GitHub Classroom",
+      vendor_url: "https://classroom.github.com/"
+    )
+
+    builder.add_vendor_attributes(lms_settings.vendor_domain, lms_settings.vendor_attributes)
+    builder.to_xml
+  end
+
   private
 
   def lms_settings
