@@ -161,6 +161,10 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
           create(:assignment, options)
         end
 
+        before(:each) do
+          GitHubClassroom.flipper[:template_repos].enable
+        end
+
         after(:each) do
           client.delete_repository(github_repository.id)
           AssignmentRepo.destroy_all
@@ -190,6 +194,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
         end
 
         it "tracks create success stat" do
+          expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.repo.with_templates.started")
           expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.repo.with_templates.success")
           expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
           AssignmentRepo::Creator.perform(assignment: assignment, user: student)
@@ -211,8 +216,20 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
 
           it "new repository name has expected suffix" do
             AssignmentRepo::Creator.perform(assignment: assignment, user: student)
-            expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
+            expect(WebMock).to have_requested(:post, github_url("/repositories/#{github_repository.id}/generate"))
               .with(body: /^.*#{@original_repository.name}-1.*$/)
+          end
+        end
+
+        context "failure" do
+          before(:each) do
+            GitHubClassroom.flipper[:template_repos].enable
+            organization.github_organization.delete_repository(assignment.starter_code_repo_id)
+          end
+
+          it "reports error to Failbot" do
+            AssignmentRepo::Creator.perform(assignment: assignment, user: student)
+            expect(Failbot.reports.count).to be > 0
           end
         end
       end
