@@ -169,9 +169,9 @@ ActiveRecord::Schema.define(version: 20190718211229) do
     t.text "consumer_key", null: false
     t.text "shared_secret", null: false
     t.text "lms_link"
+    t.bigint "organization_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "organization_id"
     t.string "context_membership_url"
     t.text "lms_type", default: "other", null: false
     t.index ["consumer_key"], name: "index_lti_configurations_on_consumer_key", unique: true

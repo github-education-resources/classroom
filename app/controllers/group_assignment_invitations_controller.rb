@@ -13,6 +13,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   before_action :check_should_redirect_to_roster_page,   only: :show
   before_action :authorize_group_access,                 only: :accept_invitation
   before_action :ensure_github_repo_exists,              only: :successful_invitation
+  before_action :check_group_exists,                     only: :accept
 
   def show
     @groups = invitation.groups.order(:title).page(params[:page])
@@ -249,6 +250,10 @@ class GroupAssignmentInvitationsController < ApplicationController
     return false if group_assignment_repo.blank?
     return false if group_assignment.starter_code? && !group_assignment_repo.github_repository.imported?
     true
+  end
+
+  def check_group_exists
+    redirect_to group_assignment_invitation_path(invitation) if group.blank?
   end
 end
 # rubocop:enable Metrics/ClassLength

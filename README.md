@@ -158,7 +158,7 @@ ENV Variable | Description |
 `GITHUB_CLIENT_SECRET`| the GitHub Application Client Secret.
 `NON_STAFF_GITHUB_ADMIN_IDS` | GitHub `user_ids` of users to be granted staff level access.
 `GOOGLE_CLIENT_ID` | the Google Client ID
-`GOOGLE_CLIENT_SECRET=` | the Google Client Secret 
+`GOOGLE_CLIENT_SECRET` | the Google Client Secret
 
 To obtain your `GitHub Client ID/Secret` you need to [register a new OAuth application](https://github.com/settings/applications/new).
 
@@ -239,6 +239,18 @@ script/server
 ```
 
 Aaand that's it! You should have a working instance of GitHub Classroom located [here](http://localhost:5000)
+
+#### Debugging
+We use [pry-rails](https://github.com/rweng/pry-rails) and [byebug](https://github.com/deivid-rodriguez/byebug) for debugging. But since we use `overmind` in the development environment, debugging via `byebug` or via `binding.pry` requires a few more steps:
+
+* Once you start your server using `script/server`, `overmind` will start tmux processes depending on the `Procfile`.
+* We have two such processes `rails` and `sidekiq` (See `Procfile.dev` for details) that you can control.
+* Once you've added a debugging statement in the code and your request pauses, you can access console in a separate tab/window using the following command:
+  * `overmind connect rails` for debugging in request-response cycle, typically controllers, models, services.
+  * `overmind connect sidekiq` for debugging in background jobs.
+* After you've finished debugging you can close the connection using `Ctrl+b d`.
+
+For more details please visit `overmind` homepage: https://github.com/DarthSim/overmind
 
 ## Deployment
 We strongly encourage you to use [https://classroom.github.com](https://classroom.github.com), but if you would like your own version GitHub Classroom can be easily deployed to Heroku.

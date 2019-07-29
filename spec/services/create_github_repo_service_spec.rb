@@ -73,23 +73,23 @@ RSpec.describe CreateGitHubRepoService do
         AssignmentRepo.destroy_all
       end
 
-      it "sends a request to OctoKit::Client via assignment.creator.github_client with correct params" do
-        expect(service.assignment.creator.github_client)
-          .to receive(:post).with(
-            "https://api.github.com/repositories/#{github_repository.id}/generate",
+      it "sends a request to GitHubOrganization#create_repository_from_template with correct params" do
+        expect_any_instance_of(GitHubOrganization)
+          .to receive(:create_repository_from_template)
+          .with(
+            github_repository.id,
+            service.exercise.repo_name,
             hash_including(
-              name: service.exercise.repo_name,
-              owner: github_organization.login,
-              accept: "application/vnd.github.baptiste-preview",
-              include_all_branches: true
+              private: false,
+              description: "#{service.exercise.repo_name} created by GitHub Classroom"
             )
           )
         service.create_github_repository_from_template!
       end
 
       it "raises a Result::Error if repository not created" do
-        allow(service.assignment.creator.github_client)
-          .to receive(:post)
+        allow_any_instance_of(GitHubOrganization)
+          .to receive(:create_repository_from_template)
           .and_raise(GitHub::Error, "Could not created GitHub repository")
         expect { service.create_github_repository_from_template! }
           .to raise_error(
@@ -534,24 +534,25 @@ RSpec.describe CreateGitHubRepoService do
         GroupAssignmentRepo.destroy_all
       end
 
-      it "sends a request to OctoKit::Client via assignment.creator.github_client with correct params" do
-        expect(service.assignment.creator.github_client)
-          .to receive(:post).with(
-            "https://api.github.com/repositories/#{github_repository.id}/generate",
+      it "sends a request to GitHubOrganization#create_repository_from_template with correct params" do
+        expect_any_instance_of(GitHubOrganization)
+          .to receive(:create_repository_from_template)
+          .with(
+            github_repository.id,
+            service.exercise.repo_name,
             hash_including(
-              name: service.exercise.repo_name,
-              owner: github_organization.login,
-              accept: "application/vnd.github.baptiste-preview",
-              include_all_branches: true
+              private: false,
+              description: "#{service.exercise.repo_name} created by GitHub Classroom"
             )
           )
         service.create_github_repository_from_template!
       end
 
       it "raises a Result::Error if repository not created" do
-        allow(service.assignment.creator.github_client)
-          .to receive(:post)
+        allow_any_instance_of(GitHubOrganization)
+          .to receive(:create_repository_from_template)
           .and_raise(GitHub::Error, "Could not created GitHub repository")
+
         expect { service.create_github_repository_from_template! }
           .to raise_error(
             subject::Result::Error,
