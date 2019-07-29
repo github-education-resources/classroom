@@ -1,0 +1,18 @@
+<div class="site-content">
+  <div class="site-content-cap">
+    <h1 class="site-content-heading">Connect to Google Classroom</h1>
+  </div>
+
+  <div class="site-content-body">
+    <div class="my-3">
+      <h2 class="h3 mb-2">Select the Google Classroom you want to link</h2>
+
+      <%= form_tag google_classrooms_search_organization_path, id: 'js-search-form', class: 'form-block col-md-4 py-2', method: :get, remote: true do %>
+        <%= text_field_tag :query, params[:query], class: 'form-control width-full', placeholder: 'Search Google Classrooms...', autofocus: true, autocomplete: :off %>
+      <% end %>
+
+      <div class="mt-2" id="js-search-results">
+        <%= render partial: 'google_classroom_collection', locals: {courses: @google_classroom_courses} %>
+      </div>
+  </div>
+</div>
