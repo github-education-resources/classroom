@@ -13,10 +13,12 @@
           </span>
           <div class='flex-justify-between'>
             <% if google_classroom_roster_import_enabled? && current_organization.google_course_id %>
-              <span class="btn btn-primary btn-sm", role="button" data-remodal-target="sync-google-roster-modal">Sync from Google Classroom</span>
+              <span class="btn btn-primary btn-sm", role="button" data-remodal-target="sync-google-roster-modal"><%= octicon "sync" %> Sync from Google Classroom</span>
             <% elsif lti_launch_enabled? && current_organization.lti_configuration %>
               <% lms_name = current_organization.lti_configuration.lms_name(default_name: "Learning Management System") %>
-              <%= link_to "Sync from #{lms_name}", import_from_lms_roster_path, remote: true, method: :get, class: "btn btn-primary btn-sm" %>
+              <%= link_to import_from_lms_roster_path, remote: true, method: :get, class: "btn btn-primary btn-sm" do %>
+                <%= octicon "sync" %> Sync from <%= lms_name %> 
+              <% end %>
             <% else %>
               <span class="btn btn-primary btn-sm", role="button" data-remodal-target="new-student-modal">Update students</span>
             <% end %>
