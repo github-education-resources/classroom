@@ -20,7 +20,7 @@
       <div class="input-group">
         <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "consumer-key-#{current_organization.github_id}", value: current_lti_configuration.consumer_key, readonly: 'readonly' %>
         <span class="input-group-button">
-          <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#consumer-key-#{current_organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
+          <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target="<%= "#consumer-key-#{current_organization.github_id}" %>" class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
             <%= octicon 'clippy' %>
             Copy
           </button>
@@ -33,7 +33,7 @@
       <div class="input-group">
         <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "shared-secret-#{current_organization.github_id}", value: current_lti_configuration.shared_secret, readonly: 'readonly' %>
         <span class="input-group-button">
-          <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#shared-secret-#{current_organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
+          <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target="<%= "#shared-secret-#{current_organization.github_id}" %>" class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
             <%= octicon 'clippy' %>
             Copy
           </button>
@@ -41,18 +41,29 @@
       </div>
 
       <br>
-
+      <% if current_lti_configuration.supports_autoconfiguration %>
       <dt><label>Application Auto-Configuration URL</label></dt>
-      <dt>If <%= lms_name %> supports the capability, paste in this link to automatically set up Classroom.<dt>
       <div class="input-group">
         <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "autoconfigure-url-#{current_organization.github_id}", value: autoconfigure_lti_configuration_url, readonly: 'readonly' %>
         <span class="input-group-button">
-          <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#shared-secret-#{current_organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
+          <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target="<%= "#autoconfigure-url-#{current_organization.github_id}" %>" class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
             <%= octicon 'clippy' %>
             Copy
           </button>
         </span>
       </div>
+      <% else %>
+      <dt><label>Launch URL</label></dt>
+      <div class="input-group">
+        <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "launch-url-#{current_organization.github_id}", value: auth_lti_launch_url, readonly: 'readonly' %>
+        <span class="input-group-button">
+          <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target="<%= "#launch-url-#{current_organization.github_id}" %>" class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
+            <%= octicon 'clippy' %>
+            Copy
+          </button>
+        </span>
+      </div>
+      <% end %>
     </div>
 
     <div class="boxed-group dangerzone pb-3">
