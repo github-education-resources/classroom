@@ -29,7 +29,7 @@
     <% if action_name == 'invite' %>
       <div class="form-actions">
         <% next_step = new_roster_path(current_organization) %>
-        <% if lti_launch_enabled? %>
+        <% if lti_launch_enabled? || google_classroom_roster_import_enabled? %>
           <% next_step = link_lms_organization_path(current_organization) %>
         <% end %>
 
