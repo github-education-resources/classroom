@@ -10,14 +10,14 @@
     <div class="site-content-body markdown-body">
       <p>Connecting GitHub Classroom to your institution's Learning Management System (LMS) will allow you to automatically import your course roster. You can always skip this step and come back later.</p>
       <div class="d-flex flex-wrap gutter">
-        <div class="col-6 col-md-4 col-lg-4">
-          <% if google_classroom_roster_import_enabled? %>
+        <% if google_classroom_roster_import_enabled? %>
+          <div class="col-6 col-md-4 col-lg-4">
             <%= button_to google_classrooms_index_organization_path(current_organization), method: :get, class: 'd-block width-full text-center hover-grow border rounded-2 box-shadow-medium bg-white p-3 mb-4' do %>
               <%= image_tag "google-classroom-logo.png", class: 'avatar d-block mx-auto mb-2', height: 25 %>
               <span class="css-truncate-target" title="Google Classroom">Google Classroom</span>
             <% end %>
-          <% end %>
-        </div>
+          </div>
+        <% end %>
         <% if lti_launch_enabled? %>
           <% LtiConfiguration.lms_types.each_pair do |lms_type, lms_name| %>
             <% lms_name = "Other LMS" if lms_type == "other" %>
