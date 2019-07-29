@@ -6,7 +6,7 @@ RSpec.describe LtiConfiguration::BrightspaceSettings do
   let(:settings) { described_class.new }
   let(:general)  { LtiConfiguration::GenericSettings.new }
 
-  it "platform_name should be 'Blackboard'" do
+  it "platform_name should be 'Brightspace'" do
     expect(settings.platform_name).to eql("Brightspace")
   end
 
