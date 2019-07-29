@@ -93,9 +93,7 @@ module Orgs
     end
     # rubocop:enable Metrics/MethodLength
 
-    def complete
-      not_found unless current_organization.users.include? current_user
-    end
+    def complete; end
 
     private
 
