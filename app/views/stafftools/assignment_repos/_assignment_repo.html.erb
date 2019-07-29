@@ -7,7 +7,7 @@
 
   <div class="col-10 col-md-10 d-flex flex-column">
     <%= link_to stafftools_assignment_repo_path(assignment_repo.id) do %>
-      <strong class="search-result-title"><%= t('views.stafftools.assignment_repos.assignment_title', user_login: assignment_repo.user_login, title: assignment_repo.assignment_title) %></strong>
+      <strong class="search-result-title"><%= t('views.stafftools.assignment_repos.assignment_title', user_login: assignment_repo.user.github_user.login, title: assignment_repo.assignment.title) %></strong>
     <% end %>
 
     <span class="text-gray css-truncate css-truncate-target"><%= t('views.stafftools.assignment_repos.created') %> <%= local_time_ago(assignment_repo.created_at) %></span>

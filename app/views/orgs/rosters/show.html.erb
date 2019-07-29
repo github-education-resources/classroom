@@ -1,5 +1,5 @@
 <div class="remodal-bg">
-  <%= render 'organizations/organization_banner' %>
+  <%= render 'organizations/organization_banner', settings: true %>
 
   <div class="columns">
     <div class="one-fourth column">
@@ -12,8 +12,11 @@
             Classroom roster
           </span>
           <div class='flex-justify-between'>
-            <% if current_organization.lti_configuration %>
-              <%= link_to "Sync from LMS", import_from_lms_roster_path, remote: true, method: :get, class: "btn btn-primary btn-sm" %>
+            <% if google_classroom_roster_import_enabled? && current_organization.google_course_id %>
+              <span class="btn btn-primary btn-sm", role="button" data-remodal-target="sync-google-roster-modal">Sync from Google Classroom</span>
+            <% elsif lti_launch_enabled? && current_organization.lti_configuration %>
+              <% lms_name = current_organization.lti_configuration.lms_name(default_name: "Learning Management System") %>
+              <%= link_to "Sync from #{lms_name}", import_from_lms_roster_path, remote: true, method: :get, class: "btn btn-primary btn-sm" %>
             <% else %>
               <span class="btn btn-primary btn-sm", role="button" data-remodal-target="new-student-modal">Update students</span>
             <% end %>
@@ -57,7 +60,7 @@
         </div>
       </div>
 
-      <div class="boxed-group dangerzone">
+      <div class="boxed-group dangerzone pb-3">
         <h3>Delete this roster</h3>
         <div class="boxed-group-inner pt-2 clearfix">
           <p>
@@ -77,7 +80,8 @@
   </div>
 </div>
 
-<%= render partial: 'new_student_modal', locals: { roster: current_roster, google_course_name: @google_course_name } %>
+<%= render partial: 'new_student_modal', locals: { roster: current_roster } %>
+<%= render partial: 'sync_google_roster_modal', locals: { roster: current_roster, course_name: @google_course_name } %>
 <%= render partial: 'download_csv_modal', locals: { roster: current_roster, organization: current_organization } %>
 <%= render partial: 'remove_roster_modal', locals: { roster: current_roster, organization: current_organization } %>
 <%= render partial: 'select_identifier_modal', locals: { roster: current_roster, organization: current_organization } %>

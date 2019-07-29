@@ -27,7 +27,7 @@ module Orgs
     private
 
     def ensure_lti_configuration
-      redirect_to new_lti_configuration_path(current_organization) unless current_organization.lti_configuration
+      redirect_to link_lms_organization_path(current_organization) unless current_organization.lti_configuration
     end
 
     # rubocop:disable Metrics/MethodLength
@@ -35,7 +35,8 @@ module Orgs
     def lms_membership
       membership_service_url = current_organization.lti_configuration.context_membership_url(nonce: session[:lti_nonce])
       unless membership_service_url
-        msg = "GitHub Classroom is not configured properly on your Learning Management System.
+        lms_name = current_organization.lti_configuration.lms_name(default_name: "your Learning Management System")
+        msg = "GitHub Classroom is not configured properly on #{lms_name}.
         Please ensure the integration is configured properly and try again."
 
         raise LtiImportError, msg
@@ -50,7 +51,8 @@ module Orgs
       begin
         membership_service.students
       rescue Faraday::ClientError, JSON::ParserError
-        msg = "GitHub Classroom is unable to fetch membership from your Learning Management System at this time.
+        lms_name = current_organization.lti_configuration.lms_name(default_name: "your Learning Management System")
+        msg = "GitHub Classroom is unable to fetch membership from #{lms_name} at this time.
         Please try again later."
 
         raise LtiImportError, msg

@@ -1,0 +1,29 @@
+<% organization = @organization || current_organization %>
+<% assignment = @group_assignment %>
+
+<div class="container-lg p-responsive mt-4">
+  <div class="d-md-flex flex-items-center flex-justify-between mb-1">
+    <div class="d-flex flex-auto">
+      <span class="assignment-icon assignment-icon-group mt-1 mr-3">
+        <%= octicon 'organization', height: 22 %>
+      </span>
+      <div>
+        <h2 class="f1 text-normal lh-condensed">
+          <%= assignment.title %>
+        </h2>
+        <p class="text-gray">Group assignment for <strong><%= @group_assignment.grouping.title %></strong>
+          <% if @group_assignment.deadline %>
+            <% if @group_assignment.deadline.passed? %>
+              - Deadline Passed
+            <% else %>
+              <%= "- Deadline in #{distance_of_time_in_words(Time.zone.now, @group_assignment.deadline.deadline_at)}" %>
+            <% end %>
+          <% end %>
+        </p>
+      </div>
+    </div>
+    <%= render assignment.group_assignment_invitation %>
+  </div>
+
+  <%= render 'group_assignments/navigation', organization: organization, assignment: assignment %>
+</div>

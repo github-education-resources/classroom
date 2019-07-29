@@ -13,6 +13,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   before_action :check_should_redirect_to_roster_page,   only: :show
   before_action :authorize_group_access,                 only: :accept_invitation
   before_action :ensure_github_repo_exists,              only: :successful_invitation
+  before_action :check_group_exists,                     only: :accept
 
   def show
     @groups = invitation.groups.order(:title).page(params[:page])
@@ -187,7 +188,7 @@ class GroupAssignmentInvitationsController < ApplicationController
       flash[:error] = result.error
       redirect_to group_assignment_invitation_path
     when :success, :pending
-      GitHubClassroom.statsd.increment("v2_group_exercise_invitation.accept")
+      GitHubClassroom.statsd.increment("group_exercise_invitation.accept")
       route_based_on_status
     end
   end
@@ -198,14 +199,14 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   def report_retry
     if group_invite_status.errored_creating_repo?
-      GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.retry")
+      GitHubClassroom.statsd.increment("group_exercise_repo.create.retry")
     elsif group_invite_status.errored_importing_starter_code?
-      GitHubClassroom.statsd.increment("v2_group_exercise_repo.import.retry")
+      GitHubClassroom.statsd.increment("group_exercise_repo.import.retry")
     end
   end
 
   def report_invitation_failure
-    GitHubClassroom.statsd.increment("v2_group_exercise_invitation.fail")
+    GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
   end
 
   ## Resource Helpers
@@ -249,6 +250,10 @@ class GroupAssignmentInvitationsController < ApplicationController
     return false if group_assignment_repo.blank?
     return false if group_assignment.starter_code? && !group_assignment_repo.github_repository.imported?
     true
+  end
+
+  def check_group_exists
+    redirect_to group_assignment_invitation_path(invitation) if group.blank?
   end
 end
 # rubocop:enable Metrics/ClassLength

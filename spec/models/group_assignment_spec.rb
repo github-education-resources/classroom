@@ -228,21 +228,13 @@ RSpec.describe GroupAssignment, type: :model do
       end
 
       it "does not raise an error when starter code repo is a template repo" do
-        client.patch(
-          "https://api.github.com/repositories/#{github_repository.id}",
-          is_template: true,
-          accept: "application/vnd.github.baptiste-preview"
-        )
+        client.edit_repository(github_repository.full_name, is_template: true)
         group_assignment.assign_attributes(starter_code_repo_id: github_repository.id)
         expect { group_assignment.save! }.not_to raise_error
       end
 
       it "raises an error when starter code repository is not a template repo" do
-        client.patch(
-          "https://api.github.com/repositories/#{github_repository.id}",
-          is_template: false,
-          accept: "application/vnd.github.baptiste-preview"
-        )
+        client.edit_repository(github_repository.full_name, is_template: false)
         group_assignment.assign_attributes(starter_code_repo_id: github_repository.id)
         expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Starter code"\
           " repository is not a template repository. Make it a template repository to use template cloning.")

@@ -228,6 +228,16 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         end
       end
     end
+
+    context "user has no group" do
+      before do
+        sign_in_as(student)
+      end
+      it "redirects to #show if user manually visits #accept" do
+        get :accept, params: { id: invitation.key }
+        expect(response).to redirect_to(group_assignment_invitation_path(invitation))
+      end
+    end
   end
 
   describe "PATCH #accept_invitation", :vcr do
@@ -244,7 +254,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       it "sends an event to statsd" do
         expect(GitHubClassroom.statsd)
           .to receive(:increment)
-          .with("v2_group_exercise_invitation.accept")
+          .with("group_exercise_invitation.accept")
         patch :accept_invitation, params: { id: invitation.key, group: { title: "Code Squad" } }
       end
 
@@ -362,7 +372,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       context "with group import resiliency enabled" do
         describe "success" do
           it "sends an event to statsd" do
-            expect(GitHubClassroom.statsd).to receive(:increment).with("v2_group_exercise_invitation.accept")
+            expect(GitHubClassroom.statsd).to receive(:increment).with("group_exercise_invitation.accept")
             patch :accept_invitation, params: { id: invitation.key, group: { title: group.title } }
           end
 

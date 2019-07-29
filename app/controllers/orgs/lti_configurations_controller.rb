@@ -9,6 +9,7 @@ module Orgs
     before_action :ensure_lms_type, only: %i[create]
 
     skip_before_action :authenticate_user!, only: :autoconfigure
+    skip_before_action :ensure_lti_launch_flipper_is_enabled, only: :autoconfigure
     skip_before_action :ensure_current_organization_visible_to_current_user, only: :autoconfigure
 
     # rubocop:disable Metrics/MethodLength
@@ -35,6 +36,11 @@ module Orgs
       @lti_configuration = LtiConfiguration.new(lms_type: nil)
     end
 
+    def info
+      lms_type = params[:lms_type]
+      @lti_configuration = LtiConfiguration.new(lms_type: lms_type)
+    end
+
     def edit; end
 
     def update
@@ -48,9 +54,10 @@ module Orgs
     end
 
     def destroy
+      lms_name = current_lti_configuration.lms_name(default_name: "your Learning Management System")
       current_lti_configuration.destroy!
 
-      redirect_to edit_organization_path(id: current_organization), alert: "LTI configuration deleted."
+      redirect_to edit_organization_path(current_organization), alert: "Classroom is now disconnected from #{lms_name}."
     end
 
     # rubocop:disable Metrics/MethodLength
@@ -115,7 +122,7 @@ module Orgs
     end
 
     def ensure_lms_type
-      return if params.dig(:lti_configuration, :lms_type)
+      return if params.dig(:lti_configuration, :lms_type).present?
       redirect_to new_lti_configuration_path(current_organization)
     end
   end
