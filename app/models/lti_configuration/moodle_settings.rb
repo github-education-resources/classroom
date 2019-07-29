@@ -2,14 +2,6 @@
 
 class LtiConfiguration
   class MoodleSettings < GenericSettings
-    def initialize
-      super(
-        platform_name: "Moodle",
-        icon: "moodle-logo.png",
-        supports_membership_service: true
-      )
-    end
-
     def platform_name
       "Moodle"
     end
