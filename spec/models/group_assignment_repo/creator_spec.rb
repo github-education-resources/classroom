@@ -240,7 +240,7 @@ RSpec.describe GroupAssignmentRepo::Creator do
 
           it "reports error to Failbot" do
             GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
-            expect(Failbot.reports.count).to eq(1)
+            expect(Failbot.reports.count).to be > 0
           end
         end
       end

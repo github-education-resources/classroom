@@ -229,7 +229,7 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
 
           it "reports error to Failbot" do
             AssignmentRepo::Creator.perform(assignment: assignment, user: student)
-            expect(Failbot.reports.count).to eq(1)
+            expect(Failbot.reports.count).to be > 0
           end
         end
       end
