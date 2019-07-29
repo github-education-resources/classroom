@@ -32,7 +32,7 @@ As you don’t get the complete commit history, you miss out on the following fe
 * If you’re planning to create an assignment for a group project or a long project with multiple phases, you can either use separate branches for each phase and use repo templates, or you can stick to the importer.
 * If you plan on pushing changes to the student repos for any updates, using the existing importer might be a better option
 
-\* the template repos API is still under a preview and might change, but we will keep this page updated if any of those changes affect your experience on classroom.
+\* The template repositories API is still under a preview and might change.  We will keep this page updated if any of those changes affect your experience on classroom.
 
 ### Helpful links:
 * [https://help.github.com/en/articles/creating-a-template-repository](https://help.github.com/en/articles/creating-a-template-repository)
