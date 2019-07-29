@@ -8,17 +8,17 @@
 
 
     <div class="site-content-body markdown-body">
-      <p>Would you like to connect GitHub Classroom to your Learning Management System (LMS)? You can always skip this step and come back later.</p>
+      <p>Connecting GitHub Classroom to your institution's Learning Management System (LMS) will allow you to automatically import your course roster. You can always skip this step and come back later.</p>
       <div class="d-flex flex-wrap gutter">
-        <div class="col-6 col-md-4 col-lg-3">
+        <div class="col-6 col-md-4 col-lg-4">
           <%= button_to select_google_classroom_roster_path(current_organization), method: :get, class: 'd-block width-full text-center hover-grow border rounded-2 box-shadow-medium bg-white p-3 mb-4' do %>
             <%= image_tag "google-classroom-logo.png", class: 'avatar d-block mx-auto mb-2', height: 25 %>
-            <span class="css-truncate css-truncate-target" title="Google Classroom">Google Class</span>
+            <span class="css-truncate-target" title="Google Classroom">Google Classroom</span>
           <% end %>
         </div>
         <% LtiConfiguration.lms_types.each_pair do |lms_type, lms_name| %>
           <% lms_name = "Other LMS" if lms_type == "other" %>
-          <div class="col-6 col-md-4 col-lg-3">
+          <div class="col-6 col-md-4 col-lg-4">
             <%= button_to info_lti_configuration_path(current_organization), method: :get, params: { lms_type: lms_type }, class: 'd-block width-full text-center hover-grow border rounded-2 box-shadow-medium bg-white p-3 mb-4' do %>
               <%= image_tag "#{lms_type}-logo.png", class: 'avatar d-block mx-auto mb-2', height: 25 %>
               <span class="css-truncate css-truncate-target" title=<%= lms_name %>><%= lms_name %></span>
