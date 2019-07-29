@@ -8,7 +8,7 @@ class HooksController < ApplicationController
 
   def receive
     send_github_payload_to_job(payload_hash)
-    update_last_webhook_received(payload_hash)
+    update_last_webhook_recieved(payload_hash)
     head :ok
   end
 
@@ -41,12 +41,12 @@ class HooksController < ApplicationController
     # rubocop:enable GuardClause
   end
 
-  def update_last_webhook_received(payload_hash)
+  def update_last_webhook_recieved(payload_hash)
     github_organization_id = payload_hash.dig("organization", "id")
     return false unless github_organization_id
     OrganizationWebhook
       .find_by!(github_organization_id: github_organization_id)
-      .update_columns(last_webhook_received: Time.now.utc) # rubocop:disable Rails/SkipsModelValidations
+      .update_columns(last_webhook_recieved: Time.now.utc) # rubocop:disable Rails/SkipsModelValidations
     true
   end
 end

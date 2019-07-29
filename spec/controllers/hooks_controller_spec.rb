@@ -47,10 +47,10 @@ RSpec.describe HooksController, type: :controller do
     end
   end
 
-  describe "#update_last_webhook_received" do
+  describe "#update_last_webhook_recieved" do
     context "payload[organization][id] exists" do
       let(:payload) { { "organization" => { "id" => 0 } } }
-      subject { HooksController.new.send(:update_last_webhook_received, payload) }
+      subject { HooksController.new.send(:update_last_webhook_recieved, payload) }
 
       context "OrganizationWebhook exists" do
         before do
@@ -71,7 +71,7 @@ RSpec.describe HooksController, type: :controller do
 
     context "payload[organization][id] does not exist" do
       let(:payload) { {} }
-      subject { HooksController.new.send(:update_last_webhook_received, payload) }
+      subject { HooksController.new.send(:update_last_webhook_recieved, payload) }
 
       it "returns false" do
         expect(subject).to be_falsy
