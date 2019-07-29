@@ -80,12 +80,16 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
       end
 
       context "when the user is authorized" do
-        before do
+        before(:each) do
           # Stub google authentication again
           client = Signet::OAuth2::Client.new
           allow_any_instance_of(ApplicationController)
             .to receive(:user_google_classroom_credentials)
             .and_return(client)
+        end
+
+        it "creates a statsd event" do
+          expect(GitHubClassroom.statsd).to receive(:increment).with("google_classroom.create")
 
           post :create, params: {
             id: organization.slug,
@@ -93,9 +97,18 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
           }
         end
 
-        it "suceeds" do
-          expect(Organization.first.google_course_id).to eq("6464")
-          expect(flash[:success]).to eq("Google Classroom integration was succesfully configured.")
+        context "creates configuration" do
+          before do 
+            post :create, params: {
+              id: organization.slug,
+              course_id: 6464
+            }
+          end
+
+          it "suceeds" do
+            expect(Organization.first.google_course_id).to eq("6464")
+            expect(flash[:success]).to eq("Google Classroom integration was succesfully configured.")
+          end
         end
       end
 
@@ -205,20 +218,36 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
   end
 
   describe "#destroy", :vcr do
-    before do
-      organization.update(google_course_id: "3333")
-      delete :destroy, params: {
-        id: organization.slug
-      }
-      organization.reload
-    end
+    context "deletes google classroom" do
+      before do
+        organization.update(google_course_id: "3333")
+        delete :destroy, params: {
+          id: organization.slug
+        }
+        organization.reload
+      end
 
-    it "deletes google classroom" do
-      expect(organization.google_course_id).to be_nil
-    end
+      it "succeeds" do
+        expect(organization.google_course_id).to be_nil
+      end
 
-    it "redirects or organization page" do
-      expect(response).to redirect_to(organization_path(organization))
+      it "redirects or organization page" do
+        expect(response).to redirect_to(organization_path(organization))
+      end
+    end
+    
+    context "sends statsd" do
+      before do 
+        organization.update(google_course_id: "3333")
+      end
+
+      it "succeeds" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("google_classroom.destroy")
+
+        delete :destroy, params: {
+          id: organization.slug
+        }
+      end
     end
   end
 end

@@ -18,6 +18,8 @@ module Orgs
         "Emails": students.map(&:email)
       }
 
+      GitHubClassroom.statsd.increment("lti_configuration.import")
+
       respond_to do |format|
         format.js
         format.html

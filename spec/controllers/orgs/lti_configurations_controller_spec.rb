@@ -113,6 +113,11 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         GitHubClassroom.flipper[:lti_launch].enable
       end
 
+      it "sends statsd" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("lti_configuration.create")
+        post :create, params: { id: organization.slug, lti_configuration: { lms_type: :other } }
+      end
+
       it "creates lti_configuration if lms_type is set" do
         post :create, params: { id: organization.slug, lti_configuration: { lms_type: :other } }
         expect(organization.lti_configuration).to_not be_nil
@@ -173,6 +178,11 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
     context "with flipper enabled" do
       before(:each) do
         GitHubClassroom.flipper[:lti_launch].enable
+      end
+
+      it "sends statsd" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("lti_configuration.destroy")
+        delete :destroy, params: { id: organization.slug }
       end
 
       context "with lti configuration present" do

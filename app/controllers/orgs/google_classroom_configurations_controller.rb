@@ -10,6 +10,8 @@ module Orgs
     def create
       current_organization.update(google_course_id: params[:course_id])
 
+      GitHubClassroom.statsd.increment("google_classroom.create")
+
       flash[:success] = "Google Classroom integration was succesfully configured."
       redirect_to new_roster_path(current_organization)
     end
@@ -33,6 +35,7 @@ module Orgs
 
     def destroy
       current_organization.update!(google_course_id: nil)
+      GitHubClassroom.statsd.increment("google_classroom.destroy")
       flash[:success] = "Removed link to Google Classroom. No students were removed from your roster."
 
       redirect_to organization_path(current_organization)

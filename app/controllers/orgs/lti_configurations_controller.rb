@@ -22,6 +22,7 @@ module Orgs
       )
 
       if lti_configuration.present?
+        GitHubClassroom.statsd.increment("lti_configuration.create")
         redirect_to lti_configuration_path(current_organization)
       else
         redirect_to info_lti_configuration_path(current_lti_configuration),
@@ -56,7 +57,7 @@ module Orgs
     def destroy
       lms_name = current_lti_configuration.lms_name(default_name: "your Learning Management System")
       current_lti_configuration.destroy!
-
+      GitHubClassroom.statsd.increment("lti_configuration.destroy")
       redirect_to edit_organization_path(current_organization), alert: "Classroom is now disconnected from #{lms_name}."
     end
 
