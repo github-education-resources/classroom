@@ -233,9 +233,9 @@ RSpec.describe GroupAssignmentRepo::Creator do
         end
 
         context "failure" do
-          before do
+          before(:each) do
             GitHubClassroom.flipper[:template_repos].enable
-            group_assignment.update_attribute("starter_code_repo_id", -1)
+            organization.github_organization.delete_repository(group_assignment.starter_code_repo_id)
           end
 
           it "reports error to Failbot" do

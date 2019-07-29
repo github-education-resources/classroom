@@ -222,13 +222,13 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
         end
 
         context "failure" do
-          before do
+          before(:each) do
             GitHubClassroom.flipper[:template_repos].enable
-            assignment.update_attribute("starter_code_repo_id", -1)
+            organization.github_organization.delete_repository(assignment.starter_code_repo_id)
           end
 
           it "reports error to Failbot" do
-            result = AssignmentRepo::Creator.perform(assignment: assignment, user: student)
+            AssignmentRepo::Creator.perform(assignment: assignment, user: student)
             expect(Failbot.reports.count).to eq(1)
           end
         end
