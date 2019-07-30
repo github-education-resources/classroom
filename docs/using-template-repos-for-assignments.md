@@ -43,7 +43,7 @@ Template repositories are the best option in _most_ cases. You may not want to u
 * You plan on pushing updates to the starter code repository _after_ releasing the assignment.
 * You care about the full commit history of the starter code repository.
 
-Note: the template repos API is still under a preview and might change, but we will keep this page updated if any of those changes affect your experience on classroom.
+Note: The template repositories API is still under a preview and might change.  We will keep this page updated if any of those changes affect your experience on classroom.
 
 ### Helpful links:
 * [https://help.github.com/en/articles/creating-a-template-repository](https://help.github.com/en/articles/creating-a-template-repository)
