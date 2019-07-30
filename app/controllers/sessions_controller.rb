@@ -88,10 +88,6 @@ class SessionsController < ApplicationController
 
   private
 
-  def allow_in_iframe
-    response.headers.delete "X-Frame-Options"
-  end
-
   def verify_lti_launch_enabled
     return not_found unless lti_launch_enabled?
   end

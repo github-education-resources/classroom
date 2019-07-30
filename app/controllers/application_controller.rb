@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user, :logged_in?, :true_user, :log_out # authentication_dependency
   helper_method :team_management_enabled? # feature_flags_dependency
+  helper_method :allow_in_iframe
 
   # errors_dependency
   rescue_from StandardError, with: :send_to_statsd_and_reraise
@@ -66,5 +67,9 @@ class ApplicationController < ActionController::Base
       render file: Rails.root.join("public", "invalid_link_error.html"), layout: false,
              status: :not_found, formats: [:html]
     end
+  end
+
+  def allow_in_iframe
+    response.headers.delete "X-Frame-Options"
   end
 end

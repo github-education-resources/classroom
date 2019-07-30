@@ -10,6 +10,8 @@ class AssignmentsController < ApplicationController
   before_action :set_filter_options, only: %i[show]
   before_action :set_unlinked_users, only: %i[show]
 
+  before_action :allow_in_iframe, only: [:link_to_lms]
+
   def new
     @assignment = Assignment.new
   end
