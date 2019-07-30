@@ -12,7 +12,7 @@ module Orgs
     skip_before_action :ensure_lti_launch_flipper_is_enabled, only: :autoconfigure
     skip_before_action :ensure_current_organization_visible_to_current_user, only: :autoconfigure
 
-    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     def create
       lti_configuration = LtiConfiguration.create(
         organization: current_organization,
@@ -29,7 +29,7 @@ module Orgs
           alert: "There was a problem creating the configuration. Please try again later."
       end
     end
-    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
     def show; end
 

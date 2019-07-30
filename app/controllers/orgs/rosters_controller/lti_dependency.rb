@@ -10,6 +10,7 @@ module Orgs
 
     rescue_from LtiImportError, with: :handle_lms_import_error
 
+    # rubocop:disable Metrics/MethodLength
     def import_from_lms
       students = lms_membership.map(&:member)
       @identifiers = {
@@ -25,6 +26,7 @@ module Orgs
         format.html
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     private
 

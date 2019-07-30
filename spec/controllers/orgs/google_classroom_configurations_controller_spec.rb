@@ -98,7 +98,7 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
         end
 
         context "creates configuration" do
-          before do 
+          before do
             post :create, params: {
               id: organization.slug,
               course_id: 6464
@@ -235,9 +235,9 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
         expect(response).to redirect_to(organization_path(organization))
       end
     end
-    
+
     context "sends statsd" do
-      before do 
+      before do
         organization.update(google_course_id: "3333")
       end
 
