@@ -33,6 +33,9 @@ class LtiConfiguration
           windowTarget: "_blank",
           visibility: "admins", # only show the application to instructors
           enabled: "true"
+        },
+        assignment_selection: {
+          message_type: "ContentItemSelectionRequest"
         }
       }
     end
