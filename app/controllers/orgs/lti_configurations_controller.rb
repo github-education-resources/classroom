@@ -60,38 +60,12 @@ module Orgs
       redirect_to edit_organization_path(current_organization), alert: "Classroom is now disconnected from #{lms_name}."
     end
 
-    # rubocop:disable Metrics/MethodLength
     def autoconfigure
-      builder = GitHubClassroom::LTI::ConfigurationBuilder.new("GitHub Classroom", auth_lti_launch_url)
+      not_found unless current_lti_configuration.supports_autoconfiguration?
 
-      builder.add_attributes(
-        description: "Sync your GitHub Classroom organization with your Learning Management System.",
-        icon: "https://classroom.github.com/favicon.ico",
-        vendor_name: "GitHub Classroom",
-        vendor_url: "https://classroom.github.com/"
-      )
-
-      ## LMS Specific Attributes ##
-      # Note: LMS's will ignore vendor identifiers they do not understand
-
-      # Canvas will not display an LTI application
-      # unless specify a course_navigation location.
-      builder.add_vendor_attributes(
-        "canvas.instructure.com",
-        privacy_level: "public",
-        custom_fields: {
-          custom_context_membership_url: "$ToolProxyBinding.memberships.url"
-        },
-        course_navigation: {
-          windowTarget: "_blank",
-          visibility: "admins", # only show the application to instructors
-          enabled: "true"
-        }
-      )
-
-      render xml: builder.to_xml, status: :ok
+      xml_configuration = current_lti_configuration.xml_configuration(auth_lti_launch_url)
+      render xml: xml_configuration, status: :ok
     end
-    # rubocop:enable Metrics/MethodLength
 
     def complete; end
 
