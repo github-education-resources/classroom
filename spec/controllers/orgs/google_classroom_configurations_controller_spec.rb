@@ -35,6 +35,26 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
             id: organization.slug
           }
         end
+
+        it "succeeds" do
+          expect(response).to have_http_status(:success)
+        end
+
+        context "when there is an error fetching classes" do
+          before do
+            allow_any_instance_of(GoogleAPI::ClassroomService)
+              .to receive(:list_courses)
+              .and_raise(Google::Apis::ServerError.new("boom"))
+
+            patch :index, params: {
+              id: organization.slug
+            }
+          end
+
+          it "sets error message" do
+            expect(flash[:error]).to eq("Failed to fetch classroom from Google Classroom. Please try again.")
+          end
+        end
       end
 
       context "when user is not authorized" do
