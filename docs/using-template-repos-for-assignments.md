@@ -47,5 +47,5 @@ Note: The template repositories API is still under a preview and might change.  
 
 ### Helpful links:
 * [Creating a template repository](https://help.github.com/en/articles/creating-a-template-repository)
-* [https://help.github.com/en/articles/creating-a-repository-from-a-template](https://help.github.com/en/articles/creating-a-repository-from-a-template)
+* [Creating a repository from a template](https://help.github.com/en/articles/creating-a-repository-from-a-template)
 * [Generate new repositories with repository templates](https://github.blog/2019-06-06-generate-new-repositories-with-repository-templates)
