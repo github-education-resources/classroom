@@ -20,32 +20,35 @@
         <%= f.submit t('views.organizations.save_changes'), class: 'btn btn-primary' %>
       <% end %>
 
-      <div class="Box Box--condensed mt-5">
-        <div class="Box-header">
-          <h2 class="Box-title"><%= "Learning Management System" %></h2>
-        </div>
+      <% if lti_launch_enabled? || google_classroom_roster_import_enabled? %>
+        <div class="Box Box--condensed mt-5">
+          <div class="Box-header">
+            <h2 class="Box-title"><%= "Learning Management System" %></h2>
+          </div>
 
-        <div class="Box-body">
-          <% if lti_launch_enabled? && current_organization.lti_configuration %>
-            <% lms_name = current_organization.lti_configuration.lms_name(default_name: "a Learning Management System") %>
-            <%= link_to "Connection Settings", lti_configuration_path(current_organization) %>
-          <% elsif google_classroom_roster_import_enabled? && current_organization.google_course_id %>
-            You are currently connected to <strong>Google Classroom</strong>.
-          <% else lti_launch_enabled? || google_classroom_roster_import_enabled? %>
-            <p>You are currently not connected to a Learning Management System. Connect to this Classroom via</p>
-            <%= link_to "Google Classroom",
-              google_classrooms_index_organization_path,
-              class: "btn btn-sm btn-secondary d-inline-flex flex-items-center mb-2 mr-1"
-            %>
-            <% LtiConfiguration.lms_types.each_pair do |lms_type, lms_name| %>
-            <% lms_name = "Another LMS" if lms_type == "other" %>
-            <%= link_to lms_name, info_lti_configuration_path(current_organization, lms_type: lms_type),
-              class: "btn btn-sm btn-secondary d-inline-flex flex-items-center mb-2 mr-1"
-            %>
+          <div class="Box-body">
+            <% if lti_launch_enabled? && current_organization.lti_configuration %>
+              <% lms_name = current_organization.lti_configuration.lms_name(default_name: "a Learning Management System") %>
+              You are currently connected to <%= lms_name %>.
+              <%= link_to "Connection Settings", lti_configuration_path(current_organization) %>
+            <% elsif google_classroom_roster_import_enabled? && current_organization.google_course_id %>
+              You are currently connected to Google Classroom.
+            <% else lti_launch_enabled? || google_classroom_roster_import_enabled? %>
+              <p>You are currently not connected to a Learning Management System. Connect to this Classroom via</p>
+              <%= link_to "Google Classroom",
+                google_classrooms_index_organization_path,
+                class: "btn btn-sm btn-secondary d-inline-flex flex-items-center mb-2 mr-1"
+              %>
+              <% LtiConfiguration.lms_types.each_pair do |lms_type, lms_name| %>
+              <% lms_name = "Another LMS" if lms_type == "other" %>
+              <%= link_to lms_name, info_lti_configuration_path(current_organization, lms_type: lms_type),
+                class: "btn btn-sm btn-secondary d-inline-flex flex-items-center mb-2 mr-1"
+              %>
+              <% end %>
             <% end %>
-          <% end %>
+          </div>
         </div>
-      </div>
+      <% end %>
 
       <div class="Box Box--condensed mt-5">
         <div class="Box-header bg-red">
