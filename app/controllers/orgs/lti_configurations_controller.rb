@@ -12,7 +12,7 @@ module Orgs
     skip_before_action :ensure_lti_launch_flipper_is_enabled, only: :autoconfigure
     skip_before_action :ensure_current_organization_visible_to_current_user, only: :autoconfigure
 
-    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     def create
       lti_configuration = LtiConfiguration.create(
         organization: current_organization,
@@ -22,13 +22,14 @@ module Orgs
       )
 
       if lti_configuration.present?
+        GitHubClassroom.statsd.increment("lti_configuration.create")
         redirect_to lti_configuration_path(current_organization)
       else
         redirect_to info_lti_configuration_path(current_lti_configuration),
           alert: "There was a problem creating the configuration. Please try again later."
       end
     end
-    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
     def show; end
 
@@ -55,8 +56,8 @@ module Orgs
 
     def destroy
       lms_name = current_lti_configuration.lms_name(default_name: "your Learning Management System")
+      GitHubClassroom.statsd.increment("lti_configuration.destroy")
       current_lti_configuration.destroy!
-
       redirect_to edit_organization_path(current_organization), alert: "Classroom is now disconnected from #{lms_name}."
     end
 
