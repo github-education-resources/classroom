@@ -231,6 +231,18 @@ RSpec.describe GroupAssignmentRepo::Creator do
               .with(text: subject::CREATE_REPO, status: "creating_repo", repo_url: nil)
           end
         end
+
+        context "failure" do
+          before(:each) do
+            GitHubClassroom.flipper[:template_repos].enable
+            organization.github_organization.delete_repository(group_assignment.starter_code_repo_id)
+          end
+
+          it "reports error to Failbot" do
+            GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
+            expect(Failbot.reports.count).to be > 0
+          end
+        end
       end
     end
 

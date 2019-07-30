@@ -1,0 +1,24 @@
+<% lms_name = current_lti_configuration.lms_name(default_name: "your Learning Management System") %>
+
+<%= render 'organizations/organization_banner', settings: true %>
+
+<div class="site-content">
+
+  <div class="site-content-cap container-lg clearfix">
+    <h2 class="col-6 float-left text-left pr-2 site-content-heading">Connect to <%= lms_name %></h2>
+  </div>
+
+
+  <div class="site-content-body">
+    <div class="blankslate blankslate-spacious blankslate-clean-background">
+      <h3>Congratulations! You've successfully connected GitHub Classroom to <%= lms_name %></h3>
+      <%= link_to organization_path(current_organization), class: 'btn btn-large btn-primary f3 mt-3', role: 'button' do %>
+        Continue to Assignments
+      <% end %>
+    </div>
+
+    <div class="protip">
+      <%= octicon 'gear' %> Or head back to <%= link_to "classroom settings", edit_organization_path(current_organization) %>
+    </div>
+  </div>
+</div>

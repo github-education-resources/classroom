@@ -67,10 +67,9 @@ class SessionsController < ApplicationController
     linked_org = LtiConfiguration.find_by_auth_hash(auth_hash).organization
 
     if logged_in?
-      lms_name = linked_org.lti_configuration.lms_name(default_name: "your Learning Management System")
-      redirect_to edit_organization_path(linked_org), notice: "Successfully linked GitHub Classroom to #{lms_name}!"
+      redirect_to complete_lti_configuration_path(linked_org)
     else
-      session[:pre_login_destination] = edit_organization_path(linked_org)
+      session[:pre_login_destination] = complete_lti_configuration_path(linked_org)
       authenticate_user!
     end
   end

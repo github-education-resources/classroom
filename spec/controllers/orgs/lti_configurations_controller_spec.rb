@@ -279,4 +279,36 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       end
     end
   end
+
+  describe "GET #complete", :vcr do
+    context "with flipper on" do
+      before(:each) do
+        GitHubClassroom.flipper[:lti_launch].enable
+      end
+
+      context "with existing lti_configuration" do
+        before(:each) do
+          create(:lti_configuration, organization: organization)
+        end
+
+        context "with user who is an instructor" do
+          it "returns success page" do
+            get :complete, params: { id: organization.slug }
+            expect(response).to have_http_status(:success)
+          end
+        end
+      end
+    end
+
+    context "with flipper disabled" do
+      before(:each) do
+        GitHubClassroom.flipper[:lti_launch].disable
+      end
+
+      it "returns a not_found" do
+        get :complete, params: { id: organization.slug }
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
 end

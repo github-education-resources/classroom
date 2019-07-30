@@ -220,6 +220,18 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
               .with(body: /^.*#{@original_repository.name}-1.*$/)
           end
         end
+
+        context "failure" do
+          before(:each) do
+            GitHubClassroom.flipper[:template_repos].enable
+            organization.github_organization.delete_repository(assignment.starter_code_repo_id)
+          end
+
+          it "reports error to Failbot" do
+            AssignmentRepo::Creator.perform(assignment: assignment, user: student)
+            expect(Failbot.reports.count).to be > 0
+          end
+        end
       end
     end
 
