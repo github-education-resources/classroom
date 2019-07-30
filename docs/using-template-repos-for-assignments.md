@@ -2,37 +2,48 @@ Importing starter code for assignments is a very useful feature and with GitHub 
 
 ### How to use template repositories for an assignment?
 
+#### Before you begin
+To use template repositories for assignments, you'll need the following:
 
-![Searches for repository, then selects the option of Importing starter code with template repositories](https://user-images.githubusercontent.com/1490434/61005360-10631080-a336-11e9-843b-ddb3e4f011ca.gif)
+* A GitHub organization, preferably [with a discount for private repositories](https://education.github.com/discount_requests/new) and access to GitHub Classroom.
+* A classroom which uses the GitHub organization.
+* An exercise (a repository that you have access to, which contains documentation, starter code, tests, or anything else your students need to begin work on an assignment).
+* A list of students, or unique identifiers like their email addresses.
 
+#### Get started
 
-When you pick your template repository as a starter code repository, you will now get two options:
+Once you log in to [GitHub Classroom](https://classroom.github.com/), select your classroom and then click on **New Assignment**. Template repositories work for both **Individual Assignments** and **Group Assignments**. So you can pick either of the two for your assignment. You can then provide details for the assignment. Once you've filled out the details, the **Optional** section has a search bar for finding your starter code repository. When you search for your starter code repository, you will now get two options:
 
   * Import starter code using a template repository.
   * Import starter code using source importer.
-  * After selecting either of the options, the following steps are the same as before. More information on this can be found on our [Videos page](/videos)
 
-Note: If the picked starter code repository is not a template repository we will try to make it into one for you. If that fails, you can do it manually from the settings page of the repository on GitHub. More details on this page: [https://help.github.com/en/articles/creating-a-template-repository](https://help.github.com/en/articles/creating-a-template-repository)
+If you choose the first option, we will use your starter code repository as a template for generating the assignment for the students.
+
+![Searches for repository, then selects the option of Importing starter code with template repositories](https://user-images.githubusercontent.com/3170078/62091261-ee69f900-b224-11e9-96ab-b4b34cce0001.gif)
+
+Note: For import via template repositories to work, your starter code repository _must_ be a template repository.If you own the repository or have permissions, you can do it manually from the settings page of the repository on GitHub. More details [here](https://help.github.com/en/articles/creating-a-template-repository). We are in the process of automating this for you, and will post an update on this page soon!
 
 
 ### What are the advantages of using template repositories?
 
-* Importing starter code is faster, as it uses the newer and faster [template repositories API](https://developer.github.com/v3/repos/#create-repository-using-a-repository-template).
-* Template repositories can be really useful if only the lastest files in the starter code repository are important and you do not want the entire commit history.
+* Importing starter code is faster, as it uses the new [template repositories API](https://developer.github.com/v3/repos/#create-repository-using-a-repository-template).
+* Template repositories are built with the aim of distribution and management of boilerplate code and hence releasing assignments is almost instantaneous.
 
-### What do you miss out on when you use template repositories?\*
-As you don’t get the complete commit history, you miss out on the following features:
+### What do you miss out on when you use template repositories?
 
-* All the original tags in the repositories.
-* Since repositories created from templates are a clean slate, adding them as remotes on original repository and pushing updates to them is not possible.
+Template repositories do not copy the complete commit history, but instead start with a single commit. Because of that, you miss out on the following features:
+
+* Reference to all the original tags in the repositories.
+* Ability to push updates to the generated repositories.
 
 ### Recommended option for your assignment
 
-* A stand-alone homework assignment with starter code, or with just a README, or assignment instructions is a perfect fit for using template repositories.
-* If you’re planning to create an assignment for a group project or a long project with multiple phases, you can either use separate branches for each phase and use repo templates, or you can stick to the importer.
-* If you plan on pushing changes to the student repos for any updates, using the existing importer might be a better option
+Template repositories are the best option in _most_ cases. You may not want to use it if:
 
-\* the template repos API is still under a preview and might change, but we will keep this page updated if any of those changes affect your experience on classroom.
+* You plan on pushing updates to the starter code repository _after_ releasing the assignment.
+* You care about the full commit history of the starter code repository.
+
+Note: the template repos API is still under a preview and might change, but we will keep this page updated if any of those changes affect your experience on classroom.
 
 ### Helpful links:
 * [https://help.github.com/en/articles/creating-a-template-repository](https://help.github.com/en/articles/creating-a-template-repository)
