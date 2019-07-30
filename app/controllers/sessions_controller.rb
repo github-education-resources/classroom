@@ -61,14 +61,17 @@ class SessionsController < ApplicationController
 
     message = GitHubClassroom::LTI::MessageStore.construct_message(auth_hash.extra.raw_info)
     raise("invalid lti launch message") unless message_store.message_valid?(message)
-
+    puts message
     nonce = message_store.save_message(message)
     session[:lti_nonce] = nonce
 
     linked_org = LtiConfiguration.find_by_auth_hash(auth_hash).organization
-
     if logged_in?
-      @post_launch_url = complete_lti_configuration_url(linked_org)
+      if(message.lti_message_type == "ContentItemSelectionRequest")
+        return redirect_to select_lms_assignment_organization_url(linked_org)
+      else
+        @post_launch_url = complete_lti_configuration_url(linked_org)
+      end
     else
       @post_launch_url = login_url
       session[:pre_login_destination] = complete_lti_configuration_url(linked_org)
