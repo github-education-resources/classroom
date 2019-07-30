@@ -254,10 +254,23 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         create(:lti_configuration, organization: organization)
       end
 
-      it "returns an xml configuration" do
-        get :autoconfigure, params: { id: organization.slug }
-        expect(response).to have_http_status(:success)
-        expect(response.content_type).to eq "application/xml"
+      context "with autoconfiguration enabled" do
+        before(:each) { LtiConfiguration.any_instance.stub(:supports_autoconfiguration?).and_return(true) }
+
+        it "returns an xml configuration" do
+          get :autoconfigure, params: { id: organization.slug }
+          expect(response).to have_http_status(:success)
+          expect(response.content_type).to eq "application/xml"
+        end
+      end
+
+      context "with autoconfiguration disabled" do
+        before(:each) { LtiConfiguration.any_instance.stub(:supports_autoconfiguration?).and_return(false) }
+
+        it "does not return an xml configuration" do
+          get :autoconfigure, params: { id: organization.slug }
+          expect(response).to have_http_status(:not_found)
+        end
       end
     end
 
