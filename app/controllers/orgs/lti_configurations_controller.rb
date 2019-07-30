@@ -67,6 +67,8 @@ module Orgs
       render xml: xml_configuration, status: :ok
     end
 
+    def complete; end
+
     private
 
     def current_lti_configuration

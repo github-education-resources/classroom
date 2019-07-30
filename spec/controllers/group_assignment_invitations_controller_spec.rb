@@ -228,6 +228,16 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         end
       end
     end
+
+    context "user has no group" do
+      before do
+        sign_in_as(student)
+      end
+      it "redirects to #show if user manually visits #accept" do
+        get :accept, params: { id: invitation.key }
+        expect(response).to redirect_to(group_assignment_invitation_path(invitation))
+      end
+    end
   end
 
   describe "PATCH #accept_invitation", :vcr do
