@@ -48,6 +48,10 @@ class OrganizationsController < Orgs::Controller
       .page(params[:page])
   end
 
+  def select_lms_assignment
+    @assignments = current_organization.all_assignments
+  end
+
   def edit; end
 
   def invitation; end

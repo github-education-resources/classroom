@@ -1,0 +1,3 @@
+<% @assignments.each do |assignment| %>
+  <%= link_to assignment.title, link_to_lms_organization_assignment_path(organization_id: assignment.organization.slug, id: assignment.slug) %>
+<% end %>
