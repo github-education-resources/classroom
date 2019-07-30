@@ -180,15 +180,15 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         GitHubClassroom.flipper[:lti_launch].enable
       end
 
-      it "sends statsd" do
-        expect(GitHubClassroom.statsd).to receive(:increment).with("lti_configuration.destroy")
-        delete :destroy, params: { id: organization.slug }
-      end
-
       context "with lti configuration present" do
         before(:each) do
           create(:lti_configuration, organization: organization)
           get :show, params: { id: organization.slug }
+        end
+
+        it "sends statsd" do
+          expect(GitHubClassroom.statsd).to receive(:increment).with("lti_configuration.destroy")
+          delete :destroy, params: { id: organization.slug }
         end
 
         it "deletes lti_configuration" do
