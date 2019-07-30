@@ -67,8 +67,8 @@ class SessionsController < ApplicationController
 
     linked_org = LtiConfiguration.find_by_auth_hash(auth_hash).organization
     if logged_in?
-      if(message.lti_message_type == "ContentItemSelectionRequest")
-        return redirect_to select_lms_assignment_organization_url(linked_org)
+      if(message.resource_link_id)
+        @post_launch_url = select_lms_assignment_organization_url(linked_org, resource_id: message.resource_link_id)
       else
         @post_launch_url = complete_lti_configuration_url(linked_org)
       end

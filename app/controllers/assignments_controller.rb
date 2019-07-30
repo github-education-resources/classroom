@@ -102,23 +102,24 @@ class AssignmentsController < ApplicationController
   end
 
   def link_to_lms
+    @lti_resource_id = params[:resource_id]
     lti_configuration = @organization.lti_configuration
-    store = GitHubClassroom.lti_message_store(lti_configuration: lti_configuration)
-    message = store.get_message(session[:lti_nonce])
+    #store = GitHubClassroom.lti_message_store(lti_configuration: lti_configuration)
+    #message = store.get_message(session[:lti_nonce])
 
-    content_item_service = GitHubClassroom::LTI::ContentItemService.new(
-      message.content_item_return_url,
-      lti_configuration.consumer_key,
-      lti_configuration.shared_secret
-    )
+    #content_item_service = GitHubClassroom::LTI::ContentItemService.new(
+    #  message.content_item_return_url,
+    #  lti_configuration.consumer_key,
+    #  lti_configuration.shared_secret
+    #)
 
-    content_item = content_item_service.build_lti_link(@assignment.title, auth_lti_launch_url, {}, custom_attributes: {
-      assignment_id: @assignment.id,
-      booga_wooga: "oooooga WOOGAS"
-    })
+    #content_item = content_item_service.build_lti_link(@assignment.title, auth_lti_launch_url, {}, custom_attributes: {
+    #  assignment_id: @assignment.id,
+    #  booga_wooga: "oooooga WOOGAS"
+    #})
 
-    @form_submit_url = message.content_item_return_url
-    @payload = content_item_service.signed_content(content_item, data: message.data)
+    #@form_submit_url = message.content_item_return_url
+    #@payload = content_item_service.signed_content(content_item, data: message.data)
   end
 
   private

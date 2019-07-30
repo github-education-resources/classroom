@@ -1,3 +1,4 @@
 <% @assignments.each do |assignment| %>
-  <%= link_to assignment.title, link_to_lms_organization_assignment_path(organization_id: assignment.organization.slug, id: assignment.slug) %>
+  Which assignment to link to <%= @lti_resource_id%> ?
+  <%= link_to assignment.title, link_to_lms_organization_assignment_path(assignment.organization.slug, assignment.slug, resource_id: @lti_resource_id) %>
 <% end %>

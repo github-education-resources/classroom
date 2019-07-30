@@ -1,7 +1,1 @@
-<%= form_with url: @form_submit_url, authenticity_token: false do |f| %>
-  <%= f.text_field :content_items, value: @payload[:content_items] %>
-  <%= f.hidden_field :lti_message_type, value: @payload[:lti_message_type] %>
-  <%= f.hidden_field :lti_version, value: @payload[:lti_version] %>
-  <%= f.hidden_field :data, value: @payload[:data] %>
-  <%= f.submit %>
-<% end %>
+Successfully linked <%= @assignment.title %> to LTI Assignment <%= @lti_resource_id %>

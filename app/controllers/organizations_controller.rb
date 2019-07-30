@@ -51,6 +51,7 @@ class OrganizationsController < Orgs::Controller
   end
 
   def select_lms_assignment
+    @lti_resource_id = params[:resource_id]
     @assignments = current_organization.all_assignments
   end
 
