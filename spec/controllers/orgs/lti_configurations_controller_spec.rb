@@ -249,6 +249,28 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
   end
 
   describe "GET #autoconfigure", :vcr do
+    context "with existing lti_configuration" do
+      before(:each) do
+        create(:lti_configuration, organization: organization)
+      end
+
+      it "returns an xml configuration" do
+        get :autoconfigure, params: { id: organization.slug }
+        expect(response).to have_http_status(:success)
+        expect(response.content_type).to eq "application/xml"
+      end
+    end
+
+    context "with no existing lti_configuration" do
+      it "does not generate an xml configuration" do
+        patch :autoconfigure, params: { id: organization.slug }
+        expect(response).to redirect_to(info_lti_configuration_path(organization))
+        expect(organization.lti_configuration).to be_nil
+      end
+    end
+  end
+
+  describe "GET #complete", :vcr do
     context "with flipper on" do
       before(:each) do
         GitHubClassroom.flipper[:lti_launch].enable
@@ -259,18 +281,11 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
           create(:lti_configuration, organization: organization)
         end
 
-        it "returns an xml configuration" do
-          get :autoconfigure, params: { id: organization.slug }
-          expect(response).to have_http_status(:success)
-          expect(response.content_type).to eq "application/xml"
-        end
-      end
-
-      context "with no existing lti_configuration" do
-        it "does not generate an xml configuration" do
-          patch :autoconfigure, params: { id: organization.slug }
-          expect(response).to redirect_to(info_lti_configuration_path(organization))
-          expect(organization.lti_configuration).to be_nil
+        context "with user who is an instructor" do
+          it "returns success page" do
+            get :complete, params: { id: organization.slug }
+            expect(response).to have_http_status(:success)
+          end
         end
       end
     end
@@ -281,7 +296,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       end
 
       it "returns a not_found" do
-        get :autoconfigure, params: { id: organization.slug }
+        get :complete, params: { id: organization.slug }
         expect(response).to have_http_status(:not_found)
       end
     end

@@ -2,9 +2,6 @@
 
 # rubocop:disable ClassLength
 class CreateGitHubRepoService
-  GITHUB_API_HOST                         = "https://api.github.com"
-  TEMPLATE_REPOS_API_PREVIEW              = "application/vnd.github.baptiste-preview"
-
   attr_reader :exercise, :stats_sender
   delegate :assignment, :collaborator, :organization, :invite_status, to: :exercise
 
@@ -75,23 +72,22 @@ class CreateGitHubRepoService
   # rubocop:disable Metrics/AbcSize
   def create_github_repository_from_template!
     stats_sender.report_with_exercise_prefix(:import_with_templates_started)
-    client = assignment.creator.github_client
+
     options = {
-      name: exercise.repo_name,
-      owner: exercise.organization_login,
       private: assignment.private?,
-      description: "#{exercise.repo_name} created by GitHub Classroom",
-      accept: TEMPLATE_REPOS_API_PREVIEW,
-      include_all_branches: true
+      description: "#{exercise.repo_name} created by GitHub Classroom"
     }
 
-    github_repository = client.post(
-      "#{GITHUB_API_HOST}/repositories/#{assignment.starter_code_repo_id}/generate",
+    github_repository = organization.github_organization.create_repository_from_template(
+      assignment.starter_code_repo_id,
+      exercise.repo_name,
       options
     )
+
     stats_sender.report_with_exercise_prefix(:import_with_templates_success)
     github_repository
   rescue GitHub::Error => error
+    Failbot.report!(error)
     raise Result::Error.new errors(:template_repository_creation_failed), error.message
   end
   # rubocop:enable Metrics/MethodLength

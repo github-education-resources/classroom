@@ -26,7 +26,6 @@ Rails.application.routes.draw do
   match "/auth/failure",            to: "sessions#failure",       via: %i[get post]
 
   match "/google_classroom/oauth2_callback", to: Google::Auth::WebUserAuthorizer::CallbackApp, via: :all
-  get "/google_classroom/list", to: "google_classroom#index"
 
   get "/a/:short_key", to: "short_url#assignment_invitation",       as: "assignment_invitation_short"
   get "/g/:short_key", to: "short_url#group_assignment_invitation", as: "group_assignment_invitation_short"
@@ -90,15 +89,20 @@ Rails.application.routes.draw do
           patch :remove_organization
           patch :import_from_google_classroom
           patch :sync_google_classroom
-          patch :unlink_google_classroom
-          get   :select_google_classroom
-          get   :search_google_classroom
           get   :import_from_lms
         end
 
         resource :lti_configuration, controller: "orgs/lti_configurations" do
           get :info
           get :autoconfigure
+          get :complete
+        end
+
+        scope :google_classrooms do
+          root "orgs/google_classroom_configurations#index", as: :google_classrooms_index
+          get  "search", to: "orgs/google_classroom_configurations#search", as: "google_classrooms_search"
+          post "create", to: "orgs/google_classroom_configurations#create", as: "google_classrooms_create"
+          delete "delete", to: "orgs/google_classroom_configurations#destroy", as: "google_classrooms_delete"
         end
       end
 
