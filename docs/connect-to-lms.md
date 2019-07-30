@@ -33,6 +33,6 @@ Second, with the generated credentials in hand, we configure GitHub Classroom fr
 We've created distinct guides for each platform to make the process easier, but any  LTI-compliant Learning Management System
 should be compatible.
 
-- [Configuring GitHub Classroom within Canvas]()
+- [Configuring GitHub Classroom within Canvas](/help/setup-canvas)
 - [Configuring GitHub Classroom within Moodle]()
 - [Configuring GitHub Classroom within another Learning Management System]()

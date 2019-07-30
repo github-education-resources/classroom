@@ -12,7 +12,8 @@ class PagesController < ApplicationController
     "help",
     "probot-settings",
     "upgrade-your-organization",
-    "connect-to-lms"
+    "connect-to-lms",
+    "setup-canvas"
   ].freeze
 
   # rubocop:disable AbcSize
