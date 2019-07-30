@@ -46,6 +46,6 @@ Template repositories are the best option in _most_ cases. You may not want to u
 Note: The template repositories API is still under a preview and might change.  We will keep this page updated if any of those changes affect your experience on classroom.
 
 ### Helpful links:
-* [https://help.github.com/en/articles/creating-a-template-repository](https://help.github.com/en/articles/creating-a-template-repository)
+* [Creating a template repository](https://help.github.com/en/articles/creating-a-template-repository)
 * [https://help.github.com/en/articles/creating-a-repository-from-a-template](https://help.github.com/en/articles/creating-a-repository-from-a-template)
 * [Generate new repositories with repository templates](https://github.blog/2019-06-06-generate-new-repositories-with-repository-templates)
