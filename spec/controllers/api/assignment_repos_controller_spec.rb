@@ -37,13 +37,12 @@ RSpec.describe API::AssignmentReposController, type: :controller do
   end
 
   describe "GET #clone_url", :vcr do
-    before do
-      @assignment_repo = create(:assignment_repo, assignment: assignment, github_repo_id: 42, user: user)
-
-      get :clone_url, params: {
+    let(:assignment_repo) { create(:assignment_repo, assignment: assignment, github_repo_id: 42, user: user) }
+    let(:params) do
+      {
         organization_id: organization.slug,
         assignment_id: assignment.slug,
-        assignment_repo_id: @assignment_repo.id,
+        assignment_repo_id: assignment_repo.id,
         access_token: user.api_token
       }
     end
@@ -53,11 +52,20 @@ RSpec.describe API::AssignmentReposController, type: :controller do
     end
 
     it "returns success" do
+      get :clone_url, params: params
       expect(response).to have_http_status(:success)
     end
 
     it "returns json with temp clone url" do
+      get :clone_url, params: params
       expect(json["temp_clone_url"]).to_not be_nil
+    end
+
+    it "returns 404 if invalid repository found" do
+      allow_any_instance_of(AssignmentRepo).to receive(:present?).and_return(false)
+      get :clone_url, params: params
+      expect(json).to eq("error" => "not_found")
+      expect(response.status).to eq(404)
     end
   end
 end
