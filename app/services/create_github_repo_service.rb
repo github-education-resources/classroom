@@ -87,7 +87,16 @@ class CreateGitHubRepoService
     stats_sender.report_with_exercise_prefix(:import_with_templates_success)
     github_repository
   rescue GitHub::Error => error
-    Failbot.report!(error)
+    error_context = {}.tap do |e|
+      e[:user] = collaborator.id if collaborator.is_a? User
+      e[:github_team_id] = collaborator.github_team_id if collaborator.is_a? Group
+      e[:starter_code_repo_id] = assignment.starter_code_repo_id
+      e[:organization] = organization.id
+    end
+    Failbot.report!(
+      error,
+      error_context
+    )
     raise Result::Error.new errors(:template_repository_creation_failed), error.message
   end
   # rubocop:enable Metrics/MethodLength

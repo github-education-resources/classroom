@@ -116,7 +116,12 @@ class GroupAssignmentRepo
 
       organization.github_organization.create_repository_from_template(template_repo_id, repository_name, options)
     rescue GitHub::Error => error
-      Failbot.report!(error)
+      Failbot.report!(
+        error,
+        organization: organization.id,
+        starter_code_repo_id: template_repo_id,
+        github_team_id: group.github_team_id
+      )
       GitHubClassroom.statsd.increment("group_exercise_repo.create.repo.with_templates.failed")
       raise Result::Error.new TEMPLATE_REPOSITORY_CREATION_FAILED, error.message
     end
