@@ -5,10 +5,8 @@ Importing starter code for assignments is a very useful feature and with GitHub 
 #### Before you begin
 To use template repositories for assignments, you'll need the following:
 
-* A GitHub organization, preferably [with a discount for private repositories](https://education.github.com/discount_requests/new) and access to GitHub Classroom.
-* A classroom which uses the GitHub organization.
+* Set-up a GitHub classroom
 * An exercise (a repository that you have access to, which contains documentation, starter code, tests, or anything else your students need to begin work on an assignment).
-* A list of students, or unique identifiers like their email addresses.
 
 #### Get started
 
@@ -21,12 +19,13 @@ If you choose the first option, we will use your starter code repository as a te
 
 ![Searches for repository, then selects the option of Importing starter code with template repositories](https://user-images.githubusercontent.com/3170078/62091261-ee69f900-b224-11e9-96ab-b4b34cce0001.gif)
 
-Note: For import via template repositories to work, your starter code repository _must_ be a template repository.If you own the repository or have permissions, you can do it manually from the settings page of the repository on GitHub. More details [here](https://help.github.com/en/articles/creating-a-template-repository). We are in the process of automating this for you, and will post an update on this page soon!
+Note: For import via template repositories to work, your starter code repository _must_ be a template repository. If you own the repository or have permissions, you can do it manually from the settings page of the repository on GitHub. If you do not own the repository, you can make a fork of it and then make it a template. More details [here](https://help.github.com/en/articles/creating-a-template-repository). We are in the process of automating this for you, and will post an update on this page soon!
 
 
 ### What are the advantages of using template repositories?
 
 * Importing starter code is faster, as it uses the new [template repositories API](https://developer.github.com/v3/repos/#create-repository-using-a-repository-template).
+* Template repositories are more reliable as we have noticed that 99% of our imports with template repositories succeeded, whereas only 95% of imports with source importer succeeded.
 * Template repositories are built with the aim of distribution and management of boilerplate code and hence releasing assignments is almost instantaneous.
 
 ### What do you miss out on when you use template repositories?
@@ -34,7 +33,7 @@ Note: For import via template repositories to work, your starter code repository
 Template repositories do not copy the complete commit history, but instead start with a single commit. Because of that, you miss out on the following features:
 
 * Reference to all the original tags in the repositories.
-* Ability to push updates to the generated repositories.
+* Ability to push updates to the student repositories.
 
 ### Recommended option for your assignment
 
