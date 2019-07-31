@@ -149,8 +149,7 @@ class GroupAssignmentRepo
     def delete_github_repository(github_repository_id)
       return true if github_repository_id.nil?
       organization.github_organization.delete_repository(github_repository_id)
-    rescue GitHub::Error => error
-      Failbot.report!(error)
+    rescue GitHub::Error
       true
     end
 

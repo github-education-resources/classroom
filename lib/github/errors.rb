@@ -5,10 +5,11 @@ require "English"
 module GitHub
   module Errors
     class << self
-      def with_error_handling
+      def with_error_handling(report_to_failbot: true)
         yield
       rescue Octokit::Error => err
         GitHubClassroom.statsd.increment("github.error.#{err.class.to_s.remove('Octokit::')}")
+        Failbot.report!(err) if report_to_failbot
         process_octokit_error(err)
       end
 
