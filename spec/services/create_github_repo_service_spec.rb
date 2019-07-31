@@ -345,7 +345,13 @@ RSpec.describe CreateGitHubRepoService do
 
             it "reports collaborator, github repo and organization info to Failbot" do
               service.perform
-              expect(Failbot.reports.first).to include("organization", "starter_code_repo_id")
+              expect(
+                Failbot.reports.find do |error|
+                  (error.include? "starter_code_repo_id") &&
+                  (error.include? "organization") &&
+                  ((error.include? "github_team_id") || (error.include? "user"))
+                end
+              ).to_not be_nil
             end
           end
         end
