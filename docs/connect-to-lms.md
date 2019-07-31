@@ -35,4 +35,4 @@ should be compatible.
 
 - [Configuring GitHub Classroom within Canvas](/help/setup-canvas)
 - [Configuring GitHub Classroom within Moodle](/help/setup-moodle)
-- [Configuring GitHub Classroom within another Learning Management System]()
+- [Configuring GitHub Classroom within another Learning Management System](/help/setup-generic-lms)

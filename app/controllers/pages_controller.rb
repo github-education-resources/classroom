@@ -14,6 +14,7 @@ class PagesController < ApplicationController
     "upgrade-your-organization",
     "connect-to-lms",
     "generate-lms-credentials",
+    "setup-generic-lms",
     "setup-canvas",
     "setup-moodle"
   ].freeze
