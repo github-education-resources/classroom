@@ -167,7 +167,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
       expect(assigns(:group_assignment_repos)).to eq([])
     end
 
-    it "search is not case senstive" do
+    it "search is not case sensitive" do
       get :show, xhr: true, params: {
         organization_id: organization.slug, id: group_assignment.slug, query: "TEST"
       }
