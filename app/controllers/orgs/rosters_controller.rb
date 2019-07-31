@@ -53,9 +53,12 @@ module Orgs
 
       # Set the object so that we can see errors when rendering :new
       @roster = result.roster
-
       if result.success?
-        GitHubClassroom.statsd.increment("roster.create")
+        if current_organization.google_course_id && !params[:google_user_ids].empty?
+          GitHubClassroom.statsd.increment("google_classroom.import")
+        else
+          GitHubClassroom.statsd.increment("roster.create")
+        end
 
         flash[:success] = \
           "Your classroom roster has been saved! Manage it <a href='#{roster_url(current_organization)}'>here</a>."
@@ -76,7 +79,7 @@ module Orgs
 
       flash[:success] = "Roster successfully deleted!"
     rescue ActiveRecord::RecordInvalid
-      flash[:error] = "An error has occured while trying to delete the roster. Please try again."
+      flash[:error] = "An error has occurred while trying to delete the roster. Please try again."
     ensure
       redirect_to organization_path(current_organization)
     end
@@ -91,7 +94,7 @@ module Orgs
 
       flash[:success] = "Student and GitHub account linked!"
     rescue ActiveRecord::ActiveRecordError
-      flash[:error] = "An error has occured, please try again."
+      flash[:error] = "An error has occurred, please try again."
     ensure
       redirect_to roster_path(current_organization)
     end
@@ -101,7 +104,7 @@ module Orgs
 
       flash[:success] = "Student and GitHub account unlinked!"
     rescue ActiveRecord::ActiveRecordError
-      flash[:error] = "An error has occured, please try again."
+      flash[:error] = "An error has occurred, please try again."
     ensure
       redirect_to roster_path(current_organization)
     end
@@ -111,7 +114,7 @@ module Orgs
 
       flash[:success] = "Student successfully removed from roster!"
     rescue ActiveRecord::ActiveRecordError
-      flash[:error] = "An error has occured, please try again."
+      flash[:error] = "An error has occurred, please try again."
     ensure
       redirect_to roster_path(current_organization)
     end
@@ -137,7 +140,7 @@ module Orgs
           flash[:success] = "Students created. Some duplicates have been omitted."
         end
       rescue RosterEntry::IdentifierCreationError
-        flash[:error] = "An error has occured. Please try again."
+        flash[:error] = "An error has occurred. Please try again."
       end
 
       redirect_to roster_path(current_organization)

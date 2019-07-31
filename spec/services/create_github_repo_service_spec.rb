@@ -130,7 +130,7 @@ RSpec.describe CreateGitHubRepoService do
       it "returns true if github_repo_id is nil" do
         expect(service.delete_github_repository(nil)).to be(true)
       end
-      it "returns true if github repository sucessfully deleted" do
+      it "returns true if github repository successfully deleted" do
         allow_any_instance_of(GitHubOrganization).to receive(:delete_repository).with(anything).and_return(true)
         expect(service.delete_github_repository(1)).to be(true)
       end
@@ -331,6 +331,28 @@ RSpec.describe CreateGitHubRepoService do
               .with("exercise_repo.create.repo.with_templates.success")
             expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
             service.perform
+          end
+
+          context "failure" do
+            before(:each) do
+              assignment.update(starter_code_repo_id: -1)
+            end
+
+            it "reports error to Failbot" do
+              service.perform
+              expect(Failbot.reports.count).to be > 0
+            end
+
+            it "reports collaborator, github repo and organization info to Failbot" do
+              service.perform
+              expect(
+                Failbot.reports.find do |error|
+                  (error.include? "starter_code_repo_id") &&
+                  (error.include? "organization") &&
+                  ((error.include? "github_team_id") || (error.include? "user"))
+                end
+              ).to_not be_nil
+            end
           end
         end
 
@@ -592,7 +614,7 @@ RSpec.describe CreateGitHubRepoService do
       it "returns true if github_repo_id is nil" do
         expect(service.delete_github_repository(nil)).to be(true)
       end
-      it "returns true if github repository sucessfully deleted" do
+      it "returns true if github repository successfully deleted" do
         allow_any_instance_of(GitHubOrganization).to receive(:delete_repository).with(anything).and_return(true)
         expect(service.delete_github_repository(1)).to be(true)
       end

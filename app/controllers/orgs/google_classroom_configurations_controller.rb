@@ -10,6 +10,8 @@ module Orgs
     def create
       current_organization.update(google_course_id: params[:course_id])
 
+      GitHubClassroom.statsd.increment("google_classroom.create")
+
       flash[:success] = "Google Classroom integration was succesfully configured."
       redirect_to new_roster_path(current_organization)
     end
@@ -29,10 +31,18 @@ module Orgs
 
     def index
       @google_classroom_courses = fetch_all_google_classrooms
+    rescue Google::Apis::AuthorizationError, Signet::AuthorizationError
+      google_classroom_client = GitHubClassroom.google_classroom_client
+      login_hint = current_user.github_user.login
+      redirect_to google_classroom_client.get_authorization_url(login_hint: login_hint, request: request)
+    rescue Google::Apis::ServerError, Google::Apis::ClientError
+      flash[:error] = "Failed to fetch classroom from Google Classroom. Please try again."
+      redirect_to organization_path(current_organization)
     end
 
     def destroy
       current_organization.update!(google_course_id: nil)
+      GitHubClassroom.statsd.increment("google_classroom.destroy")
       flash[:success] = "Removed link to Google Classroom. No students were removed from your roster."
 
       redirect_to organization_path(current_organization)
@@ -45,6 +55,7 @@ module Orgs
       courses = []
       loop do
         response = @google_classroom_service.list_courses(page_size: 20, page_token: next_page)
+
         courses.push(*response.courses)
 
         next_page = response.next_page_token
