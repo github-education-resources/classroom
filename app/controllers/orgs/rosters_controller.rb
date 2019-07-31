@@ -79,7 +79,7 @@ module Orgs
 
       flash[:success] = "Roster successfully deleted!"
     rescue ActiveRecord::RecordInvalid
-      flash[:error] = "An error has occured while trying to delete the roster. Please try again."
+      flash[:error] = "An error has occurred while trying to delete the roster. Please try again."
     ensure
       redirect_to organization_path(current_organization)
     end
@@ -94,7 +94,7 @@ module Orgs
 
       flash[:success] = "Student and GitHub account linked!"
     rescue ActiveRecord::ActiveRecordError
-      flash[:error] = "An error has occured, please try again."
+      flash[:error] = "An error has occurred, please try again."
     ensure
       redirect_to roster_path(current_organization)
     end
@@ -104,7 +104,7 @@ module Orgs
 
       flash[:success] = "Student and GitHub account unlinked!"
     rescue ActiveRecord::ActiveRecordError
-      flash[:error] = "An error has occured, please try again."
+      flash[:error] = "An error has occurred, please try again."
     ensure
       redirect_to roster_path(current_organization)
     end
@@ -114,7 +114,7 @@ module Orgs
 
       flash[:success] = "Student successfully removed from roster!"
     rescue ActiveRecord::ActiveRecordError
-      flash[:error] = "An error has occured, please try again."
+      flash[:error] = "An error has occurred, please try again."
     ensure
       redirect_to roster_path(current_organization)
     end
@@ -140,7 +140,7 @@ module Orgs
           flash[:success] = "Students created. Some duplicates have been omitted."
         end
       rescue RosterEntry::IdentifierCreationError
-        flash[:error] = "An error has occured. Please try again."
+        flash[:error] = "An error has occurred. Please try again."
       end
 
       redirect_to roster_path(current_organization)
