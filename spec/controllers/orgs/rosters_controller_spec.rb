@@ -243,6 +243,11 @@ RSpec.describe Orgs::RostersController, type: :controller do
                 .and_return(students)
             end
 
+            it "sends statsd" do
+              expect(GitHubClassroom.statsd).to receive(:increment).with("lti_configuration.import")
+              get :import_from_lms, params: { id: lti_configuration.organization.slug }
+            end
+
             it "format.html: succeeds" do
               get :import_from_lms, params: { id: lti_configuration.organization.slug }
               expect(response).to have_http_status(:ok)
@@ -666,6 +671,13 @@ RSpec.describe Orgs::RostersController, type: :controller do
             context "when organization has no roster" do
               before do
                 organization.update_attributes(roster_id: nil)
+              end
+
+              it "sends statsd" do
+                expect(GitHubClassroom.statsd).to receive(:increment).with("google_classroom.import")
+                patch :import_from_google_classroom, params: {
+                  id: organization.slug
+                }
               end
 
               context "when students are fetched succesfully" do

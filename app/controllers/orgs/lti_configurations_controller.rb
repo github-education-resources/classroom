@@ -12,7 +12,7 @@ module Orgs
     skip_before_action :ensure_lti_launch_flipper_is_enabled, only: :autoconfigure
     skip_before_action :ensure_current_organization_visible_to_current_user, only: :autoconfigure
 
-    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     def create
       lti_configuration = LtiConfiguration.create(
         organization: current_organization,
@@ -22,13 +22,14 @@ module Orgs
       )
 
       if lti_configuration.present?
+        GitHubClassroom.statsd.increment("lti_configuration.create")
         redirect_to lti_configuration_path(current_organization)
       else
         redirect_to info_lti_configuration_path(current_lti_configuration),
           alert: "There was a problem creating the configuration. Please try again later."
       end
     end
-    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
     def show; end
 
@@ -55,43 +56,17 @@ module Orgs
 
     def destroy
       lms_name = current_lti_configuration.lms_name(default_name: "your Learning Management System")
+      GitHubClassroom.statsd.increment("lti_configuration.destroy")
       current_lti_configuration.destroy!
-
       redirect_to edit_organization_path(current_organization), alert: "Classroom is now disconnected from #{lms_name}."
     end
 
-    # rubocop:disable Metrics/MethodLength
     def autoconfigure
-      builder = GitHubClassroom::LTI::ConfigurationBuilder.new("GitHub Classroom", auth_lti_launch_url)
+      not_found unless current_lti_configuration.supports_autoconfiguration?
 
-      builder.add_attributes(
-        description: "Sync your GitHub Classroom organization with your Learning Management System.",
-        icon: "https://classroom.github.com/favicon.ico",
-        vendor_name: "GitHub Classroom",
-        vendor_url: "https://classroom.github.com/"
-      )
-
-      ## LMS Specific Attributes ##
-      # Note: LMS's will ignore vendor identifiers they do not understand
-
-      # Canvas will not display an LTI application
-      # unless specify a course_navigation location.
-      builder.add_vendor_attributes(
-        "canvas.instructure.com",
-        privacy_level: "public",
-        custom_fields: {
-          custom_context_membership_url: "$ToolProxyBinding.memberships.url"
-        },
-        course_navigation: {
-          windowTarget: "_blank",
-          visibility: "admins", # only show the application to instructors
-          enabled: "true"
-        }
-      )
-
-      render xml: builder.to_xml, status: :ok
+      xml_configuration = current_lti_configuration.xml_configuration(auth_lti_launch_url)
+      render xml: xml_configuration, status: :ok
     end
-    # rubocop:enable Metrics/MethodLength
 
     def complete; end
 
