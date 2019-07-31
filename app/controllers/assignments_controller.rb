@@ -102,8 +102,11 @@ class AssignmentsController < ApplicationController
   end
 
   def link_to_lms
-    @lti_resource_id = params[:resource_id]
+    lti_resource_link_id = params[:resource_id]
     lti_configuration = @organization.lti_configuration
+
+    @assignment.lti_resource_link_id = lti_resource_link_id
+    @assignment.save!
     #store = GitHubClassroom.lti_message_store(lti_configuration: lti_configuration)
     #message = store.get_message(session[:lti_nonce])
 
