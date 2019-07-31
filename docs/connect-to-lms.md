@@ -20,14 +20,14 @@ Brightspace, Canvas, Moodle, and many more!
 This support guide will walk your through the process of linking GitHub Classroom and your Learning Management System, from
 start to finish.
 
-#### Part One
+#### Part One: Generating your Configuration Credentials
 
 First, we must generate the necessary credentials on GitHub Classroom to configure it on your Learning Management System.
-These steps are the same regardless of which Learning Management System you use.
+The steps for this portion are the same regardless of which Learning Management System you use.
 
-[Generating your Configuration Credentials on GitHub Classroom]()
+[Generating your Configuration Credentials on GitHub Classroom](/help/generate-lms-credentials)
 
-#### Part Two
+#### Part Two: Connecting GitHub Classroom to your Learning Management System
 
 Second, with the generated credentials in hand, we configure GitHub Classroom from within your Learning Management System.
 We've created distinct guides for each platform to make the process easier, but any  LTI-compliant Learning Management System

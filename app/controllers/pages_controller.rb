@@ -13,6 +13,7 @@ class PagesController < ApplicationController
     "probot-settings",
     "upgrade-your-organization",
     "connect-to-lms",
+    "generate-lms-credentials",
     "setup-canvas"
   ].freeze
 
