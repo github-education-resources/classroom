@@ -47,15 +47,6 @@ describe GitHub::Errors do
           end
         end.to raise_error(GitHub::NotFound, error_message)
       end
-
-      it "does not report a NotFound error" do
-        begin
-          GitHub::Errors.with_error_handling do
-            raise Octokit::NotFound
-          end
-        rescue GitHub::NotFound; end # rubocop:disable Lint/HandleExceptions
-        expect(Failbot.reports.count).to eq(0)
-      end
     end
 
     context "Octokit::ServerError is raised" do
