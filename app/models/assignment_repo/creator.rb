@@ -152,7 +152,7 @@ class AssignmentRepo
 
       organization.github_organization.create_repository_from_template(template_repo_id, repository_name, options)
     rescue GitHub::Error => error
-      Failbot.report!(error)
+      Failbot.report!(error, user: user.id, organization: organization.id, starter_code_repo_id: template_repo_id)
       raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
     end
 
