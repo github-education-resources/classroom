@@ -7,8 +7,6 @@ module Orgs
     before_action :ensure_google_classroom_roster_import_is_enabled, only: %i[create search index]
     before_action :authorize_google_classroom, only: %i[create search index]
 
-    ARCHIVED_CLASS = "ARCHIVED"
-
     def create
       current_organization.update(google_course_id: params[:course_id])
 
@@ -56,8 +54,7 @@ module Orgs
       next_page = nil
       courses = []
       loop do
-        response = @google_classroom_service.list_courses(page_size: 20, page_token: next_page)
-        response.courses.delete_if { |course| course.course_state == ARCHIVED_CLASS }
+        response = @google_classroom_service.list_courses(course_states: "ACTIVE", page_size: 20, page_token: next_page)
         courses.push(*response.courses)
 
         next_page = response.next_page_token
