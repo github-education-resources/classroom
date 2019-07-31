@@ -14,7 +14,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
   describe "GET #new", :vcr do
     it "returns success status" do
       get :new, params: { organization_id: organization.slug }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
 
     it "has a new GroupAssignment" do
@@ -133,7 +133,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
   describe "GET #show", :vcr do
     it "returns success status" do
       get :show, params: { organization_id: organization.slug, id: group_assignment.slug }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
   end
 
@@ -180,7 +180,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
     it "returns success status and sets the group assignment" do
       get :edit, params: { organization_id: organization.slug, id: group_assignment.slug }
 
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
       expect(assigns(:group_assignment)).to_not be_nil
     end
   end
