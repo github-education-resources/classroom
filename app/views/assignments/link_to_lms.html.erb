@@ -1,1 +1,25 @@
-Successfully linked <%= @assignment.title %> to LTI Assignment <%= @lti_resource_id %>
+<% lms_name = @organization.lti_configuration.lms_name(default_name: "your Learning Management System") %>
+
+<%= render 'organizations/organization_banner' %>
+
+<div class="site-content">
+
+  <div class="site-content-cap container-lg clearfix">
+    <h2 class="col-6 float-left text-left pr-2 site-content-heading">Connect to <%= lms_name %></h2>
+  </div>
+
+
+  <div class="site-content-body">
+    <div class="blankslate blankslate-spacious blankslate-clean-background">
+      <h3>You've successfully linked assignment "<%= @assignment.title %>" to <%= lms_name %>.</h3>
+      <p>Students now have access this assignment via the assignment link in <%= lms_name %>.</p>
+      <%= link_to organization_assignment_path(@organization, @assignment), class: 'btn btn-large btn-primary f3 mt-3', role: 'button' do %>
+        Continue to Assignment
+      <% end %>
+    </div>
+
+    <div class="protip">
+      <%= octicon 'x' %> Or you may <%= link_to "close this window", edit_organization_path(@organization) %>
+    </div>
+  </div>
+</div>

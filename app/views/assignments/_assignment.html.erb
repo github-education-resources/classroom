@@ -1,3 +1,5 @@
+<% show_invitation_url = local_assigns.fetch(:show_invitation_url, true) %>
+
 <div class="assignment-list-item container-lg clearfix">
   <div class="float-left col-sm-6 d-flex">
     <div class="d-flex flex-column flex-justify-center flex-items-center flex-md-items-start">
@@ -16,8 +18,12 @@
   </div>
 
   <div class="float-right col-sm-6 d-flex clipboard-form">
-    <div class="flex-self-center input-group assignment-invite-link">
-      <%= render partial: "shared/invitations/clipboard_form", locals: InvitationHelper.attributes(assignment.invitation, request.base_url) %>
-    </div>
+    <% if show_invitation_url %>
+      <div class="flex-self-center input-group assignment-invite-link">
+        <%= render partial: "shared/invitations/clipboard_form", locals: InvitationHelper.attributes(assignment.invitation, request.base_url) %>
+      </div>
+    <% end %>
+
+    <%= yield if block_given? %>
   </div>
 </div>

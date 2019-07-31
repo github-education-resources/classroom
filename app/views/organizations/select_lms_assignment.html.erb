@@ -1,4 +1,35 @@
-<% @assignments.each do |assignment| %>
-  Which assignment to link to <%= @lti_resource_id%> ?
-  <%= link_to assignment.title, link_to_lms_organization_assignment_path(assignment.organization.slug, assignment.slug, resource_id: @lti_resource_id) %>
-<% end %>
+<%= render 'organizations/organization_banner' %>
+
+<div class="site-content">
+
+  <div class="site-content-cap container-lg clearfix">
+      <h2 class="col-6 float-left text-left pr-2 site-content-heading">Select an assignment to link to <%= current_organization.lti_configuration.lms_name %></h2>
+
+        <div class="col-6 float-right text-right pl-2">
+          <% if @assignments.present? %>
+            <%= link_to t('views.organizations.new_assignment'), new_assignment_organization_path(current_organization), class: 'btn btn-primary right', role: 'button'%>
+          <% end %>
+        </div>
+  </div>
+
+
+  <div class="site-content-body assignment-list-items">
+    <% if @assignments.present? %>
+      <% @assignments.each do |assignment| %>
+        <%= render assignment, show_invitation_url: false do %>
+          <%= button_to "Link to #{current_organization.lti_configuration.lms_name}",
+              link_to_lms_organization_assignment_path(assignment.organization.slug, assignment.slug, resource_id: @lti_resource_id),
+              class: "btn btn-primary", method: :patch
+          %>
+        <% end %>
+      <% end %>
+    <% else %>
+      <div class="blankslate blankslate-spacious blankslate-clean-background">
+        <h3><%= t('views.organizations.no_assignments') %></h3>
+        <%= link_to new_assignment_organization_path(current_organization), class: 'btn btn-large btn-primary f3 mt-3', role: 'button' do %>
+          <%= t('views.organizations.create_first_assignment') %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
