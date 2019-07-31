@@ -125,7 +125,8 @@ class CreateGitHubRepoService
   def delete_github_repository(github_repo_id)
     return true if github_repo_id.nil?
     organization.github_organization.delete_repository(github_repo_id)
-  rescue GitHub::Error
+  rescue GitHub::Error => error
+    Failbot.report!(error)
     true
   end
 
