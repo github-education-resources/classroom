@@ -4,6 +4,7 @@ class LtiConfiguration < ApplicationRecord
   belongs_to :organization
 
   validates :lms_type, presence: true
+  validates :lms_connection_status, presence: true
 
   delegate :icon, to: :lms_settings, prefix: :lms
   delegate :supports_autoconfiguration?, to: :lms_settings
@@ -15,6 +16,11 @@ class LtiConfiguration < ApplicationRecord
     brightspace: "Brightspace",
     moodle: "Moodle",
     other: "other"
+  }, _prefix: true
+
+  enum lms_connection_status: {
+    unlinked: "unlinked",
+    linked: "linked"
   }, _prefix: true
 
   def self.find_by_auth_hash(hash)

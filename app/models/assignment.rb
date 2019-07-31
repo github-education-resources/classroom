@@ -42,6 +42,8 @@ class Assignment < ApplicationRecord
 
   validate :starter_code_repository_is_template
 
+  validates :lti_resource_link_id, uniqueness: true, allow_nil: true
+
   alias_attribute :invitation, :assignment_invitation
   alias_attribute :repos, :assignment_repos
   alias_attribute :template_repos_enabled?, :template_repos_enabled
