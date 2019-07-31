@@ -234,7 +234,11 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
 
           it "Failbot report contains the user, repository, and organization info" do
             AssignmentRepo::Creator.perform(assignment: assignment, user: student)
-            expect(Failbot.reports.first).to include("user", "organization", "starter_code_repo_id")
+            expect(
+              Failbot.reports.find do |error|
+                (error.include? "user") && (error.include? "organization") && (error.include? "starter_code_repo_id")
+              end
+            ).to_not be_nil
           end
         end
       end
