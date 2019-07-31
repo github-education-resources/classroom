@@ -242,6 +242,11 @@ RSpec.describe GroupAssignmentRepo::Creator do
             GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
             expect(Failbot.reports.count).to be > 0
           end
+
+          it "Failbot report contains the repository, github_team, and organization info" do
+            GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
+            expect(Failbot.reports.first).to include("organization", "starter_code_repo_id", "github_team_id")
+          end
         end
       end
     end

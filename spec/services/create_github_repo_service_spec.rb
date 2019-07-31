@@ -332,6 +332,22 @@ RSpec.describe CreateGitHubRepoService do
             expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
             service.perform
           end
+
+          context "failure" do
+            before(:each) do
+              assignment.update(starter_code_repo_id: -1)
+            end
+
+            it "reports error to Failbot" do
+              service.perform
+              expect(Failbot.reports.count).to be > 0
+            end
+
+            it "reports collaborator, github repo and organization info to Failbot" do
+              service.perform
+              expect(Failbot.reports.first).to include("organization", "starter_code_repo_id")
+            end
+          end
         end
 
         describe "without starter code" do

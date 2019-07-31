@@ -53,9 +53,12 @@ module Orgs
 
       # Set the object so that we can see errors when rendering :new
       @roster = result.roster
-
       if result.success?
-        GitHubClassroom.statsd.increment("roster.create")
+        if current_organization.google_course_id && !params[:google_user_ids].empty?
+          GitHubClassroom.statsd.increment("google_classroom.import")
+        else
+          GitHubClassroom.statsd.increment("roster.create")
+        end
 
         flash[:success] = \
           "Your classroom roster has been saved! Manage it <a href='#{roster_url(current_organization)}'>here</a>."
