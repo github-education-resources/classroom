@@ -9,6 +9,7 @@ class OrganizationsController < Orgs::Controller
   before_action :add_current_user_to_organizations,   only: [:index]
   before_action :paginate_users_github_organizations, only: %i[new create]
   before_action :verify_user_belongs_to_organization, only: [:remove_user]
+  before_action :set_filter_options,                  only: %i[search index]
 
   skip_before_action :ensure_current_organization,                         only: %i[index new create search]
   skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create search]
@@ -108,23 +109,15 @@ class OrganizationsController < Orgs::Controller
     end
   end
 
-  # rubocop:disable MethodLength
   def search
     @organizations = current_user
       .organizations
+      .filter_by_search(@query)
+      .order_by_sort_mode(@current_sort_mode)
       .order(:id)
-      .where("title ILIKE ?", "%#{params[:query]}%")
       .page(params[:page])
       .per(12)
-
-    respond_to do |format|
-      format.html do
-        render partial: "organizations/organization_card_layout",
-               locals: { organizations: @organizations }
-      end
-    end
   end
-  # rubocop:enable MethodLength
 
   private
 
@@ -161,6 +154,20 @@ class OrganizationsController < Orgs::Controller
     end
   end
   # rubocop:enable Metrics/AbcSize
+
+  def set_filter_options
+    @sort_modes = Organization.sort_modes
+
+    @current_sort_mode = params[:sort_classrooms_by] || @sort_modes.keys.first
+    @query = params[:query]
+
+    @sort_modes_links = @sort_modes.keys.map do |mode|
+      search_organizations_path(
+        sort_by: mode,
+        query: @query
+      )
+    end
+  end
 
   # Check if the current user has any organizations with admin privilege,
   # if so add the user to the corresponding classroom automatically.

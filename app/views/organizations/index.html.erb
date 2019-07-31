@@ -1,8 +1,18 @@
 <div class="d-sm-flex flex-items-center flex-justify-between my-4">
   <% if @organizations.present? %>
-    <%= form_tag search_organizations_path, id: 'js-search-form', class: 'form-block col-md-4', method: :get, remote: true do %>
+    <!--<%= form_tag search_organizations_path, id: 'js-search-form', class: 'form-block col-md-4', method: :get, remote: true do %>
       <%= text_field_tag :query, params[:query], class: 'form-control width-full', placeholder: 'Search Classrooms...', autofocus: true, autocomplete: :off %>
-    <% end %>
+    <% end %>-->
+
+  <%= render partial: "shared/search_and_sort", locals: {
+      submit_url: search_organizations_path,
+      select_menu_title: "Sort by:",
+      search_placeholder: "Search by name...",
+      query: @query,
+      options: @sort_modes.keys,
+      option_links: @sort_modes_links,
+      selected_option: @current_sort_mode
+    } %>
 
     <%= link_to new_organization_path, class: 'd-none d-sm-inline-block btn btn-primary', role: 'button' do %>
       <%= t('views.organizations.new_classroom') %>
