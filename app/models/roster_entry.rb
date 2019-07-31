@@ -14,16 +14,19 @@ class RosterEntry < ApplicationRecord
 
   before_create :validate_identifiers_are_unique_to_roster
 
+  # we wrap the join query in Arel.sql() because it ensures the safety of the query
+  # for more information: https://github.com/rails/rails/blob/5-2-stable/activerecord/CHANGELOG.md#rails-520-april-09-2018
   scope :order_by_repo_created_at, lambda { |context|
     assignment = context[:assignment]
     sql_formatted_assignment_id = assignment.id
 
+    join_query = <<~SQL
+      LEFT OUTER JOIN assignment_repos
+      ON roster_entries.user_id = assignment_repos.user_id
+      AND assignment_repos.assignment_id='#{sql_formatted_assignment_id}'
+     SQL
     order("assignment_repos.created_at")
-      .joins <<~SQL
-        LEFT OUTER JOIN assignment_repos
-        ON roster_entries.user_id = assignment_repos.user_id
-        AND assignment_repos.assignment_id='#{sql_formatted_assignment_id}'
-      SQL
+      .joins(join_query)
   }
 
   scope :order_by_student_identifier, ->(_context = nil) { order(identifier: :asc) }
@@ -70,28 +73,34 @@ class RosterEntry < ApplicationRecord
   # last:   Unlinked student
   #
   # with a secondary sort on ID to ensure ties are always handled in the same way
+  # we wrap the query in Arel.sql() because it ensures the safety of the query
+  # for more information: https://github.com/rails/rails/blob/5-2-stable/activerecord/CHANGELOG.md#rails-520-april-09-2018
   def self.order_for_view(assignment)
     users_with_repo = assignment.repos.pluck(:user_id)
     sql_formatted_users = users_with_repo.empty? ? "(NULL)" : "(#{users_with_repo.join(',')})"
 
-    order <<~SQL
+    query = <<~SQL
       CASE
         WHEN roster_entries.user_id IS NULL THEN 2                   /* Not linked */
         WHEN roster_entries.user_id IN #{sql_formatted_users} THEN 0 /* Accepted */
         ELSE 1                                                       /* Linked but not accepted */
       END
     SQL
+    order(Arel.sql(query))
   end
 
   # Restrict relation to only entries that have not joined a team
+  # we wrap the query in Arel.sql() because it ensures the safety of the query
+  # for more information: https://github.com/rails/rails/blob/5-2-stable/activerecord/CHANGELOG.md#rails-520-april-09-2018
   def self.students_not_on_team(group_assignment)
     students_on_team = group_assignment.repos.map(&:repo_accesses).flatten.map(&:user).map(&:id).uniq
     sql_formatted_students_on_team = students_on_team.empty? ? "(NULL)" : "(#{students_on_team.join(',')})"
 
-    where <<~SQL
+    query = <<~SQL
       roster_entries.user_id IS NULL OR
       roster_entries.user_id NOT IN #{sql_formatted_students_on_team}
     SQL
+    order(Arel.sql(query))
   end
 
   # Takes an array of identifiers and creates a
