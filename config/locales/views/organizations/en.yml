@@ -28,7 +28,15 @@ en:
       continue: 'Continue'
       individual_assignments: 'Individual Assignments'
       group_assignments: 'Group Assignments'
-      are_you_sure: 'Are you ABSOLUTELY sure?'
+      are_you_sure: 'Are you sure?'
+      are_you_absolutely_sure: 'Are you ABSOLUTELY sure?'
+      public: "Public"
+      private: "Private"
+      visibility_public: "Make all repositories public"
+      visibility_private: "Make all repositories private"
+      visibility_title: "Change visibility of all repositories"
+      visibility_description: "Makes all student assignment/repositories public or private. This will change your assignment settings to reflect your choice."
+      visibility_consequences_html: "This will change the visibility of <strong>all</strong> assignments and repositories related to this classroom."
       delete_warning: "Unexpected things will happen if you don't read this!"
       delete_org_consequences_html: "This action <strong>CANNOT</strong> be undone. Please note that reseting and removing this classroom will delete all repositories and teams under the <strong>%{organization}</strong> account that were created by GitHub Classroom."
       delete_classroom_consequences_html: "This action <strong>CANNOT</strong> be undone. Please note that reseting and removing this classroom will delete all repositories and teams created by this classroom in the <strong>%{organization}</strong> account."

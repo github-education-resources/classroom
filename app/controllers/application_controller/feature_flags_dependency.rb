@@ -47,4 +47,9 @@ class ApplicationController
     GitHubClassroom.flipper[:unified_repo_creators].enabled?
   end
   helper_method :unified_repo_creators_enabled?
+
+  def classroom_visibility_enabled?
+    logged_in? && current_user.feature_enabled?(:classroom_visibility)
+  end
+  helper_method :classroom_visibility_enabled?
 end

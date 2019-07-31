@@ -10,6 +10,7 @@ module Orgs
 
     rescue_from LtiImportError, with: :handle_lms_import_error
 
+    # rubocop:disable Metrics/MethodLength
     def import_from_lms
       students = lms_membership.map(&:member)
       @identifiers = {
@@ -18,11 +19,14 @@ module Orgs
         "Emails": students.map(&:email)
       }
 
+      GitHubClassroom.statsd.increment("lti_configuration.import")
+
       respond_to do |format|
         format.js
         format.html
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     private
 

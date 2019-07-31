@@ -85,9 +85,9 @@ RSpec.describe "LTI launch", type: :request do
         get response.redirect_url # /auth/github/callback
       end
 
-      it "redirects to linked organization" do
+      it "redirects to lms success page" do
         get auth_lti_launch_path(oauth_consumer_key: consumer_key)
-        expect(response).to redirect_to(edit_organization_path(id: organization.slug)) # /classrooms/:slug/settings
+        expect(response).to redirect_to(complete_lti_configuration_path(id: organization.slug))
       end
     end
   end
