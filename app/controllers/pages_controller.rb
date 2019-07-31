@@ -14,7 +14,8 @@ class PagesController < ApplicationController
     "upgrade-your-organization",
     "connect-to-lms",
     "generate-lms-credentials",
-    "setup-canvas"
+    "setup-canvas",
+    "setup-moodle"
   ].freeze
 
   # rubocop:disable AbcSize
