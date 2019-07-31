@@ -31,7 +31,7 @@ module Orgs
 
     def index
       @google_classroom_courses = fetch_all_google_classrooms
-    rescue Google::Apis::AuthorizationError
+    rescue Google::Apis::AuthorizationError, Signet::AuthorizationError
       google_classroom_client = GitHubClassroom.google_classroom_client
       login_hint = current_user.github_user.login
       redirect_to google_classroom_client.get_authorization_url(login_hint: login_hint, request: request)
