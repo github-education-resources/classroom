@@ -57,6 +57,18 @@
 
         <div class="Box-body">
           <ul>
+            <% if classroom_visibility_enabled? %>
+              <li class="Box-row">
+                <div class="details-reset details-overlay">
+                  <a data-remodal-target="organization-visibility-private" class="btn btn-danger boxed-action"><%= t('views.organizations.private') %>
+                  </a>
+                  <a data-remodal-target="organization-visibility-public" class="btn btn-danger boxed-action"><%= t('views.organizations.public') %>
+                  </a>
+                </div>
+                <strong class="text-gray"><%= t('views.organizations.visibility_title') %></strong>
+                <p class="text-gray"><%= t('views.organizations.visibility_description') %></p>
+              </li>
+            <% end %>
             <% if current_organization.google_course_id %>
               <li class="Box-row">
                 <div class="details-reset details-overlay">
@@ -105,4 +117,6 @@
   </div>
 
   <%= render partial: 'organizations/reset_and_remove_organization_modal' %>
+  <%= render partial: 'organizations/organization_visibility_private_modal' %>
+  <%= render partial: 'organizations/organization_visibility_public_modal' %>
 </div>
