@@ -15,9 +15,34 @@ RSpec.describe Organization::Editor do
       end
 
       context "updating archive setting" do
-        it "can archive a classroom" do
-          subject.perform(organization: organization, options: { archived: "true" })
-          expect(organization.archived_at).to be_an_instance_of(ActiveSupport::TimeWithZone)
+        context "archiving a classroom" do
+          before do
+            assignment = create(
+              :assignment,
+              title: "Assignment 1",
+              organization: organization,
+              invitations_enabled: true
+            )
+            group_assignment = create(
+              :group_assignment,
+              title: "Group Assignment 1",
+              organization: organization,
+              invitations_enabled: true
+            )
+            organization.assignments << assignment
+            organization.group_assignments << group_assignment
+          end
+
+          it "changes the archived_at column in the organization" do
+            subject.perform(organization: organization, options: { archived: "true" })
+            expect(organization.archived_at).to be_an_instance_of(ActiveSupport::TimeWithZone)
+          end
+
+          it "disables assignment invitations for all assignments" do
+            subject.perform(organization: organization, options: { archived: "true" })
+            expect(organization.assignments).to all(have_attributes(invitations_enabled: false))
+            expect(organization.group_assignments).to all(have_attributes(invitations_enabled: false))
+          end
         end
 
         it "can unarchive a classroom" do

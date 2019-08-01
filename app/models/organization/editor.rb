@@ -65,13 +65,22 @@ class Organization
     private
 
     def update_archive_setting(options)
-      archive_option = options[:archived]
-      return if archive_option.nil?
+      archive = options[:archived]
+      return if archive.nil?
 
-      if archive_option == "true"
+      if archive == "true"
         @organization.update(archived_at: Time.zone.now)
       else
         @organization.update(archived_at: nil)
+      end
+
+      disable_invitations_in_all_assignments! if archive == "true"
+    end
+
+    def disable_invitations_in_all_assignments!
+      classroom_assignments = @organization.assignments + @organization.group_assignments
+      classroom_assignments.each do |assignment|
+        assignment.update_attribute("invitations_enabled", false)
       end
     end
   end
