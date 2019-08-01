@@ -1,4 +1,4 @@
-<%= form_tag google_classrooms_create_organization_path(current_organization), method: :post do |f| %>
+<%= form_tag google_classrooms_create_organization_path(current_organization), id: "google_classroom_link", method: :post do |f| %>
   <% if courses.any? %>
     <% courses.each_with_index do |course, i| %>
       <li class="Box-row">

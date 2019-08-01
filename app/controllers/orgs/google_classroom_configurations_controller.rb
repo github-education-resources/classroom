@@ -23,7 +23,7 @@ module Orgs
 
       respond_to do |format|
         format.html do
-          render partial: "orgs/rosters/google_classroom_collection",
+          render partial: "google_classroom_collection",
                  locals: { courses: courses_found }
         end
       end
