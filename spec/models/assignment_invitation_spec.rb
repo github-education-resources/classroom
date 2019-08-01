@@ -64,27 +64,69 @@ RSpec.describe AssignmentInvitation, type: :model do
   describe "#redeem_for" do
     let(:student) { create(:user) }
 
-    let(:result) do
-      assignment_repo = create(:assignment_repo, user: student)
-      AssignmentRepo::Creator::Result.success(assignment_repo)
+    context "with unified_repo_creators enabled" do
+      before do
+        GitHubClassroom.flipper[:unified_repo_creators].enable
+      end
+      after do
+        GitHubClassroom.flipper[:unified_repo_creators].disable
+      end
+
+      let(:result) do
+        assignment_repo = create(:assignment_repo, user: student)
+        CreateGitHubRepoService::Result.success(assignment_repo)
+      end
+
+      it "returns a AssignmentRepo::Creator::Result with the assignment repo" do
+        allow(invitation).to receive(:redeem_for).with(student).and_return(result)
+        result = invitation.redeem_for(student)
+
+        expect(result.success?).to be_truthy
+        expect(result.repo).to eql(AssignmentRepo.last)
+      end
+
+      it "fails if invitations are not enabled" do
+        assignment = invitation.assignment
+
+        assignment.invitations_enabled = false
+        assignment.save
+
+        result = invitation.redeem_for(student)
+        expect(result.success?).to be_falsey
+      end
     end
 
-    it "returns a AssignmentRepo::Creator::Result with the assignment repo" do
-      allow(invitation).to receive(:redeem_for).with(student).and_return(result)
-      result = invitation.redeem_for(student)
+    context "with unified_repo_creators disabled" do
+      before do
+        GitHubClassroom.flipper[:unified_repo_creators].disable
+      end
 
-      expect(result.success?).to be_truthy
-      expect(result.assignment_repo).to eql(AssignmentRepo.last)
-    end
+      after do
+        GitHubClassroom.flipper[:unified_repo_creators].enable
+      end
 
-    it "fails if invitations are not enabled" do
-      assignment = invitation.assignment
+      let(:result) do
+        assignment_repo = create(:assignment_repo, user: student)
+        AssignmentRepo::Creator::Result.success(assignment_repo)
+      end
 
-      assignment.invitations_enabled = false
-      assignment.save
+      it "returns a AssignmentRepo::Creator::Result with the assignment repo" do
+        allow(invitation).to receive(:redeem_for).with(student).and_return(result)
+        result = invitation.redeem_for(student)
 
-      result = invitation.redeem_for(student)
-      expect(result.success?).to be_falsey
+        expect(result.success?).to be_truthy
+        expect(result.assignment_repo).to eql(AssignmentRepo.last)
+      end
+
+      it "fails if invitations are not enabled" do
+        assignment = invitation.assignment
+
+        assignment.invitations_enabled = false
+        assignment.save
+
+        result = invitation.redeem_for(student)
+        expect(result.success?).to be_falsey
+      end
     end
   end
 

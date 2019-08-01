@@ -29,19 +29,21 @@ class AssignmentInvitation < ApplicationRecord
   #
   # Returns a AssignmentRepo::Creator::Result.
   #
+  # rubocop:disable AbcSize
   def redeem_for(invitee)
     if (repo_access = RepoAccess.find_by(user: invitee, organization: organization))
       assignment_repo = AssignmentRepo.find_by(assignment: assignment, repo_access: repo_access)
-      return AssignmentRepo::Creator::Result.success(assignment_repo) if assignment_repo.present?
+      creator_result_class.success(assignment_repo) if assignment_repo.present?
     end
 
     assignment_repo = AssignmentRepo.find_by(assignment: assignment, user: invitee)
-    return AssignmentRepo::Creator::Result.success(assignment_repo) if assignment_repo.present?
+    return creator_result_class.success(assignment_repo) if assignment_repo.present?
 
-    return AssignmentRepo::Creator::Result.failed("Invitations for this assignment have been disabled.") unless enabled?
+    return creator_result_class.failed("Invitations for this assignment have been disabled.") unless enabled?
 
-    AssignmentRepo::Creator::Result.pending
+    creator_result_class.pending
   end
+  # rubocop:enable AbcSize
 
   def to_param
     key
@@ -59,6 +61,18 @@ class AssignmentInvitation < ApplicationRecord
   end
 
   protected
+
+  # Provides the correct Result class
+  # Both classes have essentially same functionality but,
+  # Using them based on feature flag for consistency
+  # TODO: remove this method when we remove creators
+  def creator_result_class
+    if GitHubClassroom.flipper[:unified_repo_creators].enabled?
+      CreateGitHubRepoService::Result
+    else
+      AssignmentRepo::Creator::Result
+    end
+  end
 
   def assign_key
     self.key ||= SecureRandom.hex(16)
