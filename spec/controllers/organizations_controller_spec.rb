@@ -180,19 +180,19 @@ RSpec.describe OrganizationsController, type: :controller do
     end
 
     it "finds an organization" do
-      get :search, params: { id: organization.slug, query: "github" }
+      get :search, params: { id: organization.slug, query: "github" }, xhr: true
       expect(response.status).to eq(200)
       expect(assigns(:organizations)).to_not eq([])
     end
 
     it "finds no organization" do
-      get :search, params: { id: organization.slug, query: "testing stuff" }
+      get :search, params: { id: organization.slug, query: "testing stuff" }, xhr: true
       expect(response.status).to eq(200)
       expect(assigns(:organizations)).to eq([])
     end
 
     it "is not case sensitive" do
-      get :search, params: { id: organization.slug, query: "GITHUB" }
+      get :search, params: { id: organization.slug, query: "GITHUB" }, xhr: true
       expect(response.status).to eq(200)
       expect(assigns(:organizations)).to_not eq([])
     end
