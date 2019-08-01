@@ -11,7 +11,12 @@ class PagesController < ApplicationController
     "create-group-assignments",
     "help",
     "probot-settings",
-    "upgrade-your-organization"
+    "upgrade-your-organization",
+    "connect-to-lms",
+    "generate-lms-credentials",
+    "setup-generic-lms",
+    "setup-canvas",
+    "setup-moodle"
   ].freeze
 
   # rubocop:disable AbcSize
