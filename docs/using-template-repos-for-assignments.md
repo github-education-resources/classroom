@@ -10,7 +10,7 @@ To use template repositories for assignments, you'll need the following:
 
 #### Get started
 
-Once you log in to [GitHub Classroom](https://classroom.github.com/), select your classroom and then click on **New Assignment**. Template repositories work for both **Individual Assignments** and **Group Assignments**. So you can pick either of the two for your assignment. You can then provide details for the assignment. Once you've filled out the details, the **Optional** section has a search bar for finding your starter code repository. When you search for your starter code repository, you will now get two options:
+Once you log in to [GitHub Classroom](https://classroom.github.com/), select your classroom and then click on **New Assignment**. Template repositories work for both **Individual Assignments** and **Group Assignments**. You can then provide details for the assignment. Once you've filled out the details, the **Optional** section has a search bar for finding your starter code repository. When you search for your starter code repository, you will now get two options:
 
   * Import starter code using a template repository.
   * Import starter code using source importer.
