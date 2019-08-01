@@ -12,8 +12,11 @@ the same workflow your used to on GitHub Classroom, such as:
 
 GitHub Classroom integrates with your Learning Management via the industry-standard LTI protocol and is certified by the
 Instructional Management System Global Learning Consortium, so you can be confident your information is safe and secure. Any
-Learning Management System which is compliant with the LTI standard is compatible with GitHub Classroom, such as Blackboard,
+Learning Management System which is compliant with the LTI standard is compatible with GitHub Classroom, such as
 Brightspace, Canvas, Moodle, and many more!
+
+Note: Blackboard does not currently support automatically importing a course roster. We are working to support Blackboard in the near future!
+{: class="warning"}
 
 ### Setup Guide
 
@@ -30,8 +33,7 @@ The steps for this portion are the same regardless of which Learning Management 
 #### Part Two: Connecting GitHub Classroom to your Learning Management System
 
 Second, with the generated credentials in hand, we configure GitHub Classroom from within your Learning Management System.
-We've created distinct guides for each platform to make the process easier, but any  LTI-compliant Learning Management System
-should be compatible.
+We've created distinct guides for each platform to make the process easier, but any  LTI-compliant Learning Management System should be compatible.
 
 - [Configuring GitHub Classroom within Canvas](/help/setup-canvas)
 - [Configuring GitHub Classroom within Moodle](/help/setup-moodle)
