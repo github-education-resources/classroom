@@ -69,7 +69,7 @@ module Orgs
       next_page = nil
       courses = []
       loop do
-        response = @google_classroom_service.list_courses(page_size: 20, page_token: next_page)
+        response = @google_classroom_service.list_courses(course_states: "ACTIVE", page_size: 20, page_token: next_page)
 
         courses.push(*response.courses)
 
