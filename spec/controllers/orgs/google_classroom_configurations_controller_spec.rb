@@ -41,12 +41,11 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
         end
 
         context "there is a LTI configuration" do
-          before(:each) do 
+          before(:each) do
             create(:lti_configuration,
               organization: organization,
               consumer_key: "hi",
-              shared_secret: "hi"
-            )
+              shared_secret: "hi")
 
             get :index, params: {
               id: organization.slug
@@ -189,12 +188,11 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
         end
 
         context "there is a LTI configuration" do
-          before(:each) do 
+          before(:each) do
             create(:lti_configuration,
               organization: organization,
               consumer_key: "hi",
-              shared_secret: "hi"
-            )
+              shared_secret: "hi")
 
             post :create, params: {
               id: organization.slug,
