@@ -10,7 +10,7 @@ To use template repositories for assignments, you'll need the following:
 
 #### Get started
 
-Once you log in to [GitHub Classroom](https://classroom.github.com/), select your classroom and then click on **New Assignment**. Template repositories work for both **Individual Assignments** and **Group Assignments**. So you can pick either of the two for your assignment. You can then provide details for the assignment. Once you've filled out the details, the **Optional** section has a search bar for finding your starter code repository. When you search for your starter code repository, you will now get two options:
+Once you log in to [GitHub Classroom](https://classroom.github.com/), select your classroom and then click on **New Assignment**. Template repositories work for both **Individual Assignments** and **Group Assignments**. You can then provide details for the assignment. Once you've filled out the details, the **Optional** section has a search bar for finding your starter code repository. When you search for your starter code repository, you will now get two options:
 
   * Import starter code using a template repository.
   * Import starter code using source importer.
@@ -25,7 +25,7 @@ Note: For import via template repositories to work, your starter code repository
 ### What are the advantages of using template repositories?
 
 * Importing starter code is faster, as it uses the new [template repositories API](https://developer.github.com/v3/repos/#create-repository-using-a-repository-template).
-* Template repositories are more reliable as we have noticed that 99% of our imports with template repositories succeeded, whereas only 95% of imports with source importer succeeded.
+* Template repositories are far more reliable than source imports.
 * Template repositories are built with the aim of distribution and management of boilerplate code and hence releasing assignments is almost instantaneous.
 
 ### What do you miss out on when you use template repositories?
