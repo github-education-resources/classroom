@@ -3,13 +3,12 @@
 module Orgs
   class RostersController
     before_action :ensure_google_classroom_roster_import_is_enabled, only: %i[
-      import_from_google_classroom sync_google_classroom
+      import_from_google_classroom
+      sync_google_classroom
     ]
     before_action :authorize_google_classroom, only: %i[import_from_google_classroom sync_google_classroom]
     before_action :ensure_google_classroom_is_linked, only: %i[import_from_google_classroom sync_google_classroom]
     before_action :set_google_classroom, only: %i[import_from_google_classroom sync_google_classroom]
-    before_action :ensure_no_lti_configuration, only: :import_from_google_classroom
-    before_action :google_classroom_ensure_no_roster, only: :import_from_google_classroom
 
     def import_from_google_classroom
       students = list_google_classroom_students
@@ -55,12 +54,6 @@ module Orgs
       )
     end
 
-    def ensure_no_lti_configuration
-      return unless current_organization.lti_configuration
-      redirect_to edit_organization_path(current_organization),
-        alert: "A LMS configuration already exists. Please remove configuration before creating a new one."
-    end
-
     # Returns list of students in a google classroom with error checking
     def list_google_classroom_students
       @google_classroom_course.students || []
@@ -88,13 +81,6 @@ module Orgs
       else
         add_students
       end
-    end
-
-    def google_classroom_ensure_no_roster
-      return unless current_organization.roster
-      redirect_to edit_organization_path(current_organization),
-        alert: "We are unable to link your classroom organization to Google Classroom "\
-          "because a roster already exists. Please delete your current roster and try again."
     end
   end
 end

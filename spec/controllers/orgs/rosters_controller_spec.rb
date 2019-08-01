@@ -502,7 +502,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
       end
 
       it "sets flash message" do
-        expect(flash[:error]).to eq("An error has occured. Please try again.")
+        expect(flash[:error]).to eq("An error has occurred. Please try again.")
       end
 
       it "creates no roster entries" do
@@ -720,49 +720,6 @@ RSpec.describe Orgs::RostersController, type: :controller do
                   expect(flash[:error]).to eq("Failed to fetch students from Google Classroom. Please try again later.")
                 end
               end
-            end
-          end
-
-          context "when organization already has roster" do
-            before do
-              patch :import_from_google_classroom, params: {
-                id: organization.slug
-              }
-            end
-
-            it "redirects to settings" do
-              expect(response).to redirect_to(edit_organization_path(organization))
-            end
-
-            it "sets error message" do
-              expect(flash[:alert]).to eq(
-                "We are unable to link your classroom organization to Google Classroom "\
-                "because a roster already exists. Please delete your current roster and try again."
-              )
-            end
-
-            it "does not import students" do
-              expect(organization.roster.roster_entries.count).to eq(1)
-            end
-          end
-
-          context "when there is an existing lti configuration" do
-            before do
-              create(:lti_configuration,
-                organization: organization,
-                consumer_key: "hello",
-                shared_secret: "hello")
-
-              patch :import_from_google_classroom, params: {
-                id: organization.slug
-              }
-            end
-
-            it "alerts user that there is an existing config" do
-              expect(response).to redirect_to(edit_organization_path(organization))
-              expect(flash[:alert]).to eq(
-                "A LMS configuration already exists. Please remove configuration before creating a new one."
-              )
             end
           end
         end

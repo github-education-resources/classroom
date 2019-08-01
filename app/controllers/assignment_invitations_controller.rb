@@ -83,7 +83,7 @@ class AssignmentInvitationsController < ApplicationController
 
     redirect_to assignment_invitation_url(current_invitation)
   rescue ActiveRecord::ActiveRecordError
-    flash[:error] = "An error occured, please try again!"
+    flash[:error] = "An error occurred, please try again!"
   end
 
   private
