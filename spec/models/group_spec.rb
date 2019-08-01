@@ -81,7 +81,7 @@ RSpec.describe Group, type: :model do
   end
 
   describe "callbacks", :vcr do
-    describe "assocation callbacks" do
+    describe "association callbacks" do
       before(:each) do
         @repo_access = RepoAccess.create(user: user, organization: organization)
         group.repo_accesses << @repo_access

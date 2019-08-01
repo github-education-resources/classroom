@@ -4,7 +4,7 @@
   // A new window/tab event can be one of the following
   // ctrlKey (Windows)
   // metaKey (OSX)
-  // shiftKey (OS agnositc)
+  // shiftKey (OS agnostic)
   // New tab with middle click
   is_new_window_or_tab_event = function(event) {
     var middle_click_event;
