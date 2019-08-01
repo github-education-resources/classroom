@@ -77,11 +77,10 @@ class Organization
       disable_invitations_in_all_assignments! if archive == "true"
     end
 
-    # rubocop:disable SkipsModelValidations
     def disable_invitations_in_all_assignments!
       classroom_assignments = @organization.assignments + @organization.group_assignments
       classroom_assignments.each do |assignment|
-        assignment.update_attribute("invitations_enabled", false)
+        assignment.update(invitations_enabled: false)
       end
     end
   end
