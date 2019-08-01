@@ -8,8 +8,8 @@ RSpec.describe RepoAccess, type: :model do
 
   describe ".search" do
     before do
-      RepoAccess.any_instance.stub(:add_membership_to_github_organization)
-      RepoAccess.any_instance.stub(:accept_membership_to_github_organization)
+      allow_any_instance_of(RepoAccess).to receive(:add_membership_to_github_organization)
+      allow_any_instance_of(RepoAccess).to receive(:accept_membership_to_github_organization)
       @repo_access = RepoAccess.create(user: student, organization: organization, github_team_id: 50)
     end
 
