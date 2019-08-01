@@ -28,14 +28,13 @@ module GitHubClassroom
         #response = request.get
         #byebug
 
-        req = build_net_req(@context_membership_url, :get, nil, role: roles.join(","))
-        sign_request!(req, @consumer_key, @secret)
+        req = membership_request(roles)
 
         headers = {
           "Accept": "application/vnd.ims.lis.v2.membershipcontainer+json",
           "Authorization": req.get_fields("Authorization")[0]
         }
-        byebug
+
         c = Faraday.new(url: req.uri, headers: headers) do |conn|
           conn.response :raise_error
           conn.adapter Faraday.default_adapter
@@ -51,19 +50,14 @@ module GitHubClassroom
       private
 
       def membership_request(roles)
-        #uri = URI.parse(@context_membership_url)
-        #uri.query = URI.encode_www_form(role: roles.join(","))
 
-        #req = Net::HTTP::Get.new(uri)
         req = signed_request(
           @context_membership_url,
           method: :get,
           #headers: { "Accept": "application/vnd.ims.lis.v2.membershipcontainer+json" },
-          query: { role: roles.join(",") },
-          body: nil
+          query: { role: roles.join(",") }
         )
 
-        byebug
         #headers = {
         #  "Accept": "application/vnd.ims.lis.v2.membershipcontainer+json",
         #  "Authorization": req.get_fields("Authorization")
@@ -73,6 +67,8 @@ module GitHubClassroom
         #  conn.response :raise_error
         #  conn.adapter Faraday.default_adapter
         #end
+
+        req
       end
 
       def parse_membership(json_membership)
