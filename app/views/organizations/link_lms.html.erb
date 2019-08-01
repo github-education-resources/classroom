@@ -8,7 +8,10 @@
 
 
     <div class="site-content-body markdown-body">
-      <p>Connecting GitHub Classroom to your institution's Learning Management System (LMS) will allow you to automatically import your course roster. You can always skip this step and come back later.</p>
+      <p>Connecting GitHub Classroom to your institution's Learning Management System will unlock new capabilities,
+      such as automatic roster importing, and enhance your experience. You can always skip this step and come back later.
+      <%= link_to "Learn more", help_path(article_name: "connect-to-lms") %>.
+      </p>
       <div class="d-flex flex-wrap gutter">
         <% if google_classroom_roster_import_enabled? %>
           <div class="col-6 col-md-4 col-lg-4">

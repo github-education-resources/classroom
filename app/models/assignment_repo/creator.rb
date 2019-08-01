@@ -133,8 +133,7 @@ class AssignmentRepo
     def delete_github_repository(github_repo_id)
       return true if github_repo_id.nil?
       organization.github_organization.delete_repository(github_repo_id)
-    rescue GitHub::Error => error
-      Failbot.report!(error)
+    rescue GitHub::Error
       true
     end
 
@@ -146,14 +145,18 @@ class AssignmentRepo
       GitHubClassroom.statsd.increment("exercise_repo.create.repo.with_templates.started")
       repository_name = generate_github_repository_name
       template_repo_id = assignment.starter_code_repo_id
-      options = {
-        private: assignment.private?,
-        description: "#{repository_name} created by GitHub Classroom"
-      }
+      options = repo_from_template_options(repository_name)
 
       organization.github_organization.create_repository_from_template(template_repo_id, repository_name, options)
     rescue GitHub::Error => error
-      Failbot.report!(error, user: user.id, organization: organization.id, starter_code_repo_id: template_repo_id)
+      Failbot.report!(
+        error,
+        user: user.id,
+        organization: organization.id,
+        starter_code_repo_id: template_repo_id,
+        new_repo_name: repository_name,
+        params: options
+      )
       raise Result::Error.new REPOSITORY_CREATION_FAILED, error.message
     end
 
@@ -226,6 +229,15 @@ class AssignmentRepo
       suffixed_repo_name(repository_name, suffix_count)
     end
     # rubocop:enable AbcSize
+
+    def repo_from_template_options(repository_name)
+      {
+        private: assignment.private?,
+        description: "#{repository_name} created by GitHub Classroom",
+        owner: organization.github_organization.login,
+        include_all_branches: true
+      }
+    end
 
     def suffixed_repo_name(repository_name, suffix_count)
       return repository_name if suffix_count.zero?

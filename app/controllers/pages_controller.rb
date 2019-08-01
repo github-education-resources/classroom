@@ -12,7 +12,12 @@ class PagesController < ApplicationController
     "help",
     "probot-settings",
     "upgrade-your-organization",
-    "using-template-repos-for-assignments"
+    "using-template-repos-for-assignments",
+    "connect-to-lms",
+    "generate-lms-credentials",
+    "setup-generic-lms",
+    "setup-canvas",
+    "setup-moodle"
   ].freeze
 
   # rubocop:disable AbcSize
