@@ -172,7 +172,7 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: { format: :json } do
     scope :internal do
-      resources :organizations, path: "classrooms", only: [:index] do
+      scope "classrooms/:organization_id" do
         resources :assignments, only: %i[index show] do
           resources :assignment_repos, only: [:index] do
             get "/clone_url", to: "assignment_repos#clone_url"
