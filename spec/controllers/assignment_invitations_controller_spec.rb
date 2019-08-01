@@ -352,7 +352,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
           end
         end
 
-        it "says a job was succesfully kicked off" do
+        it "says a job was successfully kicked off" do
           post :create_repo, params: { id: invitation.key }
           expect(json)
             .to eq(
@@ -396,7 +396,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
           end
         end
 
-        it "says a job was succesfully kicked off" do
+        it "says a job was successfully kicked off" do
           post :create_repo, params: { id: invitation.key }
           expect(json)
             .to eq(
@@ -450,7 +450,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
           end
         end
 
-        it "says a job was unsuccesfully kicked off" do
+        it "says a job was unsuccessfully kicked off" do
           post :create_repo, params: { id: invitation.key }
           expect(json)
             .to eq(

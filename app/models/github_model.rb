@@ -175,7 +175,7 @@ class GitHubModel
   # id_args - The Interger ids for the resource.
   # options - A Hash of options to pass (optional).
   #
-  # Returns a Sawyer::Resource or nil if an error occured.
+  # Returns a Sawyer::Resource or nil if an error occurred.
   def github_classroom_request(id_args, **options)
     GitHub::Errors.with_error_handling do
       GitHubClassroom.github_client.send(github_type, *id_args, options)

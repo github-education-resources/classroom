@@ -40,7 +40,7 @@ class GitHubOrganization < GitHubResource
   def create_repository_from_template(template_repo_id, repo_name, users_repo_options = {})
     repo_options = github_template_repo_default_options.merge(users_repo_options)
 
-    repo = GitHub::Errors.with_error_handling do
+    repo = GitHub::Errors.with_error_handling(report_to_failbot: false) do
       @client.create_repository_from_template(template_repo_id, repo_name, repo_options)
     end
 
