@@ -25,7 +25,7 @@ Note: For import via template repositories to work, your starter code repository
 ### What are the advantages of using template repositories?
 
 * Importing starter code is faster, as it uses the new [template repositories API](https://developer.github.com/v3/repos/#create-repository-using-a-repository-template).
-* Template repositories are more reliable as we have noticed that 99% of our imports with template repositories succeeded, whereas only 95% of imports with source importer succeeded.
+* Template repositories are far more reliable than source imports.
 * Template repositories are built with the aim of distribution and management of boilerplate code and hence releasing assignments is almost instantaneous.
 
 ### What do you miss out on when you use template repositories?
