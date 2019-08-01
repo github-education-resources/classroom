@@ -20,11 +20,30 @@ module GitHubClassroom
       end
 
       def membership(roles: [])
-        headers = { "Accept": "application/vnd.ims.lis.v2.membershipcontainer+json" }
-        request = signed_request(@context_membership_url, @consumer_key, @secret,
-          query: { role: roles.join(",") },
-          headers: headers)
-        response = request.get
+        #byebug
+        #headers = { "Accept": "application/vnd.ims.lis.v2.membershipcontainer+json" }
+        #request = signed_request(@context_membership_url, @consumer_key, @secret,
+        #  query: { role: roles.join(",") },
+        #  headers: headers)
+        #response = request.get
+        #byebug
+
+        uri = URI.parse(@context_membership_url)
+        uri.query = URI.encode_www_form( role: roles.join(",") )
+        req = Net::HTTP::Get.new(uri)
+        sign_request!(req, @consumer_key, @secret)
+
+        headers = {
+          "Accept": "application/vnd.ims.lis.v2.membershipcontainer+json",
+          "Authorization": req.get_fields("Authorization")[0]
+        }
+        byebug
+        c = Faraday.new(url: req.uri, headers: headers) do |conn|
+          conn.response :raise_error
+          conn.adapter Faraday.default_adapter
+        end
+        byebug
+        response = c.get
 
         json_membership = JSON.parse(response.body)
         parsed_membership = parse_membership(json_membership)
@@ -32,6 +51,31 @@ module GitHubClassroom
       end
 
       private
+
+      def membership_request(roles)
+        #uri = URI.parse(@context_membership_url)
+        #uri.query = URI.encode_www_form(role: roles.join(","))
+
+        #req = Net::HTTP::Get.new(uri)
+        req = signed_request(
+          @context_membership_url,
+          method: :get,
+          #headers: { "Accept": "application/vnd.ims.lis.v2.membershipcontainer+json" },
+          query: { role: roles.join(",") },
+          body: nil
+        )
+
+        byebug
+        #headers = {
+        #  "Accept": "application/vnd.ims.lis.v2.membershipcontainer+json",
+        #  "Authorization": req.get_fields("Authorization")
+        #}
+
+        #Faraday.new(url: req.uri, headers: headers) do |conn|
+        #  conn.response :raise_error
+        #  conn.adapter Faraday.default_adapter
+        #end
+      end
 
       def parse_membership(json_membership)
         unparsed_memberships = json_membership.dig("pageOf", "membershipSubject", "membership")
