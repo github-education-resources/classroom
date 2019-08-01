@@ -30,14 +30,71 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
           allow_any_instance_of(GoogleAPI::ClassroomService)
             .to receive(:list_courses)
             .and_return(response)
-
-          get :index, params: {
-            id: organization.slug
-          }
         end
 
         it "succeeds" do
+          get :index, params: {
+            id: organization.slug
+          }
+
           expect(response).to have_http_status(:success)
+        end
+
+        context "there is a LTI configuration" do
+          before(:each) do 
+            create(:lti_configuration,
+              organization: organization,
+              consumer_key: "hi",
+              shared_secret: "hi"
+            )
+
+            get :index, params: {
+              id: organization.slug
+            }
+          end
+
+          it "flashes error message" do
+            message = "A LMS configuration already exists. Please remove configuration before creating a new one."
+            expect(flash[:alert]).to eq(message)
+          end
+
+          it "redirects to settings page" do
+            expect(response).to redirect_to(edit_organization_path(organization))
+          end
+
+          after(:each) do
+            organization.lti_configuration = nil
+            organization.save!
+            organization.reload
+          end
+        end
+
+        context "there is a roster" do
+          before(:each) do
+            organization.roster = create(:roster)
+            organization.save!
+            organization.reload
+
+            get :index, params: {
+              id: organization.slug
+            }
+          end
+
+          it "flashes error message" do
+            message = "We are unable to link your classroom organization to Google Classroom "\
+              "because a roster already exists. Please delete your current roster and try again."
+            expect(flash[:alert]).to eq(message)
+          end
+
+          it "redirects to settings page" do
+            expect(response).to redirect_to(edit_organization_path(organization))
+          end
+
+          after(:each) do
+            organization.roster = nil
+            organization.save!
+            organization.reload
+          end
         end
 
         context "when there is an error fetching classes" do
@@ -128,6 +185,65 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
           it "suceeds" do
             expect(Organization.first.google_course_id).to eq("6464")
             expect(flash[:success]).to eq("Google Classroom integration was succesfully configured.")
+          end
+        end
+
+        context "there is a LTI configuration" do
+          before(:each) do 
+            create(:lti_configuration,
+              organization: organization,
+              consumer_key: "hi",
+              shared_secret: "hi"
+            )
+
+            post :create, params: {
+              id: organization.slug,
+              course_id: 6464
+            }
+          end
+
+          it "flashes error message" do
+            message = "A LMS configuration already exists. Please remove configuration before creating a new one."
+            expect(flash[:alert]).to eq(message)
+          end
+
+          it "redirects to settings page" do
+            expect(response).to redirect_to(edit_organization_path(organization))
+          end
+
+          after(:each) do
+            organization.lti_configuration = nil
+            organization.save!
+            organization.reload
+          end
+        end
+
+        context "there is a roster" do
+          before(:each) do
+            organization.roster = create(:roster)
+            organization.save!
+            organization.reload
+
+            post :create, params: {
+              id: organization.slug,
+              course_id: 6464
+            }
+          end
+
+          it "flashes error message" do
+            message = "We are unable to link your classroom organization to Google Classroom "\
+              "because a roster already exists. Please delete your current roster and try again."
+            expect(flash[:alert]).to eq(message)
+          end
+
+          it "redirects to settings page" do
+            expect(response).to redirect_to(edit_organization_path(organization))
+          end
+
+          after(:each) do
+            organization.roster = nil
+            organization.save!
+            organization.reload
           end
         end
       end
