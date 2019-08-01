@@ -28,9 +28,7 @@ module GitHubClassroom
         #response = request.get
         #byebug
 
-        uri = URI.parse(@context_membership_url)
-        uri.query = URI.encode_www_form( role: roles.join(",") )
-        req = Net::HTTP::Get.new(uri)
+        req = build_net_req(@context_membership_url, :get, nil, role: roles.join(","))
         sign_request!(req, @consumer_key, @secret)
 
         headers = {
