@@ -20,17 +20,7 @@ module GitHubClassroom
       end
 
       def membership(roles: [])
-        #byebug
-        #headers = { "Accept": "application/vnd.ims.lis.v2.membershipcontainer+json" }
-        #request = signed_request(@context_membership_url, @consumer_key, @secret,
-        #  query: { role: roles.join(",") },
-        #  headers: headers)
-        #response = request.get
-        #byebug
-
         req = membership_request(roles)
-
-        byebug
         response = req.get
 
         json_membership = JSON.parse(response.body)
@@ -41,23 +31,12 @@ module GitHubClassroom
       private
 
       def membership_request(roles)
-
-        req = signed_request(
+        signed_request(
           @context_membership_url,
           method: :get,
           headers: { "Accept": "application/vnd.ims.lis.v2.membershipcontainer+json" },
           query: { role: roles.join(",") }
         )
-
-        #headers = {
-        #  "Accept": "application/vnd.ims.lis.v2.membershipcontainer+json",
-        #  "Authorization": req.get_fields("Authorization")[0]
-        #}
-
-        #Faraday.new(url: req.uri, headers: headers) do |conn|
-        #  conn.response :raise_error
-        #  conn.adapter Faraday.default_adapter
-        #end
       end
 
       def parse_membership(json_membership)
