@@ -14,10 +14,7 @@ module GitHubClassroom
           signed_headers = {}
           req.each_header { |header, value| signed_headers[header] = value }
 
-          Faraday.new(url: req.uri, headers: {
-            "Accept": "application/vnd.ims.lis.v2.membershipcontainer+json",
-            "Authorization": req.get_fields("Authorization")[0]
-          }) do |conn|
+          Faraday.new(url: req.uri, headers: signed_headers) do |conn|
             conn.response :raise_error
             conn.adapter Faraday.default_adapter
           end
