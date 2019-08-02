@@ -203,4 +203,24 @@ RSpec.describe Assignment, type: :model do
       end
     end
   end
+
+  describe "validation methods that call API" do
+    let(:organization) { classroom_org }
+
+    context "validation methods for starter code repo" do
+      let(:assignment) { create(:assignment, organization: organization, title: "Assignment 3") }
+
+      it "calls methods if starter_code_repo_id is changed" do
+        expect(assignment).to receive(:starter_code_repository_not_empty)
+        expect(assignment).to receive(:starter_code_repository_is_template)
+        assignment.update(starter_code_repo_id: 1_062_897)
+      end
+
+      it "does not call methods if starter_code_repo_id is unchanged" do
+        expect(assignment).not_to receive(:starter_code_repository_not_empty)
+        expect(assignment).not_to receive(:starter_code_repository_is_template)
+        assignment.update(title: "Assignment 4")
+      end
+    end
+  end
 end
