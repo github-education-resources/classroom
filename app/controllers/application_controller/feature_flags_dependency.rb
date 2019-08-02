@@ -18,11 +18,6 @@ class ApplicationController
   end
   helper_method :google_classroom_roster_import_enabled?
 
-  def multiple_classrooms_per_org_enabled?
-    logged_in? && current_user.feature_enabled?(:multiple_classrooms_per_org)
-  end
-  helper_method :multiple_classrooms_per_org_enabled?
-
   def team_management_enabled?
     logged_in? && current_user.feature_enabled?(:team_management)
   end

@@ -16,7 +16,7 @@
       <div class="d-flex flex-wrap gutter-spacious">
         <% @users_github_organizations.each do |org| %>
           <div class="col-6 col-md-4 col-lg-3 mb-6">
-            <% if org[:role] == 'admin' && (!org[:classroom].present? || multiple_classrooms_per_org_enabled?) %>
+            <% if org[:role] == 'admin' %>
               <%= render partial: 'organization_select', locals: { org: org } %>
             <% else %>
               <%= render partial: 'disabled_organization_select', locals: { org: org } %>
