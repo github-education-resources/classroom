@@ -12,6 +12,7 @@ class PagesController < ApplicationController
     "help",
     "probot-settings",
     "upgrade-your-organization",
+    "using-template-repos-for-assignments",
     "connect-to-lms",
     "generate-lms-credentials",
     "setup-generic-lms",
