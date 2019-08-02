@@ -6,6 +6,7 @@
 * [Controlling assignment repo settings with the Probot Settings app](/help/probot-settings)
 * [Creating group assignments](/help/create-group-assignments)
 * [Upgrading your organization](/help/upgrade-your-organization)
+* [Using template repositories for assignments](/help/using-template-repos-for-assignments)
 
 ### Workflows, case studies, best practices, and more from the GitHub blog
 

@@ -232,11 +232,15 @@ RSpec.describe AssignmentRepo::Creator, type: :model do
             expect(Failbot.reports.count).to be > 0
           end
 
-          it "Failbot report contains the user, repository, and organization info" do
+          it "Failbot report contains details" do
             AssignmentRepo::Creator.perform(assignment: assignment, user: student)
             expect(
               Failbot.reports.find do |error|
-                (error.include? "user") && (error.include? "organization") && (error.include? "starter_code_repo_id")
+                (error.include? "user") &&
+                (error.include? "organization") &&
+                (error.include? "starter_code_repo_id") &&
+                (error.include? "params") &&
+                (error.include? "new_repo_name")
               end
             ).to_not be_nil
           end
