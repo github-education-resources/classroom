@@ -23,11 +23,6 @@ class ApplicationController
   end
   helper_method :team_management_enabled?
 
-  def search_assignments_enabled?
-    logged_in? && current_user.feature_enabled?(:search_assignments)
-  end
-  helper_method :search_assignments_enabled?
-
   def archive_classrooms_enabled?
     logged_in? && current_user.feature_enabled?(:archive_classrooms)
   end
