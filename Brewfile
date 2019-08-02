@@ -3,7 +3,7 @@
 tap "caskroom/cask"
 tap "github/bootstrap"
 
-cask "docker"
+cask "docker" unless system 'which docker'
 cask "ngrok"
 
 brew "tmux"
