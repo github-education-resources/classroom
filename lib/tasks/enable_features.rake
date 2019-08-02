@@ -2,7 +2,6 @@
 
 task enable_features: :environment do
   GitHubClassroom.flipper[:team_management].enable_group :staff
-  GitHubClassroom.flipper[:repo_setup].enable_group :staff
   GitHubClassroom.flipper[:google_classroom_roster_import].enable_group :staff
   GitHubClassroom.flipper[:multiple_classrooms_per_org].enable_group :staff
   GitHubClassroom.flipper[:team_management].enable_group :staff
