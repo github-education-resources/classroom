@@ -181,7 +181,6 @@ class GroupAssignmentInvitationsController < ApplicationController
       selected_group,
       new_group_title
     )
-
     case result.status
     when :failed
       report_invitation_failure if invitation.enabled?
