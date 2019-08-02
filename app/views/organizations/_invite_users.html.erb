@@ -1,4 +1,4 @@
-<div class="Subhead">
+<div class="Subhead Subhead--spacious">
   <h3 class="Subhead-heading"><%= t('views.organizations.invite_administrator') %></h3>
 </div>
 <h4><%= t('views.organizations.add_to_organization') %></h4>
@@ -19,8 +19,12 @@
 </div>
 
 <% if action_name == 'invite' %>
-  <div class="form-actions">
-    <% path = student_identifier_enabled? ? new_roster_path(current_organization) : organization_path(current_organization) %>
-    <%= link_to t('views.organizations.continue'), path, class: 'btn btn-primary right' %>
-  </div>
-<% end %>
+      <div class="form-actions">
+        <% next_step = new_roster_path(current_organization) %>
+        <% if lti_launch_enabled? || google_classroom_roster_import_enabled? %>
+          <% next_step = link_lms_organization_path(current_organization) %>
+        <% end %>
+
+        <%= button_to t('views.organizations.continue'), next_step, class: 'btn btn-primary right', method: :get %>
+      </div>
+    <% end %>
