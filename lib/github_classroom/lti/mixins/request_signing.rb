@@ -11,18 +11,18 @@ module GitHubClassroom
           #req["User-agent"] = nil
           sign_request!(req, @consumer_key, @secret)
           #byebug
-          #signed_headers = {}
-          #req.each_header { |header, value| signed_headers[header] = value }
+          signed_headers = {}
+          req.each_header { |header, value| signed_headers[header] = value }
 
-          #Faraday.new(url: req.uri, headers: {
-          #  "Accept": "application/vnd.ims.lis.v2.membershipcontainer+json",
-          #  "Authorization": req.get_fields("Authorization")[0]
-          #}) do |conn|
-          #  conn.response :raise_error
-          #  conn.adapter Faraday.default_adapter
-          #end
+          Faraday.new(url: req.uri, headers: {
+            "Accept": "application/vnd.ims.lis.v2.membershipcontainer+json",
+            "Authorization": req.get_fields("Authorization")[0]
+          }) do |conn|
+            conn.response :raise_error
+            conn.adapter Faraday.default_adapter
+          end
 
-          req
+          #req
         end
 
         #private
@@ -35,9 +35,9 @@ module GitHubClassroom
           klass = "Net::HTTP::#{method.to_s.capitalize}".constantize
           req = klass.new(uri)
           #req.each_header { |header, value| req[header] = nil}
-          #headers.each_pair { |header,value| req[header] = value }
+          headers.each_pair { |header,value| req[header] = value }
           #byebug
-          #req.body = body
+          req.body = body
 
           req
         end
