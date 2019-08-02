@@ -5,10 +5,11 @@ module GitHubClassroom
     class MembershipService
       include Mixins::RequestSigning
 
-      def initialize(context_membership_url, consumer_key, shared_secret)
+      def initialize(context_membership_url, consumer_key, shared_secret, lti_version: 1.1)
         @context_membership_url = context_membership_url
         @consumer_key = consumer_key
         @secret = shared_secret
+        @lti_version = lti_version
       end
 
       def students
@@ -21,7 +22,8 @@ module GitHubClassroom
 
       def membership(roles: [])
         req = membership_request(roles)
-        response = req.get
+        byebug
+        response = send_request(req)
 
         json_membership = JSON.parse(response.body)
         parsed_membership = parse_membership(json_membership)
@@ -31,11 +33,17 @@ module GitHubClassroom
       private
 
       def membership_request(roles)
-        signed_request(
+        method = @lti_version == 1.1 ? :get : :post
+        query = @lti_version == 1.1 ? { role: roles.join(",") } : nil
+        body = @lti_version == 1.0 ? { id: "bcde6a55f4cad71bb7865a04a57823ec:::4jflkkdf9s" } : nil
+
+        lti_request(
           @context_membership_url,
-          method: :get,
+          lti_version: @lti_version,
+          method: method,
           headers: { "Accept": "application/vnd.ims.lis.v2.membershipcontainer+json" },
-          query: { role: roles.join(",") }
+          query: query,
+          body: body
         )
       end
 

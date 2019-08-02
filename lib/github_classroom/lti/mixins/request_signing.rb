@@ -4,11 +4,30 @@ module GitHubClassroom
   module LTI
     module Mixins
       module RequestSigning
-        # given an endpoint, build a Faraday connection which satisfies the LTI standard
-        def signed_request(endpoint, lti_version: 1.1, method: :post, headers: {}, query: {}, body: nil)
-          req = build_http_req(endpoint, method, headers, query, body)
-          sign_request!(req, @consumer_key, @secret, lti_version: lti_version)
+        @@default_lti_request_options = {
+          lti_version: 1.1,
+          method: :post,
+          headers: {},
+          query: {},
+          body: nil
+        }
 
+        def lti_request(endpoint, request_options = {})
+          opts = @@default_lti_request_options.merge(request_options.inject({}) do |opts, (k, v)|
+            opts[k.to_sym] = v
+            opts
+          end)
+
+          byebug
+
+          req = build_http_request(endpoint, opts[:method], opts[:headers], opts[:query], opts[:body])
+          sign_request!(req, @consumer_key, @secret, lti_version: opts[:lti_version])
+
+          req
+        end
+
+        def send_request(req)
+          byebug
           request_headers = {}
           req.each_header { |header, value| request_headers[header] = value }
 
@@ -17,22 +36,14 @@ module GitHubClassroom
             conn.adapter Faraday.default_adapter
           end
 
-          body.present? ? connection.send(method, nil, req.body) : connection.send(method)
+          method = req.method.downcase
+          req.body.present? ? connection.send(method, nil, req.body) : connection.send(method, nil)
         end
-
-        #@@default_lti_request_options = {
-        #  lti_version: 1.1,
-        #  method: :post,
-        #  scheme: :header,
-        #  headers: {},
-        #  query: {},
-        #  body: nil
-        #}
 
         private
 
         # builds a Net::HTTP request from endpoint and options
-        def build_http_req(endpoint, method = :post, headers = {}, query = nil, body = nil)
+        def build_http_request(endpoint, method, headers, query, body)
           uri = URI.parse(endpoint)
           uri.query = URI.encode_www_form(query) if query
 
