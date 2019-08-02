@@ -158,7 +158,7 @@ class OrganizationsController < Orgs::Controller
   def set_filter_options
     @sort_modes = Organization.sort_modes
 
-    @current_sort_mode = params[:sort_classrooms_by] || @sort_modes.keys.first
+    @current_sort_mode = params[:sort_by] || @sort_modes.keys.first
     @query = params[:query]
 
     @sort_modes_links = @sort_modes.keys.map do |mode|

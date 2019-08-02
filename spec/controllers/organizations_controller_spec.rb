@@ -198,6 +198,43 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
+  describe "sort organizations", :vcr do
+    before do
+      organization.created_at = 1.day.ago
+      organization.save!
+
+      user.organizations = [create(:organization, title: "github_class_300"), organization]
+      user.save!
+    end
+
+    it "sorts organizations by name" do
+      get :search, params: { id: organization.slug, sort_by: "Classroom name" }, xhr: true
+      expect(response.status).to eq(200)
+
+      actual = assigns(:organizations).pluck(:title)
+      expected = user.organizations.sort_by(&:title).pluck(:title)
+      expect(actual).to eql(expected)
+    end
+
+    it "sorts organizations by oldest first" do
+      get :search, params: { id: organization.slug, sort_by: "Oldest first" }, xhr: true
+      expect(response.status).to eq(200)
+
+      actual = assigns(:organizations).pluck(:created_at)
+      expected = user.organizations.sort_by(&:created_at).pluck(:created_at)
+      expect(actual).to eql(expected)
+    end
+
+    it "sorts organizations by newest first" do
+      get :search, params: { id: organization.slug, sort_by: "Newest first" }, xhr: true
+      expect(response.status).to eq(200)
+
+      actual = assigns(:organizations).pluck(:created_at)
+      expected = user.organizations.sort_by(&:created_at).reverse.pluck(:created_at)
+      expect(actual).to eql(expected)
+    end
+  end
+
   describe "GET #edit", :vcr do
     it "returns success and sets the organization" do
       get :edit, params: { id: organization.slug }
