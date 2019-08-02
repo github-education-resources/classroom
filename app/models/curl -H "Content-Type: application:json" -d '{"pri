@@ -1,0 +1,10 @@
+curl -H "Content-Type: application/json" -d '{"private":true, "include_all_branches":true, "name":"123", "description":"assignment-progr-ss2019-part2-Flomarkt created by GitHub Classroom"}' -X POST -H "Authorization: token d7815fcc589749e258a2e063d5f98b8762addacc" -H "Accept: application/vnd.github.baptiste-preview" https://api.github.com/repos/swe4s/unit-test/generate
+
+
+curl -H "Content-Type: application/json" -d '{"private":true, "owner":"classroomtestorg", "include_all_branches":true, "name":"123", "description":"assignment-progr-ss2019-part2-Flomarkt created by GitHub Classroom"}' -X POST -H "Authorization: token 719eb2070a722c205216de107128d2c771d71082" -H "Accept: application/vnd.github.baptiste-preview" https://api.github.com/repositories/199500741/generate
+
+PERSONAL ^
+
+
+curl https://api.github.com/repos/swe4s/unit-test -H "Authorization: token 8908fa60f8b28afaf3f4afb03e9c41898b231857"
+

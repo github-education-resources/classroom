@@ -38,6 +38,10 @@ class Organization < ApplicationRecord
       group_assignments.includes(:group_assignment_invitation)
   end
 
+  def archived?
+    archived_at.present?
+  end
+
   def github_client
     if Rails.env.test?
       token = users.first.token unless users.first.nil?
