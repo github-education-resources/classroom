@@ -144,13 +144,9 @@ class OrganizationsController < Orgs::Controller
     params.require(:organization).permit(:github_id).merge(users: [current_user])
   end
 
-  # rubocop:disable Metrics/AbcSize
   def set_users_github_organizations
     @users_github_organizations = current_user.github_user.organization_memberships.map do |membership|
       {
-        # TODO: Remove `classroom` field after we turn off the feature flag
-        # for multiple classrooms in one org
-        classroom:   Organization.unscoped.find_by(github_id: membership.organization.id),
         github_id:   membership.organization.id,
         login:       membership.organization.login,
         owner_login: membership.user.login,
@@ -158,7 +154,6 @@ class OrganizationsController < Orgs::Controller
       }
     end
   end
-  # rubocop:enable Metrics/AbcSize
 
   # Check if the current user has any organizations with admin privilege,
   # if so add the user to the corresponding classroom automatically.
