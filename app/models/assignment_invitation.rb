@@ -27,20 +27,20 @@ class AssignmentInvitation < ApplicationRecord
 
   # Public: Redeem an AssignmentInvtiation for a User invitee.
   #
-  # Returns a AssignmentRepo::Creator::Result.
+  # Returns a CreateGitHubRepoService::Result.
   #
   def redeem_for(invitee)
     if (repo_access = RepoAccess.find_by(user: invitee, organization: organization))
       assignment_repo = AssignmentRepo.find_by(assignment: assignment, repo_access: repo_access)
-      return AssignmentRepo::Creator::Result.success(assignment_repo) if assignment_repo.present?
+      CreateGitHubRepoService::Result.success(assignment_repo) if assignment_repo.present?
     end
 
     assignment_repo = AssignmentRepo.find_by(assignment: assignment, user: invitee)
-    return AssignmentRepo::Creator::Result.success(assignment_repo) if assignment_repo.present?
+    return CreateGitHubRepoService::Result.success(assignment_repo) if assignment_repo.present?
 
-    return AssignmentRepo::Creator::Result.failed("Invitations for this assignment have been disabled.") unless enabled?
+    return CreateGitHubRepoService::Result.failed("Invitations for this assignment have been disabled.") unless enabled?
 
-    AssignmentRepo::Creator::Result.pending
+    CreateGitHubRepoService::Result.pending
   end
 
   def to_param

@@ -66,15 +66,15 @@ RSpec.describe AssignmentInvitation, type: :model do
 
     let(:result) do
       assignment_repo = create(:assignment_repo, user: student)
-      AssignmentRepo::Creator::Result.success(assignment_repo)
+      CreateGitHubRepoService::Result.success(assignment_repo)
     end
 
-    it "returns a AssignmentRepo::Creator::Result with the assignment repo" do
+    it "returns a CreateGitHubRepoService::Result with the assignment repo" do
       allow(invitation).to receive(:redeem_for).with(student).and_return(result)
       result = invitation.redeem_for(student)
 
       expect(result.success?).to be_truthy
-      expect(result.assignment_repo).to eql(AssignmentRepo.last)
+      expect(result.repo).to eql(AssignmentRepo.last)
     end
 
     it "fails if invitations are not enabled" do
