@@ -87,10 +87,7 @@
                   <p class="text-gray"><%= t('views.organizations.unarchive_description') %></p>
                 <% else %>
                   <div class="details-reset details-overlay">
-                    <%= form_for current_organization do |f| %>
-                      <%= f.hidden_field :archived, value: true %>
-                      <%= f.submit t('views.organizations.archive_submit'), class: "btn btn-danger boxed-action" %>
-                    <% end %>
+                    <a data-remodal-target="archive" class="btn btn-danger boxed-action"><%= t('views.organizations.archive_submit') %></a>
                   </div>
                   <strong class="text-gray"><%= t('views.organizations.archive_title') %></strong>
                   <p class="text-gray"><%= t('views.organizations.archive_description') %></p>
@@ -115,4 +112,5 @@
   <%= render partial: 'organizations/reset_and_remove_organization_modal' %>
   <%= render partial: 'organizations/organization_visibility_private_modal' %>
   <%= render partial: 'organizations/organization_visibility_public_modal' %>
+  <%= render partial: 'organizations/archive_modal' %>
 </div>
