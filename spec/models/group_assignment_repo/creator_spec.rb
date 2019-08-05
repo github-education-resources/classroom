@@ -243,13 +243,15 @@ RSpec.describe GroupAssignmentRepo::Creator do
             expect(Failbot.reports.count).to be > 0
           end
 
-          it "Failbot report contains the repository, github_team, and organization info" do
+          it "Failbot report contains details" do
             GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
             expect(
               Failbot.reports.find do |error|
                 (error.include? "github_team_id") &&
                 (error.include? "organization") &&
-                (error.include? "starter_code_repo_id")
+                (error.include? "starter_code_repo_id") &&
+                (error.include? "params") &&
+                (error.include? "new_repo_name")
               end
             ).to_not be_nil
           end

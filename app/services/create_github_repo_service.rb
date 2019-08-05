@@ -73,10 +73,7 @@ class CreateGitHubRepoService
   def create_github_repository_from_template!
     stats_sender.report_with_exercise_prefix(:import_with_templates_started)
 
-    options = {
-      private: assignment.private?,
-      description: "#{exercise.repo_name} created by GitHub Classroom"
-    }
+    options = repo_from_template_options
 
     github_repository = organization.github_organization.create_repository_from_template(
       assignment.starter_code_repo_id,
@@ -92,6 +89,8 @@ class CreateGitHubRepoService
       e[:github_team_id] = collaborator.github_team_id if collaborator.is_a? Group
       e[:starter_code_repo_id] = assignment.starter_code_repo_id
       e[:organization] = organization.id
+      e[:new_repo_name] = exercise.repo_name
+      e[:params] = options
     end
     Failbot.report!(
       error,
@@ -229,6 +228,15 @@ class CreateGitHubRepoService
     {}.tap do |options|
       options[:permission] = exercise.admin? ? "admin" : "push"
     end
+  end
+
+  def repo_from_template_options
+    {
+      private: assignment.private?,
+      description: "#{exercise.repo_name} created by GitHub Classroom",
+      owner: organization.github_organization.login,
+      include_all_branches: true
+    }
   end
 
   # Internal: Method for error messages, modifies error messages based on the type of assignment.
