@@ -6,6 +6,8 @@ module Orgs
   class GoogleClassroomConfigurationsController < Orgs::Controller
     before_action :ensure_google_classroom_roster_import_is_enabled, only: %i[create search index]
     before_action :authorize_google_classroom, only: %i[create search index]
+    before_action :ensure_no_lti_configuration, only: %i[create index]
+    before_action :ensure_no_roster, only: %i[create index]
 
     def create
       current_organization.update(google_course_id: params[:course_id])
@@ -23,7 +25,7 @@ module Orgs
 
       respond_to do |format|
         format.html do
-          render partial: "orgs/rosters/google_classroom_collection",
+          render partial: "google_classroom_collection",
                  locals: { courses: courses_found }
         end
       end
@@ -50,11 +52,24 @@ module Orgs
 
     private
 
+    def ensure_no_lti_configuration
+      return unless current_organization.lti_configuration
+      redirect_to edit_organization_path(current_organization),
+        alert: "A LMS configuration already exists. Please remove configuration before creating a new one."
+    end
+
+    def ensure_no_roster
+      return unless current_organization.roster
+      redirect_to edit_organization_path(current_organization),
+        alert: "We are unable to link your classroom organization to Google Classroom "\
+          "because a roster already exists. Please delete your current roster and try again."
+    end
+
     def fetch_all_google_classrooms
       next_page = nil
       courses = []
       loop do
-        response = @google_classroom_service.list_courses(page_size: 20, page_token: next_page)
+        response = @google_classroom_service.list_courses(course_states: "ACTIVE", page_size: 20, page_token: next_page)
 
         courses.push(*response.courses)
 
