@@ -27,7 +27,7 @@ class LtiConfiguration < ApplicationRecord
 
   # TODO: this method is more or less entirely unnecessary (and doesn't belong here, really).
   # Remove it when possible.
-  def context_membership_url(use_cache: true, nonce: nil)
+  def context_membership_url(use_cache: true)
     cached_value = self[:context_membership_url] if use_cache
     return cached_value if cached_value
 
@@ -51,6 +51,7 @@ class LtiConfiguration < ApplicationRecord
   end
 
   def launch_message
+    return nil unless cached_launch_message_nonce
     message_store = GitHubClassroom.lti_message_store(consumer_key: consumer_key)
     message_store.get_message(cached_launch_message_nonce)
   end

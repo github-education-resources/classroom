@@ -28,6 +28,48 @@ RSpec.describe LtiConfiguration, type: :model do
     it { should belong_to(:organization) }
   end
 
+  describe "cached_launch_message_nonce=" do
+    before(:each) do
+      GitHubClassroom::LTI::MessageStore.any_instance.stub(:delete_message).and_return(nil)
+    end
+
+    it "removes the old corresponding message from LTI::MessageStore on set" do
+      expect_any_instance_of(GitHubClassroom::LTI::MessageStore)
+        .to receive(:delete_message)
+        .with(lti_configuration.cached_launch_message_nonce)
+
+      lti_configuration.cached_launch_message_nonce = Faker::Code.isbn
+    end
+  end
+
+  describe "launch_message" do
+    context "with cached_launch_message_nonce" do
+      it "fetches the corresponding message from LTI::MessageStore" do
+        expect_any_instance_of(GitHubClassroom::LTI::MessageStore)
+          .to receive(:get_message)
+          .with(lti_configuration.cached_launch_message_nonce)
+
+        lti_configuration.launch_message
+      end
+    end
+
+    context "without cached_launch_message_nonce" do
+      before(:each) do
+        lti_configuration.cached_launch_message_nonce = nil
+        lti_configuration.save!
+      end
+
+      it "returns nil before calling out to LTI::MessageStore" do
+        expect(GitHubClassroom.lti_message_store(lti_configuration: lti_configuration))
+          .not_to receive(:get_message)
+          .with(lti_configuration.cached_launch_message_nonce)
+
+        expect(lti_configuration.launch_message).to be_nil
+      end
+    end
+  end
+
+  # TODO: literally all of this can be removed (after a little more untangling)
   describe "context_membership_url" do
     context "with cached value" do
       let(:cached_url) { "www.example.com" }
@@ -46,6 +88,11 @@ RSpec.describe LtiConfiguration, type: :model do
 
     context "without cached value" do
       context "with no nonce" do
+        before(:each) do
+          lti_configuration.cached_launch_message_nonce = nil
+          lti_configuration.save!
+        end
+
         it "returns nil" do
           expect(lti_configuration.context_membership_url).to be_nil
         end
@@ -76,6 +123,9 @@ RSpec.describe LtiConfiguration, type: :model do
           GitHubClassroom
             .lti_message_store(consumer_key: lti_configuration.consumer_key)
             .save_message(lti_launch_message)
+
+          lti_configuration.cached_launch_message_nonce = nonce
+          lti_configuration.save!
         end
 
         after(:each) do
@@ -83,13 +133,6 @@ RSpec.describe LtiConfiguration, type: :model do
         end
 
         it "returns the url corresponding to the nonce" do
-          expect(lti_configuration.context_membership_url(nonce: nonce)).to eq(uncached_membership_url)
-        end
-
-        it "persists the url to the model" do
-          expect(lti_configuration.context_membership_url).to be_nil
-          lti_configuration.context_membership_url(nonce: nonce)
-          lti_configuration.reload
           expect(lti_configuration.context_membership_url).to eq(uncached_membership_url)
         end
 
