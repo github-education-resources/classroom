@@ -220,8 +220,8 @@ RSpec.describe OrganizationsController, type: :controller do
       get :search, params: { id: organization.slug, sort_by: "Oldest first" }, xhr: true
       expect(response.status).to eq(200)
 
-      actual = assigns(:organizations).pluck(:created_at)
-      expected = user.organizations.sort_by(&:created_at).pluck(:created_at)
+      actual = assigns(:organizations).pluck(:id)
+      expected = user.organizations.sort_by(&:created_at).pluck(:id)
       expect(actual).to eql(expected)
     end
 
@@ -229,8 +229,8 @@ RSpec.describe OrganizationsController, type: :controller do
       get :search, params: { id: organization.slug, sort_by: "Newest first" }, xhr: true
       expect(response.status).to eq(200)
 
-      actual = assigns(:organizations).pluck(:created_at)
-      expected = user.organizations.sort_by(&:created_at).reverse.pluck(:created_at)
+      actual = assigns(:organizations).pluck(:id)
+      expected = user.organizations.sort_by(&:created_at).reverse.pluck(:id)
       expect(actual).to eql(expected)
     end
   end
