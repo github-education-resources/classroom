@@ -4,6 +4,9 @@ class GroupAssignmentInvitation < ApplicationRecord
   include ShortKey
   include StafftoolsSearchable
 
+  INVITATIONS_DISABLED = "Invitations for this assignment have been disabled."
+  INVITATIONS_DISABLED_ARCHIVED = "Invitations for this assignment are disabled because the classroom is archived."
+
   define_pg_search(columns: %i[id key])
 
   default_scope { where(deleted_at: nil) }
@@ -28,7 +31,7 @@ class GroupAssignmentInvitation < ApplicationRecord
   delegate :title, to: :group_assignment
 
   def redeem_for(invitee, selected_group = nil, new_group_title = nil)
-    return Result.failed("Invitations for this assignment have been disabled.") unless enabled?
+    return reason_for_disabled_invitations unless enabled?
 
     repo_access = RepoAccess.find_or_create_by!(user: invitee, organization: organization)
     group_creator_result = group(repo_access, selected_group, new_group_title)
@@ -45,7 +48,7 @@ class GroupAssignmentInvitation < ApplicationRecord
   end
 
   def enabled?
-    group_assignment.invitations_enabled?
+    group_assignment.invitations_enabled? && !group_assignment.organization.archived?
   end
 
   def status(group)
@@ -83,5 +86,10 @@ class GroupAssignmentInvitation < ApplicationRecord
     else
       Result.pending
     end
+  end
+
+  def reason_for_disabled_invitations
+    return Result.failed(INVITATIONS_DISABLED) unless group_assignment.invitations_enabled?
+    return Result.failed(INVITATIONS_DISABLED_ARCHIVED) if group_assignment.organization.archived?
   end
 end
