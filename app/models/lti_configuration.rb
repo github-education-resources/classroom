@@ -43,6 +43,13 @@ class LtiConfiguration < ApplicationRecord
     membership_url
   end
 
+  def cached_launch_message_nonce=(value)
+    message_store = GitHubClassroom.lti_message_store(consumer_key: consumer_key)
+    message_store.delete_message(cached_launch_message_nonce)
+
+    super(value)
+  end
+
   def launch_message
     message_store = GitHubClassroom.lti_message_store(consumer_key: consumer_key)
     message_store.get_message(cached_launch_message_nonce)
