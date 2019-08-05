@@ -6,7 +6,7 @@ class GroupAssignmentRepo
     DEFAULT_ERROR_MESSAGE                   = "Group assignment could not be created, please try again."
     REPOSITORY_CREATION_FAILED              = "GitHub repository could not be created, please try again."
     REPOSITORY_STARTER_CODE_IMPORT_FAILED   = "We were not able to import you the starter code to your group assignment, please try again." # rubocop:disable LineLength
-    REPOSITORY_TEAM_ADDITION_FAILED         = "We were not able to add the team to the repository, please try again." # rubocop:disable LineLength
+    REPOSITORY_TEAM_ADDITION_FAILED         = "We were not able to add the team to the repository, please try again."
     REPOSITORY_CREATION_COMPLETE            = "Your GitHub repository was created."
     TEMPLATE_REPOSITORY_CREATION_FAILED     = "GitHub repository could not be created from template, please try again."
     IMPORT_ONGOING                          = "Your GitHub repository is importing starter code."
@@ -109,14 +109,18 @@ class GroupAssignmentRepo
       GitHubClassroom.statsd.increment("group_exercise_repo.create.repo.with_templates.started")
       repository_name = generate_github_repository_name
       template_repo_id = group_assignment.starter_code_repo_id
-      options = {
-        private: group_assignment.private?,
-        description: "#{repository_name} created by GitHub Classroom"
-      }
+      options = repo_from_template_options(repository_name)
 
       organization.github_organization.create_repository_from_template(template_repo_id, repository_name, options)
     rescue GitHub::Error => error
-      Failbot.report!(error)
+      Failbot.report!(
+        error,
+        organization: organization.id,
+        starter_code_repo_id: template_repo_id,
+        github_team_id: group.github_team_id,
+        new_repo_name: repository_name,
+        params: options
+      )
       GitHubClassroom.statsd.increment("group_exercise_repo.create.repo.with_templates.failed")
       raise Result::Error.new TEMPLATE_REPOSITORY_CREATION_FAILED, error.message
     end
@@ -181,6 +185,15 @@ class GroupAssignmentRepo
     def repository_permissions
       {
         permission: group_assignment.students_are_repo_admins? ? "admin" : "push"
+      }
+    end
+
+    def repo_from_template_options(repository_name)
+      {
+        private: group_assignment.private?,
+        description: "#{repository_name} created by GitHub Classroom",
+        owner: organization.github_organization.login,
+        include_all_branches: true
       }
     end
 

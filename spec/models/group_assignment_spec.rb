@@ -280,4 +280,24 @@ RSpec.describe GroupAssignment, type: :model do
       end
     end
   end
+
+  describe "validation methods that call API" do
+    let(:organization) { classroom_org }
+
+    context "validation methods for starter code repo" do
+      let(:group_assignment) { create(:group_assignment, organization: organization, title: "Group Assignment 3") }
+
+      it "runs validation method if starter_code_repo_id is changed" do
+        expect(group_assignment).to receive(:starter_code_repository_not_empty)
+        expect(group_assignment).to receive(:starter_code_repository_is_template)
+        group_assignment.update(starter_code_repo_id: 1_062_897)
+      end
+
+      it "does not run validation method if starter_code_repo_id is unchanged" do
+        expect(group_assignment).not_to receive(:starter_code_repository_not_empty)
+        expect(group_assignment).not_to receive(:starter_code_repository_is_template)
+        group_assignment.update(title: "Group Assignment 4")
+      end
+    end
+  end
 end

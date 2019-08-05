@@ -34,17 +34,13 @@
             <% elsif google_classroom_roster_import_enabled? && current_organization.google_course_id %>
               You are currently connected to Google Classroom.
             <% else lti_launch_enabled? || google_classroom_roster_import_enabled? %>
-              <p>You are currently not connected to a Learning Management System. Connect to this Classroom via</p>
-              <%= link_to "Google Classroom",
-                google_classrooms_index_organization_path,
+              <p>You are currently not connected to a Learning Management System. Integrating GitHub Classroom
+              with your institution will unlock new capabilities and enhance your experience.</p>
+              <%= link_to "Connect to a Learning Management System",
+                link_lms_organization_path(current_organization),
                 class: "btn btn-sm btn-secondary d-inline-flex flex-items-center mb-2 mr-1"
               %>
-              <% LtiConfiguration.lms_types.each_pair do |lms_type, lms_name| %>
-              <% lms_name = "Another LMS" if lms_type == "other" %>
-              <%= link_to lms_name, info_lti_configuration_path(current_organization, lms_type: lms_type),
-                class: "btn btn-sm btn-secondary d-inline-flex flex-items-center mb-2 mr-1"
-              %>
-              <% end %>
+              <%= link_to "Learn more", help_path(article_name: "connect-to-lms") %>
             <% end %>
           </div>
         </div>
@@ -57,6 +53,18 @@
 
         <div class="Box-body">
           <ul>
+            <% if classroom_visibility_enabled? %>
+              <li class="Box-row">
+                <div class="details-reset details-overlay">
+                  <a data-remodal-target="organization-visibility-private" class="btn btn-danger boxed-action"><%= t('views.organizations.private') %>
+                  </a>
+                  <a data-remodal-target="organization-visibility-public" class="btn btn-danger boxed-action"><%= t('views.organizations.public') %>
+                  </a>
+                </div>
+                <strong class="text-gray"><%= t('views.organizations.visibility_title') %></strong>
+                <p class="text-gray"><%= t('views.organizations.visibility_description') %></p>
+              </li>
+            <% end %>
             <% if current_organization.google_course_id %>
               <li class="Box-row">
                 <div class="details-reset details-overlay">
@@ -79,10 +87,7 @@
                   <p class="text-gray"><%= t('views.organizations.unarchive_description') %></p>
                 <% else %>
                   <div class="details-reset details-overlay">
-                    <%= form_for current_organization do |f| %>
-                      <%= f.hidden_field :archived, value: true %>
-                      <%= f.submit t('views.organizations.archive_submit'), class: "btn btn-danger boxed-action" %>
-                    <% end %>
+                    <a data-remodal-target="archive" class="btn btn-danger boxed-action"><%= t('views.organizations.archive_submit') %></a>
                   </div>
                   <strong class="text-gray"><%= t('views.organizations.archive_title') %></strong>
                   <p class="text-gray"><%= t('views.organizations.archive_description') %></p>
@@ -105,4 +110,7 @@
   </div>
 
   <%= render partial: 'organizations/reset_and_remove_organization_modal' %>
+  <%= render partial: 'organizations/organization_visibility_private_modal' %>
+  <%= render partial: 'organizations/organization_visibility_public_modal' %>
+  <%= render partial: 'organizations/archive_modal' %>
 </div>
