@@ -79,10 +79,16 @@ class Roster
     private
 
     def add_identifiers_to_roster(raw_identifiers_string, google_ids: [])
-      identifiers = raw_identifiers_string.split("\r\n").reject(&:blank?).uniq
+      identifiers = raw_identifiers_string.split("\r\n").reject(&:blank?)
 
       identifiers.zip(google_ids).each do |identifier, google_user_id|
-        @roster.roster_entries << RosterEntry.new(identifier: identifier, google_user_id: google_user_id)
+        identifier = identifier.strip
+        duplicates_found = @roster.roster_entries.select { |entry| entry.identifier = identifier || entry.identifier.start_with(identifier+"-")}
+        binding.pry
+        if duplicates_found.count > 0
+          identifier = identifier + "-" + duplicates_found.count.to_s
+        end
+        @roster.roster_entries << RosterEntry.new(roster: @roster, identifier: identifier, google_user_id: google_user_id)
       end
     end
 

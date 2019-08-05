@@ -104,12 +104,11 @@ class RosterEntry < ApplicationRecord
     created_entries = []
     RosterEntry.transaction do
       identifiers.zip(google_user_ids).each do |identifier, google_user_id|
-        identifier.strip
-        duplicates_found = RosterEntry.where(roster: roster, identifier: identifier).count + RosterEntry.where("roster_id = ? and identifier LIKE ?", roster.id, identifier+"-").count
+        duplicates_found = RosterEntry.where(roster: roster, identifier: identifier).count +
+          RosterEntry.where("roster_id = ? and identifier LIKE ?", roster.id, "#{identifier}-%").count
         identifier = identifier + "-" + duplicates_found.to_s if duplicates_found > 0
 
         roster_entry = RosterEntry.create(identifier: identifier, roster: roster, google_user_id: google_user_id)
-
         if !roster_entry.persisted?
           raise IdentifierCreationError unless roster_entry.errors.include?(:identifier)
         else
@@ -120,5 +119,4 @@ class RosterEntry < ApplicationRecord
 
     created_entries
   end
-  # rubocop:enable Metrics/MethodLength
 end
