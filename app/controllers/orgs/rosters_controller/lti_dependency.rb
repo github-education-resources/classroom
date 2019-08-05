@@ -37,7 +37,7 @@ module Orgs
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/AbcSize
     def lms_membership
-      membership_service_url = current_organization.lti_configuration.context_membership_url(nonce: session[:lti_nonce])
+      membership_service_url = current_organization.lti_configuration.context_membership_url
       unless membership_service_url
         lms_name = current_organization.lti_configuration.lms_name(default_name: "your Learning Management System")
         msg = "GitHub Classroom is not configured properly on #{lms_name}.
