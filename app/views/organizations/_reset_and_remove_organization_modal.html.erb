@@ -9,9 +9,9 @@
   <div class="remodal-description">
     <p>
       <% if multiple_classrooms_per_org_enabled? %>
-        <%= t('views.organizations.delete_classroom_consequences_html', organization: sanitize(current_organization.github_organization.login)) %>
+        <%= t('views.organizations.delete_classroom_consequences_html', organization: sanitize(current_organization.github_organization.login), classroom_title: current_organization.title) %>
       <% else %>
-        <%= t('views.organizations.delete_org_consequences_html', organization: sanitize(current_organization.github_organization.login)) %>
+        <%= t('views.organizations.delete_org_consequences_html', organization: sanitize(current_organization.github_organization.login), classroom_title: current_organization.title) %>
       <% end %>
     </p>
   </div>
