@@ -1,40 +1,30 @@
-## Integrating with a Learning Management System
+## Integrating with a learning management system
 
-GitHub Classroom is continuously adding support for integrating with your institution's Learning Management System (LMS)!
-Connecting GitHub Classroom to a Learning Management System will unlock new capabilities that will streamline and enhance
-the same workflow your used to on GitHub Classroom, such as:
+GitHub Classroom integrates with your institution's learning management system (LMS), such as Brightspace, Canvas, Moodle, and others. Classroom supports:
 
-- Automatic roster provisioning
+- Roster provisioning
 - Assignment creation (Planned)
 - Submission syncing (Planned)
 
-### Supported Learning Management Systems
+Classroom works with any LMS that uses the Learning Tools Interoperability (LTI) standard. LTI is an industry-standard protocol certified by the Instructional Management System Global Learning Consortium. Using LTI keeps your information safe and secure.
 
-GitHub Classroom integrates with your Learning Management via the industry-standard LTI protocol and is certified by the
-Instructional Management System Global Learning Consortium, so you can be confident your information is safe and secure. Any
-Learning Management System which is compliant with the LTI standard is compatible with GitHub Classroom, such as
-Brightspace, Canvas, Moodle, and many more!
-
-Note: Blackboard does not currently support automatically importing a course roster. We are working to support Blackboard in the near future!
+**Note**: Blackboard does not currently support automatically importing a course roster. We are working to support Blackboard in the near future!
 {: class="warning"}
 
-### Setup Guide
+### Setup guide
 
-This support guide will walk your through the process of linking GitHub Classroom and your Learning Management System, from
-start to finish.
+This guide will walk you through linking GitHub Classroom and your LMS.
 
-#### Part One: Generating your Configuration Credentials
+#### Part 1: Generate your configuration credentials
 
-First, we must generate the necessary credentials on GitHub Classroom to configure it on your Learning Management System.
-The steps for this portion are the same regardless of which Learning Management System you use.
+To connect your LMS to GitHub Classroom, you need credentials from GitHub Classroom. The steps for this are the same for all learning management systems:
 
-[Generating your Configuration Credentials on GitHub Classroom](/help/generate-lms-credentials)
+[Generating your configuration credentials on GitHub Classroom](/help/generate-lms-credentials)
 
-#### Part Two: Connecting GitHub Classroom to your Learning Management System
+#### Part 2: Connect GitHub Classroom to your LMS
 
-Second, with the generated credentials in hand, we configure GitHub Classroom from within your Learning Management System.
-We've created distinct guides for each platform to make the process easier, but any  LTI-compliant Learning Management System should be compatible.
+From within your LMS, connect to GitHub Classroom. Follow the guide for your LMS:
 
-- [Configuring GitHub Classroom within Canvas](/help/setup-canvas)
-- [Configuring GitHub Classroom within Moodle](/help/setup-moodle)
-- [Configuring GitHub Classroom within another Learning Management System](/help/setup-generic-lms)
+- [Configuring Canvas for GitHub Classroom](/help/setup-canvas)
+- [Configuring Moodle for GitHub Classroom](/help/setup-moodle)
+- [Configuring another learning management system for GitHub Classroom](/help/setup-generic-lms)
