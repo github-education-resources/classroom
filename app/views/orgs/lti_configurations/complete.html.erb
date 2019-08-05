@@ -15,6 +15,7 @@
       <%= link_to organization_path(current_organization), class: 'btn btn-large btn-primary f3 mt-3', role: 'button' do %>
         Continue to Assignments
       <% end %>
+      Roster Import Service: <%= current_lti_configuration.supports_membership_service? %>
     </div>
 
     <div class="protip">

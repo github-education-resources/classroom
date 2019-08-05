@@ -68,7 +68,10 @@ module Orgs
       render xml: xml_configuration, status: :ok
     end
 
-    def complete; end
+    def complete
+      current_lti_configuration.cached_launch_message_nonce = session[:lti_nonce]
+      current_lti_configuration.save!
+    end
 
     private
 
