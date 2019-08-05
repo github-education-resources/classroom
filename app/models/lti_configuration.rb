@@ -11,7 +11,6 @@ class LtiConfiguration < ApplicationRecord
 
   enum lms_type: {
     canvas: "Canvas",
-    blackboard: "Blackboard",
     brightspace: "Brightspace",
     moodle: "Moodle",
     other: "other"
