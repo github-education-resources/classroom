@@ -85,6 +85,17 @@ RSpec.describe AssignmentInvitation, type: :model do
 
       result = invitation.redeem_for(student)
       expect(result.success?).to be_falsey
+      expect(result.error).to eql(AssignmentInvitation::INVITATIONS_DISABLED)
+    end
+
+    it "fails if the classroom is archived" do
+      assignment = invitation.assignment
+      expect(assignment.organization).to receive(:archived?).at_least(1).times.and_return true
+      expect(assignment.organization.archived?).to be true
+
+      result = invitation.redeem_for(student)
+      expect(result.success?).to be_falsey
+      expect(result.error).to eql(AssignmentInvitation::INVITATIONS_DISABLED_ARCHIVED)
     end
   end
 
