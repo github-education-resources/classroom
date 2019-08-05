@@ -6,14 +6,19 @@ class LtiConfiguration < ApplicationRecord
   validates :lms_type, presence: true
 
   delegate :icon, to: :lms_settings, prefix: :lms
+  delegate :lti_version, to: :lms_settings
   delegate :supports_autoconfiguration?, to: :lms_settings
   delegate :supports_membership_service?, to: :lms_settings
+
+  delegate :context_membership_url, to: :lms_settings
+  delegate :context_membership_body_params, to: :lms_settings
 
   enum lms_type: {
     canvas: "Canvas",
     blackboard: "Blackboard",
     brightspace: "Brightspace",
     moodle: "Moodle",
+    sakai: "Sakai",
     other: "other"
   }, _prefix: true
 
@@ -62,10 +67,10 @@ class LtiConfiguration < ApplicationRecord
   private
 
   def lms_settings
-    return LtiConfiguration::GenericSettings.new if lms_type.blank?
-    return LtiConfiguration::GenericSettings.new if lms_type_other?
+    return LtiConfiguration::GenericSettings.new(launch_message) if lms_type.blank?
+    return LtiConfiguration::GenericSettings.new(launch_message) if lms_type_other?
 
     klass = "LtiConfiguration::#{lms_type.capitalize}Settings"
-    klass.constantize.new
+    klass.constantize.new(launch_message)
   end
 end
