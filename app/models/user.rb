@@ -64,6 +64,17 @@ class User < ApplicationRecord
     MessageVerifier.encode({ user_id: id }, exp)
   end
 
+  def running_bulk_api_job?
+    redis = GitHubClassroom.redis
+    existing_api_job = redis.get("user_api_job:#{id}")&.to_datetime
+    existing_api_job && existing_api_job.future?
+  end
+
+  def bulk_api_job
+    redis = GitHubClassroom.redis
+    redis.get("user_api_job:#{id}")&.to_datetime
+  end
+
   private
 
   # Internal: We need to make sure that the user
