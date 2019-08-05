@@ -12,12 +12,12 @@ module Orgs
 
     # rubocop:disable Metrics/MethodLength
     def import_from_lms
-      students = lms_membership.map(&:member)
+      students = lms_membership
       @identifiers = {
         "User IDs": students.map(&:user_id),
         "Names": students.map(&:name),
         "Emails": students.map(&:email)
-      }
+      }.select { |k,v| v.any? }
 
       GitHubClassroom.statsd.increment("lti_configuration.import")
 
@@ -37,7 +37,7 @@ module Orgs
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/AbcSize
     def lms_membership
-      membership_service_url = current_organization.lti_configuration.context_membership_url(nonce: session[:lti_nonce])
+      membership_service_url = current_organization.lti_configuration.context_membership_url
       unless membership_service_url
         lms_name = current_organization.lti_configuration.lms_name(default_name: "your Learning Management System")
         msg = "GitHub Classroom is not configured properly on #{lms_name}.
@@ -49,11 +49,13 @@ module Orgs
       membership_service = GitHubClassroom::LTI::MembershipService.new(
         membership_service_url,
         current_organization.lti_configuration.consumer_key,
-        current_organization.lti_configuration.shared_secret
+        current_organization.lti_configuration.shared_secret,
+        lti_version: current_organization.lti_configuration.lti_version
       )
+      #byebug
 
       begin
-        membership_service.students
+        membership_service.students(body_params: current_organization.lti_configuration.context_membership_body_params)
       rescue Faraday::ClientError, JSON::ParserError
         lms_name = current_organization.lti_configuration.lms_name(default_name: "your Learning Management System")
         msg = "GitHub Classroom is unable to fetch membership from #{lms_name} at this time.
