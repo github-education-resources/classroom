@@ -25,12 +25,13 @@ class LtiConfiguration < ApplicationRecord
     lms_settings.platform_name || default_name
   end
 
+  # TODO: this method is more or less entirely unnecessary (and doesn't belong here, really).
+  # Remove it when possible.
   def context_membership_url(use_cache: true, nonce: nil)
     cached_value = self[:context_membership_url] if use_cache
     return cached_value if cached_value
 
-    message_store = GitHubClassroom.lti_message_store(consumer_key: consumer_key)
-    message = message_store.get_message(nonce)
+    message = launch_message
     return nil unless message
 
     membership_url = message.custom_params[lms_settings.context_memberships_url_key]
@@ -40,6 +41,11 @@ class LtiConfiguration < ApplicationRecord
     save!
 
     membership_url
+  end
+
+  def launch_message
+    message_store = GitHubClassroom.lti_message_store(consumer_key: consumer_key)
+    message_store.get_message(cached_launch_message_nonce)
   end
 
   def xml_configuration(launch_url)
