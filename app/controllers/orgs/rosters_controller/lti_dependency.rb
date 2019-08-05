@@ -12,12 +12,12 @@ module Orgs
 
     # rubocop:disable Metrics/MethodLength
     def import_from_lms
-      students = lms_membership.map(&:member)
+      students = lms_membership
       @identifiers = {
         "User IDs": students.map(&:user_id),
         "Names": students.map(&:name),
         "Emails": students.map(&:email)
-      }
+      }.select { |k,v| v.any? }
 
       GitHubClassroom.statsd.increment("lti_configuration.import")
 
