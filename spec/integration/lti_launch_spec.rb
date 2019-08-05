@@ -70,10 +70,16 @@ RSpec.describe "LTI launch", type: :request do
       expect(session[:lti_nonce]).to eql("mock_nonce")
     end
 
+    it "renders lti_launch template" do
+      get auth_lti_launch_path(oauth_consumer_key: consumer_key)
+      expect(response).to have_http_status(:ok)
+      expect(response).to render_template(:lti_launch)
+    end
+
     context "unauthenticated request" do
-      it "redirects to sessions#new" do
+      it "post_launch_url is set to sessions#new" do
         get auth_lti_launch_path(oauth_consumer_key: consumer_key)
-        expect(response).to redirect_to(login_path) # /login
+        expect(assigns[:post_launch_url]).to eq(login_url) # /login
       end
     end
 
@@ -85,9 +91,9 @@ RSpec.describe "LTI launch", type: :request do
         get response.redirect_url # /auth/github/callback
       end
 
-      it "redirects to lms success page" do
+      it "post_launch_url is set to LtiConfigurations#complete" do
         get auth_lti_launch_path(oauth_consumer_key: consumer_key)
-        expect(response).to redirect_to(complete_lti_configuration_path(id: organization.slug))
+        expect(assigns[:post_launch_url]).to eq(complete_lti_configuration_url(id: organization.slug))
       end
     end
   end
