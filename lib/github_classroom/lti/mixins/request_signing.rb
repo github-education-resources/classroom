@@ -18,16 +18,12 @@ module GitHubClassroom
             opts
           end)
 
-          byebug
-
           req = build_http_request(endpoint, opts[:method], opts[:headers], opts[:query], opts[:body])
           sign_request!(req, @consumer_key, @secret, lti_version: opts[:lti_version])
-
           req
         end
 
         def send_request(req)
-          byebug
           request_headers = {}
           req.each_header { |header, value| request_headers[header] = value }
 
@@ -63,6 +59,8 @@ module GitHubClassroom
 
         def sign_request!(req, consumer_key, secret, lti_version: 1.1)
           http = Net::HTTP.new(req.uri.host, req.uri.port)
+          http.use_ssl = (req.uri.instance_of? URI::HTTPS)
+
           consumer = OAuth::Consumer.new(consumer_key, secret)
           if lti_version == 1.1
             # Necessary to override because LTI 1.1 expects a body hash
