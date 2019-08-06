@@ -5,6 +5,7 @@ class RosterEntry < ApplicationRecord
 
   include Sortable
   include Searchable
+  include DuplicateRosterEntries
 
   belongs_to :roster
   belongs_to :user, optional: true
@@ -103,14 +104,11 @@ class RosterEntry < ApplicationRecord
   def self.create_entries(identifiers:, roster:, google_user_ids: [])
     created_entries = []
     RosterEntry.transaction do
+      identifiers = self.add_suffix_to_duplicates(
+        identifiers: identifiers, roster_entries: RosterEntry.where(roster: roster).pluck(:identifier)
+      )
+
       identifiers.zip(google_user_ids).each do |identifier, google_user_id|
-        identifier = identifier.strip
-        duplicates_found = RosterEntry.where(
-          "roster_id = ? and (identifier LIKE ? or identifier = ?)", roster.id, "#{identifier}-%", identifier
-        ).count
-
-        identifier = identifier + "-" + duplicates_found.to_s if duplicates_found.positive?
-
         roster_entry = RosterEntry.create(identifier: identifier, roster: roster, google_user_id: google_user_id)
 
         if !roster_entry.persisted?

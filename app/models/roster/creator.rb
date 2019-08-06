@@ -32,6 +32,8 @@ class Roster
 
     DEFAULT_IDENTIFIER_NAME = "Identifiers"
 
+    include DuplicateRosterEntries
+
     # Public: Create a Roster for an Organiation.
     #
     # organization    - The Organization the Roster will belong to.
@@ -79,26 +81,13 @@ class Roster
 
     def add_identifiers_to_roster(raw_identifiers_string, google_ids: [])
       identifiers = raw_identifiers_string.split("\r\n").reject(&:blank?)
+      identifiers = Roster.add_suffix_to_duplicates(identifiers: identifiers)
 
       identifiers.zip(google_ids).each do |identifier, google_user_id|
-        identifier = check_for_duplicates(@roster.roster_entries, identifier)
-
         @roster.roster_entries << RosterEntry.new(
           roster: @roster, identifier: identifier, google_user_id: google_user_id
         )
-        @roster.save!
       end
-    end
-
-    def check_for_duplicates(roster_entries, identifier)
-      identifier = identifier.strip
-
-      duplicates_found = roster_entries.select do |entry|
-        entry.identifier == identifier || entry.identifier.start_with?("#{identifier}-")
-      end
-
-      identifier = identifier + "-" + duplicates_found.count.to_s if duplicates_found.any?
-      identifier
     end
 
     def ensure_organization_does_not_have_roster!
