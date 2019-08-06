@@ -17,21 +17,24 @@ class BulkApiJob < ApplicationJob
 
   queue_as :bulk_api_job
 
-  rescue_from(GitHub::Forbidden, Error::JobAlreadyRunning) do
-    user = arguments.first
+  rescue_from(GitHub::Forbidden) do
     retries = arguments.last[:retries] if arguments.last.is_a? Hash
     arguments.last[:retries] -= 1 if retries
-    api_wait_time = user.bulk_api_job
 
-    self.class.set(wait_until: api_wait_time).perform_later(*arguments) if retries && retries.positive?
+    self.class.perform_later(*arguments) if retries && retries.positive?
   end
 
-  before_perform do |job|
+  before_enqueue do |job|
     user = job.arguments.first
-
     raise Error::MissingUser unless user.is_a? User
-    raise Error::JobAlreadyRunning if user.running_bulk_api_job?
+    cooldown = user.bulk_api_job_cooldown
 
-    GitHubClassroom.redis.set("user_api_job:#{user.id}", (Time.zone.now + 1.hour).to_datetime)
+    if cooldown.nil? || Time.zone.now > cooldown
+      job.scheduled_at = Time.zone.now
+      GitHubClassroom.redis.set("user_api_job:#{user.id}", (Time.zone.now + 1.hour).to_datetime)
+    else
+      job.scheduled_at = cooldown.to_i
+      GitHubClassroom.redis.set("user_api_job:#{user.id}", (cooldown + 1.hour).to_datetime)
+    end
   end
 end

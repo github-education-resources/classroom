@@ -24,15 +24,27 @@ RSpec.describe BulkApiJob, type: :job do
     Timecop.return
   end
 
-  context "successful execution" do
-    it "does not raise an error" do
-      expect { subject.perform_now(teacher, _) }.to_not raise_error
+  describe "successful execution" do
+    context "cooldown does not exist" do
+      it "succeeds" do
+        expect { subject.perform_later(teacher, _) }.to_not raise_error
+      end
+    end
+
+    context "cooldown is in the past" do
+      before(:each) do
+        redis.set("user_api_job:#{teacher.id}", (Time.zone.now - 2.hours).to_datetime)
+      end
+
+      it "succeeds" do
+        expect { subject.perform_later(teacher, _) }.to_not raise_error
+      end
     end
   end
 
   context "user performing the job is not the first argument" do
     it "raises an exception" do
-      expect { subject.perform_now(_, teacher) }.to raise_error(BulkApiJob::Error::MissingUser)
+      expect { subject.perform_later(_, teacher) }.to raise_error(BulkApiJob::Error::MissingUser)
     end
   end
 
@@ -42,17 +54,19 @@ RSpec.describe BulkApiJob, type: :job do
     end
 
     # rubocop:disable Rails/TimeZone
-    it "enqueues the retry for one hour later" do
-      expect { subject.perform_now(teacher, _, retries: 1) }
+    it "perform_later will schedule the job to execute sequentially after the cooldown" do
+      expect { subject.perform_later(teacher, _, retries: 1) }
         .to have_enqueued_job(FakeBulkApiJob)
-        .on_queue("bulk_api_job")
         .at(Time.at((Time.now + 1.hour).to_i))
+      expect { subject.perform_later(teacher, _, retries: 1) }
+        .to have_enqueued_job(FakeBulkApiJob)
+        .at(Time.at((Time.now + 2.hours).to_i))
     end
   end
 
   context "failure by rate limit or job already running" do
     before(:each) do
-      allow_any_instance_of(subject).to receive(:perform).and_raise(BulkApiJob::Error::JobAlreadyRunning)
+      allow_any_instance_of(subject).to receive(:perform).and_raise(GitHub::Forbidden)
     end
 
     it "does not retry if retries not passed" do

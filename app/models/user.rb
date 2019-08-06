@@ -70,7 +70,7 @@ class User < ApplicationRecord
     existing_api_job && existing_api_job.future?
   end
 
-  def bulk_api_job
+  def bulk_api_job_cooldown
     redis = GitHubClassroom.redis
     redis.get("user_api_job:#{id}")&.to_datetime
   end
