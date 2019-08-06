@@ -18,13 +18,13 @@
 <% end %>
 
 <div class='assignment-repo-list' id='assignment-repo-list'>
-    <%= render partial: 'assignments/assignment_roster_list', locals: {
-      organization: @organization,
-      assignment: @assignment,
-      list_type: @list_type,
-      roster_entries: @roster_entries,
-      assignment_repos: @assignment_repos,
-    } %>
+  <%= render partial: 'assignments/assignment_roster_list', locals: {
+    organization: @organization,
+    assignment: @assignment,
+    list_type: @list_type,
+    roster_entries: @roster_entries,
+    assignment_repos: @assignment_repos,
+  } %>
 </div>
 
 <div id='assignment-repo-pagination'>
