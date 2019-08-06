@@ -99,16 +99,20 @@ class RosterEntry < ApplicationRecord
   #
   # Returns the created entries.
 
-  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
   def self.create_entries(identifiers:, roster:, google_user_ids: [])
     created_entries = []
     RosterEntry.transaction do
       identifiers.zip(google_user_ids).each do |identifier, google_user_id|
-        duplicates_found = RosterEntry.where(roster: roster, identifier: identifier).count +
-          RosterEntry.where("roster_id = ? and identifier LIKE ?", roster.id, "#{identifier}-%").count
-        identifier = identifier + "-" + duplicates_found.to_s if duplicates_found > 0
+        identifier = identifier.strip
+        duplicates_found = RosterEntry.where(
+          "roster_id = ? and (identifier LIKE ? or identifier = ?)", roster.id, "#{identifier}-%", identifier
+        ).count
+
+        identifier = identifier + "-" + duplicates_found.to_s if duplicates_found.positive?
 
         roster_entry = RosterEntry.create(identifier: identifier, roster: roster, google_user_id: google_user_id)
+
         if !roster_entry.persisted?
           raise IdentifierCreationError unless roster_entry.errors.include?(:identifier)
         else
@@ -119,4 +123,5 @@ class RosterEntry < ApplicationRecord
 
     created_entries
   end
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 end

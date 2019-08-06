@@ -66,7 +66,6 @@ class Roster
         google_ids = @options[:google_user_ids] || []
         add_identifiers_to_roster(@options[:identifiers], google_ids: google_ids) if @options.key?(:identifiers)
 
-        @roster.save!
         @organization.update_attributes!(roster: @roster)
       end
 
@@ -83,12 +82,14 @@ class Roster
 
       identifiers.zip(google_ids).each do |identifier, google_user_id|
         identifier = identifier.strip
-        duplicates_found = @roster.roster_entries.select { |entry| entry.identifier = identifier || entry.identifier.start_with(identifier+"-")}
-        binding.pry
+        duplicates_found = @roster.roster_entries.select { |entry| entry.identifier = identifier || entry.identifier.start_with(identifier+"-") }
+
         if duplicates_found.count > 0
           identifier = identifier + "-" + duplicates_found.count.to_s
         end
+
         @roster.roster_entries << RosterEntry.new(roster: @roster, identifier: identifier, google_user_id: google_user_id)
+        @roster.save!
       end
     end
 
