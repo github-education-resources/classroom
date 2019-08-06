@@ -84,7 +84,7 @@ class Roster
       identifiers = Roster.add_suffix_to_duplicates(identifiers: identifiers)
 
       identifiers.zip(google_ids).each do |identifier, google_user_id|
-        @roster.roster_entries << RosterEntry.new(roster: @roster, identifier: identifier, google_user_id: google_user_id)
+        @roster.roster_entries << RosterEntry.new(identifier: identifier, google_user_id: google_user_id)
       end
     end
 
