@@ -3,8 +3,9 @@
 require "rails_helper"
 
 RSpec.describe LtiConfiguration::MoodleSettings do
-  let(:settings) { described_class.new }
-  let(:general)  { LtiConfiguration::GenericSettings.new }
+  let(:launch_message) { IMS::LTI::Models::Messages::BasicLTILaunchRequest.new }
+  let(:settings) { described_class.new(launch_message) }
+  let(:general)  { LtiConfiguration::GenericSettings.new(launch_message) }
 
   it "platform_name should be 'Moodle'" do
     expect(settings.platform_name).to eql("Moodle")

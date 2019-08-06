@@ -2,7 +2,6 @@
 
 class LtiConfiguration
   class GenericSettings
-
     delegate :membership_url, to: :membership_settings, prefix: :context
     delegate :membership_body_params, to: :membership_settings, prefix: :context
 
