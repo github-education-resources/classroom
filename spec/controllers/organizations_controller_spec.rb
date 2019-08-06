@@ -157,21 +157,58 @@ RSpec.describe OrganizationsController, type: :controller do
     end
 
     it "finds an organization" do
-      get :search, params: { id: organization.slug, query: "github" }
+      get :search, params: { id: organization.slug, query: "github" }, xhr: true
       expect(response.status).to eq(200)
       expect(assigns(:organizations)).to_not eq([])
     end
 
     it "finds no organization" do
-      get :search, params: { id: organization.slug, query: "testing stuff" }
+      get :search, params: { id: organization.slug, query: "testing stuff" }, xhr: true
       expect(response.status).to eq(200)
       expect(assigns(:organizations)).to eq([])
     end
 
     it "is not case sensitive" do
-      get :search, params: { id: organization.slug, query: "GITHUB" }
+      get :search, params: { id: organization.slug, query: "GITHUB" }, xhr: true
       expect(response.status).to eq(200)
       expect(assigns(:organizations)).to_not eq([])
+    end
+  end
+
+  describe "sort organizations", :vcr do
+    before do
+      organization.created_at = 1.day.ago
+      organization.save!
+
+      user.organizations = [create(:organization, title: "github_class_300"), organization]
+      user.save!
+    end
+
+    it "sorts organizations by name" do
+      get :search, params: { id: organization.slug, sort_by: "Classroom name" }, xhr: true
+      expect(response.status).to eq(200)
+
+      actual = assigns(:organizations).pluck(:title)
+      expected = user.organizations.sort_by(&:title).pluck(:title)
+      expect(actual).to eql(expected)
+    end
+
+    it "sorts organizations by oldest first" do
+      get :search, params: { id: organization.slug, sort_by: "Oldest first" }, xhr: true
+      expect(response.status).to eq(200)
+
+      actual = assigns(:organizations).pluck(:id)
+      expected = user.organizations.sort_by(&:created_at).pluck(:id)
+      expect(actual).to eql(expected)
+    end
+
+    it "sorts organizations by newest first" do
+      get :search, params: { id: organization.slug, sort_by: "Newest first" }, xhr: true
+      expect(response.status).to eq(200)
+
+      actual = assigns(:organizations).pluck(:id)
+      expected = user.organizations.sort_by(&:created_at).reverse.pluck(:id)
+      expect(actual).to eql(expected)
     end
   end
 

@@ -1,31 +1,19 @@
 <% list_type = local_assigns.fetch(:list_type) %>
 
-<div class='TableObject'>
-  <div class='TableObject-item TableObject-item--primary'>
-    <%= form_tag organization_assignment_path, id: 'js-search-form', method: :get, remote: true do %>
-      <% if list_type == :roster_entries %>
-        <% placeholder = 'Search by student identifier' %>
-      <% elsif list_type == :assignment_repos %>
-        <% placeholder = 'Search by GitHub login' %>
-      <% end %>
-      <%= text_field_tag :query, @query, class: 'input-block form-control', placeholder: placeholder, autofocus: true, autocomplete: :off, id: 'repo-search-query-field' %>
-      <%= hidden_field_tag :sort_assignment_repos_by, @current_sort_mode, id: 'sort-mode-field' %>
-    <% end %>
-  </div>
-  <div class='TableObject-item'>
-    <div id="select-menu-container">
-      <%= render partial: 'shared/select_menu',
-            locals: {
-              title: 'Sort assignments by:',
-              options: @assignment_sort_modes.keys,
-              option_links: @assignment_sort_modes_links,
-              selected_option: @current_sort_mode,
-              remote: true
-            }
-      %>
-    </div>
-  </div>
-</div>
+<% placeholder = "Search by GitHub login" %>
+<% if list_type == :roster_entries %>
+  <% placeholder = "Search by student identifier" %>
+<% end%>
+
+<%= render partial: "shared/search_and_sort", locals: {
+  submit_url: organization_assignment_path,
+  select_menu_title: "Sort assignments by:",
+  search_placeholder: placeholder,
+  query: @query,
+  options: @assignment_sort_modes.keys,
+  option_links: @assignment_sort_modes_links,
+  selected_option: @current_sort_mode
+} %>
 
 <div class='assignment-repo-list' id='assignment-repo-list'>
   <%= render partial: 'assignments/assignment_roster_list', locals: {
