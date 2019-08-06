@@ -66,6 +66,7 @@ class Roster
         google_ids = @options[:google_user_ids] || []
         add_identifiers_to_roster(@options[:identifiers], google_ids: google_ids) if @options.key?(:identifiers)
 
+        @roster.save!
         @organization.update_attributes!(roster: @roster)
       end
 
@@ -73,7 +74,6 @@ class Roster
     rescue Result::Error, ActiveRecord::ActiveRecordError => err
       Result.failed(@roster, err.message)
     end
-    # rubocop:enable Metrics/MethodLength
 
     private
 
@@ -81,16 +81,24 @@ class Roster
       identifiers = raw_identifiers_string.split("\r\n").reject(&:blank?)
 
       identifiers.zip(google_ids).each do |identifier, google_user_id|
-        identifier = identifier.strip
-        duplicates_found = @roster.roster_entries.select { |entry| entry.identifier = identifier || entry.identifier.start_with(identifier+"-") }
+        identifier = check_for_duplicates(@roster.roster_entries, identifier)
 
-        if duplicates_found.count > 0
-          identifier = identifier + "-" + duplicates_found.count.to_s
-        end
-
-        @roster.roster_entries << RosterEntry.new(roster: @roster, identifier: identifier, google_user_id: google_user_id)
+        @roster.roster_entries << RosterEntry.new(
+          roster: @roster, identifier: identifier, google_user_id: google_user_id
+        )
         @roster.save!
       end
+    end
+
+    def check_for_duplicates(roster_entries, identifier)
+      identifier = identifier.strip
+
+      duplicates_found = roster_entries.select do |entry|
+        entry.identifier == identifier || entry.identifier.start_with?("#{identifier}-")
+      end
+
+      identifier = identifier + "-" + duplicates_found.count.to_s if duplicates_found.any?
+      identifier
     end
 
     def ensure_organization_does_not_have_roster!
