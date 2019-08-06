@@ -3,7 +3,7 @@
 require "rails_helper"
 
 class FakeBulkApiJob < BulkApiJob
-  def perform(user, some_other_variable, retries: 0); end
+  def perform(arguments); end
 end
 
 RSpec.describe BulkApiJob, type: :job do
@@ -27,7 +27,7 @@ RSpec.describe BulkApiJob, type: :job do
   describe "successful execution" do
     context "cooldown does not exist" do
       it "succeeds" do
-        expect { subject.perform_later(teacher, _) }.to_not raise_error
+        expect { subject.perform_later(user: teacher) }.to_not raise_error
       end
     end
 
@@ -37,14 +37,14 @@ RSpec.describe BulkApiJob, type: :job do
       end
 
       it "succeeds" do
-        expect { subject.perform_later(teacher, _) }.to_not raise_error
+        expect { subject.perform_later(user: teacher) }.to_not raise_error
       end
     end
   end
 
-  context "user performing the job is not the first argument" do
+  context "user performing the job is not provided" do
     it "raises an exception" do
-      expect { subject.perform_later(_, teacher) }.to raise_error(BulkApiJob::Error::MissingUser)
+      expect { subject.perform_later(retries: 1) }.to raise_error(BulkApiJob::Error::UserNotFound)
     end
   end
 
@@ -55,10 +55,10 @@ RSpec.describe BulkApiJob, type: :job do
 
     # rubocop:disable Rails/TimeZone
     it "perform_later will schedule the job to execute sequentially after the cooldown" do
-      expect { subject.perform_later(teacher, _, retries: 1) }
+      expect { subject.perform_later(user: teacher, retries: 1) }
         .to have_enqueued_job(FakeBulkApiJob)
         .at(Time.at((Time.now + 1.hour).to_i))
-      expect { subject.perform_later(teacher, _, retries: 1) }
+      expect { subject.perform_later(user: teacher, retries: 1) }
         .to have_enqueued_job(FakeBulkApiJob)
         .at(Time.at((Time.now + 2.hours).to_i))
     end
@@ -70,21 +70,21 @@ RSpec.describe BulkApiJob, type: :job do
     end
 
     it "does not retry if retries not passed" do
-      expect { subject.perform_now(teacher, _) }.to_not have_enqueued_job(FakeBulkApiJob)
+      expect { subject.perform_now(user: teacher) }.to_not have_enqueued_job(FakeBulkApiJob)
     end
 
     it "does not retry if retries is zero" do
-      expect { subject.perform_now(teacher, _, retries: 0) }.to_not have_enqueued_job(FakeBulkApiJob)
+      expect { subject.perform_now(user: teacher, retries: 0) }.to_not have_enqueued_job(FakeBulkApiJob)
     end
 
     it "does retry if retries are greater than zero" do
-      expect { subject.perform_now(teacher, _, retries: 1) }.to have_enqueued_job(FakeBulkApiJob)
+      expect { subject.perform_now(user: teacher, retries: 1) }.to have_enqueued_job(FakeBulkApiJob)
     end
 
     it "decreases retry count and passes correct variables when retrying" do
-      expect { subject.perform_now(teacher, _, retries: 2) }
+      expect { subject.perform_now(user: teacher, repo_id: 1234, retries: 2) }
         .to have_enqueued_job(FakeBulkApiJob)
-        .with(teacher, _, retries: 1)
+        .with(user: teacher, repo_id: 1234, retries: 1)
     end
   end
 end

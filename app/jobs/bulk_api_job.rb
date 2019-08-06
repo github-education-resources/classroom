@@ -2,15 +2,15 @@
 
 class BulkApiJob < ApplicationJob
   class Error < StandardError
-    class JobAlreadyRunning < Error
+    class ArgumentError < Error
       def message
-        "User is already running a bulk API job. Users can only run one bulk job at a time."
+        "Invalid arguments. Arguments should be provided as a hash."
       end
     end
 
-    class MissingUser < Error
+    class UserNotFound < Error
       def message
-        "First argument in perform method must be the User performing the job."
+        "User performing the bulk API job must be provided."
       end
     end
   end
@@ -18,15 +18,17 @@ class BulkApiJob < ApplicationJob
   queue_as :bulk_api_job
 
   rescue_from(GitHub::Forbidden) do
+    args = arguments.first
     retries = arguments.last[:retries] if arguments.last.is_a? Hash
     arguments.last[:retries] -= 1 if retries
 
-    self.class.perform_later(*arguments) if retries && retries.positive?
+    self.class.perform_later(args) if retries&.positive?
   end
 
   before_enqueue do |job|
-    user = job.arguments.first
-    raise Error::MissingUser unless user.is_a? User
+    args = job.arguments.first
+    raise Error::ArgumentError unless args.is_a? Hash
+    raise Error::UserNotFound unless (user = args[:user])
     cooldown = user.bulk_api_job_cooldown
 
     if cooldown.nil? || Time.zone.now > cooldown
