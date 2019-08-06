@@ -6,7 +6,7 @@ GitHub Classroom integrates with your institution's learning management system (
 - Assignment creation (Planned)
 - Submission syncing (Planned)
 
-Classroom works with any LMS that uses the Learning Tools Interoperability (LTI) standard. LTI is an industry-standard protocol certified by the Instructional Management System Global Learning Consortium. Using LTI keeps your information safe and secure.
+Classroom works with any LMS that uses the Learning Tools Interoperability (LTI) standard. Using LTI keeps your information safe and secure. LTI is an industry-standard protocol and Classroom's use of LTI is certified by the Instructional Management System Global Learning Consortium.
 
 **Note**: Blackboard does not currently support automatically importing a course roster. We are working to support Blackboard in the near future!
 {: class="warning"}
