@@ -1,10 +1,21 @@
 # frozen_string_literal: true
 
 class SessionsController < ApplicationController
+  class LtiLaunchError < StandardError
+    attr_reader :lti_message
+
+    def initialize(message="There was an error launching GitHub Classroom. Please try again.", lti_message)
+      super(message)
+      @lti_message = lti_message
+    end
+  end
+
   skip_before_action :authenticate_user!
   skip_before_action :verify_authenticity_token,  only: %i[lti_launch]
   before_action      :allow_in_iframe,            only: %i[lti_launch]
   before_action      :verify_lti_launch_enabled,  only: %i[lti_setup lti_launch]
+
+  rescue_from LtiLaunchError, with: :handle_lti_launch_error
 
   def new
     scopes = session[:required_scopes] || default_required_scopes
@@ -60,12 +71,13 @@ class SessionsController < ApplicationController
     )
 
     message = GitHubClassroom::LTI::MessageStore.construct_message(auth_hash.extra.raw_info)
-    raise("invalid lti launch message") unless message_store.message_valid?(message)
+    raise LtiLaunchError.new(message) unless message_store.message_valid?(message)
 
     nonce = message_store.save_message(message)
     session[:lti_nonce] = nonce
 
     linked_org = LtiConfiguration.find_by_auth_hash(auth_hash).organization
+    raise LtiLaunchError.new(message), "Configured consumer key is not associated with GitHub Classroom." unless linked_org
 
     if logged_in?
       @post_launch_url = complete_lti_configuration_url(linked_org)
@@ -94,5 +106,18 @@ class SessionsController < ApplicationController
 
   def verify_lti_launch_enabled
     return not_found unless lti_launch_enabled?
+  end
+
+  def handle_lti_launch_error(err)
+    error_msg = err.message
+    message = err.lti_message
+
+    if message.launch_presentation_return_url
+      error_params = { lti_errormsg: error_msg }.to_param
+      callback_url = "#{message.launch_presentation_return_url}?#{error_params}"
+
+      return redirect_to callback_url
+    end
+    render :lti_launch, layout: false, locals: { error: error_msg }
   end
 end

@@ -24,6 +24,11 @@ module GitHubClassroom
         # check if nonce too old
         return false if DateTime.strptime(lti_message.oauth_timestamp, "%s") < 5.minutes.ago
 
+        # check if required params are provided
+        return false unless lti_message.resource_link_id
+        return false unless lti_message.lti_version
+        return false unless lti_message.lti_message_type
+
         true
       end
 
