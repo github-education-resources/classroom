@@ -58,7 +58,6 @@ class AssignmentsController < ApplicationController
     respond_to do |format|
       format.html
       format.js do
-        not_found unless search_assignments_enabled?
         render "assignments/filter_repos.js.erb", format: :js
       end
     end
