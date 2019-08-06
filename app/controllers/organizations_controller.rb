@@ -61,6 +61,7 @@ class OrganizationsController < Orgs::Controller
       flash[:success] = "Organization \"#{current_organization.title}\" updated"
       redirect_to current_organization
     else
+      current_organization.reload
       render :edit
     end
   end
