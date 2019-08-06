@@ -66,13 +66,13 @@ class User < ApplicationRecord
 
   def running_bulk_api_job?
     redis = GitHubClassroom.redis
-    existing_api_job = redis.get("user_api_job:#{id}")&.to_datetime
+    existing_api_job = redis.get("user_bulk_job_cooldown:#{id}")&.to_datetime
     existing_api_job&.future?
   end
 
   def bulk_api_job_cooldown
     redis = GitHubClassroom.redis
-    redis.get("user_api_job:#{id}")&.to_datetime
+    redis.get("user_bulk_job_cooldown:#{id}")&.to_datetime
   end
 
   private

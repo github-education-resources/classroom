@@ -16,7 +16,7 @@ RSpec.describe BulkApiJob, type: :job do
   let(:_) { "some other variable" }
 
   before(:each) do
-    redis.keys("user_api_job:*").each { |key| redis.del(key) }
+    redis.keys("user_bulk_job_cooldown:*").each { |key| redis.del(key) }
     Timecop.freeze
   end
 
@@ -33,7 +33,7 @@ RSpec.describe BulkApiJob, type: :job do
 
     context "cooldown is in the past" do
       before(:each) do
-        redis.set("user_api_job:#{teacher.id}", (Time.zone.now - 2.hours).to_datetime)
+        redis.set("user_bulk_job_cooldown:#{teacher.id}", (Time.zone.now - 2.hours).to_datetime)
       end
 
       it "succeeds" do
@@ -50,7 +50,7 @@ RSpec.describe BulkApiJob, type: :job do
 
   context "user is already running a bulk API job" do
     before(:each) do
-      redis.set("user_api_job:#{teacher.id}", (Time.zone.now + 1.hour).to_datetime)
+      redis.set("user_bulk_job_cooldown:#{teacher.id}", (Time.zone.now + 1.hour).to_datetime)
     end
 
     # rubocop:disable Rails/TimeZone

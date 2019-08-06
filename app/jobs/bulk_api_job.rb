@@ -33,10 +33,10 @@ class BulkApiJob < ApplicationJob
 
     if cooldown.nil? || Time.zone.now > cooldown
       job.scheduled_at = Time.zone.now
-      GitHubClassroom.redis.set("user_api_job:#{user.id}", (Time.zone.now + 1.hour).to_datetime)
+      GitHubClassroom.redis.set("user_bulk_job_cooldown:#{user.id}", (Time.zone.now + 1.hour).to_datetime)
     else
       job.scheduled_at = cooldown.to_i
-      GitHubClassroom.redis.set("user_api_job:#{user.id}", (cooldown + 1.hour).to_datetime)
+      GitHubClassroom.redis.set("user_bulk_job_cooldown:#{user.id}", (cooldown + 1.hour).to_datetime)
     end
   end
 end
