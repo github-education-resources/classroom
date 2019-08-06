@@ -94,7 +94,7 @@ You should now be directed the following screen. You have successfully linked Gi
 
 ### Next steps
 
-[Importing your course roster from your learning management system to GitHub Classroom]().
+[Importing your course roster from Moodle to GitHub Classroom]()
 
 Not finding what you need? Want to talk to a human? [Open an issue on the Classroom repo.](https://github.com/education/classroom/issues)
 {: class="warning"}
