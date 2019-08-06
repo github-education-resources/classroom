@@ -211,7 +211,7 @@ module Orgs
     end
 
     def check_for_duplicate_entry
-      return if RosterEntry.where(roster: current_roster, identifier: params[:roster_entry_identifier]).any?
+      return unless RosterEntry.where(roster: current_roster, identifier: params[:roster_entry_identifier]).any?
       flash[:error] = "There is already a roster entry named #{params[:roster_entry_identifier]}."
       redirect_to roster_url(current_organization)
     end
