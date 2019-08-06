@@ -545,6 +545,60 @@ RSpec.describe Orgs::RostersController, type: :controller do
     end
   end
 
+  describe "PATCH #edit_entry", :vcr do
+    before do
+      sign_in_as(user)
+
+      create(:roster_entry, roster: roster, identifier: "John Smith")
+      create(:roster_entry, roster: roster, identifier: "John Smith-1")
+    end
+
+    context "when renaming to an identifier that does not exist" do
+      before do
+        patch :edit_entry, params: {
+          roster_entry_id: organization.roster.roster_entries.second,
+          roster_entry_identifier: "Jessica Smith",
+          id: organization.slug
+        }
+        organization.roster.roster_entries.reload
+      end
+
+      it "updates roster entry" do
+        expect(organization.roster.roster_entries.second.identifier).to eq("Jessica Smith")
+      end
+
+      it "redirects to roster page" do
+        expect(response).to redirect_to(roster_url(organization))
+      end
+
+      it "displays success message" do
+        expect(flash[:success]).to eq("Roster entry successfully updated!")
+      end
+    end
+
+    context "when renaming to an identifier that exists" do
+      before do
+        patch :edit_entry, params: {
+          roster_entry_id: organization.roster.roster_entries.second,
+          roster_entry_identifier: "John Smith-1",
+          id: organization.slug
+        }
+      end
+
+      it "does not update roster entry" do
+        expect(organization.roster.roster_entries.second.identifier).to eq("John Smith")
+      end
+
+      it "redirects to roster page" do
+        expect(response).to redirect_to(roster_url(organization))
+      end
+
+      it "displays success message" do
+        expect(flash[:error]).to eq("There is already a roster entry named John Smith-1.")
+      end
+    end
+  end
+
   describe "PATCH #remove_organization", :vcr do
     before do
       sign_in_as(user)
