@@ -36,7 +36,7 @@
           <span id='students-span'>
             <div class="assignment-list-items">
               <% @roster_entries.each do |roster_entry| %>
-                <%= render 'roster_entry', roster_entry: roster_entry %>
+                <%= render 'roster_entry', roster_entry: roster_entry, roster_entries_page: @roster_entries.current_page %>
               <% end %>
 
               <div class="d-flex col-12">

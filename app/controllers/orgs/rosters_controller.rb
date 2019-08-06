@@ -127,7 +127,7 @@ module Orgs
     rescue ActiveRecord::ActiveRecordError
       flash[:error] = "An error has occurred, please try again."
     ensure
-      redirect_to roster_path(current_organization)
+      redirect_to roster_path(current_organization, params: { roster_entries_page: params[:roster_entries_page] })
     end
 
     # rubocop:disable Metrics/MethodLength
