@@ -40,7 +40,10 @@ module GitHubClassroom
 
         def build_http_request(endpoint, method, headers, query, body)
           uri = URI.parse(endpoint)
-          uri.query = URI.encode_www_form(query) if query
+          if query
+            existing_query = Hash[URI.decode_www_form(uri.query || "")]
+            uri.query = URI.encode_www_form(query.merge(existing_query))
+          end
 
           klass = "Net::HTTP::#{method.to_s.capitalize}".constantize
           req = klass.new(uri, headers.stringify_keys)
