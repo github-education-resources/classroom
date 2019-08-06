@@ -100,11 +100,11 @@ class RosterEntry < ApplicationRecord
   #
   # Returns the created entries.
 
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def self.create_entries(identifiers:, roster:, google_user_ids: [])
     created_entries = []
     RosterEntry.transaction do
-      identifiers = self.add_suffix_to_duplicates(
+      identifiers = add_suffix_to_duplicates(
         identifiers: identifiers, roster_entries: RosterEntry.where(roster: roster).pluck(:identifier)
       )
 
