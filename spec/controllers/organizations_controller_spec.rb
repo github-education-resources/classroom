@@ -285,11 +285,23 @@ RSpec.describe OrganizationsController, type: :controller do
   end
 
   describe "PATCH #update", :vcr do
-    it "correctly updates the organization" do
-      options = { title: "New Title" }
-      patch :update, params: { id: organization.slug, organization: options }
+    context "when success" do
+      it "correctly updates the organization" do
+        options = { title: "New Title" }
+        patch :update, params: { id: organization.slug, organization: options }
 
-      expect(response).to redirect_to(organization_path(Organization.find(organization.id)))
+        expect(response).to redirect_to(organization_path(Organization.find(organization.id)))
+      end
+    end
+
+    context "when fail" do
+      it "not change current organization title" do
+        options = { title: " " }
+        patch :update, params: { id: organization.slug, organization: options }
+
+        expect(assigns(:current_organization).title).not_to eql(options[:title])
+        expect(response).to render_template(:edit)
+      end
     end
   end
 

@@ -1,0 +1,15 @@
+<div class="remodal text-left" data-remodal-id="archive">
+  <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
+  <h2 class="remodal-header"><%= t('views.organizations.are_you_sure') %></h2>
+
+  <div class="remodal-description" style="height:auto">
+    <p>
+      <%= t('views.organizations.archive_consequences_html', organization: sanitize(current_organization.github_organization.login)) %>
+    </p>
+  </div>
+
+  <%= form_for current_organization do |f| %>
+    <%= f.hidden_field :archived, value: true %>
+    <%= f.submit t('views.organizations.archive_submit'), class: "btn btn-danger btn-block js-submit" %>
+  <% end %>
+</div>
