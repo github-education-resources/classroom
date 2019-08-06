@@ -43,11 +43,6 @@ class ApplicationController
   end
   helper_method :lti_launch_enabled?
 
-  def unified_repo_creators_enabled?
-    GitHubClassroom.flipper[:unified_repo_creators].enabled?
-  end
-  helper_method :unified_repo_creators_enabled?
-
   def classroom_visibility_enabled?
     logged_in? && current_user.feature_enabled?(:classroom_visibility)
   end
