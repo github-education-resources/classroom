@@ -23,8 +23,6 @@ class OrganizationsController < Orgs::Controller
 
   # rubocop:disable MethodLength
   def create
-    return unless validate_multiple_classrooms_on_org
-
     result = Organization::Creator.perform(
       github_id: new_organization_params[:github_id],
       users: new_organization_params[:users]
@@ -147,13 +145,9 @@ class OrganizationsController < Orgs::Controller
     params.require(:organization).permit(:github_id).merge(users: [current_user])
   end
 
-  # rubocop:disable Metrics/AbcSize
   def set_users_github_organizations
     @users_github_organizations = current_user.github_user.organization_memberships.map do |membership|
       {
-        # TODO: Remove `classroom` field after we turn off the feature flag
-        # for multiple classrooms in one org
-        classroom:   Organization.unscoped.find_by(github_id: membership.organization.id),
         github_id:   membership.organization.id,
         login:       membership.organization.login,
         owner_login: membership.user.login,
@@ -161,7 +155,6 @@ class OrganizationsController < Orgs::Controller
       }
     end
   end
-  # rubocop:enable Metrics/AbcSize
 
   # Check if the current user has any organizations with admin privilege,
   # if so add the user to the corresponding classroom automatically.
@@ -195,16 +188,6 @@ class OrganizationsController < Orgs::Controller
   def verify_user_belongs_to_organization
     @removed_user = User.find(params[:user_id])
     not_found unless current_organization.users.map(&:id).include?(@removed_user.id)
-  end
-
-  def validate_multiple_classrooms_on_org
-    classroom_exists_on_org = Organization.unscoped.find_by(github_id: new_organization_params[:github_id])
-    if classroom_exists_on_org && !multiple_classrooms_per_org_enabled?
-      flash[:error] = "Validation failed: GitHub ID has already been taken"
-      redirect_to new_organization_path
-      return false
-    end
-    true
   end
 end
 # rubocop:enable Metrics/ClassLength
