@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# rubocop:disable ClassAndModuleChildren
 module GitHubClassroom::LTI::Models::MembershipService
   class MembershipSubject < IMS::LTI::Models::LTIModel
     add_attribute :membership, relation: "GitHubClassroom::LTI::Models::MembershipService::Membership"
@@ -11,3 +14,4 @@ module GitHubClassroom::LTI::Models::MembershipService
     end
   end
 end
+# rubocop:enable ClassAndModuleChildren
