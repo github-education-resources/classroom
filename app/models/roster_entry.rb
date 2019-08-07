@@ -105,7 +105,8 @@ class RosterEntry < ApplicationRecord
     created_entries = []
     RosterEntry.transaction do
       identifiers = add_suffix_to_duplicates(
-        identifiers: identifiers, roster_entries: RosterEntry.where(roster: roster).pluck(:identifier)
+        identifiers: identifiers,
+        existing_roster_entries: RosterEntry.where(roster: roster).pluck(:identifier)
       )
 
       identifiers.zip(google_user_ids).each do |identifier, google_user_id|

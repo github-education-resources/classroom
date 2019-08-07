@@ -4,13 +4,12 @@ module DuplicateRosterEntries
   extend ActiveSupport::Concern
 
   module ClassMethods
-    # rubocop:disable Metrics/MethodLength
-    def add_suffix_to_duplicates(identifiers: , roster_entries: [])
+    def add_suffix_to_duplicates(identifiers:, existing_roster_entries: [])
       list_of_identifiers = []
       identifiers.each do |identifier|
         identifier = identifier.strip
 
-        duplicates_found = (roster_entries + list_of_identifiers).select do |entry|
+        duplicates_found = (existing_roster_entries + list_of_identifiers).select do |entry|
           entry == identifier || entry.start_with?("#{identifier}-")
         end
 
