@@ -127,34 +127,19 @@ RSpec.describe RosterEntry, type: :model do
       end
     end
 
-    context "some entries not valid" do
+    context "when duplicate entries" do
       before do
-        RosterEntry.create(identifier: "1", roster: roster)
+        RosterEntry.create(identifier: "John", roster: roster)
       end
 
       let(:result) do
-        RosterEntry.create_entries(identifiers: %w[1 2], roster: roster)
+        RosterEntry.create_entries(identifiers: %w[John Bob], roster: roster)
       end
 
-      it "creates one roster entries" do
-        expect(result.length).to eq(1)
+      it "creates adds suffix to duplicate entries" do
+        expect(result.length).to eq(2)
 
-        expect(result[0]).to eq(RosterEntry.find_by(identifier: "2", roster: roster))
-      end
-    end
-
-    context "no roster entries valid" do
-      before do
-        RosterEntry.create(identifier: "1", roster: roster)
-        RosterEntry.create(identifier: "2", roster: roster)
-      end
-
-      let(:result) do
-        RosterEntry.create_entries(identifiers: %w[1 2], roster: roster)
-      end
-
-      it "creates no roster entries" do
-        expect(result.length).to eq(0)
+        expect(result[0]).to eq(RosterEntry.find_by(identifier: "John-1", roster: roster))
       end
     end
 
