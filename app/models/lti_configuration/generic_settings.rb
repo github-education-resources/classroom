@@ -34,12 +34,12 @@ class LtiConfiguration
     end
 
     def supports_membership_service?
-      membership_settings.membership_url.present?
+      membership_url.present?
     end
 
     def membership_settings
       LtiConfiguration::Membership::Settings.new(
-        membership_url: @launch_message.custom_params["custom_context_memberships_url"]
+        membership_url: (@launch_message.custom_params["custom"] if @launch_message)
       )
     end
   end
