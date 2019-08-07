@@ -122,7 +122,7 @@ module Orgs
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/AbcSize
     def add_students
-      identifiers = params[:identifiers].split("\r\n").reject(&:blank?).uniq
+      identifiers = params[:identifiers].split("\r\n").reject(&:blank?)
       google_ids = params[:google_user_ids] || []
 
       begin
