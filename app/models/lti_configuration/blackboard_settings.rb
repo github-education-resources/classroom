@@ -9,5 +9,9 @@ class LtiConfiguration
     def icon
       "blackboard-logo.png"
     end
+
+    def supports_membership_service?
+      false
+    end
   end
 end
