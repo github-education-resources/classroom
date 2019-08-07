@@ -235,7 +235,18 @@ RSpec.describe Orgs::RostersController, type: :controller do
           end
 
           context "fetching roster succeeds" do
-            let(:students) { [] }
+            let(:student) do
+              IMS::LTI::Models::MembershipService::LISPerson.new(
+                email: "sample@example.com",
+                name: "Example Name",
+                user_id: "12345"
+              )
+            end
+
+            let(:students) do
+              [IMS::LTI::Models::MembershipService::Membership.new(member: student)]
+            end
+
             before(:each) do
               GitHubClassroom::LTI::MembershipService
                 .any_instance
@@ -243,21 +254,41 @@ RSpec.describe Orgs::RostersController, type: :controller do
                 .and_return(students)
             end
 
-            it "sends statsd" do
-              expect(GitHubClassroom.statsd).to receive(:increment).with("lti_configuration.import")
-              get :import_from_lms, params: { id: lti_configuration.organization.slug }
+            context "all attributes present" do
+              it "sends statsd" do
+                expect(GitHubClassroom.statsd).to receive(:increment).with("lti_configuration.import")
+                get :import_from_lms, params: { id: lti_configuration.organization.slug }
+              end
+
+              it "format.html: succeeds" do
+                get :import_from_lms, params: { id: lti_configuration.organization.slug }
+                expect(response).to have_http_status(:ok)
+                expect(flash[:alert]).to be_nil
+                expect(assigns(:identifiers).keys.length).to eql(3)
+              end
+
+              it "format.js: succeeds" do
+                get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
+                expect(response).to have_http_status(:ok)
+                expect(flash[:alert]).to be_nil
+                expect(assigns(:identifiers).keys.length).to eql(3)
+              end
             end
 
-            it "format.html: succeeds" do
-              get :import_from_lms, params: { id: lti_configuration.organization.slug }
-              expect(response).to have_http_status(:ok)
-              expect(flash[:alert]).to be_nil
-            end
+            context "successful fetch, but missing some attributes" do
+              let(:student) do
+                IMS::LTI::Models::MembershipService::LISPerson.new(
+                  email: nil,
+                  name: nil,
+                  user_id: "12345"
+                )
+              end
 
-            it "format.js: succeeds" do
-              get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
-              expect(response).to have_http_status(:ok)
-              expect(flash[:alert]).to be_nil
+              it "hides options when they're nil lists" do
+                get :import_from_lms, params: { id: lti_configuration.organization.slug }
+                expect(response).to have_http_status(:ok)
+                expect(assigns(:identifiers).keys.length).to eql(1)
+              end
             end
           end
 
