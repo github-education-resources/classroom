@@ -15,7 +15,7 @@ class OrganizationsController < Orgs::Controller
   skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create search]
 
   def index
-    @organizations = current_user.organizations.order(:id).page(params[:page]).per(12)
+    @organizations = current_user.organizations.where(archived_at: nil).order(:id).page(params[:page]).per(12)
   end
 
   def new

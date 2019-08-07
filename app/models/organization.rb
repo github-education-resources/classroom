@@ -33,9 +33,10 @@ class Organization < ApplicationRecord
 
   before_destroy :silently_remove_organization_webhook
 
-  scope :order_by_newest, ->(_context = nil) { order(created_at: :desc) }
-  scope :order_by_oldest, ->(_context = nil) { order(created_at: :asc) }
-  scope :order_by_title,  ->(_context = nil) { order(:title) }
+  scope :order_by_newest,   ->(_context = nil) { order(created_at: :desc).where(archived_at: nil) }
+  scope :order_by_oldest,   ->(_context = nil) { order(created_at: :asc).where(archived_at: nil) }
+  scope :order_by_title,    ->(_context = nil) { order(:title).where(archived_at: nil) }
+  scope :order_by_archived, ->(query) { where.not(archived_at: nil).order(archived_at: :desc) }
 
   scope :search_by_title, ->(query) { where("title ILIKE ?", "%#{query}%") }
 
@@ -47,7 +48,8 @@ class Organization < ApplicationRecord
     {
       "Oldest first" => :order_by_oldest,
       "Newest first" => :order_by_newest,
-      "Classroom name" => :order_by_title
+      "Classroom name" => :order_by_title,
+      "Archived (newest first)" => :order_by_archived
     }
   end
 
