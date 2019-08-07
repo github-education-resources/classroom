@@ -148,7 +148,6 @@ RSpec.describe GroupAssignmentsController, type: :controller do
         group: group_assignment.grouping.groups.first
       )
       group_assignment.save!
-      GitHubClassroom.flipper[:search_assignments].enable
     end
 
     it "finds group assignment in search" do

@@ -38,13 +38,14 @@ en:
       visibility_description: "Makes all student assignment/repositories public or private. This will change your assignment settings to reflect your choice."
       visibility_consequences_html: "This will change the visibility of <strong>all</strong> assignments and repositories related to this classroom."
       delete_warning: "Unexpected things will happen if you don't read this!"
-      delete_org_consequences_html: "This action <strong>CANNOT</strong> be undone. Please note that reseting and removing this classroom will delete all repositories and teams under the <strong>%{organization}</strong> account that were created by GitHub Classroom."
-      delete_classroom_consequences_html: "This action <strong>CANNOT</strong> be undone. Please note that reseting and removing this classroom will delete all repositories and teams created by this classroom in the <strong>%{organization}</strong> account."
+      delete_org_consequences_html: "This action <strong>CANNOT</strong> be undone. This will permanently delete the <strong>%{classroom_title}</strong> classroom and all repositories and teams under the <strong>%{organization}</strong> organization account that were created by GitHub Classroom."
+      delete_classroom_consequences_html: "This action <strong>CANNOT</strong> be undone. This will permanently delete the <strong>%{classroom_title}</strong> classroom and all repositories and teams created by this classroom in the <strong>%{organization}</strong> organization account."
       delete_confirm: 'Please type the name of the classroom to confirm'
       delete_title: 'Reset and remove this classroom'
       delete_submit: 'Remove classroom'
       danger_zone: 'The Danger Zone'
       archived_classrooms: 'Archived classrooms'
+      archive_consequences_html: "<p>Assignment invitations will be disabled while the classroom is archived and the classroom will be moved to the archived section.</p><p>You can unarchive your classroom at any point.</p>"
       archive_description: 'Mark this classroom as archived. The classroom will be moved to the archived section away from your active classrooms. Nothing will be deleted and this can be undone.'
       archive_title: 'Archive this classroom'
       archive_submit: 'Archive classroom'
