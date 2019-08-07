@@ -29,7 +29,9 @@
           <div class="blankslate blankslate-spacious blankslate-clean-background">
             <%= image_tag "classroom-logo.png", size: 128, class: "mb-3" %>
             <h3>There was an error launching GitHub Classroom from your Learning Management System.</h3>
-            <p><%= error %></p>
+            <div class="markdown-body pt-3">
+              <p><%= error %></p>
+            </div>
           </div>
         <% end %>
       </div>
