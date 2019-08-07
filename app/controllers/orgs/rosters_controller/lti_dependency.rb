@@ -21,13 +21,6 @@ module Orgs
 
       GitHubClassroom.statsd.increment("lti_configuration.import")
 
-      if @identifiers.empty?
-        msg = "GitHub Classroom received an empty roster from your Learning Management System. Please ensure you
-        have enabled GitHub Classroom to receive student information from within your Learning Management System."
-
-        raise LtiImportError, msg
-      end
-
       respond_to do |format|
         format.js
         format.html

@@ -290,22 +290,6 @@ RSpec.describe Orgs::RostersController, type: :controller do
                 expect(assigns(:identifiers).keys.length).to eql(1)
               end
             end
-
-            context "successful fetch, but missing all attributes" do
-              let(:student) do
-                IMS::LTI::Models::MembershipService::LISPerson.new(
-                  email: nil,
-                  name: nil,
-                  user_id: nil
-                )
-              end
-
-              it "sets flash if all options are nil lists" do
-                get :import_from_lms, params: { id: lti_configuration.organization.slug }
-                expect(flash[:alert]).to be_present
-                expect(assigns(:identifiers).keys.length).to eql(0)
-              end
-            end
           end
 
           context "fetching roster fails" do
