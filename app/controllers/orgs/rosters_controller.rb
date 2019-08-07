@@ -14,6 +14,7 @@ module Orgs
     before_action :ensure_current_roster_entry,       only:   %i[link unlink delete_entry download_roster]
     before_action :ensure_enough_members_in_roster,   only:   [:delete_entry]
     before_action :ensure_allowed_to_access_grouping, only:   [:show]
+    before_action :check_for_duplicate_entry,         only:   [:edit_entry]
 
     helper_method :current_roster, :unlinked_users
 
@@ -119,10 +120,20 @@ module Orgs
       redirect_to roster_path(current_organization)
     end
 
+    def edit_entry
+      current_roster_entry.update(identifier: params[:roster_entry_identifier])
+
+      flash[:success] = "Roster entry successfully updated!"
+    rescue ActiveRecord::ActiveRecordError
+      flash[:error] = "An error has occurred, please try again."
+    ensure
+      redirect_to roster_path(current_organization, params: { roster_entries_page: params[:roster_entries_page] })
+    end
+
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/AbcSize
     def add_students
-      identifiers = params[:identifiers].split("\r\n").reject(&:blank?).uniq
+      identifiers = params[:identifiers].split("\r\n").reject(&:blank?)
       lms_ids = params[:lms_user_ids] || []
 
       begin
@@ -197,6 +208,12 @@ module Orgs
       return if params[:grouping].nil?
 
       not_found unless Grouping.find(params[:grouping]).organization_id == current_organization.id
+    end
+
+    def check_for_duplicate_entry
+      return unless RosterEntry.where(roster: current_roster, identifier: params[:roster_entry_identifier]).any?
+      flash[:error] = "There is already a roster entry named #{params[:roster_entry_identifier]}."
+      redirect_to roster_url(current_organization)
     end
 
     # An unlinked user is a user who:

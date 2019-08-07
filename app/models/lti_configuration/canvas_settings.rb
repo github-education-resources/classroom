@@ -14,10 +14,6 @@ class LtiConfiguration
       true
     end
 
-    def supports_membership_service?
-      true
-    end
-
     def vendor_domain
       "canvas.instructure.com"
     end
