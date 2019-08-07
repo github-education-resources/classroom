@@ -36,7 +36,7 @@ class Organization < ApplicationRecord
   scope :order_by_newest,   ->(_context = nil) { order(created_at: :desc).where(archived_at: nil) }
   scope :order_by_oldest,   ->(_context = nil) { order(created_at: :asc).where(archived_at: nil) }
   scope :order_by_title,    ->(_context = nil) { order(:title).where(archived_at: nil) }
-  scope :order_by_archived, ->(_contet = nil) { where.not(archived_at: nil).order(archived_at: :desc) }
+  scope :order_by_archived, ->(_context = nil) { where.not(archived_at: nil).order(archived_at: :desc) }
 
   scope :search_by_title, ->(query) { where("title ILIKE ?", "%#{query}%") }
 
