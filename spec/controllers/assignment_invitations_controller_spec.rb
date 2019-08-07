@@ -347,7 +347,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         end
 
         it "enqueues a CreateRepositoryJob" do
-          assert_enqueued_jobs 1, only: AssignmentRepo::CreateGitHubRepositoryJob do
+          assert_enqueued_jobs 1, only: CreateGitHubRepositoryNewJob do
             post :create_repo, params: { id: invitation.key }
           end
         end
@@ -391,7 +391,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         end
 
         it "enqueues a CreateRepositoryJob" do
-          assert_enqueued_jobs 1, only: AssignmentRepo::CreateGitHubRepositoryJob do
+          assert_enqueued_jobs 1, only: CreateGitHubRepositoryNewJob do
             post :create_repo, params: { id: invitation.key }
           end
         end
@@ -445,7 +445,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         end
 
         it "does not enqueue a CreateRepositoryJob" do
-          assert_enqueued_jobs 0, only: AssignmentRepo::CreateGitHubRepositoryJob do
+          assert_enqueued_jobs 0, only: CreateGitHubRepositoryNewJob do
             post :create_repo, params: { id: invitation.key }
           end
         end
