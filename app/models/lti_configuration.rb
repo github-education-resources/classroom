@@ -17,6 +17,7 @@ class LtiConfiguration < ApplicationRecord
     canvas: "Canvas",
     brightspace: "Brightspace",
     moodle: "Moodle",
+    sakai: "Sakai",
     other: "other"
   }, _prefix: true
 
