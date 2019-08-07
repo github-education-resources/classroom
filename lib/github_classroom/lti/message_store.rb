@@ -45,12 +45,15 @@ module GitHubClassroom
       def get_message(nonce)
         scoped = scoped_nonce(nonce)
         raw_message = @redis_store.get(scoped)
-
         return nil unless raw_message
 
         json_message = JSON.parse(raw_message)
-
         hydrate(json_message)
+      end
+
+      def delete_message(nonce)
+        scoped = scoped_nonce(nonce)
+        @redis_store.del(scoped)
       end
 
       private

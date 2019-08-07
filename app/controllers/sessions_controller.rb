@@ -73,12 +73,12 @@ class SessionsController < ApplicationController
     message = GitHubClassroom::LTI::MessageStore.construct_message(auth_hash.extra.raw_info)
     raise LtiLaunchError.new(message) unless message_store.message_valid?(message)
 
-    nonce = message_store.save_message(message)
-    session[:lti_nonce] = nonce
+    lti_configuration = LtiConfiguration.find_by_auth_hash(auth_hash)
+    raise LtiLaunchError.new(message), "Configured consumer key is not associated with GitHub Classroom." unless lti_configuration
+    lti_configuration.cached_launch_message_nonce = message_store.save_message(message)
+    lti_configuration.save!
 
-    linked_org = LtiConfiguration.find_by_auth_hash(auth_hash).organization
-    raise LtiLaunchError.new(message), "Configured consumer key is not associated with GitHub Classroom." unless linked_org
-
+    linked_org = lti_configuration.organization
     if logged_in?
       @post_launch_url = complete_lti_configuration_url(linked_org)
     else
