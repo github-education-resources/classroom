@@ -236,7 +236,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
           context "fetching roster succeeds" do
             let(:student) do
-              IMS::LTI::Models::MembershipService::LISPerson.new(
+              GitHubClassroom::LTI::Models::CourseMember.new(
                 email: "sample@example.com",
                 name: "Example Name",
                 user_id: "12345"
@@ -244,7 +244,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
             end
 
             let(:students) do
-              [IMS::LTI::Models::MembershipService::Membership.new(member: student)]
+              [student]
             end
 
             before(:each) do
@@ -277,7 +277,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
             context "successful fetch, but missing some attributes" do
               let(:student) do
-                IMS::LTI::Models::MembershipService::LISPerson.new(
+                GitHubClassroom::LTI::Models::CourseMember.new(
                   email: nil,
                   name: nil,
                   user_id: "12345"
