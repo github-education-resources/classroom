@@ -65,9 +65,10 @@ RSpec.describe "LTI launch", type: :request do
   end
 
   describe "sessions#lti_launch", :vcr do
-    it "sets lti_nonce on session on success" do
+    it "sets cached_launch_message_nonce on corresponding lti_configuration" do
       get auth_lti_launch_path(oauth_consumer_key: consumer_key)
-      expect(session[:lti_nonce]).to eql("mock_nonce")
+      lti_configuration.reload
+      expect(lti_configuration.cached_launch_message_nonce).to eql("mock_nonce")
     end
 
     it "renders lti_launch template" do
