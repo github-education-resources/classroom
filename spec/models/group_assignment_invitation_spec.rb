@@ -90,7 +90,7 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
 
     context "disabled invitation" do
       before do
-        expect(subject).to receive(:enabled?).and_return(false)
+        subject.group_assignment.invitations_enabled = false
       end
 
       it "failed?" do
@@ -100,7 +100,19 @@ RSpec.describe GroupAssignmentInvitation, type: :model do
 
       it "fails when the invitation is not enabled?" do
         result = subject.redeem_for(student, nil, group_name)
-        expect(result.error).to eq("Invitations for this assignment have been disabled.")
+        expect(result.error).to eq(GroupAssignmentInvitation::INVITATIONS_DISABLED)
+      end
+    end
+
+    context "classroom is archived" do
+      before do
+        expect(subject.group_assignment.organization).to receive(:archived?).at_least(1).times.and_return true
+      end
+
+      it "fails with proper error message" do
+        result = subject.redeem_for(student, nil, group_name)
+        expect(result.failed?).to be_truthy
+        expect(result.error).to eq(GroupAssignmentInvitation::INVITATIONS_DISABLED_ARCHIVED)
       end
     end
 
