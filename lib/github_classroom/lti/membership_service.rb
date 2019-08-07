@@ -30,18 +30,16 @@ module GitHubClassroom
       private
 
       def membership_request(roles, body_params)
-        method = @lti_version == 1.1 ? :get : :post
-        query = @lti_version == 1.1 ? { role: roles.join(",") } : nil
-        body = @lti_version == 1.0 ? body_params.merge(lti_message_type: "basic-lis-readmembershipsforcontext", lti_version: "LTI-1p0") : nil
+        if @lti_version == 1.1
+          accept_header = { "Accept": "application/vnd.ims.lis.v2.membershipcontainer+json" }
+          role_query = { role: roles.join(",") }
 
-        lti_request(
-          @context_membership_url,
-          lti_version: @lti_version,
-          method: method,
-          headers: { "Accept": "application/vnd.ims.lis.v2.membershipcontainer+json" },
-          query: query,
-          body: body
-        )
+          lti_request(@context_membership_url, method: :get, headers: accept_header, query: role_query)
+        elsif @lti_version == 1.0
+          body = body_params.merge(lti_message_type: "basic-lis-readmembershipsforcontext", lti_version: "LTI-1p0")
+
+          lti_request(@context_membership_url, method: :post, body: body, lti_version: 1.0)
+        end
       end
 
       def parse_membership(raw_data)
@@ -61,12 +59,7 @@ module GitHubClassroom
         membership_subject = Models::MembershipService::MembershipSubject.from_json(membership_subject_json)
         membership_subject.memberships.map do |m|
           member = m.member
-          Models::CourseMember.new(
-            user_id: member.user_id,
-            email: member.email,
-            name: member.name,
-            role: m.role
-          )
+          Models::CourseMember.new(user_id: member.user_id, email: member.email, name: member.name, role: m.role)
         end
       end
 

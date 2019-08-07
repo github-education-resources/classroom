@@ -4,19 +4,16 @@ module GitHubClassroom
   module LTI
     module Mixins
       module RequestSigning
-        @@default_lti_request_options = {
+        DEFAULT_REQUEST_OPTIONS = {
           lti_version: 1.1,
           method: :post,
           headers: {},
           query: {},
           body: nil
-        }
+        }.freeze
 
         def lti_request(endpoint, request_options = {})
-          opts = @@default_lti_request_options.merge(request_options.inject({}) do |opts, (k, v)|
-            opts[k.to_sym] = v
-            opts
-          end)
+          opts = DEFAULT_REQUEST_OPTIONS.merge(request_options.symbolize_keys)
 
           req = build_http_request(endpoint, opts[:method], opts[:headers], opts[:query], opts[:body])
           sign_request!(req, @consumer_key, @secret, lti_version: opts[:lti_version])
@@ -39,24 +36,29 @@ module GitHubClassroom
         private
 
         def build_http_request(endpoint, method, headers, query, body)
+          uri = build_uri(endpoint, query)
+
+          klass = "Net::HTTP::#{method.to_s.capitalize}".constantize
+          req = klass.new(uri, headers.stringify_keys)
+
+          if body.is_a?(Hash)
+            req.body = OAuth::Helper.normalize(body)
+            req.content_type = "application/x-www-form-urlencoded"
+          else
+            req.body = body.to_s
+          end
+
+          req
+        end
+
+        def build_uri(endpoint, query)
           uri = URI.parse(endpoint)
           if query
             existing_query = Hash[URI.decode_www_form(uri.query || "")]
             uri.query = URI.encode_www_form(query.merge(existing_query))
           end
 
-          klass = "Net::HTTP::#{method.to_s.capitalize}".constantize
-          req = klass.new(uri, headers.stringify_keys)
-
-          if(body.is_a?(Hash))
-            req.body = OAuth::Helper.normalize(body)
-            req.content_type = 'application/x-www-form-urlencoded'
-          else
-            req.body = body.to_s
-            req["Content-Length"] = req.body.length.to_s
-          end
-
-          req
+          uri
         end
 
         def sign_request!(req, consumer_key, secret, lti_version: 1.1)
