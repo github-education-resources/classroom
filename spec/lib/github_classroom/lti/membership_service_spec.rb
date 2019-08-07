@@ -7,10 +7,10 @@ describe GitHubClassroom::LTI::MembershipService do
   let(:consumer_key)  { "valid_consumer_key" }
   let(:shared_secret) { "valid_shared_secret" }
 
-  # Official LTI reference tool consumer specifically for testing purposes. Response will be stored in VCR.
-  let(:endpoint) { "https://ltiapps.net/test/tc-memberships.php/context/4e0b4a729e8429355ec09d86c5d32439" }
+  describe "membership service (LTI 1.1)", :vcr do
+    # Official LTI reference tool consumer specifically for testing purposes. Response will be stored in VCR.
+    let(:endpoint) { "http://ltiapps.net/test/tc-memberships.php/context/bcde6a55f4cad71bb7865a04a57823ec" }
 
-  describe "membership", :vcr do
     context "valid authentication" do
       let(:instance) { subject.new(endpoint, consumer_key, shared_secret) }
 
@@ -18,8 +18,9 @@ describe GitHubClassroom::LTI::MembershipService do
         membership = instance.membership
         expect(membership).to_not be_empty
 
-        first_membership = membership.first
-        expect(first_membership).to be_an_instance_of(IMS::LTI::Models::MembershipService::Membership)
+        expected_klass = GitHubClassroom::LTI::Models::CourseMember
+        member = membership.first
+        expect(member).to be_an_instance_of(expected_klass)
       end
 
       it "gets only instructors" do
@@ -46,6 +47,25 @@ describe GitHubClassroom::LTI::MembershipService do
 
       it "cannot get members" do
         expect { instance.membership }.to raise_error(Faraday::ClientError)
+      end
+    end
+  end
+
+  describe "membership extension (LTI 1.0)", :vcr do
+    # Official LTI reference tool consumer specifically for testing purposes. Response will be stored in VCR.
+    let(:endpoint) { "http://ltiapps.net/test/tc-ext-memberships.php" }
+    let(:body_params) { { "id": "bcde6a55f4cad71bb7865a04a57823ec:::4jflkkdf9s" } }
+
+    context "valid authentication" do
+      let(:instance) { subject.new(endpoint, consumer_key, shared_secret, lti_version: 1.0) }
+
+      it "gets membership" do
+        membership = instance.membership(body_params: body_params)
+        expect(membership).to_not be_empty
+
+        expected_klass = GitHubClassroom::LTI::Models::CourseMember
+        member = membership.first
+        expect(member).to be_an_instance_of(expected_klass)
       end
     end
   end

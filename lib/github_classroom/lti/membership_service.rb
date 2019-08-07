@@ -52,22 +52,34 @@ module GitHubClassroom
         end
       end
 
+      # LTI 1.1 (and up) responses
       def parse_membership_service(raw_data)
         json_membership = JSON.parse(raw_data)
         membership_subject_json = json_membership.dig("pageOf", "membershipSubject")
         raise JSON::ParserError unless membership_subject_json
 
         membership_subject = Models::MembershipService::MembershipSubject.from_json(membership_subject_json)
-        membership_subject.memberships.map(&:member)
+        membership_subject.memberships.map do |m|
+          member = m.member
+          Models::CourseMember.new(
+            user_id: member.user_id,
+            email: member.email,
+            name: member.name,
+            role: m.role
+          )
+        end
       end
 
+      # LTI 1.0 responses
       def parse_membership_extension(raw_data)
         membership_hash = Hash.from_xml(raw_data)
         raise JSON::ParserError unless membership_hash["message_response"]
         message_response_json = membership_hash["message_response"].to_json
 
         message_response = Models::MembershipExtension::MessageResponse.from_json(message_response_json)
-        message_response.membership.members
+        message_response.membership.members.map do |m|
+          Models::CourseMember.new(user_id: m.user_id, name: m.name, email: m.email, role: m.role)
+        end
       end
     end
   end
