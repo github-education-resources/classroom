@@ -1,0 +1,29 @@
+<% submit_url = local_assigns.fetch(:submit_url) %>
+<% query = local_assigns.fetch(:query, nil) %>
+<% search_placeholder = local_assigns.fetch(:search_placeholder, "Search...") %>
+<% select_menu_title = local_assigns.fetch(:select_menu_title, "Sort by:") %>
+<% options = local_assigns.fetch(:options, []) %>
+<% option_links = local_assigns.fetch(:option_links, []) %>
+<% selected_option = local_assigns.fetch(:selected_option, options.first) %>
+
+<div class="TableObject" id="js-search-and-sort-component" >
+  <div class="TableObject-item TableObject-item--primary">
+    <%= form_tag submit_url, id: "search-form", method: :get, remote: true do %>
+      <%= text_field_tag :query, query, class: "input-block form-control", placeholder: search_placeholder, autofocus: true, autocomplete: :off, id: "search-query-field" %>
+      <%= hidden_field_tag :sort_by, @current_sort_mode, id: "sort-mode-field" %>
+    <% end %>
+  </div>
+  <div class="TableObject-item">
+    <div id="select-menu-container">
+      <%= render partial: "shared/select_menu",
+          locals: {
+            title: select_menu_title,
+            options: options,
+            option_links: option_links,
+            selected_option: selected_option,
+            remote: true
+          }
+      %>
+    </div>
+  </div>
+</div>

@@ -50,7 +50,6 @@ class GroupAssignmentsController < ApplicationController
     respond_to do |format|
       format.html
       format.js do
-        not_found unless search_assignments_enabled?
         render "group_assignments/filter_repos.js.erb", format: :js
       end
     end
@@ -151,17 +150,17 @@ class GroupAssignmentsController < ApplicationController
   def set_filter_options
     @assignment_sort_modes = GroupAssignmentRepo.sort_modes
 
-    @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
+    @current_sort_mode = params[:sort_by] || @assignment_sort_modes.keys.first
     @query = params[:query]
 
     @assignment_sort_modes_links = @assignment_sort_modes.keys.map do |mode|
       organization_group_assignment_path(
-        sort_assignment_repos_by: mode,
+        sort_by: mode,
         query: @query
       )
     end
 
-    @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
+    @current_sort_mode = params[:sort_by] || @assignment_sort_modes.keys.first
   end
 
   def set_pagination_key

@@ -2,7 +2,8 @@
 
 class SessionsController < ApplicationController
   skip_before_action :authenticate_user!
-  skip_before_action :verify_authenticity_token,  only: [:lti_launch]
+  skip_before_action :verify_authenticity_token,  only: %i[lti_launch]
+  before_action      :allow_in_iframe,            only: %i[lti_launch]
   before_action      :verify_lti_launch_enabled,  only: %i[lti_setup lti_launch]
 
   def new
@@ -67,11 +68,12 @@ class SessionsController < ApplicationController
     linked_org = LtiConfiguration.find_by_auth_hash(auth_hash).organization
 
     if logged_in?
-      redirect_to complete_lti_configuration_path(linked_org)
+      @post_launch_url = complete_lti_configuration_url(linked_org)
     else
-      session[:pre_login_destination] = complete_lti_configuration_path(linked_org)
-      authenticate_user!
+      @post_launch_url = login_url
+      session[:pre_login_destination] = complete_lti_configuration_url(linked_org)
     end
+    render :lti_launch, layout: false, locals: { post_launch_url: @post_launch_url }
   end
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize
@@ -85,6 +87,10 @@ class SessionsController < ApplicationController
   end
 
   private
+
+  def allow_in_iframe
+    response.headers.delete "X-Frame-Options"
+  end
 
   def verify_lti_launch_enabled
     return not_found unless lti_launch_enabled?
