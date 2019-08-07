@@ -4,6 +4,8 @@ class Organization < ApplicationRecord
   include Flippable
   include Sluggable
   include StafftoolsSearchable
+  include Searchable
+  include Sortable
 
   define_pg_search(columns: %i[id github_id title slug])
 
@@ -30,6 +32,24 @@ class Organization < ApplicationRecord
   validates :slug, uniqueness: true
 
   before_destroy :silently_remove_organization_webhook
+
+  scope :order_by_newest, ->(_context = nil) { order(created_at: :desc) }
+  scope :order_by_oldest, ->(_context = nil) { order(created_at: :asc) }
+  scope :order_by_title,  ->(_context = nil) { order(:title) }
+
+  scope :search_by_title, ->(query) { where("title ILIKE ?", "%#{query}%") }
+
+  def self.search_mode
+    :search_by_title
+  end
+
+  def self.sort_modes
+    {
+      "Oldest first" => :order_by_oldest,
+      "Newest first" => :order_by_newest,
+      "Classroom name" => :order_by_title
+    }
+  end
 
   def all_assignments(with_invitations: false)
     return assignments + group_assignments unless with_invitations

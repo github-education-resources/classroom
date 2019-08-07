@@ -57,3 +57,12 @@ end
 
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
+
+# SIGTERM is raised when there is a rolling deployment usually involving
+# docker/kubernetes. Since classroom is dockerized, our exception tracker
+# gets noisy SignalException errors on every deployment. This configuration
+# will not raise a SignalException on SIGTERM whenever we deploy.
+# more infomation on this can be found here:
+# https://github.com/puma/puma/pull/1690
+#
+raise_exception_on_sigterm false
