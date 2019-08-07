@@ -1,3 +1,5 @@
+<% lms_name = local_assigns.fetch(:lms_name, "your Learning Management System") %>
+
 (function() {
   <% if flash[:alert] %>
     $('#flash-messages').html("<%= j render 'shared/flash_messages' %>");
@@ -5,7 +7,8 @@
   $('[data-remodal-id=select-identifier-modal]').replaceWith(
     "<%= j render partial: 'orgs/rosters/select_identifier_modal', locals: {
       roster: current_roster,
-      organization: current_organization
+      organization: current_organization,
+      lms_name: lms_name
     } %>"
   )
 
