@@ -6,12 +6,15 @@ class LtiConfiguration < ApplicationRecord
   validates :lms_type, presence: true
 
   delegate :icon, to: :lms_settings, prefix: :lms
+  delegate :lti_version, to: :lms_settings
   delegate :supports_autoconfiguration?, to: :lms_settings
   delegate :supports_membership_service?, to: :lms_settings
 
+  delegate :context_membership_url, to: :lms_settings
+  delegate :context_membership_body_params, to: :lms_settings
+
   enum lms_type: {
     canvas: "Canvas",
-    blackboard: "Blackboard",
     brightspace: "Brightspace",
     moodle: "Moodle",
     other: "other"
@@ -26,21 +29,17 @@ class LtiConfiguration < ApplicationRecord
     lms_settings.platform_name || default_name
   end
 
-  def context_membership_url(use_cache: true, nonce: nil)
-    cached_value = self[:context_membership_url] if use_cache
-    return cached_value if cached_value
-
+  def cached_launch_message_nonce=(value)
     message_store = GitHubClassroom.lti_message_store(consumer_key: consumer_key)
-    message = message_store.get_message(nonce)
-    return nil unless message
+    message_store.delete_message(cached_launch_message_nonce)
 
-    membership_url = message.custom_params[lms_settings.context_memberships_url_key]
-    return nil unless membership_url
+    super(value)
+  end
 
-    self[:context_membership_url] = membership_url
-    save!
-
-    membership_url
+  def launch_message
+    return nil unless cached_launch_message_nonce
+    message_store = GitHubClassroom.lti_message_store(consumer_key: consumer_key)
+    message_store.get_message(cached_launch_message_nonce)
   end
 
   def xml_configuration(launch_url)
@@ -62,10 +61,10 @@ class LtiConfiguration < ApplicationRecord
   private
 
   def lms_settings
-    return LtiConfiguration::GenericSettings.new if lms_type.blank?
-    return LtiConfiguration::GenericSettings.new if lms_type_other?
+    return LtiConfiguration::GenericSettings.new(launch_message) if lms_type.blank?
+    return LtiConfiguration::GenericSettings.new(launch_message) if lms_type_other?
 
     klass = "LtiConfiguration::#{lms_type.capitalize}Settings"
-    klass.constantize.new
+    klass.constantize.new(launch_message)
   end
 end
