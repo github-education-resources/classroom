@@ -11,6 +11,7 @@ module Orgs
     rescue_from LtiImportError, with: :handle_lms_import_error
 
     # rubocop:disable Metrics/MethodLength
+    # rubocop:disable AbcSize
     def import_from_lms
       students = lms_membership.map(&:member)
       @identifiers = {
@@ -21,11 +22,13 @@ module Orgs
 
       GitHubClassroom.statsd.increment("lti_configuration.import")
 
+      lms_name = current_organization.lti_configuration.lms_name(default_name: "your Learning Management System")
       respond_to do |format|
-        format.js
-        format.html
+        format.js { render :import_from_lms, locals: { lms_name: lms_name } }
+        format.html { render :import_from_lms, locals: { lms_name: lms_name } }
       end
     end
+    # rubocop:enable AbcSize
     # rubocop:enable Metrics/MethodLength
 
     private

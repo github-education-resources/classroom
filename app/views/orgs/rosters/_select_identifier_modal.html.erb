@@ -1,6 +1,6 @@
 <% view = FormView.new(subject: roster) %>
 <% identifiers = @identifiers || {} %>
-<% lms_name = current_organization.lti_configuration.lms_name(default_name: "your Learning Management System") %>
+<% lms_name = local_assigns.fetch(:lms_name, "your Learning Management System") %>
 
 <div class="remodal text-left" data-remodal-id="select-identifier-modal">
   <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
