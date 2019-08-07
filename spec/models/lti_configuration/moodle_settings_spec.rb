@@ -11,7 +11,7 @@ RSpec.describe LtiConfiguration::MoodleSettings do
     expect(settings.platform_name).to eql("Moodle")
   end
 
-  it "context_memberships_url_key should be inherited" do
-    expect(settings.context_memberships_url_key).to eql(general.context_memberships_url_key)
+  it "lti_version should be inherited" do
+    expect(settings.lti_version).to eql(general.lti_version)
   end
 end
