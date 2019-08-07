@@ -462,7 +462,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
             it "didn't kick off a job" do
               expect { post :create_repo, params: { id: invitation.key } }
-                .to_not have_enqueued_job(GroupAssignmentRepo::CreateGitHubRepositoryJob)
+                .to_not have_enqueued_job(CreateGitHubRepositoryNewJob)
             end
           end
         end
@@ -498,7 +498,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
             it "kick off a job" do
               expect { post :create_repo, params: { id: invitation.key } }
-                .to have_enqueued_job(GroupAssignmentRepo::CreateGitHubRepositoryJob)
+                .to have_enqueued_job(CreateGitHubRepositoryNewJob)
             end
           end
         end
