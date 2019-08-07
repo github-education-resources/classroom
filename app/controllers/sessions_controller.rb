@@ -62,11 +62,11 @@ class SessionsController < ApplicationController
     message = GitHubClassroom::LTI::MessageStore.construct_message(auth_hash.extra.raw_info)
     raise("invalid lti launch message") unless message_store.message_valid?(message)
 
-    nonce = message_store.save_message(message)
-    session[:lti_nonce] = nonce
+    lti_configuration = LtiConfiguration.find_by_auth_hash(auth_hash)
+    lti_configuration.cached_launch_message_nonce = message_store.save_message(message)
+    lti_configuration.save!
 
-    linked_org = LtiConfiguration.find_by_auth_hash(auth_hash).organization
-
+    linked_org = lti_configuration.organization
     if logged_in?
       @post_launch_url = complete_lti_configuration_url(linked_org)
     else
