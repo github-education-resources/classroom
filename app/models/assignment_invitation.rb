@@ -43,7 +43,7 @@ class AssignmentInvitation < ApplicationRecord
     assignment_repo = AssignmentRepo.find_by(assignment: assignment, user: invitee)
     return CreateGitHubRepoService::Result.success(assignment_repo) if assignment_repo.present?
 
-    AssignmentRepo::Creator::Result.pending
+    CreateGitHubRepoService::Result.pending
   end
 
   def to_param
