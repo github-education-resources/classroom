@@ -123,7 +123,7 @@ class OrganizationsController < Orgs::Controller
   def authorize_organization_addition
     new_github_organization = github_organization_from_params
 
-    return if new_github_organization.admin?(current_user.github_user.login)
+    return if new_github_organization.admin?(current_user.github_user.login(use_cache: false))
     raise NotAuthorized, "You are not permitted to add this organization as a classroom"
   end
 
@@ -178,7 +178,7 @@ class OrganizationsController < Orgs::Controller
 
   def create_user_organization_access(organization)
     github_org = GitHubOrganization.new(current_user.github_client, organization.github_id)
-    return unless github_org.admin?(current_user.github_user.login)
+    return unless github_org.admin?(current_user.github_user.login(use_cache: false))
     organization.users << current_user
   end
 

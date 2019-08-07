@@ -9,7 +9,7 @@ module Orgs
 
     def add_current_user_to_current_organization_or_404
       github_organization = GitHubOrganization.new(current_user.github_client, current_organization.github_id)
-      return not_found unless github_organization.admin?(current_user.github_user.login)
+      return not_found unless github_organization.admin?(current_user.github_user.login(use_cache: false))
       current_organization.users << current_user
       true
     end
