@@ -63,7 +63,7 @@ class Roster
       ensure_organization_does_not_have_roster!
 
       ActiveRecord::Base.transaction do
-        google_ids = @options[:google_user_ids] || []
+        google_ids = @options[:lms_user_ids] || []
         add_identifiers_to_roster(@options[:identifiers], google_ids: google_ids) if @options.key?(:identifiers)
 
         @roster.save!
@@ -81,8 +81,8 @@ class Roster
     def add_identifiers_to_roster(raw_identifiers_string, google_ids: [])
       identifiers = raw_identifiers_string.split("\r\n").reject(&:blank?).uniq
 
-      identifiers.zip(google_ids).each do |identifier, google_user_id|
-        @roster.roster_entries << RosterEntry.new(identifier: identifier, google_user_id: google_user_id)
+      identifiers.zip(google_ids).each do |identifier, lms_user_id|
+        @roster.roster_entries << RosterEntry.new(identifier: identifier, lms_user_id: lms_user_id)
       end
     end
 
