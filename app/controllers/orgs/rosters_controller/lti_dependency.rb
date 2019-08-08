@@ -13,9 +13,10 @@ module Orgs
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable AbcSize
     def import_from_lms
-      students = lms_membership
+      students = get_new_students(lms_membership)
+      @student_ids = students.map(&:user_id)
       @identifiers = {
-        "User IDs": students.map(&:user_id),
+        "User IDs": @student_ids,
         "Names": students.map(&:name),
         "Emails": students.map(&:email)
       }.select { |_, v| v.any? }
@@ -35,6 +36,15 @@ module Orgs
 
     def ensure_lti_configuration
       redirect_to link_lms_organization_path(current_organization) unless current_organization.lti_configuration
+    end
+
+    def get_new_students(students)
+      current_student_ids = RosterEntry.where(roster: current_roster).pluck(:lms_user_id)
+      all_student_ids = students.map(&:user_id)
+
+      latest_student_ids = all_student_ids - current_student_ids
+      latest_students = students.select { |student| latest_student_ids.include?(student.user_id) }
+      latest_students
     end
 
     # rubocop:disable Metrics/MethodLength
