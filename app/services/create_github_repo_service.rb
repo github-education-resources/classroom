@@ -257,8 +257,8 @@ class CreateGitHubRepoService
     when :template_repository_creation_failed
       "GitHub repository could not be created from template, please try again."
     when :template_repository_not_found
-      "Starter code template repository was not found. The repository might be deleted, or the organization the "\
-        "repository belongs to might have restrictions on third-party access."
+      "Starter code template repository was not found. The repository might be deleted, or the organization that "\
+        "owns the repository has restrictions on third-party access."
     when :starter_code_import_failed
       "We were not able to import you the starter code to your #{exercise.assignment_type.humanize}, please try again."
     when :collaborator_addition_failed
