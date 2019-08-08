@@ -15,7 +15,7 @@
               <dt class="Box-subtitle">Select from the choices below</dt>
             </dl>
             <ul>
-            <%= hidden_field_tag "lms_user_ids", @ids %>
+            <%= hidden_field_tag "lms_user_ids", @student_ids %>
               <% @identifiers.each_pair do |identifier_type, ids| %>
                 <li class="Box-row">
                   <%= f.radio_button :identifiers, ids.join("\r\n") %>&nbsp;
