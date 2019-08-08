@@ -5,7 +5,7 @@ system to save you time when creating a GitHub Classroom course.
 
 ### Prerequisites
 
-This guide assumes that you've successfully [connected GitHub Classroom to you Learning Management System](/help/connect-to-lms). If you haven't, please follow those setup instructions before proceeding to the next steps.
+If you haven't yet, [connect GitHub Classroom to you learning management system](/help/connect-to-lms) before proceeding.
 
 Importing a course roster from your Learning Management System will only work if you have you have enabled GitHub Classroom to receive course roster information per the privacy settings within your Learning Management System.
 
