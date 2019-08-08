@@ -40,17 +40,16 @@ module Orgs
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/AbcSize
     def lms_membership
-      membership_service_url = current_organization.lti_configuration.context_membership_url
-      unless membership_service_url
+      unless current_organization.lti_configuration.supports_membership_service?
         lms_name = current_organization.lti_configuration.lms_name(default_name: "your Learning Management System")
-        msg = "GitHub Classroom is not configured properly on #{lms_name}.
-        Please ensure the integration is configured properly and try again."
+        msg = "GitHub Classroom does not have access to your course roster on #{lms_name}. Please ensure that
+        you've allowed GitHub Classroom to retrieve your course membership from #{lms_name} and try again."
 
         raise LtiImportError, msg
       end
 
       membership_service = GitHubClassroom::LTI::MembershipService.new(
-        membership_service_url,
+        current_organization.lti_configuration.context_membership_url,
         current_organization.lti_configuration.consumer_key,
         current_organization.lti_configuration.shared_secret
       )
@@ -59,8 +58,8 @@ module Orgs
         membership_service.students
       rescue Faraday::ClientError, JSON::ParserError
         lms_name = current_organization.lti_configuration.lms_name(default_name: "your Learning Management System")
-        msg = "GitHub Classroom is unable to fetch membership from #{lms_name} at this time.
-        Please try again later."
+        msg = "GitHub Classroom is unable to fetch membership from #{lms_name} at this time. If the problem persists,
+        re-launch GitHub Classroom from your Learning Management System and try again."
 
         raise LtiImportError, msg
       end
