@@ -230,8 +230,8 @@ RSpec.describe Orgs::RostersController, type: :controller do
           before(:each) do
             LtiConfiguration
               .any_instance
-              .stub(:context_membership_url)
-              .and_return("http://www.example.com")
+              .stub(:supports_membership_service?)
+              .and_return(true)
           end
 
           context "fetching roster succeeds" do
