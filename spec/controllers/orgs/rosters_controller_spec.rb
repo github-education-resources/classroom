@@ -883,9 +883,9 @@ RSpec.describe Orgs::RostersController, type: :controller do
               expect(organization.roster.roster_entries.count).to eq(3)
             end
 
-            it "appends suffix with duplicate students that were already added to roster" do
+            it "does not add duplicate students that were already added to roster" do
               patch :sync_google_classroom, params: { id: organization.slug }
-              expect(organization.roster.roster_entries.count).to eq(5)
+              expect(organization.roster.roster_entries.count).to eq(3)
             end
 
             it "does not remove students deleted from google classroom" do
