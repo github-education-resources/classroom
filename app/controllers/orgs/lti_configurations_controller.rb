@@ -88,13 +88,14 @@ module Orgs
     def ensure_no_google_classroom
       return unless current_organization.google_course_id
       redirect_to edit_organization_path(current_organization),
-        alert: "A Google Classroom configuration exists. Please remove configuration before creating a new one."
+        alert: "This classroom is already connected to Google Classroom. Please disconnect from Google Classroom "\
+          "before connecting to another Learning Management System."
     end
 
     def ensure_no_roster
       return unless current_organization.roster
       redirect_to edit_organization_path(current_organization),
-        alert: "We are unable to link your classroom organization to an LMS"\
+        alert: "We are unable to link your classroom organization to a Learning Management System "\
           "because a roster already exists. Please delete your current roster and try again."
     end
 
