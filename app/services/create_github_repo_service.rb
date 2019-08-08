@@ -69,6 +69,7 @@ class CreateGitHubRepoService
   #
   # Returns an Integer ID or raises a Result::Error
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def create_github_repository_from_template!
     stats_sender.report_with_exercise_prefix(:import_with_templates_started)
 
@@ -82,8 +83,11 @@ class CreateGitHubRepoService
 
     stats_sender.report_with_exercise_prefix(:import_with_templates_success)
     github_repository
+  rescue GitHub::NotFound => error
+    raise Result::Error.new errors(:template_repository_not_found), error.message
   rescue GitHub::Error => error
-    handle_template_error(error, options)
+    report_template_error_to_failbot(error, options)
+    raise Result::Error.new errors(:template_repository_creation_failed), error.message
   end
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
@@ -229,8 +233,7 @@ class CreateGitHubRepoService
   end
 
   # rubocop:disable MethodLength
-  def handle_template_error(error, options)
-    raise Result::Error.new errors(:template_repository_not_found), error.message if error.class == GitHub::NotFound
+  def report_template_error_to_failbot(error, options)
     error_context = {}.tap do |e|
       e[:user] = collaborator.id if collaborator.is_a? User
       e[:github_team_id] = collaborator.github_team_id if collaborator.is_a? Group
@@ -243,7 +246,6 @@ class CreateGitHubRepoService
       error,
       error_context
     )
-    raise Result::Error.new errors(:template_repository_creation_failed), error.message
   end
 
   # Internal: Method for error messages, modifies error messages based on the type of assignment.
