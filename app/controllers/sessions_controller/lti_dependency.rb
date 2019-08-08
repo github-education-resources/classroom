@@ -1,33 +1,30 @@
+# frozen_string_literal: true
+
 class SessionsController < ApplicationController
   class LtiLaunchError < StandardError
     attr_reader :lti_message
 
-    def initialize(message="There was an error launching GitHub Classroom. Please try again.", lti_message)
-      super(message)
+    def initialize(lti_message)
+      super(nil)
       @lti_message = lti_message
     end
   end
 
   skip_before_action :verify_authenticity_token,  only: %i[lti_launch]
-  before_action      :allow_in_iframe,            only: %i[lti_launch]
   before_action      :verify_lti_launch_enabled,  only: %i[lti_setup lti_launch]
+  before_action      :allow_in_iframe,            only: %i[lti_launch]
 
   rescue_from LtiLaunchError, with: :handle_lti_launch_error
 
-  # rubocop:disable MethodLength
   # Called before validating an LTI launch request, and sets
   # required parameters for the Omniauth LTI strategy to succeed
   def lti_setup
-    message = GitHubClassroom::LTI::MessageStore.construct_message(request.params)
-    lti_configuration = LtiConfiguration.find_by(consumer_key: message.oauth_consumer_key)
-    unless lti_configuration
-      error_msg = "Configured credentials are not recognized by GitHub Classroom. Please ensure you've put in the
-      proper `Consumer Key` and `Shared Secret` when configuring GitHub Classroom witin your Learning Management System."
+    OmniAuth.config.on_failure = Proc.new { |env|
+      OmniAuth::FailureEndpoint.new(env).redirect_to_failure
+    }
 
-      raise LtiLaunchError.new(message), error_msg
-    end
-
-    shared_secret = lti_configuration.shared_secret
+    lti_configuration = LtiConfiguration.find_by(consumer_key: request.params["oauth_consumer_key"])
+    raise LtiLaunchError.new(nil) unless lti_configuration
 
     strategy = request.env["omniauth.strategy"]
     strategy.options.consumer_key = lti_configuration.consumer_key
@@ -35,7 +32,6 @@ class SessionsController < ApplicationController
 
     head :ok
   end
-  # rubocop:enable MethodLength
 
   # After validating the LTI handshake is valid, we proceed with validating
   # the LTI message itself and scoping it to the relevant classroom organization
@@ -46,9 +42,18 @@ class SessionsController < ApplicationController
     validate_message!(message)
     persist_message!(message)
 
-    set_post_launch_url(message)
+    update_post_launch_url(message)
 
     render :lti_launch, layout: false, locals: { post_launch_url: @post_launch_url }
+  end
+
+  # Called if the LTI OmniAuth handshake fails verification
+  def lti_failure
+    message = IMS::LTI::Models::Messages::BasicLTILaunchRequest.new(launch_presentation_return_url: params[:message])
+    error_msg = "The launch credentials could not be authorized. Ensure you've entered the correct \"consumer key\"
+    and \"shared secret\" when configuring GitHub Classroom within your Learning Management System."
+
+    raise LtiLaunchError.new(message), error_msg
   end
 
   private
@@ -56,8 +61,8 @@ class SessionsController < ApplicationController
   def validate_message!(message)
     message_store = GitHubClassroom.lti_message_store(consumer_key: message.oauth_consumer_key)
     unless message_store.message_valid?(message)
-      error_msg = "GitHub Classroom did not receive a valid launch message from your Learning Management System.
-      Please re-launch GitHub Classroom from your Learning Management System and try again."
+      error_msg = "The launch message from your Learning Management system could not be validated.
+      Please re-launch GitHub Classroom from your Learning Management System."
 
       raise LtiLaunchError.new(message), error_msg
     end
@@ -69,10 +74,6 @@ class SessionsController < ApplicationController
     message_store = GitHubClassroom.lti_message_store(consumer_key: message.oauth_consumer_key)
     lti_configuration = LtiConfiguration.find_by(consumer_key: message.oauth_consumer_key)
 
-    unless lti_configuration
-      raise LtiLaunchError.new(message), "Configured credentials are not recognized by GitHub Classroom."
-    end
-
     nonce = message_store.save_message(message)
     lti_configuration.cached_launch_message_nonce = nonce
     lti_configuration.save!
@@ -80,7 +81,7 @@ class SessionsController < ApplicationController
     message
   end
 
-  def set_post_launch_url(message)
+  def update_post_launch_url(message)
     linked_org = LtiConfiguration.find_by(consumer_key: message.oauth_consumer_key).organization
     if logged_in?
       @post_launch_url = complete_lti_configuration_url(linked_org)
@@ -94,7 +95,7 @@ class SessionsController < ApplicationController
     error_msg = err.message
     message = err.lti_message
 
-    if message.launch_presentation_return_url
+    if message && message.launch_presentation_return_url
       error_params = { lti_errormsg: error_msg }.to_param
       callback_url = "#{message.launch_presentation_return_url}?#{error_params}"
 

@@ -22,6 +22,7 @@ Rails.application.routes.draw do
 
   match "/auth/lti/setup",          to: "sessions#lti_setup",     via: %i[get post]
   match "/auth/lti/launch",         to: "sessions#lti_launch",    via: %i[get post]
+  match "/auth/lti/failure",        to: "sessions#lti_failure",   via: %i[get post]
   match "/auth/:provider/callback", to: "sessions#create",        via: %i[get post]
   match "/auth/failure",            to: "sessions#failure",       via: %i[get post]
 

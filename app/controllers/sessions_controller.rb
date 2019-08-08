@@ -35,6 +35,9 @@ class SessionsController < ApplicationController
   end
 
   def failure
+    if params[:strategy] == "lti"
+      return redirect_to auth_lti_failure_path(request.parameters) if params[:strategy] == "lti"
+    end
     redirect_to root_path, alert: "There was a problem authenticating with GitHub, please try again."
   end
 
