@@ -14,9 +14,9 @@ module Orgs
     # rubocop:disable AbcSize
     def import_from_lms
       students = get_new_students(lms_membership)
-      @ids = students.map(&:user_id)
+      @student_ids = students.map(&:user_id)
       @identifiers = {
-        "User IDs": students.map(&:user_id),
+        "User IDs": @student_ids,
         "Names": students.map(&:name),
         "Emails": students.map(&:email)
       }.select { |_, v| v.any? }
