@@ -75,6 +75,24 @@ describe GitHubClassroom::LTI::MessageStore do
       end
     end
 
+    context "deleting messages" do
+      let(:existing_nonce) { instance.save_message(lti_message) }
+
+      it "deletes existing nonce" do
+        expect(instance.get_message(existing_nonce)).not_to be_nil
+        instance.delete_message(existing_nonce)
+        expect(instance.get_message(existing_nonce)).to be_nil
+      end
+
+      it "does nothing on nonexistant nonce" do
+        nonexisting_nonce = existing_nonce + "-not_existing"
+
+        expect(instance.get_message(existing_nonce)).not_to be_nil
+        instance.delete_message(nonexisting_nonce)
+        expect(instance.get_message(existing_nonce)).not_to be_nil
+      end
+    end
+
     context "retrieving messages" do
       it "returns a message for existing nonce" do
         nonce = instance.save_message(lti_message)

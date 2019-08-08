@@ -9,9 +9,5 @@ class LtiConfiguration
     def icon
       "moodle-logo.png"
     end
-
-    def supports_membership_service
-      true
-    end
   end
 end
