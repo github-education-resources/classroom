@@ -17,6 +17,7 @@ module GitHubClassroom
         IMS::LTI::Models::Messages::Message.generate(params)
       end
 
+      # rubocop:disable CyclomaticComplexity
       def message_valid?(lti_message)
         # check for duplicate nonce
         return false if nonce_exists?(lti_message.oauth_nonce)
@@ -25,12 +26,15 @@ module GitHubClassroom
         return false if DateTime.strptime(lti_message.oauth_timestamp, "%s") < 5.minutes.ago
 
         # check if required params are provided
-        return false unless lti_message.resource_link_id
-        return false unless lti_message.lti_version
-        return false unless lti_message.lti_message_type
+        if lti_message.lti_message_type == "basic-lti-launch-request"
+          return false unless lti_message.resource_link_id
+          return false unless lti_message.lti_version
+          return false unless lti_message.lti_message_type
+        end
 
         true
       end
+      # rubocop:enable CyclomaticComplexity
 
       def save_message(lti_message)
         nonce = lti_message.oauth_nonce
