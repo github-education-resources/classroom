@@ -84,7 +84,12 @@ class RosterEntry < ApplicationRecord
 
   # Restrict relation to only entries that have not joined a team
   def self.students_not_on_team(group_assignment)
-    students_on_team = group_assignment.repos.includes(:repo_accesses).flat_map(&:repo_accesses).map(&:user_id).uniq
+    students_on_team = group_assignment
+      .repos
+      .includes(:repo_accesses)
+      .flat_map(&:repo_accesses)
+      .map(&:user_id)
+      .uniq
     where(user_id: nil).or(where.not(user_id: students_on_team))
   end
 
