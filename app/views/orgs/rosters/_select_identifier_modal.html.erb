@@ -1,5 +1,5 @@
 <% view = FormView.new(subject: roster) %>
-<% identifiers = @identifiers || {} %>
+<% identifiers = local_assigns.fetch(:identifiers, {}) %>
 <% lms_name = local_assigns.fetch(:lms_name, "your Learning Management System") %>
 
 <div class="remodal text-left" data-remodal-id="select-identifier-modal">
