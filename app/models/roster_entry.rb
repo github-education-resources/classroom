@@ -101,7 +101,7 @@ class RosterEntry < ApplicationRecord
   # Returns the created entries.
 
   # rubocop:disable Metrics/MethodLength
-  def self.create_entries(identifiers:, roster:, google_user_ids: [])
+  def self.create_entries(identifiers:, roster:, lms_user_ids: [])
     created_entries = []
     RosterEntry.transaction do
       identifiers = add_suffix_to_duplicates(
@@ -109,8 +109,8 @@ class RosterEntry < ApplicationRecord
         existing_roster_entries: RosterEntry.where(roster: roster).pluck(:identifier)
       )
 
-      identifiers.zip(google_user_ids).each do |identifier, google_user_id|
-        roster_entry = RosterEntry.create(identifier: identifier, roster: roster, google_user_id: google_user_id)
+      identifiers.zip(lms_user_ids).each do |identifier, lms_user_id|
+        roster_entry = RosterEntry.create(identifier: identifier, roster: roster, lms_user_id: lms_user_id)
 
         if !roster_entry.persisted?
           raise IdentifierCreationError unless roster_entry.errors.include?(:identifier)
