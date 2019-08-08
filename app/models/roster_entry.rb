@@ -5,14 +5,13 @@ class RosterEntry < ApplicationRecord
 
   include Sortable
   include Searchable
+  include DuplicateRosterEntries
 
   belongs_to :roster
   belongs_to :user, optional: true
 
   validates :identifier, presence: true
   validates :roster,     presence: true
-
-  before_create :validate_identifiers_are_unique_to_roster
 
   scope :order_by_repo_created_at, lambda { |context|
     assignment = context[:assignment]
@@ -85,13 +84,13 @@ class RosterEntry < ApplicationRecord
 
   # Restrict relation to only entries that have not joined a team
   def self.students_not_on_team(group_assignment)
-    students_on_team = group_assignment.repos.map(&:repo_accesses).flatten.map(&:user).map(&:id).uniq
-    sql_formatted_students_on_team = students_on_team.empty? ? "(NULL)" : "(#{students_on_team.join(',')})"
-
-    where <<~SQL
-      roster_entries.user_id IS NULL OR
-      roster_entries.user_id NOT IN #{sql_formatted_students_on_team}
-    SQL
+    students_on_team = group_assignment
+      .repos
+      .includes(:repo_accesses)
+      .flat_map(&:repo_accesses)
+      .map(&:user_id)
+      .uniq
+    where(user_id: nil).or(where.not(user_id: students_on_team))
   end
 
   # Takes an array of identifiers and creates a
@@ -102,11 +101,16 @@ class RosterEntry < ApplicationRecord
   # Returns the created entries.
 
   # rubocop:disable Metrics/MethodLength
-  def self.create_entries(identifiers:, roster:, google_user_ids: [])
+  def self.create_entries(identifiers:, roster:, lms_user_ids: [])
     created_entries = []
     RosterEntry.transaction do
-      identifiers.zip(google_user_ids).each do |identifier, google_user_id|
-        roster_entry = RosterEntry.create(identifier: identifier, roster: roster, google_user_id: google_user_id)
+      identifiers = add_suffix_to_duplicates(
+        identifiers: identifiers,
+        existing_roster_entries: RosterEntry.where(roster: roster).pluck(:identifier)
+      )
+
+      identifiers.zip(lms_user_ids).each do |identifier, lms_user_id|
+        roster_entry = RosterEntry.create(identifier: identifier, roster: roster, lms_user_id: lms_user_id)
 
         if !roster_entry.persisted?
           raise IdentifierCreationError unless roster_entry.errors.include?(:identifier)
@@ -118,14 +122,5 @@ class RosterEntry < ApplicationRecord
 
     created_entries
   end
-  # rubocop:enable Metrics/MethodLength
-
-  private
-
-  def validate_identifiers_are_unique_to_roster
-    return unless RosterEntry.find_by(roster: roster, identifier: identifier)
-
-    errors[:identifier] << "Identifier must be unique in the roster."
-    throw(:abort)
-  end
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 end

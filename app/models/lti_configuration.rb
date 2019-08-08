@@ -17,13 +17,9 @@ class LtiConfiguration < ApplicationRecord
     canvas: "Canvas",
     brightspace: "Brightspace",
     moodle: "Moodle",
+    sakai: "Sakai",
     other: "other"
   }, _prefix: true
-
-  def self.find_by_auth_hash(hash)
-    consumer_key = hash.credentials.token
-    find_by(consumer_key: consumer_key)
-  end
 
   def lms_name(default_name: "Other Learning Management System")
     lms_settings.platform_name || default_name

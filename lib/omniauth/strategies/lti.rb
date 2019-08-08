@@ -18,16 +18,17 @@ module OmniAuth
       end
 
       def callback_phase
-        return fail!(:invalid_credentials) unless valid_lti?
+        error_return_url = request.params["launch_presentation_return_url"]
+        return fail!(error_return_url) unless valid_lti?
         env["lti.launch_params"] = @authenticator.params
 
         super
       rescue ::Timeout::Error
-        fail!(:timeout)
+        fail!(error_return_url)
       rescue ::Net::HTTPFatalError, ::OpenSSL::SSL::SSLError
-        fail!(:service_unavailable)
+        fail!(error_return_url)
       rescue ::OmniAuth::NoSessionError
-        fail!(:session_expired)
+        fail!(error_return_url)
       end
 
       uid { @authenticator.params["user_id"] }
