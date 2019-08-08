@@ -45,11 +45,14 @@ module Orgs
 
     # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     def create
+      if params[:lms_user_ids].is_a? String
+        params[:lms_user_ids] = params[:lms_user_ids].split
+      end
       result = Roster::Creator.perform(
         organization: current_organization,
         identifiers: params[:identifiers],
         idenifier_name: params[:identifier_name],
-        lms_user_ids: params[:lms_user_ids].split
+        lms_user_ids: params[:lms_user_ids]
       )
 
       # Set the object so that we can see errors when rendering :new
