@@ -13,6 +13,8 @@ describe GitHubClassroom::LTI::MessageStore do
       "oauth_timestamp": DateTime.now.to_i.to_s,
       "oauth_nonce": "mock_nonce",
       "oauth_version": "1.0",
+      "oauth_callback": "about:blank",
+      "oauth_signature": "mock_oauth_signature",
       "context_id": "mock_context_id",
       "context_label": "CONTEXT-LABEL",
       "context_title": "Context/Course Title",
@@ -22,8 +24,8 @@ describe GitHubClassroom::LTI::MessageStore do
       "lti_message_type": "basic-lti-launch-request",
       "lti_version": "LTI-1p0",
       "user_id": "mock_user_id",
-      "oauth_signature": "mock_oauth_signature"
-    }
+      "resource_link_id": "mock_resource_link_id"
+    }.stringify_keys
   end
 
   let(:lti_message) { subject.construct_message(lti_launch_params) }

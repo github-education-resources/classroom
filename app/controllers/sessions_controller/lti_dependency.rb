@@ -16,6 +16,7 @@ class SessionsController < ApplicationController
 
   rescue_from LtiLaunchError, with: :handle_lti_launch_error
 
+  # rubocop:disable AbcSize
   # Called before validating an LTI launch request, and sets
   # required parameters for the Omniauth LTI strategy to succeed
   def lti_setup
@@ -23,23 +24,25 @@ class SessionsController < ApplicationController
     raise LtiLaunchError.new(nil), "Configured consumer key is invalid." unless lti_configuration
 
     strategy = request.env["omniauth.strategy"]
+    raise LtiLaunchError.new(nil), "Incoming request is not a LTI launch" unless strategy
+
     strategy.options.consumer_key = lti_configuration.consumer_key
     strategy.options.shared_secret = lti_configuration.shared_secret
-
     head :ok
   end
+  # rubocop:enable AbcSize
 
   # After validating the LTI handshake is valid, we proceed with validating
   # the LTI message itself and scoping it to the relevant classroom organization
   def lti_launch
     auth_hash = request.env["omniauth.auth"]
+    consumer_key = auth_hash.credentials.token
     message = GitHubClassroom::LTI::MessageStore.construct_message(auth_hash.extra.raw_info)
 
-    validate_message!(message)
-    persist_message!(message)
+    validate_message!(consumer_key, message)
+    persist_message!(consumer_key, message)
 
-    update_post_launch_url(message)
-
+    update_post_launch_url(consumer_key)
     render :lti_launch, layout: false, locals: { post_launch_url: @post_launch_url }
   end
 
@@ -54,8 +57,8 @@ class SessionsController < ApplicationController
 
   private
 
-  def validate_message!(message)
-    message_store = GitHubClassroom.lti_message_store(consumer_key: message.oauth_consumer_key)
+  def validate_message!(consumer_key, message)
+    message_store = GitHubClassroom.lti_message_store(consumer_key: consumer_key)
     unless message_store.message_valid?(message)
       error_msg = "The launch message from your Learning Management system could not be validated.
       Please re-launch GitHub Classroom from your Learning Management System."
@@ -66,9 +69,9 @@ class SessionsController < ApplicationController
     message
   end
 
-  def persist_message!(message)
-    message_store = GitHubClassroom.lti_message_store(consumer_key: message.oauth_consumer_key)
-    lti_configuration = LtiConfiguration.find_by(consumer_key: message.oauth_consumer_key)
+  def persist_message!(consumer_key, message)
+    message_store = GitHubClassroom.lti_message_store(consumer_key: consumer_key)
+    lti_configuration = LtiConfiguration.find_by(consumer_key: consumer_key)
 
     nonce = message_store.save_message(message)
     lti_configuration.cached_launch_message_nonce = nonce
@@ -77,8 +80,8 @@ class SessionsController < ApplicationController
     message
   end
 
-  def update_post_launch_url(message)
-    linked_org = LtiConfiguration.find_by(consumer_key: message.oauth_consumer_key).organization
+  def update_post_launch_url(consumer_key)
+    linked_org = LtiConfiguration.find_by(consumer_key: consumer_key).organization
     if logged_in?
       @post_launch_url = complete_lti_configuration_url(linked_org)
     else
