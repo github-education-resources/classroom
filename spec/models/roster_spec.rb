@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.describe Roster, type: :model do
+  it { should have_many(:roster_entries).dependent(:destroy) }
+
   subject { create(:roster) }
 
   describe "associations" do
