@@ -42,7 +42,7 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
 
         context "there is a LTI configuration" do
           before(:each) do
-            create(:lti_configuration,
+            @lti_configuration = create(:lti_configuration,
               organization: organization,
               consumer_key: "hi",
               shared_secret: "hi")
@@ -53,7 +53,9 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
           end
 
           it "flashes error message" do
-            expect(flash[:alert]).to be_present
+            lms_name = @lti_configuration.lms_name(default_name: "a Learning Management System")
+            expect(flash[:alert]).to eq("This classroom is already connected to #{lms_name}. "\
+              "Please disconnect from #{lms_name} before connecting to Google Classroom.")
           end
 
           it "redirects to settings page" do
@@ -79,7 +81,9 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
           end
 
           it "flashes error message" do
-            expect(flash[:alert]).to be_present
+            message = "We are unable to link your classroom organization to Google Classroom "\
+              "because a roster already exists. Please delete your current roster and try again."
+            expect(flash[:alert]).to eq(message)
           end
 
           it "redirects to settings page" do
@@ -186,7 +190,7 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
 
         context "there is a LTI configuration" do
           before(:each) do
-            create(:lti_configuration,
+            @lti_configuration = create(:lti_configuration,
               organization: organization,
               consumer_key: "hi",
               shared_secret: "hi")
@@ -198,7 +202,9 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
           end
 
           it "flashes error message" do
-            expect(flash[:alert]).to be_present
+            lms_name = @lti_configuration.lms_name(default_name: "a Learning Management System")
+            expect(flash[:alert]).to eq("This classroom is already connected to #{lms_name}. "\
+              "Please disconnect from #{lms_name} before connecting to Google Classroom.")
           end
 
           it "redirects to settings page" do
@@ -225,7 +231,9 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
           end
 
           it "flashes error message" do
-            expect(flash[:alert]).to be_present
+            message = "We are unable to link your classroom organization to Google Classroom "\
+              "because a roster already exists. Please delete your current roster and try again."
+            expect(flash[:alert]).to eq(message)
           end
 
           it "redirects to settings page" do

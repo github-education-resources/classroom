@@ -88,8 +88,8 @@ module Orgs
     def ensure_no_google_classroom
       return unless current_organization.google_course_id
       redirect_to edit_organization_path(current_organization),
-        alert: "This classroom is already connected to Google Classroom. Please disconnect from Google Classroom before
-          connecting to another Learning Management System."
+        alert: "This classroom is already connected to Google Classroom. Please disconnect from Google Classroom "\
+          "before connecting to another Learning Management System."
     end
 
     def ensure_no_roster

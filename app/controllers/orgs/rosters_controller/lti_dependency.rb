@@ -19,15 +19,13 @@ module Orgs
       new_students = filter_new_students(all_students)
       if all_students.present? && new_students.empty?
         raise LtiImportError, "No students created. Your roster is already up to date with #{lms_name}."
-        #flash[:success] = "No students created. Your roster is already up to date with #{lms_name}."
-        #redirect_to roster_path(current_organization)
       end
 
-      @student_ids = students.map(&:user_id)
+      @student_ids = new_students.map(&:user_id)
       @identifiers = {
         "User IDs": @student_ids,
-        "Names": students.map(&:name),
-        "Emails": students.map(&:email)
+        "Names": new_students.map(&:name),
+        "Emails": new_students.map(&:email)
       }.select { |_, v| v.any? }
 
       GitHubClassroom.statsd.increment("lti_configuration.import")
