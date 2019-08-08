@@ -1,0 +1,10 @@
+<div class="remodal text-left" data-remodal-id="edit-roster-student-<%= roster_entry.id %>">
+  <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
+  <h2 class="remodal-header text-left">Edit <%= roster_entry.identifier %></h2>
+  <%= form_tag({ controller: :rosters, action: :edit_entry }, method: :patch) do %>
+    <%= hidden_field_tag 'roster_entry_id', roster_entry.id %>
+    <%= hidden_field_tag 'roster_entries_page', roster_entries_page %>
+    <%= text_field_tag 'roster_entry_identifier', roster_entry.identifier, class: 'input-block form-control', autofocus: true, autocomplete: :off %>
+    <%= submit_tag 'Edit roster entry', class: 'btn btn-primary my-3 js-submit' %>
+  <% end %>
+</div>
