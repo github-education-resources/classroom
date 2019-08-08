@@ -30,8 +30,7 @@ module Orgs
 
       latest_students = list_google_classroom_students
       latest_student_ids = latest_students.collect(&:user_id)
-      current_student_ids = current_roster.roster_entries.pluck(&:google_user_id)
-
+      current_student_ids = current_roster.roster_entries.pluck(:lms_user_id)
       new_student_ids = latest_student_ids - current_student_ids
       new_students = latest_students.select { |s| new_student_ids.include? s.user_id }
 
@@ -74,7 +73,7 @@ module Orgs
       names = students.map { |s| s.profile.name.full_name }
       user_ids = students.map(&:user_id)
       params[:identifiers] = names.join("\r\n")
-      params[:google_user_ids] = user_ids
+      params[:lms_user_ids] = user_ids
 
       if current_roster.nil?
         create
