@@ -32,7 +32,7 @@ To import a new course roster from your Learning Management, select the classroo
     **Note**: If you do not see the kind of identifier you want, you may have to enable GitHub Classroom to receive student name and email information in your learning management system's privacy settings. See [troubleshooting](#troubleshooting) for more advice.
     {: class="note"}
 
-5. That's it! You should now have your roster imported into GitHub Classroom.
+You have imported your roster into GitHub Classroom.
 
     **Note**: If you encounter any errors, check to ensure you have enabled the roster membership service from within your Learning Management System. See [troubleshooting](#troubleshooting) for more advice.
     {: class="note"}
