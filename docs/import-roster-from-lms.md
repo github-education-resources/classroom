@@ -11,21 +11,25 @@ Importing a course roster from your learning management system will only work if
 
 ### Creating a new course roster
 
-To import a new course roster from your Learning Management, select the classroom you would like to import into. Then proceed through the following steps:
+To import a new course roster from your learning management system:
 
    <div class="d-flex flex-justify-around">
      <img src="/images/help/lms/roster-import/import-roster.gif" class="border" style="width: 75%;">
    </div>
 
-1. Navigate to classroom settings within GitHub Classroom
+1. [Sign in to GitHub Classroom](https://classroom.github.com/login).
 
-2. Select "Roster Management" from the sidebar
+2. Select the classroom you wish to import your roster into.
 
-3. On the "Add students" page which pops up, click "Import from your Learning Management System"
+3. Navigate to _Classroom Settings_ within GitHub Classroom
 
-4. Select how you would like to identify the imported students by:
+4. In the _sidebar_, select **Roster Management**. A page named _Add Students_ appears.
 
-    - **User ID**: The Student ID as stored in your institution's Learning Management System
+5. Click **Import from your Learning Management System**
+
+6. Select how you would like to identify the imported students by:
+
+    - **User ID**: The Student ID as stored in your institution's learning management system
     - **Names**: Student full names
     - **Emails**: Student emails
 
@@ -34,8 +38,8 @@ To import a new course roster from your Learning Management, select the classroo
 
 You have imported your roster into GitHub Classroom.
 
-    **Note**: If you encounter any errors, check to ensure you have enabled the roster membership service from within your Learning Management System. See [troubleshooting](#troubleshooting) for more advice.
-    {: class="note"}
+  **Note**: If you encounter any errors, check to ensure you have enabled the roster membership service from within your learning management system. See [troubleshooting](#troubleshooting) for more advice.
+  {: class="note"}
 
 
 ### Syncing an existing course roster
@@ -46,33 +50,45 @@ After you've imported a roster, keep it up to date by syncing:
      <img src="/images/help/lms/roster-import/sync-roster.gif" class="border" style="width: 75%;">
    </div>
 
-1. Navigate to classroom settings within GitHub Classroom.
+1. [Sign in to GitHub Classroom](https://classroom.github.com/login).
 
-2. Select "Roster Management" on the sidebar
+2. Select the classroom you wish to import your roster into.
 
-3. In the existing roster view, click "Sync from your Learning Management System" in
-   the top right corner
+3. Navigate to _Classroom Settings_ within GitHub Classroom.
 
-4. Select how you would like to identify the imported students by:
+4. In the _sidebar_, select **Roster Management**. You will be directed to your existing course roster.
 
-    - **User ID**: The Student ID as stored in your institution's Learning Management System
+5. Click **Sync from your Learning Management System**.
+
+6. Select how you would like to identify the imported students by:
+
+    - **User ID**: The Student ID as stored in your institution's learning management system
     - **Names**: Student full names
     - **Emails**: Student emails
 
-    _Note:_ If you do not see the kind of identifier you want, you may have to enable GitHub Classroom to receive student name and email information per your Learning Management System's privacy settings. See [troubleshooting](#troubleshooting) for more advice.
+    **Note:** If you do not see the kind of identifier you want, you may have to enable GitHub Classroom to receive student name and email information per your learning management system's privacy settings. See [troubleshooting](#troubleshooting) for more advice.
     {: class="note"}
 
-5. That's it! Your roster should now be up to date with the latest course information from your Learning Management System.
+Your roster is now up to date with your Learning Managment System.
 
-    _Note:_ If you encounter any errors, check to ensure you have enabled the roster membership service from within your Learning Management System. See [troubleshooting](#troubleshooting) for more advice.
-    {: class="note"}
+  **Note:** If you encounter any errors, check to ensure you have enabled the roster membership service from within your learning management system. See [troubleshooting](#troubleshooting) for more advice.
+  {: class="note"}
 
 ### Troubleshooting
 
 #### Unable to import students by Name or Email
-Lorem ipsum
+If you're trying to import students by their full name or email but only
+able to import by User ID, ensure you've enabled GitHub Classroom to retrieve
+student information from your learning management system. You may be able to
+change the privacy settings for GitHub Classroom within your Learning Management
+System by inspecting the configuration settings by inspecting the configuration
+settings as specified in [connect GitHub Classroom to you learning management system](/help/connect-to-lms).
 
-#### Roster import service is not supported
-Lorem ipsum
-
+#### Roster import service is not enabled
+If GitHub Classroom notifies you that it is unable to import students because
+it does not have access to the course roster on your learning management system,
+ensure you've configured GitHub to retrieve course membersip infromation from
+your learning management system. You may be able to change the privacy settings for
+GitHub Classroom within your Learning Management System by inspecting the
+configuration settings as specified in [connect GitHub Classroom to you learning management system](/help/connect-to-lms).
 
