@@ -19,12 +19,8 @@ class SessionsController < ApplicationController
   # Called before validating an LTI launch request, and sets
   # required parameters for the Omniauth LTI strategy to succeed
   def lti_setup
-    OmniAuth.config.on_failure = Proc.new { |env|
-      OmniAuth::FailureEndpoint.new(env).redirect_to_failure
-    }
-
     lti_configuration = LtiConfiguration.find_by(consumer_key: request.params["oauth_consumer_key"])
-    raise LtiLaunchError.new(nil) unless lti_configuration
+    raise LtiLaunchError.new(nil), "Configured consumer key is invalid." unless lti_configuration
 
     strategy = request.env["omniauth.strategy"]
     strategy.options.consumer_key = lti_configuration.consumer_key
