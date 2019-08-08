@@ -1,6 +1,6 @@
 ## Importing a course roster from your Learning Management System
 
-GitHub Classroom is able to automatically import your course roster from your institution's Learning Management
+GitHub Classroom can automatically import your course roster from your institution's learning management
 system to save you time when creating a GitHub Classroom course.
 
 ### Prerequisites
