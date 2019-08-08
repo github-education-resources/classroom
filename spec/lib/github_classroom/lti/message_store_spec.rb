@@ -127,6 +127,32 @@ describe GitHubClassroom::LTI::MessageStore do
 
         expect(instance.message_valid?(old_lti_message)).to be false
       end
+
+      it "returns false when there is an invalid lti_version" do
+        old_lti_launch_params = lti_launch_params.clone
+        old_lti_launch_params["lti_version"] = nil
+        old_lti_message = subject.construct_message(old_lti_launch_params)
+
+        expect(instance.message_valid?(old_lti_message)).to be false
+      end
+
+      it "returns false when there is an invalid message type" do
+        old_lti_launch_params = lti_launch_params.clone
+        old_lti_launch_params["lti_message_type"] = nil
+        old_lti_message = subject.construct_message(old_lti_launch_params)
+
+        expect(instance.message_valid?(old_lti_message)).to be false
+      end
+
+      context "message_type is basic-lti-launch-request" do
+        it "returns false if there is no resource_link_id" do
+          old_lti_launch_params = lti_launch_params.clone
+          old_lti_launch_params["resource_link_id"] = nil
+          old_lti_message = subject.construct_message(old_lti_launch_params)
+
+          expect(instance.message_valid?(old_lti_message)).to be false
+        end
+      end
     end
   end
 end
