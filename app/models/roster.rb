@@ -7,6 +7,8 @@ class Roster < ApplicationRecord
   validates :identifier_name, presence: true
   validates :roster_entries, presence: true
 
+  include DuplicateRosterEntries
+
   def unlinked_entries
     roster_entries.select do |entry|
       entry.user.nil?
