@@ -53,8 +53,7 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
           end
 
           it "flashes error message" do
-            message = "A LMS configuration already exists. Please remove configuration before creating a new one."
-            expect(flash[:alert]).to eq(message)
+            expect(flash[:alert]).to be_present
           end
 
           it "redirects to settings page" do
@@ -80,9 +79,7 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
           end
 
           it "flashes error message" do
-            message = "We are unable to link your classroom organization to Google Classroom "\
-              "because a roster already exists. Please delete your current roster and try again."
-            expect(flash[:alert]).to eq(message)
+            expect(flash[:alert]).to be_present
           end
 
           it "redirects to settings page" do
@@ -201,8 +198,7 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
           end
 
           it "flashes error message" do
-            message = "A LMS configuration already exists. Please remove configuration before creating a new one."
-            expect(flash[:alert]).to eq(message)
+            expect(flash[:alert]).to be_present
           end
 
           it "redirects to settings page" do
@@ -229,9 +225,7 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
           end
 
           it "flashes error message" do
-            message = "We are unable to link your classroom organization to Google Classroom "\
-              "because a roster already exists. Please delete your current roster and try again."
-            expect(flash[:alert]).to eq(message)
+            expect(flash[:alert]).to be_present
           end
 
           it "redirects to settings page" do
