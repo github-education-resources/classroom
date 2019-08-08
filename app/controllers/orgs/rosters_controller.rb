@@ -49,7 +49,7 @@ module Orgs
         organization: current_organization,
         identifiers: params[:identifiers],
         idenifier_name: params[:identifier_name],
-        lms_user_ids: params[:lms_user_ids]
+        lms_user_ids: params[:lms_user_ids].split
       )
 
       # Set the object so that we can see errors when rendering :new
