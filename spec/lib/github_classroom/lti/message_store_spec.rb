@@ -13,6 +13,8 @@ describe GitHubClassroom::LTI::MessageStore do
       "oauth_timestamp": DateTime.now.to_i.to_s,
       "oauth_nonce": "mock_nonce",
       "oauth_version": "1.0",
+      "oauth_callback": "about:blank",
+      "oauth_signature": "mock_oauth_signature",
       "context_id": "mock_context_id",
       "context_label": "CONTEXT-LABEL",
       "context_title": "Context/Course Title",
@@ -22,8 +24,8 @@ describe GitHubClassroom::LTI::MessageStore do
       "lti_message_type": "basic-lti-launch-request",
       "lti_version": "LTI-1p0",
       "user_id": "mock_user_id",
-      "oauth_signature": "mock_oauth_signature"
-    }
+      "resource_link_id": "mock_resource_link_id"
+    }.stringify_keys
   end
 
   let(:lti_message) { subject.construct_message(lti_launch_params) }
@@ -124,6 +126,32 @@ describe GitHubClassroom::LTI::MessageStore do
         old_lti_message = subject.construct_message(old_lti_launch_params)
 
         expect(instance.message_valid?(old_lti_message)).to be false
+      end
+
+      it "returns false when there is an invalid lti_version" do
+        old_lti_launch_params = lti_launch_params.clone
+        old_lti_launch_params["lti_version"] = nil
+        old_lti_message = subject.construct_message(old_lti_launch_params)
+
+        expect(instance.message_valid?(old_lti_message)).to be false
+      end
+
+      it "returns false when there is an invalid message type" do
+        old_lti_launch_params = lti_launch_params.clone
+        old_lti_launch_params["lti_message_type"] = nil
+        old_lti_message = subject.construct_message(old_lti_launch_params)
+
+        expect(instance.message_valid?(old_lti_message)).to be false
+      end
+
+      context "message_type is basic-lti-launch-request" do
+        it "returns false if there is no resource_link_id" do
+          old_lti_launch_params = lti_launch_params.clone
+          old_lti_launch_params["resource_link_id"] = nil
+          old_lti_message = subject.construct_message(old_lti_launch_params)
+
+          expect(instance.message_valid?(old_lti_message)).to be false
+        end
       end
     end
   end
