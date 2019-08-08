@@ -13,7 +13,16 @@ module Orgs
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable AbcSize
     def import_from_lms
-      students = get_new_students(lms_membership)
+      lms_name = current_organization.lti_configuration.lms_name(default_name: "your Learning Management System")
+
+      all_students = lms_membership
+      new_students = filter_new_students(all_students)
+      if all_students.present? && new_students.empty?
+        raise LtiImportError, "No students created. Your roster is already up to date with #{lms_name}."
+        #flash[:success] = "No students created. Your roster is already up to date with #{lms_name}."
+        #redirect_to roster_path(current_organization)
+      end
+
       @student_ids = students.map(&:user_id)
       @identifiers = {
         "User IDs": @student_ids,
@@ -23,7 +32,6 @@ module Orgs
 
       GitHubClassroom.statsd.increment("lti_configuration.import")
 
-      lms_name = current_organization.lti_configuration.lms_name(default_name: "your Learning Management System")
       respond_to do |format|
         format.js { render :import_from_lms, locals: { lms_name: lms_name } }
         format.html { render :import_from_lms, locals: { lms_name: lms_name } }
@@ -38,13 +46,13 @@ module Orgs
       redirect_to link_lms_organization_path(current_organization) unless current_organization.lti_configuration
     end
 
-    def get_new_students(students)
-      current_student_ids = RosterEntry.where(roster: current_roster).pluck(:lms_user_id)
-      all_student_ids = students.map(&:user_id)
+    def filter_new_students(all_students)
+      all_student_ids = all_students.map(&:user_id)
+      existing_student_ids = RosterEntry.where(roster: current_roster).pluck(:lms_user_id)
 
-      latest_student_ids = all_student_ids - current_student_ids
-      latest_students = students.select { |student| latest_student_ids.include?(student.user_id) }
-      latest_students
+      new_student_ids = all_student_ids - existing_student_ids
+      new_students = all_students.select { |student| new_student_ids.include?(student.user_id) }
+      new_students
     end
 
     # rubocop:disable Metrics/MethodLength
