@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190718211229) do
+ActiveRecord::Schema.define(version: 20190805192704) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -174,6 +174,7 @@ ActiveRecord::Schema.define(version: 20190718211229) do
     t.bigint "organization_id"
     t.string "context_membership_url"
     t.text "lms_type", default: "other", null: false
+    t.string "cached_launch_message_nonce"
     t.index ["consumer_key"], name: "index_lti_configurations_on_consumer_key", unique: true
     t.index ["organization_id"], name: "index_lti_configurations_on_organization_id"
   end
@@ -232,7 +233,9 @@ ActiveRecord::Schema.define(version: 20190718211229) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "google_user_id"
+    t.string "lms_user_id"
     t.index ["google_user_id"], name: "index_roster_entries_on_google_user_id"
+    t.index ["lms_user_id"], name: "index_roster_entries_on_lms_user_id"
     t.index ["roster_id"], name: "index_roster_entries_on_roster_id"
     t.index ["user_id"], name: "index_roster_entries_on_user_id"
   end
