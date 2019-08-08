@@ -20,6 +20,8 @@ function initializeSelectMenu() {
 
     selectItem(clicked_item);
     closeSelectMenu();
+
+    clicked_item.trigger("select");
   });
 
   select_menu_close_button.click(function(e) {
@@ -57,10 +59,10 @@ function initializeSelectMenu() {
         select_menu_list_items.each(function() {
           optionLinks.push($(this).prop("href"));
         });
-  
+
         return optionLinks;
       }
-  
+
       select_menu.get(0).setOptionLinks = function(optionLinks) {
         select_menu_list_items.each(function (index) {
           optionLink = optionLinks[index];
