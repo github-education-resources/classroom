@@ -84,13 +84,13 @@ class RosterEntry < ApplicationRecord
 
   # Restrict relation to only entries that have not joined a team
   def self.students_not_on_team(group_assignment)
-    students_on_team = group_assignment.repos.map(&:repo_accesses).flatten.map(&:user).map(&:id).uniq
-    sql_formatted_students_on_team = students_on_team.empty? ? "(NULL)" : "(#{students_on_team.join(',')})"
-
-    where <<~SQL
-      roster_entries.user_id IS NULL OR
-      roster_entries.user_id NOT IN #{sql_formatted_students_on_team}
-    SQL
+    students_on_team = group_assignment
+      .repos
+      .includes(:repo_accesses)
+      .flat_map(&:repo_accesses)
+      .map(&:user_id)
+      .uniq
+    where(user_id: nil).or(where.not(user_id: students_on_team))
   end
 
   # Takes an array of identifiers and creates a
