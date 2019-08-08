@@ -3,6 +3,9 @@
 module GitHubClassroom
   module LTI
     class MessageStore
+      VALID_LTI_VERSIONS  = ["LTI-1p0"].freeze # LTI-1p0 covers 1.0 and 1.1 and 1.2, but not 1.3
+      VALID_MESSAGE_TYPES = ["basic-lti-launch-request"].freeze
+
       attr_reader :consumer_key
 
       def initialize(consumer_key: nil, redis_store: nil)
@@ -18,6 +21,7 @@ module GitHubClassroom
       end
 
       # rubocop:disable CyclomaticComplexity
+      # rubocop:disable AbcSize
       def message_valid?(lti_message)
         # check for duplicate nonce
         return false if nonce_exists?(lti_message.oauth_nonce)
@@ -26,14 +30,17 @@ module GitHubClassroom
         return false if DateTime.strptime(lti_message.oauth_timestamp, "%s") < 5.minutes.ago
 
         # check if required params are provided
+        return false unless VALID_MESSAGE_TYPES.include? lti_message.lti_message_type
+        return false unless VALID_LTI_VERSIONS.include? lti_message.lti_version
+
+        # check required params for message type
         if lti_message.lti_message_type == "basic-lti-launch-request"
           return false unless lti_message.resource_link_id
-          return false unless lti_message.lti_version
-          return false unless lti_message.lti_message_type
         end
 
         true
       end
+      # rubocop:enable AbcSize
       # rubocop:enable CyclomaticComplexity
 
       def save_message(lti_message)
