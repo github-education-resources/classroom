@@ -40,7 +40,7 @@ To import a new course roster from your Learning Management, select the classroo
 
 ### Syncing an existing course roster
 
-Once you've created a course roster imported from you Learning Management System, keeping it up to date is easy!
+After you've imported a roster, keep it up to date by syncing:
 
    <div class="d-flex flex-justify-around">
      <img src="/images/help/lms/roster-import/sync-roster.gif" class="border" style="width: 75%;">
