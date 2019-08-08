@@ -34,7 +34,7 @@ To import a new course roster from your Learning Management, select the classroo
 
 5. That's it! You should now have your roster imported into GitHub Classroom.
 
-    _Note:_ If you encounter any errors, check to ensure you have enabled the roster membership service from within your Learning Management System. See [troubleshooting](#troubleshooting) for more advice.
+    **Note**: If you encounter any errors, check to ensure you have enabled the roster membership service from within your Learning Management System. See [troubleshooting](#troubleshooting) for more advice.
     {: class="note"}
 
 
