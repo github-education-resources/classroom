@@ -235,7 +235,18 @@ RSpec.describe Orgs::RostersController, type: :controller do
           end
 
           context "fetching roster succeeds" do
-            let(:students) { [] }
+            let(:student) do
+              GitHubClassroom::LTI::Models::CourseMember.new(
+                email: "sample@example.com",
+                name: "Example Name",
+                user_id: "12345"
+              )
+            end
+
+            let(:students) do
+              [student]
+            end
+
             before(:each) do
               GitHubClassroom::LTI::MembershipService
                 .any_instance
@@ -243,21 +254,41 @@ RSpec.describe Orgs::RostersController, type: :controller do
                 .and_return(students)
             end
 
-            it "sends statsd" do
-              expect(GitHubClassroom.statsd).to receive(:increment).with("lti_configuration.import")
-              get :import_from_lms, params: { id: lti_configuration.organization.slug }
+            context "all attributes present" do
+              it "sends statsd" do
+                expect(GitHubClassroom.statsd).to receive(:increment).with("lti_configuration.import")
+                get :import_from_lms, params: { id: lti_configuration.organization.slug }
+              end
+
+              it "format.html: succeeds" do
+                get :import_from_lms, params: { id: lti_configuration.organization.slug }
+                expect(response).to have_http_status(:ok)
+                expect(flash[:alert]).to be_nil
+                expect(assigns(:identifiers).keys.length).to eql(3)
+              end
+
+              it "format.js: succeeds" do
+                get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
+                expect(response).to have_http_status(:ok)
+                expect(flash[:alert]).to be_nil
+                expect(assigns(:identifiers).keys.length).to eql(3)
+              end
             end
 
-            it "format.html: succeeds" do
-              get :import_from_lms, params: { id: lti_configuration.organization.slug }
-              expect(response).to have_http_status(:ok)
-              expect(flash[:alert]).to be_nil
-            end
+            context "successful fetch, but missing some attributes" do
+              let(:student) do
+                GitHubClassroom::LTI::Models::CourseMember.new(
+                  email: nil,
+                  name: nil,
+                  user_id: "12345"
+                )
+              end
 
-            it "format.js: succeeds" do
-              get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
-              expect(response).to have_http_status(:ok)
-              expect(flash[:alert]).to be_nil
+              it "hides options when they're nil lists" do
+                get :import_from_lms, params: { id: lti_configuration.organization.slug }
+                expect(response).to have_http_status(:ok)
+                expect(assigns(:identifiers).keys.length).to eql(1)
+              end
             end
           end
 
@@ -430,34 +461,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
       end
     end
 
-    context "when some identifiers get added" do
-      before do
-        create(:roster_entry, roster: roster, identifier: "a")
-        patch :add_students, params: {
-          id:         organization.slug,
-          identifiers: "a\r\nb"
-        }
-      end
-
-      it "redirects to rosters page" do
-        expect(response).to redirect_to(roster_url(organization))
-      end
-
-      it "sets flash message" do
-        expect(flash[:success]).to eq("Students created. Some duplicates have been omitted.")
-      end
-
-      it "creates only one roster entry" do
-        expect do
-          patch :add_students, params: {
-            id:         organization.slug,
-            identifiers: "a\r\nc"
-          }
-        end.to change(roster.reload.roster_entries, :count).by(1)
-      end
-    end
-
-    context "when no identifiers get added" do
+    context "when there are duplicate identifiers" do
       before do
         create(:roster_entry, roster: roster, identifier: "a")
         create(:roster_entry, roster: roster, identifier: "b")
@@ -472,16 +476,21 @@ RSpec.describe Orgs::RostersController, type: :controller do
       end
 
       it "sets flash message" do
-        expect(flash[:warning]).to eq("No students created.")
+        expect(flash[:success]).to eq("Students created.")
       end
 
-      it "creates no roster entries" do
+      it "creates roster entries" do
         expect do
           patch :add_students, params: {
             id:         organization.slug,
             identifiers: "a\r\nb"
           }
-        end.to change(roster.reload.roster_entries, :count).by(0)
+        end.to change(roster.reload.roster_entries, :count).by(2)
+      end
+
+      it "finds identifiers with suffix" do
+        expect(roster.reload.roster_entries).to include(RosterEntry.find_by(identifier: "a-1"))
+        expect(roster.reload.roster_entries).to include(RosterEntry.find_by(identifier: "b-1"))
       end
     end
 
@@ -563,6 +572,60 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
       it "displays success message" do
         expect(flash[:success]).to_not be_nil
+      end
+    end
+  end
+
+  describe "PATCH #edit_entry", :vcr do
+    before do
+      sign_in_as(user)
+
+      create(:roster_entry, roster: roster, identifier: "John Smith")
+      create(:roster_entry, roster: roster, identifier: "John Smith-1")
+    end
+
+    context "when renaming to an identifier that does not exist" do
+      before do
+        patch :edit_entry, params: {
+          roster_entry_id: organization.roster.roster_entries.second,
+          roster_entry_identifier: "Jessica Smith",
+          id: organization.slug
+        }
+        organization.roster.roster_entries.reload
+      end
+
+      it "updates roster entry" do
+        expect(organization.roster.roster_entries.second.identifier).to eq("Jessica Smith")
+      end
+
+      it "redirects to roster page" do
+        expect(response).to redirect_to(roster_url(organization))
+      end
+
+      it "displays success message" do
+        expect(flash[:success]).to eq("Roster entry successfully updated!")
+      end
+    end
+
+    context "when renaming to an identifier that exists" do
+      before do
+        patch :edit_entry, params: {
+          roster_entry_id: organization.roster.roster_entries.second,
+          roster_entry_identifier: "John Smith-1",
+          id: organization.slug
+        }
+      end
+
+      it "does not update roster entry" do
+        expect(organization.roster.roster_entries.second.identifier).to eq("John Smith")
+      end
+
+      it "redirects to roster page" do
+        expect(response).to redirect_to(roster_url(organization))
+      end
+
+      it "displays success message" do
+        expect(flash[:error]).to eq("There is already a roster entry named John Smith-1.")
       end
     end
   end
@@ -820,7 +883,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
               expect(organization.roster.roster_entries.count).to eq(3)
             end
 
-            it "deduplicates students that were already added to roster" do
+            it "does not add duplicate students that were already added to roster" do
               patch :sync_google_classroom, params: { id: organization.slug }
               expect(organization.roster.roster_entries.count).to eq(3)
             end
