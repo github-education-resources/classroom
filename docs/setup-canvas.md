@@ -61,7 +61,7 @@ the configuration process!
 ### Next Steps
 After successfully linking GitHub Classroom to Canvas, you are now able to use enhanced current and planned capabilities made possible by this rich integration.
 
-[Importing your course roster from Canvas to GitHub Classroom]()
+[Importing your course roster from Canvas to GitHub Classroom](/help/import-roster-from-lms)
 
 ### Troubleshooting
 

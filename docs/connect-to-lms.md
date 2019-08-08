@@ -4,7 +4,7 @@ GitHub Classroom is continuously adding support for integrating with your instit
 Connecting GitHub Classroom to a Learning Management System will unlock new capabilities that will streamline and enhance
 the same workflow your used to on GitHub Classroom, such as:
 
-- Automatic roster provisioning
+- [Automatic roster provisioning](/help/import-roster-from-lms)
 - Assignment creation (Planned)
 - Submission syncing (Planned)
 

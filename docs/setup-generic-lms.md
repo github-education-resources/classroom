@@ -33,7 +33,7 @@ You should then be directed the following screen. Congratulations! You successfu
 ### Next Steps
 After successfully linking GitHub Classroom to your Learning Management System, you are now able to use enhanced current and planned capabilities made possible by this rich integration.
 
-[Importing your course roster from your Learning Management System to GitHub Classroom]()
+[Importing your course roster from your Learning Management System to GitHub Classroom](/help/import-roster-from-lms)
 
 Not finding what you need? Want to talk to a human? [Open an issue on the Classroom repo.](https://github.com/education/classroom/issues)
 {: class="warning"}
