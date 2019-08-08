@@ -2,9 +2,6 @@
 
 # rubocop:disable ClassLength
 class CreateGitHubRepoService
-  GITHUB_API_HOST                         = "https://api.github.com"
-  TEMPLATE_REPOS_API_PREVIEW              = "application/vnd.github.baptiste-preview"
-
   attr_reader :exercise, :stats_sender
   delegate :assignment, :collaborator, :organization, :invite_status, to: :exercise
 
@@ -75,23 +72,30 @@ class CreateGitHubRepoService
   # rubocop:disable Metrics/AbcSize
   def create_github_repository_from_template!
     stats_sender.report_with_exercise_prefix(:import_with_templates_started)
-    client = assignment.creator.github_client
-    options = {
-      name: exercise.repo_name,
-      owner: exercise.organization_login,
-      private: assignment.private?,
-      description: "#{exercise.repo_name} created by GitHub Classroom",
-      accept: TEMPLATE_REPOS_API_PREVIEW,
-      include_all_branches: true
-    }
 
-    github_repository = client.post(
-      "#{GITHUB_API_HOST}/repositories/#{assignment.starter_code_repo_id}/generate",
+    options = repo_from_template_options
+
+    github_repository = organization.github_organization.create_repository_from_template(
+      assignment.starter_code_repo_id,
+      exercise.repo_name,
       options
     )
+
     stats_sender.report_with_exercise_prefix(:import_with_templates_success)
     github_repository
   rescue GitHub::Error => error
+    error_context = {}.tap do |e|
+      e[:user] = collaborator.id if collaborator.is_a? User
+      e[:github_team_id] = collaborator.github_team_id if collaborator.is_a? Group
+      e[:starter_code_repo_id] = assignment.starter_code_repo_id
+      e[:organization] = organization.id
+      e[:new_repo_name] = exercise.repo_name
+      e[:params] = options
+    end
+    Failbot.report!(
+      error,
+      error_context
+    )
     raise Result::Error.new errors(:template_repository_creation_failed), error.message
   end
   # rubocop:enable Metrics/MethodLength
@@ -224,6 +228,15 @@ class CreateGitHubRepoService
     {}.tap do |options|
       options[:permission] = exercise.admin? ? "admin" : "push"
     end
+  end
+
+  def repo_from_template_options
+    {
+      private: assignment.private?,
+      description: "#{exercise.repo_name} created by GitHub Classroom",
+      owner: organization.github_organization.login,
+      include_all_branches: true
+    }
   end
 
   # Internal: Method for error messages, modifies error messages based on the type of assignment.

@@ -4,28 +4,76 @@ module GitHubClassroom
   module LTI
     module Mixins
       module RequestSigning
-        def signed_request(endpoint, consumer_key, secret, query: {}, headers: {})
-          uri = URI.parse(endpoint)
-          uri.query = URI.encode_www_form(query)
-          headers = { "Authorization": signed_auth_header(uri, consumer_key, secret) }.merge(headers)
+        DEFAULT_REQUEST_OPTIONS = {
+          lti_version: 1.1,
+          method: :post,
+          headers: {},
+          query: {},
+          body: nil
+        }.freeze
 
-          opts = { url: uri, headers: headers }
-          Faraday.new(opts) do |conn|
+        def lti_request(endpoint, request_options = {})
+          opts = DEFAULT_REQUEST_OPTIONS.merge(request_options.symbolize_keys)
+
+          req = build_http_request(endpoint, opts[:method], opts[:headers], opts[:query], opts[:body])
+          sign_request!(req, @consumer_key, @secret, lti_version: opts[:lti_version])
+          req
+        end
+
+        def send_request(req)
+          request_headers = {}
+          req.each_header { |header, value| request_headers[header] = value }
+
+          connection = Faraday.new(url: req.uri, headers: request_headers) do |conn|
             conn.response :raise_error
             conn.adapter Faraday.default_adapter
           end
+
+          method = req.method.downcase
+          req.body.present? ? connection.send(method, nil, req.body) : connection.send(method, nil)
         end
 
         private
 
-        def signed_auth_header(uri, consumer_key, secret)
-          req = Net::HTTP::Get.new(uri)
+        def build_http_request(endpoint, method, headers, query, body)
+          uri = build_uri(endpoint, query)
+
+          klass = "Net::HTTP::#{method.to_s.capitalize}".constantize
+          req = klass.new(uri, headers.stringify_keys)
+
+          if body.is_a?(Hash)
+            req.body = OAuth::Helper.normalize(body)
+            req.content_type = "application/x-www-form-urlencoded"
+          else
+            req.body = body.to_s
+          end
+
+          req
+        end
+
+        def build_uri(endpoint, query)
+          uri = URI.parse(endpoint)
+          if query
+            existing_query = Hash[URI.decode_www_form(uri.query || "")]
+            uri.query = URI.encode_www_form(query.merge(existing_query))
+          end
+
+          uri
+        end
+
+        def sign_request!(req, consumer_key, secret, lti_version: 1.1)
+          http = Net::HTTP.new(req.uri.host, req.uri.port)
+          http.use_ssl = (req.uri.instance_of? URI::HTTPS)
 
           consumer = OAuth::Consumer.new(consumer_key, secret)
-          auth_signer = OAuth::Client::Helper.new(req, request_uri: uri, consumer: consumer)
-          auth_signer.hash_body
-
-          auth_signer.header
+          if lti_version == 1.1
+            # Necessary to override because LTI 1.1 expects a body hash
+            # even when the body is empty, as it is in GET requests
+            req.instance_variable_set(:@request_has_body, true)
+            req.oauth!(http, consumer, nil, scheme: "header")
+          elsif lti_version == 1.0
+            req.oauth!(http, consumer, nil, scheme: "body")
+          end
         end
       end
     end

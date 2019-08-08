@@ -3,10 +3,11 @@
 tap "caskroom/cask"
 tap "github/bootstrap"
 
-cask "docker"
+cask "docker" unless system "which docker"
 cask "ngrok"
 
-brew "hivemind"
+brew "tmux"
+brew "overmind"
 brew "nginx", restart_service: :changed
 brew "postgresql@10"
 brew "terminal-notifier"

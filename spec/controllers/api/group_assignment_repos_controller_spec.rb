@@ -7,7 +7,7 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
   let(:user)              { classroom_teacher }
   let(:student)      { classroom_student }
   let(:grouping)     { create(:grouping, organization: organization) }
-  let(:github_team_id) { organization.github_organization.create_team(Faker::Team.name).id }
+  let(:github_team_id) { 3_284_880 }
   let(:group) { create(:group, grouping: grouping, github_team_id: github_team_id) }
   let(:group_assignment) do
     create(
@@ -19,18 +19,34 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
       starter_code_repo_id: 1_062_897
     )
   end
+  let(:group_assignment_repo) do
+    create(
+      :group_assignment_repo,
+      group_assignment: group_assignment,
+      group: group,
+      organization: organization,
+      github_repo_id: 42
+    )
+  end
+  let(:params) do
+    {
+      organization_id: organization.slug,
+      group_assignment_id: group_assignment.slug,
+      group_assignment_repo_id: group_assignment_repo.id,
+      access_token: user.api_token
+    }
+  end
   describe "GET #index", :vcr do
     before do
-      GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
       get :index, params: {
         organization_id: organization.slug,
         group_assignment_id: group_assignment.slug,
-        access_token: user.api_token
+        access_token: user.api_token,
+        group_assignment_repo_id: group_assignment_repo.id
       }
     end
 
     after do
-      organization.github_organization.delete_team(group.github_team_id)
       GroupAssignmentRepo.destroy_all
     end
 
@@ -45,27 +61,25 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
   end
 
   describe "GET #clone_url", :vcr do
-    before do
-      result = GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
-      group_assignment_repo = result.group_assignment_repo
-      get :clone_url, params: {
-        organization_id: organization.slug,
-        group_assignment_id: group_assignment.slug,
-        group_assignment_repo_id: group_assignment_repo.id,
-        access_token: user.api_token
-      }
-    end
-
     after do
       GroupAssignmentRepo.destroy_all
     end
 
     it "returns success" do
+      get :clone_url, params: params
       expect(response).to have_http_status(:success)
     end
 
     it "returns json with temp clone url" do
+      get :clone_url, params: params
       expect(json["temp_clone_url"]).to_not be_nil
+    end
+
+    it "returns 404 if invalid repository found" do
+      allow_any_instance_of(GroupAssignmentRepo).to receive(:present?).and_return(false)
+      get :clone_url, params: params
+      expect(json).to eq("error" => "not_found")
+      expect(response.status).to eq(404)
     end
   end
 end

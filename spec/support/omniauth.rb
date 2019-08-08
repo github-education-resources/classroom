@@ -22,7 +22,10 @@ VCR.use_cassette "auth_user" do
     extra: {
       raw_info: {
         oauth_nonce: "mock_nonce",
-        oauth_timestamp: DateTime.now.to_i.to_s
+        oauth_timestamp: DateTime.now.to_i.to_s,
+        resource_link_id: "mock_resource_link_id",
+        lti_version: "LTI-1p0",
+        lti_message_type: "basic-lti-launch-request"
       }
     },
 

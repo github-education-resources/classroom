@@ -1,40 +1,30 @@
-<div class="site-content">
-  <div class="site-content-cap">
-    <h2 class="site-content-heading"><%= t('views.organizations.invite_administrator') %></h2>
-  </div>
+<div class="Subhead Subhead--spacious">
+  <h3 class="Subhead-heading"><%= t('views.organizations.invite_administrator') %></h3>
+</div>
+<h4><%= t('views.organizations.add_to_organization') %></h4>
+<p><%= t('views.organizations.must_add_as_owner') %> <%= t('views.organizations.link_to_add_owner', href: link_to(current_organization.github_organization.team_invitations_url, current_organization.github_organization.team_invitations_url)).html_safe %></p>
 
-  <div class="site-content-body markdown-body">
-    <h3><%= t('views.organizations.add_to_organization') %></h3>
-    <p><strong><%= t('views.organizations.must_add_as_owner') %></strong></p>
-    <p><%= t('views.organizations.link_to_add_owner', href: link_to(current_organization.github_organization.team_invitations_url, current_organization.github_organization.team_invitations_url)).html_safe %></p>
+<h4><%= t('views.organizations.give_this_link') %></h4>
+<p><%= t('views.organizations.give_this_link_desc') %></p>
+<%= link_to organization_url(current_organization), organization_url(current_organization), class: 'mobile-invitation-content' %>
 
-    <h3><%= t('views.organizations.give_this_link') %></h3>
-    <p><%= t('views.organizations.give_this_link_desc') %></p>
-    <%= link_to organization_url(current_organization), organization_url(current_organization), class: 'mobile-invitation-content' %>
+<div class="col-md-6 input-group">
+  <%= content_tag :input, '', type: 'text', class: "form-control input-sm", id: "organization-#{current_organization.github_id}", value: organization_url(current_organization), readonly: 'readonly' %>
+  <span class="input-group-button">
+    <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#organization-#{current_organization.github_id}" %> class="js-clipboard btn btn-sm tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
+      <%= octicon 'clippy' %>
+      <%= t('views.organizations.copy_classroom_link') %>
+    </button>
+  </span>
+</div>
 
-    <div class="columns desktop-invitation-content">
-      <div class="two-thirds">
-        <div class="input-group">
-          <%= content_tag :input, '', type: 'text', class: "form-control input-contrast", id: "organization-#{current_organization.github_id}", value: organization_url(current_organization), readonly: 'readonly' %>
-          <span class="input-group-button">
-            <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#organization-#{current_organization.github_id}" %> class="js-clipboard btn tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
-              <%= octicon 'clippy' %>
-              <%= t('views.organizations.copy_classroom_link') %>
-            </button>
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <% if action_name == 'invite' %>
+<% if action_name == 'invite' %>
       <div class="form-actions">
         <% next_step = new_roster_path(current_organization) %>
-        <% if lti_launch_enabled? %>
+        <% if lti_launch_enabled? || google_classroom_roster_import_enabled? %>
           <% next_step = link_lms_organization_path(current_organization) %>
         <% end %>
 
         <%= button_to t('views.organizations.continue'), next_step, class: 'btn btn-primary right', method: :get %>
       </div>
     <% end %>
-  </div>
-</div>

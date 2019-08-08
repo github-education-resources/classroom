@@ -1,6 +1,6 @@
 <div class="remodal text-left" data-remodal-id="reset-and-remove-organization">
   <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
-  <h2 class="remodal-header"><%= t('views.organizations.are_you_sure') %></h2>
+  <h2 class="remodal-header"><%= t('views.organizations.are_you_absolutely_sure') %></h2>
 
   <div class="remodal-warning">
     <%= t('views.organizations.delete_warning') %>
@@ -8,11 +8,7 @@
 
   <div class="remodal-description">
     <p>
-      <% if multiple_classrooms_per_org_enabled? %>
-        <%= t('views.organizations.delete_classroom_consequences_html', organization: sanitize(current_organization.github_organization.login)) %>
-      <% else %>
-        <%= t('views.organizations.delete_org_consequences_html', organization: sanitize(current_organization.github_organization.login)) %>
-      <% end %>
+      <%= t('views.organizations.delete_classroom_consequences_html', organization: sanitize(current_organization.github_organization.login), classroom_title: current_organization.title) %>
     </p>
   </div>
 
