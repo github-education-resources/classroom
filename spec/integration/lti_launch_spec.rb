@@ -16,52 +16,17 @@ RSpec.describe "LTI launch", type: :request do
   let(:redis_store) { Redis.new }
 
   before do
-    GitHubClassroom.flipper[:lti_launch].enable
     GitHubClassroom.stub(:redis).and_return(redis_store)
-  end
-
-  after do
-    GitHubClassroom.flipper[:lti_launch].disable
   end
 
   before(:each) do
     redis_store.flushdb
+    GitHubClassroom.flipper[:lti_launch].enable
   end
 
   after(:each) do
+    GitHubClassroom.flipper[:lti_launch].disable
     redis_store.quit
-  end
-
-  describe "sessions#lti_setup", :vcr do
-    it "errors when no consumer_key is present" do
-      expect { get auth_lti_setup_path }.to raise_error(ActionController::BadRequest)
-    end
-
-    it "errors when consumer_key is present, no corresponding lti_configuration exists" do
-      LtiConfiguration.stub(:find_by).and_return(nil)
-
-      expect { get auth_lti_setup_path(oauth_consumer_key: lti_configuration.consumer_key) }
-        .to raise_error(ActionController::BadRequest)
-    end
-
-    it "errors when omniauth strategy request env variable is not present" do
-      expect { get auth_lti_setup_path(oauth_consumer_key: lti_configuration.consumer_key) }
-        .to raise_error(ActionController::BadRequest)
-    end
-
-    it "succeeeds" do
-      options = double("options")
-      allow(options).to receive(:consumer_key=)
-      allow(options).to receive(:shared_secret=)
-
-      strategy = double("omniauth.strategy", options: options)
-
-      Rails.application.env_config["omniauth.strategy"] = strategy
-      get auth_lti_setup_path(oauth_consumer_key: lti_configuration.consumer_key)
-      Rails.application.env_config["omniauth.strategy"] = nil
-
-      expect(response).to have_http_status(200)
-    end
   end
 
   describe "sessions#lti_launch", :vcr do
