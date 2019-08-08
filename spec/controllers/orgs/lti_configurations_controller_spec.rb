@@ -138,7 +138,10 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         it "alerts user about existing configuration" do
           get :create, params: { id: organization.slug }
           expect(response).to redirect_to(edit_organization_path(organization))
-          expect(flash[:alert]).to be_present
+          expect(flash[:alert]).to eq(
+            "This classroom is already connected to Google Classroom. Please disconnect from Google Classroom "\
+            "before connecting to another Learning Management System."
+          )
         end
       end
 
@@ -152,7 +155,10 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         it "alerts user that there is an existing roster" do
           post :create, params: { id: organization.slug }
           expect(response).to redirect_to(edit_organization_path(organization))
-          expect(flash[:alert]).to be_present
+          expect(flash[:alert]).to eq(
+            "We are unable to link your classroom organization to a Learning Management System "\
+            "because a roster already exists. Please delete your current roster and try again."
+          )
         end
       end
     end
