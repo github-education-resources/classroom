@@ -45,17 +45,20 @@ module Orgs
 
     # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     def create
+      if params[:lms_user_ids].is_a? String
+        params[:lms_user_ids] = params[:lms_user_ids].split
+      end
       result = Roster::Creator.perform(
         organization: current_organization,
         identifiers: params[:identifiers],
         idenifier_name: params[:identifier_name],
-        google_user_ids: params[:google_user_ids]
+        lms_user_ids: params[:lms_user_ids]
       )
 
       # Set the object so that we can see errors when rendering :new
       @roster = result.roster
       if result.success?
-        if current_organization.google_course_id && !params[:google_user_ids].empty?
+        if current_organization.google_course_id && !params[:lms_user_ids].empty?
           GitHubClassroom.statsd.increment("google_classroom.import")
         else
           GitHubClassroom.statsd.increment("roster.create")
@@ -134,13 +137,13 @@ module Orgs
     # rubocop:disable Metrics/AbcSize
     def add_students
       identifiers = params[:identifiers].split("\r\n").reject(&:blank?)
-      google_ids = params[:google_user_ids] || []
+      lms_ids = params[:lms_user_ids] || []
 
       begin
         entries = RosterEntry.create_entries(
           identifiers: identifiers,
           roster: current_roster,
-          google_user_ids: google_ids
+          lms_user_ids: lms_ids
         )
 
         if entries.empty?
