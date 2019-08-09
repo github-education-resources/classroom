@@ -23,7 +23,7 @@ To import a new course roster from your learning management system:
 
 3. Navigate to _Classroom Settings_ within GitHub Classroom.
 
-4. In the _sidebar_, select **Roster Management**. A page named _Add Students_ appears.
+4. In the sidebar, select **Roster Management**. The _Add Students_ page appears.
 
 5. Click **Import from your Learning Management System**
 
