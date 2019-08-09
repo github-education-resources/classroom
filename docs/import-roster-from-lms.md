@@ -56,7 +56,7 @@ After you've imported a roster, keep it up to date by syncing:
 
 3. Navigate to _Classroom Settings_ within GitHub Classroom.
 
-4. In the _sidebar_, select **Roster Management**. You will be directed to your existing course roster.
+4. In the sidebar, select **Roster Management**. You are directed to your existing course roster.
 
 5. Click **Sync from your Learning Management System**.
 
