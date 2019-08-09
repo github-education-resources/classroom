@@ -54,7 +54,7 @@ module Orgs
 
     def ensure_no_lti_configuration
       return unless current_organization.lti_configuration
-      lms_name = current_organization.lti_configuration.lms_name(default_name: "a Learning Management System")
+      lms_name = current_organization.lti_configuration.lms_name(default_name: "a learning management system")
       redirect_to edit_organization_path(current_organization),
         alert: "This classroom is already connected to #{lms_name}. Please disconnect from #{lms_name} before "\
         "connecting to Google Classroom."
