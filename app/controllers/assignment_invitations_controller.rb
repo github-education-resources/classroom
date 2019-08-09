@@ -66,7 +66,14 @@ class AssignmentInvitationsController < ApplicationController
     }
   end
 
-  def show; end
+  def show
+    roster = current_assignment.organization.roster
+
+    if roster
+      binding.pry
+      current_user.roster_entries.where(roster_id: roster.id)
+    end
+  end
 
   def success; end
 
