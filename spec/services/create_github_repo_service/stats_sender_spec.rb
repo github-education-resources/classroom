@@ -43,6 +43,13 @@ RSpec.describe CreateGitHubRepoService::StatsSender do
         stats_sender.report_with_exercise_prefix(:template_repository_creation_failed)
       end
 
+      it "when message is :template_repository_not_found" do
+        expect(GitHubClassroom.statsd)
+          .to receive(:increment)
+          .with("group_exercise_repo.create.repo.with_templates.not_found")
+        stats_sender.report_with_exercise_prefix(:template_repository_not_found)
+      end
+
       it "when message is :collaborator_addition_failed" do
         expect(GitHubClassroom.statsd)
           .to receive(:increment)
