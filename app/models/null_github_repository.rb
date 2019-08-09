@@ -16,4 +16,8 @@ class NullGitHubRepository < NullGitHubResource
   def node_id
     ""
   end
+
+  def private
+    nil
+  end
 end
