@@ -73,10 +73,7 @@ class CreateGitHubRepoService
   def create_github_repository_from_template!
     stats_sender.report_with_exercise_prefix(:import_with_templates_started)
 
-    options = {
-      private: assignment.private?,
-      description: "#{exercise.repo_name} created by GitHub Classroom"
-    }
+    options = repo_from_template_options
 
     github_repository = organization.github_organization.create_repository_from_template(
       assignment.starter_code_repo_id,
@@ -86,17 +83,10 @@ class CreateGitHubRepoService
 
     stats_sender.report_with_exercise_prefix(:import_with_templates_success)
     github_repository
+  rescue GitHub::NotFound => error
+    raise Result::Error.new errors(:template_repository_not_found), error.message
   rescue GitHub::Error => error
-    error_context = {}.tap do |e|
-      e[:user] = collaborator.id if collaborator.is_a? User
-      e[:github_team_id] = collaborator.github_team_id if collaborator.is_a? Group
-      e[:starter_code_repo_id] = assignment.starter_code_repo_id
-      e[:organization] = organization.id
-    end
-    Failbot.report!(
-      error,
-      error_context
-    )
+    report_template_error_to_failbot(error, options)
     raise Result::Error.new errors(:template_repository_creation_failed), error.message
   end
   # rubocop:enable Metrics/MethodLength
@@ -185,13 +175,15 @@ class CreateGitHubRepoService
 
   # Maps the type of error to a Datadog error
   #
-  # rubocop:disable MethodLength
+  # rubocop:disable MethodLength, AbcSize
   def report_error(err)
     case err
     when /^#{errors(:repository_creation_failed)}/
       stats_sender.report_with_exercise_prefix(:repository_creation_failed)
     when /^#{errors(:template_repository_creation_failed)}/
       stats_sender.report_with_exercise_prefix(:template_repository_creation_failed)
+    when /^#{errors(:template_repository_not_found)}/
+      stats_sender.report_with_exercise_prefix(:template_repository_not_found)
     when /^#{errors(:collaborator_addition_failed)}/
       stats_sender.report_with_exercise_prefix(:collaborator_addition_failed)
     when /^#{errors(:starter_code_import_failed)}/
@@ -231,16 +223,44 @@ class CreateGitHubRepoService
     end
   end
 
+  def repo_from_template_options
+    {
+      private: assignment.private?,
+      description: "#{exercise.repo_name} created by GitHub Classroom",
+      owner: organization.github_organization.login,
+      include_all_branches: true
+    }
+  end
+
+  # rubocop:disable MethodLength
+  def report_template_error_to_failbot(error, options)
+    error_context = {}.tap do |e|
+      e[:user] = collaborator.id if collaborator.is_a? User
+      e[:github_team_id] = collaborator.github_team_id if collaborator.is_a? Group
+      e[:starter_code_repo_id] = assignment.starter_code_repo_id
+      e[:organization] = organization.id
+      e[:new_repo_name] = exercise.repo_name
+      e[:params] = options
+    end
+    Failbot.report!(
+      error,
+      error_context
+    )
+  end
+
   # Internal: Method for error messages, modifies error messages based on the type of assignment.
   #
   # error_message - A symbol for getting the  appropriate error message.
-  # rubocop:disable MethodLength
+  # rubocop:disable CyclomaticComplexity
   def errors(error_message, options = {})
     case error_message
     when :repository_creation_failed
       "GitHub repository could not be created, please try again."
     when :template_repository_creation_failed
       "GitHub repository could not be created from template, please try again."
+    when :template_repository_not_found
+      "Starter code template repository was not found. The repository might be deleted, or the organization that "\
+        "owns the repository has restrictions on third-party access."
     when :starter_code_import_failed
       "We were not able to import you the starter code to your #{exercise.assignment_type.humanize}, please try again."
     when :collaborator_addition_failed

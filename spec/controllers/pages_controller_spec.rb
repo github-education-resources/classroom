@@ -22,7 +22,13 @@ RSpec.describe PagesController, type: :controller do
       expected_pages = [
         "create-group-assignments",
         "probot-settings",
-        "upgrade-your-organization"
+        "upgrade-your-organization",
+        "using-template-repos-for-assignments",
+        "connect-to-lms",
+        "generate-lms-credentials",
+        "setup-generic-lms",
+        "setup-canvas",
+        "setup-moodle"
       ]
       expected_pages.each do |help_page|
         get :help, params: { article_name: help_page }

@@ -1,0 +1,62 @@
+<% error = local_assigns.fetch(:error, nil) %>
+<% post_launch_url = error.nil? ? post_launch_url : nil %>
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>GitHub Classroom</title>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+  </head>
+  <body class="site">
+    <main class="bg-gray-light">
+      <div class="container-lg p-responsive">
+        <% if post_launch_url %>
+          <div class="blankslate blankslate-spacious blankslate-clean-background">
+            <%= image_tag "classroom-logo.png", size: 128, class: "mb-3" %>
+            <h3>Launching GitHub Classroom from your learning management system...</h3>
+          </div>
+
+          <div class="protip">
+            Or <%= link_to "launch GitHub Classroom manually", post_launch_url, target: "_blank" %> if you are not automatically redirected.
+          </div>
+        <% else %>
+          <div class="blankslate blankslate-spacious blankslate-clean-background">
+            <%= image_tag "classroom-logo.png", size: 128, class: "mb-3" %>
+            <h3>There was an error launching GitHub Classroom from your learning management system.</h3>
+            <div class="markdown-body pt-3">
+              <p><%= error %></p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </main>
+
+    <% if post_launch_url %>
+      <script>
+        (function() {
+          function insideFrame() {
+            try {
+              return window.self !== window.top;
+            } catch (e) {
+              return true;
+            }
+          }
+
+          setTimeout(function() {
+            if(insideFrame()) {
+              window.open("<%= post_launch_url %>")
+            } else {
+              window.location.replace("<%= post_launch_url %>");
+            }
+          }, 500);
+        })();
+      </script>
+    <% end %>
+  </body>
+</html>

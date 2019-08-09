@@ -50,7 +50,8 @@ class RepoAccess < ApplicationRecord
 
   def silently_remove_organization_member
     remove_organization_member
-    true # Destroy ActiveRecord object even if we fail to delete the repository
+  rescue GitHub::Error
+    true
   end
 
   def title

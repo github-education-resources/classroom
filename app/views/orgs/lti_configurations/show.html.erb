@@ -1,7 +1,7 @@
 <div class="remodal-bg">
   <%= render 'organizations/organization_banner', settings: true %>
 
-  <% lms_name = current_lti_configuration.lms_name(default_name: "your Learning Management System") %>
+  <% lms_name = current_lti_configuration.lms_name(default_name: "your learning management system") %>
 
   <div class="site-content">
     <div class="site-content-cap">
@@ -13,7 +13,8 @@
       <p>You or your system administrator will need to add a new application to
       <%= lms_name %> with the following credentials generated below
       by GitHub Classroom. Check out our
-      <%= link_to "step-by-step guide for configuing GitHub Classroom with #{lms_name}.", "https://www.youtube.com/watch?v=dQw4w9WgXcQ" %>
+      <%= link_to "step-by-step guide for configuing GitHub Classroom with #{lms_name}", help_path(article_name: "connect-to-lms") %>
+      for more information.
       </p>
 
       <dt><label>Consumer Key</label></dt>

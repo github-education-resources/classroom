@@ -9,11 +9,11 @@ class CreateGitHubRepoService
       end
     end
 
-    def self.success(repo, exercise)
+    def self.success(repo, exercise = nil)
       new(:success, repo: repo, exercise: exercise)
     end
 
-    def self.failed(error, exercise)
+    def self.failed(error, exercise = nil)
       new(:failed, error: error, exercise: exercise)
     end
 

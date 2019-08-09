@@ -3,13 +3,12 @@
 module Orgs
   class RostersController
     before_action :ensure_google_classroom_roster_import_is_enabled, only: %i[
-      import_from_google_classroom sync_google_classroom
+      import_from_google_classroom
+      sync_google_classroom
     ]
     before_action :authorize_google_classroom, only: %i[import_from_google_classroom sync_google_classroom]
     before_action :ensure_google_classroom_is_linked, only: %i[import_from_google_classroom sync_google_classroom]
     before_action :set_google_classroom, only: %i[import_from_google_classroom sync_google_classroom]
-    before_action :ensure_no_lti_configuration, only: :import_from_google_classroom
-    before_action :google_classroom_ensure_no_roster, only: :import_from_google_classroom
 
     def import_from_google_classroom
       students = list_google_classroom_students
@@ -31,8 +30,7 @@ module Orgs
 
       latest_students = list_google_classroom_students
       latest_student_ids = latest_students.collect(&:user_id)
-      current_student_ids = current_roster.roster_entries.pluck(&:google_user_id)
-
+      current_student_ids = current_roster.roster_entries.pluck(:lms_user_id)
       new_student_ids = latest_student_ids - current_student_ids
       new_students = latest_students.select { |s| new_student_ids.include? s.user_id }
 
@@ -55,12 +53,6 @@ module Orgs
       )
     end
 
-    def ensure_no_lti_configuration
-      return unless current_organization.lti_configuration
-      redirect_to edit_organization_path(current_organization),
-        alert: "A LMS configuration already exists. Please remove configuration before creating a new one."
-    end
-
     # Returns list of students in a google classroom with error checking
     def list_google_classroom_students
       @google_classroom_course.students || []
@@ -81,20 +73,13 @@ module Orgs
       names = students.map { |s| s.profile.name.full_name }
       user_ids = students.map(&:user_id)
       params[:identifiers] = names.join("\r\n")
-      params[:google_user_ids] = user_ids
+      params[:lms_user_ids] = user_ids
 
       if current_roster.nil?
         create
       else
         add_students
       end
-    end
-
-    def google_classroom_ensure_no_roster
-      return unless current_organization.roster
-      redirect_to edit_organization_path(current_organization),
-        alert: "We are unable to link your classroom organization to Google Classroom "\
-          "because a roster already exists. Please delete your current roster and try again."
     end
   end
 end
