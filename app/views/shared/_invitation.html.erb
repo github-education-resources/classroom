@@ -1,9 +1,9 @@
 <dt class=<%= mobile? ? "mobile-invitation-content" : "desktop-invitation-content" %>>
-  <%= check_box_tag 'invitations_enabled',true, @assignment.invitations_enabled,
+  <%= check_box_tag 'invitations_enabled',true, (@assignment.nil? ? @group_assignment.invitations_enabled : @assignment.invitations_enabled),
     onchange: "$(this).data('params', 'invitations_enabled=' + this.checked);showLoadingIndicator(true);showCheckmark(false);",
     data: {
       remote: true,
-      url: url_for(action: :toggle_invitations, id: @assignment.slug),
+      url: url_for(action: :toggle_invitations, id: (@assignment.nil? ? @group_assignment.slug : @assignment.slug)),
       method: "POST"
     } %>
   <label>Enable assignment invitation URL</label>
