@@ -94,7 +94,7 @@ class SessionsController < ApplicationController
     error_msg = err.message
     message = err.lti_message
 
-    if message && message.launch_presentation_return_url
+    if message.try(:launch_presentation_return_url)
       error_params = { lti_errormsg: error_msg }.to_param
       callback_url = "#{message.launch_presentation_return_url}?#{error_params}"
 
