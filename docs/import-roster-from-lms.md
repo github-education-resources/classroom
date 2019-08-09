@@ -76,7 +76,7 @@ Your roster is now up to date with your Learning Managment System.
 
 ### Troubleshooting
 
-#### Unable to import students by Name or Email
+#### Unable to import students by name or email
 If you're trying to import students by their full name or email but only
 able to import by User ID, ensure you've enabled GitHub Classroom to retrieve
 student information from your learning management system. You may be able to
