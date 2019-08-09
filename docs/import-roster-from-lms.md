@@ -60,7 +60,7 @@ After you've imported a roster, keep it up to date by syncing:
 
 5. Click **Sync from your Learning Management System**.
 
-6. Select how you would like to identify the imported students by:
+6. Select how to identify the imported students:
 
     - **User ID**: The Student ID as stored in your institution's learning management system
     - **Names**: Student full names
