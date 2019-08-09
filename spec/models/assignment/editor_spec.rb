@@ -139,7 +139,7 @@ RSpec.describe Assignment::Editor do
 
           expect do
             subject.perform(assignment: assignment, options: { public_repo: false })
-          end.to_not have_enqueued_job(Assignment::RepositoryVisibilityJob)
+          end.to_not have_enqueued_job(AssignmentRepositoryVisibilityJob)
         end
 
         it "returns failed result" do
@@ -163,7 +163,7 @@ RSpec.describe Assignment::Editor do
 
           expect do
             subject.perform(assignment: assignment, options: { public_repo: false })
-          end.to have_enqueued_job(Assignment::RepositoryVisibilityJob)
+          end.to have_enqueued_job(AssignmentRepositoryVisibilityJob)
         end
 
         it "returns success result" do
