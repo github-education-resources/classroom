@@ -89,6 +89,6 @@ If GitHub Classroom notifies you that it is unable to import students because
 it does not have access to the course roster on your learning management system,
 ensure you've configured GitHub to retrieve course membersip infromation from
 your learning management system. You may be able to change the privacy settings for
-GitHub Classroom within your Learning Management System by inspecting the
+GitHub Classroom within your learning management system by inspecting the
 settings you configured when [connecting GitHub Classroom to you learning management system](/help/connect-to-lms).
 
