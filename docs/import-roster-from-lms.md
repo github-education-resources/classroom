@@ -82,7 +82,7 @@ able to import by User ID, ensure you've enabled GitHub Classroom to retrieve
 student information from your learning management system. You may be able to
 change the privacy settings for GitHub Classroom within your learning management
 System by inspecting the configuration settings by inspecting the settings
-you configured when [connecting GitHub Classroom to you learning management system](/help/connect-to-lms).
+you set when [connecting GitHub Classroom to you learning management system](/help/connect-to-lms).
 
 #### Roster import service is not enabled
 If GitHub Classroom notifies you that it is unable to import students because
