@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# This is deprecated and will be removed in a subsequent deploy
+# Please see AssignmentRepositoryVisibilityJob
 class Assignment
   class RepositoryVisibilityJob < ApplicationJob
     queue_as :assignment
