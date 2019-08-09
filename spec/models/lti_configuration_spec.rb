@@ -14,7 +14,7 @@ RSpec.describe LtiConfiguration, type: :model do
 
     it "returns the default name when unspecified type is :other" do
       lti_configuration.lms_type = :other
-      expect(lti_configuration.lms_name).to eq("Other Learning Management System")
+      expect(lti_configuration.lms_name).to eq("Other learning management system")
     end
 
     it "returns a custom default name when specified type is :other" do

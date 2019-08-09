@@ -55,7 +55,7 @@ module Orgs
     end
 
     def destroy
-      lms_name = current_lti_configuration.lms_name(default_name: "your Learning Management System")
+      lms_name = current_lti_configuration.lms_name(default_name: "your learning management system")
       GitHubClassroom.statsd.increment("lti_configuration.destroy")
       current_lti_configuration.destroy!
       redirect_to edit_organization_path(current_organization), alert: "Classroom is now disconnected from #{lms_name}."
@@ -89,13 +89,13 @@ module Orgs
       return unless current_organization.google_course_id
       redirect_to edit_organization_path(current_organization),
         alert: "This classroom is already connected to Google Classroom. Please disconnect from Google Classroom "\
-          "before connecting to another Learning Management System."
+          "before connecting to another learning management system."
     end
 
     def ensure_no_roster
       return unless current_organization.roster
       redirect_to edit_organization_path(current_organization),
-        alert: "We are unable to link your classroom organization to a Learning Management System "\
+        alert: "We are unable to link your classroom organization to a learning management system "\
           "because a roster already exists. Please delete your current roster and try again."
     end
 

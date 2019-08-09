@@ -53,7 +53,7 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
           end
 
           it "flashes error message" do
-            lms_name = @lti_configuration.lms_name(default_name: "a Learning Management System")
+            lms_name = @lti_configuration.lms_name(default_name: "a learning management system")
             expect(flash[:alert]).to eq("This classroom is already connected to #{lms_name}. "\
               "Please disconnect from #{lms_name} before connecting to Google Classroom.")
           end
@@ -202,7 +202,7 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
           end
 
           it "flashes error message" do
-            lms_name = @lti_configuration.lms_name(default_name: "a Learning Management System")
+            lms_name = @lti_configuration.lms_name(default_name: "a learning management system")
             expect(flash[:alert]).to eq("This classroom is already connected to #{lms_name}. "\
               "Please disconnect from #{lms_name} before connecting to Google Classroom.")
           end
