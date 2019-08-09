@@ -335,12 +335,28 @@ RSpec.describe CreateGitHubRepoService do
 
           context "failure" do
             before(:each) do
-              assignment.update(starter_code_repo_id: -1)
+              allow_any_instance_of(GitHubOrganization)
+                .to receive(:create_repository_from_template)
+                .and_raise(GitHub::Forbidden)
+              Failbot.reports.clear
             end
 
             it "reports error to Failbot" do
               service.perform
               expect(Failbot.reports.count).to be > 0
+            end
+
+            context "NotFound error" do
+              before(:each) do
+                allow_any_instance_of(GitHubOrganization)
+                  .to receive(:create_repository_from_template)
+                  .and_raise(GitHub::NotFound)
+              end
+
+              it "does not report NotFound error to Failbot" do
+                service.perform
+                expect(Failbot.reports.count).to be_zero
+              end
             end
 
             it "Failbot report contains details" do
