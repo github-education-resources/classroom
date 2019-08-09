@@ -25,7 +25,7 @@ To import a new course roster from your learning management system:
 
 4. In the sidebar, select **Roster Management**. The _Add Students_ page appears.
 
-5. Click **Import from your Learning Management System**
+5. Click **Import from your Learning Management System**.
 
 6. Select how to identify the imported students:
 
