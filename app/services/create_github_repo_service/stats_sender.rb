@@ -48,6 +48,8 @@ class CreateGitHubRepoService
         GitHubClassroom.statsd.increment("#{root_prefix}.create.repo.fail")
       when :template_repository_creation_failed
         GitHubClassroom.statsd.increment("#{root_prefix}.create.repo.with_templates.failed")
+      when :template_repository_not_found
+        GitHubClassroom.statsd.increment("#{root_prefix}.create.repo.with_templates.not_found")
       when :collaborator_addition_failed
         GitHubClassroom.statsd.increment("#{root_prefix}.create.adding_collaborator.fail")
       when :starter_code_import_failed

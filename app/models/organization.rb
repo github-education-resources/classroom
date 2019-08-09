@@ -85,7 +85,12 @@ class Organization < ApplicationRecord
 
   def geo_pattern_data_uri
     patterns = %i[chevrons hexagons octagons plus_signs triangles squares diamonds]
-    @geo_pattern_data_uri ||= GeoPattern.generate(id, base_color: "#28a745", patterns: patterns).to_data_uri
+    options = { base_color: "#28a745", patterns: patterns }
+    if archived?
+      options.delete(:base_color)
+      options[:color] = "#696868"
+    end
+    @geo_pattern_data_uri ||= GeoPattern.generate(id, options).to_data_uri
   end
 
   # Check if we are the last Classroom on this GitHub Organization
