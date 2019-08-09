@@ -80,7 +80,7 @@ Your roster is now up to date with your Learning Managment System.
 If you're trying to import students by their full name or email but only
 able to import by User ID, ensure you've enabled GitHub Classroom to retrieve
 student information from your learning management system. You may be able to
-change the privacy settings for GitHub Classroom within your Learning Management
+change the privacy settings for GitHub Classroom within your learning management
 System by inspecting the configuration settings by inspecting the settings
 you configured when [connecting GitHub Classroom to you learning management system](/help/connect-to-lms).
 
