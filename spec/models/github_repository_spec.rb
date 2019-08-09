@@ -306,5 +306,18 @@ describe GitHubRepository do
         end
       end
     end
+
+    describe "public?", :vcr do
+      let(:organization) { classroom_org }
+      let(:client) { oauth_client }
+      let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
+      let(:github_repository) do
+        github_organization.create_repository("Assignment 5", private: true)
+      end
+
+      it "returns a boolean indicating the visibility" do
+        expect(github_repository.public?).to be false
+      end
+    end
   end
 end
