@@ -34,8 +34,8 @@
           have enabled GitHub Classroom to receive student information per your privacy settings
           from within <%= lms_name %> and try again.
         </div>
-        <div class="d-flex flex-items-center pt-5">
-          <button data-remodal-action="close">Cancel</button>
+        <div class="d-flex flex-items-center pt-3">
+          <%= link_to "Cancel", "#", { "data-remodal-action": "close" } %>
         </div>
       <% end %>
     </div>
