@@ -290,7 +290,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
         allow_any_instance_of(GitHubOrganization).to receive(:plan).and_return(private_repos_plan)
 
-        assert_enqueued_jobs 1, only: Assignment::RepositoryVisibilityJob do
+        assert_enqueued_jobs 1, only: AssignmentRepositoryVisibilityJob do
           patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
         end
       end
@@ -300,7 +300,7 @@ RSpec.describe AssignmentsController, type: :controller do
       it "will not kick off an AssignmentVisibility job" do
         options = { title: "Ruby on Rails" }
 
-        assert_no_enqueued_jobs only: Assignment::RepositoryVisibilityJob do
+        assert_no_enqueued_jobs only: AssignmentRepositoryVisibilityJob do
           patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
         end
       end
