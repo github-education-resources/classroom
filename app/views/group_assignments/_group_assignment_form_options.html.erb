@@ -74,7 +74,7 @@
     <% time           = Time.zone.now %>
     <% suggested_name = Time.zone.now.strftime("Teams formed on %B #{time.day.ordinalize}, %Y") %>
     <dd><input class="textfield form-control input-contrast input-block" type="text" value="<%= suggested_name unless groupings_present %>" placeholder="<%= suggested_name if groupings_present %>" name="grouping[title]" id="grouping_title" autocomplete="off"></dd>
-    <%= render 'shared/form_error', errors: view.error_message_for(:grouping) if view.errors_for?(:grouping) %>
+    <%= render('shared/form_error', errors: view.error_message_for_object(@group_assignment.grouping)) if view.errors_for_object?(@group_assignment.grouping) %>
   </dl>
 <% end %>
 
