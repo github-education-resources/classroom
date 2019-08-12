@@ -133,33 +133,16 @@ module Orgs
       redirect_to roster_path(current_organization, params: { roster_entries_page: params[:roster_entries_page] })
     end
 
-    # rubocop:disable Metrics/MethodLength
-    # rubocop:disable Metrics/AbcSize
     def add_students
       identifiers = params[:identifiers].split("\r\n").reject(&:blank?)
-      lms_ids = params[:lms_user_ids] || []
+      lms_user_ids = params[:lms_user_ids] || []
 
-      begin
-        entries = RosterEntry.create_entries(
-          identifiers: identifiers,
-          roster: current_roster,
-          lms_user_ids: lms_ids
-        )
-
-        if entries.empty?
-          flash[:warning] = "No students created."
-        elsif entries.length == identifiers.length
-          flash[:success] = "Students created."
-        else
-          flash[:success] = "Students created. Some duplicates have been omitted."
-        end
-      rescue RosterEntry::IdentifierCreationError
-        flash[:error] = "An error has occurred. Please try again."
-      end
-
+      AddStudentsToRosterJob.perform_later(identifiers, current_roster, current_user, lms_user_ids)
       redirect_to roster_path(current_organization)
     end
 
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def download_roster
       grouping = current_organization.groupings.find(params[:grouping]) if params[:grouping]
 
@@ -176,7 +159,6 @@ module Orgs
         end
       end
     end
-
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
 
