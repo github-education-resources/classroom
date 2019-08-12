@@ -1,14 +1,5 @@
 version: '2.1'
 services:
-  elasticsearch:
-    container_name: "classroom_elasticsearch"
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
-    ports:
-      - "127.0.0.1:9337:9300"
-      - "127.0.0.1:9227:9200"
-    volumes:
-      - ~/.docker-volumes/education/classroom/elasticsearch/data/:/usr/share/elasticsearch/data
-      - ~/.docker-volumes/education/classroom/elasticsearch/logs/:/user/share/elasticsearch/logs
   memcached:
     container_name: "classroom_memcached"
     image: memcached:1.4.26-alpine

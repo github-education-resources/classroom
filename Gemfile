@@ -15,7 +15,6 @@ gem "autoprefixer-rails", "~> 7.1", ">= 7.1.3"
 gem "barnes"
 gem "bootsnap", "~> 1.1", ">= 1.1.2", require: false
 
-gem "chewy", "~> 5.0.0"
 gem "connection_pool", "~> 2.2", ">= 2.2.1"
 
 gem "dalli", "~> 2.7", ">= 2.7.6"

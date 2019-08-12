@@ -31,7 +31,6 @@
     }
   },
   "addons": [
-    "foundelasticsearch",
     "heroku-postgresql",
     "heroku-redis",
     "memcachedcloud",

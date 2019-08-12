@@ -21,7 +21,7 @@ class LtiConfiguration < ApplicationRecord
     other: "other"
   }, _prefix: true
 
-  def lms_name(default_name: "Other Learning Management System")
+  def lms_name(default_name: "Other learning management system")
     lms_settings.platform_name || default_name
   end
 
@@ -44,7 +44,7 @@ class LtiConfiguration < ApplicationRecord
     builder = GitHubClassroom::LTI::ConfigurationBuilder.new("GitHub Classroom", launch_url)
 
     builder.add_attributes(
-      description: "Sync your GitHub Classroom organization with your Learning Management System.",
+      description: "Sync your GitHub Classroom organization with your learning management system.",
       icon: "https://classroom.github.com/favicon.ico",
       vendor_name: "GitHub Classroom",
       vendor_url: "https://classroom.github.com/"
