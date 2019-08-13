@@ -140,7 +140,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
           expect(response).to redirect_to(edit_organization_path(organization))
           expect(flash[:alert]).to eq(
             "This classroom is already connected to Google Classroom. Please disconnect from Google Classroom "\
-            "before connecting to another Learning Management System."
+            "before connecting to another learning management system."
           )
         end
       end
@@ -156,7 +156,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
           post :create, params: { id: organization.slug }
           expect(response).to redirect_to(edit_organization_path(organization))
           expect(flash[:alert]).to eq(
-            "We are unable to link your classroom organization to a Learning Management System "\
+            "We are unable to link your classroom organization to a learning management system "\
             "because a roster already exists. Please delete your current roster and try again."
           )
         end

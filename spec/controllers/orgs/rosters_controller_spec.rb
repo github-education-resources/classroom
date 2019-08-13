@@ -307,6 +307,20 @@ RSpec.describe Orgs::RostersController, type: :controller do
                 expect(flash[:alert]).to be_nil
                 expect(assigns(:identifiers).keys.length).to eql(3)
               end
+
+              context "no new students" do
+                before(:each) do
+                  subject
+                    .stub(:filter_new_students)
+                    .and_return([])
+                end
+
+                it "creates no duplicate entries" do
+                  expect(subject).to receive(:handle_lms_import_error)
+
+                  get :import_from_lms, params: { id: lti_configuration.organization.slug }
+                end
+              end
             end
 
             context "successful fetch, but missing some attributes" do

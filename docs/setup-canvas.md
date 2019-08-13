@@ -54,7 +54,7 @@ the configuration process)
 
 ### Next steps
 
-[Importing your course roster from Canvas to GitHub Classroom]().
+[Importing your course roster from Canvas to GitHub Classroom](/help/import-roster-from-lms)
 
 ### Troubleshooting: _Enable Membership Service_ checkbox is not visible
 

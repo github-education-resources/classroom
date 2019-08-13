@@ -31,20 +31,20 @@ RSpec.describe "LTI launch", type: :request do
 
   describe "sessions#lti_launch", :vcr do
     it "sets cached_launch_message_nonce on corresponding lti_configuration" do
-      get auth_lti_launch_path(oauth_consumer_key: consumer_key)
+      post auth_lti_launch_path(oauth_consumer_key: consumer_key)
       lti_configuration.reload
       expect(lti_configuration.cached_launch_message_nonce).to eql("mock_nonce")
     end
 
     it "renders lti_launch template" do
-      get auth_lti_launch_path(oauth_consumer_key: consumer_key)
+      post auth_lti_launch_path(oauth_consumer_key: consumer_key)
       expect(response).to have_http_status(:ok)
       expect(response).to render_template(:lti_launch)
     end
 
     context "unauthenticated request" do
       it "post_launch_url is set to sessions#new" do
-        get auth_lti_launch_path(oauth_consumer_key: consumer_key)
+        post auth_lti_launch_path(oauth_consumer_key: consumer_key)
         expect(assigns[:post_launch_url]).to eq(login_url) # /login
       end
     end
@@ -58,7 +58,7 @@ RSpec.describe "LTI launch", type: :request do
       end
 
       it "post_launch_url is set to LtiConfigurations#complete" do
-        get auth_lti_launch_path(oauth_consumer_key: consumer_key)
+        post auth_lti_launch_path(oauth_consumer_key: consumer_key)
         expect(assigns[:post_launch_url]).to eq(complete_lti_configuration_url(id: organization.slug))
       end
     end

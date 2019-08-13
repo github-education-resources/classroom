@@ -138,6 +138,9 @@ module Orgs
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/AbcSize
     def add_students
+      if params[:lms_user_ids].is_a? String
+        params[:lms_user_ids] = params[:lms_user_ids].split
+      end
       identifiers = params[:identifiers].split("\r\n").reject(&:blank?)
       lms_ids = params[:lms_user_ids] || []
 
