@@ -97,8 +97,9 @@ class SessionsController < ApplicationController
     if message.try(:launch_presentation_return_url)
       error_params = { lti_errormsg: error_msg }.to_param
       callback_url = URI.parse(message.launch_presentation_return_url)
-      callback_url.query = "#{callback_url.query}&#{error_params}"
+      query = callback_url.query
 
+      callback_url.query = query ? "#{query}&#{error_params}" : error_params
       return redirect_to callback_url.to_s
     end
 
