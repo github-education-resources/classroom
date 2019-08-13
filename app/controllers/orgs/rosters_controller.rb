@@ -191,7 +191,7 @@ module Orgs
       end
     end
 
-    def importing_students_lms_statsd(lms_user_ids:, entries_length: )
+    def importing_students_lms_statsd(lms_user_ids:, entries_length:)
       return if lms_user_ids.nil?
       GitHubClassroom.statsd.increment("roster_entries.lms_imported", by: entries_length)
     end
