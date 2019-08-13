@@ -60,6 +60,8 @@ module Orgs
       if result.success?
         if current_organization.google_course_id && !params[:lms_user_ids].empty?
           GitHubClassroom.statsd.increment("google_classroom.import")
+        elsif current_organization.lti_configuration && !params[:lms_user_ids].empty?
+          GitHubClassroom.statsd.increment("lti_configuration.successful_import")
         else
           GitHubClassroom.statsd.increment("roster.create")
         end

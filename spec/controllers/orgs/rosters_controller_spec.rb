@@ -62,6 +62,40 @@ RSpec.describe Orgs::RostersController, type: :controller do
       }
     end
 
+    context "when there is an lti_configuration present" do
+      before(:each) do
+        create(:lti_configuration, organization: organization)
+      end
+
+      it "sends statsd" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("lti_configuration.successful_import")
+        post :create, params: {
+          id:         organization.slug,
+          identifier_name: "emails",
+          identifiers: "a\r\nb",
+          lms_user_ids: [1, 2]
+        }
+      end
+
+      it "creates roster entries" do
+        post :create, params: {
+          id:         organization.slug,
+          identifier_name: "emails",
+          identifiers: "a\r\nb",
+          lms_user_ids: "1 2"
+        }
+        organization.reload
+        expect(organization.roster.roster_entries.count).to eq(2)
+        expect(organization.roster.roster_entries[0].lms_user_id).to eq("1")
+        expect(organization.roster.roster_entries[1].lms_user_id).to eq("2")
+      end
+
+      after(:each) do
+        Roster.destroy_all
+        RosterEntry.destroy_all
+      end
+    end
+
     context "with no identifier_name" do
       before do
         post :create, params: { id: organization.slug, identifiers: "myemail" }
@@ -591,7 +625,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
           roster_entry_identifier: "Jessica Smith",
           id: organization.slug
         }
-        organization.roster.roster_entries.reload
+        organization.reload.roster.roster_entries
       end
 
       it "updates roster entry" do
