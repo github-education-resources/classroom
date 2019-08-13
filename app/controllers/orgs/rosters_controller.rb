@@ -144,6 +144,10 @@ module Orgs
           lms_user_ids: lms_ids
         )
 
+        unless params[:lms_user_ids].nil?
+          GitHubClassroom.statsd.increment("roster_entries.lms_imported", by: entries.length)
+        end
+
         if entries.empty?
           flash[:warning] = "No students created."
         elsif entries.length == identifiers.length

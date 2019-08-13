@@ -488,6 +488,39 @@ RSpec.describe Orgs::RostersController, type: :controller do
       sign_in_as(user)
     end
 
+    context "with google or lti integration" do
+      context "sends out statsd when successful" do
+        before do
+          create(:lti_configuration, organization: organization)
+        end
+
+        it "sends successfully" do
+          expect(GitHubClassroom.statsd).to receive(:increment).with("roster_entries.lms_imported", by: 2)
+          patch :add_students, params: {
+            id:         organization.slug,
+            identifiers: "a\r\nb",
+            lms_user_ids: [1,2]
+          }
+        end
+      end
+
+      context "does not send out statsd when not successful" do
+        before do
+          Roster.destroy_all
+          RosterEntry.destroy_all
+        end
+
+        it "sends successfully" do
+          expect(GitHubClassroom.statsd).to_not receive(:increment).with("roster_entries.lms_imported", by: 2)
+          patch :add_students, params: {
+            id:         organization.slug,
+            identifiers: "a\r\nb",
+            lms_user_ids: [1,2]
+          }
+        end
+      end
+    end
+
     context "when all identifiers are valid" do
       before do
         patch :add_students, params: {
