@@ -50,7 +50,7 @@ class SessionsController < ApplicationController
   def lti_failure
     message = IMS::LTI::Models::Messages::BasicLTILaunchRequest.new(launch_presentation_return_url: params[:message])
     error_msg = "The launch credentials could not be authorized. Ensure you've entered the correct \"consumer key\"
-    and \"shared secret\" when configuring GitHub Classroom within your Learning Management System."
+    and \"shared secret\" when configuring GitHub Classroom within your learning management system."
 
     raise LtiLaunchError.new(message), error_msg
   end
@@ -61,7 +61,7 @@ class SessionsController < ApplicationController
     message_store = GitHubClassroom.lti_message_store(consumer_key: consumer_key)
     unless message_store.message_valid?(message)
       error_msg = "The launch message from your Learning Management system could not be validated.
-      Please re-launch GitHub Classroom from your Learning Management System."
+      Please re-launch GitHub Classroom from your learning management system."
 
       raise LtiLaunchError.new(message), error_msg
     end
@@ -94,7 +94,7 @@ class SessionsController < ApplicationController
     error_msg = err.message
     message = err.lti_message
 
-    if message && message.launch_presentation_return_url
+    if message.try(:launch_presentation_return_url)
       error_params = { lti_errormsg: error_msg }.to_param
       callback_url = "#{message.launch_presentation_return_url}?#{error_params}"
 

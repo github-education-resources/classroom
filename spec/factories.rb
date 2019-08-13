@@ -102,6 +102,7 @@ FactoryBot.define do
   factory :roster_entry do
     roster
     identifier { "myemail@example.com" }
+    lms_user_id { Faker::Code.isbn }
   end
 
   factory :user do
