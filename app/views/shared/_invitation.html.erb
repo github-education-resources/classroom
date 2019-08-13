@@ -8,9 +8,8 @@
     } %>
   <label>Enable assignment invitation URL</label>
   <span style="color: green"><%= octicon 'check', height: 16, id: "checkmark", style: "display: none; padding-bottom: 3px;" %></span>
-  <%= image_tag 'octocat-spinner-128.gif', width: 14, height: 14, class: 'spinner', id: "loading-indicator", style: "display:none" %>
-  <div class="input-group input-block">
+  <%= image_tag 'octocat-spinner-128.gif', width: 13, height: 13, class: 'spinner', id: "loading-indicator", style: "display:none" %>
+  <div class="input-group input-block py-2">
     <%= render partial: "shared/invitations/clipboard_form", locals: local_assigns %>
   </div>
-  <br>
 <%= t('views.shared.share_invite_url') %></dt>
