@@ -37,6 +37,12 @@ class ApplicationController < ActionController::Base
       render file: Rails.root.join("public", "406.html"), layout: false,
              status: :not_acceptable, formats: [:html]
     end
+
+    rescue_from ActionController::UnknownFormat do
+      GitHubClassroom.statsd.increment("errors.action_controller_unknown_format")
+      render file: Rails.root.join("public", "406.html"), layout: false,
+             status: :not_acceptable, formats: [:html]
+    end
   end
 
   def peek_enabled?
