@@ -58,14 +58,7 @@ module Orgs
       # Set the object so that we can see errors when rendering :new
       @roster = result.roster
       if result.success?
-        if current_organization.google_course_id && !params[:lms_user_ids].empty?
-          GitHubClassroom.statsd.increment("google_classroom.import")
-        elsif current_organization.lti_configuration && !params[:lms_user_ids].empty?
-          GitHubClassroom.statsd.increment("lti_configuration.successful_import")
-        else
-          GitHubClassroom.statsd.increment("roster.create")
-        end
-
+        create_statsd(lms_user_ids: params[:lms_user_ids])
         flash[:success] = \
           "Your classroom roster has been saved! Manage it <a href='#{roster_url(current_organization)}'>here</a>."
 
@@ -186,6 +179,16 @@ module Orgs
     # rubocop:enable Metrics/AbcSize
 
     private
+
+    def create_statsd(lms_user_ids:)
+      if lms_user_ids.nil?
+        GitHubClassroom.statsd.increment("roster.create")
+      elsif current_organization.google_course_id
+        GitHubClassroom.statsd.increment("google_classroom.import")
+      else
+        GitHubClassroom.statsd.increment("lti_configuration.successful_import")
+      end
+    end
 
     def current_roster
       return @current_roster if defined?(@current_roster)
