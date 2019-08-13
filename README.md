@@ -271,6 +271,7 @@ ENV Variable | Description |
 ## Help wanted
 If you're interested in helping out with Classroom development and looking for a place to get started, check out the issues labeled [`help-wanted`](https://github.com/education/classroom/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted+%3Araised_hand_with_fingers_splayed%3A%22) and feel free to ask any questions you have before diving into the code.
 
+
 ## Contributors
 Classroom is developed by these [contributors](https://github.com/education/classroom/graphs/contributors).
 
