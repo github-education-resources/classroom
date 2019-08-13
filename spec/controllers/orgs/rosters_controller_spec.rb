@@ -499,7 +499,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
           patch :add_students, params: {
             id:         organization.slug,
             identifiers: "a\r\nb",
-            lms_user_ids: [1,2]
+            lms_user_ids: [1, 2]
           }
         end
       end
@@ -515,7 +515,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
           patch :add_students, params: {
             id:         organization.slug,
             identifiers: "a\r\nb",
-            lms_user_ids: [1,2]
+            lms_user_ids: [1, 2]
           }
         end
       end
