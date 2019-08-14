@@ -8,12 +8,12 @@ function importOptions(starterCodeFieldValue) {
 }
 
 function removeErrorBox(el) {
-  parent = el.closest(".errored");
+  var parent = el.closest(".errored");
 
   if (!parent) return;
 
-  errorBoxes = parent.getElementsByClassName("error");
+  var errorBox = parent.querySelector(".error");
 
   parent.classList.remove("errored");
-  errorBoxes.length && errorBoxes[0].remove();
+  errorBox && errorBox.remove();
 }
