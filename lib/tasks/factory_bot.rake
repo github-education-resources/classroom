@@ -5,7 +5,6 @@ namespace :factory_bot do
   task lint: :environment do
     if Rails.env.test?
       begin
-        Chewy.strategy(:bypass)
         DatabaseCleaner.start
         FactoryBot.lint
       ensure

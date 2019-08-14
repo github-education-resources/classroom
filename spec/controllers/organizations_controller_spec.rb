@@ -105,34 +105,11 @@ RSpec.describe OrganizationsController, type: :controller do
       organization.destroy!
     end
 
-    context "multiple_classrooms_per_org flag not enabled" do
-      before do
-        GitHubClassroom.flipper[:multiple_classrooms_per_org].disable
-      end
-
-      it "will not add an organization that already exists" do
-        existing_organization_options = { github_id: organization.github_id }
-        expect do
-          post :create, params: { organization: existing_organization_options }
-        end.to_not change(Organization, :count)
-      end
-    end
-
-    context "multiple_classrooms_per_org flag is enabled" do
-      before do
-        GitHubClassroom.flipper[:multiple_classrooms_per_org].enable
-      end
-
-      after do
-        GitHubClassroom.flipper[:multiple_classrooms_per_org].disable
-      end
-
-      it "will add a classroom on same organization" do
-        existing_organization_options = { github_id: organization.github_id }
-        expect do
-          post :create, params: { organization: existing_organization_options }
-        end.to change(Organization, :count)
-      end
+    it "will add a classroom on same organization" do
+      existing_organization_options = { github_id: organization.github_id }
+      expect do
+        post :create, params: { organization: existing_organization_options }
+      end.to change(Organization, :count)
     end
 
     it "will fail to add an organization the user is not an admin of" do
@@ -170,6 +147,68 @@ RSpec.describe OrganizationsController, type: :controller do
 
       expect(response.status).to eq(200)
       expect(assigns(:current_organization)).to_not be_nil
+    end
+  end
+
+  describe "search organizations", :vcr do
+    before do
+      user.organizations = [create(:organization, title: "github_class_300"), organization]
+      user.save!
+    end
+
+    it "finds an organization" do
+      get :search, params: { id: organization.slug, query: "github" }, xhr: true
+      expect(response.status).to eq(200)
+      expect(assigns(:organizations)).to_not eq([])
+    end
+
+    it "finds no organization" do
+      get :search, params: { id: organization.slug, query: "testing stuff" }, xhr: true
+      expect(response.status).to eq(200)
+      expect(assigns(:organizations)).to eq([])
+    end
+
+    it "is not case sensitive" do
+      get :search, params: { id: organization.slug, query: "GITHUB" }, xhr: true
+      expect(response.status).to eq(200)
+      expect(assigns(:organizations)).to_not eq([])
+    end
+  end
+
+  describe "sort organizations", :vcr do
+    before do
+      organization.created_at = 1.day.ago
+      organization.save!
+
+      user.organizations = [create(:organization, title: "github_class_300"), organization]
+      user.save!
+    end
+
+    it "sorts organizations by name" do
+      get :search, params: { id: organization.slug, sort_by: "Classroom name" }, xhr: true
+      expect(response.status).to eq(200)
+
+      actual = assigns(:organizations).pluck(:title)
+      expected = user.organizations.sort_by(&:title).pluck(:title)
+      expect(actual).to eql(expected)
+    end
+
+    it "sorts organizations by oldest first" do
+      get :search, params: { id: organization.slug, sort_by: "Oldest first" }, xhr: true
+      expect(response.status).to eq(200)
+
+      actual = assigns(:organizations).pluck(:id)
+      expected = user.organizations.sort_by(&:created_at).pluck(:id)
+      expect(actual).to eql(expected)
+    end
+
+    it "sorts organizations by newest first" do
+      get :search, params: { id: organization.slug, sort_by: "Newest first" }, xhr: true
+      expect(response.status).to eq(200)
+
+      actual = assigns(:organizations).pluck(:id)
+      expected = user.organizations.sort_by(&:created_at).reverse.pluck(:id)
+      expect(actual).to eql(expected)
     end
   end
 
@@ -260,11 +299,23 @@ RSpec.describe OrganizationsController, type: :controller do
   end
 
   describe "PATCH #update", :vcr do
-    it "correctly updates the organization" do
-      options = { title: "New Title" }
-      patch :update, params: { id: organization.slug, organization: options }
+    context "when success" do
+      it "correctly updates the organization" do
+        options = { title: "New Title" }
+        patch :update, params: { id: organization.slug, organization: options }
 
-      expect(response).to redirect_to(organization_path(Organization.find(organization.id)))
+        expect(response).to redirect_to(organization_path(Organization.find(organization.id)))
+      end
+    end
+
+    context "when fail" do
+      it "not change current organization title" do
+        options = { title: " " }
+        patch :update, params: { id: organization.slug, organization: options }
+
+        expect(assigns(:current_organization).title).not_to eql(options[:title])
+        expect(response).to render_template(:edit)
+      end
     end
   end
 
@@ -287,6 +338,42 @@ RSpec.describe OrganizationsController, type: :controller do
     it "redirects back to the index page" do
       delete :destroy, params: { id: organization.slug }
       expect(response).to redirect_to(organizations_path)
+    end
+  end
+
+  describe "GET #link_lms", :vcr do
+    context "with lti launch enabled" do
+      before(:each) { GitHubClassroom.flipper[:lti_launch].enable }
+      after(:each)  { GitHubClassroom.flipper[:lti_launch].disable }
+
+      it "renders the LMS selection page" do
+        get :link_lms, params: { id: organization.slug }
+        expect(response).to have_http_status(:ok)
+        expect(response).to render_template(:link_lms)
+      end
+    end
+
+    context "with google classroom disabled" do
+      before(:each) { GitHubClassroom.flipper[:google_classroom_roster_import].enable }
+      after(:each)  { GitHubClassroom.flipper[:google_classroom_roster_import].disable }
+
+      it "renders the LMS selection page" do
+        get :link_lms, params: { id: organization.slug }
+        expect(response).to have_http_status(:ok)
+        expect(response).to render_template(:link_lms)
+      end
+    end
+
+    context "with lti launch or google classroom disabled" do
+      before(:each) do
+        GitHubClassroom.flipper[:lti_launch].disable
+        GitHubClassroom.flipper[:google_classroom_roster_import].disable
+      end
+
+      it "returns not found" do
+        get :link_lms, params: { id: organization.slug }
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 

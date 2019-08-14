@@ -204,6 +204,68 @@ RSpec.describe AssignmentsController, type: :controller do
     end
   end
 
+  describe "search for user in the roster", :vcr do
+    before do
+      organization.roster = create(:roster)
+      organization.save!
+      RosterEntry.create(identifier: "tester", roster: organization.roster)
+      organization.roster.reload
+    end
+
+    it "finds one user if in roster" do
+      get :show, xhr: true, params: { organization_id: organization.slug, id: assignment.slug, query: "tester" }
+      expect(response.status).to eq(200)
+      expect(assigns(:roster_entries)).to_not eq([])
+    end
+
+    it "finds no user if not in roster" do
+      get :show, xhr: true, params: { organization_id: organization.slug, id: assignment.slug, query: "aabz" }
+      expect(response.status).to eq(200)
+      expect(assigns(:roster_entries)).to eq([])
+    end
+
+    it "search is not case-sensitive" do
+      get :show, xhr: true, params: { organization_id: organization.slug, id: assignment.slug, query: "TESTER" }
+      expect(response.status).to eq(200)
+      expect(assigns(:roster_entries)).to_not eq([])
+    end
+  end
+
+  describe "display student username", :vcr, type: :view do
+    before do
+      organization.users.push(create(:user, uid: 90, token: "asdfsad4333"))
+      organization.roster = create(:roster)
+      organization.roster.roster_entries.push(RosterEntry.create(
+                                                identifier: "student",
+                                                roster: organization.roster,
+                                                user_id: organization.users.last
+      ))
+      organization.save!
+      organization.roster.reload
+    end
+
+    it "displays student's identifier if is a roster_entry" do
+      assignment_repo = create(:assignment_repo,
+        assignment: assignment,
+        user: organization.users.last,
+        github_repo_id: 34_534_534)
+      render partial: "orgs/roster_entries/assignment_repos/linked_accepted",
+             locals: { assignment_repo: assignment_repo,
+                       current_roster_entry: organization.roster.roster_entries.last }
+      expect(response).to include("student")
+    end
+
+    it "displays student github username if there is no roster_entry" do
+      assignment_repo = create(:assignment_repo,
+        assignment: assignment,
+        user: organization.users.last,
+        github_repo_id: 34_534_534)
+      render partial: "orgs/roster_entries/assignment_repos/linked_accepted",
+             locals: { assignment_repo: assignment_repo }
+      expect(response).to_not include("student")
+    end
+  end
+
   describe "GET #edit", :vcr do
     it "returns success and sets the assignment" do
       get :edit, params: { id: assignment.slug, organization_id: organization.slug }
@@ -228,7 +290,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
         allow_any_instance_of(GitHubOrganization).to receive(:plan).and_return(private_repos_plan)
 
-        assert_enqueued_jobs 1, only: Assignment::RepositoryVisibilityJob do
+        assert_enqueued_jobs 1, only: AssignmentRepositoryVisibilityJob do
           patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
         end
       end
@@ -238,7 +300,7 @@ RSpec.describe AssignmentsController, type: :controller do
       it "will not kick off an AssignmentVisibility job" do
         options = { title: "Ruby on Rails" }
 
-        assert_no_enqueued_jobs only: Assignment::RepositoryVisibilityJob do
+        assert_no_enqueued_jobs only: AssignmentRepositoryVisibilityJob do
           patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
         end
       end

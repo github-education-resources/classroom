@@ -3,9 +3,11 @@
 class Assignment < ApplicationRecord
   include Flippable
   include GitHubPlan
+  include StarterCodeImportable
   include ValidatesNotReservedWord
+  include StafftoolsSearchable
 
-  update_index("assignment#assignment") { self }
+  define_pg_search(columns: %i[id title slug])
 
   default_scope { where(deleted_at: nil) }
 
@@ -36,9 +38,12 @@ class Assignment < ApplicationRecord
   validates :assignment_invitation, presence: true
 
   validate :uniqueness_of_slug_across_organization
+  validate :starter_code_repository_not_empty, if: :will_save_change_to_starter_code_repo_id?
+  validate :starter_code_repository_is_template, if: :will_save_change_to_starter_code_repo_id?
 
   alias_attribute :invitation, :assignment_invitation
   alias_attribute :repos, :assignment_repos
+  alias_attribute :template_repos_enabled?, :template_repos_enabled
 
   def private?
     !public_repo
@@ -46,15 +51,6 @@ class Assignment < ApplicationRecord
 
   def public?
     public_repo
-  end
-
-  def starter_code?
-    starter_code_repo_id.present?
-  end
-
-  def starter_code_repository
-    return unless starter_code?
-    @starter_code_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id)
   end
 
   def to_param

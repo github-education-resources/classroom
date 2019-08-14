@@ -1,27 +1,33 @@
-<div class="site-content">
+<div class="d-sm-flex flex-items-center flex-justify-between my-4">
+  <% if @organizations.present? %>
 
-  <div class="site-content-cap clearfix">
-    <% if @organizations.present? %>
-      <%= link_to new_organization_path, class: 'btn btn-primary float-right', role: 'button' do %>
-        <%= t('views.organizations.new_classroom') %>
-      <% end %>
+    <div class="form-block col-md-5">
+      <%= render partial: "shared/search_and_sort", locals: {
+          submit_url: search_organizations_path,
+          query: @query,
+          options: @sort_modes.keys,
+          option_links: @sort_modes_links,
+          selected_option: @current_sort_mode
+        } %>
+    </div>
+
+    <%= link_to new_organization_path, class: 'd-none d-sm-inline-block btn btn-primary', role: 'button' do %>
+      <%= t('views.organizations.new_classroom') %>
     <% end %>
-    <h2 class="site-content-heading float-left"><%= t('views.organizations.classrooms') %></h2>
-  </div>
-
-  <div class="site-content-body organization-list-items">
-    <% if @organizations.present? %>
-      <%= render @organizations %>
-      <%= render partial: 'shared/pagination', locals: { collection: @organizations } %>
-    <% else %>
-      <div class="blankslate large-format spacious clean-background">
-        <h3><%= t('views.organizations.no_classrooms') %></h3>
-        <p><%= t('views.organizations.no_classrooms_desc') %></p>
-
-        <%= link_to new_organization_path, class: 'btn btn-primary btn-big', role: 'button' do %>
-          <%= t('views.organizations.create_first_classroom') %>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
+  <% end %>
 </div>
+
+<% if @organizations.present? %>
+    <div class="my-4" id="js-search-results">
+      <%= render partial: 'organization_card_layout', locals: {organizations: @organizations} %>
+    </div>
+<% else %>
+    <div class="blankslate large-format spacious clean-background">
+      <h3><%= t('views.organizations.no_classrooms') %></h3>
+      <p><%= t('views.organizations.no_classrooms_desc') %></p>
+
+      <%= link_to new_organization_path, class: 'btn btn-primary btn-big', role: 'button' do %>
+        <%= t('views.organizations.create_first_classroom') %>
+      <% end %>
+    </div>
+<% end %>

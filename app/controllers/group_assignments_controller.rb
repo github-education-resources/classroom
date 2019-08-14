@@ -6,7 +6,9 @@ class GroupAssignmentsController < ApplicationController
   include StarterCode
 
   before_action :set_group_assignment,      except: %i[new create]
-  before_action :set_groupings,             except: [:show]
+  before_action :set_groupings,             except: %i[show]
+  before_action :set_pagination_key,        only: %i[create show]
+  before_action :set_filter_options,        only: %i[show]
   before_action :authorize_grouping_access, only: %i[create update]
 
   def new
@@ -29,19 +31,31 @@ class GroupAssignmentsController < ApplicationController
     end
   end
 
+  # rubocop:disable AbcSize
+  # rubocop:disable MethodLength
   def show
-    pagination_key = @organization.roster ? :teams_page : :page
-    @group_assignment_repos = GroupAssignmentRepo
-      .where(group_assignment: @group_assignment)
+    @group_assignment_repos = @group_assignment.group_assignment_repos
+      .filter_by_search(@query)
+      .order_by_sort_mode(@current_sort_mode)
       .order(:id)
-      .page(params[pagination_key])
+      .page(params[@pagination_key])
 
-    return unless @organization.roster
-    @students_not_on_team = @organization.roster.roster_entries
-      .students_not_on_team(@group_assignment)
-      .order(:id)
-      .page(params[:students_page])
+    if @organization.roster
+      @students_not_on_team = @organization.roster.roster_entries
+        .students_not_on_team(@group_assignment)
+        .order(:id)
+        .page(params[:students_page])
+    end
+
+    respond_to do |format|
+      format.html
+      format.js do
+        render "group_assignments/filter_repos.js.erb", format: :js
+      end
+    end
   end
+  # rubocop:enable MethodLength
+  # rubocop:enable AbcSize
 
   def edit; end
 
@@ -102,7 +116,9 @@ class GroupAssignmentsController < ApplicationController
         :grouping_id,
         :max_members,
         :students_are_repo_admins,
-        :invitations_enabled
+        :invitations_enabled,
+        :max_teams,
+        :template_repos_enabled
       )
       .merge(
         creator: current_user,
@@ -131,6 +147,26 @@ class GroupAssignmentsController < ApplicationController
       .find_by!(slug: params[:id])
   end
 
+  def set_filter_options
+    @assignment_sort_modes = GroupAssignmentRepo.sort_modes
+
+    @current_sort_mode = params[:sort_by] || @assignment_sort_modes.keys.first
+    @query = params[:query]
+
+    @assignment_sort_modes_links = @assignment_sort_modes.keys.map do |mode|
+      organization_group_assignment_path(
+        sort_by: mode,
+        query: @query
+      )
+    end
+
+    @current_sort_mode = params[:sort_by] || @assignment_sort_modes.keys.first
+  end
+
+  def set_pagination_key
+    @pagination_key = @organization.roster ? :teams_page : :page
+  end
+
   def deadline_param
     return if params[:group_assignment][:deadline].blank?
 
@@ -156,7 +192,9 @@ class GroupAssignmentsController < ApplicationController
         :max_members,
         :students_are_repo_admins,
         :deadline,
-        :invitations_enabled
+        :invitations_enabled,
+        :max_teams,
+        :template_repos_enabled
       )
       .merge(starter_code_repo_id: starter_code_repo_id_param)
   end

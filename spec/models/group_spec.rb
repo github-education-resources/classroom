@@ -7,9 +7,43 @@ RSpec.describe Group, type: :model do
   let(:organization) { classroom_org }
   let(:grouping)     { create(:grouping, organization: organization) }
   let(:user)         { classroom_student }
-  let(:group)        { create(:group, grouping: grouping, github_team_id: 2_977_000) }
+  let(:github_team_id) { organization.github_organization.create_team(Faker::Team.name[0..39]).id }
+  let(:group) { create(:group, grouping: grouping, github_team_id: github_team_id) }
 
   it_behaves_like "github_teamable"
+
+  describe ".search" do
+    let(:searchable_group) { create(:group) }
+
+    before do
+      expect(searchable_group).to_not be_nil
+    end
+
+    it "searches by id" do
+      results = Group.search(searchable_group.id)
+      expect(results.to_a).to include(searchable_group)
+    end
+
+    it "searches by github_team_id" do
+      results = Group.search(searchable_group.github_team_id)
+      expect(results.to_a).to include(searchable_group)
+    end
+
+    it "searches by title" do
+      results = Group.search(searchable_group.title)
+      expect(results.to_a).to include(searchable_group)
+    end
+
+    it "searches by slug" do
+      results = Group.search(searchable_group.slug)
+      expect(results.to_a).to include(searchable_group)
+    end
+
+    it "does not return the group when it shouldn't" do
+      results = Group.search("spaghetto")
+      expect(results.to_a).to_not include(searchable_group)
+    end
+  end
 
   describe "assocations", :vcr do
     after(:each) do
@@ -47,7 +81,7 @@ RSpec.describe Group, type: :model do
   end
 
   describe "callbacks", :vcr do
-    describe "assocation callbacks" do
+    describe "association callbacks" do
       before(:each) do
         @repo_access = RepoAccess.create(user: user, organization: organization)
         group.repo_accesses << @repo_access
@@ -60,7 +94,8 @@ RSpec.describe Group, type: :model do
       describe "before_add" do
         describe "#add_member_to_github_team" do
           it "adds the user to the GitHub team" do
-            github_user     = GitHubUser.new(@repo_access.user.github_client, @repo_access.user.uid)
+            user            = @repo_access.user
+            github_user     = GitHubUser.new(user.github_client, user.uid, classroom_resource: user)
             memberships_url = "teams/#{group.github_team_id}/memberships/#{github_user.login}"
 
             expect(WebMock).to have_requested(:put, github_url(memberships_url))
@@ -71,7 +106,8 @@ RSpec.describe Group, type: :model do
       describe "before_destroy" do
         describe "#remove_from_github_team" do
           it "removes the user from the GitHub team" do
-            github_user = GitHubUser.new(@repo_access.user.github_client, @repo_access.user.github_client)
+            user = @repo_access.user
+            github_user = GitHubUser.new(user.github_client, user.github_client, classroom_resource: user)
 
             group.repo_accesses.delete(@repo_access)
             rmv_from_team_github_url = github_url("/teams/#{group.github_team_id}/memberships/#{github_user.login}")

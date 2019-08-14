@@ -5,12 +5,12 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  depends_on :authentication, :errors, :feature_flags
+  depends_on :authentication, :errors, :feature_flags, :google_authentication
 
   before_action :authenticate_user! # authentication_dependency
 
-  helper_method :current_user, :logged_in?, :true_user, :log_out        # authentication_dependency
-  helper_method :student_identifier_enabled?, :team_management_enabled? # feature_flags_dependency
+  helper_method :current_user, :logged_in?, :true_user, :log_out # authentication_dependency
+  helper_method :team_management_enabled? # feature_flags_dependency
 
   # errors_dependency
   rescue_from StandardError, with: :send_to_statsd_and_reraise

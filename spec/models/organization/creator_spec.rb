@@ -23,15 +23,6 @@ RSpec.describe Organization::Creator, type: :model do
             .and_return(organization_webhook)
         end
 
-        it "creates an Organization with a webhook_id" do
-          result = subject.perform
-
-          expect(result.success?).to be_truthy
-          expect(result.organization.github_id).to eql(github_organization_id)
-          expect(result.organization.webhook_id).to_not be_nil
-          expect(result.organization.github_global_relay_id).to_not be_nil
-        end
-
         it "sends an event to statd" do
           expect(GitHubClassroom.statsd).to receive(:increment).with("classroom.created")
 
@@ -86,7 +77,7 @@ RSpec.describe Organization::Creator, type: :model do
 
         it "creates a classroom with the same webhook id as the existing one" do
           result = subject.perform
-          expect(result.organization.webhook_id).to eql(@org.webhook_id)
+          expect(result.organization.organization_webhook.github_id).to eql(@org.organization_webhook.github_id)
         end
 
         it "creates a classroom with the default title but incremented id" do
@@ -96,7 +87,7 @@ RSpec.describe Organization::Creator, type: :model do
       end
     end
 
-    describe "unsucessful creation" do
+    describe "unsuccessful creation" do
       context "does not allow non admins to be added" do
         subject do
           non_admin_user = create(:user, uid: 1)

@@ -7,6 +7,38 @@ RSpec.describe Organization, type: :model do
 
   it { should belong_to(:organization_webhook) }
   it { should belong_to(:roster).optional }
+  it { should have_one(:lti_configuration) }
+
+  describe ".search" do
+    before do
+      expect(subject).to_not be_nil
+    end
+
+    it "searches by id" do
+      results = Organization.search(subject.id)
+      expect(results.to_a).to include(subject)
+    end
+
+    it "searches by github_id" do
+      results = Organization.search(subject.github_id)
+      expect(results.to_a).to include(subject)
+    end
+
+    it "searches by title" do
+      results = Organization.search(subject.title)
+      expect(results.to_a).to include(subject)
+    end
+
+    it "searches by slug" do
+      results = Organization.search(subject.slug)
+      expect(results.to_a).to include(subject)
+    end
+
+    it "does not return the org when it shouldn't" do
+      results = Organization.search("spaghetto")
+      expect(results.to_a).to_not include(subject)
+    end
+  end
 
   describe "roster association" do
     it "can have a roster" do
@@ -98,10 +130,10 @@ RSpec.describe Organization, type: :model do
           end
 
           it "does not delete the webhook from GitHub" do
-            subject.update(webhook_id: 9_999_999, is_webhook_active: true)
+            subject.organization_webhook.update(github_id: 9_999_999)
 
             org_id     = subject.github_id
-            webhook_id = subject.webhook_id
+            webhook_id = subject.organization_webhook.github_id
 
             subject.destroy
 
@@ -111,9 +143,9 @@ RSpec.describe Organization, type: :model do
 
         context "last classroom on organization" do
           it "deletes the webhook from GitHub" do
-            subject.update(webhook_id: 9_999_999, is_webhook_active: true)
+            subject.organization_webhook.update(github_id: 9_999_999)
 
-            webhook_id = subject.webhook_id
+            webhook_id = subject.organization_webhook.github_id
 
             subject.destroy
 

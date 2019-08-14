@@ -1,27 +1,31 @@
 (function() {
-  var delay, ready;
+  var debounce, ready;
 
-  delay = (function() {
+  debounce = (function() {
     var timer;
     timer = 0;
     return function(callback, ms) {
-      clearTimeout(timer);
+      if (timer) {
+        clearTimeout(timer);
+      }
       timer = setTimeout(callback, ms);
     };
   })();
 
   ready = function() {
-    return $('#js-search-form').on('change keyup', function() {
+    return $('#js-search-form').on('keyup', function() {
       var $this, formData;
       $this = $(this);
-      formData = $(this).serialize();
-      history.replaceState(null, '', "?" + formData);
-      return delay((function() {
-        $this.submit();
-        return $this.on('ajax:success', function(e, data, status, xhr) {
+      formData = $(this).find('input[name!=utf8]').serialize();
+      history.replaceState(null, '', '?' + formData);
+
+      debounce(function() { 
+        $this.one('ajax:success', function(e, data, status, xhr) {
           return $('#js-search-results').html(xhr.responseText);
         });
-      }), 200);
+        
+        $this.submit();
+      }, 300);
     });
   };
 

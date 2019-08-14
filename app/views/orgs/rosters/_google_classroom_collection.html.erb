@@ -1,0 +1,27 @@
+<%= form_tag import_from_google_classroom_roster_path, method: :patch do |f| %>
+  <div class="Box overflow-scroll">
+    <ul>
+      <% courses.each_with_index do |course, i| %>
+        <li class="Box-row">
+          <label>
+            <%= radio_button_tag "course_id", course.id, i==0, 'aria-describedby':"help-text-for-checkbox", class:"mr-2" %>
+            <%= course.name %>
+          </label>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="f4 text-gray text-italic my-3">
+    or
+    <%= link_to "manually add students",
+                new_roster_path,
+                class: "btn-link"
+    %>
+  </div>
+
+  <div class="d-flex flex-items-center border-top pt-5">
+    <%= submit_tag 'Import roster', class: 'btn btn-primary mr-3' %>
+    <%= link_to 'Skip', organization_path(current_organization), class: 'btn-link' %>
+  </div>
+<% end %>

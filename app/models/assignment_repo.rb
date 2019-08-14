@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 class AssignmentRepo < ApplicationRecord
-  update_index("assignment_repo#assignment_repo") { self }
+  include AssignmentRepoable
+  include StafftoolsSearchable
+  include Sortable
+  include Searchable
+
+  define_pg_search(columns: %i[id github_repo_id])
 
   # TODO: remove this enum (dead code)
   enum configuration_state: %i[not_configured configuring configured]
@@ -14,40 +19,27 @@ class AssignmentRepo < ApplicationRecord
 
   validates :assignment, presence: true
 
-  validates :github_repo_id, presence:   true
-  validates :github_repo_id, uniqueness: true
-
   validate :assignment_user_key_uniqueness
-
-  # TODO: Remove this dependency from the model.
-  before_destroy :silently_destroy_github_repository
 
   delegate :creator, :starter_code_repo_id, to: :assignment
   delegate :github_user,                    to: :user
   delegate :default_branch, :commits,       to: :github_repository
+  delegate :github_team_id,                 to: :repo_access, allow_nil: true
 
-  # This should really be in a view model
-  # but it'll live here for now.
-  def disabled?
-    @disabled ||= !github_repository.on_github? || !github_user.on_github?
+  scope :order_by_created_at, ->(_context = nil) { order(:created_at) }
+  scope :order_by_github_login, ->(_context = nil) { joins(:user).order("users.github_login") }
+
+  scope :search_by_github_login, ->(query) { joins(:user).where("users.github_login ILIKE ?", "%#{query}%") }
+
+  def self.sort_modes
+    {
+      "GitHub login" => :order_by_github_login,
+      "Created at" => :order_by_created_at
+    }
   end
 
-  def private?
-    !assignment.public_repo?
-  end
-
-  def github_team_id
-    repo_access.present? ? repo_access.github_team_id : nil
-  end
-
-  def github_repository
-    @github_repository ||= GitHubRepository.new(organization.github_client, github_repo_id)
-  end
-
-  def import_status
-    return "No starter code provided" unless assignment.starter_code?
-
-    github_repository.import_progress.status.humanize
+  def self.search_mode
+    :search_by_github_login
   end
 
   # Public: This method is used for legacy purposes
@@ -66,18 +58,6 @@ class AssignmentRepo < ApplicationRecord
   end
 
   private
-
-  # Internal: Attempt to destroy the GitHub repository.
-  #
-  # Returns true.
-  def silently_destroy_github_repository
-    return true if organization.blank?
-
-    organization.github_organization.delete_repository(github_repo_id)
-    true
-  rescue GitHub::Error
-    true
-  end
 
   # Internal: Validate uniqueness of <user, assignment> key.
   # Only runs the validation on new records.

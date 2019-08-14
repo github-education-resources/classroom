@@ -2,6 +2,7 @@
 
 require "sidekiq/web"
 require "staff_constraint"
+require "googleauth"
 
 Rails.application.routes.draw do
   mount Peek::Railtie => "/peek"
@@ -10,16 +11,22 @@ Rails.application.routes.draw do
   root to: "pages#home"
 
   get "/assistant", to: "pages#assistant"
-  get "/home", to: "pages#homev2"
+  get "/help/(:article_name)", to: "pages#help", as: "help"
+  get "/home", to: "pages#home"
 
   get  "/login",  to: "sessions#new",     as: "login"
   post "/logout", to: "sessions#destroy", as: "logout"
 
   get  "/login/oauth/authorize", to: "oauth#authorize"
-  post  "/login/oauth/access_token", to: "oauth#access_token"
+  post "/login/oauth/access_token", to: "oauth#access_token"
 
-  match "/auth/:provider/callback", to: "sessions#create",  via: %i[get post]
-  match "/auth/failure",            to: "sessions#failure", via: %i[get post]
+  post "/auth/lti/launch",          to: "sessions#lti_launch"
+  get "/auth/lti/setup",            to: "sessions#lti_setup"
+  get "/auth/lti/failure",          to: "sessions#lti_failure"
+  match "/auth/:provider/callback", to: "sessions#create",        via: %i[get post]
+  match "/auth/failure",            to: "sessions#failure",       via: %i[get post]
+
+  match "/google_classroom/oauth2_callback", to: Google::Auth::WebUserAuthorizer::CallbackApp, via: :all
 
   get "/a/:short_key", to: "short_url#assignment_invitation",       as: "assignment_invitation_short"
   get "/g/:short_key", to: "short_url#group_assignment_invitation", as: "group_assignment_invitation_short"
@@ -61,7 +68,12 @@ Rails.application.routes.draw do
 
   scope path_names: { edit: "settings" } do
     resources :organizations, path: "classrooms" do
+      collection do
+        get :search
+      end
+
       member do
+        get   :link_lms
         get   :invite
         get   :new_assignment, path: "new-assignment"
         get   :setup
@@ -74,8 +86,25 @@ Rails.application.routes.draw do
           patch :link
           patch :unlink
           patch :delete_entry
+          patch :edit_entry
           patch :add_students
           patch :remove_organization
+          patch :import_from_google_classroom
+          patch :sync_google_classroom
+          get   :import_from_lms
+        end
+
+        resource :lti_configuration, controller: "orgs/lti_configurations" do
+          get :info
+          get :autoconfigure
+          get :complete
+        end
+
+        scope :google_classrooms do
+          root "orgs/google_classroom_configurations#index", as: :google_classrooms_index
+          get  "search", to: "orgs/google_classroom_configurations#search", as: "google_classrooms_search"
+          post "create", to: "orgs/google_classroom_configurations#create", as: "google_classrooms_create"
+          delete "delete", to: "orgs/google_classroom_configurations#destroy", as: "google_classrooms_delete"
         end
       end
 
@@ -123,6 +152,7 @@ Rails.application.routes.draw do
     resources :organizations, path: "classrooms", only: [:show] do
       member do
         delete "/users/:user_id", to: "organizations#remove_user", as: "remove_user"
+        post :ensure_webhook_is_active
       end
     end
 
@@ -144,7 +174,7 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: { format: :json } do
     scope :internal do
-      resources :organizations, path: "classrooms", only: [:index] do
+      scope "classrooms/:organization_id" do
         resources :assignments, only: %i[index show] do
           resources :assignment_repos, only: [:index] do
             get "/clone_url", to: "assignment_repos#clone_url"

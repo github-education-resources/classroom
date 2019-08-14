@@ -12,15 +12,22 @@ module API
       paginate json: repos
     end
 
+    # rubocop:disable MethodLength
     def clone_url
       repo = GroupAssignmentRepo.where(
         group_assignment: @group_assignment,
         id: params[:group_assignment_repo_id]
       ).first
-      render json: {
-        temp_clone_url: repo.github_repository.temp_clone_url
-      }
+
+      if repo.present?
+        render json: {
+          temp_clone_url: repo.github_repository.temp_clone_url
+        }
+      else
+        render json: { "error": "not_found" }, status: :not_found
+      end
     end
+    # rubocop:enable MethodLength
 
     private
 

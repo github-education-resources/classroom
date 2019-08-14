@@ -46,6 +46,7 @@ FactoryBot.define do
     slug     { title.parameterize                            }
     grouping { create(:grouping, organization: organization) }
     creator  { organization.users.first                      }
+    group_assignment_invitation { build_group_assignment_invitation }
   end
 
   factory :group_assignment_invitation do
@@ -59,6 +60,11 @@ FactoryBot.define do
     slug  { title.parameterize  }
   end
 
+  factory :group_assignment_repo do
+    group_assignment
+    group
+    github_repo_id { rand(1..1_000_000) }
+  end
   factory :group do
     grouping
 
@@ -71,8 +77,10 @@ FactoryBot.define do
   end
 
   factory :organization do
+    organization_webhook
+
     title      { "#{Faker::Company.name} Class" }
-    github_id  { rand(1..1_000_000) }
+    github_id  { organization_webhook.github_organization_id }
 
     transient do
       users_count 1
@@ -94,6 +102,7 @@ FactoryBot.define do
   factory :roster_entry do
     roster
     identifier { "myemail@example.com" }
+    lms_user_id { Faker::Code.isbn }
   end
 
   factory :user do
@@ -109,5 +118,15 @@ FactoryBot.define do
         create_list(:organization, evaluator.organizations_count, users: [user])
       end
     end
+  end
+
+  factory :lti_configuration do
+    organization
+
+    consumer_key { SecureRandom.uuid }
+    shared_secret { SecureRandom.uuid }
+    cached_launch_message_nonce { SecureRandom.uuid }
+    lms_link { "www.example.com" }
+    lms_type { :other }
   end
 end

@@ -3,9 +3,11 @@
 class GroupAssignment < ApplicationRecord
   include Flippable
   include GitHubPlan
+  include StarterCodeImportable
   include ValidatesNotReservedWord
+  include StafftoolsSearchable
 
-  update_index("group_assignment#group_assignment") { self }
+  define_pg_search(columns: %i[id title slug])
 
   default_scope { where(deleted_at: nil) }
 
@@ -36,9 +38,13 @@ class GroupAssignment < ApplicationRecord
                              message: "should only contain letters, numbers, dashes and underscores" }
 
   validate :uniqueness_of_slug_across_organization
+  validate :max_teams_less_than_group_count
+  validate :starter_code_repository_not_empty, if: :will_save_change_to_starter_code_repo_id?
+  validate :starter_code_repository_is_template, if: :will_save_change_to_starter_code_repo_id?
 
   alias_attribute :invitation, :group_assignment_invitation
   alias_attribute :repos, :group_assignment_repos
+  alias_attribute :template_repos_enabled?, :template_repos_enabled
 
   def private?
     !public_repo
@@ -46,15 +52,6 @@ class GroupAssignment < ApplicationRecord
 
   def public?
     public_repo
-  end
-
-  def starter_code?
-    starter_code_repo_id.present?
-  end
-
-  def starter_code_repository
-    return unless starter_code?
-    @starter_code_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id)
   end
 
   def to_param
@@ -66,5 +63,14 @@ class GroupAssignment < ApplicationRecord
   def uniqueness_of_slug_across_organization
     return if Assignment.where(slug: slug, organization: organization).blank?
     errors.add(:slug, :taken)
+  end
+
+  def max_teams_less_than_group_count
+    return unless max_teams.present? && grouping.present? && max_teams < group_count = grouping.groups.count
+    if new_record?
+      errors.add(:max_teams, "is less than the number of teams in the existing set you've selected (#{group_count})")
+    else
+      errors.add(:max_teams, "is less than the number of existing teams (#{group_count})")
+    end
   end
 end

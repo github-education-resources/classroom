@@ -1,19 +1,27 @@
 # frozen_string_literal: true
 
-options = {}.tap do |opts|
-  opts[:scope] = "user:email,repo,delete_repo,admin:org,admin:org_hook"
+module OmniAuth
+  module Strategies
+    autoload :Lti, Rails.root.join("lib", "omniauth", "strategies", "lti")
+  end
+end
+
+Rails.application.config.middleware.use OmniAuth::Builder do
+  options = { scope: "user:email,repo,delete_repo,admin:org,admin:org_hook" }
 
   if GitHubClassroom.enterprise_instance?
     hostname = Rails.application.secrets.github_enterprise_hostname
-    opts[:site]          = "https://#{hostname}/api/v3"
-    opts[:authorize_url] = "https://#{hostname}/login/oauth/authorize"
-    opts[:token_url]     = "https://#{hostname}/login/oauth/access_token"
+    options[:site]          = "https://#{hostname}/api/v3"
+    options[:authorize_url] = "https://#{hostname}/login/oauth/authorize"
+    options[:token_url]     = "https://#{hostname}/login/oauth/access_token"
   end
 
-  Rails.application.config.middleware.use OmniAuth::Builder do
-    provider :github,
+  provider :github,
     Rails.application.secrets.github_client_id,
     Rails.application.secrets.github_client_secret,
-    { client_options: options }
-  end
+    options
+
+  provider :lti,
+    callback_path: "/auth/lti/launch",
+    setup: true
 end

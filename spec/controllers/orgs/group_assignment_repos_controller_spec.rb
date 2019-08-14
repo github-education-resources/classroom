@@ -6,12 +6,29 @@ RSpec.describe Orgs::GroupAssignmentReposController, type: :controller do
   let(:user)         { classroom_teacher }
   let(:organization) { classroom_org     }
   let(:student)      { classroom_student }
-  let(:repo_access)  { RepoAccess.create(user: student, organization: organization) }
+
+  let(:grouping)     { create(:grouping, organization: organization) }
+  let(:github_team_id) { 3_284_880 }
+  let(:group) { create(:group, grouping: grouping, github_team_id: github_team_id) }
   let(:group_assignment) do
-    create(:group_assignment, title: "Learn Ruby", organization: organization, public_repo: false)
+    create(
+      :group_assignment,
+      grouping: grouping,
+      title: "Learn JavaScript",
+      organization: organization,
+      public_repo: true,
+      starter_code_repo_id: 1_062_897
+    )
   end
-  let(:group) { create(:group, grouping: group_assignment.grouping, github_team_id: 2_976_561) }
-  let(:group_assignment_repo) { GroupAssignmentRepo.create(group_assignment: group_assignment, group: group) }
+  let(:group_assignment_repo) do
+    create(
+      :group_assignment_repo,
+      group_assignment: group_assignment,
+      group: group,
+      organization: organization,
+      github_repo_id: 42
+    )
+  end
 
   before(:each) do
     sign_in_as(user)
