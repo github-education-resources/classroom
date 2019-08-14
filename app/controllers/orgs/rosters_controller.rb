@@ -47,7 +47,6 @@ module Orgs
     def create
       if params[:lms_user_ids].is_a? String
         params[:lms_user_ids] = params[:lms_user_ids].split
-        importing_students_lms_statsd(lms_user_ids: params[:lms_user_ids])
       end
 
       result = Roster::Creator.perform(
@@ -61,15 +60,13 @@ module Orgs
       @roster = result.roster
       if result.success?
         create_statsd(lms_user_ids: params[:lms_user_ids])
+        imported_students_lms_statsd(lms_user_ids: params[:lms_user_ids])
         flash[:success] = \
           "Your classroom roster has been saved! Manage it <a href='#{roster_url(current_organization)}'>here</a>."
 
         redirect_to organization_path(current_organization)
       else
         render :new
-        if params[:lms_user_ids]
-          GitHubClassroom.statsd.decrement("roster_entries.lms_imported", by: lms_user_ids.length)
-        end
       end
     end
     # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
@@ -153,9 +150,10 @@ module Orgs
           flash[:warning] = "No students created."
         elsif entries.length == identifiers.length
           flash[:success] = "Students created."
-          importing_students_lms_statsd(lms_user_ids: params[:lms_user_ids])
+          imported_students_lms_statsd(lms_user_ids: params[:lms_user_ids])
         else
           flash[:success] = "Students created. Some duplicates have been omitted."
+          imported_students_lms_statsd(lms_user_ids: params[:lms_user_ids])
         end
       rescue RosterEntry::IdentifierCreationError
         flash[:error] = "An error has occurred. Please try again."
@@ -196,7 +194,7 @@ module Orgs
       end
     end
 
-    def importing_students_lms_statsd(lms_user_ids:)
+    def imported_students_lms_statsd(lms_user_ids:)
       return if lms_user_ids.nil?
       GitHubClassroom.statsd.increment("roster_entries.lms_imported", by: lms_user_ids.length)
     end
