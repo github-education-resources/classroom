@@ -5,7 +5,7 @@ class AddStudentsToRosterJob < ApplicationJob
 
   ROSTER_UPDATE_SUCCESSFUL = "Roster successfully updated."
   ROSTER_UPDATE_FAILED     = "Could not add any students to roster, please try again."
-  ROSTER_UPDATE_PARTIAL_SUCCESS = "Could not add following students: "
+  ROSTER_UPDATE_PARTIAL_SUCCESS = "Could not add following students:"
 
   # Takes an array of identifiers and creates a
   # roster entry for each. Omits duplicates, and
@@ -15,11 +15,11 @@ class AddStudentsToRosterJob < ApplicationJob
     channel = AddStudentsToRosterChannel.channel(roster_id: roster.id, user_id: user.id)
     ActionCable.server.broadcast(channel, status: "update_started")
 
-    identifiers = add_suffix_to_duplicates!(identifiers)
+    identifiers = add_suffix_to_duplicates!(identifiers, roster)
     invalid_roster_entries =
       identifiers.zip(lms_user_ids).map do |identifier, lms_user_id|
         roster_entry = RosterEntry.create(identifier: identifier, roster: roster, lms_user_id: lms_user_id)
-        roster_entry if roster_entry.errors.include?(:identifier)
+        roster_entry.identifier if roster_entry.errors.include?(:identifier)
       end
 
     message = build_message(invalid_roster_entries.compact, identifiers)
@@ -28,7 +28,7 @@ class AddStudentsToRosterJob < ApplicationJob
   end
   # rubocop:enable AbcSize
 
-  def add_suffix_to_duplicates!(identifiers)
+  def add_suffix_to_duplicates!(identifiers, roster)
     existing_roster_entries = RosterEntry.where(roster: roster).pluck(:identifier)
     RosterEntry.add_suffix_to_duplicates(
       identifiers: identifiers,
@@ -45,7 +45,7 @@ class AddStudentsToRosterJob < ApplicationJob
     else
       formatted_students =
         invalid_roster_entries.map do |invalid_roster_entry|
-          "#{invalid_roster_entry.identifier} \n"
+          "#{invalid_roster_entry} \n"
         end.join("")
       "#{ROSTER_UPDATE_PARTIAL_SUCCESS} \n#{formatted_students}"
     end
