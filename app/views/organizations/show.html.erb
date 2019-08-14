@@ -1,29 +1,21 @@
 <%= render 'organizations/organization_banner' %>
 
-<div class="site-content">
-
-  <div class="site-content-cap container-lg clearfix">
-      <h2 class="col-6 float-left text-left pr-2 site-content-heading">Assignments</h2>
-
-        <div class="col-6 float-right text-right pl-2">
-          <% if @assignments.present? %>
-            <%= link_to t('views.organizations.new_assignment'), new_assignment_organization_path(current_organization), class: 'btn btn-primary right', role: 'button'%>
-          <% end %>
-        </div>
-  </div>
-
-
-  <div class="site-content-body assignment-list-items">
+<div class="container-lg p-responsive">
+  <div class="d-md-flex flex-items-center flex-justify-between mt-5 mb-3">
+    <h2 class="f2 text-normal">Assignments</h2>
     <% if @assignments.present? %>
-      <%= render @assignments %>
-      <%= render partial: 'shared/pagination', locals: { collection: @assignments } %>
-    <% else %>
-      <div class="blankslate blankslate-spacious blankslate-clean-background">
-        <h3><%= t('views.organizations.no_assignments') %></h3>
-        <%= link_to new_assignment_organization_path(current_organization), class: 'btn btn-large btn-primary f3 mt-3', role: 'button' do %>
-          <%= t('views.organizations.create_first_assignment') %>
-        <% end %>
-      </div>
+      <%= link_to t('views.organizations.new_assignment'), new_assignment_organization_path(current_organization), class: 'btn btn-primary right', role: 'button'%>
     <% end %>
   </div>
-</div>
+
+  <% if @assignments.present? %>
+    <%= render @assignments %>
+    <%= render partial: 'shared/pagination', locals: { collection: @assignments } %>
+  <% else %>
+    <div class="blankslate blankslate-spacious blankslate">
+      <h3><%= t('views.organizations.no_assignments') %></h3>
+      <%= link_to new_assignment_organization_path(current_organization), class: 'btn btn-large btn-primary f3 mt-3', role: 'button' do %>
+        <%= t('views.organizations.create_first_assignment') %>
+      <% end %>
+    </div>
+  <% end %>

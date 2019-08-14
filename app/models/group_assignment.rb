@@ -42,6 +42,8 @@ class GroupAssignment < ApplicationRecord
   validate :starter_code_repository_not_empty, if: :will_save_change_to_starter_code_repo_id?
   validate :starter_code_repository_is_template, if: :will_save_change_to_starter_code_repo_id?
 
+  validates_associated :grouping
+
   alias_attribute :invitation, :group_assignment_invitation
   alias_attribute :repos, :group_assignment_repos
   alias_attribute :template_repos_enabled?, :template_repos_enabled
