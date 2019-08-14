@@ -84,13 +84,13 @@ class RosterEntry < ApplicationRecord
 
   # Restrict relation to only entries that have not joined a team
   def self.students_not_on_team(group_assignment)
-    students_on_team = group_assignment.repos.map(&:repo_accesses).flatten.map(&:user).map(&:id).uniq
-    sql_formatted_students_on_team = students_on_team.empty? ? "(NULL)" : "(#{students_on_team.join(',')})"
-
-    where <<~SQL
-      roster_entries.user_id IS NULL OR
-      roster_entries.user_id NOT IN #{sql_formatted_students_on_team}
-    SQL
+    students_on_team = group_assignment
+      .repos
+      .includes(:repo_accesses)
+      .flat_map(&:repo_accesses)
+      .map(&:user_id)
+      .uniq
+    where(user_id: nil).or(where.not(user_id: students_on_team))
   end
 
   # Takes an array of identifiers and creates a
@@ -101,7 +101,7 @@ class RosterEntry < ApplicationRecord
   # Returns the created entries.
 
   # rubocop:disable Metrics/MethodLength
-  def self.create_entries(identifiers:, roster:, google_user_ids: [])
+  def self.create_entries(identifiers:, roster:, lms_user_ids: [])
     created_entries = []
     RosterEntry.transaction do
       identifiers = add_suffix_to_duplicates(
@@ -109,8 +109,8 @@ class RosterEntry < ApplicationRecord
         existing_roster_entries: RosterEntry.where(roster: roster).pluck(:identifier)
       )
 
-      identifiers.zip(google_user_ids).each do |identifier, google_user_id|
-        roster_entry = RosterEntry.create(identifier: identifier, roster: roster, google_user_id: google_user_id)
+      identifiers.zip(lms_user_ids).each do |identifier, lms_user_id|
+        roster_entry = RosterEntry.create(identifier: identifier, roster: roster, lms_user_id: lms_user_id)
 
         if !roster_entry.persisted?
           raise IdentifierCreationError unless roster_entry.errors.include?(:identifier)

@@ -42,7 +42,7 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
 
         context "there is a LTI configuration" do
           before(:each) do
-            create(:lti_configuration,
+            @lti_configuration = create(:lti_configuration,
               organization: organization,
               consumer_key: "hi",
               shared_secret: "hi")
@@ -53,8 +53,9 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
           end
 
           it "flashes error message" do
-            message = "A LMS configuration already exists. Please remove configuration before creating a new one."
-            expect(flash[:alert]).to eq(message)
+            lms_name = @lti_configuration.lms_name(default_name: "a learning management system")
+            expect(flash[:alert]).to eq("This classroom is already connected to #{lms_name}. "\
+              "Please disconnect from #{lms_name} before connecting to Google Classroom.")
           end
 
           it "redirects to settings page" do
@@ -189,7 +190,7 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
 
         context "there is a LTI configuration" do
           before(:each) do
-            create(:lti_configuration,
+            @lti_configuration = create(:lti_configuration,
               organization: organization,
               consumer_key: "hi",
               shared_secret: "hi")
@@ -201,8 +202,9 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
           end
 
           it "flashes error message" do
-            message = "A LMS configuration already exists. Please remove configuration before creating a new one."
-            expect(flash[:alert]).to eq(message)
+            lms_name = @lti_configuration.lms_name(default_name: "a learning management system")
+            expect(flash[:alert]).to eq("This classroom is already connected to #{lms_name}. "\
+              "Please disconnect from #{lms_name} before connecting to Google Classroom.")
           end
 
           it "redirects to settings page" do
