@@ -15,6 +15,7 @@ class PagesController < ApplicationController
     "using-template-repos-for-assignments",
     "connect-to-lms",
     "generate-lms-credentials",
+    "import-roster-from-lms",
     "setup-generic-lms",
     "setup-canvas",
     "setup-moodle"
