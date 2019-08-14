@@ -47,6 +47,7 @@ module Orgs
     def create
       if params[:lms_user_ids].is_a? String
         params[:lms_user_ids] = params[:lms_user_ids].split
+        importing_students_lms_statsd(lms_user_ids: params[:lms_user_ids])
       end
       result = Roster::Creator.perform(
         organization: current_organization,
