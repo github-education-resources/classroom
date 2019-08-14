@@ -75,7 +75,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
           identifiers: "a\r\nb",
           lms_user_ids: [1, 2]
         }
-        expect(GitHubClassroom.statsd).to have_received(:increment).with("lti_configuration.successful_import")
+        expect(GitHubClassroom.statsd).to have_received(:increment).with("lti_configuration.import")
         expect(GitHubClassroom.statsd).to have_received(:increment).with("roster_entries.lms_imported", by: 2)
       end
 
@@ -291,11 +291,6 @@ RSpec.describe Orgs::RostersController, type: :controller do
             end
 
             context "all attributes present" do
-              it "sends statsd" do
-                expect(GitHubClassroom.statsd).to receive(:increment).with("lti_configuration.import")
-                get :import_from_lms, params: { id: lti_configuration.organization.slug }
-              end
-
               it "format.html: succeeds" do
                 get :import_from_lms, params: { id: lti_configuration.organization.slug }
                 expect(response).to have_http_status(:ok)

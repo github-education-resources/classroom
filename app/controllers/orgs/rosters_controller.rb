@@ -190,7 +190,7 @@ module Orgs
       elsif current_organization.google_course_id
         GitHubClassroom.statsd.increment("google_classroom.import")
       else
-        GitHubClassroom.statsd.increment("lti_configuration.successful_import")
+        GitHubClassroom.statsd.increment("lti_configuration.import")
       end
     end
 
