@@ -2,19 +2,18 @@
 
 module GitHubClassroom
   def self.github_client(options = {})
-    client_options = options.tap do |opts|
-      opts[:user_agent] = "GitHub Classroom"
+    options[:user_agent] = "GitHub Classroom"
 
-      unless options.key?(:access_token)
-        opts[:client_id]     = Rails.application.secrets.github_client_id
-        opts[:client_secret] = Rails.application.secrets.github_client_secret
-      end
-
-      if enterprise_instance?
-        opts[:api_endpoint] = "https://#{Rails.application.secrets.github_enterprise_hostname}/api/v3"
-      end
+    unless options.key?(:access_token)
+      options[:client_id] = Rails.application.secrets.github_client_id
+      options[:client_secret] = Rails.application.secrets.github_client_secret
     end
-    Octokit::Client.new(client_options)
+
+    if enterprise_instance?
+      options[:api_endpoint] = "https://#{Rails.application.secrets.github_enterprise_hostname}/api/v3"
+    end
+
+    Octokit::Client.new(options)
   end
 
   def self.enterprise_instance?
