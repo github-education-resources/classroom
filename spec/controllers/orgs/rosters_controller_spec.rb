@@ -68,13 +68,15 @@ RSpec.describe Orgs::RostersController, type: :controller do
       end
 
       it "sends statsd" do
-        expect(GitHubClassroom.statsd).to receive(:increment).with("lti_configuration.successful_import")
+        allow(GitHubClassroom.statsd).to receive(:increment)
         post :create, params: {
           id:         organization.slug,
           identifier_name: "emails",
           identifiers: "a\r\nb",
           lms_user_ids: [1, 2]
         }
+        expect(GitHubClassroom.statsd).to have_received(:increment).with("lti_configuration.successful_import")
+        expect(GitHubClassroom.statsd).to have_received(:increment).with("roster_entries.lms_imported", by: 2)
       end
 
       it "creates roster entries" do
@@ -818,10 +820,12 @@ RSpec.describe Orgs::RostersController, type: :controller do
               end
 
               it "sends statsd" do
-                expect(GitHubClassroom.statsd).to receive(:increment).with("google_classroom.import")
+                allow(GitHubClassroom.statsd).to receive(:increment)
                 patch :import_from_google_classroom, params: {
                   id: organization.slug
                 }
+                expect(GitHubClassroom.statsd).to have_received(:increment).with("google_classroom.import")
+                expect(GitHubClassroom.statsd).to have_received(:increment).with("roster_entries.lms_imported", by: 2)
               end
 
               context "when students are fetched succesfully" do
