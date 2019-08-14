@@ -14,7 +14,6 @@ module DockerCompose
     #
     # "         Name                        Command               State                         Ports                       \n" +
     # "---------------------------------------------------------------------------------------------------------------------\n" +
-    # "classroom_elasticsearch   /docker-entrypoint.sh elas ...   Up      127.0.0.1:9227->9200/tcp, 127.0.0.1:9337->9300/tcp\n" +
     # "classroom_memcached       docker-entrypoint.sh memcached   Up      127.0.0.1:22322->11211/tcp                        \n" +
     # "classroom_postgresql      /docker-entrypoint.sh postgres   Up      127.0.0.1:2345->5432/tcp                          \n" +
     # "classroom_redis           docker-entrypoint.sh redis ...   Up      127.0.0.1:9736->6379/tcp                          \n"

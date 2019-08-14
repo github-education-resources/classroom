@@ -2,7 +2,7 @@
 
 GitHub Classroom integrates with your institution's learning management system (LMS), such as Brightspace, Canvas, Moodle, and others. Classroom supports:
 
-- Roster provisioning
+- [Roster provisioning](/help/import-roster-from-lms)
 - Assignment creation (Planned)
 - Submission syncing (Planned)
 
