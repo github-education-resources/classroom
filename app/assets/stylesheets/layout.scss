@@ -214,47 +214,6 @@ main {
   background-color: #555;
 }
 
-.assignment-list-items {
-  .assignment-list-item:not(:first-child) {
-    padding-top: 1rem;
-    margin-top: 1rem;
-    border-top: 1px solid #e3e3e3;
-
-    @media screen and (max-width: 40em) {
-      padding-top: 1rem;
-      margin-top: 0.5rem;
-    }
-  }
-
-  .assignment-list-item:not(:last-child) {
-    margin-bottom: 1rem;
-  }
-}
-
-.assignment-name-link {
-  padding-top: 0.4rem;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.assignment-type {
-  margin-top: 0;
-  margin-bottom: 0;
-
-  @media screen and (max-width: 40em) {
-    display: inline-block;
-    max-width: 125px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    vertical-align: top;
-  }
-}
-
-.assignment-invite-link {
-  float: right;
-}
-
 .table-minimal {
   td {
     padding-right: 1rem;
