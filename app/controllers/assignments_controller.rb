@@ -16,28 +16,9 @@ class AssignmentsController < ApplicationController
 
   def create
     if assignment_creator_enabled?
-      result = Assignment::Creator.perform(options: new_assignment_params.to_h)
-      @assignment = result.assignment
-      if result.success?
-        flash[:success] = "\"#{@assignment.title}\" has been created!"
-        redirect_to organization_assignment_path(@organization, @assignment)
-      else
-        render :new
-      end
+      create_assignment_using_creator
     else
-      @assignment = Assignment.new(new_assignment_params)
-
-      @assignment.build_assignment_invitation
-
-      if @assignment.save
-        @assignment.deadline&.create_job
-
-        send_create_assignment_statsd_events
-        flash[:success] = "\"#{@assignment.title}\" has been created!"
-        redirect_to organization_assignment_path(@organization, @assignment)
-      else
-        render :new
-      end
+      create_assignment
     end
   end
 
@@ -189,6 +170,33 @@ class AssignmentsController < ApplicationController
   def send_create_assignment_statsd_events
     GitHubClassroom.statsd.increment("exercise.create")
     GitHubClassroom.statsd.increment("deadline.create") if @assignment.deadline
+  end
+
+  def create_assignment
+    @assignment = Assignment.new(new_assignment_params)
+
+    @assignment.build_assignment_invitation
+
+    if @assignment.save
+      @assignment.deadline&.create_job
+
+      send_create_assignment_statsd_events
+      flash[:success] = "\"#{@assignment.title}\" has been created!"
+      redirect_to organization_assignment_path(@organization, @assignment)
+    else
+      render :new
+    end
+  end
+
+  def create_assignment_using_creator
+    result = Assignment::Creator.perform(options: new_assignment_params.to_h)
+    @assignment = result.assignment
+    if result.success?
+      flash[:success] = "\"#{@assignment.title}\" has been created!"
+      redirect_to organization_assignment_path(@organization, @assignment)
+    else
+      render :new
+    end
   end
 end
 # rubocop:enable Metrics/ClassLength
