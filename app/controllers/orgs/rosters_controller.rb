@@ -49,6 +49,7 @@ module Orgs
         params[:lms_user_ids] = params[:lms_user_ids].split
         importing_students_lms_statsd(lms_user_ids: params[:lms_user_ids])
       end
+
       result = Roster::Creator.perform(
         organization: current_organization,
         identifiers: params[:identifiers],
@@ -66,6 +67,7 @@ module Orgs
         redirect_to organization_path(current_organization)
       else
         render :new
+        GitHubClassroom.statsd.decrement("roster_entries.lms_imported", by: lms_user_ids.length) if params[:lms_user_ids]
       end
     end
     # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
@@ -149,7 +151,7 @@ module Orgs
           flash[:warning] = "No students created."
         elsif entries.length == identifiers.length
           flash[:success] = "Students created."
-          importing_students_lms_statsd(lms_user_ids: params[:lms_user_ids], entries_length: entries.length)
+          importing_students_lms_statsd(lms_user_ids: params[:lms_user_ids])
         else
           flash[:success] = "Students created. Some duplicates have been omitted."
         end
@@ -192,9 +194,9 @@ module Orgs
       end
     end
 
-    def importing_students_lms_statsd(lms_user_ids:, entries_length:)
+    def importing_students_lms_statsd(lms_user_ids:)
       return if lms_user_ids.nil?
-      GitHubClassroom.statsd.increment("roster_entries.lms_imported", by: entries_length)
+      GitHubClassroom.statsd.increment("roster_entries.lms_imported", by: lms_user_ids.length)
     end
 
     def current_roster
