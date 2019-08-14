@@ -80,7 +80,7 @@ class RosterEntry < ApplicationRecord
     order_sql = <<~SQL
       CASE
         WHEN roster_entries.user_id IS NULL THEN 2      /* Not linked */
-        WHEN roster_entries.user_id IS NOT NULL THEN 0  /* Linked but not accepted */
+        WHEN roster_entries.user_id IS NOT NULL AND assignment_repos.user_id IS NOT NULL THEN 0  /* Linked but not accepted */
         ELSE 1                                          /* Unlinked */
       END
     SQL
