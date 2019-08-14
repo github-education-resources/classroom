@@ -14,4 +14,12 @@ class FormView < ViewModel
   def form_class_for(field)
     "form-group#{errors_for?(field) ? ' errored primer-new' : ''}"
   end
+
+  def error_message_for_object(object)
+    object.errors.full_messages.join(", ")
+  end
+
+  def errors_for_object?(object)
+    object&.errors.present?
+  end
 end
