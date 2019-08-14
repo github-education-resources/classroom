@@ -15,18 +15,29 @@ class AssignmentsController < ApplicationController
   end
 
   def create
-    @assignment = Assignment.new(new_assignment_params)
-
-    @assignment.build_assignment_invitation
-
-    if @assignment.save
-      @assignment.deadline&.create_job
-
-      send_create_assignment_statsd_events
-      flash[:success] = "\"#{@assignment.title}\" has been created!"
-      redirect_to organization_assignment_path(@organization, @assignment)
+    if assignment_creator_enabled?
+      result = Assignment::Creator.perform(options: new_assignment_params.to_h)
+      @assignment = result.assignment
+      if result.success?
+        flash[:success] = "\"#{@assignment.title}\" has been created!"
+        redirect_to organization_assignment_path(@organization, @assignment)
+      else
+        render :new
+      end
     else
-      render :new
+      @assignment = Assignment.new(new_assignment_params)
+
+      @assignment.build_assignment_invitation
+
+      if @assignment.save
+        @assignment.deadline&.create_job
+
+        send_create_assignment_statsd_events
+        flash[:success] = "\"#{@assignment.title}\" has been created!"
+        redirect_to organization_assignment_path(@organization, @assignment)
+      else
+        render :new
+      end
     end
   end
 

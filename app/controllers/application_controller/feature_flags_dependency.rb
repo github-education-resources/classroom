@@ -37,4 +37,9 @@ class ApplicationController
     logged_in? && current_user.feature_enabled?(:classroom_visibility)
   end
   helper_method :classroom_visibility_enabled?
+
+  def assignment_creator_enabled?
+    logged_in? && current_user.feature_enabled?(:assignment_creator)
+  end
+  helper_method :assignment_creator_enabled?
 end

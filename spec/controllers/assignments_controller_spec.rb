@@ -24,6 +24,10 @@ RSpec.describe AssignmentsController, type: :controller do
   end
 
   describe "POST #create", :vcr do
+    before(:each) do
+      GitHubClassroom.flipper[:assignment_creator].disable
+    end
+
     it "creates a new Assignment" do
       expect do
         post :create, params: {
