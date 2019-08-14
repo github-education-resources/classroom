@@ -18,10 +18,11 @@ Rails.application.routes.draw do
   post "/logout", to: "sessions#destroy", as: "logout"
 
   get  "/login/oauth/authorize", to: "oauth#authorize"
-  post  "/login/oauth/access_token", to: "oauth#access_token"
+  post "/login/oauth/access_token", to: "oauth#access_token"
 
-  match "/auth/lti/setup",          to: "sessions#lti_setup",     via: %i[get post]
-  match "/auth/lti/launch",         to: "sessions#lti_launch",    via: %i[get post]
+  post "/auth/lti/launch",          to: "sessions#lti_launch"
+  get "/auth/lti/setup",            to: "sessions#lti_setup"
+  get "/auth/lti/failure",          to: "sessions#lti_failure"
   match "/auth/:provider/callback", to: "sessions#create",        via: %i[get post]
   match "/auth/failure",            to: "sessions#failure",       via: %i[get post]
 
@@ -85,6 +86,7 @@ Rails.application.routes.draw do
           patch :link
           patch :unlink
           patch :delete_entry
+          patch :edit_entry
           patch :add_students
           patch :remove_organization
           patch :import_from_google_classroom

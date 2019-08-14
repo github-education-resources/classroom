@@ -32,6 +32,8 @@ class Roster
 
     DEFAULT_IDENTIFIER_NAME = "Identifiers"
 
+    include DuplicateRosterEntries
+
     # Public: Create a Roster for an Organiation.
     #
     # organization    - The Organization the Roster will belong to.
@@ -63,8 +65,8 @@ class Roster
       ensure_organization_does_not_have_roster!
 
       ActiveRecord::Base.transaction do
-        google_ids = @options[:google_user_ids] || []
-        add_identifiers_to_roster(@options[:identifiers], google_ids: google_ids) if @options.key?(:identifiers)
+        lms_ids = @options[:lms_user_ids] || []
+        add_identifiers_to_roster(@options[:identifiers], lms_ids: lms_ids) if @options.key?(:identifiers)
 
         @roster.save!
         @organization.update_attributes!(roster: @roster)
@@ -74,15 +76,15 @@ class Roster
     rescue Result::Error, ActiveRecord::ActiveRecordError => err
       Result.failed(@roster, err.message)
     end
-    # rubocop:enable Metrics/MethodLength
 
     private
 
-    def add_identifiers_to_roster(raw_identifiers_string, google_ids: [])
-      identifiers = raw_identifiers_string.split("\r\n").reject(&:blank?).uniq
+    def add_identifiers_to_roster(raw_identifiers_string, lms_ids: [])
+      identifiers = raw_identifiers_string.split("\r\n").reject(&:blank?)
+      identifiers = Roster.add_suffix_to_duplicates(identifiers: identifiers)
 
-      identifiers.zip(google_ids).each do |identifier, google_user_id|
-        @roster.roster_entries << RosterEntry.new(identifier: identifier, google_user_id: google_user_id)
+      identifiers.zip(lms_ids).each do |identifier, lms_user_id|
+        @roster.roster_entries << RosterEntry.new(identifier: identifier, lms_user_id: lms_user_id)
       end
     end
 

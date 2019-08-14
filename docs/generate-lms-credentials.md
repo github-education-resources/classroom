@@ -1,46 +1,46 @@
-## Generating Learning Management System Configuration Credentials on GitHub Classroom
+## Generating your configuration credentials on GitHub Classroom
 
-Before integrating GitHub Classroom within your Learning Management System, we must generate the necessary credentials.
-GitHub Classroom handles this entire part of the process for you.
+Before integrating GitHub Classroom within your learning management system (LMS), you must generate the necessary credentials.
 
 ### Generating credentials for an existing classroom
-1. After logging into GitHub Classroom, select the classroom you would like to connect to a Learning Management System on the dashboard.
 
-2. Within that classroom, Navigate to classroom settings
+1. [Sign in to GitHub Classroom](https://classroom.github.com/login).
 
-3. On the "Classroom Profile" page, within "Learning Management System" the section, click "Connect to a Learning Management System."
+1. From the dashboard, click the classroom to connect to an LMS.
 
-4. Select the vendor that your institution uses as its Learning Management System. If your Learning Management System is not listed,
-select "Other Learning Management System".
+1. Click **Settings**. This is your classroom profile.
 
-5. Read and follow the prompts. You should eventually see a screen which looks similar to this.
+1. Click **Connect to a learning management system**.
 
-  <div class="d-flex flex-justify-around">
-    <img src="/images/help/lms/github-classroom-credentials.png" class="border" style="width: 75%;">
-  </div>
-  <br>
+1. Click your LMS. If your LMS is not listed,
+click **Other learning management system**.
 
-> Note: You may access this screen at any time by going to your Classroom Profile within settings and clicking "Connection Settings".
+1. Follow the prompts. At the end you'll see a screen which looks like this:
 
-Congratulations! You have now generated all the credentials necessary to connect GitHub Classroom to your Learning Management System.
-You are now ready to configure [GitHub Classroom within your Learning Management System](/help/connect-to-lms#part-two).
+   <div class="d-flex flex-justify-around">
+     <img src="/images/help/lms/github-classroom-credentials.png" class="border" style="width: 75%;">
+   </div>
+   <br>
+
+   **Note**: You may access this screen at any time by clicking **Connection Settings** in your classroom profile.
+
+1. Copy the credentials (or keep this page open in a separate window or tab) and [configure your learning management system](/help/connect-to-lms#part-2).
 
 ### Generating credentials for a new classroom
-1. After logging into GitHub Classroom, click "New Classroom"
 
-2. Follow the prompts until you reach the "Connect to a Learning Management System"
+1. [Sign in to GitHub Classroom](https://classroom.github.com/login).
 
-3. Select the vendor that your institution uses as its Learning Management System. If your Learning Management System is not listed,
-select "Other Learning Management System".
+1. Click **New classroom**.
 
-4. Read and follow the prompts. You should eventually see a screen which looks similar to this.
+1. Follow the prompts until you reach _Connect to a learning management system_, then click your LMS. If your LMS is not listed, click **Other learning management system**.
 
-  <div class="d-flex flex-justify-around">
-    <img src="/images/help/lms/github-classroom-credentials.png" class="border" style="width: 75%;">
-  </div>
-  <br>
+4. Follow the prompts. At the end you'll see a screen which looks like this:
 
-> Note: You may access this screen at any time by going to your Classroom Profile within settings and clicking "Connection Settings".
+   <div class="d-flex flex-justify-around">
+     <img src="/images/help/lms/github-classroom-credentials.png" class="border" style="width: 75%;">
+   </div>
+   <br>
 
-Congratulations! You have now generated all the credentials necessary to connect GitHub Classroom to your Learning Management System.
-You are now ready to configure [GitHub Classroom within your Learning Management System](/help/connect-to-lms#part-two).
+   **Note**: You may access this screen at any time by clicking **Connection Settings** in your classroom profile.
+
+1. Copy the credentials (or keep this page open in a separate window or tab) and [configure your learning management system](/help/connect-to-lms#part-2).

@@ -59,7 +59,7 @@ class OrganizationsController < Orgs::Controller
     result = Organization::Editor.perform(organization: current_organization, options: update_organization_params.to_h)
 
     if result.success?
-      flash[:success] = "Organization \"#{current_organization.title}\" updated"
+      flash[:success] = "Successfully updated \"#{current_organization.title}\"!"
       redirect_to current_organization
     else
       current_organization.reload
