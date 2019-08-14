@@ -67,7 +67,9 @@ module Orgs
         redirect_to organization_path(current_organization)
       else
         render :new
-        GitHubClassroom.statsd.decrement("roster_entries.lms_imported", by: lms_user_ids.length) if params[:lms_user_ids]
+        if params[:lms_user_ids]
+          GitHubClassroom.statsd.decrement("roster_entries.lms_imported", by: lms_user_ids.length)
+        end
       end
     end
     # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
