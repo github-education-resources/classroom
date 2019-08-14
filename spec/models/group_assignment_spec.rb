@@ -279,6 +279,29 @@ RSpec.describe GroupAssignment, type: :model do
         expect(group_assignment.grouping.persisted?).to be true
       end
     end
+
+    describe "validates_associating Grouping" do
+      context "Grouping is invalid" do
+        before do
+          grouping.assign_attributes(title: "")
+        end
+
+        it "Group and Grouping fail validation and are not persisted" do
+          expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Your set "\
+           "of teams is invalid")
+          expect(group_assignment.persisted?).to be false
+          expect(group_assignment.grouping.persisted?).to be false
+        end
+      end
+
+      context "Grouping is valid" do
+        it "Group and Grouping pass validation and are persisted" do
+          expect { group_assignment.save! }.not_to raise_error
+          expect(group_assignment.persisted?).to be true
+          expect(group_assignment.grouping.persisted?).to be true
+        end
+      end
+    end
   end
 
   describe "validation methods that call API" do
