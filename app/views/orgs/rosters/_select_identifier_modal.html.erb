@@ -1,6 +1,6 @@
 <% view = FormView.new(subject: roster) %>
 <% identifiers = local_assigns.fetch(:identifiers, {}) %>
-<% lms_name = local_assigns.fetch(:lms_name, "your Learning Management System") %>
+<% lms_name = local_assigns.fetch(:lms_name, "your learning management system") %>
 
 <div class="remodal text-left" data-remodal-id="select-identifier-modal">
   <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
@@ -15,6 +15,7 @@
               <dt class="Box-subtitle">Select from the choices below</dt>
             </dl>
             <ul>
+              <%= hidden_field_tag "lms_user_ids", @student_ids %>
               <% identifiers.each_pair do |identifier_type, ids| %>
                 <li class="Box-row">
                   <%= f.radio_button :identifiers, ids.join("\r\n") %>&nbsp;

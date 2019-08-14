@@ -13,7 +13,7 @@ module Orgs
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable AbcSize
     def import_from_lms
-      lms_name = current_organization.lti_configuration.lms_name(default_name: "your Learning Management System")
+      lms_name = current_organization.lti_configuration.lms_name(default_name: "your learning management system")
 
       all_students = lms_membership
       new_students = filter_new_students(all_students)
@@ -27,8 +27,6 @@ module Orgs
         "Names": new_students.map(&:name),
         "Emails": new_students.map(&:email)
       }.select { |_, v| v.any? }
-
-      GitHubClassroom.statsd.increment("lti_configuration.import")
 
       respond_to do |format|
         format.js { render :import_from_lms, locals: { lms_name: lms_name } }
@@ -57,7 +55,7 @@ module Orgs
     # rubocop:disable Metrics/AbcSize
     def lms_membership
       unless current_organization.lti_configuration.supports_membership_service?
-        lms_name = current_organization.lti_configuration.lms_name(default_name: "your Learning Management System")
+        lms_name = current_organization.lti_configuration.lms_name(default_name: "your learning management system")
         msg = "GitHub Classroom does not have access to your course roster on #{lms_name}. Please ensure that
         you've allowed GitHub Classroom to retrieve your course membership from #{lms_name} and try again."
 
@@ -74,9 +72,9 @@ module Orgs
       begin
         membership_service.students(body_params: current_organization.lti_configuration.context_membership_body_params)
       rescue Faraday::ClientError, JSON::ParserError
-        lms_name = current_organization.lti_configuration.lms_name(default_name: "your Learning Management System")
+        lms_name = current_organization.lti_configuration.lms_name(default_name: "your learning management system")
         msg = "GitHub Classroom is unable to fetch membership from #{lms_name} at this time. If the problem persists,
-        re-launch GitHub Classroom from your Learning Management System and try again."
+        re-launch GitHub Classroom from your learning management system and try again."
 
         raise LtiImportError, msg
       end
