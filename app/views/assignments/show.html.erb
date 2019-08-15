@@ -1,90 +1,60 @@
 <%= render 'organizations/organization_banner' %>
 
-<div class="site-content">
-  <div class="site-content-cap d-flex flex-justify-between">
-      <div class="pr-2">
-        <div class="d-table col-12">
-          <div class="col-1 d-table-cell v-align-middle">
-            <span class="assignment-icon assignment-icon-individual left">
-              <%= octicon 'person', height: 22 %>
-            </span>
-          </div>
+<%= render 'assignments/banner' %>
 
-          <div class="col-11 d-table-cell v-align-middle">
-            <h2 class="site-content-heading">
-              <%= @assignment.title %>
-            </h2>
-            <p class="assignment-type text-gray">Individual assignment
-              <% if @assignment.deadline %>
-                <% if @assignment.deadline.passed? %>
-                  - Deadline Passed
-                <% else %>
-                  <%= "- Deadline in #{distance_of_time_in_words(Time.zone.now, @assignment.deadline.deadline_at)}" %>
-                <% end %>
-              <% end %>
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <%= render partial: 'shared/open_on_assistant_modal', locals: {
-        assistant_url: assistant_organization_assignment_url,
-        enabled: @assignment.assignment_repos.any?
-      } %>
-
-      <div class="text-right mt-3 pl-2 settings">
-        <%= link_to edit_organization_assignment_path(@organization, @assignment), class: 'btn right' do %>
-          <%= octicon 'gear' %>
-          Assignment settings
-        <% end %>
-      </div>
-  </div>
-
-  <div class="site-content-body">
-    <div class="invitation-content">
-      <%= render @assignment.assignment_invitation %>
-    </div>
+<div class="border-top border-bottom bg-white">
+  <div class="container-lg p-responsive py-5">
     <% if @organization.roster %>
-      <div class="assignment-container">
-        <div class="tabnav-body clearfix ">
-          <div class="tabnav">
-            <nav class="tabnav-tabs">
-              <span id='students-tab' onclick="selectTab(this)" class="tabnav-tab selected tabnav-link" aria-current="page">All students</span>
-              <span id='unlinked-tab' onclick="selectTab(this)" class="tabnav-tab tabnav-link">Unlinked GitHub accounts</span>
-            </nav>
-          </div>
-          <span id='students-span'>
-              <% if @roster_entries.present? %>
-                <%= render partial: 'assignments/filterable_assignment_roster_list', locals: { list_type: :roster_entries } %>
-              <% else %>
-                <div class="blankslate">
-                  <h3>"<%= @assignment.title %>" does not have any repositories.</h3>
-                  <p>Share the invitation link with your students to get started.</p>
-                </div>
-              <% end %>
-          </span>
-          <span id='unlinked-span' class='hidden-tab'>
-            <span>
-              <% if @unlinked_users.empty? %>
-                <%= render 'shared/unlinked_blank_slate' %>
-              <% else %>
-                <% @unlinked_user_repos.each do |repo| %>
-                  <% # Remove this unlinked_user thing later %>
-                  <%= render 'orgs/assignment_repos/unlinked_user', unlinked_user: repo.user, assignment_repo: repo %>
-                <% end %>
-              <% end %>
-            </span>
-            <%= render partial: 'shared/pagination', locals: { collection: @unlinked_user_repos, param_name: :unlinked_accounts_page } %>
-          </span>
+      <div class="Box">
+        <div class="Box-header text-gray d-flex flex-items-center">
+          <span id='students-tab' onclick="selectTab(this)" class="cursor selected mr-3" aria-current="page">All students</span>
+          <span id='unlinked-tab' onclick="selectTab(this)" class="cursor flex-auto">Unlinked GitHub accounts</span>
+
+          <%= render partial: 'shared/open_on_assistant_modal', locals: {
+            assistant_url: assistant_organization_assignment_url,
+            enabled: @assignment_repos.present?
+          } %>
         </div>
       </div>
+
+        <span id='students-span'>
+          <div class="assignment-repo-list">
+            <% @roster_entries.each do |entry| %>
+              <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
+                url: organization_assignment_roster_entry_path(@organization, @assignment, entry)
+              } %>
+            <% end %>
+          </div>
+
+        <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :students_page } %>
+      </span>
+
+      <span id='unlinked-span' class='hidden-tab'>
+        <span>
+          <% if @unlinked_users.empty? %>
+            <%= render 'shared/unlinked_blank_slate' %>
+          <% else %>
+            <% @unlinked_user_repos.each do |repo| %>
+              <% # Remove this unlinked_user thing later %>
+              <%= render 'orgs/assignment_repos/unlinked_user', unlinked_user: repo.user, assignment_repo: repo %>
+            <% end %>
+          <% end %>
+        </span>
+        <%= render partial: 'shared/pagination', locals: { collection: @unlinked_user_repos, param_name: :unlinked_accounts_page } %>
+      </span>
     <% else %>
       <% if @assignment_repos.present? %>
-        <%= render partial: 'assignments/filterable_assignment_roster_list', locals: { list_type: :assignment_repos } %>
+        <div class="assignment-repo-list">
+          <% @assignment_repos.each do |assignment_repo| %>
+            <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: { url: organization_assignment_assignment_repo_path(@organization, @assignment, assignment_repo) } %>
+          <% end %>
+        </div>
+
+        <%= render partial: 'shared/pagination', locals: { collection: @assignment_repos } %>
       <% else %>
         <div class="blankslate">
           <h3>"<%= @assignment.title %>" does not have any repositories.</h3>
-          <p>Share the invitation link with your students to get started.</p>
+          <p class="mb-0">Share the invitation link with your students to get started.</p>
         </div>
       <% end %>
     <% end %>

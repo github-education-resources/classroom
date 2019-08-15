@@ -90,33 +90,6 @@ main {
   }
 }
 
-.organization-name {
-  margin-bottom: 0;
-  font-size: 2.2rem;
-  font-weight: normal;
-  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-
-  a {
-    color: inherit;
-  }
-
-  @media screen and (max-width: 40em) {
-    font-size: 1.5rem;
-  }
-}
-
-.organization-login {
-  display: inline-block;
-  margin-top: 0.2rem;
-  font-size: 1rem;
-  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
-  opacity: 0.8;
-
-  a {
-    color: inherit;
-  }
-}
-
 .organization-nav {
   border-bottom: none;
 
@@ -128,12 +101,6 @@ main {
     border-top: 3px solid #444d56;
     background-color: #fafbfc;
   }
-}
-
-
-.site-content,
-.menu {
-  margin-top: 1rem;
 }
 
 .site-content-cap {
@@ -212,6 +179,18 @@ main {
 .assignment-icon-group {
   color: #f3f3f3;
   background-color: #555;
+}
+
+.assignment-nav {
+  position: relative;
+  top: 1px;
+}
+
+.assignment-repo-github-url {
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
 }
 
 .table-minimal {

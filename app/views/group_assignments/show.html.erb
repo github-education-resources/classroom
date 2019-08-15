@@ -1,95 +1,72 @@
 <%= render 'organizations/organization_banner' %>
 
-<div class="site-content">
-  <div class="site-content-cap d-flex flex-justify-between">
-      <div class="pr-2">
-        <div class="d-table col-12">
-          <div class="col-1 d-table-cell v-align-middle">
-            <span class="group-assignment-icon assignment-icon-group left">
-              <%= octicon 'organization', height: 22 %>
-            </span>
-          </div>
+<%= render 'group_assignments/banner' %>
 
-          <div class="col-11 d-table-cell v-align-middle">
-            <h2 class="site-content-heading group-assignment-title">
-              <%= @group_assignment.title %>
-            </h2>
-            <p class="assignment-type text-gray">Group assignment for <strong><%= @group_assignment.grouping.title %></strong>
-              <% if @group_assignment.deadline %>
-                <% if @group_assignment.deadline.passed? %>
-                  - Deadline Passed
-                <% else %>
-                  <%= "- Deadline in #{distance_of_time_in_words(Time.zone.now, @group_assignment.deadline.deadline_at)}" %>
-                <% end %>
-              <% end %>
-            </p>
-          </div>
+<div class="border-top border-bottom bg-white">
+  <div class="container-lg p-responsive py-5">
+    <% if @organization.roster %>
+      <div class="Box">
+        <div class="Box-header text-gray d-flex flex-items-center">
+          <span id='students-tab' onclick="selectTab(this)" class="cursor selected mr-3" aria-current="page">Teams</span>
+          <span id='unlinked-tab' onclick="selectTab(this)" class="cursor flex-auto">Students not on a team</span>
+          <%= render partial: 'shared/open_on_assistant_modal', locals: {
+            assistant_url: assistant_organization_group_assignment_url,
+            enabled: @group_assignment_repos.present?
+          } %>
         </div>
       </div>
 
-      <%= render partial: 'shared/open_on_assistant_modal', locals: {
-        assistant_url: assistant_organization_group_assignment_url,
-        enabled: @group_assignment.group_assignment_repos.present?
-      } %>
-
-      <div class="text-right mt-3 pl-2 settings">
-        <%= link_to edit_organization_group_assignment_path(@organization, @group_assignment), class: 'btn right' do %>
-          <%= octicon 'gear' %>
-          Group assignment settings
-        <% end %>
-      </div>
-  </div>
-
-  <div class="site-content-body">
-    <div class="invitation-content">
-      <%= render @group_assignment.group_assignment_invitation %>
-    </div>
-
-    <% if @organization.roster %>
-      <div class="assignment-container">
-        <div class="tabnav-body clearfix ">
-          <div class="tabnav">
-            <nav class="tabnav-tabs">
-              <span id='students-tab' onclick="selectTab(this)" class="tabnav-tab selected tabnav-link" aria-current="page">Teams</span>
-              <span id='unlinked-tab' onclick="selectTab(this)" class="tabnav-tab tabnav-link">Students not on a team</span>
-            </nav>
-          </div>
-          <span id='students-span'>
-            <% if @group_assignment_repos.present? %>
-              <%= render partial: 'group_assignments/filterable_group_assignment_repo_list', locals: { param_name: :teams_page } %>
-            <% else %>
-              <div class="blankslate">
-                <h3>"<%= @group_assignment.title %>" does not have any repositories.</h3>
-                <p>Share the invitation link with your students to get started.</p>
-              </div>
-            <% end %>
-          </span>
-          <span id='unlinked-span' class='hidden-tab'>
+      <span id='students-span'>
+        <div class="assignment-repo-list">
+          <% if @group_assignment_repos.present? %>
             <div class="assignment-repo-list">
-              <% if @students_not_on_team.present? %>
-                <% @students_not_on_team.each do |entry| %>
-                  <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
-                    url: organization_group_assignment_roster_entry_path(@organization, @group_assignment, entry)
-                  } %>
-                <% end %>
-
-                <%= render partial: 'shared/pagination', locals: { collection: @students_not_on_team, param_name: :students_page } %>
-              <% else %>
-              <div class="blankslate">
-                <h3>All students have joined a team.</h3>
-              </div>
+              <% @group_assignment_repos.each do |group_assignment_repo| %>
+                <%= render partial: 'orgs/group_assignment_repos/group_assignment_repo', \
+                  locals: { url: organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo) } %>
               <% end %>
             </div>
-          </span>
+
+            <%= render partial: 'shared/pagination', locals: { collection: @group_assignment_repos, param_name: :teams_page } %>
+          <% else %>
+            <div class="blankslate">
+              <h3>"<%= @group_assignment.title %>" does not have any repositories.</h3>
+              <p class="mb-0">Share the invitation link with your students to get started.</p>
+            </div>
+          <% end %>
         </div>
-      </div>
+      </span>
+
+      <span id='unlinked-span' class='hidden-tab'>
+        <div class="assignment-repo-list">
+          <% if @students_not_on_team.present? %>
+            <% @students_not_on_team.each do |entry| %>
+              <%= render partial: 'orgs/assignment_repos/assignment_repo', locals: {
+                url: organization_group_assignment_roster_entry_path(@organization, @group_assignment, entry)
+              } %>
+            <% end %>
+
+            <%= render partial: 'shared/pagination', locals: { collection: @students_not_on_team, param_name: :students_page } %>
+          <% else %>
+          <div class="blankslate">
+            <h3>All students have joined a team.</h3>
+          </div>
+          <% end %>
+        </div>
+      </span>
     <% else %>
       <% if @group_assignment_repos.present? %>
-        <%= render partial: 'group_assignments/filterable_group_assignment_repo_list', locals: { param_name: :page } %>
+        <div class="assignment-repo-list">
+          <% @group_assignment_repos.each do |group_assignment_repo| %>
+            <%= render partial: 'orgs/group_assignment_repos/group_assignment_repo', \
+              locals: { url: organization_group_assignment_group_assignment_repo_path(@organization, @group_assignment, group_assignment_repo) } %>
+          <% end %>
+        </div>
+
+        <%= render partial: 'shared/pagination', locals: { collection: @group_assignment_repos } %>
       <% else %>
         <div class="blankslate">
           <h3>"<%= @group_assignment.title %>" does not have any repositories.</h3>
-          <p>Share the invitation link with your students to get started.</p>
+          <p class="mb-0">Share the invitation link with your students to get started.</p>
         </div>
       <% end %>
     <% end %>

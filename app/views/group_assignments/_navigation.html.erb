@@ -1,10 +1,7 @@
-<div class="tabnav assignment-nav mb-0">
-  <nav class="tabnav-tabs" aria-label="Assignment menu">
-    <%= link_to organization_group_assignment_path(organization, @group_assignment), class: "tabnav-tab #{'selected' if current_page?(organization_group_assignment_path(organization))}" do %>
-      <%= octicon 'repo', class: 'mr-1' %>
-      Repositories
-    <% end %>
-    <%= link_to edit_organization_group_assignment_path(organization, @group_assignment), class: "tabnav-tab #{'selected' if current_page?(edit_organization_group_assignment_path(organization))}" do %>
+<div class="tabnav organization-nav">
+  <nav class="tabnav-tabs" aria-label="Classroom menu">
+    <%= link_to 'Assignments', organization, class: "tabnav-tab #{'selected' if current_page?(organization_path(organization)) || request.path_info.include?('assignment')}" %>
+    <%= link_to edit_organization_path(organization), class: "tabnav-tab #{'selected' if settings_view == true || request.path_info.include?('invite')}" do %>
       <%= octicon 'gear', class: 'mr-1' %>
       Settings
     <% end %>
