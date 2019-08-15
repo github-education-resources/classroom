@@ -13,7 +13,7 @@ Importing a course roster from your learning management system will only work if
 
 To import a new course roster from your learning management system:
 
-   <div class="d-flex flex-justify-around">
+   <div class="text-center">
      <img src="/images/help/lms/roster-import/import-roster.gif" class="border" style="width: 75%;">
    </div>
 
@@ -46,8 +46,8 @@ You have imported your roster into GitHub Classroom.
 
 After you've imported a roster, keep it up to date by syncing:
 
-   <div class="d-flex flex-justify-around">
-     <img src="/images/help/lms/roster-import/sync-roster.gif" class="border" style="width: 75%;">
+   <div class="text-center">
+     <img src="/images/help/lms/roster-import/sync-roster.gif" style="width: 75%;">
    </div>
 
 1. [Sign in to GitHub Classroom](https://classroom.github.com/login).
