@@ -68,7 +68,12 @@ class RosterEntry < ApplicationRecord
   # second: Linked but not accepted
   # last:   Unlinked student
   #
-  # with a secondary sort on ID to ensure ties are always handled in the same way
+  # To display all the roster entries that have accepted the assignment first,
+  # we perform a LEFT JOIN operation. But for this order to work correctly,
+  # we should also verify if the join operation resulted in a match. Hence the query
+  # to find accepted students adds an extra check for assignment_repos.user_id NOT NULL.
+  # For more context visit: https://github.com/education/classroom/pull/2237
+  #
   # rubocop:disable Metrics/MethodLength
   def self.order_for_view(assignment)
     join_sql = <<~SQL
@@ -79,9 +84,10 @@ class RosterEntry < ApplicationRecord
 
     order_sql = <<~SQL
       CASE
-        WHEN roster_entries.user_id IS NULL THEN 2      /* Not linked */
-        WHEN roster_entries.user_id IS NOT NULL AND assignment_repos.user_id IS NOT NULL THEN 0  /* Linked but not accepted */
-        ELSE 1                                          /* Unlinked */
+        WHEN roster_entries.user_id IS NULL THEN 2                  /* Not linked */
+        WHEN roster_entries.user_id IS NOT NULL
+          AND assignment_repos.user_id IS NOT NULL THEN 0           /* Accepted */
+        ELSE 1                                                      /* Linked but not accepted */
       END
     SQL
 
