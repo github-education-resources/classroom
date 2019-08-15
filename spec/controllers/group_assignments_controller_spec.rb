@@ -205,7 +205,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
 
         allow_any_instance_of(GitHubOrganization).to receive(:plan).and_return(private_repos_plan)
 
-        assert_enqueued_jobs 1, only: Assignment::RepositoryVisibilityJob do
+        assert_enqueued_jobs 1, only: AssignmentRepositoryVisibilityJob do
           patch :update, params: {
             id:               group_assignment.slug,
             organization_id:  organization.slug,
@@ -219,7 +219,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
       it "will not kick off an AssignmentVisibility background job" do
         options = { title: "JavaScript Calculator" }
 
-        assert_no_enqueued_jobs only: Assignment::RepositoryVisibilityJob do
+        assert_no_enqueued_jobs only: AssignmentRepositoryVisibilityJob do
           patch :update, params: {
             id:               group_assignment.slug,
             organization_id:  organization.slug,
@@ -270,6 +270,21 @@ RSpec.describe GroupAssignmentsController, type: :controller do
     it "redirects back to the organization" do
       delete :destroy, params: { id: group_assignment.slug, organization_id: organization.slug }
       expect(response).to redirect_to(organization)
+    end
+  end
+
+  describe "POST #toggle_invitations", :vcr do
+    before(:each) do
+      group_assignment.update(invitations_enabled: false)
+    end
+
+    it "updates the Assignment's invitations_enabled column" do
+      post :toggle_invitations, params: {
+        invitations_enabled: true,
+        organization_id: organization.slug,
+        id: group_assignment.slug
+      }
+      expect(group_assignment.reload.invitations_enabled).to be true
     end
   end
 end

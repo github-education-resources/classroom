@@ -11,8 +11,7 @@ en:
       changelog: "Check out what's new"
       copy_to_clipboard: 'Copy to clipboard'
       copy_invitation_link: 'Copy invitation link'
-      give_this_to_students: 'Give this to your students'
-      give_this_to_students_short: 'Or use this short URL'
+      share_invite_url: 'Share this URL with your students to invite them to this assignment. If enabled, students will be able to accept and access the assignment.'
       classroom_is_open_source: "GitHub Classroom is %{href}."
       open_source_href: "open source"
       with_love_by_github: "%{octicon_mortar_board} with %{octicon_heart} by %{href}"

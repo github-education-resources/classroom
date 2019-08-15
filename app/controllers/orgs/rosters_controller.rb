@@ -48,6 +48,7 @@ module Orgs
       if params[:lms_user_ids].is_a? String
         params[:lms_user_ids] = params[:lms_user_ids].split
       end
+
       result = Roster::Creator.perform(
         organization: current_organization,
         identifiers: params[:identifiers],
@@ -58,12 +59,8 @@ module Orgs
       # Set the object so that we can see errors when rendering :new
       @roster = result.roster
       if result.success?
-        if current_organization.google_course_id && !params[:lms_user_ids].empty?
-          GitHubClassroom.statsd.increment("google_classroom.import")
-        else
-          GitHubClassroom.statsd.increment("roster.create")
-        end
-
+        create_statsd(lms_user_ids: params[:lms_user_ids])
+        imported_students_lms_statsd(lms_user_ids: params[:lms_user_ids])
         flash[:success] = \
           "Your classroom roster has been saved! Manage it <a href='#{roster_url(current_organization)}'>here</a>."
 
@@ -134,6 +131,9 @@ module Orgs
     end
 
     def add_students
+      if params[:lms_user_ids].is_a? String
+        params[:lms_user_ids] = params[:lms_user_ids].split
+      end
       identifiers = params[:identifiers].split("\r\n").reject(&:blank?)
       lms_user_ids = params[:lms_user_ids] || []
 
@@ -163,6 +163,21 @@ module Orgs
     # rubocop:enable Metrics/AbcSize
 
     private
+
+    def create_statsd(lms_user_ids:)
+      if lms_user_ids.nil?
+        GitHubClassroom.statsd.increment("roster.create")
+      elsif current_organization.google_course_id
+        GitHubClassroom.statsd.increment("google_classroom.import")
+      else
+        GitHubClassroom.statsd.increment("lti_configuration.import")
+      end
+    end
+
+    def imported_students_lms_statsd(lms_user_ids:)
+      return if lms_user_ids.nil?
+      GitHubClassroom.statsd.increment("roster_entries.lms_imported", by: lms_user_ids.length)
+    end
 
     def current_roster
       return @current_roster if defined?(@current_roster)

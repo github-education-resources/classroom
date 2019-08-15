@@ -62,6 +62,42 @@ RSpec.describe Orgs::RostersController, type: :controller do
       }
     end
 
+    context "when there is an lti_configuration present" do
+      before(:each) do
+        create(:lti_configuration, organization: organization)
+      end
+
+      it "sends statsd" do
+        allow(GitHubClassroom.statsd).to receive(:increment)
+        post :create, params: {
+          id:         organization.slug,
+          identifier_name: "emails",
+          identifiers: "a\r\nb",
+          lms_user_ids: [1, 2]
+        }
+        expect(GitHubClassroom.statsd).to have_received(:increment).with("lti_configuration.import")
+        expect(GitHubClassroom.statsd).to have_received(:increment).with("roster_entries.lms_imported", by: 2)
+      end
+
+      it "creates roster entries" do
+        post :create, params: {
+          id:         organization.slug,
+          identifier_name: "emails",
+          identifiers: "a\r\nb",
+          lms_user_ids: "1 2"
+        }
+        organization.reload
+        expect(organization.roster.roster_entries.count).to eq(2)
+        expect(organization.roster.roster_entries[0].lms_user_id).to eq("1")
+        expect(organization.roster.roster_entries[1].lms_user_id).to eq("2")
+      end
+
+      after(:each) do
+        Roster.destroy_all
+        RosterEntry.destroy_all
+      end
+    end
+
     context "with no identifier_name" do
       before do
         post :create, params: { id: organization.slug, identifiers: "myemail" }
@@ -255,11 +291,6 @@ RSpec.describe Orgs::RostersController, type: :controller do
             end
 
             context "all attributes present" do
-              it "sends statsd" do
-                expect(GitHubClassroom.statsd).to receive(:increment).with("lti_configuration.import")
-                get :import_from_lms, params: { id: lti_configuration.organization.slug }
-              end
-
               it "format.html: succeeds" do
                 get :import_from_lms, params: { id: lti_configuration.organization.slug }
                 expect(response).to have_http_status(:ok)
@@ -272,6 +303,20 @@ RSpec.describe Orgs::RostersController, type: :controller do
                 expect(response).to have_http_status(:ok)
                 expect(flash[:alert]).to be_nil
                 expect(assigns(:identifiers).keys.length).to eql(3)
+              end
+
+              context "no new students" do
+                before(:each) do
+                  subject
+                    .stub(:filter_new_students)
+                    .and_return([])
+                end
+
+                it "creates no duplicate entries" do
+                  expect(subject).to receive(:handle_lms_import_error)
+
+                  get :import_from_lms, params: { id: lti_configuration.organization.slug }
+                end
               end
             end
 
@@ -440,6 +485,39 @@ RSpec.describe Orgs::RostersController, type: :controller do
       sign_in_as(user)
     end
 
+    context "with google or lti integration" do
+      context "sends out statsd when successful" do
+        before do
+          create(:lti_configuration, organization: organization)
+        end
+
+        it "sends successfully" do
+          expect(GitHubClassroom.statsd).to receive(:increment).with("roster_entries.lms_imported", by: 2)
+          patch :add_students, params: {
+            id:         organization.slug,
+            identifiers: "a\r\nb",
+            lms_user_ids: [1, 2]
+          }
+        end
+      end
+
+      context "does not send out statsd when not successful" do
+        before do
+          Roster.destroy_all
+          RosterEntry.destroy_all
+        end
+
+        it "sends successfully" do
+          expect(GitHubClassroom.statsd).to_not receive(:increment).with("roster_entries.lms_imported", by: 2)
+          patch :add_students, params: {
+            id:         organization.slug,
+            identifiers: "a\r\nb",
+            lms_user_ids: [1, 2]
+          }
+        end
+      end
+    end
+
     context "when all identifiers are valid" do
       it "redirects to rosters page" do
         patch :add_students, params: {
@@ -526,7 +604,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
           roster_entry_identifier: "Jessica Smith",
           id: organization.slug
         }
-        organization.roster.roster_entries.reload
+        organization.reload.roster.roster_entries
       end
 
       it "updates roster entry" do
@@ -672,10 +750,12 @@ RSpec.describe Orgs::RostersController, type: :controller do
               end
 
               it "sends statsd" do
-                expect(GitHubClassroom.statsd).to receive(:increment).with("google_classroom.import")
+                allow(GitHubClassroom.statsd).to receive(:increment)
                 patch :import_from_google_classroom, params: {
                   id: organization.slug
                 }
+                expect(GitHubClassroom.statsd).to have_received(:increment).with("google_classroom.import")
+                expect(GitHubClassroom.statsd).to have_received(:increment).with("roster_entries.lms_imported", by: 2)
               end
 
               context "when students are fetched succesfully" do

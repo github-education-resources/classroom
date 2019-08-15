@@ -68,18 +68,6 @@ module GitHubClassroom
           "ok"
         end
 
-        ping.check :elasticsearch do
-          status = Chewy.client.cluster.health["status"] || "unavailable"
-
-          # Yellow status is when elasticsearch has allocated all of the primary shards,
-          # but the replicas have not been allocated. This is okay in our instance since we don't
-          # necessarily need replicas.
-          # Docs: https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-health.html
-          raise "Elasticsearch status is #{status}" unless %w[green yellow].include?(status)
-
-          "ok"
-        end
-
         ping.check :github, timeout: 5 do
           uri = URI("https://www.githubstatus.com/api/v2/components.json")
           status_components = JSON.parse(Net::HTTP.get(uri))["components"]

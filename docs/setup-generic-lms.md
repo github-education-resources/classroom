@@ -23,13 +23,13 @@ While learning management systems differ, the main idea is the same across all v
 
 When you have successfully linked GitHub Classroom to your LMS, you should be directed the following screen:
 
-  <div class="d-flex flex-justify-around">
+  <div class="text-center">
     <img src="/images/help/lms/generic/success.png" class="border" style="width: 75%;">
   </div>
 
 ### Next steps
 
-[Importing your course roster from your learning management system to GitHub Classroom]()
+[Importing your course roster from your learning management system to GitHub Classroom](/help/import-roster-from-lms)
 
 Not finding what you need? Want to talk to a human? [Open an issue on the Classroom repo.](https://github.com/education/classroom/issues)
 {: class="warning"}
