@@ -14,14 +14,14 @@ the configuration process)
 1. Select the Canvas course to integrate with GitHub Classroom.
 1. In the course sidebar, navigate to _Settings_, then _Apps_.
 
-   <div class="d-flex flex-justify-around">
+   <div class="text-center">
      <img src="/images/help/lms/canvas/step-4.png" class="border" style="width: 75%;">
    </div>
 
 1. Click **+ App** in the top right. A popup appears.
 1. In _Configuration Type_ dropdown, select **By URL**.
 
-   <div class="d-flex flex-justify-around">
+   <div class="text-center">
      <img src="/images/help/lms/canvas/step-6.png" class="border" style="width: 75%;">
    </div>
 
@@ -36,31 +36,31 @@ the configuration process)
 
     After entering that information, the form should look like:
 
-    <div class="d-flex flex-justify-around">
+    <div class="text-center">
       <img src="/images/help/lms/canvas/step-7.png" class="border" style="width: 75%;">
     </div>
 
 1. Click _Submit_ and navigate out of settings.
 
-   <div class="d-flex flex-justify-around">
+   <div class="text-center">
      <img src="/images/help/lms/canvas/step-9.png" class="border" style="width: 30%;">
    </div>
 
 1. Click _GitHub Classroom_ to finish linking GitHub Classroom. You should see following screen:
 
-    <div class="d-flex flex-justify-around">
+    <div class="text-center">
       <img src="/images/help/lms/canvas/success.png" class="border" style="width: 75%;">
     </div>
 
 ### Next steps
 
-[Importing your course roster from Canvas to GitHub Classroom]().
+[Importing your course roster from Canvas to GitHub Classroom](/help/import-roster-from-lms)
 
 ### Troubleshooting: _Enable Membership Service_ checkbox is not visible
 
 If you don’t see a checkbox in Canvas labeled _Allow this tool to access the IMS Names and Role Provisioning Service_, then you may have to ask your institution’s Canvas administrator to enable _Membership Service Configuration_ for your account.
 
-<div class="d-flex flex-justify-around">
+<div class="text-center">
   <img src="/images/help/lms/canvas/troubleshooting-1.png" class="border" style="width: 75%;">
 </div>
 

@@ -15,25 +15,25 @@ the configuration process)
 1. Turn editing on.
 1. Wherever you’d like GitHub Classroom to be accessible from, click **Add an activity or resource**.
 
-   <div class="d-flex flex-justify-around">
+   <div class="text-center">
      <img src="/images/help/lms/moodle/step-4.png" class="border" style="width: 75%;">
    </div>
 
 1. From the dialog box that pops up, choose **External tool** and click **Add**.
 
-   <div class="d-flex flex-justify-around">
+   <div class="text-center">
      <img src="/images/help/lms/moodle/step-5.png" class="border" style="width: 75%;">
    </div>
 
 1. In the _Activity name_ field, enter <kbd>GitHub Classroom</kbd>.
 
-   <div class="d-flex flex-justify-around">
+   <div class="text-center">
      <img src="/images/help/lms/moodle/step-6.png" class="border" style="width: 75%;">
    </div>
 
 1. In the _Preconfigured tool_ field, click the **+** to the right of the dropdown menu. A screen appears which looks like this:
 
-   <div class="d-flex flex-justify-around">
+   <div class="text-center">
      <img src="/images/help/lms/moodle/step-8.png" class="border" style="width: 75%;">
    </div>
 
@@ -52,19 +52,19 @@ the configuration process)
 
 1. Scroll to and click **Services**.
 
-    <div class="d-flex flex-justify-around">
+    <div class="text-center">
       <img src="/images/help/lms/moodle/step-10.png" class="border" style="width: 75%;">
     </div>
 
 1. In the _IMS LTI Names and Role Provisioning_ menu, select **Use this service**.
 
-    <div class="d-flex flex-justify-around">
+    <div class="text-center">
       <img src="/images/help/lms/moodle/step-11.png" class="border" style="width: 30%;">
     </div>
 
 1. Scroll down to the bottom of the page and click **Save changes**. You should retun to the page that looks like this:
 
-   <div class="d-flex flex-justify-around">
+   <div class="text-center">
      <img src="/images/help/lms/moodle/step-13.png" class="border" style="width: 30%;">
    </div>
 
@@ -72,7 +72,7 @@ the configuration process)
 
 1. In the _Activity_ menu (under _Common module settings_), select **Hide from students**.
 
-   <div class="d-flex flex-justify-around">
+   <div class="text-center">
      <img src="/images/help/lms/moodle/step-15.png" class="border" style="width: 30%;">
    </div>
 
@@ -80,7 +80,7 @@ the configuration process)
 
 1. You should now see a _GitHub Classroom_ activity wherever your chose to place it.
 
-    <div class="d-flex flex-justify-around">
+    <div class="text-center">
       <img src="/images/help/lms/moodle/step-17.png" class="border" style="width: 30%;">
     </div>
 
@@ -88,13 +88,13 @@ the configuration process)
 
 You should now be directed the following screen. You have successfully linked GitHub Classroom to your Moodle.
 
-<div class="d-flex flex-justify-around">
+<div class="text-center">
   <img src="/images/help/lms/moodle/success.png" class="border" style="width: 75%;">
 </div>
 
 ### Next steps
 
-[Importing your course roster from Moodle to GitHub Classroom]()
+[Importing your course roster from Moodle to GitHub Classroom](/help/import-roster-from-lms)
 
 Not finding what you need? Want to talk to a human? [Open an issue on the Classroom repo.](https://github.com/education/classroom/issues)
 {: class="warning"}

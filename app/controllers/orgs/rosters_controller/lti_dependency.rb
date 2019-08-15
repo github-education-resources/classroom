@@ -28,8 +28,6 @@ module Orgs
         "Emails": new_students.map(&:email)
       }.select { |_, v| v.any? }
 
-      GitHubClassroom.statsd.increment("lti_configuration.import")
-
       respond_to do |format|
         format.js { render :import_from_lms, locals: { lms_name: lms_name } }
         format.html { render :import_from_lms, locals: { lms_name: lms_name } }

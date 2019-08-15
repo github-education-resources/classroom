@@ -77,5 +77,5 @@ en:
       set_of_teams: 'Set of teams'
       no_teams: "This classroom doesn't have any sets of teams yet."
       assignments: 'Assignments'
-      no_assignments: "This organization doesn't have any assignments yet."
+      no_assignments: "There are no assignments in this classroom yet."
       create_first_assignment: 'Create your first assignment'
