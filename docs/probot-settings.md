@@ -10,9 +10,9 @@ Adding the Probot Settings app to your organization turns it on for any repo in 
 
 1. Add the Probot Settings app to the GitHub organization you use with Classroom. Go to [the Settings app page](https://github.com/apps/settings) and click **+ Add to GitHub**. When asked, make sure to give it access to all the repositories in the organization.
 
-   <div class="text-center">
-     <img src="/images/help/probot-settings.gif" style="width: 75%;">
-   </div>
+  <div class="text-center">
+    <img src="/images/help/probot-settings.gif" class="border" style="width: 75%;">
+  </div>
 
 2. Add a `.github/settings.yml` file to your starter repo. See the [probot/settings README](https://github.com/probot/settings#github-settings) for a complete list of settings.
 

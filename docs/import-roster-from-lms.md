@@ -46,9 +46,9 @@ You have imported your roster into GitHub Classroom.
 
 After you've imported a roster, keep it up to date by syncing:
 
-   <div class="text-center">
-     <img src="/images/help/lms/roster-import/sync-roster.gif" style="width: 75%;">
-   </div>
+  <div class="text-center">
+    <img src="/images/help/lms/roster-import/sync-roster.gif" class="border" style="width: 75%;">
+  </div>
 
 1. [Sign in to GitHub Classroom](https://classroom.github.com/login).
 
