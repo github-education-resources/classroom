@@ -197,6 +197,21 @@ RSpec.describe AssignmentsController, type: :controller do
     end
   end
 
+  describe "POST #toggle_invitations", :vcr do
+    before(:each) do
+      assignment.update(invitations_enabled: false)
+    end
+
+    it "updates the Assignment's invitations_enabled column" do
+      post :toggle_invitations, params: {
+        invitations_enabled: true,
+        organization_id: organization.slug,
+        id: assignment.slug
+      }
+      expect(assignment.reload.invitations_enabled).to be true
+    end
+  end
+
   describe "GET #show", :vcr do
     it "returns success status" do
       get :show, params: { organization_id: organization.slug, id: assignment.slug }

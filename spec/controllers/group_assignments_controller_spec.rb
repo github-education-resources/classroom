@@ -272,4 +272,19 @@ RSpec.describe GroupAssignmentsController, type: :controller do
       expect(response).to redirect_to(organization)
     end
   end
+
+  describe "POST #toggle_invitations", :vcr do
+    before(:each) do
+      group_assignment.update(invitations_enabled: false)
+    end
+
+    it "updates the Assignment's invitations_enabled column" do
+      post :toggle_invitations, params: {
+        invitations_enabled: true,
+        organization_id: organization.slug,
+        id: group_assignment.slug
+      }
+      expect(group_assignment.reload.invitations_enabled).to be true
+    end
+  end
 end
