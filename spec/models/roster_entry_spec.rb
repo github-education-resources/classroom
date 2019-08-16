@@ -108,6 +108,16 @@ RSpec.describe RosterEntry, type: :model do
 
       expect(RosterEntry.where(roster: roster).order_for_view(assignment).to_a).to eq(expected_ordering)
     end
+
+    it "order_by_repo_created_at returns list of roster entries ordered by the creation of their assignment repos" do
+      earliest_student = create(:user)
+      create(:assignment_repo, assignment: assignment, user: earliest_student)
+      initial_entry = roster.roster_entries.first
+      earliest_student_entry = create(:roster_entry, roster: roster, user: earliest_student)
+      roster_entries = RosterEntry.where(roster: roster).order_by_repo_created_at({assignment: assignment})
+
+      expect(roster_entries).to match_array([earliest_student_entry, initial_entry])
+    end
   end
 
   describe "create_entries" do

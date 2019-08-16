@@ -24,7 +24,7 @@ class RosterEntry < ApplicationRecord
       ON roster_entries.user_id = assignment_repos.user_id
       AND assignment_repos.assignment_id='#{sql_formatted_assignment_id}'
      SQL
-    order("assignment_repos.created_at")
+    order(Arel.sql("assignment_repos.created_at"))
       .joins(join_query)
   }
 
