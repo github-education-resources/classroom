@@ -1,4 +1,4 @@
-<div class="d-sm-flex flex-items-center flex-justify-between my-4">
+<div class="container-lg d-sm-flex flex-items-center flex-justify-between my-4">
   <% if @organizations.present? %>
 
     <div class="form-block col-md-5">
@@ -18,11 +18,11 @@
 </div>
 
 <% if @organizations.present? %>
-    <div class="my-4" id="js-search-results">
+    <div class="container-lg my-4" id="js-search-results">
       <%= render partial: 'organization_card_layout', locals: {organizations: @organizations} %>
     </div>
 <% else %>
-    <div class="blankslate large-format spacious clean-background">
+    <div class="container-lg blankslate large-format spacious clean-background">
       <h3><%= t('views.organizations.no_classrooms') %></h3>
       <p><%= t('views.organizations.no_classrooms_desc') %></p>
 
