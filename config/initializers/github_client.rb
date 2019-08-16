@@ -17,6 +17,6 @@ module GitHubClassroom
   end
 
   def self.enterprise_instance?
-    Rails.application.secrets.enterprise_enabled == true
+    Rails.application.secrets.github_enterprise_hostname.present?
   end
 end
