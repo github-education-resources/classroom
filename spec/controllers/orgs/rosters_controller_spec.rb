@@ -495,10 +495,10 @@ RSpec.describe Orgs::RostersController, type: :controller do
           expect(GitHubClassroom.statsd).to receive(:increment).with("roster_entries.lms_imported", by: 2)
           perform_enqueued_jobs do
             patch :add_students, params: {
-                    id:         organization.slug,
-                    identifiers: "a\r\nb",
-                    lms_user_ids: [1, 2]
-                  }
+              id:         organization.slug,
+              identifiers: "a\r\nb",
+              lms_user_ids: [1, 2]
+            }
           end
         end
       end
@@ -513,10 +513,10 @@ RSpec.describe Orgs::RostersController, type: :controller do
           expect(GitHubClassroom.statsd).to_not receive(:increment).with("roster_entries.lms_imported", by: 2)
           perform_enqueued_jobs do
             patch :add_students, params: {
-                    id:         organization.slug,
-                    identifiers: "a\r\nb",
-                    lms_user_ids: [1, 2]
-                  }
+              id:         organization.slug,
+              identifiers: "a\r\nb",
+              lms_user_ids: [1, 2]
+            }
           end
         end
       end
