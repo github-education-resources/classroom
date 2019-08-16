@@ -77,7 +77,7 @@
         <% end %>
       </dl>
     <% end %>
-    
+
     <dl class="<%= view.form_class_for(:deadline) %>">
       <dt><label>Deadline</label></dt>
       <dd><%= f.text_field :deadline, class: 'jquery-datetimepicker form-control input-block', value: DeadlineFormatHelper.convert(f.object.deadline), autocomplete: :off %></dd>
