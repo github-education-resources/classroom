@@ -130,16 +130,16 @@ module Orgs
       redirect_to roster_path(current_organization, params: { roster_entries_page: params[:roster_entries_page] })
     end
 
+    # rubocop:disable Metrics/AbcSize
     def add_students
-      if params[:lms_user_ids].is_a? String
-        params[:lms_user_ids] = params[:lms_user_ids].split
-      end
-      identifiers = params[:identifiers].split("\r\n").reject(&:blank?)
-      lms_user_ids = params[:lms_user_ids] || []
+      params[:lms_user_ids].split! if params[:lms_user_ids].is_a? String
+      lms_user_ids = Array.wrap(params[:lms_user_ids])
 
+      identifiers = params[:identifiers].split("\r\n").reject(&:blank?)
       AddStudentsToRosterJob.perform_later(identifiers, current_roster, current_user, lms_user_ids)
       redirect_to roster_path(current_organization)
     end
+    # rubocop:enable Metrics/AbcSize
 
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/AbcSize
@@ -175,7 +175,7 @@ module Orgs
     end
 
     def imported_students_lms_statsd(lms_user_ids:)
-      return if lms_user_ids.nil?
+      return if lms_user_ids.blank?
       GitHubClassroom.statsd.increment("roster_entries.lms_imported", by: lms_user_ids.length)
     end
 

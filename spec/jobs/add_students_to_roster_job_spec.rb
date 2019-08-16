@@ -44,6 +44,30 @@ RSpec.describe AddStudentsToRosterJob, type: :job do
           .with(hash_including(status: "completed"))
       end
     end
+
+    context "sends DataDog stats" do
+      context "with google or lti integration" do
+        context "sends out statsd when successful" do
+          before do
+            create(:lti_configuration, organization: organization)
+          end
+
+          it "sends successfully" do
+            expect(GitHubClassroom.statsd).to receive(:increment).with("roster_entries.lms_imported", by: 2)
+            described_class.perform_now(identifiers, roster, user, lms_user_ids)
+          end
+        end
+
+        context "does not send out statsd when not successful" do
+          before(:each) do
+          end
+          it "sends successfully" do
+            expect(GitHubClassroom.statsd).to_not receive(:increment).with("roster_entries.lms_imported", by: 2)
+            described_class.perform_now(identifiers, roster, user, [])
+          end
+        end
+      end
+    end
   end
 
   describe "#build_message" do

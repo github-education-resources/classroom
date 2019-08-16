@@ -11,6 +11,7 @@ class AddStudentsToRosterJob < ApplicationJob
   # roster entry for each. Omits duplicates, and
   #
   # rubocop:disable AbcSize
+  # rubocop:disable MethodLength
   def perform(identifiers, roster, user, lms_user_ids = [])
     channel = AddStudentsToRosterChannel.channel(roster_id: roster.id, user_id: user.id)
     ActionCable.server.broadcast(channel, status: "update_started")
@@ -20,13 +21,17 @@ class AddStudentsToRosterJob < ApplicationJob
       identifiers.zip(lms_user_ids).map do |identifier, lms_user_id|
         roster_entry = RosterEntry.create(identifier: identifier, roster: roster, lms_user_id: lms_user_id)
         roster_entry.identifier if roster_entry.errors.include?(:identifier)
-      end
+      end.compact!
 
-    message = build_message(invalid_roster_entries.compact, identifiers)
-
+    message = build_message(invalid_roster_entries, identifiers)
+    entries_created = identifiers.count - invalid_roster_entries.count
+    if lms_user_ids.present? && entries_created.positive?
+      GitHubClassroom.statsd.increment("roster_entries.lms_imported", by: entries_created)
+    end
     ActionCable.server.broadcast(channel, message: message, status: "completed")
   end
   # rubocop:enable AbcSize
+  # rubocop:enable MethodLength
 
   def add_suffix_to_duplicates!(identifiers, roster)
     existing_roster_entries = RosterEntry.where(roster: roster).pluck(:identifier)

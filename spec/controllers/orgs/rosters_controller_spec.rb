@@ -493,11 +493,13 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
         it "sends successfully" do
           expect(GitHubClassroom.statsd).to receive(:increment).with("roster_entries.lms_imported", by: 2)
-          patch :add_students, params: {
-            id:         organization.slug,
-            identifiers: "a\r\nb",
-            lms_user_ids: [1, 2]
-          }
+          perform_enqueued_jobs do
+            patch :add_students, params: {
+                    id:         organization.slug,
+                    identifiers: "a\r\nb",
+                    lms_user_ids: [1, 2]
+                  }
+          end
         end
       end
 
@@ -509,11 +511,13 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
         it "sends successfully" do
           expect(GitHubClassroom.statsd).to_not receive(:increment).with("roster_entries.lms_imported", by: 2)
-          patch :add_students, params: {
-            id:         organization.slug,
-            identifiers: "a\r\nb",
-            lms_user_ids: [1, 2]
-          }
+          perform_enqueued_jobs do
+            patch :add_students, params: {
+                    id:         organization.slug,
+                    identifiers: "a\r\nb",
+                    lms_user_ids: [1, 2]
+                  }
+          end
         end
       end
     end
@@ -891,7 +895,9 @@ RSpec.describe Orgs::RostersController, type: :controller do
                 .to receive(:students)
                 .and_return(@students)
 
-              patch :sync_google_classroom, params: { id: organization.slug }
+              perform_enqueued_jobs do
+                patch :sync_google_classroom, params: { id: organization.slug }
+              end
             end
 
             it "adds the new student to the roster" do
