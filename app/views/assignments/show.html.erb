@@ -58,7 +58,7 @@
                 <%= render partial: 'assignments/filterable_assignment_roster_list', locals: { list_type: :roster_entries } %>
               <% else %>
                 <div class="blankslate">
-                  <h3>"<%= @assignment.title %>" does not have any repositories.</h3>
+                  <h3>No students have accepted "<%= @assignment.title %>".</h3>
                   <p>Share the invitation link with your students to get started.</p>
                 </div>
               <% end %>
@@ -83,7 +83,7 @@
         <%= render partial: 'assignments/filterable_assignment_roster_list', locals: { list_type: :assignment_repos } %>
       <% else %>
         <div class="blankslate">
-          <h3>"<%= @assignment.title %>" does not have any repositories.</h3>
+          <h3>No students have accepted "<%= @assignment.title %>"</h3>
           <p>Share the invitation link with your students to get started.</p>
         </div>
       <% end %>

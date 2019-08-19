@@ -98,6 +98,14 @@ class AssignmentsController < ApplicationController
     redirect_to "x-github-classroom://?assignment_url=#{url_param}&code=#{code_param}"
   end
 
+  def toggle_invitations
+    @assignment.update(invitations_enabled: params[:invitations_enabled])
+    respond_to do |format|
+      format.js
+      format.html { redirect_to organization_assignment_path(@organization, @assignment) }
+    end
+  end
+
   private
 
   def new_assignment_params

@@ -23,7 +23,7 @@ While learning management systems differ, the main idea is the same across all v
 
 When you have successfully linked GitHub Classroom to your LMS, you should be directed the following screen:
 
-  <div class="d-flex flex-justify-around">
+  <div class="text-center">
     <img src="/images/help/lms/generic/success.png" class="border" style="width: 75%;">
   </div>
 
