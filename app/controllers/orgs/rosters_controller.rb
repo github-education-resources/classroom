@@ -35,6 +35,9 @@ module Orgs
         .order(:id)
         .page(params[:unlinked_users_page])
 
+      # Used for displaying all roster entries in tabs
+      @roster_entries_count = current_roster.roster_entries.count
+
       download_roster if params.dig("format")
     end
     # rubocop:enable AbcSize
