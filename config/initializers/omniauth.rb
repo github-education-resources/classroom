@@ -14,7 +14,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
     options[:client_options] = {
       site: "https://#{hostname}/api/v3",
       authorize_url: "https://#{hostname}/login/oauth/authorize",
-      token_url: "https://#{hostname}/login/oauth/access_token",
+      token_url: "https://#{hostname}/login/oauth/access_token"
     }
   end
 
