@@ -30,8 +30,7 @@ module Orgs
         .order(:identifier)
         .page(params[:roster_entries_page])
 
-      @current_unlinked_users = User
-        .where(id: unlinked_user_ids)
+      @current_unlinked_users = User.where(id: unlinked_user_ids)
         .order(:id)
         .page(params[:unlinked_users_page])
 
