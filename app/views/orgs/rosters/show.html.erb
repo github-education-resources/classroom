@@ -25,6 +25,8 @@
             <span class="btn btn-primary btn-sm", role="button" data-remodal-target="download-csv-modal">Download</span>
           </div>
         </h3>
+        <%= hidden_field_tag 'user_id', current_user.id %>
+        <%= hidden_field_tag 'roster_id', current_roster.id %>
 
         <div class="flex-justify-between roster-update-progress" hidden>
           <div class="Box Box--blue">
