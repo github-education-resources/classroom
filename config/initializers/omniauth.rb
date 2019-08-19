@@ -10,11 +10,11 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   options = { scope: "user:email,repo,delete_repo,admin:org,admin:org_hook" }
 
   if GitHubClassroom.enterprise_instance?
-    hostname = Rails.application.secrets.github_enterprise_hostname
+    url = Rails.application.secrets.github_enterprise_url
     options[:client_options] = {
-      site: "https://#{hostname}/api/v3",
-      authorize_url: "https://#{hostname}/login/oauth/authorize",
-      token_url: "https://#{hostname}/login/oauth/access_token"
+      site: "#{url}/api/v3",
+      authorize_url: "#{url}/login/oauth/authorize",
+      token_url: "#{url}/login/oauth/access_token"
     }
   end
 
