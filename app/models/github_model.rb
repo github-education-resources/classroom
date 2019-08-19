@@ -178,7 +178,7 @@ class GitHubModel
   # Returns a Sawyer::Resource or nil if an error occurred.
   def github_classroom_request(id_args, **options)
     GitHub::Errors.with_error_handling do
-      GitHubClassroom.github_client.send(github_type, *id_args, options)
+      GitHubClassroom.github_client(auto_paginate:  true).send(github_type, *id_args, options)
     end
   rescue GitHub::Error
     nil
