@@ -48,7 +48,7 @@ class OrganizationWebhook < ApplicationRecord
             end
     raise NoValidTokenError, "No valid token with the `admin:org` hook scope." if token.nil?
 
-    GitHubClassroom.github_client(access_token: token)    
+    GitHubClassroom.github_client(access_token: token)
   end
 
   # External: Creates an organization webhook, and saves it's ID.
