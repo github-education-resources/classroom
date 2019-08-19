@@ -137,6 +137,7 @@ module Orgs
 
       identifiers = params[:identifiers].split("\r\n").reject(&:blank?)
       AddStudentsToRosterJob.perform_later(identifiers, current_roster, current_user, lms_user_ids)
+      flash[:success] = "Updating the roster with new students, please stay tuned."
       redirect_to roster_path(current_organization)
     end
     # rubocop:enable Metrics/AbcSize
