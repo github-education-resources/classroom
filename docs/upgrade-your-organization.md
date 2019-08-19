@@ -3,10 +3,10 @@
 Verified faculty can now upgrade any GitHub organization being used for academic purposes to [GitHub Team](https://github.com/pricing) for free.
 
 1. Go to [GitHub Education Benefits](https://education.github.com/benefits).
-   
+
    Organizations you own are listed under _Upgrade your organization_.
 
-   <div class="d-flex flex-justify-around">
+   <div class="text-center">
      <img src="/images/help/upgrade-organization.png" class="border" style="width: 75%;">
    </div>
 
