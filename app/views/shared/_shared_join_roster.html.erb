@@ -13,11 +13,11 @@
       </div>
     </div>
   </div>
-  <div class="p-5 bg-white border border-top-0">
+  <div class="px-5 py-3 bg-white border border-top-0">
     <p class="f4">Your teacher has configured this classroom to pair GitHub accounts with identifiers. Please select yourself from the list below. You can also <%= link_to "skip", view.skip_path %> this step for now.</p>
     <div class="border my-3">
       <h3 class="bg-gray-light p-2 f4 text-normal"><%= roster.identifier_name %></h3>
-        <div class="overflow-auto">
+        <div class="overflow-auto" style="max-height:45vh;">
           <% roster.unlinked_entries.sort_by(&:identifier).each do |entry| %>
             <div class="menu-item p-0">
               <%= form_tag({ controller: view.controller_name, action: :join_roster }, method: :patch) do %>
