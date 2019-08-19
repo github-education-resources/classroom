@@ -2,13 +2,13 @@
 
 <dl class="<%= view.form_class_for(:title) %> mt-0">
   <dt><%= f.label :title %></dt>
-  <dd><%= f.text_field :title, class: 'textfield form-control input-block', autocomplete: :off %></dd>
+  <dd><%= f.text_field :title, class: 'textfield form-control input-block', autocomplete: :off, oninput: 'removeErrorBox(el);' %></dd>
   <%= render('shared/form_error', errors: view.error_message_for(:title)) if view.errors_for?(:title) %>
 </dl>
 
 <dl class="<%= view.form_class_for(:slug) %>">
   <dt><%= f.label :slug %></dt>
-  <dd><%= f.text_field :slug, class: 'textfield form-control input-block', autocomplete: :off %></dd>
+  <dd><%= f.text_field :slug, class: 'textfield form-control input-block', autocomplete: :off, oninput: 'removeErrorBox(this);' %></dd>
   <%= render('shared/form_error', errors: view.error_message_for(:slug)) if view.errors_for?(:slug) %>
   <p class="f6 text-gray my-2"><%= t('assignment_form.slug_note') %></p>
 </dl>
@@ -47,30 +47,14 @@
   <%= render('shared/form_error', errors: view.error_message_for(:public_repo)) if view.errors_for?(:public_repo) %>
 </dl>
 
-<dl class="form-group">
-  <div class="form-checkbox">
-    <label>
-      <%= f.check_box :students_are_repo_admins %>
-      Give students admin permissions on their repository.
-      <div class="f6 text-gray text-normal mt-1">Editing this after assignments are created will not retroactively change their permissions.</div>
-    </label>
-  </div>
-</dl>
-
-<dl class="form-group">
-  <div class="form-checkbox">
-    <label><%= f.check_box :invitations_enabled %> Enable assignment invitation URL</label>
-  </div>
-</dl>
-
 <div class="Box my-4">
   <div class="Box-header">
     <h3 class="Box-title">Optional</h3>
   </div>
   <div class="Box-body">
     <dl class="form-group mt-0 <%= view.form_class_for(:starter_code_repository) %>">
-      <dt><label>Add your starter code from GitHub <small>(optional)</small> </label></dt>
-      <dd><input class="textfield js-autocomplete-textfield form-control input-contrast input-block" type="text" name="repo_name" value="<%= @assignment.starter_code_repository.try(:full_name) %>" placeholder="<%= @assignment.starter_code_repository.try(:full_name) || 'Search repositories'%>" autocomplete="off" data-autocomplete-search-endpoint="github_repos" oninput=<%= "importOptions(this.value);removeErrorBox();" if @organization.feature_enabled?(:template_repos) %>></dd>
+      <dt><label>Add your starter code from GitHub</label></dt>
+      <dd><input class="textfield js-autocomplete-textfield form-control input-contrast input-block" type="text" name="repo_name" value="<%= @assignment.starter_code_repository.try(:full_name) %>" placeholder="<%= @assignment.starter_code_repository.try(:full_name) || 'Search repositories'%>" autocomplete="off" data-autocomplete-search-endpoint="github_repos" oninput=<%= "importOptions(this.value);removeErrorBox(this);" if @organization.feature_enabled?(:template_repos) %>></dd>
       <dd class="dd-autocomplete-suggestions"><%= render_autocomplete_suggestions_container %></dd>
       <input class="js-autocomplete-resource-id" type="hidden" name="repo_id" />
 
@@ -96,6 +80,26 @@
       <dd><%= f.text_field :deadline, class: 'jquery-datetimepicker form-control input-block', value: DeadlineFormatHelper.convert(f.object.deadline), autocomplete: :off %></dd>
       <%= render('shared/form_error', errors: view.error_message_for(:deadline)) if view.errors_for?(:deadline) %>
       <p class="f6 text-gray my-2">After the deadline, GitHub Classroom will save the latest commit from each repo as a submission. Submission commits are viewable on the assignment page.</p>
+    </dl>
+
+    <dl class="form-group">
+      <div class="form-checkbox">
+        <label>
+          <%= f.check_box :students_are_repo_admins %>
+          Give students admin permissions on their repository.
+          <div class="f6 text-gray text-normal mt-1">Editing this after assignments are created will not retroactively change their permissions.</div>
+        </label>
+      </div>
+    </dl>
+
+    <dl class="form-group">
+      <div class="form-checkbox">
+        <label>
+          <%= f.check_box :invitations_enabled %>
+          Enable assignment invitation URL
+        <div class="f6 text-gray text-normal mt-1">If enabled, students will be able to accept and access the assignment using the invitation URL.</div>
+        </label>
+      </div>
     </dl>
   </div>
 </div>
