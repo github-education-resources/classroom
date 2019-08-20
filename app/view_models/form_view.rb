@@ -24,8 +24,14 @@ class FormView < ViewModel
   end
 
   def private_repos_available?
-    plan = organization.plan
+    return @private_repos_available if @private_repos_available
 
-    plan[:owned_private_repos] < plan[:private_repos]
+    begin
+      plan = organization.plan
+    rescue GitHub::Error => error
+      raise Result::Error, error.message
+    end
+
+    @private_repos_available = plan[:owned_private_repos] < plan[:private_repos]
   end
 end
