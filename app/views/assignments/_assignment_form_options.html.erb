@@ -1,4 +1,4 @@
-<% view = FormView.new(subject: @assignment) %>
+<% view = FormView.new(subject: @assignment, organization: @organization) %>
 
 <dl class="<%= view.form_class_for(:title) %> mt-0">
   <dt><%= f.label :title %></dt>
@@ -16,7 +16,7 @@
 <dl class="<%= view.form_class_for(:public_repo) %> my-4">
   <div class="form-checkbox">
     <label>
-      <%= f.radio_button :public_repo, true %>
+      <%= f.radio_button :public_repo, !view.private_repos_available? %>
       <div class="d-flex">
         <div>
           <%= octicon 'repo', height: 32, class: "text-gray mr-2" %>
@@ -31,7 +31,7 @@
 
   <div class="form-checkbox">
     <label>
-      <%= f.radio_button :public_repo, false %>
+      <%= f.radio_button :public_repo, view.private_repos_available? %>
       <div class="d-flex">
         <div>
           <%= octicon 'lock', height: 32, class: "text-orange mr-2" %>

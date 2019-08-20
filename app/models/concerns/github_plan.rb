@@ -11,7 +11,7 @@ module GitHubPlan
 
   # rubocop:disable MethodLength
   def verify_organization_has_private_repos_available
-    github_organization_plan = GitHubOrganization.new(organization.github_client, organization.github_id).plan
+    github_organization_plan = organization.plan
 
     owned_private_repos = github_organization_plan[:owned_private_repos]
     private_repos       = github_organization_plan[:private_repos]
