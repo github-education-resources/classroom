@@ -10,7 +10,7 @@ class CreateGitHubRepoService
       end
     end
 
-    attr_reader :assignment, :collaborator, :organization, :invite_status
+    attr_reader :assignment, :collaborator, :organization, :invite_status, :github_organization
     delegate :status, to: :invite_status
 
     def initialize(assignment, collaborator)
@@ -18,6 +18,7 @@ class CreateGitHubRepoService
       @collaborator = collaborator
       @organization = assignment.organization
       @invite_status = assignment.invitation.status(collaborator)
+      @github_organization = github_organization_with_access
     end
 
     def repo_name
@@ -29,7 +30,7 @@ class CreateGitHubRepoService
     end
 
     def organization_login
-      @organization_login ||= organization.github_organization.login
+      @organization_login ||= @github_organization.login
     end
 
     def assignment_type
@@ -68,6 +69,28 @@ class CreateGitHubRepoService
 
       suffix = "-#{suffix_count}"
       default_repo_name.truncate(100 - suffix.length, omission: "") + suffix
+    end
+
+    # rubocop:disable MethodLength
+    def github_organization_with_access
+      github_organization_with_random_token = @organization.github_organization
+      return github_organization_with_random_token unless assignment.starter_code?
+
+      github_client = assignment.creator.github_client
+      starter_code_repository = GitHub::Errors.with_error_handling do
+        github_client.repository(assignment.starter_code_repo_id)
+      end
+
+      return github_organization_with_random_token unless
+          require_creators_token?(starter_code_repository, github_organization_with_random_token)
+
+      GitHubOrganization.new(github_client, starter_code_repository)
+    rescue GitHub::NotFound
+      github_organization_with_random_token
+    end
+
+    def require_creators_token?(starter_code_repository, github_org)
+      starter_code_repository.private && starter_code_repository.owner.login != github_org.login
     end
   end
 end

@@ -48,8 +48,7 @@ RSpec.describe CreateGitHubRepoService do
         options = {
           private: false,
           is_template: true,
-          auto_init: true,
-          accept: "application/vnd.github.baptiste-preview"
+          auto_init: true
         }
         github_organization.create_repository("#{Faker::Company.name} Template", options)
       end
@@ -290,8 +289,7 @@ RSpec.describe CreateGitHubRepoService do
             options = {
               private: false,
               is_template: true,
-              auto_init: true,
-              accept: "application/vnd.github.baptiste-preview"
+              auto_init: true
             }
             github_organization.create_repository("#{Faker::Company.name} Template", options)
           end
@@ -548,8 +546,7 @@ RSpec.describe CreateGitHubRepoService do
         options = {
           private: false,
           is_template: true,
-          auto_init: true,
-          accept: "application/vnd.github.baptiste-preview"
+          auto_init: true
         }
         github_organization.create_repository("#{Faker::Company.name} Template", options)
       end
