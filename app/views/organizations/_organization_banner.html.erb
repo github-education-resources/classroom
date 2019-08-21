@@ -17,7 +17,11 @@
         </div>
         <% if organization.archived? %><br><span class="Label v-align-middle" style="background-color: red;">Archived</span><% end %>
         <div class="mt-3">
-          <%= render 'organizations/navigation', organization: organization, settings_view: local_assigns[:settings] %>
+          <%= render 'organizations/navigation',
+            organization: organization,
+            roster_view: local_assigns[:students],
+            settings_view: local_assigns[:settings]
+          %>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 <% view = FormView.new(subject: @roster) %>
 
-<%= render 'organizations/organization_banner', settings: true %>
+<%= render 'organizations/organization_banner', students: true %>
 
 <div class="site-content">
   <div class="site-content-cap">
@@ -15,22 +15,22 @@
         <h2 class="h3 mb-2">Import students from your institution</h2>
         <% if current_organization.lti_configuration %>
           <% lms_name = current_organization.lti_configuration.lms_name(default_name: "your learning management system") %>
-          <p>It looks like you are connected to <%= lms_name %>. GitHub Classroom can automatically import your roster for you!</p>
+          <p>It looks like you are connected to <%= lms_name %>. GitHub Classroom can automatically import students for you!</p>
 
           <%= link_to image_tag('other-logo.png', size: "25", class:"mr-2") + "Import from #{lms_name}",
             import_from_lms_roster_path,
             class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
           %>
         <% elsif current_organization.google_course_id %>
-          <p>It looks like you are connected to Google Classroom. GitHub Classroom can automatically import your roster for you!</p>
+          <p>It looks like you are connected to Google Classroom. GitHub Classroom can automatically import students for you!</p>
           <%= link_to image_tag('google-classroom-logo.png', size: "25", class:"mr-2") + "Import from Google Classroom",
             import_from_google_classroom_roster_path(current_organization),
             method: :patch,
             class: "btn btn-secondary d-inline-flex flex-items-center mb-3"
           %>
         <% else %>
-          <p>GitHub Classroom is able to automatically import your roster from your institution. If you
-          would rather manage your roster manually, you can still do that, too.</p>
+          <p>GitHub Classroom is able to automatically import students from your institution. If you
+          would rather manage students manually, you can still do that, too.</p>
 
           <%= link_to image_tag('other-logo.png', size: "25", class:"mr-2") + "Import from a learning management system",
             link_lms_organization_path,
@@ -59,7 +59,7 @@
             </div>
 
             <div class="d-flex flex-items-center border-top pt-5">
-              <%= submit_tag 'Create roster', class: 'btn btn-primary mr-3' %>
+              <%= submit_tag 'Add students', class: 'btn btn-primary mr-3' %>
               <%= link_to 'Skip', organization_path(current_organization), class: 'btn-link' %>
             </div>
           <% end %>

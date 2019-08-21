@@ -14,7 +14,4 @@
   <%= link_to t('views.organizations.invite_other_admin'),
               settings_invitations_organization_path(organization),
               class: "menu-item #{'selected' if current_page?(settings_invitations_organization_path(organization))}" %>
-
-  <%= link_to 'Roster management', roster_path(organization),
-              class: "menu-item #{'selected' if current_page?(roster_path(organization))}" %>
 </nav>
