@@ -31,6 +31,8 @@ class Organization < ApplicationRecord
 
   validates :slug, uniqueness: true
 
+  delegate :plan, to: :github_organization
+
   before_destroy :silently_remove_organization_webhook
 
   scope :order_by_newest, ->(_context = nil) { order(created_at: :desc) }
