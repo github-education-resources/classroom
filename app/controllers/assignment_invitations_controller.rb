@@ -70,13 +70,18 @@ class AssignmentInvitationsController < ApplicationController
 
   def success; end
 
+  # rubocop:disable Metrics/LineLength
   def join_roster
     super
+
+    entry = organization.roster.roster_entries.find_by(user_id: current_user.id)
+    flash[:success] = "Your account is linked to #{entry.identifier} on the roster. If this is wrong, please reach out to your instructor."
 
     redirect_to assignment_invitation_url(current_invitation)
   rescue ActiveRecord::ActiveRecordError
     flash[:error] = "An error occurred, please try again!"
   end
+  # rubocop:enable Metrics/LineLength
 
   private
 
