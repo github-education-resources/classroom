@@ -193,6 +193,13 @@ main {
   }
 }
 
+.Box-header {
+  .selected {
+    color: #2f363d !important;
+    font-weight: 600;
+  }
+}
+
 .table-minimal {
   td {
     padding-right: 1rem;
