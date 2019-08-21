@@ -1,8 +1,12 @@
 [Learn more about GitHub Classroom](#guides), join [the education community](#community), or [get in touch](#need-more-help) for more help.
 
-### Guides
+### Getting started with GitHub Classroom
+* [Quick-start video tutorials](/videos):
+  * Just getting started? [Learn the basics of setting up GitHub Classroom](/videos#ChA_zph7aao)
+  * [Create individual assignments](/videos#rTsfBAV7sOo)
+  * [Create group assignments](/videos#-52quDR2QSc) for collaborative projects
 
-* [Video tutorials](/videos)
+### Guides  
 * [Controlling assignment repo settings with the Probot Settings app](/help/probot-settings)
 * [Creating group assignments](/help/create-group-assignments)
 * [Upgrading your organization](/help/upgrade-your-organization)
