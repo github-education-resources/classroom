@@ -41,6 +41,7 @@ Template repositories are the best option in _most_ cases. You may not want to u
 
 * You plan on pushing updates to the starter code repository _after_ releasing the assignment.
 * You care about the full commit history of the starter code repository.
+* Your repository contains very large files (individual files greater than 10mb in size)
 
 ### Helpful links:
 * [Creating a template repository](https://help.github.com/en/articles/creating-a-template-repository)
