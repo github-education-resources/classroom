@@ -70,6 +70,7 @@ class AssignmentInvitationsController < ApplicationController
 
   def success; end
 
+  # rubocop:disable Metrics/LineLength
   def join_roster
     super
 
@@ -80,6 +81,7 @@ class AssignmentInvitationsController < ApplicationController
   rescue ActiveRecord::ActiveRecordError
     flash[:error] = "An error occurred, please try again!"
   end
+  # rubocop:enable Metrics/LineLength
 
   private
 
