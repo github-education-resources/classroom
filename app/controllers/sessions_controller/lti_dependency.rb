@@ -48,7 +48,7 @@ class SessionsController < ApplicationController
 
   # Called if the LTI OmniAuth handshake fails verification
   def lti_failure
-    message = IMS::LTI::Models::Messages::BasicLTILaunchRequest.new(launch_presentation_return_url: params[:message])
+    message = IMS::LTI::Models::Messages::BasicLTILaunchRequest.new(params)
     error_msg = "The launch credentials could not be authorized. Ensure you've entered the correct \"consumer key\"
     and \"shared secret\" when configuring GitHub Classroom within your learning management system."
 
@@ -96,9 +96,11 @@ class SessionsController < ApplicationController
 
     if message.try(:launch_presentation_return_url)
       error_params = { lti_errormsg: error_msg }.to_param
-      callback_url = "#{message.launch_presentation_return_url}?#{error_params}"
+      callback_url = URI.parse(message.launch_presentation_return_url)
+      query = callback_url.query
 
-      return redirect_to callback_url
+      callback_url.query = query ? "#{query}&#{error_params}" : error_params
+      return redirect_to callback_url.to_s
     end
 
     render :lti_launch, layout: false, locals: { error: error_msg }
