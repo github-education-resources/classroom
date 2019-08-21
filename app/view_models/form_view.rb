@@ -28,10 +28,9 @@ class FormView < ViewModel
 
     begin
       plan = organization.plan
-    rescue GitHub::Error => error
-      raise Result::Error, error.message
+      @private_repos_available = plan[:owned_private_repos] < plan[:private_repos]
+    rescue GitHub::Error # default to false if the API call fails
+      @private_repos_available = false
     end
-
-    @private_repos_available = plan[:owned_private_repos] < plan[:private_repos]
   end
 end
