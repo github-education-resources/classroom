@@ -17,7 +17,7 @@ click **Other learning management system**.
 
 1. Follow the prompts. At the end you'll see a screen which looks like this:
 
-   <div class="d-flex flex-justify-around">
+   <div class="text-center">
      <img src="/images/help/lms/github-classroom-credentials.png" class="border" style="width: 75%;">
    </div>
    <br>
@@ -36,7 +36,7 @@ click **Other learning management system**.
 
 4. Follow the prompts. At the end you'll see a screen which looks like this:
 
-   <div class="d-flex flex-justify-around">
+   <div class="text-center">
      <img src="/images/help/lms/github-classroom-credentials.png" class="border" style="width: 75%;">
    </div>
    <br>

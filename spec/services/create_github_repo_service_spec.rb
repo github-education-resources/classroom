@@ -159,6 +159,7 @@ RSpec.describe CreateGitHubRepoService do
     describe "#verify_organization_has_private_repos_available!" do
       before(:each) do
         allow(assignment).to receive(:public?).and_return(false)
+        allow(assignment).to receive(:private?).and_return(true)
       end
       context "organization has private repos" do
         it "returns true" do
@@ -661,6 +662,7 @@ RSpec.describe CreateGitHubRepoService do
     describe "#verify_organization_has_private_repos_available!" do
       before(:each) do
         allow(group_assignment).to receive(:public?).and_return(false)
+        allow(group_assignment).to receive(:private?).and_return(true)
       end
       context "organization has private repos" do
         it "returns true" do

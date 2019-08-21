@@ -31,6 +31,20 @@ class ApplicationController < ActionController::Base
     redirect_to url
   end
 
+  unless Rails.env.development?
+    rescue_from ActionView::MissingTemplate do
+      GitHubClassroom.statsd.increment("errors.action_view_missing_template")
+      render file: Rails.root.join("public", "406.html"), layout: false,
+             status: :not_acceptable, formats: [:html]
+    end
+
+    rescue_from ActionController::UnknownFormat do
+      GitHubClassroom.statsd.increment("errors.action_controller_unknown_format")
+      render file: Rails.root.join("public", "406.html"), layout: false,
+             status: :not_acceptable, formats: [:html]
+    end
+  end
+
   def peek_enabled?
     logged_in? && current_user.staff?
   end

@@ -90,6 +90,14 @@ class GroupAssignmentsController < ApplicationController
     redirect_to "x-github-classroom://?assignment_url=#{url_param}&code=#{code_param}"
   end
 
+  def toggle_invitations
+    @group_assignment.update(invitations_enabled: params[:invitations_enabled])
+    respond_to do |format|
+      format.js
+      format.html { redirect_to organization_group_assignment_path(@organization, @group_assignment) }
+    end
+  end
+
   private
 
   def authorize_grouping_access

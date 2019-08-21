@@ -59,7 +59,7 @@
               <%= render partial: 'group_assignments/filterable_group_assignment_repo_list', locals: { param_name: :teams_page } %>
             <% else %>
               <div class="blankslate">
-                <h3>"<%= @group_assignment.title %>" does not have any repositories.</h3>
+                <h3>No students have accepted "<%= @group_assignment.title %>".</h3>
                 <p>Share the invitation link with your students to get started.</p>
               </div>
             <% end %>
@@ -88,7 +88,7 @@
         <%= render partial: 'group_assignments/filterable_group_assignment_repo_list', locals: { param_name: :page } %>
       <% else %>
         <div class="blankslate">
-          <h3>"<%= @group_assignment.title %>" does not have any repositories.</h3>
+          <h3>No students have accepted "<%= @group_assignment.title %>".</h3>
           <p>Share the invitation link with your students to get started.</p>
         </div>
       <% end %>

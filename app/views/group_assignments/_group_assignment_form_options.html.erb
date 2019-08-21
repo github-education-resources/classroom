@@ -1,4 +1,4 @@
-<% view = FormView.new(subject: @group_assignment) %>
+<% view = FormView.new(subject: @group_assignment, organization: @organization) %>
 
 <dl class="<%= view.form_class_for(:title) %>">
   <dt><%= f.label :title %></dt>
@@ -16,7 +16,7 @@
 <dl class="<%= view.form_class_for(:public_repo) %> my-4">
   <div class="form-checkbox">
     <label>
-      <%= f.radio_button :public_repo, true %>
+      <%= f.radio_button :public_repo, !view.private_repos_available? %>
       <div class="d-flex">
         <div>
           <%= octicon 'repo', height: 32, class: "text-gray mr-2" %>
@@ -31,32 +31,21 @@
 
   <div class="form-checkbox">
     <label>
-      <%= f.radio_button :public_repo, false %>
+      <%= f.radio_button :public_repo, view.private_repos_available?, disabled: !view.private_repos_available? %>
       <div class="d-flex">
         <div>
           <%= octicon 'lock', height: 32, class: "text-orange mr-2" %>
         </div>
         <div>
           Private
-          <span class="d-block f6 text-gray text-normal mt-1">Submit assignments using private repositories. Submissions will only be visible to the submitter and organization owners. Editing this after assignments are created will not retroactively change their visibility.</span>
+          <span class="d-block f6 text-gray text-normal mt-1">Submit assignments using private repositories. Submissions will only be visible to the submitter and organization owners. Editing this after assignments are created will not retroactively change their visibility.
+          <% unless view.private_repos_available? %><strong>This organization does not have any private repositories available.</strong><% end %></span></span>
         </div>
       </div>
     </label>
   </div>
 
   <%= render('shared/form_error', errors: view.error_message_for(:public_repo)) if view.errors_for?(:public_repo) %>
-</dl>
-
-<dl class="form">
-  <div class="form-checkbox">
-    <label><%= f.check_box :students_are_repo_admins %> Give students admin permissions on their repository</label>
-  </div>
-</dl>
-
-<dl class="form-group">
-  <div class="form-checkbox">
-    <label><%= f.check_box :invitations_enabled %> Enable assignment invitation URL</label>
-  </div>
 </dl>
 
 <% if @group_assignment.new_record? %>
@@ -74,7 +63,7 @@
     <% time           = Time.zone.now %>
     <% suggested_name = Time.zone.now.strftime("Teams formed on %B #{time.day.ordinalize}, %Y") %>
     <dd><input class="textfield form-control input-contrast input-block" type="text" value="<%= suggested_name unless groupings_present %>" placeholder="<%= suggested_name if groupings_present %>" name="grouping[title]" id="grouping_title" autocomplete="off"></dd>
-    <%= render 'shared/form_error', errors: view.error_message_for(:grouping) if view.errors_for?(:grouping) %>
+    <%= render('shared/form_error', errors: view.error_message_for_object(@group_assignment.grouping)) if view.errors_for_object?(@group_assignment.grouping) %>
   </dl>
 <% end %>
 
@@ -84,7 +73,7 @@
   </div>
   <div class="Box-body">
     <dl class="<%= view.form_class_for(:starter_code_repository) %>">
-      <dt><label>Add your starter code from GitHub <small>(optional)</small> </label></dt>
+      <dt><label>Add your starter code from GitHub</label></dt>
       <dd><input class="textfield js-autocomplete-textfield form-control input-contrast input-block" type="text" name="repo_name" value="<%= @group_assignment.starter_code_repository.try(:full_name) %>" placeholder="<%= @group_assignment.starter_code_repository.try(:full_name) || 'Search repositories'%>" autocomplete="off" data-autocomplete-search-endpoint="github_repos" oninput=<%= "importOptions(this.value);removeErrorBox();" if @organization.feature_enabled?(:template_repos) %>></dd>
       <dd class="dd-autocomplete-suggestions"><%= render_autocomplete_suggestions_container %></dd>
       <input class="js-autocomplete-resource-id form-control input-contrast input-block" type="hidden" name="repo_id" />
@@ -113,7 +102,7 @@
        <%= render 'shared/form_error', errors: view.error_message_for(:max_members) if view.errors_for?(:max_members) %>
     </dl>
     <dl class="<%= view.form_class_for(:max_teams) %>">
-      <dt><%= f.label "Maximum number of teams (optional)" %></dt>
+      <dt><%= f.label "Maximum number of teams" %></dt>
       <dd><%= f.number_field :max_teams, class: 'textfield form-control input-contrast input-block', autocomplete: :off %></dd>
       <%= render 'shared/form_error', errors: view.error_message_for(:max_teams) if view.errors_for?(:max_teams) %>
     </dl>
@@ -122,6 +111,26 @@
       <dd><%= f.text_field :deadline, class: 'jquery-datetimepicker form-control input-contrast input-block', value: DeadlineFormatHelper.convert(f.object.deadline), autocomplete: :off %></dd>
       <%= render('shared/form_error', errors: view.error_message_for(:deadline)) if view.errors_for?(:deadline) %>
       <p class="f6 text-gray my-2">After the deadline, GitHub Classroom will save the latest commit from each repo as a submission. Submission commits are viewable on the assignment page.</p>
+    </dl>
+
+    <dl class="form-group">
+      <div class="form-checkbox">
+        <label>
+          <%= f.check_box :students_are_repo_admins %>
+          Give students admin permissions on their repository.
+          <div class="f6 text-gray text-normal mt-1">Editing this after assignments are created will not retroactively change their permissions.</div>
+        </label>
+      </div>
+    </dl>
+
+    <dl class="form-group">
+      <div class="form-checkbox">
+        <label>
+          <%= f.check_box :invitations_enabled %>
+          Enable assignment invitation URL
+        <div class="f6 text-gray text-normal mt-1">If enabled, students will be able to accept and access the assignment using the invitation URL.</div>
+        </label>
+      </div>
     </dl>
   </div>
 </div>
