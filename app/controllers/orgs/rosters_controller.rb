@@ -62,7 +62,7 @@ module Orgs
         create_statsd(lms_user_ids: params[:lms_user_ids])
         imported_students_lms_statsd(lms_user_ids: params[:lms_user_ids])
         flash[:success] = \
-          "Your classroom roster has been saved! Manage it <a href='#{roster_url(current_organization)}'>here</a>."
+          "Students have been added to your classroom! Manage students <a href='#{roster_url(current_organization)}'>here</a>."
 
         redirect_to organization_path(current_organization)
       else
