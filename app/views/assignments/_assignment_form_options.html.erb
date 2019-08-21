@@ -47,22 +47,6 @@
   <%= render('shared/form_error', errors: view.error_message_for(:public_repo)) if view.errors_for?(:public_repo) %>
 </dl>
 
-<dl class="form-group">
-  <div class="form-checkbox">
-    <label>
-      <%= f.check_box :students_are_repo_admins %>
-      Give students admin permissions on their repository.
-      <div class="f6 text-gray text-normal mt-1">Editing this after assignments are created will not retroactively change their permissions.</div>
-    </label>
-  </div>
-</dl>
-
-<dl class="form-group">
-  <div class="form-checkbox">
-    <label><%= f.check_box :invitations_enabled %> Enable assignment invitation URL</label>
-  </div>
-</dl>
-
 <div class="Box my-4">
   <div class="Box-header">
     <h3 class="Box-title">Optional</h3>
@@ -96,6 +80,26 @@
       <dd><%= f.text_field :deadline, class: 'jquery-datetimepicker form-control input-block', value: DeadlineFormatHelper.convert(f.object.deadline), autocomplete: :off %></dd>
       <%= render('shared/form_error', errors: view.error_message_for(:deadline)) if view.errors_for?(:deadline) %>
       <p class="f6 text-gray my-2">After the deadline, GitHub Classroom will save the latest commit from each repo as a submission. Submission commits are viewable on the assignment page.</p>
+    </dl>
+
+    <dl class="form-group">
+      <div class="form-checkbox">
+        <label>
+          <%= f.check_box :students_are_repo_admins %>
+          Give students admin permissions on their repository.
+          <div class="f6 text-gray text-normal mt-1">Editing this after assignments are created will not retroactively change their permissions.</div>
+        </label>
+      </div>
+    </dl>
+
+    <dl class="form-group">
+      <div class="form-checkbox">
+        <label>
+          <%= f.check_box :invitations_enabled %>
+          Enable assignment invitation URL
+        <div class="f6 text-gray text-normal">If enabled, students will be able to accept and access the assignment using the invitation URL.</div>
+        </label>
+      </div>
     </dl>
   </div>
 </div>

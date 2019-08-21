@@ -222,9 +222,6 @@ hr {
 }
 
 .invitation-content {
-  padding-bottom: 2rem;
-  border-bottom: 1px solid #e3e3e3;
-
   @media screen and (max-width: 40em) {
     padding-bottom: 1rem;
     margin-bottom: 1rem;
@@ -374,6 +371,17 @@ hr {
 .classroom-user-name {
   @media screen and (max-width: 40em) {
     display: none;
+  }
+}
+
+.desktop-invitation-content {
+  width: 40%;
+  margin: 0 auto;
+
+  @media screen and (max-width: 767px) {
+    display: block;
+    margin: 2em 0em 2em 0em;
+    width: 100%;
   }
 }
 
