@@ -9,15 +9,16 @@ module GitHubClassroom
       options[:client_secret] = Rails.application.secrets.github_client_secret
     end
 
-    if enterprise_instance?
+    if enterprise?
       options[:api_endpoint] = "#{Rails.application.secrets.github_enterprise_url}/api/v3"
     end
 
     Octokit::Client.new(options)
   end
 
-  def self.enterprise_instance?
+  def self.enterprise?
     return false if Rails.env.test?
+    
     Rails.application.secrets.github_enterprise_url.present?
   end
 end

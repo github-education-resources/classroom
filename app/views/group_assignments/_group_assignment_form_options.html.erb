@@ -71,7 +71,7 @@
     <h3 class="Box-title">Optional</h3>
   </div>
   <div class="Box-body">
-    <% unless GitHubClassroom.enterprise_instance? %>
+    <% unless GitHubClassroom.enterprise? %>
       <dl class="<%= view.form_class_for(:starter_code_repository) %>">
         <dt><label>Add your starter code from GitHub</label></dt>
         <dd><input class="textfield js-autocomplete-textfield form-control input-contrast input-block" type="text" name="repo_name" value="<%= @group_assignment.starter_code_repository.try(:full_name) %>" placeholder="<%= @group_assignment.starter_code_repository.try(:full_name) || 'Search repositories'%>" autocomplete="off" data-autocomplete-search-endpoint="github_repos" oninput=<%= "importOptions(this.value);removeErrorBox();" if @organization.feature_enabled?(:template_repos) %>></dd>

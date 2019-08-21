@@ -9,7 +9,7 @@ end
 Rails.application.config.middleware.use OmniAuth::Builder do
   options = { scope: "user:email,repo,delete_repo,admin:org,admin:org_hook" }
 
-  if GitHubClassroom.enterprise_instance?
+  if GitHubClassroom.enterprise?
     url = Rails.application.secrets.github_enterprise_url
     options[:client_options] = {
       site: "#{url}/api/v3",
