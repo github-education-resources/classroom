@@ -17,7 +17,7 @@ class CreateGitHubRepoService
     invite_status.creating_repo!
     Broadcaster.call(exercise, :create_repo, :text)
 
-    verify_organization_has_private_repos_available! if assignment.private?
+    verify_organization_has_private_repos_available!
 
     github_repository =
       if exercise.use_template_repos?
@@ -138,8 +138,8 @@ class CreateGitHubRepoService
   # Public: Ensure that we can make a private repository on GitHub.
   #
   # Returns True or raises a Result::Error with a helpful message.
-  # rubocop:disable AbcSize
   def verify_organization_has_private_repos_available!
+    return unless assignment.private?
     begin
       github_organization_plan = organization.plan
     rescue GitHub::Error => error
