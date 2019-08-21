@@ -18,7 +18,7 @@ module GitHubClassroom
 
   def self.enterprise?
     return false if Rails.env.test?
-    
+
     Rails.application.secrets.github_enterprise_url.present?
   end
 
