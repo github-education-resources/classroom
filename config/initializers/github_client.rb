@@ -21,4 +21,12 @@ module GitHubClassroom
     
     Rails.application.secrets.github_enterprise_url.present?
   end
+
+  def self.github_url
+    if enterprise?
+      Rails.application.secrets.github_enterprise_url.present?
+    else
+      "https://github.com"
+    end
+  end
 end
