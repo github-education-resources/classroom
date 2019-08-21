@@ -40,6 +40,32 @@ describe GitHubClassroom::LTI::MembershipService do
           expect(i.role).to include(a_string_matching(/Student/)).or include(a_string_matching(/Learner/))
         end
       end
+
+      context "pagination" do
+        let(:mock_raw_body) { { nextPage: endpoint }.to_json }
+
+        before(:each) do
+          # Because we are stubbing getting a paginated response,
+          # we need to unstub it after so we don't get stuck in an infinite loop
+          # (since we'd be continuously fetching the next page)
+          instance.stub(:fetch_raw_membership) do
+            instance.unstub(:fetch_raw_membership)
+            mock_raw_body
+          end
+
+          instance.stub(:parse_membership) { [GitHubClassroom::LTI::Models::CourseMember.new] }
+        end
+
+        it "gets the membership for each page" do
+          expect(instance).to receive(:membership).and_call_original.twice
+          instance.membership
+        end
+
+        it "collects all pages of results into one list" do
+          membership = instance.membership
+          expect(membership.length).to eq(2)
+        end
+      end
     end
 
     context "invalid authentication" do

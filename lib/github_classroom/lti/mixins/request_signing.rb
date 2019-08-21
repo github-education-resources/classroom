@@ -54,6 +54,7 @@ module GitHubClassroom
         def build_uri(endpoint, query)
           uri = URI.parse(endpoint)
           if query
+            query.stringify_keys!
             existing_query = Hash[URI.decode_www_form(uri.query || "")]
             uri.query = URI.encode_www_form(query.merge(existing_query))
           end
