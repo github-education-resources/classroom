@@ -831,7 +831,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
                 end
 
                 it "sets success message" do
-                  expect(flash[:success]).to start_with("Your classroom roster has been saved! Manage it")
+                  expect(flash[:success]).to start_with("Students have been added to your classroom! Manage students")
                 end
 
                 it "has correct number of students" do
