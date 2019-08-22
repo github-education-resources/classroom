@@ -71,6 +71,7 @@ GEM
     api-pagination (4.7.1)
     arel (9.0.0)
     ast (2.3.0)
+    atomic (1.1.101)
     autoprefixer-rails (7.1.3)
       execjs
     awesome_print (1.8.0)
@@ -300,7 +301,7 @@ GEM
       concurrent-ruby (>= 0.9.0)
       concurrent-ruby-ext (>= 0.9.0)
       railties (>= 4.0.0)
-    peek-dalli (1.1.3.4.g0a68e1f)
+    peek-dalli (1.2.0)
       concurrent-ruby
       concurrent-ruby-ext
       dalli
@@ -309,14 +310,15 @@ GEM
       peek
     peek-git (1.0.2)
       peek
-    peek-performance_bar (1.2.0)
+    peek-performance_bar (1.3.1)
       peek (>= 0.1.0)
     peek-pg (1.3.0)
       concurrent-ruby
       concurrent-ruby-ext
       peek
       pg
-    peek-sidekiq (1.0.0.4.g261c857)
+    peek-sidekiq (1.0.4)
+      atomic (>= 1.0.0)
       peek
       sidekiq
     pg (1.1.4)
@@ -558,12 +560,12 @@ DEPENDENCIES
   octopoller (~> 0.1)
   omniauth-github (~> 1.3)
   peek (~> 1.0, >= 1.0.1)
-  peek-dalli (= 1.1.3.4.g0a68e1f)
+  peek-dalli (= 1.2.0)
   peek-gc (~> 0.0.2)
   peek-git (~> 1.0, >= 1.0.2)
-  peek-performance_bar (= 1.2)
+  peek-performance_bar (= 1.3.1)
   peek-pg (~> 1.3)
-  peek-sidekiq (= 1.0.0.4.g261c857)
+  peek-sidekiq (= 1.0.4)
   pg (~> 1.1.4)
   pg_search (~> 2.2)
   pinglish (~> 0.2.1)
