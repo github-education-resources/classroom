@@ -17,9 +17,13 @@ class API::ApplicationController < ApplicationController
   def verify_api_token
     if params[:access_token].present?
       data = MessageVerifier.decode(params[:access_token])
-      return session[:user_id] = data[:user_id] unless data.nil? || data[:user_id].nil?
+      return @user_id = data[:user_id] unless data.nil? || data[:user_id].nil?
     end
     render_forbidden
+  end
+
+  def current_user
+    @current_user ||= User.find_by(id: @user_id) if @user_id
   end
 
   private
