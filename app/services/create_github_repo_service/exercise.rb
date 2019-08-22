@@ -71,12 +71,11 @@ class CreateGitHubRepoService
       default_repo_name.truncate(100 - suffix.length, omission: "") + suffix
     end
 
-    # rubocop:disable MethodLength
     def github_organization_with_access
       github_organization_with_random_token = @organization.github_organization
       return github_organization_with_random_token unless assignment.starter_code?
 
-      starter_code_repository = GitHub::Errors.with_error_handling do
+      GitHub::Errors.with_error_handling do
         github_organization_with_random_token.client.repository(assignment.starter_code_repo_id)
       end
 
