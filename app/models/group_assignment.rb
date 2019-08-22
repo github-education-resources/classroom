@@ -40,7 +40,8 @@ class GroupAssignment < ApplicationRecord
   validate :uniqueness_of_slug_across_organization
   validate :max_teams_less_than_group_count
   validate :starter_code_repository_not_empty, if: :will_save_change_to_starter_code_repo_id?
-  validate :starter_code_repository_is_template, if: :will_save_change_to_starter_code_repo_id?
+  validate :starter_code_repository_is_template,
+    if: -> { :will_save_change_to_starter_code_repo_id? || :will_save_change_to_template_repos_enabled }
 
   validates_associated :grouping
 
