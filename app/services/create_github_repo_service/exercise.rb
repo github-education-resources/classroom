@@ -76,17 +76,14 @@ class CreateGitHubRepoService
       github_organization_with_random_token = @organization.github_organization
       return github_organization_with_random_token unless assignment.starter_code?
 
-      github_client = assignment.creator.github_client
       starter_code_repository = GitHub::Errors.with_error_handling do
-        github_client.repository(assignment.starter_code_repo_id)
+        github_organization_with_random_token.client.repository(assignment.starter_code_repo_id)
       end
 
-      return github_organization_with_random_token unless
-          require_creators_token?(starter_code_repository, github_organization_with_random_token)
-
-      GitHubOrganization.new(github_client, starter_code_repository)
-    rescue GitHub::NotFound
       github_organization_with_random_token
+    rescue GitHub::NotFound
+      github_client = assignment.creator.github_client
+      GitHubOrganization.new(github_client, assignment.starter_code_repo_id)
     end
 
     def require_creators_token?(starter_code_repository, github_org)
