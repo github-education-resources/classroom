@@ -16,9 +16,7 @@ task remove_deleted_roster_entries: :environment do
     roster_entries_to_delete.find_in_batches(batch_size: BATCH_SIZE) do |roster_entries|
       puts "Updating batch #{batch_num}, starting with roster entry ID #{roster_entries.first.id}"
 
-      roster_entries.each do |roster_entry|
-        roster_entry.destroy!
-      end
+      roster_entries.each(&:destroy!)
 
       roster_entries_deleted += roster_entries.length
       batch_num += 1
