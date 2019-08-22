@@ -104,6 +104,7 @@ RSpec.describe CreateGitHubRepoService::Exercise do
         end
 
         it "uses a new GitHubOrganization with the assignment creator's token" do
+          allow_any_instance_of(Octokit::Client).to receive(:repository).and_raise(GitHub::NotFound)
           exercise = described_class.new(assignment, student)
           expect(exercise.github_organization).not_to eql(github_organization)
           expect(exercise.github_organization.access_token).to eql(assignment.creator.github_client.access_token)

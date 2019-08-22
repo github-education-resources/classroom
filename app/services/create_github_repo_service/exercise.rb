@@ -84,9 +84,5 @@ class CreateGitHubRepoService
       github_client = assignment.creator.github_client
       GitHubOrganization.new(github_client, assignment.starter_code_repo_id)
     end
-
-    def require_creators_token?(starter_code_repository, github_org)
-      starter_code_repository.private && starter_code_repository.owner.login != github_org.login
-    end
   end
 end
