@@ -45,7 +45,7 @@ class CreateGitHubRepoService
     end
 
     def use_template_repos?
-      assignment.organization.feature_enabled?(:template_repos) && assignment.use_template_repos?
+      assignment.use_template_repos?
     end
 
     private

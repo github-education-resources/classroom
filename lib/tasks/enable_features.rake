@@ -9,6 +9,5 @@ task enable_features: :environment do
   GitHubClassroom.flipper[:lti_launch].enable_group :staff
   GitHubClassroom.flipper[:unified_repo_creators].enable_group :staff
   GitHubClassroom.flipper[:classroom_visibility].enable_group :staff
-  GitHubClassroom.flipper[:template_repos].enable_group :staff
   GitHubClassroom.flipper[:student_identifier].enable_group :staff
 end
