@@ -2,7 +2,7 @@
 
 These steps will walk you through the process of configuring GitHub Classroom as an external tool within Canvas.
 
-**Note**: We currently do not support free teacher accounts due to the [limitations of features available](https://learn.canvas.net/courses/1233/pages/canvas-free-for-teachers-account-registration-and-login)
+**Note**: Canvas does not support adding external apps for free accounts and cannot be used with GitHub Classroom at this time. See more about the restrictions [here](https://learn.canvas.net/courses/1233/pages/canvas-free-for-teachers-account-registration-and-login).
 {: class="warning"}
 
 ### Prerequisites
