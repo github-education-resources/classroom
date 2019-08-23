@@ -5,14 +5,14 @@ require "rails_helper"
 describe "default public_repo", type: :view do
   let(:organization) { classroom_org }
 
-  it "defaults public_repo to true if the organization does not have private repos" do
+  it "selects public_repo true if the assignment has public_repo set to true if no private repos are available" do
     no_private_repos_plan = { owned_private_repos: 0, private_repos: 0 }
     allow_any_instance_of(GitHubOrganization).to receive(:plan).and_return(no_private_repos_plan)
     allow_any_instance_of(Organization).to receive(:plan).and_return(no_private_repos_plan)
     stub_template("organizations/_organization_banner.html.erb" => "")
     stub_template("assignments/_delete_assignment_modal.html" => "")
 
-    @assignment = Assignment.new
+    @assignment = create(:assignment, public_repo: true)
     @organization = organization
     render template: "assignments/edit"
 
@@ -22,14 +22,31 @@ describe "default public_repo", type: :view do
     expect(response.body).to include(private_unchecked)
   end
 
-  it "defaults public_repo to false if the organization has private repos" do
+  it "selects public_repo true if the assignment has public_repo set to true even if private repos are available" do
+    no_private_repos_plan = { owned_private_repos: 0, private_repos: 100 }
+    allow_any_instance_of(GitHubOrganization).to receive(:plan).and_return(no_private_repos_plan)
+    allow_any_instance_of(Organization).to receive(:plan).and_return(no_private_repos_plan)
+    stub_template("organizations/_organization_banner.html.erb" => "")
+    stub_template("assignments/_delete_assignment_modal.html" => "")
+
+    @assignment = create(:assignment, public_repo: true)
+    @organization = organization
+    render template: "assignments/edit"
+
+    public_checked = "value=\"public\" checked=\"checked\" name=\"assignment[visibility]\""
+    private_unchecked = "value=\"private\" name=\"assignment[visibility]\""
+    expect(response.body).to include(public_checked)
+    expect(response.body).to include(private_unchecked)
+  end
+
+  it "selects public_repo false if the assignment has public_repo set to false" do
     private_repos_plan = { owned_private_repos: 0, private_repos: 100 }
     allow_any_instance_of(GitHubOrganization).to receive(:plan).and_return(private_repos_plan)
     allow_any_instance_of(Organization).to receive(:plan).and_return(private_repos_plan)
     stub_template("organizations/_organization_banner.html.erb" => "")
     stub_template("assignments/_delete_assignment_modal.html" => "")
 
-    @assignment = Assignment.new
+    @assignment = create(:assignment, public_repo: false)
     @organization = organization
     render template: "assignments/edit"
 
