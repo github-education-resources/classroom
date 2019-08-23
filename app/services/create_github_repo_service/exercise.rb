@@ -12,6 +12,7 @@ class CreateGitHubRepoService
 
     attr_reader :assignment, :collaborator, :organization, :invite_status
     delegate :status, to: :invite_status
+    delegate :use_template_repos?, to: :assignment
 
     def initialize(assignment, collaborator)
       @assignment = assignment
@@ -42,10 +43,6 @@ class CreateGitHubRepoService
 
     def admin?
       assignment.students_are_repo_admins?
-    end
-
-    def use_template_repos?
-      assignment.use_template_repos?
     end
 
     private
