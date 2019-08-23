@@ -175,7 +175,7 @@ class AssignmentsController < ApplicationController
       .permit(
         :title,
         :slug,
-        :public_repo,
+        :visibility,
         :students_are_repo_admins,
         :deadline, :invitations_enabled,
         :template_repos_enabled

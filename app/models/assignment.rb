@@ -45,6 +45,10 @@ class Assignment < ApplicationRecord
   alias_attribute :repos, :assignment_repos
   alias_attribute :template_repos_enabled?, :template_repos_enabled
 
+  def visibility=(visibility)
+    self.public_repo = visibility != "private"
+  end
+
   def private?
     !public_repo
   end
