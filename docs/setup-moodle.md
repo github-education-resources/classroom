@@ -62,6 +62,18 @@ the configuration process)
       <img src="/images/help/lms/moodle/step-11.png" class="border" style="width: 30%;">
     </div>
 
+1. Scroll to and click **Privacy**
+
+    <div class="text-center">
+      <img src="/images/help/lms/moodle/step-115.png" class="border" style="width: 30%;">
+    </div>
+
+1. In the _Share launcher's name with tool_ and _Share launcher's email with tool_ menu, select **Always**.
+
+    <div class="text-center">
+      <img src="/images/help/lms/moodle/step-12.png" class="border" style="width: 30%;">
+    </div>
+
 1. Scroll down to the bottom of the page and click **Save changes**. You should retun to the page that looks like this:
 
    <div class="text-center">
