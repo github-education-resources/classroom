@@ -109,7 +109,7 @@ group :production do
   gem "newrelic_rpm",       "~> 4.4", ">= 4.4.0.336"
   gem "pinglish",           "~> 0.2.1"
   gem "puma_worker_killer", "~> 0.1.1"
-  gem "rack-tracker",       "~> 1.4"
+  gem "rack-tracker",       "~> 1.11.1"
 end
 
 group :test do

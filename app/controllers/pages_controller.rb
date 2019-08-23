@@ -27,7 +27,7 @@ class PagesController < ApplicationController
 
     @teacher_count = User.last.id if User.last
 
-    if AssignmentRepo.last && GroupAssignmentRepo.last.id
+    if AssignmentRepo.last && GroupAssignmentRepo.last&.id
       @repo_count = AssignmentRepo.last.id + GroupAssignmentRepo.last.id
     end
 
