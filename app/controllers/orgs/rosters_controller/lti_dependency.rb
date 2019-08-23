@@ -71,7 +71,9 @@ module Orgs
 
       begin
         membership_service.students(body_params: current_organization.lti_configuration.context_membership_body_params)
-      rescue Faraday::ClientError, JSON::ParserError
+      rescue Faraday::ClientError, JSON::ParserError => error
+        report_error(error)
+
         lms_name = current_organization.lti_configuration.lms_name(default_name: "your learning management system")
         msg = "GitHub Classroom is unable to fetch membership from #{lms_name} at this time. If the problem persists,
         re-launch GitHub Classroom from your learning management system and try again."
@@ -79,8 +81,15 @@ module Orgs
         raise LtiImportError, msg
       end
     end
-    # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/AbcSize
+
+    def report_error(error)
+      error_context = {}.tap do |e|
+        e[:context_membership_url] = current_organization.lti_configuration.context_membership_url
+        e[:lti_version] = current_organization.lti_configuration.lti_version
+        e[:lms_type] = current_organization.lti_configuration.lms_type
+      end
+      Failbot.report!(error, error_context)
+    end
 
     def handle_lms_import_error(err)
       respond_to do |f|

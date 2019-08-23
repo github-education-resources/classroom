@@ -47,7 +47,8 @@ class OrganizationWebhook < ApplicationRecord
               users_with_admin_org_hook_scope.sample&.token
             end
     raise NoValidTokenError, "No valid token with the `admin:org` hook scope." if token.nil?
-    Octokit::Client.new(access_token: token)
+
+    GitHubClassroom.github_client(access_token: token)
   end
 
   # External: Creates an organization webhook, and saves it's ID.
