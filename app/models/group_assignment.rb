@@ -56,6 +56,10 @@ class GroupAssignment < ApplicationRecord
     public_repo
   end
 
+  def visibility=(visibility)
+    self.public_repo = visibility != "private"
+  end
+
   def to_param
     slug
   end
