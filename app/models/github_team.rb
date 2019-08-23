@@ -28,7 +28,7 @@ class GitHubTeam < GitHubResource
   end
 
   def html_url
-    "https://github.com/orgs/#{github_organization.login}/teams/#{slug}"
+    "#{GitHubClassroom.github_url}/orgs/#{github_organization.login}/teams/#{slug}"
   end
 
   def github_organization
