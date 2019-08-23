@@ -14,8 +14,11 @@ describe "default public_repo", type: :view do
     @group_assignment = GroupAssignment.new
     @organization = organization
     render template: "group_assignments/new"
-    expect(response.body).to include("value=\"public\" checked=\"checked\" name=\"group_assignment[visibility]\"")
-    expect(response.body).to include("disabled=\"disabled\" type=\"radio\" value=\"private\" name=\"group_assignment[visibility]\"")
+
+    public_checked = "value=\"public\" checked=\"checked\" name=\"group_assignment[visibility]\""
+    private_unchecked = "disabled=\"disabled\" type=\"radio\" value=\"private\" name=\"group_assignment[visibility]\""
+    expect(response.body).to include(public_checked)
+    expect(response.body).to include(private_unchecked)
   end
 
   it "defaults public_repo to false if the organization has private repos" do
@@ -27,7 +30,10 @@ describe "default public_repo", type: :view do
     @group_assignment = GroupAssignment.new
     @organization = organization
     render template: "group_assignments/new"
-    expect(response.body).to include("value=\"public\" name=\"group_assignment[visibility]\"")
-    expect(response.body).to include("value=\"private\" checked=\"checked\" name=\"group_assignment[visibility]\"")
+
+    public_unchecked = "value=\"public\" name=\"group_assignment[visibility]\""
+    private_checked = "value=\"private\" checked=\"checked\" name=\"group_assignment[visibility]\""
+    expect(response.body).to include(public_unchecked)
+    expect(response.body).to include(private_checked)
   end
 end
