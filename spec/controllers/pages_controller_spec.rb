@@ -15,6 +15,48 @@ RSpec.describe PagesController, type: :controller do
       get :home
       expect(response).to redirect_to(organizations_path)
     end
+
+    context "assigns correct value to @repo_count" do
+      it "if AssignmentRepo and GroupAssignmentRepo present" do
+        allow(AssignmentRepo).to receive_message_chain("last.id").and_return(1)
+        allow(GroupAssignmentRepo).to receive_message_chain("last.id").and_return(1)
+        get :home
+        expect(assigns(:repo_count)).to eq(2)
+      end
+
+      it "if AssignmentRepo present and GroupAssignmentRepo not present" do
+        allow(AssignmentRepo).to receive_message_chain("last.id").and_return(1)
+        get :home
+        expect(assigns(:repo_count)).to eq(1)
+      end
+
+      it "if AssignmentRepo not present and GroupAssignmentRepo present" do
+        allow(GroupAssignmentRepo).to receive_message_chain("last.id").and_return(1)
+        get :home
+        expect(assigns(:repo_count)).to eq(1)
+      end
+
+      it "if both AssignmentRepo and GroupAssignmentRepo not present" do
+        allow(AssignmentRepo).to receive(:last).and_return(nil)
+        allow(GroupAssignmentRepo).to receive(:last).and_return(nil)
+        get :home
+        expect(assigns(:repo_count)).to eq(0)
+      end
+    end
+
+    context "assigns correct value to @teacher_count" do
+      it "if no users present" do
+        allow(User).to receive(:last).and_return(nil)
+        get :home
+        expect(assigns(:teacher_count)).to eq(0)
+      end
+
+      it "if user present" do
+        allow(User).to receive_message_chain("last.id").and_return(1)
+        get :home
+        expect(assigns(:teacher_count)).to eq(1)
+      end
+    end
   end
 
   describe "GET #help" do
