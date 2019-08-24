@@ -10,7 +10,7 @@ class Roster < ApplicationRecord
   include DuplicateRosterEntries
 
   def unlinked_entries
-    roster_entries.select do |entry|
+    roster_entries.includes(:user).select do |entry|
       entry.user.nil?
     end
   end

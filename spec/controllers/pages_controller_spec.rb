@@ -6,7 +6,7 @@ RSpec.describe PagesController, type: :controller do
   describe "GET #home" do
     it "returns success" do
       get :home
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
 
     it "redirects to the dashboard if the user is already logged in" do
@@ -74,7 +74,7 @@ RSpec.describe PagesController, type: :controller do
       ]
       expected_pages.each do |help_page|
         get :help, params: { article_name: help_page }
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(200)
       end
     end
   end

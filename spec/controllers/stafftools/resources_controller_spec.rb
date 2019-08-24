@@ -29,7 +29,7 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
         end
 
         it "returns a success status" do
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(200)
         end
 
         it "does not have any resources" do
@@ -43,7 +43,7 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
         end
 
         it "returns a success status" do
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(200)
         end
 
         it "has a MultiIndexSearchRequest of resources" do
@@ -73,7 +73,7 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
         end
 
         it "returns a succcess status" do
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(200)
         end
 
         it "does not have any resources" do
@@ -87,7 +87,7 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
         end
 
         it "returns a succcess status" do
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(200)
         end
 
         it "has a MultiIndexSearchRequest of resources" do

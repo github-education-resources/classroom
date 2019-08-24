@@ -29,7 +29,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       end
 
       it "returns success status" do
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(200)
       end
 
       it "renders new template" do
@@ -57,7 +57,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       end
 
       it "returns success status" do
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(200)
       end
 
       it "renders new template" do
@@ -90,7 +90,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         end
 
         it "returns success status" do
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(200)
         end
 
         it "renders show template" do
@@ -270,7 +270,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
 
         it "returns an xml configuration" do
           get :autoconfigure, params: { id: organization.slug }
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(200)
           expect(response.content_type).to eq "application/xml"
         end
       end
@@ -308,7 +308,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         context "with user who is an instructor" do
           it "returns success page" do
             get :complete, params: { id: organization.slug }
-            expect(response).to have_http_status(:success)
+            expect(response).to have_http_status(200)
           end
         end
       end
