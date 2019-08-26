@@ -43,7 +43,7 @@ module GitHub
 
       def scopes(token, client = nil)
         GitHub::Errors.with_error_handling do
-          github_client = client.present? ? client : GitHubClassroom.github_client
+          github_client = client.present? ? client : GitHubClassroom.github_client(auto_paginate: true)
           unexpanded_scopes = github_client.scopes(token, headers: GitHub::APIHeaders.no_cache_no_store)
           expand_scopes(unexpanded_scopes)
         end

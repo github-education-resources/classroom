@@ -26,7 +26,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
     it "succeeds" do
       sign_in_as(user)
       get :new, params: { id: organization.slug }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
 
     it "renders correct template" do
@@ -90,6 +90,28 @@ RSpec.describe Orgs::RostersController, type: :controller do
         expect(organization.roster.roster_entries.count).to eq(2)
         expect(organization.roster.roster_entries[0].lms_user_id).to eq("1")
         expect(organization.roster.roster_entries[1].lms_user_id).to eq("2")
+      end
+
+      context "failbot reports when there is an error" do
+        before do
+          allow_any_instance_of(Orgs::RostersController)
+            .to receive(:lms_membership)
+            .and_raise(Faraday::ClientError)
+          Failbot.reports.clear
+        end
+
+        it "successfully" do
+          post :create, params: {
+            id: organization.slug,
+            identifiers: "email1\r\nemail2",
+            identifier_name: "emails"
+          }
+          expect(Failbot.reports.count).to eq(1)
+        end
+
+        after do
+          Failbot.reports.clear
+        end
       end
 
       after(:each) do
@@ -197,7 +219,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
       end
 
       it "succeeds" do
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(200)
       end
 
       it "renders roster/show" do

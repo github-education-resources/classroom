@@ -21,19 +21,14 @@ class PagesController < ApplicationController
     "setup-moodle"
   ].freeze
 
-  # rubocop:disable AbcSize
   def home
     return redirect_to organizations_path if logged_in?
 
-    @teacher_count = User.last.id if User.last
-
-    if AssignmentRepo.last && GroupAssignmentRepo.last.id
-      @repo_count = AssignmentRepo.last.id + GroupAssignmentRepo.last.id
-    end
+    @teacher_count = User.last&.id.to_i
+    @repo_count = AssignmentRepo.last&.id.to_i + GroupAssignmentRepo.last&.id.to_i
 
     render layout: "layouts/pages"
   end
-  # rubocop:enable AbcSize
 
   def assistant
     render layout: "layouts/pages"
