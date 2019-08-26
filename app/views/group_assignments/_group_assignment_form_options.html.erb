@@ -16,7 +16,7 @@
 <dl class="<%= view.form_class_for(:public_repo) %> my-4">
   <div class="form-checkbox">
     <label>
-      <%= f.radio_button :public_repo, true %>
+      <%= f.radio_button :visibility, "public", checked: view.public_is_checked? %>
       <div class="d-flex">
         <div>
           <%= octicon 'repo', height: 32, class: "text-gray mr-2" %>
@@ -31,7 +31,7 @@
 
   <div class="form-checkbox">
     <label>
-      <%= f.radio_button :public_repo, false, disabled: !view.private_repos_available? %>
+      <%= f.radio_button :visibility, "private", checked: !view.public_is_checked?, disabled: !view.private_repos_available? %>
       <div class="d-flex">
         <div>
           <%= octicon 'lock', height: 32, class: "text-orange mr-2" %>
