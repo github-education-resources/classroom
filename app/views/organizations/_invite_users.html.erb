@@ -9,7 +9,7 @@
 <%= link_to organization_url(current_organization), organization_url(current_organization), class: 'mobile-invitation-content' %>
 
 <div class="col-md-6 input-group">
-  <%= content_tag :input, '', type: 'text', class: "form-control input-sm", id: "organization-#{current_organization.github_id}", value: organization_url(current_organization), readonly: 'readonly' %>
+  <%= content_tag :input, '', type: 'text', class: "form-control input-sm text-mono", id: "organization-#{current_organization.github_id}", value: organization_url(current_organization), readonly: 'readonly' %>
   <span class="input-group-button">
     <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#organization-#{current_organization.github_id}" %> class="js-clipboard btn btn-sm tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
       <%= octicon 'clippy' %>
