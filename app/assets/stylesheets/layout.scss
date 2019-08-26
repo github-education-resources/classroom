@@ -364,22 +364,28 @@ footer {
     .octicon-heart {
       color: $red-500;
     }
-    h4 {
-      padding-right: $spacer-3;
-      width: calc(100% - $spacer-5);
-    }
-    a {
-      color: $blue-600;
-      &:hover {
-        color: $blue-400;
+    section {
+      @media screen and (max-width: $width-sm) {
+        min-width: 300px;
       }
-    }
-    ul {
-      li {
-        padding-right: $spacer-4;
-        line-height: 1.5;
-        padding-top: $spacer-1;
-        padding-bottom: $spacer-1;
+      h4 {
+        padding-right: $spacer-3;
+        width: calc(100% - $spacer-5);
+
+      }
+      a {
+        color: $blue-600;
+        &:hover {
+          color: $blue-400;
+        }
+      }
+      ul {
+        li {
+          padding-right: $spacer-4;
+          line-height: 1.5;
+          padding-top: $spacer-1;
+          padding-bottom: $spacer-1;
+        }
       }
     }
   }
