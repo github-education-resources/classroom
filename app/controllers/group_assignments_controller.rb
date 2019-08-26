@@ -120,7 +120,7 @@ class GroupAssignmentsController < ApplicationController
       .permit(
         :title,
         :slug,
-        :public_repo,
+        :visibility,
         :grouping_id,
         :max_members,
         :students_are_repo_admins,
@@ -196,7 +196,7 @@ class GroupAssignmentsController < ApplicationController
       .permit(
         :title,
         :slug,
-        :public_repo,
+        :visibility,
         :max_members,
         :students_are_repo_admins,
         :deadline,

@@ -69,7 +69,7 @@ RSpec.describe Orgs::GroupAssignmentReposController, type: :controller do
         end
 
         it "succeeds" do
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(200)
         end
 
         it "sets the GroupAssignmentRepo" do
