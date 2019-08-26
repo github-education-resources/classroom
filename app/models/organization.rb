@@ -87,7 +87,7 @@ class Organization < ApplicationRecord
   end
 
   def geo_pattern_data_uri
-    patterns = %i[chevrons hexagons octagons plus_signs triangles squares diamonds]
+    patterns = %i[plaid hexagons plus_signs overlapping_circles overlapping_rings mosaic_squares]
     options = { base_color: "#28a745", patterns: patterns }
     if archived?
       options.delete(:base_color)
