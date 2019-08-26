@@ -58,23 +58,19 @@ class GitHubModel
 
           no_cache_options = options.dup
           no_cache_options[:headers] = GitHub::APIHeaders.no_cache_no_store
+          cached_value = resource.send(field_name)
 
-          if use_cache
-            cached_value = resource.send(field_name)
-            return cached_value if cached_value
+          return cached_value if use_cache && cached_value
 
-            api_response = github_response(client, id_attributes.values.compact, no_cache_options)
+          api_response = github_response(client, id_attributes.values.compact, no_cache_options)
 
-            local_cached_attributes.each do |attribute|
-              resource.assign_attributes("github_#{attribute}" => api_response.send(attribute))
-            end
-
-            resource.save
-
-            resource.send(field_name)
-          else
-            github_response(client, id_attributes.values.compact, no_cache_options).send(gh_attr)
+          local_cached_attributes.each do |attribute|
+            resource.assign_attributes("github_#{attribute}" => api_response.send(attribute))
           end
+
+          resource.save if resource.changed?
+
+          resource.send(field_name)
         end
       end
 
