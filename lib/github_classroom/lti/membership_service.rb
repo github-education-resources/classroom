@@ -69,7 +69,13 @@ module GitHubClassroom
 
       # LTI 1.1 (and up) responses
       def parse_membership_service(raw_data)
+      begin
         json_membership = JSON.parse(raw_data)
+      rescue 
+        Rails.logger.error(raw_data)
+        raise JSON::ParserError
+      end
+      
         membership_subject_json = json_membership.dig("pageOf", "membershipSubject")
         raise JSON::ParserError unless membership_subject_json
 
