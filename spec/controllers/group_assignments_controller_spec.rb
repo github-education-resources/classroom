@@ -14,7 +14,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
   describe "GET #new", :vcr do
     it "returns success status" do
       get :new, params: { organization_id: organization.slug }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
 
     it "has a new GroupAssignment" do
@@ -133,7 +133,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
   describe "GET #show", :vcr do
     it "returns success status" do
       get :show, params: { organization_id: organization.slug, id: group_assignment.slug }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
   end
 
@@ -179,7 +179,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
     it "returns success status and sets the group assignment" do
       get :edit, params: { organization_id: organization.slug, id: group_assignment.slug }
 
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
       expect(assigns(:group_assignment)).to_not be_nil
     end
   end
@@ -201,7 +201,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
     context "public_repo attribute is changed" do
       it "calls the AssignmentVisibility background job" do
         private_repos_plan = { owned_private_repos: 0, private_repos: 2 }
-        options = { title: "JavaScript Calculator", public_repo: !group_assignment.public? }
+        options = { title: "JavaScript Calculator", visibility: "private" }
 
         allow_any_instance_of(GitHubOrganization).to receive(:plan).and_return(private_repos_plan)
 

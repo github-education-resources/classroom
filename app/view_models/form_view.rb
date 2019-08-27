@@ -23,6 +23,10 @@ class FormView < ViewModel
     object&.errors.present?
   end
 
+  def public_is_checked?
+    subject.persisted? ? subject.public_repo : !private_repos_available?
+  end
+
   def private_repos_available?
     return @private_repos_available if @private_repos_available
 

@@ -157,7 +157,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       context "no roster" do
         it "will bring you to the page" do
           get :show, params: { id: invitation.key }
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(200)
           expect(response).to render_template("group_assignment_invitations/show")
         end
       end
@@ -191,7 +191,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         context "with ignore param" do
           it "will bring you to the show page" do
             get :show, params: { id: invitation.key, roster: "ignore" }
-            expect(response).to have_http_status(:success)
+            expect(response).to have_http_status(200)
             expect(response).to render_template("group_assignment_invitations/show")
           end
         end
@@ -212,7 +212,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
       it "returns success status" do
         get :accept, params: { id: invitation.key }
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(200)
       end
 
       it "render :accept" do
