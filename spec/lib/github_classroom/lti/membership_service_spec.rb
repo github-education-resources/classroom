@@ -51,7 +51,7 @@ describe GitHubClassroom::LTI::MembershipService do
         it "raises error and logs" do
           allow(Rails.logger).to receive(:error)
           expect { instance.students }.to raise_error(JSON::ParserError)
-          expect(Rails.logger).to have_received(:error).with("sdfsdf")
+          expect(Rails.logger).to have_received(:error).with("raw_data: sdfsdf")
         end
       end
 
