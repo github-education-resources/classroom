@@ -68,14 +68,15 @@ module GitHubClassroom
       end
 
       # LTI 1.1 (and up) responses
+      # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       def parse_membership_service(raw_data)
-      begin
-        json_membership = JSON.parse(raw_data)
-      rescue 
-        Rails.logger.error(raw_data)
-        raise JSON::ParserError
-      end
-      
+        begin
+          json_membership = JSON.parse(raw_data)
+        rescue
+          Rails.logger.error(raw_data)
+          raise JSON::ParserError
+        end
+
         membership_subject_json = json_membership.dig("pageOf", "membershipSubject")
         raise JSON::ParserError unless membership_subject_json
 
@@ -85,6 +86,7 @@ module GitHubClassroom
           Models::CourseMember.new(user_id: member.user_id, email: member.email, name: member.name, role: m.role)
         end
       end
+      # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
       # LTI 1.0 responses
       def parse_membership_extension(raw_data)

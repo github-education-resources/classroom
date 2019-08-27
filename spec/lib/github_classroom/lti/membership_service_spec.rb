@@ -41,8 +41,8 @@ describe GitHubClassroom::LTI::MembershipService do
         end
       end
 
-      context "invalid json is given" do 
-        before do 
+      context "invalid json is given" do
+        before do
           instance.stub(:fetch_raw_membership) do
             "sdfsdf"
           end
