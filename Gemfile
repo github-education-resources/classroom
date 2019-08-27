@@ -13,7 +13,7 @@ gem "rails", "~> 5.2.3"
 gem "autoprefixer-rails", "~> 7.1", ">= 7.1.3"
 
 gem "barnes"
-gem "bootsnap", "~> 1.1", ">= 1.1.2", require: false
+gem "bootsnap", "~> 1.4", ">= 1.4.4", require: false
 
 gem "connection_pool", "~> 2.2", ">= 2.2.1"
 
@@ -59,14 +59,14 @@ gem "peek-pg",              "~> 1.3"
 gem "peek-sidekiq",         "1.0.4"
 gem "pg",                   "~> 1.1.4"
 gem "pg_search",            "~> 2.2"
-gem "pry-byebug",           "~> 3.5"
-gem "pry-rails",            "~> 0.3.6"
+gem "pry-byebug",           "~> 3.7"
+gem "pry-rails",            "~> 0.3.9"
 gem "puma",                 "~> 4.0", ">= 4.0.1"
 
 gem "rack-canonical-host", "~> 0.2.3"
 gem "rack-rewrite",        "~> 1.5.0"
-gem "rack-timeout",        "~> 0.4.2", require: false
-gem "rails-i18n",          "~> 5.0", ">= 5.0.1"
+gem "rack-timeout",        "~> 0.5.1", require: false
+gem "rails-i18n",          "~> 5.1", ">= 5.1.3"
 gem "redis-namespace",     "~> 1.5", ">= 1.5.3"
 gem "ruby-progressbar",    "~> 1.8", ">= 1.8.1", require: false
 
@@ -79,7 +79,7 @@ gem "sprockets",  "~> 3.7", ">= 3.7.2"
 gem "turbolinks", "~> 2.5", ">= 2.5.4"
 gem "typhoeus",   "~> 1.3"
 
-gem "uglifier",      "~> 3.2"
+gem "uglifier",      "~> 4.1"
 gem "unicode-emoji", "~> 1.1"
 
 group :development do
@@ -93,20 +93,20 @@ group :development, :test do
   gem "fuubar",                   "~> 2.4.0"
   gem "guard-rspec",              "~> 4.7", ">= 4.7.3", require: false
   gem "knapsack",                 "~> 1.14", ">= 1.14.1"
-  gem "rails-controller-testing", "~> 1.0", ">= 1.0.2"
+  gem "rails-controller-testing", "~> 1.0", ">= 1.0.4"
   gem "rspec-rails",              "~> 3.6", ">= 3.6.1"
   gem "rubocop",                  "~> 0.49.1", require: false
   gem "scss_lint",                "~> 0.54.0", require: false
-  gem "spring",                   "~> 2.0", ">= 2.0.2"
+  gem "spring",                   "~> 2.1", ">= 2.1.0"
   gem "spring-watcher-listen",    "~> 2.0", ">= 2.0.1"
   gem "terminal-notifier-guard",  "~> 1.7"
   gem "timecop",                  "~> 0.9.1"
 end
 
 group :production do
-  gem "dogstatsd-ruby",     "~> 3.0"
+  gem "dogstatsd-ruby",     "~> 4.5"
   gem "lograge",            "~> 0.11.2"
-  gem "newrelic_rpm",       "~> 4.4", ">= 4.4.0.336"
+  gem "newrelic_rpm",       "~> 6.5", ">= 6.5.0.357"
   gem "pinglish",           "~> 0.2.1"
   gem "puma_worker_killer", "~> 0.1.1"
   gem "rack-tracker",       "~> 1.11.1"
