@@ -41,6 +41,20 @@ describe GitHubClassroom::LTI::MembershipService do
         end
       end
 
+      context "invalid json is given" do
+        before do
+          instance.stub(:fetch_raw_membership) do
+            "sdfsdf"
+          end
+        end
+
+        it "raises error and logs" do
+          allow(Rails.logger).to receive(:error)
+          expect { instance.students }.to raise_error(JSON::ParserError)
+          expect(Rails.logger).to have_received(:error).with("raw_data: sdfsdf")
+        end
+      end
+
       context "pagination" do
         let(:mock_raw_body) { { nextPage: endpoint }.to_json }
 
