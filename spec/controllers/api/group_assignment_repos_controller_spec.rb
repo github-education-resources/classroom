@@ -51,7 +51,7 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
     end
 
     it "returns success" do
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
 
     it "returns correct attributes in group assignment repo serializer" do
@@ -67,7 +67,7 @@ RSpec.describe API::GroupAssignmentReposController, type: :controller do
 
     it "returns success" do
       get :clone_url, params: params
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
 
     it "returns json with temp clone url" do
