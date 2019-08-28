@@ -41,20 +41,6 @@ describe GitHubClassroom::LTI::MembershipService do
         end
       end
 
-      context "json is gzipped" do
-        let!(:students) { Zlib.gzip("{test: \"asad\"}") }
-        before do
-          instance.stub(:fetch_raw_membership) do
-            students
-          end
-        end
-
-        it "succesfully unzip" do
-          students = instance.students
-          expect(students).to_not be_empty
-        end
-      end
-
       context "invalid json is given" do
         before do
           instance.stub(:fetch_raw_membership) do
