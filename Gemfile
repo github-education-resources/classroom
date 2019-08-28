@@ -107,7 +107,7 @@ end
 group :production do
   gem "dogstatsd-ruby",     "~> 3.0"
   gem "lograge",            "~> 0.11.2"
-  gem "newrelic_rpm",       "~> 4.4", ">= 4.4.0.336"
+  gem "newrelic_rpm",       "~> 6.5"
   gem "pinglish",           "~> 0.2.1"
   gem "puma_worker_killer", "~> 0.1.1"
   gem "rack-tracker",       "~> 1.11.1"
