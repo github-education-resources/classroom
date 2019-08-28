@@ -80,7 +80,7 @@ gem "sprockets",  "~> 3.7", ">= 3.7.2"
 gem "turbolinks", "~> 2.5", ">= 2.5.4"
 gem "typhoeus",   "~> 1.3"
 
-gem "uglifier",      "~> 3.2"
+gem "uglifier",      "~> 4.1"
 gem "unicode-emoji", "~> 1.1"
 
 group :development do
