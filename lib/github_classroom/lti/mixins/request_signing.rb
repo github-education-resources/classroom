@@ -27,6 +27,7 @@ module GitHubClassroom
           connection = Faraday.new(url: req.uri, headers: request_headers) do |conn|
             conn.response :raise_error
             conn.adapter Faraday.default_adapter
+            conn.use :gzip 
           end
 
           method = req.method.downcase
