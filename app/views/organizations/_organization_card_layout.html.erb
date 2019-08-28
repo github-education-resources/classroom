@@ -1,47 +1,44 @@
-<div class="d-sm-flex flex-wrap gutter-sm">
+<div class="d-sm-flex flex-wrap gutter-condensed">
   <% organizations.each do |organization| %>
-    <article class="col-sm-6 col-md-4 mb-3 mb-sm-5">
-      <div class="bg-white rounded-1 height-full no-underline border box-shadow-medium position-relative overflow-hidden">
-        <a href="<%= organization_path(organization) %>" class="position-relative d-block hover-grow">
-          <div class="position-absolute top-0 right-0 bottom-0 left-0" style="background-image: <%= organization.geo_pattern_data_uri %>"></div>
-          <div class="position-relative p-3">
-            <h1 class="h2 text-white overflow-hidden no-wrap"style="text-overflow: ellipsis;"><%= organization.title %></h1>
-            <p class="f4 text-white mb-0">@<%= organization.github_organization.login %></p>
+    <article class="col-sm-12 col-md-6 mb-3 mb-sm-5">
+      <div class="bg-white rounded-1 height-full no-underline border box-shadow position-relative overflow-hidden">
+          <div class="position-relative py-2">
+            <div class="position-absolute top-0 right-0 bottom-0 left-0" style="background-image: <%= organization.geo_pattern_data_uri %>"></div>
           </div>
-        </a>
+          <a href="<%= organization_path(organization) %>" class="position-relative d-block px-4 pt-2">
+            <h1 class="h4 overflow-hidden no-wrap pt-1"style="text-overflow: ellipsis;"><%= organization.title %></h1>
+            <p class="f5 text-gray"><%= organization.github_organization.login %></p>
+          </a>
 
-        <div class="p-3">
-          <ul class="d-flex flex-items-center list-type-none text-gray-dark mb-3">
-            <li class="d-flex flex-items-center mr-3"><%= octicon 'person', :class => "mr-1" %><%= organization.assignments.count %></li>
-            <li class="d-flex flex-items-center"><%= octicon 'organization', :class => "mr-1" %><%= organization.group_assignments.count %></li>
-          </ul>
-
+        <div class="px-4 pb-3 pt-2">
           <% if organization.assignments.present? || organization.group_assignments.present? %>
-            <h2 class="h6 text-uppercase border-bottom pb-2">Latest Assignments</h2>
-
-            <ul>
-              <% organization.all_assignments.sort_by(&:created_at).reverse.take(4).each do |assignment| %>
-                <li class="d-flex flex-items-center my-2">
+            <!-- <h2 class="h6 text-uppercase border-bottom pb-1">Latest Assignments</h2> -->
+            <ul class="border-top pt-2">
+              <% organization.all_assignments.sort_by(&:created_at).reverse.take(5).each do |assignment| %>
+                <li class="d-flex flex-items-center py-1">
                   <span class="d-inline-block text-center text-gray mr-2" style="background-color:#d1d5da;border-radius: 50%;width:18px;height:18px;">
                     <%= octicon 'person', height: 9, class: 'v-align-middle' if assignment.is_a? Assignment %>
                     <%= octicon 'organization', height: 9, class: 'v-align-middle' if assignment.is_a? GroupAssignment %>
                   </span>
-                  <%= link_to(assignment.title, organization_assignment_path(organization, assignment), class: "") if assignment.is_a? Assignment %>
-                  <%= link_to(assignment.title, organization_group_assignment_path(organization, assignment), class: "") if assignment.is_a? GroupAssignment %>
+                  <%= link_to(assignment.title, organization_assignment_path(organization, assignment), class: "text-gray-dark") if assignment.is_a? Assignment %>
+                  <%= link_to(assignment.title, organization_group_assignment_path(organization, assignment), class: "text-gray-dark") if assignment.is_a? GroupAssignment %>
                 </li>
               <% end %>
             </ul>
           <% else %>
-            <%= link_to new_assignment_organization_path(organization), class: 'btn btn-sm', role: 'button' do %>
-              <%= t('views.organizations.create_first_assignment') %>
-            <% end %>
+            <div class="py-4">
+              <%= link_to new_assignment_organization_path(organization), class: 'btn', role: 'button' do %>
+                <%= t('views.organizations.create_first_assignment') %>
+              <% end %>
+              </div>
+
           <% end %>
         </div>
       </div>
     </article>
   <% end %>
   <% if organizations.next_page.nil? %>
-    <article class="col-sm-6 col-md-4 mb-3 mb-sm-5">
+    <article class="col-sm-12 col-md-6 mb-3 mb-sm-5">
       <%= link_to new_organization_path, class: 'd-flex flex-column flex-justify-center flex-items-center rounded-1 height-full no-underline border p-5', role: 'button' do %>
         <span class="d-none f4"><%= t('views.organizations.new_classroom') %></span>
         <%= octicon 'plus', :class => "col-4 col-md-6 text-gray-light hover-grow", :width => "40", :height => "40" %>
