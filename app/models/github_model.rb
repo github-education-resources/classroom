@@ -33,6 +33,7 @@ class GitHubModel
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/BlockLength
   # rubocop:disable MethodLength
+  # rubocop:disable CyclomaticComplexity
   def initialize(client, id_attributes, **options)
     resource = options.delete(:classroom_resource)
 
@@ -87,6 +88,7 @@ class GitHubModel
   # rubocop:enable MethodLength
   # rubocop:enable Metrics/BlockLength
   # rubocop:enable Metrics/AbcSize
+  # rubocop:enable CyclomaticComplexity
 
   # Internal: Update this instance's attribute instance variables with
   # new values.
