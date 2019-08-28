@@ -105,7 +105,7 @@ group :development, :test do
 end
 
 group :production do
-  gem "dogstatsd-ruby",     "~> 3.0"
+  gem "dogstatsd-ruby",     "~> 4.5"
   gem "lograge",            "~> 0.11.2"
   gem "newrelic_rpm",       "~> 4.4", ">= 4.4.0.336"
   gem "pinglish",           "~> 0.2.1"
