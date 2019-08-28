@@ -13,7 +13,7 @@ gem "rails", "~> 5.2.3"
 gem "autoprefixer-rails", "~> 7.1", ">= 7.1.3"
 
 gem "barnes"
-gem "bootsnap", "~> 1.1", ">= 1.1.2", require: false
+gem "bootsnap", "~> 1.4", require: false
 
 gem "connection_pool", "~> 2.2", ">= 2.2.1"
 
