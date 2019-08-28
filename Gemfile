@@ -67,7 +67,7 @@ gem "puma",                 "~> 4.0", ">= 4.0.1"
 gem "rack-canonical-host", "~> 0.2.3"
 gem "rack-rewrite",        "~> 1.5.0"
 gem "rack-timeout",        "~> 0.4.2", require: false
-gem "rails-i18n",          "~> 5.0", ">= 5.0.1"
+gem "rails-i18n",          "~> 5.1"
 gem "redis-namespace",     "~> 1.5", ">= 1.5.3"
 gem "ruby-progressbar",    "~> 1.8", ">= 1.8.1", require: false
 
