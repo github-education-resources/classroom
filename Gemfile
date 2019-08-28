@@ -94,7 +94,7 @@ group :development, :test do
   gem "fuubar",                   "~> 2.4.0"
   gem "guard-rspec",              "~> 4.7", ">= 4.7.3", require: false
   gem "knapsack",                 "~> 1.14", ">= 1.14.1"
-  gem "rails-controller-testing", "~> 1.0", ">= 1.0.2"
+  gem "rails-controller-testing", "~> 1.0"
   gem "rspec-rails",              "~> 3.6", ">= 3.6.1"
   gem "rubocop",                  "~> 0.49.1", require: false
   gem "scss_lint",                "~> 0.54.0", require: false
