@@ -60,7 +60,7 @@ gem "peek-pg",              "~> 1.3"
 gem "peek-sidekiq",         "1.0.4"
 gem "pg",                   "~> 1.1.4"
 gem "pg_search",            "~> 2.2"
-gem "pry-byebug",           "~> 3.5"
+gem "pry-byebug",           "~> 3.7"
 gem "pry-rails",            "~> 0.3.6"
 gem "puma",                 "~> 4.0", ">= 4.0.1"
 
