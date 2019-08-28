@@ -98,7 +98,7 @@ group :development, :test do
   gem "rspec-rails",              "~> 3.6", ">= 3.6.1"
   gem "rubocop",                  "~> 0.49.1", require: false
   gem "scss_lint",                "~> 0.54.0", require: false
-  gem "spring",                   "~> 2.0", ">= 2.0.2"
+  gem "spring",                   "~> 2.1"
   gem "spring-watcher-listen",    "~> 2.0", ">= 2.0.1"
   gem "terminal-notifier-guard",  "~> 1.7"
   gem "timecop",                  "~> 0.9.1"
