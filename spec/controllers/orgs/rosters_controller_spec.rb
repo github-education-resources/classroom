@@ -26,7 +26,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
     it "succeeds" do
       sign_in_as(user)
       get :new, params: { id: organization.slug }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
 
     it "renders correct template" do
@@ -219,7 +219,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
       end
 
       it "succeeds" do
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(200)
       end
 
       it "renders roster/show" do

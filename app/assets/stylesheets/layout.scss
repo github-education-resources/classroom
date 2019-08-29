@@ -3,7 +3,9 @@
 }
 
 body {
-  font: 13px/1.4 Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  font-size: 13px;
+  line-height: 1.4;
   background-color: #f3f4f6;
 
   &.site {
@@ -348,19 +350,46 @@ hr {
   }
 }
 
-.made-with-heart {
-  margin-bottom: 0.3em;
-  font-size: 15px;
-
-  a {
-    position: relative;
-    color: #777;
-    text-decoration: none;
-    transition: 0.2s color ease-in 0;
-
-    &:hover { color: #333; }
+main {
+  &.bg-gray-light {
+    padding-bottom: $spacer-10;
+    &+footer {
+      border-top: 1px solid $gray-200;
+    }
   }
 }
+
+footer {
+    background-color: #fff;
+    background-color: $gray-100;
+    .octicon-heart {
+      color: $red-500;
+    }
+    section {
+      @media screen and (max-width: $width-sm) {
+        min-width: 300px;
+      }
+      h4 {
+        padding-right: $spacer-3;
+        width: calc(100% - $spacer-5);
+
+      }
+      a {
+        color: $blue-600;
+        &:hover {
+          color: $blue-400;
+        }
+      }
+      ul {
+        li {
+          padding-right: $spacer-4;
+          line-height: 1.5;
+          padding-top: $spacer-1;
+          padding-bottom: $spacer-1;
+        }
+      }
+    }
+  }
 
 
 .pages {

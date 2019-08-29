@@ -70,7 +70,8 @@ class Organization < ApplicationRecord
     else
       token = users.limit(1).order("RANDOM()").pluck(:token)[0]
     end
-    Octokit::Client.new(access_token: token)
+
+    GitHubClassroom.github_client(access_token: token)
   end
 
   def github_organization
@@ -86,7 +87,7 @@ class Organization < ApplicationRecord
   end
 
   def geo_pattern_data_uri
-    patterns = %i[chevrons hexagons octagons plus_signs triangles squares diamonds]
+    patterns = %i[plaid hexagons plus_signs overlapping_circles overlapping_rings mosaic_squares]
     options = { base_color: "#28a745", patterns: patterns }
     if archived?
       options.delete(:base_color)

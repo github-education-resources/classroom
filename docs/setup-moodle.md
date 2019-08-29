@@ -59,13 +59,25 @@ the configuration process)
 1. In the _IMS LTI Names and Role Provisioning_ menu, select **Use this service**.
 
     <div class="text-center">
-      <img src="/images/help/lms/moodle/step-11.png" class="border" style="width: 30%;">
+      <img src="/images/help/lms/moodle/step-11.png" class="border" style="width: 70%;">
+    </div>
+
+1. Scroll to and click **Privacy**
+
+    <div class="text-center">
+      <img src="/images/help/lms/moodle/step-115.png" class="border" style="width: 30%;">
+    </div>
+
+1. In the _Share launcher's name with tool_ and _Share launcher's email with tool_ menu, select **Always**.
+
+    <div class="text-center">
+      <img src="/images/help/lms/moodle/step-12.png" class="border" style="width: 70%;">
     </div>
 
 1. Scroll down to the bottom of the page and click **Save changes**. You should retun to the page that looks like this:
 
    <div class="text-center">
-     <img src="/images/help/lms/moodle/step-13.png" class="border" style="width: 30%;">
+     <img src="/images/help/lms/moodle/step-13.png" class="border" style="width: 70%;">
    </div>
 
 1. In the _Preconfigure tool_ menu, select _GitHub Classroom - [Your Classroom Name]_.
@@ -73,7 +85,7 @@ the configuration process)
 1. In the _Activity_ menu (under _Common module settings_), select **Hide from students**.
 
    <div class="text-center">
-     <img src="/images/help/lms/moodle/step-15.png" class="border" style="width: 30%;">
+     <img src="/images/help/lms/moodle/step-15.png" class="border" style="width: 70%;">
    </div>
 
 1. Scroll to the bottom of the page and click **Save and return to course**.
@@ -81,7 +93,7 @@ the configuration process)
 1. You should now see a _GitHub Classroom_ activity wherever your chose to place it.
 
     <div class="text-center">
-      <img src="/images/help/lms/moodle/step-17.png" class="border" style="width: 30%;">
+      <img src="/images/help/lms/moodle/step-17.png" class="border" style="width: 70%;">
     </div>
 
 1. Click the GitHub Classroom activity.

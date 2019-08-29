@@ -13,16 +13,19 @@ class RosterEntry < ApplicationRecord
   validates :identifier, presence: true
   validates :roster,     presence: true
 
+  # we wrap the join query in Arel.sql() because it ensures the safety of the query
+  # for more information: https://github.com/rails/rails/blob/5-2-stable/activerecord/CHANGELOG.md#rails-520-april-09-2018
   scope :order_by_repo_created_at, lambda { |context|
     assignment = context[:assignment]
     sql_formatted_assignment_id = assignment.id
 
-    order("assignment_repos.created_at")
-      .joins <<~SQL
-        LEFT OUTER JOIN assignment_repos
-        ON roster_entries.user_id = assignment_repos.user_id
-        AND assignment_repos.assignment_id='#{sql_formatted_assignment_id}'
-      SQL
+    join_query = <<~SQL
+      LEFT OUTER JOIN assignment_repos
+      ON roster_entries.user_id = assignment_repos.user_id
+      AND assignment_repos.assignment_id='#{sql_formatted_assignment_id}'
+     SQL
+    order(Arel.sql("assignment_repos.created_at"))
+      .joins(join_query)
   }
 
   scope :order_by_student_identifier, ->(_context = nil) { order(identifier: :asc) }
@@ -74,6 +77,10 @@ class RosterEntry < ApplicationRecord
   # to find accepted students adds an extra check for assignment_repos.user_id NOT NULL.
   # For more context visit: https://github.com/education/classroom/pull/2237
   #
+  # with a secondary sort on ID to ensure ties are always handled in the same way
+  # we wrap the query in Arel.sql() because it ensures the safety of the query
+  # for more information: https://github.com/rails/rails/blob/5-2-stable/activerecord/CHANGELOG.md#rails-520-april-09-2018
+  #
   # rubocop:disable Metrics/MethodLength
   def self.order_for_view(assignment)
     join_sql = <<~SQL
@@ -91,7 +98,7 @@ class RosterEntry < ApplicationRecord
       END
     SQL
 
-    joins(join_sql).order(order_sql)
+    joins(join_sql).order(Arel.sql(order_sql))
   end
   # rubocop:enable Metrics/MethodLength
 
