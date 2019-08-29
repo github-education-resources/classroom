@@ -7,9 +7,10 @@
   display_progress_bar,
   initialize_progress;
 
+  var progress_complete = false;
   setup_roster_update_cable = function(){
-    var roster_id = $("#roster_id").val();
-    var user_id = $("#user_id").val();
+    var roster_id = $("#current_roster_id").val();
+    var user_id = $("#current_user_id").val();
     App.add_students_to_roster = App.cable.subscriptions.create({
       channel: "AddStudentsToRosterChannel",
       roster_id: roster_id,
@@ -36,11 +37,7 @@
     recursive_progress_asymptotically = function(recursive_callback, counter) {
       var progress;
       var remaining = 100/counter;
-      if(remaining == 1){
-        progress = 99;
-      }else{
-        progress = 100 - (100/counter);
-      }
+      progress = 100 - (100/counter);
       $(document)
       .find(".roster-update-progress-bar")
       .animate(
@@ -48,7 +45,9 @@
         { duration: PROGRESS_HALF_LIFE * counter }
       );
       setTimeout(function() {
-        recursive_callback(recursive_callback, counter + 1);
+        if(!progress_complete){
+          recursive_callback(recursive_callback, counter + 1);
+        }
       },
       PROGRESS_HALF_LIFE * counter
     );
@@ -78,10 +77,11 @@ display_progress_bar = function(){
 initialize_progress = function(data){
   switch(data.status){
     case "update_started":
-      display_progress_bar();
-      progress_asymptotically();
+      // display_progress_bar();
+      // progress_asymptotically();
       break;
     case "completed":
+      progress_complete = true;
       set_progress(100);
       display_message(data.message);
       break;
@@ -89,6 +89,19 @@ initialize_progress = function(data){
 };
 
 ready = (function(){
+  if(window.location.href.indexOf('#new_student_modal') != -1) {
+    var inst = $('[data-remodal-id=new-student-modal]').remodal();
+    inst.open();
+  }
+
+
+  $("#add-students-roster-form").on("ajax:beforeSend", function(){
+    display_progress_bar();
+    progress_asymptotically();
+  });
+
+
+
   setup_roster_update_cable();
 });
 

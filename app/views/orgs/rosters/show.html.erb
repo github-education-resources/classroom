@@ -25,25 +25,6 @@
             <span class="btn btn-primary btn-sm", role="button" data-remodal-target="download-csv-modal">Download</span>
           </div>
         </h3>
-        <%= hidden_field_tag 'user_id', current_user.id %>
-        <%= hidden_field_tag 'roster_id', current_roster.id %>
-
-        <div class="flex-justify-between roster-update-progress" hidden>
-          <div class="Box Box--blue">
-            <div class="flash flash-full roster-update-message" hidden>
-              <button class="flash-close js-flash-close"><%= octicon "x" %></button>
-              <p id="roster-progress"></p>
-            </div>
-            <div class="Box-body">
-              <div class="Subhead border-bottom-0">
-                <h4 class="Subhead-heading Subhead-heading--blue">Adding students to Roster</h4>
-              </div>
-              <span class="Progress Progress">
-                <span class="bg-green roster-update-progress-bar" style="width: 0%;"></span>
-              </span>
-            </div>
-          </div>
-        </div>
 
         <div class="site-content-body tabnav-body clearfix">
           <div class="tabnav">

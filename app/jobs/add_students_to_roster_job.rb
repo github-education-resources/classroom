@@ -14,7 +14,7 @@ class AddStudentsToRosterJob < ApplicationJob
   # rubocop:disable MethodLength
   def perform(identifiers, roster, user, lms_user_ids = [])
     channel = AddStudentsToRosterChannel.channel(roster_id: roster.id, user_id: user.id)
-    ActionCable.server.broadcast(channel, status: "update_started")
+    # ActionCable.server.broadcast(channel, status: "update_started")
 
     identifiers = add_suffix_to_duplicates!(identifiers, roster)
     invalid_roster_entries =
@@ -28,7 +28,7 @@ class AddStudentsToRosterJob < ApplicationJob
     if lms_user_ids.present? && entries_created.positive?
       GitHubClassroom.statsd.increment("roster_entries.lms_imported", by: entries_created)
     end
-    ActionCable.server.broadcast(channel, message: message, status: "completed")
+    ActionCable.server.broadcast(channel, {message: message, status: "completed"})
   end
   # rubocop:enable AbcSize
   # rubocop:enable MethodLength
