@@ -44,7 +44,7 @@ class AddStudentsToRosterJob < ApplicationJob
   # rubocop:disable MethodLength
   def build_message(invalid_roster_entries, identifiers)
     if invalid_roster_entries.empty?
-      ROSTER_UPDATE_SUCCESSFUL
+      ROSTER_UPDATE_SUCCESSFUL + " #{identifiers.count} roster #{'entries'.pluralize(identifiers.count)} were added."
     elsif invalid_roster_entries.size == identifiers.size
       ROSTER_UPDATE_FAILED
     else
