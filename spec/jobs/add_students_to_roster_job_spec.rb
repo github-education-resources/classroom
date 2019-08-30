@@ -73,7 +73,7 @@ RSpec.describe AddStudentsToRosterJob, type: :job do
 
       let(:result) { described_class.new.build_message(invalid_roster_entries, identifiers) }
       it "returns roster update successful message" do
-        expect(result).to eq("Roster successfully updated.")
+        expect(result).to eq("Roster successfully updated. 2 roster entries were added.")
       end
     end
 
