@@ -135,13 +135,12 @@ module Orgs
     # rubocop:disable Metrics/AbcSize
     def add_students
       # channel = AddStudentsToRosterChannel.channel(roster_id: current_roster.id, user_id: current_user.id)
-      # ActionCable.server.broadcast(channel, status: "update_started")
       params[:lms_user_ids].split! if params[:lms_user_ids].is_a? String
       lms_user_ids = Array.wrap(params[:lms_user_ids])
 
       identifiers = params[:identifiers].split("\r\n").reject(&:blank?)
       job_info = AddStudentsToRosterJob.perform_later(identifiers, current_roster, current_user, lms_user_ids)
-      render json: {job_info: job_info, message: "Updating the roster with new students, please stay tuned."}
+      render json: { job_info: job_info }
       # redirect_to roster_path(current_organization, anchor: "new-student-modal")
     end
     # rubocop:enable Metrics/AbcSize

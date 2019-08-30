@@ -27,8 +27,11 @@
 
       received: function(data) {
         // Called when there's incoming data on the websocket for this channel
-        initialize_progress(data);
-
+        if(data.status == "completed"){
+          progress_complete = true;
+          set_progress(100);
+          display_message(data.message);
+        }
       }
     });
   };
@@ -69,38 +72,34 @@ set_progress = function(percent) {
   }
 };
 
-display_progress_bar = function(){
-  $('.roster-update-progress').removeAttr("hidden");
-};
-
-
-initialize_progress = function(data){
-  switch(data.status){
-    case "update_started":
-      // display_progress_bar();
-      // progress_asymptotically();
-      break;
-    case "completed":
-      progress_complete = true;
-      set_progress(100);
-      display_message(data.message);
-      break;
-  }
+toggle_roster_form = function(disable_fields){
+    var text_area = $("#entries-field");
+    var csv_button = $("#file-upload");
+    if(disable_fields){
+      text_area.attr("disabled", "disabled");
+      csv_button.addClass("disabled");
+    }else{
+      text_area.removeAttr("disabled");
+      csv_button.removeClass("disabled");
+    }
 };
 
 ready = (function(){
-  if(window.location.href.indexOf('#new_student_modal') != -1) {
-    var inst = $('[data-remodal-id=new-student-modal]').remodal();
-    inst.open();
-  }
-
-
   $("#add-students-roster-form").on("ajax:beforeSend", function(){
-    display_progress_bar();
+    toggle_roster_form(true);
+    $('.roster-update-progress').removeAttr("hidden");
     progress_asymptotically();
   });
 
+  $("#add-students-roster-form").on("ajax:complete", function(){
+    toggle_roster_form(false);
+    $("#entries-field").val("");
+  });
 
+  $(document).on('closing', '[data-remodal-id=new-student-modal]', function (e) {
+    set_progress("0");
+    $('.roster-update-progress').attr("hidden", "hidden");
+  });
 
   setup_roster_update_cable();
 });

@@ -28,7 +28,7 @@ class AddStudentsToRosterJob < ApplicationJob
     if lms_user_ids.present? && entries_created.positive?
       GitHubClassroom.statsd.increment("roster_entries.lms_imported", by: entries_created)
     end
-    ActionCable.server.broadcast(channel, {message: message, status: "completed"})
+    ActionCable.server.broadcast(channel, message: message, status: "completed")
   end
   # rubocop:enable AbcSize
   # rubocop:enable MethodLength
