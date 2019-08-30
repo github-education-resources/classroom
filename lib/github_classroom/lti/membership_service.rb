@@ -70,9 +70,9 @@ module GitHubClassroom
       # LTI 1.1 (and up) responses
       # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       def parse_membership_service(raw_data)
-        begin JSON::ParserError
+        begin
           json_membership = JSON.parse(raw_data)
-        rescue
+        rescue JSON::ParserError
           Rails.logger.error("raw_data: #{raw_data}")
           raise JSON::ParserError
         end
