@@ -15,7 +15,7 @@ class OrganizationsController < Orgs::Controller
   skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create search]
 
   def index
-    @organizations = current_user.organizations.includes(:assignments, :group_assignments).order(:id).page(params[:page]).per(12)
+    @organizations = current_user.organizations.order(:id).page(params[:page]).per(12)
   end
 
   def new
@@ -111,7 +111,6 @@ class OrganizationsController < Orgs::Controller
   def search
     @organizations = current_user
       .organizations
-      .includes(:assignments, :group_assignments)
       .filter_by_search(@query)
       .order_by_sort_mode(@current_sort_mode)
       .order(:id)
