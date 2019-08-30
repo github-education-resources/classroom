@@ -72,7 +72,7 @@ module GitHubClassroom
       def parse_membership_service(raw_data)
         begin
           json_membership = JSON.parse(raw_data)
-        rescue JSON::ParserError
+        rescue
           Rails.logger.error("raw_data: #{raw_data}")
           raise JSON::ParserError
         end
