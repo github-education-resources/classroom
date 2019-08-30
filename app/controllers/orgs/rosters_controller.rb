@@ -22,6 +22,7 @@ module Orgs
     depends_on :google_classroom
 
     # rubocop:disable AbcSize
+    # rubocop:disable MethodLength
     def show
       @google_course_name = current_organization_google_course_name
 
@@ -41,6 +42,7 @@ module Orgs
       download_roster if params.dig("format")
     end
     # rubocop:enable AbcSize
+    # rubocop:enable MethodLength
 
     def new
       @roster = Roster.new
