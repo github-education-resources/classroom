@@ -74,6 +74,7 @@ module GitHubClassroom
           json_membership = JSON.parse(raw_data)
         rescue JSON::ParserError
           Rails.logger.error("raw_data: #{raw_data}")
+          # raising new error as the encoded raw_data may be causing failbot issues
           raise JSON::ParserError
         end
 
