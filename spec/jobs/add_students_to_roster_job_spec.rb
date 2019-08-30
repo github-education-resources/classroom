@@ -33,11 +33,6 @@ RSpec.describe AddStudentsToRosterJob, type: :job do
     end
 
     context "sends ActionCable broadcastss" do
-      it "sends update_started message when job starts" do
-        expect { described_class.perform_now(identifiers, roster, user) }
-          .to have_broadcasted_to(channel)
-          .with(status: "update_started")
-      end
       it "sends completed  message when job ends" do
         expect { described_class.perform_now(identifiers, roster, user) }
           .to have_broadcasted_to(channel)

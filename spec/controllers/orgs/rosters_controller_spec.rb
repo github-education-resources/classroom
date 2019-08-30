@@ -545,14 +545,6 @@ RSpec.describe Orgs::RostersController, type: :controller do
     end
 
     context "when all identifiers are valid" do
-      it "redirects to rosters page" do
-        patch :add_students, params: {
-          id:         organization.slug,
-          identifiers: "a\r\nb"
-        }
-        expect(response).to redirect_to(roster_url(organization))
-      end
-
       it "enqueues the AddStudentsToRosterJob" do
         expect do
           patch :add_students, params: {
