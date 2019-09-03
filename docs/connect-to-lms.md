@@ -9,6 +9,7 @@ GitHub Classroom integrates with your institution's learning management system (
 Classroom works with LMSs that uses the Learning Tools Interoperability (LTI) standard. Using LTI keeps your information safe and secure. LTI is an industry-standard protocol and Classroom's use of LTI is certified by the Instructional Management System Global Learning Consortium.
 
 For the GitHub Classroom and LMS integration to work, we require that your LMS supports:
+
 - LTI version 1.0 and/or 1.1
 - LTI Names and Roles Provisioning 1.X
 
