@@ -19,11 +19,6 @@
           <%= link_to 'Cancel', organization_path(@organization), class: 'btn', role: 'button' %>
         </div>
       </div>
-      <% unless GitHubClassroom.enterprise? %>
-        <div class="col-md-3">
-          <%= render partial: 'shared/unlimited_free_private_repositories_banner' %>
-        </div>
-      <% end %>
     </div>
   <% end %>
 </div>
