@@ -7,7 +7,6 @@ body {
   font-size: 13px;
   line-height: 1.4;
   background-color: $gray-000;
-  // background-color: #f3f4f6;
 
   &.site {
     display: flex;
@@ -357,13 +356,6 @@ main.bg-gray-light, .help main {
     border-top: 1px solid $gray-200;
   }
 }
-
-
-// .help {
-//   &+footer {
-//     border-top: 1px solid $gray-200;
-//   }
-// }
 
 footer {
     background-color: #fff;
