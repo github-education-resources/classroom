@@ -102,6 +102,7 @@ FactoryBot.define do
   factory :roster_entry do
     roster
     identifier { "myemail@example.com" }
+    lms_user_id { Faker::Code.isbn }
   end
 
   factory :user do
@@ -117,5 +118,15 @@ FactoryBot.define do
         create_list(:organization, evaluator.organizations_count, users: [user])
       end
     end
+  end
+
+  factory :lti_configuration do
+    organization
+
+    consumer_key { SecureRandom.uuid }
+    shared_secret { SecureRandom.uuid }
+    cached_launch_message_nonce { SecureRandom.uuid }
+    lms_link { "www.example.com" }
+    lms_type { :other }
   end
 end

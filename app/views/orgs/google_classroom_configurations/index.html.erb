@@ -1,0 +1,26 @@
+<div class="container-lg p-responsive">
+  <div class="Subhead Subhead--spacious">
+    <div class="Subhead-heading">Connect to Google Classroom</div>
+  </div>
+  <div class="my-3">
+    <h4 class="mb-2">
+      <span class="text-normal text-gray">Select the Google Classroom that you want to connect to </span><%= current_organization.title %>.
+    </h4>
+
+    <div class="Box my-3">
+      <div class="Box-header">
+        <%= form_tag google_classrooms_search_organization_path, id: 'js-search-form', class: 'form-block col-md-4', method: :get, remote: true do %>
+          <%= text_field_tag :query, params[:query], class: 'form-control width-full', placeholder: 'Search Google Classrooms...', autofocus: true, autocomplete: :off %>
+        <% end %>
+      </div>
+      <ul id="js-search-results" class="overflow-scroll" style="max-height:275px;">
+        <%= render partial: 'google_classroom_collection', locals: {courses: @google_classroom_courses} %>
+      </ul>
+    </div>
+  </div>
+
+  <div class="d-flex flex-items-center">
+    <%= submit_tag 'Link to Google Classroom', class: 'btn btn-primary mr-3', form: "google_classroom_link" %>
+    <%= link_to 'Skip', new_roster_path(current_organization), class: 'btn-link' %>
+  </div>
+</div>

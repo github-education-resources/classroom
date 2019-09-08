@@ -10,7 +10,7 @@ en:
     invite_students_desc: 'Students gain access to assignments using unique invitation URLs, eliminating the need to collect GitHub usernames in advance and manage access manually.'
     review_progress: 'Review progress'
     review_progress_desc: 'Teachers and teaching assistants can browse submissions by assignment, making it easy to follow along with student progress.'
-    homev2:
+    home:
       signin_section:
         banner_heading: 'The workflow developers use,'
         banner_subheading: 'whether you have five students or 500.'

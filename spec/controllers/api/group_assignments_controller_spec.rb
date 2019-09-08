@@ -16,7 +16,7 @@ RSpec.describe API::GroupAssignmentsController, type: :controller do
     end
 
     it "returns success" do
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
 
     it "returns only one assignment" do
@@ -34,7 +34,7 @@ RSpec.describe API::GroupAssignmentsController, type: :controller do
     end
 
     it "returns success" do
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
 
     it "returns correct attributes in group assignment serializer" do

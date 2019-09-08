@@ -87,7 +87,7 @@ RSpec.describe Organization::Creator, type: :model do
       end
     end
 
-    describe "unsucessful creation" do
+    describe "unsuccessful creation" do
       context "does not allow non admins to be added" do
         subject do
           non_admin_user = create(:user, uid: 1)

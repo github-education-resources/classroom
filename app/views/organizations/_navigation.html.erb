@@ -1,0 +1,9 @@
+<div class="tabnav organization-nav">
+  <nav class="tabnav-tabs" aria-label="Classroom menu">
+    <%= link_to 'Assignments', organization, class: "tabnav-tab #{'selected' if current_page?(organization_path(organization)) || request.path_info.include?('assignment')}" %>
+    <%= link_to edit_organization_path(organization), class: "tabnav-tab #{'selected' if settings_view == true || request.path_info.include?('invite')}" do %>
+      <%= octicon 'gear', class: 'mr-1' %>
+      Settings
+    <% end %>
+  </nav>
+</div>

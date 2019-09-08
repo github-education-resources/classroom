@@ -147,95 +147,69 @@ RSpec.describe RepositoryImportEventJob, type: :job do
       GroupAssignment.destroy_all
     end
 
-    it "doesn't change the invite_status" do
-      status = group_invite_status.status
-      subject.perform_now(success_payload)
-      expect(group_invite_status.reload.status).to eq(status)
+    context "with source import success" do
+      it "sets invite_status to completed" do
+        subject.perform_now(success_payload)
+        expect(group_invite_status.status).to eq("completed")
+      end
+
+      it "reports success stat" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v3_group_exercise_repo.import.success")
+        subject.perform_now(success_payload)
+      end
+
+      it "broadcasts completion" do
+        expect { subject.perform_now(success_payload) }
+          .to have_broadcasted_to(group_channel)
+          .with(
+            text: subject::CREATE_COMPLETE,
+            status: "completed",
+            status_text: "Done"
+          )
+      end
     end
 
-    it "doesn't report any stats" do
-      expect(GitHubClassroom.statsd).to_not receive(:increment)
-      subject.perform_now(success_payload)
+    context "with source import failure" do
+      it "sets invite_status to errored_importing_starter_code" do
+        subject.perform_now(failure_payload)
+        expect(group_invite_status.status).to eq("errored_importing_starter_code")
+      end
+
+      it "reports failure stat" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v3_group_exercise_repo.import.failure")
+        subject.perform_now(failure_payload)
+      end
+
+      it "broadcasts failure" do
+        expect { subject.perform_now(failure_payload) }
+          .to have_broadcasted_to(group_channel)
+          .with(
+            error: subject::IMPORT_FAILED,
+            status: "errored_importing_starter_code",
+            status_text: "Failed"
+          )
+      end
     end
 
-    it "doesn't broadcast" do
-      expect { subject.perform_now(success_payload) }
-        .to_not have_broadcasted_to(individual_channel)
-    end
-
-    context "with group_import_resiliency enabled" do
-      before do
-        GitHubClassroom.flipper[:group_import_resiliency].enable
+    context "with source import cancelled" do
+      it "sets invite_status to errored_importing_starter_code" do
+        subject.perform_now(cancelled_payload)
+        expect(group_invite_status.status).to eq("errored_importing_starter_code")
       end
 
-      after do
-        GitHubClassroom.flipper[:group_import_resiliency].disable
+      it "reports cancelled stat" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("v3_group_exercise_repo.import.cancelled")
+        subject.perform_now(cancelled_payload)
       end
 
-      context "with source import success" do
-        it "sets invite_status to completed" do
-          subject.perform_now(success_payload)
-          expect(group_invite_status.status).to eq("completed")
-        end
-
-        it "reports success stat" do
-          expect(GitHubClassroom.statsd).to receive(:increment).with("v3_group_exercise_repo.import.success")
-          subject.perform_now(success_payload)
-        end
-
-        it "broadcasts completion" do
-          expect { subject.perform_now(success_payload) }
-            .to have_broadcasted_to(group_channel)
-            .with(
-              text: subject::CREATE_COMPLETE,
-              status: "completed",
-              status_text: "Done"
-            )
-        end
-      end
-
-      context "with source import failure" do
-        it "sets invite_status to errored_importing_starter_code" do
-          subject.perform_now(failure_payload)
-          expect(group_invite_status.status).to eq("errored_importing_starter_code")
-        end
-
-        it "reports failure stat" do
-          expect(GitHubClassroom.statsd).to receive(:increment).with("v3_group_exercise_repo.import.failure")
-          subject.perform_now(failure_payload)
-        end
-
-        it "broadcasts failure" do
-          expect { subject.perform_now(failure_payload) }
-            .to have_broadcasted_to(group_channel)
-            .with(
-              error: subject::IMPORT_FAILED,
-              status: "errored_importing_starter_code",
-              status_text: "Failed"
-            )
-        end
-      end
-
-      context "with source import cancelled" do
-        it "sets invite_status to errored_importing_starter_code" do
-          subject.perform_now(cancelled_payload)
-          expect(group_invite_status.status).to eq("errored_importing_starter_code")
-        end
-
-        it "reports cancelled stat" do
-          expect(GitHubClassroom.statsd).to receive(:increment).with("v3_group_exercise_repo.import.cancelled")
-          subject.perform_now(cancelled_payload)
-        end
-
-        it "broadcasts cancelled" do
-          expect { subject.perform_now(cancelled_payload) }
-            .to have_broadcasted_to(group_channel)
-            .with(
-              error: subject::IMPORT_CANCELLED,
-              status: "errored_importing_starter_code",
-              status_text: "Failed"
-            )
-        end
+      it "broadcasts cancelled" do
+        expect { subject.perform_now(cancelled_payload) }
+          .to have_broadcasted_to(group_channel)
+          .with(
+            error: subject::IMPORT_CANCELLED,
+            status: "errored_importing_starter_code",
+            status_text: "Failed"
+          )
       end
     end
   end

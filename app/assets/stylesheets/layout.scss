@@ -3,8 +3,10 @@
 }
 
 body {
-  font: 13px/1.4 Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
-  background-color: #f3f4f6;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  font-size: 13px;
+  line-height: 1.4;
+  background-color: $gray-000;
 
   &.site {
     display: flex;
@@ -81,33 +83,12 @@ main {
 }
 
 .site-nav {
-  a {
+  a:not(.dropdown-item) {
     color: rgba(255, 255, 255, 0.5);
   }
 
-  a:hover {
+  a:hover:not(.dropdown-item) {
     color: rgba(255, 255, 255, 1);
-  }
-}
-
-.organization-banner {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  color: #fff;
-  background-color: #5fb27b;
-
-  .btn {
-    float: right;
-    margin-top: 1.7rem;
-  }
-
-  @media screen and (max-width: 40em) {
-    padding-right: 1rem;
-    padding-left: 1rem;
-
-    .btn {
-      display: none;
-    }
   }
 }
 
@@ -137,6 +118,20 @@ main {
     color: inherit;
   }
 }
+
+.organization-nav {
+  border-bottom: none;
+
+  .tabnav-tab {
+    color: #f6f8fa;
+  }
+  .tabnav-tab.selected {
+    color: #2f363d;
+    border-top: 3px solid #444d56;
+    background-color: #fafbfc;
+  }
+}
+
 
 .site-content,
 .menu {
@@ -221,47 +216,6 @@ main {
   background-color: #555;
 }
 
-.assignment-list-items {
-  .assignment-list-item:not(:first-child) {
-    padding-top: 1rem;
-    margin-top: 1rem;
-    border-top: 1px solid #e3e3e3;
-
-    @media screen and (max-width: 40em) {
-      padding-top: 1rem;
-      margin-top: 0.5rem;
-    }
-  }
-
-  .assignment-list-item:not(:last-child) {
-    margin-bottom: 1rem;
-  }
-}
-
-.assignment-name-link {
-  padding-top: 0.4rem;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.assignment-type {
-  margin-top: 0;
-  margin-bottom: 0;
-
-  @media screen and (max-width: 40em) {
-    display: inline-block;
-    max-width: 125px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    vertical-align: top;
-  }
-}
-
-.assignment-invite-link {
-  float: right;
-}
-
 .table-minimal {
   td {
     padding-right: 1rem;
@@ -284,9 +238,6 @@ hr {
 }
 
 .invitation-content {
-  padding-bottom: 2rem;
-  border-bottom: 1px solid #e3e3e3;
-
   @media screen and (max-width: 40em) {
     padding-bottom: 1rem;
     margin-bottom: 1rem;
@@ -399,29 +350,48 @@ hr {
   }
 }
 
-.site-footer {
-  padding-top: 2em;
-  padding-bottom: 2em;
-  color: #777;
-}
-
-.made-with-heart {
-  margin-bottom: 0.3em;
-  font-size: 15px;
-
-  a {
-    position: relative;
-    color: #777;
-    text-decoration: none;
-    transition: 0.2s color ease-in 0;
-
-    &:hover { color: #333; }
+main.bg-gray-light, .help main {
+  padding-bottom: $spacer-10;
+  &+footer {
+    border-top: 1px solid $gray-200;
   }
 }
 
+footer {
+    background-color: #fff;
+    background-color: $gray-100;
+    .octicon-heart {
+      color: $red-500;
+    }
+    section {
+      @media screen and (max-width: $width-sm) {
+        min-width: 300px;
+      }
+      h4 {
+        padding-right: $spacer-3;
+        width: calc(100% - $spacer-5);
+
+      }
+      a {
+        color: $blue-600;
+        &:hover {
+          color: $blue-400;
+        }
+      }
+      ul {
+        li {
+          padding-right: $spacer-4;
+          line-height: 1.5;
+          padding-top: $spacer-1;
+          padding-bottom: $spacer-1;
+        }
+      }
+    }
+  }
+
 
 .pages {
-  &.homev2 {
+  &.home {
     .site-footer {
       background-color: $gray-000;
     }
@@ -443,6 +413,11 @@ hr {
   @media screen and (max-width: 40em) {
     display: none;
   }
+}
+
+.desktop-invitation-content {
+  width: 50%;
+  margin: 0 auto;
 }
 
 .mobile-invitation-content {

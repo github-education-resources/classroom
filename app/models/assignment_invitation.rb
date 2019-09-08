@@ -2,10 +2,14 @@
 
 class AssignmentInvitation < ApplicationRecord
   include ShortKey
+  include StafftoolsSearchable
+
+  INVITATIONS_DISABLED = "Invitations for this assignment have been disabled."
+  INVITATIONS_DISABLED_ARCHIVED = "Invitations for this assignment are disabled because the classroom is archived."
+
+  define_pg_search(columns: %i[id key])
 
   default_scope { where(deleted_at: nil) }
-
-  update_index("assignment_invitation#assignment_invitation") { self }
 
   belongs_to :assignment
 
@@ -26,36 +30,28 @@ class AssignmentInvitation < ApplicationRecord
 
   # Public: Redeem an AssignmentInvtiation for a User invitee.
   #
-  # Returns a AssignmentRepo::Creator::Result.
+  # Returns a CreateGitHubRepoService::Result.
   #
-  # rubocop:disable MethodLength
-  # rubocop:disable AbcSize
-  def redeem_for(invitee, import_resiliency: false)
+  def redeem_for(invitee)
+    return reason_for_disabled_invitations unless enabled?
+
     if (repo_access = RepoAccess.find_by(user: invitee, organization: organization))
       assignment_repo = AssignmentRepo.find_by(assignment: assignment, repo_access: repo_access)
-      return AssignmentRepo::Creator::Result.success(assignment_repo) if assignment_repo.present?
+      CreateGitHubRepoService::Result.success(assignment_repo) if assignment_repo.present?
     end
 
     assignment_repo = AssignmentRepo.find_by(assignment: assignment, user: invitee)
-    return AssignmentRepo::Creator::Result.success(assignment_repo) if assignment_repo.present?
+    return CreateGitHubRepoService::Result.success(assignment_repo) if assignment_repo.present?
 
-    return AssignmentRepo::Creator::Result.failed("Invitations for this assignment have been disabled.") unless enabled?
-
-    if import_resiliency
-      AssignmentRepo::Creator::Result.pending
-    else
-      AssignmentRepo::Creator.perform(assignment: assignment, user: invitee)
-    end
+    CreateGitHubRepoService::Result.pending
   end
-  # rubocop:enable MethodLength
-  # rubocop:enable AbcSize
 
   def to_param
     key
   end
 
   def enabled?
-    assignment.invitations_enabled?
+    assignment.invitations_enabled? && !assignment.organization.archived?
   end
 
   def status(user)
@@ -69,5 +65,10 @@ class AssignmentInvitation < ApplicationRecord
 
   def assign_key
     self.key ||= SecureRandom.hex(16)
+  end
+
+  def reason_for_disabled_invitations
+    return CreateGitHubRepoService::Result.failed(INVITATIONS_DISABLED) unless assignment.invitations_enabled?
+    return CreateGitHubRepoService::Result.failed(INVITATIONS_DISABLED_ARCHIVED) if assignment.organization.archived?
   end
 end

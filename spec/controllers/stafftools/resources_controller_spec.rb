@@ -29,7 +29,7 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
         end
 
         it "returns a success status" do
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(200)
         end
 
         it "does not have any resources" do
@@ -43,12 +43,12 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
         end
 
         it "returns a success status" do
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(200)
         end
 
         it "has a MultiIndexSearchRequest of resources" do
           expect(assigns(:resources)).to_not be_nil
-          expect(assigns(:resources)).to be_kind_of(described_class::MultiIndexSearchRequest)
+          expect(assigns(:resources)).to be_kind_of(Hash)
         end
       end
     end
@@ -73,7 +73,7 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
         end
 
         it "returns a succcess status" do
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(200)
         end
 
         it "does not have any resources" do
@@ -87,12 +87,12 @@ RSpec.describe Stafftools::ResourcesController, type: :controller do
         end
 
         it "returns a succcess status" do
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(200)
         end
 
         it "has a MultiIndexSearchRequest of resources" do
           expect(assigns(:resources)).to_not be_nil
-          expect(assigns(:resources)).to be_kind_of(described_class::MultiIndexSearchRequest)
+          expect(assigns(:resources)).to be_kind_of(described_class::Hash)
         end
       end
     end

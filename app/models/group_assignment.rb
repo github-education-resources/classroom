@@ -3,9 +3,11 @@
 class GroupAssignment < ApplicationRecord
   include Flippable
   include GitHubPlan
+  include StarterCodeImportable
   include ValidatesNotReservedWord
+  include StafftoolsSearchable
 
-  update_index("group_assignment#group_assignment") { self }
+  define_pg_search(columns: %i[id title slug])
 
   default_scope { where(deleted_at: nil) }
 
@@ -37,9 +39,15 @@ class GroupAssignment < ApplicationRecord
 
   validate :uniqueness_of_slug_across_organization
   validate :max_teams_less_than_group_count
+  validate :starter_code_repository_not_empty, if: :will_save_change_to_starter_code_repo_id?
+  validate :starter_code_repository_is_template,
+    if: -> { :will_save_change_to_starter_code_repo_id? || :will_save_change_to_template_repos_enabled }
+
+  validates_associated :grouping
 
   alias_attribute :invitation, :group_assignment_invitation
   alias_attribute :repos, :group_assignment_repos
+  alias_attribute :template_repos_enabled?, :template_repos_enabled
 
   def private?
     !public_repo
@@ -49,13 +57,8 @@ class GroupAssignment < ApplicationRecord
     public_repo
   end
 
-  def starter_code?
-    starter_code_repo_id.present?
-  end
-
-  def starter_code_repository
-    return unless starter_code?
-    @starter_code_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id)
+  def visibility=(visibility)
+    self.public_repo = visibility != "private"
   end
 
   def to_param

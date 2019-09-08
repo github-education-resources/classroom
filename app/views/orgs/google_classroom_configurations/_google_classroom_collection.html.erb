@@ -1,0 +1,16 @@
+<%= form_tag google_classrooms_create_organization_path(current_organization), id: "google_classroom_link", method: :post do |f| %>
+  <% if courses.any? %>
+    <% courses.each_with_index do |course, i| %>
+      <li class="Box-row">
+        <label>
+          <%= radio_button_tag "course_id", course.id, i==0, 'aria-describedby':"help-text-for-checkbox", class:"mr-2" %>
+          <%= course.name %>
+        </label>
+      </li>
+    <% end %>
+  <% else %>
+    <div class="blankslate blankslate-capped">
+      <h3>No courses are found.</h3>
+    </div>
+  <% end %>
+<% end %>

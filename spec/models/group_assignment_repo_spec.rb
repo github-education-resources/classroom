@@ -24,6 +24,29 @@ RSpec.describe GroupAssignmentRepo, type: :model do
     let(:group) { create(:group, grouping: grouping, github_team_id: github_team_id, repo_accesses: [repo_access]) }
     subject { create(:group_assignment_repo, group_assignment: group_assignment, group: group, github_repo_id: 42) }
 
+    describe ".search", :vcr do
+      let(:searchable_repo) { create(:group_assignment_repo, group_assignment: group_assignment) }
+
+      before do
+        expect(searchable_repo).to_not be_nil
+      end
+
+      it "searches by id" do
+        results = GroupAssignmentRepo.search(searchable_repo.id)
+        expect(results.to_a).to include(searchable_repo)
+      end
+
+      it "searches by github_repo_id" do
+        results = GroupAssignmentRepo.search(searchable_repo.github_repo_id)
+        expect(results.to_a).to include(searchable_repo)
+      end
+
+      it "does not return the assignment when it shouldn't" do
+        results = GroupAssignmentRepo.search("spaghetto")
+        expect(results.to_a).to_not include(searchable_repo)
+      end
+    end
+
     describe "callbacks", :vcr do
       describe "before_destroy" do
         describe "#silently_destroy_github_repository" do
@@ -88,6 +111,25 @@ RSpec.describe GroupAssignmentRepo, type: :model do
         actual_ordering = GroupAssignmentRepo.where(group_assignment: group_assignment).order_by_sort_mode("Created at")
 
         expect(actual_ordering).to eq(expected_ordering)
+      end
+    end
+
+    describe "is searchable", :vcr do
+      # rubocop:disable Metrics/LineLength
+      let(:github_team_id_two) { organization.github_organization.create_team(Faker::Team.name[0..39]).id }
+      let(:group_two) { create(:group, grouping: grouping, github_team_id: github_team_id_two, repo_accesses: [repo_access]) }
+
+      let(:group_assignment_repo_one) { create(:group_assignment_repo, group_assignment: group_assignment, group: group, github_repo_id: 1) }
+      let(:group_assignment_repo_two) { create(:group_assignment_repo, group_assignment: group_assignment, group: group_two, github_repo_id: 2) }
+      # rubocop:enable Metrics/LineLength
+
+      it "filter_by_sort_mode searches by 'Team name'" do
+        query = group_assignment_repo_one.group.title
+
+        expected = [group_assignment_repo_one, group_assignment_repo_two].select { |r| r.group.title == query }
+        actual = GroupAssignmentRepo.where(group_assignment: group_assignment).filter_by_search(query)
+
+        expect(actual).to eq(expected)
       end
     end
 

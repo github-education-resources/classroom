@@ -9,6 +9,23 @@ RSpec.describe AssignmentRepo, type: :model do
 
   subject { create(:assignment_repo, assignment: assignment, github_repo_id: 42) }
 
+  describe ".search" do
+    it "searches by id" do
+      results = AssignmentRepo.search(subject.id)
+      expect(results.to_a).to include(subject)
+    end
+
+    it "searches by github_repo_id" do
+      results = AssignmentRepo.search(subject.github_repo_id)
+      expect(results.to_a).to include(subject)
+    end
+
+    it "does not return the assignment when it shouldn't" do
+      results = AssignmentRepo.search("spaghetto")
+      expect(results.to_a).to_not include(subject)
+    end
+  end
+
   describe "callbacks", :vcr do
     describe "before_destroy" do
       describe "#silently_destroy_github_repository" do
@@ -88,6 +105,60 @@ RSpec.describe AssignmentRepo, type: :model do
         non_unique_assignment_repo.save!(validate: false)
         expect(non_unique_assignment_repo.valid?).to be_truthy
       end
+    end
+  end
+
+  describe "is sortable", :vcr do
+    let(:assignment_repo_one) { create(:assignment_repo, assignment: assignment) }
+    let(:assignment_repo_two) { create(:assignment_repo, assignment: assignment) }
+
+    # TODO: we don't have cached github attributes on the user factory
+    # but adding them messes up a ... lot ... of casettes.
+    before(:each) do
+      assignment_repo_one.user.github_login = "ONE"
+      assignment_repo_two.user.github_login = "TWO"
+
+      assignment_repo_one.user.save!
+      assignment_repo_two.user.save!
+    end
+
+    after(:each) do
+    end
+
+    it "order_by_sort_mode sorts by 'Team name'" do
+      expected_ordering = [assignment_repo_one, assignment_repo_two].sort_by { |repo| repo.user.github_login }
+      actual_ordering = AssignmentRepo.where(assignment: assignment).order_by_sort_mode("GitHub login")
+
+      expect(actual_ordering).to eq(expected_ordering)
+    end
+
+    it "order_by_sort_mode sorts by 'Created at'" do
+      expected_ordering = [assignment_repo_one, assignment_repo_two].sort_by(&:created_at)
+      actual_ordering = AssignmentRepo.where(assignment: assignment).order_by_sort_mode("Created at")
+
+      expect(actual_ordering).to eq(expected_ordering)
+    end
+  end
+
+  describe "is searchable", :vcr do
+    let(:assignment_repo_one) { create(:assignment_repo, assignment: assignment) }
+    let(:assignment_repo_two) { create(:assignment_repo, assignment: assignment) }
+
+    before(:each) do
+      assignment_repo_one.user.github_login = "ONE"
+      assignment_repo_two.user.github_login = "TWO"
+
+      assignment_repo_one.user.save!
+      assignment_repo_two.user.save!
+    end
+
+    it "filter_by_search searches by 'GitHub login'" do
+      query = assignment_repo_one.user.github_login
+
+      expected = [assignment_repo_one, assignment_repo_two].select { |r| r.user.github_login == query }
+      actual = AssignmentRepo.where(assignment: assignment).filter_by_search(query)
+
+      expect(actual).to eq(expected)
     end
   end
 end

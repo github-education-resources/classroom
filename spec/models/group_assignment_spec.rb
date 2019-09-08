@@ -5,6 +5,34 @@ require "rails_helper"
 RSpec.describe GroupAssignment, type: :model do
   it_behaves_like "a default scope where deleted_at is not present"
 
+  describe ".search" do
+    let(:searchable_assignment) { create(:group_assignment) }
+
+    before do
+      expect(searchable_assignment).to_not be_nil
+    end
+
+    it "searches by id" do
+      results = GroupAssignment.search(searchable_assignment.id)
+      expect(results.to_a).to include(searchable_assignment)
+    end
+
+    it "searches by title" do
+      results = GroupAssignment.search(searchable_assignment.title)
+      expect(results.to_a).to include(searchable_assignment)
+    end
+
+    it "searches by slug" do
+      results = GroupAssignment.search(searchable_assignment.slug)
+      expect(results.to_a).to include(searchable_assignment)
+    end
+
+    it "does not return the assignment when it shouldn't" do
+      results = GroupAssignment.search("spaghetto")
+      expect(results.to_a).to_not include(searchable_assignment)
+    end
+  end
+
   describe "invitations_enabled default" do
     it "sets invitations_enabled to true by default" do
       options = {
@@ -141,6 +169,176 @@ RSpec.describe GroupAssignment, type: :model do
         group_assignment.update(max_teams: 2)
 
         expect { group_assignment.save! }.not_to raise_error
+      end
+    end
+  end
+
+  describe "#starter_code_repository_not_empty", :vcr do
+    let(:organization) { classroom_org }
+
+    before do
+      @client = oauth_client
+    end
+
+    before(:each) do
+      github_organization = GitHubOrganization.new(@client, organization.github_id)
+      @github_repository  = github_organization.create_repository("test-repository", private: true)
+    end
+
+    after(:each) do
+      @client.delete_repository(@github_repository.id)
+    end
+
+    it "raises an error when starter code repository is empty", :vcr do
+      group_assignment = build(:group_assignment, organization: organization, title: "group-assignment")
+      group_assignment.assign_attributes(starter_code_repo_id: @github_repository.id)
+
+      expect(@github_repository.empty?).to eql(true)
+      expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Starter code "\
+        "repository cannot be empty. Select a repository that is not empty or create the assignment without starter "\
+        "code.")
+    end
+
+    it "does not raise an error when starter code repository is not empty", :vcr do
+      group_assignment = build(:group_assignment, organization: organization, title: "group-assignment")
+      group_assignment.assign_attributes(starter_code_repo_id: @github_repository.id)
+      GitHubRepository.any_instance.stub(:empty?).and_return(false)
+
+      expect(@github_repository.empty?).to eql(false)
+      expect { group_assignment.save! }.not_to raise_error
+    end
+  end
+
+  describe "#starter_code_repository_is_template", :vcr do
+    let(:organization) { classroom_org }
+    let(:client) { oauth_client }
+    let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
+    let(:group_assignment) { build(:group_assignment, organization: organization, title: "Group Assignment 1") }
+    let(:github_repository) do
+      github_organization.create_repository("#{Faker::Team.name} Template", private: true, auto_init: true)
+    end
+
+    after(:each) do
+      client.delete_repository(github_repository.id)
+    end
+
+    context "group assignment is using template repos to import" do
+      before do
+        group_assignment.update(template_repos_enabled: true)
+      end
+
+      it "does not raise an error when starter code repo is a template repo" do
+        client.edit_repository(github_repository.full_name, is_template: true)
+        group_assignment.assign_attributes(starter_code_repo_id: github_repository.id)
+        expect { group_assignment.save! }.not_to raise_error
+      end
+
+      it "raises an error when starter code repository is not a template repo" do
+        client.edit_repository(github_repository.full_name, is_template: false)
+        group_assignment.assign_attributes(starter_code_repo_id: github_repository.id)
+        expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Starter code"\
+          " repository is not a template repository. Make it a template repository to use template cloning.")
+      end
+    end
+
+    context "group assignment is not using template repos to import" do
+      before do
+        group_assignment.update(template_repos_enabled: false)
+      end
+
+      it "does not raise error when using importer" do
+        group_assignment.assign_attributes(starter_code_repo_id: github_repository.id)
+        expect { group_assignment.save! }.not_to raise_error
+      end
+
+      it "does not raise error when not using starter code" do
+        expect { group_assignment.save! }.not_to raise_error
+      end
+    end
+  end
+
+  describe "grouping" do
+    let(:organization) { classroom_org }
+    let(:grouping)     { build(:grouping, organization: organization) }
+    let(:group_assignment) { build(:group_assignment, title: "Test 1", organization: organization, grouping: grouping) }
+
+    context "group_assignment validation fails" do
+      before(:each) do
+        group_assignment.update_attributes(title: "")
+      end
+
+      it "does not persist the grouping" do
+        expect(group_assignment.save).to be false
+        expect(group_assignment.grouping.persisted?).to be false
+      end
+    end
+
+    context "group_assignment validation passes" do
+      it "persists the grouping" do
+        expect(group_assignment.save).to be true
+        expect(group_assignment.grouping.persisted?).to be true
+      end
+    end
+
+    describe "validates_associating Grouping" do
+      context "Grouping is invalid" do
+        before do
+          grouping.assign_attributes(title: "")
+        end
+
+        it "Group and Grouping fail validation and are not persisted" do
+          expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Your set "\
+           "of teams is invalid")
+          expect(group_assignment.persisted?).to be false
+          expect(group_assignment.grouping.persisted?).to be false
+        end
+      end
+
+      context "Grouping is valid" do
+        it "Group and Grouping pass validation and are persisted" do
+          expect { group_assignment.save! }.not_to raise_error
+          expect(group_assignment.persisted?).to be true
+          expect(group_assignment.grouping.persisted?).to be true
+        end
+      end
+    end
+  end
+
+  describe "validation methods that call API", :vcr do
+    let(:organization) { classroom_org }
+    let(:group_assignment) { create(:group_assignment, organization: organization, title: "Assignment 3") }
+
+    context "#starter_code_repository_not_empty" do
+      it "calls methods if starter_code_repo_id is changed" do
+        expect(group_assignment).to receive(:starter_code_repository_not_empty)
+        group_assignment.update(starter_code_repo_id: 1_062_897)
+      end
+
+      it "does not call methods if starter_code_repo_id is unchanged" do
+        expect(group_assignment).not_to receive(:starter_code_repository_not_empty)
+        group_assignment.update(title: "Assignment 4")
+      end
+    end
+
+    context "#starter_code_repository_is_template" do
+      it "is called if starter_code_repo_id is changed" do
+        expect(group_assignment).to receive(:starter_code_repository_is_template)
+        group_assignment.update(starter_code_repo_id: 1_062_897)
+      end
+
+      it "is called if template_repos_enabled is changed" do
+        expect(group_assignment).to receive(:starter_code_repository_is_template)
+        expect(group_assignment.update(template_repos_enabled: false)).to be true
+      end
+
+      it "is called if both starter_code_repo_id and template_repos_enabled are changed" do
+        expect(group_assignment).to receive(:starter_code_repository_is_template)
+        group_assignment.update(starter_code_repo_id: 1_062_897, template_repos_enabled: true)
+      end
+
+      it "isn't called if starter_code_repo_id and template_repos_enabled are not changed" do
+        expect(group_assignment).to receive(:starter_code_repository_is_template)
+        group_assignment.update(title: "Assignment 5")
       end
     end
   end

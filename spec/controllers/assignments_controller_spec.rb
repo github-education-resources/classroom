@@ -14,7 +14,7 @@ RSpec.describe AssignmentsController, type: :controller do
   describe "GET #new", :vcr do
     it "returns success status" do
       get :new, params: { organization_id: organization.slug }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
 
     it "has a new Assignment" do
@@ -197,10 +197,25 @@ RSpec.describe AssignmentsController, type: :controller do
     end
   end
 
+  describe "POST #toggle_invitations", :vcr do
+    before(:each) do
+      assignment.update(invitations_enabled: false)
+    end
+
+    it "updates the Assignment's invitations_enabled column" do
+      post :toggle_invitations, params: {
+        invitations_enabled: true,
+        organization_id: organization.slug,
+        id: assignment.slug
+      }
+      expect(assignment.reload.invitations_enabled).to be true
+    end
+  end
+
   describe "GET #show", :vcr do
     it "returns success status" do
       get :show, params: { organization_id: organization.slug, id: assignment.slug }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
   end
 
@@ -210,7 +225,6 @@ RSpec.describe AssignmentsController, type: :controller do
       organization.save!
       RosterEntry.create(identifier: "tester", roster: organization.roster)
       organization.roster.reload
-      GitHubClassroom.flipper[:search_assignments].enable
     end
 
     it "finds one user if in roster" do
@@ -232,46 +246,11 @@ RSpec.describe AssignmentsController, type: :controller do
     end
   end
 
-  describe "display student username", :vcr, type: :view do
-    before do
-      organization.users.push(create(:user, uid: 90, token: "asdfsad4333"))
-      organization.roster = create(:roster)
-      organization.roster.roster_entries.push(RosterEntry.create(
-                                                identifier: "student",
-                                                roster: organization.roster,
-                                                user_id: organization.users.last
-      ))
-      organization.save!
-      organization.roster.reload
-    end
-
-    it "displays student's identifier if is a roster_entry" do
-      assignment_repo = create(:assignment_repo,
-        assignment: assignment,
-        user: organization.users.last,
-        github_repo_id: 34_534_534)
-      render partial: "orgs/roster_entries/assignment_repos/linked_accepted",
-             locals: { assignment_repo: assignment_repo,
-                       current_roster_entry: organization.roster.roster_entries.last }
-      expect(response).to include("student")
-    end
-
-    it "displays student github username if there is no roster_entry" do
-      assignment_repo = create(:assignment_repo,
-        assignment: assignment,
-        user: organization.users.last,
-        github_repo_id: 34_534_534)
-      render partial: "orgs/roster_entries/assignment_repos/linked_accepted",
-             locals: { assignment_repo: assignment_repo }
-      expect(response).to_not include("student")
-    end
-  end
-
   describe "GET #edit", :vcr do
     it "returns success and sets the assignment" do
       get :edit, params: { id: assignment.slug, organization_id: organization.slug }
 
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
       expect(assigns(:assignment)).to_not be_nil
     end
   end
@@ -287,11 +266,11 @@ RSpec.describe AssignmentsController, type: :controller do
     context "public_repo is changed" do
       it "calls the AssignmentVisibility background job" do
         private_repos_plan = { owned_private_repos: 0, private_repos: 2 }
-        options = { title: "Ruby on Rails", public_repo: !assignment.public? }
+        options = { title: "Ruby on Rails", visibility: "private" }
 
         allow_any_instance_of(GitHubOrganization).to receive(:plan).and_return(private_repos_plan)
 
-        assert_enqueued_jobs 1, only: Assignment::RepositoryVisibilityJob do
+        assert_enqueued_jobs 1, only: AssignmentRepositoryVisibilityJob do
           patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
         end
       end
@@ -301,7 +280,7 @@ RSpec.describe AssignmentsController, type: :controller do
       it "will not kick off an AssignmentVisibility job" do
         options = { title: "Ruby on Rails" }
 
-        assert_no_enqueued_jobs only: Assignment::RepositoryVisibilityJob do
+        assert_no_enqueued_jobs only: AssignmentRepositoryVisibilityJob do
           patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
         end
       end

@@ -13,7 +13,7 @@ class GroupAssignmentInvitationsController < ApplicationController
   before_action :check_should_redirect_to_roster_page,   only: :show
   before_action :authorize_group_access,                 only: :accept_invitation
   before_action :ensure_github_repo_exists,              only: :successful_invitation
-  before_action :ensure_group_import_resiliency_enabled, only: %i[create_repo progress]
+  before_action :check_group_exists,                     only: :accept
 
   def show
     @groups = invitation.groups.order(:title).page(params[:page])
@@ -37,9 +37,7 @@ class GroupAssignmentInvitationsController < ApplicationController
     end
   end
 
-  def setup
-    not_found unless organization.feature_enabled?(:group_import_resiliency)
-  end
+  def setup; end
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
@@ -54,7 +52,7 @@ class GroupAssignmentInvitationsController < ApplicationController
           @group_assignment_repo = nil
           report_retry
           group_invite_status.waiting!
-          GroupAssignmentRepo::CreateGitHubRepositoryJob.perform_later(group_assignment, group, retries: 3)
+          CreateGitHubRepositoryNewJob.perform_later(group_assignment, group, retries: 3)
           true
         end
       else
@@ -83,7 +81,7 @@ class GroupAssignmentInvitationsController < ApplicationController
 
     redirect_to group_assignment_invitation_url(invitation)
   rescue ActiveRecord::ActiveRecordError
-    flash[:error] = "An error occured, please try again!"
+    flash[:error] = "An error occurred, please try again!"
   end
 
   private
@@ -100,15 +98,9 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   ## Before Actions
 
-  def ensure_group_import_resiliency_enabled
-    not_found unless organization.feature_enabled?(:group_import_resiliency)
-  end
-
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
-  # rubocop:disable Metrics/CyclomaticComplexity
   def route_based_on_status
-    return unless organization.feature_enabled?(:group_import_resiliency)
     status = group_invite_status&.status
     case status
     when "unaccepted", nil
@@ -123,7 +115,6 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable MethodLength
-  # rubocop:enable Metrics/CyclomaticComplexity
 
   def authorize_group_access
     group_id = group_params[:id]
@@ -191,13 +182,8 @@ class GroupAssignmentInvitationsController < ApplicationController
       flash[:error] = result.error
       redirect_to group_assignment_invitation_path
     when :success, :pending
-      if organization.feature_enabled?(:group_import_resiliency)
-        GitHubClassroom.statsd.increment("v2_group_exercise_invitation.accept")
-        route_based_on_status
-      else
-        GitHubClassroom.statsd.increment("group_exercise_invitation.accept")
-        yield if block_given?
-      end
+      GitHubClassroom.statsd.increment("group_exercise_invitation.accept")
+      route_based_on_status
     end
   end
   # rubocop:enable Metrics/AbcSize
@@ -207,18 +193,14 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   def report_retry
     if group_invite_status.errored_creating_repo?
-      GitHubClassroom.statsd.increment("v2_group_exercise_repo.create.retry")
+      GitHubClassroom.statsd.increment("group_exercise_repo.create.retry")
     elsif group_invite_status.errored_importing_starter_code?
-      GitHubClassroom.statsd.increment("v2_group_exercise_repo.import.retry")
+      GitHubClassroom.statsd.increment("group_exercise_repo.import.retry")
     end
   end
 
   def report_invitation_failure
-    if organization.feature_enabled?(:group_import_resiliency)
-      GitHubClassroom.statsd.increment("v2_group_exercise_invitation.fail")
-    else
-      GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
-    end
+    GitHubClassroom.statsd.increment("group_exercise_invitation.fail")
   end
 
   ## Resource Helpers
@@ -262,6 +244,10 @@ class GroupAssignmentInvitationsController < ApplicationController
     return false if group_assignment_repo.blank?
     return false if group_assignment.starter_code? && !group_assignment_repo.github_repository.imported?
     true
+  end
+
+  def check_group_exists
+    redirect_to group_assignment_invitation_path(invitation) if group.blank?
   end
 end
 # rubocop:enable Metrics/ClassLength
