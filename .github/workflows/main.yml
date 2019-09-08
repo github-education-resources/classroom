@@ -27,7 +27,7 @@ jobs:
     - name: Setup the Database
       run: |
         bundle exec rake db:create db:migrate db:test:prepare
-        bundle exec rake factor_bot:lint
+        bundle exec rake factory_bot:lint
     - name: Lint code with Rubocop
       run: |
         bundle exec rubocop -P
