@@ -24,6 +24,10 @@ jobs:
       run: |
         gem install bundler
         bundle install --jobs 4 --retry 3 --without production
+    - name: Setup the Database
+      run: |
+        bundle exec rake db:create db:migrate db:test:prepare
+        bundle exec rake factor_bot:lint
     - name: Lint code with Rubocop
       run: |
         bundle exec rubocop -P
