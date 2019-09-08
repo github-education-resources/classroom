@@ -29,8 +29,16 @@ jobs:
         bundle exec rake db:create db:migrate db:test:prepare
         bundle exec rake factory_bot:lint
     - name: Lint code with Rubocop
-      run: |
-        bundle exec rubocop -P
+      run: bundle exec rubocop -P
     - name: Build and test with RSpec
-      run: |
-        bundle exec rspec
+      env:
+        classroom_webhook_url_prefix: https://example.com/github/hooks
+        github_client_id: client_id
+        github_client_secret: client_secret
+        google_client_id: google_client_id
+        google_client_secret: google_client_secret
+        rails_env: test
+        rack_env: test
+        webhook_secret: abcdefg
+        api_secret: abcdefg
+      run: bundle exec rspec
