@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 class AssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
@@ -188,4 +187,3 @@ class AssignmentsController < ApplicationController
     GitHubClassroom.statsd.increment("deadline.create") if @assignment.deadline
   end
 end
-# rubocop:enable Metrics/ClassLength

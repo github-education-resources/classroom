@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 class GitHubRepository < GitHubResource
   depends_on :import
 
@@ -244,4 +243,3 @@ class GitHubRepository < GitHubResource
     %w[name full_name html_url node_id private]
   end
 end
-# rubocop:enable Metrics/ClassLength

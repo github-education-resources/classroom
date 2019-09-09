@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 class GroupAssignmentInvitationsController < ApplicationController
   class InvalidStatusForRouteError < StandardError; end
 
@@ -250,4 +249,3 @@ class GroupAssignmentInvitationsController < ApplicationController
     redirect_to group_assignment_invitation_path(invitation) if group.blank?
   end
 end
-# rubocop:enable Metrics/ClassLength
