@@ -19,6 +19,12 @@ TrailingBlankLines:
 Documentation:
   Enabled: false
 
+Metrics/LineLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
