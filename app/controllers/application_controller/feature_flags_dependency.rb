@@ -37,4 +37,9 @@ class ApplicationController
     logged_in? && current_user.feature_enabled?(:classroom_visibility)
   end
   helper_method :classroom_visibility_enabled?
+
+  def redesign_enabled?
+    GitHubClassroom.flipper[:redesign].enabled? || (logged_in? && current_user.feature_enabled?(:redesign))
+  end
+  helper_method :redesign_enabled?
 end
