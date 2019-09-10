@@ -1,0 +1,42 @@
+<header class="site-header">
+  <div class="container-lg d-md-flex flex-items-center flex-justify-between p-responsive py-3">
+    <%= link_to(image_tag('logo@2x.png', class: 'site-logo', alt: 'GitHub for Classrooms'), (logged_in? ? organizations_path : root_path), class: 'd-block text-center mb-2 mb-md-0') %>
+
+    <nav class="site-nav d-sm-flex flex-wrap flex-content-start flex-justify-center">
+      <%= link_to "GitHub Education", 'https://education.github.com', target: '_blank', class: 'd-block text-center mx-sm-3 mb-2 mb-sm-0' %>
+
+      <ul class="list-style-none d-flex flex-justify-center">
+        <% if logged_in? %>
+          <li class="ml-3">
+            <details class="dropdown details-reset details-overlay d-inline-block">
+              <summary aria-haspopup="true">
+                <%= image_tag current_user.github_user.github_avatar_url(40), class: 'avatar', alt: "@#{current_user.github_user.login}", height: 20, width: 20 %>
+                <div class="dropdown-caret mt-1"></div>
+              </summary>
+
+              <div role="menu" class="dropdown-menu dropdown-menu-sw mt-2" style="width: 180px">
+                <%= link_to current_user.github_user.html_url, class: "dropdown-item", role: "menuitem" do %>
+                  <%= t("views.shared.signed_in_as") %> <strong><%= current_user.github_user.login %></strong>
+                <% end %>
+
+                <div role="none" class="dropdown-divider"></div>
+
+                <%= link_to t("views.shared.your_classrooms"), organizations_path, class: "dropdown-item", role: "menuitem" %>
+                <%= link_to t("views.shared.community_discussion"), "https://education.github.com/forum", class: "dropdown-item", role: "menuitem" %>
+                <%= link_to t("views.shared.report_bug"), 'https://github.com/education/classroom/issues', class: "dropdown-item", role: "menuitem" %>
+                <%= link_to t("views.shared.changelog"), 'https://github.com/education/classroom/pulls?q=is%3Apr+is%3Amerged+sort%3Aupdated-desc', class: "dropdown-item", role: "menuitem", target: '_blank' %>
+
+                <div role="none" class="dropdown-divider"></div>
+
+                <%= link_to t("views.shared.help"), help_path, class: "dropdown-item", role: 'menuitem' %>
+                <%= link_to t("views.shared.sign_out"), logout_path, method: :post, class: "dropdown-item dropdown-signout", role: 'menuitem' %>
+              </div>
+            </details>
+          </li>
+        <% else %>
+          <li class="ml-3"><%= link_to t('views.shared.sign_in'), login_path %></li>
+        <% end %>
+      </ul>
+    </nav>
+  </div>
+</header>

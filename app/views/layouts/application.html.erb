@@ -20,7 +20,11 @@
     <%= render 'peek/bar' %>
     <main class="bg-gray-light">
       <%= render 'shared/message_of_the_day' %>
-      <%= render 'shared/header' %>
+      <% if onboarding_redesign_enabled? %>
+        <%= render 'shared/header_v2' %>
+      <% else %>
+        <%= render 'shared/header' %>
+      <% end %>
 
       <%= yield :organization_banner %>
 
