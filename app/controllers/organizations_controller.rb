@@ -91,9 +91,7 @@ class OrganizationsController < Orgs::Controller
 
   def new_assignment; end
 
-  def link_lms
-    not_found unless lti_launch_enabled? || google_classroom_roster_import_enabled?
-  end
+  def link_lms; end
 
   def invite; end
 

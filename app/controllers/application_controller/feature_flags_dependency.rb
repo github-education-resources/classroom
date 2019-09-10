@@ -9,15 +9,6 @@ class ApplicationController
     not_found unless lti_launch_enabled?
   end
 
-  def ensure_google_classroom_roster_import_is_enabled
-    not_found unless google_classroom_roster_import_enabled?
-  end
-
-  def google_classroom_roster_import_enabled?
-    logged_in? && current_user.feature_enabled?(:google_classroom_roster_import)
-  end
-  helper_method :google_classroom_roster_import_enabled?
-
   def team_management_enabled?
     logged_in? && current_user.feature_enabled?(:team_management)
   end

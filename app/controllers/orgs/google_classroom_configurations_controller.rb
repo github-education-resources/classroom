@@ -4,7 +4,6 @@ require "google/apis/classroom_v1"
 
 module Orgs
   class GoogleClassroomConfigurationsController < Orgs::Controller
-    before_action :ensure_google_classroom_roster_import_is_enabled, only: %i[create search index]
     before_action :authorize_google_classroom, only: %i[create search index]
     before_action :ensure_no_lti_configuration, only: %i[create index]
     before_action :ensure_no_roster, only: %i[create index]
