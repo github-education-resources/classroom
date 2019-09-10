@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable ClassLength
 class CreateGitHubRepoService
   attr_reader :exercise, :stats_sender
   delegate :assignment, :collaborator, :organization, :invite_status, to: :exercise
@@ -275,4 +274,3 @@ class CreateGitHubRepoService
   end
   # rubocop:enable MethodLength
 end
-# rubocop:enable ClassLength

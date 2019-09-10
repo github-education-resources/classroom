@@ -94,7 +94,7 @@ RSpec.describe CreateGitHubRepoService do
         expect { service.create_github_repository_from_template! }
           .to raise_error(
             subject::Result::Error,
-            "GitHub repository could not be created from template, please try again. (Could not created GitHub repository)" # rubocop:disable LineLength
+            "GitHub repository could not be created from template, please try again. (Could not created GitHub repository)"
           )
       end
     end
