@@ -92,10 +92,8 @@ describe GitHubClassroom::LTI::MembershipService do
   end
 
   describe "membership extension (LTI 1.0)", :vcr do
-    # rubocop:disable Metrics/LineLength
     let(:endpoint) { "https://trysakai.longsight.com/imsblis/service/" }
     let(:body_params) { { "id": "4d0a6e23e6902927ff0ad4e7869f7f5cb3c5b962cd7fbb796d87a4ceab90fadd:::ce59ead6-026b-4ba5-9464-568e131c0a77:::content:2586" } }
-    # rubocop:enable Metrics/LineLength
 
     context "valid authentication" do
       let(:instance) { subject.new(endpoint, consumer_key, shared_secret, lti_version: 1.0) }
