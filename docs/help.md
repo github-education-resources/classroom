@@ -5,10 +5,6 @@
   * [Create individual assignments](/videos#rTsfBAV7sOo)
   * [Create group assignments](/videos#-52quDR2QSc) for collaborative projects
 
-### Glossary
-Lorem ipsum dolor sit assessment
-
-
 ### Guides  
 * [Controlling assignment repo settings with the Probot Settings app](/help/probot-settings)
 * [Creating group assignments](/help/create-group-assignments)
