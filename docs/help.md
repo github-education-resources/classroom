@@ -1,9 +1,10 @@
 
 ### Getting started with GitHub Classroom
-* [Quick-start video tutorials](/videos):
+* Get up and running quickly with our [video tutorials](/videos):
   * Just getting started? [Learn the basics of setting up GitHub Classroom](/videos#ChA_zph7aao)
   * [Create individual assignments](/videos#rTsfBAV7sOo)
   * [Create group assignments](/videos#-52quDR2QSc) for collaborative projects
+* [Check our glossary](/help/glossary) to learn more about terms and concepts used in GitHub Classroom    
 
 ### Guides  
 * [Controlling assignment repo settings with the Probot Settings app](/help/probot-settings)
