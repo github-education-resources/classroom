@@ -20,31 +20,29 @@
         <%= f.submit t('views.organizations.save_changes'), class: 'btn btn-primary' %>
       <% end %>
 
-      <% if lti_launch_enabled? || google_classroom_roster_import_enabled? %>
-        <div class="Box Box--condensed mt-5">
-          <div class="Box-header">
-            <h2 class="Box-title"><%= "Learning management system" %></h2>
-          </div>
-
-          <div class="Box-body">
-            <% if lti_launch_enabled? && current_organization.lti_configuration %>
-              <% lms_name = current_organization.lti_configuration.lms_name(default_name: "a learning management system") %>
-              You are currently connected to <%= lms_name %>.
-              <%= link_to "Connection Settings", lti_configuration_path(current_organization) %>
-            <% elsif google_classroom_roster_import_enabled? && current_organization.google_course_id %>
-              You are currently connected to Google Classroom.
-            <% else lti_launch_enabled? || google_classroom_roster_import_enabled? %>
-              <p>You are currently not connected to a learning management system. Integrating GitHub Classroom
-              with your institution will unlock new capabilities and enhance your experience.</p>
-              <%= link_to "Connect to a learning management system",
-                link_lms_organization_path(current_organization),
-                class: "btn btn-sm btn-secondary d-inline-flex flex-items-center mb-2 mr-1"
-              %>
-              <%= link_to "Learn more", help_path(article_name: "connect-to-lms") %>
-            <% end %>
-          </div>
+      <div class="Box Box--condensed mt-5">
+        <div class="Box-header">
+          <h2 class="Box-title"><%= "Learning management system" %></h2>
         </div>
-      <% end %>
+
+        <div class="Box-body">
+          <% if current_organization.lti_configuration %>
+            <% lms_name = current_organization.lti_configuration.lms_name(default_name: "a learning management system") %>
+            You are currently connected to <%= lms_name %>.
+            <%= link_to "Connection Settings", lti_configuration_path(current_organization) %>
+          <% elsif google_classroom_roster_import_enabled? && current_organization.google_course_id %>
+            You are currently connected to Google Classroom.
+          <% else %>
+            <p>You are currently not connected to a learning management system. Integrating GitHub Classroom
+            with your institution will unlock new capabilities and enhance your experience.</p>
+            <%= link_to "Connect to a learning management system",
+              link_lms_organization_path(current_organization),
+              class: "btn btn-sm btn-secondary d-inline-flex flex-items-center mb-2 mr-1"
+            %>
+            <%= link_to "Learn more", help_path(article_name: "connect-to-lms") %>
+          <% end %>
+        </div>
+      </div>
 
       <div class="Box Box--condensed mt-5">
         <div class="Box-header bg-red">

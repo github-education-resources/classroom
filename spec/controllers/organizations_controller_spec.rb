@@ -358,17 +358,6 @@ RSpec.describe OrganizationsController, type: :controller do
         expect(response).to render_template(:link_lms)
       end
     end
-
-    context "with lti launch or google classroom disabled" do
-      before(:each) do
-        GitHubClassroom.flipper[:google_classroom_roster_import].disable
-      end
-
-      it "returns not found" do
-        get :link_lms, params: { id: organization.slug }
-        expect(response).to have_http_status(:not_found)
-      end
-    end
   end
 
   describe "GET #invite", :vcr do
