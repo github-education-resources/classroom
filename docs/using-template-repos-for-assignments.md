@@ -1,4 +1,4 @@
-Importing starter code for assignments is a very useful feature and with GitHub recently shipping the template repositories, we can leverage them in Classroom to make importing starter code much easier and faster!
+Importing starter code for assignments is a very useful feature and with GitHub recently shipping the template repositories, we can leverage them in GitHub Classroom to make importing starter code much easier and faster!
 
 ### How to use template repositories for an assignment?
 

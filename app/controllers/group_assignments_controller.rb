@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable ClassLength
 class GroupAssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
@@ -208,4 +207,3 @@ class GroupAssignmentsController < ApplicationController
   end
   # rubocop:enable MethodLength
 end
-# rubocop:enable ClassLength
