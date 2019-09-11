@@ -912,18 +912,6 @@ RSpec.describe Orgs::RostersController, type: :controller do
         end
       end
     end
-
-    context "with google classroom identifier disabled" do
-      before do
-        patch :import_from_google_classroom, params: {
-          id: organization.slug
-        }
-      end
-
-      it "404s" do
-        expect(response).to have_http_status(:not_found)
-      end
-    end
   end
 
   describe "PATCH #sync_google_classroom", :vcr do
@@ -1014,16 +1002,6 @@ RSpec.describe Orgs::RostersController, type: :controller do
           it "redirects to authorization url" do
             expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
           end
-        end
-      end
-
-      context "with google classroom identifier disabled" do
-        before do
-          patch :sync_google_classroom, params: { id: organization.slug }
-        end
-
-        it "404s" do
-          expect(response).to have_http_status(:not_found)
         end
       end
 
