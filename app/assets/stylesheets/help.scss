@@ -1,0 +1,32 @@
+.help {
+  h1 {
+    font-size: 48px;
+    // & + .markdown-body {
+    //   & > p:first-child {
+    //     font-size: 20px;
+    //     line-height: 1.5;
+    //   }
+    // }
+  }
+  h2 {
+    font-size: 32px;
+    font-weight: 500;
+    border-bottom: none;
+    padding-right: 3em;
+  }
+  h3 {
+    font-size: 24px;
+    font-weight: 500;
+    margin-top: 3em;
+    padding-right: 3em;
+  }
+  img{
+    margin: 2em auto;
+  }
+
+  .warning {
+    font-weight: normal;
+    padding: 1em 2em;
+    border: 1px solid $border-yellow;
+  }
+}

@@ -108,5 +108,5 @@ You should now be directed the following screen. You have successfully linked Gi
 
 [Importing your course roster from Moodle to GitHub Classroom](/help/import-roster-from-lms)
 
-Not finding what you need? Want to talk to a human? [Open an issue on the Classroom repo.](https://github.com/education/classroom/issues)
+Not finding what you need? Want to talk to a human? [Open an issue on the GitHub Classroom repository.](https://github.com/education/classroom/issues)
 {: class="warning"}
