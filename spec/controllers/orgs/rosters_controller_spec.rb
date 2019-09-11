@@ -272,115 +272,92 @@ RSpec.describe Orgs::RostersController, type: :controller do
       sign_in_as(user)
     end
 
-    context "with lti launch enabled" do
-      before(:each) do
-        GitHubClassroom.flipper[:lti_launch].enable
-      end
+    context "with existing LMS" do
+      let(:lti_configuration) { create(:lti_configuration, organization: organization) }
 
-      after(:each) do
-        GitHubClassroom.flipper[:lti_launch].disable
-      end
+      context "with context_membership_url" do
+        before(:each) do
+          LtiConfiguration
+            .any_instance
+            .stub(:supports_membership_service?)
+            .and_return(true)
+        end
 
-      context "with existing LMS" do
-        let(:lti_configuration) { create(:lti_configuration, organization: organization) }
-
-        context "with context_membership_url" do
-          before(:each) do
-            LtiConfiguration
-              .any_instance
-              .stub(:supports_membership_service?)
-              .and_return(true)
+        context "fetching roster succeeds" do
+          let(:student) do
+            GitHubClassroom::LTI::Models::CourseMember.new(
+              email: "sample@example.com",
+              name: "Example Name",
+              user_id: "12345"
+            )
           end
 
-          context "fetching roster succeeds" do
+          let(:students) do
+            [student]
+          end
+
+          before(:each) do
+            GitHubClassroom::LTI::MembershipService
+              .any_instance
+              .stub(:students)
+              .and_return(students)
+          end
+
+          context "all attributes present" do
+            it "format.html: succeeds" do
+              get :import_from_lms, params: { id: lti_configuration.organization.slug }
+              expect(response).to have_http_status(:ok)
+              expect(flash[:alert]).to be_nil
+              expect(assigns(:identifiers).keys.length).to eql(3)
+            end
+
+            it "format.js: succeeds" do
+              get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
+              expect(response).to have_http_status(:ok)
+              expect(flash[:alert]).to be_nil
+              expect(assigns(:identifiers).keys.length).to eql(3)
+            end
+
+            context "no new students" do
+              before(:each) do
+                subject
+                  .stub(:filter_new_students)
+                  .and_return([])
+              end
+
+              it "creates no duplicate entries" do
+                expect(subject).to receive(:handle_lms_import_error)
+
+                get :import_from_lms, params: { id: lti_configuration.organization.slug }
+              end
+            end
+          end
+
+          context "successful fetch, but missing some attributes" do
             let(:student) do
               GitHubClassroom::LTI::Models::CourseMember.new(
-                email: "sample@example.com",
-                name: "Example Name",
+                email: nil,
+                name: nil,
                 user_id: "12345"
               )
             end
 
-            let(:students) do
-              [student]
-            end
-
-            before(:each) do
-              GitHubClassroom::LTI::MembershipService
-                .any_instance
-                .stub(:students)
-                .and_return(students)
-            end
-
-            context "all attributes present" do
-              it "format.html: succeeds" do
-                get :import_from_lms, params: { id: lti_configuration.organization.slug }
-                expect(response).to have_http_status(:ok)
-                expect(flash[:alert]).to be_nil
-                expect(assigns(:identifiers).keys.length).to eql(3)
-              end
-
-              it "format.js: succeeds" do
-                get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
-                expect(response).to have_http_status(:ok)
-                expect(flash[:alert]).to be_nil
-                expect(assigns(:identifiers).keys.length).to eql(3)
-              end
-
-              context "no new students" do
-                before(:each) do
-                  subject
-                    .stub(:filter_new_students)
-                    .and_return([])
-                end
-
-                it "creates no duplicate entries" do
-                  expect(subject).to receive(:handle_lms_import_error)
-
-                  get :import_from_lms, params: { id: lti_configuration.organization.slug }
-                end
-              end
-            end
-
-            context "successful fetch, but missing some attributes" do
-              let(:student) do
-                GitHubClassroom::LTI::Models::CourseMember.new(
-                  email: nil,
-                  name: nil,
-                  user_id: "12345"
-                )
-              end
-
-              it "hides options when they're nil lists" do
-                get :import_from_lms, params: { id: lti_configuration.organization.slug }
-                expect(response).to have_http_status(:ok)
-                expect(assigns(:identifiers).keys.length).to eql(1)
-              end
-            end
-          end
-
-          context "fetching roster fails" do
-            before(:each) do
-              GitHubClassroom::LTI::MembershipService
-                .any_instance
-                .stub(:students)
-                .and_raise(JSON::ParserError)
-            end
-
-            it "format.html: presents an error message to the user" do
+            it "hides options when they're nil lists" do
               get :import_from_lms, params: { id: lti_configuration.organization.slug }
-              expect(flash[:alert]).to be_present
-            end
-
-            it "format.js: presents an error message to the user" do
-              get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
-              expect(response.status).to be(422)
-              expect(flash[:alert]).to be_present
+              expect(response).to have_http_status(:ok)
+              expect(assigns(:identifiers).keys.length).to eql(1)
             end
           end
         end
 
-        context "without context_membership_service_url" do
+        context "fetching roster fails" do
+          before(:each) do
+            GitHubClassroom::LTI::MembershipService
+              .any_instance
+              .stub(:students)
+              .and_raise(JSON::ParserError)
+          end
+
           it "format.html: presents an error message to the user" do
             get :import_from_lms, params: { id: lti_configuration.organization.slug }
             expect(flash[:alert]).to be_present
@@ -394,22 +371,24 @@ RSpec.describe Orgs::RostersController, type: :controller do
         end
       end
 
-      context "with no existing LMS" do
-        it "Redirects to link LTI configuration page" do
-          get :import_from_lms, params: { id: organization.slug }
-          expect(response).to redirect_to(link_lms_organization_path)
+      context "without context_membership_service_url" do
+        it "format.html: presents an error message to the user" do
+          get :import_from_lms, params: { id: lti_configuration.organization.slug }
+          expect(flash[:alert]).to be_present
+        end
+
+        it "format.js: presents an error message to the user" do
+          get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
+          expect(response.status).to be(422)
+          expect(flash[:alert]).to be_present
         end
       end
     end
 
-    context "with lti launch disabled" do
-      before do
-        GitHubClassroom.flipper[:lti_launch].disable
-      end
-
-      it "404s" do
+    context "with no existing LMS" do
+      it "Redirects to link LTI configuration page" do
         get :import_from_lms, params: { id: organization.slug }
-        expect(response).to have_http_status(:not_found)
+        expect(response).to redirect_to(link_lms_organization_path)
       end
     end
   end

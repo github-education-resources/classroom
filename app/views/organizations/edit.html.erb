@@ -26,7 +26,7 @@
         </div>
 
         <div class="Box-body">
-          <% if lti_launch_enabled? && current_organization.lti_configuration %>
+          <% if current_organization.lti_configuration %>
             <% lms_name = current_organization.lti_configuration.lms_name(default_name: "a learning management system") %>
             You are currently connected to <%= lms_name %>.
             <%= link_to "Connection Settings", lti_configuration_path(current_organization) %>
