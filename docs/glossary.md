@@ -23,4 +23,4 @@ Within a classroom, teachers have two assignment options: individual or [group a
 Watch: [How to set up individual assignments](/help/videos#rTsfBAV7sOo)
 
 #### Roster
-Rosters are used as a way to manage students in a classroom and make it easier to track assignment submissions. Rosters can be created manually by entering a list of [student identifiers](/help/glossary#idnetifier). Or, they can be imported automatically from your institution’s learning management system (LMS).
+Rosters are used as a way to manage students in a classroom and make it easier to track assignment submissions. Rosters can be created manually by entering a list of [student identifiers](/help/glossary#identifier). Or, they can be imported automatically from your institution’s learning management system (LMS).
