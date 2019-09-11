@@ -19,7 +19,7 @@ class PagesController < ApplicationController
     "import-roster-from-lms",
     "setup-generic-lms",
     "setup-canvas",
-    "setup-moodle",
+    "setup-moodle"
   ].freeze
 
   def home
