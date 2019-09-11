@@ -2,14 +2,12 @@
 
 module Orgs
   class LtiConfigurationsController < Orgs::Controller
-    before_action :ensure_lti_launch_flipper_is_enabled
     before_action :ensure_current_lti_configuration, except: %i[info new create]
     before_action :ensure_no_google_classroom, only: %i[new create]
     before_action :ensure_no_roster, only: %i[new create]
     before_action :ensure_lms_type, only: %i[create]
 
     skip_before_action :authenticate_user!, only: :autoconfigure
-    skip_before_action :ensure_lti_launch_flipper_is_enabled, only: :autoconfigure
     skip_before_action :ensure_current_organization_visible_to_current_user, only: :autoconfigure
 
     # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
