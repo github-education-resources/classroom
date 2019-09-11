@@ -1,12 +1,9 @@
-default: &default
-  adapter: redis
-  url: <%= GitHubClassroom::REDIS_URL %>
-
 development:
-  <<: *default
+  adapter: async
 
 test:
   adapter: test
 
 production:
-  <<: *default
+  adapter: redis
+  url: <%= GitHubClassroom::REDIS_URL %>

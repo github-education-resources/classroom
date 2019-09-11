@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 class AssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
@@ -58,7 +57,6 @@ class AssignmentsController < ApplicationController
     respond_to do |format|
       format.html
       format.js do
-        not_found unless search_assignments_enabled?
         render "assignments/filter_repos.js.erb", format: :js
       end
     end
@@ -99,12 +97,20 @@ class AssignmentsController < ApplicationController
     redirect_to "x-github-classroom://?assignment_url=#{url_param}&code=#{code_param}"
   end
 
+  def toggle_invitations
+    @assignment.update(invitations_enabled: params[:invitations_enabled])
+    respond_to do |format|
+      format.js
+      format.html { redirect_to organization_assignment_path(@organization, @assignment) }
+    end
+  end
+
   private
 
   def new_assignment_params
     params
       .require(:assignment)
-      .permit(:title, :slug, :public_repo, :students_are_repo_admins, :invitations_enabled, :template_repos_enabled)
+      .permit(:title, :slug, :visibility, :students_are_repo_admins, :invitations_enabled, :template_repos_enabled)
       .merge(creator: current_user,
              organization: @organization,
              starter_code_repo_id: starter_code_repo_id_param,
@@ -136,12 +142,12 @@ class AssignmentsController < ApplicationController
   def set_filter_options
     @assignment_sort_modes = @list_type == :roster_entries ? RosterEntry.sort_modes : AssignmentRepo.sort_modes
 
-    @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
+    @current_sort_mode = params[:sort_by] || @assignment_sort_modes.keys.first
     @query = params[:query]
 
     @assignment_sort_modes_links = @assignment_sort_modes.keys.map do |mode|
       organization_assignment_path(
-        sort_assignment_repos_by: mode,
+        sort_by: mode,
         query: @query
       )
     end
@@ -168,7 +174,7 @@ class AssignmentsController < ApplicationController
       .permit(
         :title,
         :slug,
-        :public_repo,
+        :visibility,
         :students_are_repo_admins,
         :deadline, :invitations_enabled,
         :template_repos_enabled
@@ -181,4 +187,3 @@ class AssignmentsController < ApplicationController
     GitHubClassroom.statsd.increment("deadline.create") if @assignment.deadline
   end
 end
-# rubocop:enable Metrics/ClassLength

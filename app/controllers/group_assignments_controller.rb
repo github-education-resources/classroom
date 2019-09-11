@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable ClassLength
 class GroupAssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
@@ -50,7 +49,6 @@ class GroupAssignmentsController < ApplicationController
     respond_to do |format|
       format.html
       format.js do
-        not_found unless search_assignments_enabled?
         render "group_assignments/filter_repos.js.erb", format: :js
       end
     end
@@ -91,6 +89,14 @@ class GroupAssignmentsController < ApplicationController
     redirect_to "x-github-classroom://?assignment_url=#{url_param}&code=#{code_param}"
   end
 
+  def toggle_invitations
+    @group_assignment.update(invitations_enabled: params[:invitations_enabled])
+    respond_to do |format|
+      format.js
+      format.html { redirect_to organization_group_assignment_path(@organization, @group_assignment) }
+    end
+  end
+
   private
 
   def authorize_grouping_access
@@ -113,7 +119,7 @@ class GroupAssignmentsController < ApplicationController
       .permit(
         :title,
         :slug,
-        :public_repo,
+        :visibility,
         :grouping_id,
         :max_members,
         :students_are_repo_admins,
@@ -151,17 +157,17 @@ class GroupAssignmentsController < ApplicationController
   def set_filter_options
     @assignment_sort_modes = GroupAssignmentRepo.sort_modes
 
-    @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
+    @current_sort_mode = params[:sort_by] || @assignment_sort_modes.keys.first
     @query = params[:query]
 
     @assignment_sort_modes_links = @assignment_sort_modes.keys.map do |mode|
       organization_group_assignment_path(
-        sort_assignment_repos_by: mode,
+        sort_by: mode,
         query: @query
       )
     end
 
-    @current_sort_mode = params[:sort_assignment_repos_by] || @assignment_sort_modes.keys.first
+    @current_sort_mode = params[:sort_by] || @assignment_sort_modes.keys.first
   end
 
   def set_pagination_key
@@ -189,7 +195,7 @@ class GroupAssignmentsController < ApplicationController
       .permit(
         :title,
         :slug,
-        :public_repo,
+        :visibility,
         :max_members,
         :students_are_repo_admins,
         :deadline,
@@ -201,4 +207,3 @@ class GroupAssignmentsController < ApplicationController
   end
   # rubocop:enable MethodLength
 end
-# rubocop:enable ClassLength

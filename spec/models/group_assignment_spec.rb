@@ -279,5 +279,67 @@ RSpec.describe GroupAssignment, type: :model do
         expect(group_assignment.grouping.persisted?).to be true
       end
     end
+
+    describe "validates_associating Grouping" do
+      context "Grouping is invalid" do
+        before do
+          grouping.assign_attributes(title: "")
+        end
+
+        it "Group and Grouping fail validation and are not persisted" do
+          expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Your set "\
+           "of teams is invalid")
+          expect(group_assignment.persisted?).to be false
+          expect(group_assignment.grouping.persisted?).to be false
+        end
+      end
+
+      context "Grouping is valid" do
+        it "Group and Grouping pass validation and are persisted" do
+          expect { group_assignment.save! }.not_to raise_error
+          expect(group_assignment.persisted?).to be true
+          expect(group_assignment.grouping.persisted?).to be true
+        end
+      end
+    end
+  end
+
+  describe "validation methods that call API", :vcr do
+    let(:organization) { classroom_org }
+    let(:group_assignment) { create(:group_assignment, organization: organization, title: "Assignment 3") }
+
+    context "#starter_code_repository_not_empty" do
+      it "calls methods if starter_code_repo_id is changed" do
+        expect(group_assignment).to receive(:starter_code_repository_not_empty)
+        group_assignment.update(starter_code_repo_id: 1_062_897)
+      end
+
+      it "does not call methods if starter_code_repo_id is unchanged" do
+        expect(group_assignment).not_to receive(:starter_code_repository_not_empty)
+        group_assignment.update(title: "Assignment 4")
+      end
+    end
+
+    context "#starter_code_repository_is_template" do
+      it "is called if starter_code_repo_id is changed" do
+        expect(group_assignment).to receive(:starter_code_repository_is_template)
+        group_assignment.update(starter_code_repo_id: 1_062_897)
+      end
+
+      it "is called if template_repos_enabled is changed" do
+        expect(group_assignment).to receive(:starter_code_repository_is_template)
+        expect(group_assignment.update(template_repos_enabled: false)).to be true
+      end
+
+      it "is called if both starter_code_repo_id and template_repos_enabled are changed" do
+        expect(group_assignment).to receive(:starter_code_repository_is_template)
+        group_assignment.update(starter_code_repo_id: 1_062_897, template_repos_enabled: true)
+      end
+
+      it "isn't called if starter_code_repo_id and template_repos_enabled are not changed" do
+        expect(group_assignment).to receive(:starter_code_repository_is_template)
+        group_assignment.update(title: "Assignment 5")
+      end
+    end
   end
 end

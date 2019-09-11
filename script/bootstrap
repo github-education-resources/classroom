@@ -67,9 +67,14 @@ bundle check 2>&1 || {
   ./bin/yarn install
 }
 
+# Clear bootsnap's cache
+echo "==> Clearing bootsnap's cache..."
+rm -rf "tmp/cache/bootsnap-load-path-cache"
+rm -rf "tmp/cache/bootsnap-compile-cache"
+
 # Make sure docker-compose is installed otherwise
 # we won't be able to boot our dependencies like
-# postgres or elasticsearch
+# postgres
 if ! [ -f "$(which docker-compose)" ]; then
   echo "Docker compose appears to not be installed"
   echo "Check out https://docs.docker.com/compose/install/ to get it running on your system"

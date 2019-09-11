@@ -8,20 +8,20 @@ git_source(:github) do |repo_name|
 end
 
 ruby File.read(File.expand_path("../.ruby-version", __FILE__)).chomp
-gem "rails", "~> 5.1", ">= 5.1.7"
+gem "rails", "~> 5.2.3"
 
 gem "autoprefixer-rails", "~> 7.1", ">= 7.1.3"
 
 gem "barnes"
 gem "bootsnap", "~> 1.1", ">= 1.1.2", require: false
 
-gem "chewy", "~> 5.0.0"
 gem "connection_pool", "~> 2.2", ">= 2.2.1"
 
 gem "dalli", "~> 2.7", ">= 2.7.6"
 
 gem "failbot_rails",      "~> 0.5.0"
 gem "faraday-http-cache", "~> 2.0"
+gem "faraday_middleware", "~> 0.13.1"
 gem "flipper",            "~> 0.10.2"
 gem "flipper-redis",      "~> 0.10.2"
 gem "flipper-ui",         "~> 0.10.2"
@@ -52,12 +52,12 @@ gem "octopoller",      "~> 0.1"
 gem "omniauth-github", "~> 1.3"
 
 gem "peek",                 "~> 1.0", ">= 1.0.1"
-gem "peek-dalli",           "1.1.3.4.g0a68e1f"
+gem "peek-dalli",           "1.2.0"
 gem "peek-gc",              "~> 0.0.2"
 gem "peek-git",             "~> 1.0", ">= 1.0.2"
-gem "peek-performance_bar", "1.2"
+gem "peek-performance_bar", "1.3.1"
 gem "peek-pg",              "~> 1.3"
-gem "peek-sidekiq",         "1.0.0.4.g261c857"
+gem "peek-sidekiq",         "1.0.4"
 gem "pg",                   "~> 1.1.4"
 gem "pg_search",            "~> 2.2"
 gem "pry-byebug",           "~> 3.5"
@@ -89,8 +89,8 @@ end
 
 group :development, :test do
   gem "awesome_print",            "~> 1.8", require: "ap"
-  gem "bullet",                   "~> 5.6", ">= 5.6.1"
-  gem "dotenv-rails",             "~> 2.2", ">= 2.2.1"
+  gem "bullet",                   "~> 6.0.1"
+  gem "dotenv-rails",             "~> 2.7.4"
   gem "fuubar",                   "~> 2.4.0"
   gem "guard-rspec",              "~> 4.7", ">= 4.7.3", require: false
   gem "knapsack",                 "~> 1.14", ">= 1.14.1"
@@ -106,11 +106,11 @@ end
 
 group :production do
   gem "dogstatsd-ruby",     "~> 3.0"
-  gem "lograge",            "~> 0.6.0"
+  gem "lograge",            "~> 0.11.2"
   gem "newrelic_rpm",       "~> 4.4", ">= 4.4.0.336"
   gem "pinglish",           "~> 0.2.1"
   gem "puma_worker_killer", "~> 0.1.1"
-  gem "rack-tracker",       "~> 1.4"
+  gem "rack-tracker",       "~> 1.11.1"
 end
 
 group :test do

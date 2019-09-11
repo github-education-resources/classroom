@@ -29,7 +29,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       end
 
       it "returns success status" do
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(200)
       end
 
       it "renders new template" do
@@ -57,7 +57,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
       end
 
       it "returns success status" do
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(200)
       end
 
       it "renders new template" do
@@ -90,7 +90,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         end
 
         it "returns success status" do
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(200)
         end
 
         it "renders show template" do
@@ -113,6 +113,11 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         GitHubClassroom.flipper[:lti_launch].enable
       end
 
+      it "sends statsd" do
+        expect(GitHubClassroom.statsd).to receive(:increment).with("lti_configuration.create")
+        post :create, params: { id: organization.slug, lti_configuration: { lms_type: :other } }
+      end
+
       it "creates lti_configuration if lms_type is set" do
         post :create, params: { id: organization.slug, lti_configuration: { lms_type: :other } }
         expect(organization.lti_configuration).to_not be_nil
@@ -125,7 +130,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         expect(response).to redirect_to(new_lti_configuration_path(organization))
       end
 
-      context "with existing google classrom" do
+      context "with existing google classroom" do
         before do
           organization.update_attributes(google_course_id: "1234")
         end
@@ -134,7 +139,8 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
           get :create, params: { id: organization.slug }
           expect(response).to redirect_to(edit_organization_path(organization))
           expect(flash[:alert]).to eq(
-            "A Google Classroom configuration exists. Please remove configuration before creating a new one."
+            "This classroom is already connected to Google Classroom. Please disconnect from Google Classroom "\
+            "before connecting to another learning management system."
           )
         end
       end
@@ -150,7 +156,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
           post :create, params: { id: organization.slug }
           expect(response).to redirect_to(edit_organization_path(organization))
           expect(flash[:alert]).to eq(
-            "We are unable to link your classroom organization to an LMS"\
+            "We are unable to link your classroom organization to a learning management system "\
             "because a roster already exists. Please delete your current roster and try again."
           )
         end
@@ -179,6 +185,11 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         before(:each) do
           create(:lti_configuration, organization: organization)
           get :show, params: { id: organization.slug }
+        end
+
+        it "sends statsd" do
+          expect(GitHubClassroom.statsd).to receive(:increment).with("lti_configuration.destroy")
+          delete :destroy, params: { id: organization.slug }
         end
 
         it "deletes lti_configuration" do
@@ -220,7 +231,7 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
 
           organization.lti_configuration.reload
           expect(organization.lti_configuration.lms_link).to eq("https://github.com")
-          expect(flash[:success]).to eq("The configuration was sucessfully updated.")
+          expect(flash[:success]).to eq("The configuration was successfully updated.")
           expect(response).to redirect_to(lti_configuration_path(organization))
         end
       end
@@ -254,10 +265,23 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         create(:lti_configuration, organization: organization)
       end
 
-      it "returns an xml configuration" do
-        get :autoconfigure, params: { id: organization.slug }
-        expect(response).to have_http_status(:success)
-        expect(response.content_type).to eq "application/xml"
+      context "with autoconfiguration enabled" do
+        before(:each) { LtiConfiguration.any_instance.stub(:supports_autoconfiguration?).and_return(true) }
+
+        it "returns an xml configuration" do
+          get :autoconfigure, params: { id: organization.slug }
+          expect(response).to have_http_status(200)
+          expect(response.content_type).to eq "application/xml"
+        end
+      end
+
+      context "with autoconfiguration disabled" do
+        before(:each) { LtiConfiguration.any_instance.stub(:supports_autoconfiguration?).and_return(false) }
+
+        it "does not return an xml configuration" do
+          get :autoconfigure, params: { id: organization.slug }
+          expect(response).to have_http_status(:not_found)
+        end
       end
     end
 
@@ -266,6 +290,38 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
         patch :autoconfigure, params: { id: organization.slug }
         expect(response).to redirect_to(info_lti_configuration_path(organization))
         expect(organization.lti_configuration).to be_nil
+      end
+    end
+  end
+
+  describe "GET #complete", :vcr do
+    context "with flipper on" do
+      before(:each) do
+        GitHubClassroom.flipper[:lti_launch].enable
+      end
+
+      context "with existing lti_configuration" do
+        before(:each) do
+          create(:lti_configuration, organization: organization)
+        end
+
+        context "with user who is an instructor" do
+          it "returns success page" do
+            get :complete, params: { id: organization.slug }
+            expect(response).to have_http_status(200)
+          end
+        end
+      end
+    end
+
+    context "with flipper disabled" do
+      before(:each) do
+        GitHubClassroom.flipper[:lti_launch].disable
+      end
+
+      it "returns a not_found" do
+        get :complete, params: { id: organization.slug }
+        expect(response).to have_http_status(:not_found)
       end
     end
   end

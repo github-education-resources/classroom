@@ -47,15 +47,6 @@ describe GitHub::Errors do
           end
         end.to raise_error(GitHub::NotFound, error_message)
       end
-
-      it "does not report a NotFound error" do
-        begin
-          GitHub::Errors.with_error_handling do
-            raise Octokit::NotFound
-          end
-        rescue GitHub::NotFound; end # rubocop:disable Lint/HandleExceptions
-        expect(Failbot.reports.count).to eq(0)
-      end
     end
 
     context "Octokit::ServerError is raised" do
@@ -79,6 +70,47 @@ describe GitHub::Errors do
             raise Octokit::Unauthorized
           end
         end.to raise_error(GitHub::Forbidden, error_message)
+      end
+    end
+
+    context "Failbot reporting" do
+      let(:error_message) { "You are forbidden from performing this action on github.com" }
+
+      before(:each) do
+        Failbot.reports.clear
+      end
+
+      context "report_to_failbot is true" do
+        it "reports to Failbot" do
+          expect do
+            GitHub::Errors.with_error_handling(report_to_failbot: true) do
+              raise Octokit::Forbidden
+            end
+          end.to raise_error(GitHub::Forbidden, error_message)
+          expect(Failbot.reports.count).to be > 0
+        end
+      end
+
+      context "report_to_failbot is not passed" do
+        it "reports to Failbot by default" do
+          expect do
+            GitHub::Errors.with_error_handling do
+              raise Octokit::Forbidden
+            end
+          end.to raise_error(GitHub::Forbidden, error_message)
+          expect(Failbot.reports.count).to be > 0
+        end
+      end
+
+      context "report_to_failbot is false" do
+        it "does not report to Failbot" do
+          expect do
+            GitHub::Errors.with_error_handling(report_to_failbot: false) do
+              raise Octokit::Forbidden
+            end
+          end.to raise_error(GitHub::Forbidden, error_message)
+          expect(Failbot.reports.count).to be_zero
+        end
       end
     end
   end

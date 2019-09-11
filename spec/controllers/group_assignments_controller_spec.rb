@@ -14,7 +14,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
   describe "GET #new", :vcr do
     it "returns success status" do
       get :new, params: { organization_id: organization.slug }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
 
     it "has a new GroupAssignment" do
@@ -133,7 +133,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
   describe "GET #show", :vcr do
     it "returns success status" do
       get :show, params: { organization_id: organization.slug, id: group_assignment.slug }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
   end
 
@@ -148,7 +148,6 @@ RSpec.describe GroupAssignmentsController, type: :controller do
         group: group_assignment.grouping.groups.first
       )
       group_assignment.save!
-      GitHubClassroom.flipper[:search_assignments].enable
     end
 
     it "finds group assignment in search" do
@@ -167,7 +166,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
       expect(assigns(:group_assignment_repos)).to eq([])
     end
 
-    it "search is not case senstive" do
+    it "search is not case sensitive" do
       get :show, xhr: true, params: {
         organization_id: organization.slug, id: group_assignment.slug, query: "TEST"
       }
@@ -180,7 +179,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
     it "returns success status and sets the group assignment" do
       get :edit, params: { organization_id: organization.slug, id: group_assignment.slug }
 
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
       expect(assigns(:group_assignment)).to_not be_nil
     end
   end
@@ -202,11 +201,11 @@ RSpec.describe GroupAssignmentsController, type: :controller do
     context "public_repo attribute is changed" do
       it "calls the AssignmentVisibility background job" do
         private_repos_plan = { owned_private_repos: 0, private_repos: 2 }
-        options = { title: "JavaScript Calculator", public_repo: !group_assignment.public? }
+        options = { title: "JavaScript Calculator", visibility: "private" }
 
         allow_any_instance_of(GitHubOrganization).to receive(:plan).and_return(private_repos_plan)
 
-        assert_enqueued_jobs 1, only: Assignment::RepositoryVisibilityJob do
+        assert_enqueued_jobs 1, only: AssignmentRepositoryVisibilityJob do
           patch :update, params: {
             id:               group_assignment.slug,
             organization_id:  organization.slug,
@@ -220,7 +219,7 @@ RSpec.describe GroupAssignmentsController, type: :controller do
       it "will not kick off an AssignmentVisibility background job" do
         options = { title: "JavaScript Calculator" }
 
-        assert_no_enqueued_jobs only: Assignment::RepositoryVisibilityJob do
+        assert_no_enqueued_jobs only: AssignmentRepositoryVisibilityJob do
           patch :update, params: {
             id:               group_assignment.slug,
             organization_id:  organization.slug,
@@ -271,6 +270,21 @@ RSpec.describe GroupAssignmentsController, type: :controller do
     it "redirects back to the organization" do
       delete :destroy, params: { id: group_assignment.slug, organization_id: organization.slug }
       expect(response).to redirect_to(organization)
+    end
+  end
+
+  describe "POST #toggle_invitations", :vcr do
+    before(:each) do
+      group_assignment.update(invitations_enabled: false)
+    end
+
+    it "updates the Assignment's invitations_enabled column" do
+      post :toggle_invitations, params: {
+        invitations_enabled: true,
+        organization_id: organization.slug,
+        id: group_assignment.slug
+      }
+      expect(group_assignment.reload.invitations_enabled).to be true
     end
   end
 end

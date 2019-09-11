@@ -39,8 +39,11 @@ class GroupAssignment < ApplicationRecord
 
   validate :uniqueness_of_slug_across_organization
   validate :max_teams_less_than_group_count
-  validate :starter_code_repository_not_empty
-  validate :starter_code_repository_is_template
+  validate :starter_code_repository_not_empty, if: :will_save_change_to_starter_code_repo_id?
+  validate :starter_code_repository_is_template,
+    if: -> { :will_save_change_to_starter_code_repo_id? || :will_save_change_to_template_repos_enabled }
+
+  validates_associated :grouping
 
   alias_attribute :invitation, :group_assignment_invitation
   alias_attribute :repos, :group_assignment_repos
@@ -52,6 +55,10 @@ class GroupAssignment < ApplicationRecord
 
   def public?
     public_repo
+  end
+
+  def visibility=(visibility)
+    self.public_repo = visibility != "private"
   end
 
   def to_param
@@ -72,11 +79,5 @@ class GroupAssignment < ApplicationRecord
     else
       errors.add(:max_teams, "is less than the number of existing teams (#{group_count})")
     end
-  end
-
-  def starter_code_repository_not_empty
-    return unless starter_code? && starter_code_repository.empty?
-    errors.add :starter_code_repository, "cannot be empty. Select a repository that is not empty or create the"\
-      " assignment without starter code."
   end
 end

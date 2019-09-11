@@ -4,6 +4,8 @@ class Organization < ApplicationRecord
   include Flippable
   include Sluggable
   include StafftoolsSearchable
+  include Searchable
+  include Sortable
 
   define_pg_search(columns: %i[id github_id title slug])
 
@@ -24,12 +26,32 @@ class Organization < ApplicationRecord
   validates :github_id, presence: true
 
   validates :title, presence: true
-  validates :title, length: { maximum: 60 }
+  validates :title, length: { maximum: 255 }
   validates :title, uniqueness: { scope: :github_id }
 
   validates :slug, uniqueness: true
 
+  delegate :plan, to: :github_organization
+
   before_destroy :silently_remove_organization_webhook
+
+  scope :order_by_newest, ->(_context = nil) { order(created_at: :desc) }
+  scope :order_by_oldest, ->(_context = nil) { order(created_at: :asc) }
+  scope :order_by_title,  ->(_context = nil) { order(:title) }
+
+  scope :search_by_title, ->(query) { where("title ILIKE ?", "%#{query}%") }
+
+  def self.search_mode
+    :search_by_title
+  end
+
+  def self.sort_modes
+    {
+      "Oldest first" => :order_by_oldest,
+      "Newest first" => :order_by_newest,
+      "Classroom name" => :order_by_title
+    }
+  end
 
   def all_assignments(with_invitations: false)
     return assignments + group_assignments unless with_invitations
@@ -38,13 +60,18 @@ class Organization < ApplicationRecord
       group_assignments.includes(:group_assignment_invitation)
   end
 
+  def archived?
+    archived_at.present?
+  end
+
   def github_client
     if Rails.env.test?
       token = users.first.token unless users.first.nil?
     else
       token = users.limit(1).order("RANDOM()").pluck(:token)[0]
     end
-    Octokit::Client.new(access_token: token)
+
+    GitHubClassroom.github_client(access_token: token)
   end
 
   def github_organization
@@ -60,8 +87,13 @@ class Organization < ApplicationRecord
   end
 
   def geo_pattern_data_uri
-    patterns = %i[chevrons hexagons octagons plus_signs triangles squares diamonds]
-    @geo_pattern_data_uri ||= GeoPattern.generate(id, base_color: "#28a745", patterns: patterns).to_data_uri
+    patterns = %i[plaid hexagons plus_signs overlapping_circles overlapping_rings mosaic_squares]
+    options = { base_color: "#28a745", patterns: patterns }
+    if archived?
+      options.delete(:base_color)
+      options[:color] = "#696868"
+    end
+    @geo_pattern_data_uri ||= GeoPattern.generate(id, options).to_data_uri
   end
 
   # Check if we are the last Classroom on this GitHub Organization

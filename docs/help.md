@@ -1,11 +1,17 @@
 [Learn more about GitHub Classroom](#guides), join [the education community](#community), or [get in touch](#need-more-help) for more help.
 
-### Guides
+### Getting started with GitHub Classroom
+* [Quick-start video tutorials](/videos):
+  * Just getting started? [Learn the basics of setting up GitHub Classroom](/videos#ChA_zph7aao)
+  * [Create individual assignments](/videos#rTsfBAV7sOo)
+  * [Create group assignments](/videos#-52quDR2QSc) for collaborative projects
 
-* [Video tutorials](/videos)
+### Guides  
 * [Controlling assignment repo settings with the Probot Settings app](/help/probot-settings)
 * [Creating group assignments](/help/create-group-assignments)
 * [Upgrading your organization](/help/upgrade-your-organization)
+* [Using template repositories for assignments](/help/using-template-repos-for-assignments)
+* [Connecting GitHub Classroom to your learning management system](/help/connect-to-lms)
 
 ### Workflows, case studies, best practices, and more from the GitHub blog
 
@@ -18,6 +24,7 @@
 * [How to grade programming assignments on GitHub ](https://github.blog/2017-06-13-how-to-grade-programming-assignments-on-github/)
 * [GitHub Issues and user testing as authentic assessment ](https://github.blog/2017-04-05-github-issues-and-user-testing-as-authentic-assessment/)
 * [Real-time feedback for students using continuous integration tools ](https://github.blog/2017-03-01-real-time-feedback-for-students-using-continuous-integration-tools/)
+* [Importing a course roster from your learning management system](/help/import-roster-from-lms)
 
 #### Educators share their experiences
 

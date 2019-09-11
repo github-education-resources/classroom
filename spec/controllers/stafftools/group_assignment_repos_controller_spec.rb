@@ -6,14 +6,29 @@ RSpec.describe Stafftools::GroupAssignmentReposController, type: :controller do
   let(:user)         { classroom_teacher }
   let(:organization) { classroom_org     }
   let(:student)      { classroom_student }
-  let(:repo_access)  { RepoAccess.create(user: student, organization: organization) }
+
+  let(:grouping)     { create(:grouping, organization: organization) }
+  let(:github_team_id) { 3_284_880 }
+  let(:group) { create(:group, grouping: grouping, github_team_id: github_team_id) }
   let(:group_assignment) do
-    create(:group_assignment, title: "Learn Ruby", organization: organization, public_repo: false)
+    create(
+      :group_assignment,
+      grouping: grouping,
+      title: "Learn JavaScript",
+      organization: organization,
+      public_repo: true,
+      starter_code_repo_id: 1_062_897
+    )
   end
-  let(:github_team_id) { organization.github_organization.create_team(Faker::Team.name[0..39]).id }
-  let(:group) { create(:group, grouping: group_assignment.grouping, github_team_id: github_team_id) }
-  let(:result) { GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group) }
-  let(:group_assignment_repo) { result.group_assignment_repo }
+  let(:group_assignment_repo) do
+    create(
+      :group_assignment_repo,
+      group_assignment: group_assignment,
+      group: group,
+      organization: organization,
+      github_repo_id: 42
+    )
+  end
 
   before(:each) do
     sign_in_as(user)
@@ -21,10 +36,6 @@ RSpec.describe Stafftools::GroupAssignmentReposController, type: :controller do
 
   after do
     GroupAssignmentRepo.destroy_all
-  end
-
-  after(:each) do
-    organization.github_organization.delete_team(group.github_team_id)
   end
 
   describe "GET #show", :vcr do
@@ -42,7 +53,7 @@ RSpec.describe Stafftools::GroupAssignmentReposController, type: :controller do
       end
 
       it "succeeds" do
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(200)
       end
 
       it "sets the GroupAssignmentRepo" do

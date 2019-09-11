@@ -190,14 +190,14 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
       context "no roster" do
         it "will bring you to the page" do
           get :show, params: { id: invitation.key }
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(200)
           expect(response).to render_template("assignment_invitations/show")
         end
 
         context "previous acceptee" do
           it "redirects to success" do
             assignment_repo = create(:assignment_repo, assignment: invitation.assignment, user: user)
-            AssignmentRepo::Creator::Result.success(assignment_repo)
+            CreateGitHubRepoService::Result.success(assignment_repo)
             invitation.status(user).accepted!
 
             get :show, params: { id: invitation.key }
@@ -236,7 +236,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         context "with ignore param" do
           it "will bring you to the show page" do
             get :show, params: { id: invitation.key, roster: "ignore" }
-            expect(response).to have_http_status(:success)
+            expect(response).to have_http_status(200)
             expect(response).to render_template("assignment_invitations/show")
           end
         end
@@ -247,7 +247,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
   describe "PATCH #accept", :vcr do
     let(:result) do
       assignment_repo = create(:assignment_repo, assignment: invitation.assignment, user: user)
-      AssignmentRepo::Creator::Result.success(assignment_repo)
+      CreateGitHubRepoService::Result.success(assignment_repo)
     end
 
     before do
@@ -271,7 +271,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
     end
 
     context "redeem returns an fail" do
-      let(:result) { AssignmentRepo::Creator::Result.failed("Couldn't accept the invitation") }
+      let(:result) { CreateGitHubRepoService::Result.failed("Couldn't accept the invitation") }
 
       before do
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for).with(user).and_return(result)
@@ -327,7 +327,7 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         invite_status.accepted!
         allow_any_instance_of(AssignmentInvitation).to receive(:redeem_for)
           .with(user)
-          .and_return(AssignmentRepo::Creator::Result.pending)
+          .and_return(CreateGitHubRepoService::Result.pending)
 
         patch :accept, params: { id: invitation.key }
         expect(response).to redirect_to(setup_assignment_invitation_url(invitation))
@@ -347,12 +347,12 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         end
 
         it "enqueues a CreateRepositoryJob" do
-          assert_enqueued_jobs 1, only: AssignmentRepo::CreateGitHubRepositoryJob do
+          assert_enqueued_jobs 1, only: CreateGitHubRepositoryNewJob do
             post :create_repo, params: { id: invitation.key }
           end
         end
 
-        it "says a job was succesfully kicked off" do
+        it "says a job was successfully kicked off" do
           post :create_repo, params: { id: invitation.key }
           expect(json)
             .to eq(
@@ -391,12 +391,12 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         end
 
         it "enqueues a CreateRepositoryJob" do
-          assert_enqueued_jobs 1, only: AssignmentRepo::CreateGitHubRepositoryJob do
+          assert_enqueued_jobs 1, only: CreateGitHubRepositoryNewJob do
             post :create_repo, params: { id: invitation.key }
           end
         end
 
-        it "says a job was succesfully kicked off" do
+        it "says a job was successfully kicked off" do
           post :create_repo, params: { id: invitation.key }
           expect(json)
             .to eq(
@@ -445,12 +445,12 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
         end
 
         it "does not enqueue a CreateRepositoryJob" do
-          assert_enqueued_jobs 0, only: AssignmentRepo::CreateGitHubRepositoryJob do
+          assert_enqueued_jobs 0, only: CreateGitHubRepositoryNewJob do
             post :create_repo, params: { id: invitation.key }
           end
         end
 
-        it "says a job was unsuccesfully kicked off" do
+        it "says a job was unsuccessfully kicked off" do
           post :create_repo, params: { id: invitation.key }
           expect(json)
             .to eq(
@@ -512,8 +512,8 @@ RSpec.describe AssignmentInvitationsController, type: :controller do
 
     before(:each) do
       sign_in_as(user)
-      result = AssignmentRepo::Creator.perform(assignment: assignment, user: user)
-      @assignment_repo = result.assignment_repo
+      result = CreateGitHubRepoService.new(assignment, user).perform
+      @assignment_repo = result.repo
     end
 
     after(:each) do

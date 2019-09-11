@@ -92,21 +92,43 @@ RSpec.describe RosterEntry, type: :model do
       end
     end
 
-    it "order_for_view works correctly" do
-      roster.roster_entries.first.destroy # Ignore the default entry here
-      expected_ordering = [linked_accepted_entry, linked_not_accepted_entry, not_linked_entry]
+    context "order_for_view" do
+      it "sorts correctly in expected order" do
+        roster.roster_entries.first.destroy # Ignore the default entry here
+        expected_ordering = [linked_accepted_entry, linked_not_accepted_entry, not_linked_entry]
 
-      expect(RosterEntry.where(roster: roster).order_for_view(assignment).to_a).to eq(expected_ordering)
+        expect(RosterEntry.where(roster: roster).order_for_view(assignment).to_a).to eq(expected_ordering)
+      end
+
+      it "sorts correctly, even with no accepted students" do
+        roster.roster_entries.first.destroy # Ignore the default entry here
+        assignment_repo.delete
+        linked_accepted_entry.destroy
+
+        expected_ordering = [linked_not_accepted_entry, not_linked_entry]
+
+        expect(RosterEntry.where(roster: roster).order_for_view(assignment).to_a).to eq(expected_ordering)
+      end
+
+      it "sorts correctly, even with no linked but not accepted entries" do
+        roster.roster_entries.first.destroy # Ignore the default entry here
+        assignment_repo.delete
+        linked_not_accepted_entry.destroy
+
+        expected_ordering = [linked_accepted_entry, not_linked_entry]
+
+        expect(RosterEntry.where(roster: roster).order_for_view(assignment).to_a).to eq(expected_ordering)
+      end
     end
 
-    it "order_for_view correctly, even with no accepted students" do
-      roster.roster_entries.first.destroy # Ignore the default entry here
-      assignment_repo.delete
-      linked_accepted_entry.destroy
+    it "order_by_repo_created_at returns list of roster entries ordered by the creation of their assignment repos" do
+      earliest_student = create(:user)
+      create(:assignment_repo, assignment: assignment, user: earliest_student)
+      initial_entry = roster.roster_entries.first
+      earliest_student_entry = create(:roster_entry, roster: roster, user: earliest_student)
+      roster_entries = RosterEntry.where(roster: roster).order_by_repo_created_at(assignment: assignment)
 
-      expected_ordering = [linked_not_accepted_entry, not_linked_entry]
-
-      expect(RosterEntry.where(roster: roster).order_for_view(assignment).to_a).to eq(expected_ordering)
+      expect(roster_entries).to match_array([earliest_student_entry, initial_entry])
     end
   end
 
@@ -127,34 +149,19 @@ RSpec.describe RosterEntry, type: :model do
       end
     end
 
-    context "some entries not valid" do
+    context "when duplicate entries" do
       before do
-        RosterEntry.create(identifier: "1", roster: roster)
+        RosterEntry.create(identifier: "John", roster: roster)
       end
 
       let(:result) do
-        RosterEntry.create_entries(identifiers: %w[1 2], roster: roster)
+        RosterEntry.create_entries(identifiers: %w[John Bob], roster: roster)
       end
 
-      it "creates one roster entries" do
-        expect(result.length).to eq(1)
+      it "creates adds suffix to duplicate entries" do
+        expect(result.length).to eq(2)
 
-        expect(result[0]).to eq(RosterEntry.find_by(identifier: "2", roster: roster))
-      end
-    end
-
-    context "no roster entries valid" do
-      before do
-        RosterEntry.create(identifier: "1", roster: roster)
-        RosterEntry.create(identifier: "2", roster: roster)
-      end
-
-      let(:result) do
-        RosterEntry.create_entries(identifiers: %w[1 2], roster: roster)
-      end
-
-      it "creates no roster entries" do
-        expect(result.length).to eq(0)
+        expect(result[0]).to eq(RosterEntry.find_by(identifier: "John-1", roster: roster))
       end
     end
 

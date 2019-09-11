@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 class GitHubOrganization < GitHubResource
   def accept_membership(user_github_login)
     return if organization_member?(user_github_login)
@@ -37,10 +36,8 @@ class GitHubOrganization < GitHubResource
     GitHubRepository.new(@client, repo.id)
   end
 
-  def create_repository_from_template(template_repo_id, repo_name, users_repo_options = {})
-    repo_options = github_template_repo_default_options.merge(users_repo_options)
-
-    repo = GitHub::Errors.with_error_handling do
+  def create_repository_from_template(template_repo_id, repo_name, repo_options = {})
+    repo = GitHub::Errors.with_error_handling(report_to_failbot: false) do
       @client.create_repository_from_template(template_repo_id, repo_name, repo_options)
     end
 
@@ -106,7 +103,7 @@ class GitHubOrganization < GitHubResource
   end
 
   def team_invitations_url
-    "https://github.com/orgs/#{login}/people"
+    "#{GitHubClassroom.github_url}/orgs/#{login}/people"
   end
 
   def create_organization_webhook(config: {}, options: {})
@@ -174,13 +171,6 @@ class GitHubOrganization < GitHubResource
       has_wiki:      true,
       has_downloads: true,
       organization:  @id
-    }
-  end
-
-  def github_template_repo_default_options
-    {
-      owner: @login,
-      include_all_branches: true
     }
   end
 

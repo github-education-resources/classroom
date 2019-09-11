@@ -1,9 +1,18 @@
-<form>
-  <% if mobile? %>
-    <%= render partial: "shared/invitations/mobile", locals: local_assigns %>
-  <% else %>
-    <%# if for some reason the user has a really tiny desktop screen fallback to the mobile view" %>
-    <%= render partial: "shared/invitations/mobile", locals: local_assigns %>
-    <%= render partial: "shared/invitations/desktop", locals: local_assigns %>
-  <% end %>
-</form>
+<dt class=<%= mobile? ? "mobile-invitation-content" : "desktop-invitation-content" %>>
+  <%= check_box_tag 'invitations_enabled',true, (@assignment.nil? ? @group_assignment.invitations_enabled : @assignment.invitations_enabled),
+    onchange: "$(this).data('params', 'invitations_enabled=' + this.checked);showLoadingIndicator(true);showCheckmark(false);",
+    data: {
+      remote: true,
+      url: url_for(action: :toggle_invitations, id: (@assignment.nil? ? @group_assignment.slug : @assignment.slug)),
+      method: "POST"
+    } %>
+  <label>Enable assignment invitation URL</label>
+  <span style="color: green"><%= octicon 'check', height: 16, id: "checkmark", style: "display: none; padding-bottom: 3px;" %></span>
+  <%= image_tag 'octocat-spinner-128.gif', width: 13, height: 13, class: 'spinner', id: "loading-indicator", style: "display:none" %>
+  <div class="input-group input-block pt-2 pb-1">
+    <%= render partial: "shared/invitations/clipboard_form", locals: local_assigns %>
+  </div>
+  <p class="note mb-3">
+    <%= t('views.shared.share_invite_url') %>
+  </p>
+</dt>

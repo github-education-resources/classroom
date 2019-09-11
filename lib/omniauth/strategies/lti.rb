@@ -17,18 +17,22 @@ module OmniAuth
         fail!(:invalid_request)
       end
 
+      # rubocop:disable MethodLength
       def callback_phase
-        return fail!(:invalid_credentials) unless valid_lti?
-        env["lti.launch_params"] = @authenticator.params
+        unless valid_lti?
+          env["lti.launch_params"] = @authenticator.params
+          return fail!("Invalid Launch")
+        end
 
         super
       rescue ::Timeout::Error
-        fail!(:timeout)
+        fail!("Signature expired")
       rescue ::Net::HTTPFatalError, ::OpenSSL::SSL::SSLError
-        fail!(:service_unavailable)
+        fail!("SSL signing invalid")
       rescue ::OmniAuth::NoSessionError
-        fail!(:session_expired)
+        fail!("User has no session")
       end
+      # rubocop:enable MethodLength
 
       uid { @authenticator.params["user_id"] }
 

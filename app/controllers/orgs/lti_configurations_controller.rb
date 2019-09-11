@@ -12,7 +12,7 @@ module Orgs
     skip_before_action :ensure_lti_launch_flipper_is_enabled, only: :autoconfigure
     skip_before_action :ensure_current_organization_visible_to_current_user, only: :autoconfigure
 
-    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     def create
       lti_configuration = LtiConfiguration.create(
         organization: current_organization,
@@ -22,13 +22,14 @@ module Orgs
       )
 
       if lti_configuration.present?
+        GitHubClassroom.statsd.increment("lti_configuration.create")
         redirect_to lti_configuration_path(current_organization)
       else
         redirect_to info_lti_configuration_path(current_lti_configuration),
           alert: "There was a problem creating the configuration. Please try again later."
       end
     end
-    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
     def show; end
 
@@ -45,7 +46,7 @@ module Orgs
 
     def update
       if current_lti_configuration.update_attributes(lti_configuration_params)
-        flash[:success] = "The configuration was sucessfully updated."
+        flash[:success] = "The configuration was successfully updated."
         redirect_to lti_configuration_path(current_organization)
       else
         flash[:error] = "The configuration could not be updated at this time. Please try again."
@@ -54,44 +55,20 @@ module Orgs
     end
 
     def destroy
-      lms_name = current_lti_configuration.lms_name(default_name: "your Learning Management System")
+      lms_name = current_lti_configuration.lms_name(default_name: "your learning management system")
+      GitHubClassroom.statsd.increment("lti_configuration.destroy")
       current_lti_configuration.destroy!
-
       redirect_to edit_organization_path(current_organization), alert: "Classroom is now disconnected from #{lms_name}."
     end
 
-    # rubocop:disable Metrics/MethodLength
     def autoconfigure
-      builder = GitHubClassroom::LTI::ConfigurationBuilder.new("GitHub Classroom", auth_lti_launch_url)
+      not_found unless current_lti_configuration.supports_autoconfiguration?
 
-      builder.add_attributes(
-        description: "Sync your GitHub Classroom organization with your Learning Management System.",
-        icon: "https://classroom.github.com/favicon.ico",
-        vendor_name: "GitHub Classroom",
-        vendor_url: "https://classroom.github.com/"
-      )
-
-      ## LMS Specific Attributes ##
-      # Note: LMS's will ignore vendor identifiers they do not understand
-
-      # Canvas will not display an LTI application
-      # unless specify a course_navigation location.
-      builder.add_vendor_attributes(
-        "canvas.instructure.com",
-        privacy_level: "public",
-        custom_fields: {
-          custom_context_membership_url: "$ToolProxyBinding.memberships.url"
-        },
-        course_navigation: {
-          windowTarget: "_blank",
-          visibility: "admins", # only show the application to instructors
-          enabled: "true"
-        }
-      )
-
-      render xml: builder.to_xml, status: :ok
+      xml_configuration = current_lti_configuration.xml_configuration(auth_lti_launch_url)
+      render xml: xml_configuration, status: :ok
     end
-    # rubocop:enable Metrics/MethodLength
+
+    def complete; end
 
     private
 
@@ -111,13 +88,14 @@ module Orgs
     def ensure_no_google_classroom
       return unless current_organization.google_course_id
       redirect_to edit_organization_path(current_organization),
-        alert: "A Google Classroom configuration exists. Please remove configuration before creating a new one."
+        alert: "This classroom is already connected to Google Classroom. Please disconnect from Google Classroom "\
+          "before connecting to another learning management system."
     end
 
     def ensure_no_roster
       return unless current_organization.roster
       redirect_to edit_organization_path(current_organization),
-        alert: "We are unable to link your classroom organization to an LMS"\
+        alert: "We are unable to link your classroom organization to a learning management system "\
           "because a roster already exists. Please delete your current roster and try again."
     end
 

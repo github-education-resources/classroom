@@ -12,6 +12,12 @@ module StarterCodeImportable
     @starter_code_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id)
   end
 
+  def starter_code_repository_not_empty
+    return unless starter_code? && starter_code_repository.empty?
+    errors.add :starter_code_repository, "cannot be empty. Select a repository that is not empty or create the"\
+      " assignment without starter code."
+  end
+
   def use_template_repos?
     starter_code? && template_repos_enabled?
   end

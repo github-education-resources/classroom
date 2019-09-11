@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 class GitHubRepository < GitHubResource
   depends_on :import
 
@@ -177,6 +176,10 @@ class GitHubRepository < GitHubResource
     html_url + "/tree/" + sha
   end
 
+  def public?
+    !private
+  end
+
   # Public: Checks if the GitHub repository has a given branch.
   #
   # branch    - name of the branch to check for
@@ -237,7 +240,6 @@ class GitHubRepository < GitHubResource
   private
 
   def github_attributes
-    %w[name full_name html_url node_id]
+    %w[name full_name html_url node_id private]
   end
 end
-# rubocop:enable Metrics/ClassLength

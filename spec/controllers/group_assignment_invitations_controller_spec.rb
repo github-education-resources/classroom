@@ -157,7 +157,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
       context "no roster" do
         it "will bring you to the page" do
           get :show, params: { id: invitation.key }
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(200)
           expect(response).to render_template("group_assignment_invitations/show")
         end
       end
@@ -191,7 +191,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
         context "with ignore param" do
           it "will bring you to the show page" do
             get :show, params: { id: invitation.key, roster: "ignore" }
-            expect(response).to have_http_status(:success)
+            expect(response).to have_http_status(200)
             expect(response).to render_template("group_assignment_invitations/show")
           end
         end
@@ -212,7 +212,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
       it "returns success status" do
         get :accept, params: { id: invitation.key }
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(200)
       end
 
       it "render :accept" do
@@ -397,7 +397,8 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
           end
 
           context "joins an existing group" do
-            let(:group) { create(:group, grouping: grouping, github_team_id: 2_973_107) }
+            let(:github_team_id) { organization.github_organization.create_team(Faker::Team.name).id }
+            let(:group) { create(:group, grouping: grouping, github_team_id: github_team_id) }
 
             it "creates a repo_access" do
               patch :accept_invitation, params: { id: invitation.key, group: { id: group.id } }
@@ -461,7 +462,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
             it "didn't kick off a job" do
               expect { post :create_repo, params: { id: invitation.key } }
-                .to_not have_enqueued_job(GroupAssignmentRepo::CreateGitHubRepositoryJob)
+                .to_not have_enqueued_job(CreateGitHubRepositoryNewJob)
             end
           end
         end
@@ -497,7 +498,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
             it "kick off a job" do
               expect { post :create_repo, params: { id: invitation.key } }
-                .to have_enqueued_job(GroupAssignmentRepo::CreateGitHubRepositoryJob)
+                .to have_enqueued_job(CreateGitHubRepositoryNewJob)
             end
           end
         end
@@ -548,7 +549,7 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
       context "GroupAssignmentRepo already present" do
         before do
-          GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
+          CreateGitHubRepoService.new(group_assignment, group).perform
           get :progress, params: { id: invitation.key }
         end
 
@@ -569,8 +570,8 @@ RSpec.describe GroupAssignmentInvitationsController, type: :controller do
 
     before(:each) do
       sign_in_as(student)
-      result = GroupAssignmentRepo::Creator.perform(group_assignment: group_assignment, group: group)
-      @group_assignment_repo = result.group_assignment_repo
+      result = CreateGitHubRepoService.new(group_assignment, group).perform
+      @group_assignment_repo = result.repo
     end
 
     after(:each) do

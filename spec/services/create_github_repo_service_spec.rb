@@ -94,7 +94,7 @@ RSpec.describe CreateGitHubRepoService do
         expect { service.create_github_repository_from_template! }
           .to raise_error(
             subject::Result::Error,
-            "GitHub repository could not be created from template, please try again. (Could not created GitHub repository)" # rubocop:disable LineLength
+            "GitHub repository could not be created from template, please try again. (Could not created GitHub repository)"
           )
       end
     end
@@ -130,7 +130,7 @@ RSpec.describe CreateGitHubRepoService do
       it "returns true if github_repo_id is nil" do
         expect(service.delete_github_repository(nil)).to be(true)
       end
-      it "returns true if github repository sucessfully deleted" do
+      it "returns true if github repository successfully deleted" do
         allow_any_instance_of(GitHubOrganization).to receive(:delete_repository).with(anything).and_return(true)
         expect(service.delete_github_repository(1)).to be(true)
       end
@@ -159,6 +159,7 @@ RSpec.describe CreateGitHubRepoService do
     describe "#verify_organization_has_private_repos_available!" do
       before(:each) do
         allow(assignment).to receive(:public?).and_return(false)
+        allow(assignment).to receive(:private?).and_return(true)
       end
       context "organization has private repos" do
         it "returns true" do
@@ -331,6 +332,46 @@ RSpec.describe CreateGitHubRepoService do
               .with("exercise_repo.create.repo.with_templates.success")
             expect(GitHubClassroom.statsd).to receive(:increment).with("exercise_repo.create.success")
             service.perform
+          end
+
+          context "failure" do
+            before(:each) do
+              allow_any_instance_of(GitHubOrganization)
+                .to receive(:create_repository_from_template)
+                .and_raise(GitHub::Forbidden)
+              Failbot.reports.clear
+            end
+
+            it "reports error to Failbot" do
+              service.perform
+              expect(Failbot.reports.count).to be > 0
+            end
+
+            context "NotFound error" do
+              before(:each) do
+                allow_any_instance_of(GitHubOrganization)
+                  .to receive(:create_repository_from_template)
+                  .and_raise(GitHub::NotFound)
+              end
+
+              it "does not report NotFound error to Failbot" do
+                service.perform
+                expect(Failbot.reports.count).to be_zero
+              end
+            end
+
+            it "Failbot report contains details" do
+              service.perform
+              expect(
+                Failbot.reports.find do |error|
+                  (error.include? "starter_code_repo_id") &&
+                  (error.include? "organization") &&
+                  ((error.include? "github_team_id") || (error.include? "user")) &&
+                  (error.include? "params") &&
+                  (error.include? "new_repo_name")
+                end
+              ).to_not be_nil
+            end
           end
         end
 
@@ -556,7 +597,7 @@ RSpec.describe CreateGitHubRepoService do
         expect { service.create_github_repository_from_template! }
           .to raise_error(
             subject::Result::Error,
-            "GitHub repository could not be created from template, please try again. (Could not created GitHub repository)" # rubocop:disable LineLength
+            "GitHub repository could not be created from template, please try again. (Could not created GitHub repository)"
           )
       end
     end
@@ -592,7 +633,7 @@ RSpec.describe CreateGitHubRepoService do
       it "returns true if github_repo_id is nil" do
         expect(service.delete_github_repository(nil)).to be(true)
       end
-      it "returns true if github repository sucessfully deleted" do
+      it "returns true if github repository successfully deleted" do
         allow_any_instance_of(GitHubOrganization).to receive(:delete_repository).with(anything).and_return(true)
         expect(service.delete_github_repository(1)).to be(true)
       end
@@ -614,13 +655,14 @@ RSpec.describe CreateGitHubRepoService do
         expect { service.push_starter_code!(assignment_repository) }
           .to raise_error(
             subject::Result::Error,
-            "We were not able to import you the starter code to your Group assignment, please try again. (GitHub::Error)" # rubocop:disable LineLength
+            "We were not able to import you the starter code to your Group assignment, please try again. (GitHub::Error)"
           )
       end
     end
     describe "#verify_organization_has_private_repos_available!" do
       before(:each) do
         allow(group_assignment).to receive(:public?).and_return(false)
+        allow(group_assignment).to receive(:private?).and_return(true)
       end
       context "organization has private repos" do
         it "returns true" do
@@ -806,7 +848,7 @@ RSpec.describe CreateGitHubRepoService do
             result = service.perform
             expect(result.failed?).to be_truthy
             expect(result.error)
-              .to start_with("We were not able to import you the starter code to your Group assignment, please try again.") # rubocop:disable LineLength
+              .to start_with("We were not able to import you the starter code to your Group assignment, please try again.")
             expect(WebMock).to have_requested(:put, import_regex)
           end
 

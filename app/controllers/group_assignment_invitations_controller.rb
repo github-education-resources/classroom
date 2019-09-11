@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 class GroupAssignmentInvitationsController < ApplicationController
   class InvalidStatusForRouteError < StandardError; end
 
@@ -41,7 +40,6 @@ class GroupAssignmentInvitationsController < ApplicationController
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable MethodLength
-  # rubocop:disable PerceivedComplexity
   def create_repo
     job_started =
       if group_invite_status.accepted? || group_invite_status.errored?
@@ -53,11 +51,7 @@ class GroupAssignmentInvitationsController < ApplicationController
           @group_assignment_repo = nil
           report_retry
           group_invite_status.waiting!
-          if unified_repo_creators_enabled?
-            CreateGitHubRepositoryNewJob.perform_later(group_assignment, group, retries: 3)
-          else
-            GroupAssignmentRepo::CreateGitHubRepositoryJob.perform_later(group_assignment, group, retries: 3)
-          end
+          CreateGitHubRepositoryNewJob.perform_later(group_assignment, group, retries: 3)
           true
         end
       else
@@ -71,7 +65,6 @@ class GroupAssignmentInvitationsController < ApplicationController
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable MethodLength
-  # rubocop:enable PerceivedComplexity
 
   def progress
     render json: {
@@ -87,7 +80,7 @@ class GroupAssignmentInvitationsController < ApplicationController
 
     redirect_to group_assignment_invitation_url(invitation)
   rescue ActiveRecord::ActiveRecordError
-    flash[:error] = "An error occured, please try again!"
+    flash[:error] = "An error occurred, please try again!"
   end
 
   private
@@ -256,4 +249,3 @@ class GroupAssignmentInvitationsController < ApplicationController
     redirect_to group_assignment_invitation_path(invitation) if group.blank?
   end
 end
-# rubocop:enable Metrics/ClassLength

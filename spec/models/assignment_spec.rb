@@ -203,4 +203,43 @@ RSpec.describe Assignment, type: :model do
       end
     end
   end
+
+  describe "validation methods that call API", :vcr do
+    let(:organization) { classroom_org }
+    let(:assignment) { create(:assignment, organization: organization, title: "Assignment 3") }
+
+    context "#starter_code_repository_not_empty" do
+      it "calls methods if starter_code_repo_id is changed" do
+        expect(assignment).to receive(:starter_code_repository_not_empty)
+        assignment.update(starter_code_repo_id: 1_062_897)
+      end
+
+      it "does not call methods if starter_code_repo_id is unchanged" do
+        expect(assignment).not_to receive(:starter_code_repository_not_empty)
+        assignment.update(title: "Assignment 4")
+      end
+    end
+
+    context "#starter_code_repository_is_template" do
+      it "is called if starter_code_repo_id is changed" do
+        expect(assignment).to receive(:starter_code_repository_is_template)
+        assignment.update(starter_code_repo_id: 1_062_897)
+      end
+
+      it "is called if template_repos_enabled is changed" do
+        expect(assignment).to receive(:starter_code_repository_is_template)
+        expect(assignment.update(template_repos_enabled: false)).to be true
+      end
+
+      it "is called if both starter_code_repo_id and template_repos_enabled are changed" do
+        expect(assignment).to receive(:starter_code_repository_is_template)
+        assignment.update(starter_code_repo_id: 1_062_897, template_repos_enabled: true)
+      end
+
+      it "isn't called if starter_code_repo_id and template_repos_enabled are not changed" do
+        expect(assignment).to receive(:starter_code_repository_is_template)
+        assignment.update(title: "Assignment 5")
+      end
+    end
+  end
 end

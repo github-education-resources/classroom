@@ -35,8 +35,6 @@ class AssignmentInvitationsController < ApplicationController
 
   # rubocop:disable MethodLength
   # rubocop:disable AbcSize
-  # rubocop:disable CyclomaticComplexity
-  # rubocop:disable PerceivedComplexity
   def create_repo
     job_started = false
     if current_invitation_status.accepted? || current_invitation_status.errored?
@@ -48,11 +46,7 @@ class AssignmentInvitationsController < ApplicationController
         GitHubClassroom.statsd.increment("exercise_repo.import.retry")
       end
       current_invitation_status.waiting!
-      if unified_repo_creators_enabled?
-        CreateGitHubRepositoryNewJob.perform_later(current_assignment, current_user, retries: 3)
-      else
-        AssignmentRepo::CreateGitHubRepositoryJob.perform_later(current_assignment, current_user, retries: 3)
-      end
+      CreateGitHubRepositoryNewJob.perform_later(current_assignment, current_user, retries: 3)
 
       job_started = true
     end
@@ -64,8 +58,6 @@ class AssignmentInvitationsController < ApplicationController
   end
   # rubocop:enable MethodLength
   # rubocop:enable AbcSize
-  # rubocop:enable CyclomaticComplexity
-  # rubocop:enable PerceivedComplexity
 
   def progress
     render json: {
@@ -81,9 +73,12 @@ class AssignmentInvitationsController < ApplicationController
   def join_roster
     super
 
+    entry = organization.roster.roster_entries.find_by(user_id: current_user.id)
+    flash[:success] = "Your account is linked to #{entry.identifier} on the roster. If this is wrong, please reach out to your instructor."
+
     redirect_to assignment_invitation_url(current_invitation)
   rescue ActiveRecord::ActiveRecordError
-    flash[:error] = "An error occured, please try again!"
+    flash[:error] = "An error occurred, please try again!"
   end
 
   private
