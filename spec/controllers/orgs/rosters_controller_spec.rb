@@ -899,93 +899,83 @@ RSpec.describe Orgs::RostersController, type: :controller do
       GoogleAPI = Google::Apis::ClassroomV1
     end
 
-    context "with student identifier flipper enabled" do
+    context "when user is authorized with google" do
       before do
-        GitHubClassroom.flipper[:student_identifier].enable
+        # Stub google authentication again
+        client = Signet::OAuth2::Client.new
+        allow_any_instance_of(ApplicationController)
+          .to receive(:user_google_classroom_credentials)
+          .and_return(client)
       end
 
-      context "when user is authorized with google" do
+      context "classroom has a linked google course" do
         before do
-          # Stub google authentication again
-          client = Signet::OAuth2::Client.new
+          organization.update_attributes(google_course_id: "1234")
+
+          student_names = ["Student 1", "Student 2"]
+          student_profiles = student_names.map do |name|
+            GoogleAPI::UserProfile.new(name: GoogleAPI::Name.new(full_name: name))
+          end
+          @students = student_profiles.map do |prof|
+            GoogleAPI::Student.new(profile: prof, user_id: SecureRandom.uuid)
+          end
+
+          allow_any_instance_of(GoogleClassroomCourse)
+            .to receive(:students)
+            .and_return(@students)
+
+          patch :sync_google_classroom, params: { id: organization.slug }
+        end
+
+        it "adds the new student to the roster" do
+          expect(organization.roster.roster_entries.count).to eq(3)
+        end
+
+        it "does not add duplicate students that were already added to roster" do
+          patch :sync_google_classroom, params: { id: organization.slug }
+          expect(organization.roster.roster_entries.count).to eq(3)
+        end
+
+        it "does not remove students deleted from google classroom" do
+          allow_any_instance_of(GoogleClassroomCourse)
+            .to receive(:students)
+            .and_return([])
+
+          patch :sync_google_classroom, params: { id: organization.slug }
+          expect(organization.roster.roster_entries.count).to eq(3)
+        end
+      end
+
+      context "when there is no google classroom course linked" do
+        before do
+          patch :import_from_google_classroom, params: {
+            id: organization.slug
+          }
+        end
+
+        it "redirects to google classroom selection route" do
+          expect(response).to redirect_to(google_classrooms_index_organization_path(organization))
+        end
+
+        it "sets flash message" do
+          expect(flash[:alert]).to eq(
+            "Please link a Google Classroom before syncing a roster."
+          )
+        end
+      end
+
+      context "when user is not authorized with google" do
+        before do
           allow_any_instance_of(ApplicationController)
             .to receive(:user_google_classroom_credentials)
-            .and_return(client)
+            .and_return(nil)
+
+          patch :sync_google_classroom, params: { id: organization.slug }
         end
 
-        context "classroom has a linked google course" do
-          before do
-            organization.update_attributes(google_course_id: "1234")
-
-            student_names = ["Student 1", "Student 2"]
-            student_profiles = student_names.map do |name|
-              GoogleAPI::UserProfile.new(name: GoogleAPI::Name.new(full_name: name))
-            end
-            @students = student_profiles.map do |prof|
-              GoogleAPI::Student.new(profile: prof, user_id: SecureRandom.uuid)
-            end
-
-            allow_any_instance_of(GoogleClassroomCourse)
-              .to receive(:students)
-              .and_return(@students)
-
-            patch :sync_google_classroom, params: { id: organization.slug }
-          end
-
-          it "adds the new student to the roster" do
-            expect(organization.roster.roster_entries.count).to eq(3)
-          end
-
-          it "does not add duplicate students that were already added to roster" do
-            patch :sync_google_classroom, params: { id: organization.slug }
-            expect(organization.roster.roster_entries.count).to eq(3)
-          end
-
-          it "does not remove students deleted from google classroom" do
-            allow_any_instance_of(GoogleClassroomCourse)
-              .to receive(:students)
-              .and_return([])
-
-            patch :sync_google_classroom, params: { id: organization.slug }
-            expect(organization.roster.roster_entries.count).to eq(3)
-          end
+        it "redirects to authorization url" do
+          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
         end
-
-        context "when there is no google classroom course linked" do
-          before do
-            patch :import_from_google_classroom, params: {
-              id: organization.slug
-            }
-          end
-
-          it "redirects to google classroom selection route" do
-            expect(response).to redirect_to(google_classrooms_index_organization_path(organization))
-          end
-
-          it "sets flash message" do
-            expect(flash[:alert]).to eq(
-              "Please link a Google Classroom before syncing a roster."
-            )
-          end
-        end
-
-        context "when user is not authorized with google" do
-          before do
-            allow_any_instance_of(ApplicationController)
-              .to receive(:user_google_classroom_credentials)
-              .and_return(nil)
-
-            patch :sync_google_classroom, params: { id: organization.slug }
-          end
-
-          it "redirects to authorization url" do
-            expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
-          end
-        end
-      end
-
-      after do
-        GitHubClassroom.flipper[:student_identifier].disable
       end
     end
   end
