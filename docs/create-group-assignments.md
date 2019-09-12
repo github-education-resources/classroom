@@ -1,3 +1,5 @@
+## Creating group assignments
+
 Like professional developers working together on code, students can use [GitHub Classroom](https://classroom.github.com/) to collaborate on group projects in a shared repository. In this post, we’ll walk you through how teachers can work with GitHub teams and use GitHub Classroom to create group exercises, assign teams, and reuse existing student teams.
 
 ### Before you begin
