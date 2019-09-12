@@ -349,9 +349,6 @@ RSpec.describe OrganizationsController, type: :controller do
     end
 
     context "with google classroom disabled" do
-      before(:each) { GitHubClassroom.flipper[:google_classroom_roster_import].enable }
-      after(:each)  { GitHubClassroom.flipper[:google_classroom_roster_import].disable }
-
       it "renders the LMS selection page" do
         get :link_lms, params: { id: organization.slug }
         expect(response).to have_http_status(:ok)
