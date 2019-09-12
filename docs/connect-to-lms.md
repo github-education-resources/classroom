@@ -1,12 +1,12 @@
 ## Integrating with a learning management system (LMS)
 
-GitHub Classroom integrates with your institution's learning management system (LMS), such as Brightspace, Canvas, Moodle, and others. GitHub Classroom supports:
+GitHub Classroom integrates with learning management systems (LMS) such as Brightspace, Canvas, Moodle, and others. GitHub Classroom supports:
 
 - [Roster provisioning](/help/import-roster-from-lms)
 - Assignment creation (Planned)
 - Submission syncing (Planned)
 
-GitHub Classroom works with learning management systems that use the Learning Tools Interoperability (LTI) standard. Using LTI keeps your information safe and secure. LTI is an industry-standard protocol and Classroom's use of LTI is certified by the Instructional Management System Global Learning Consortium.
+GitHub Classroom works with learning management systems that use the Learning Tools Interoperability (LTI) standard. Using LTI keeps your information safe and secure. LTI is an industry-standard protocol and GitHub Classroom's use of LTI is certified by the Instructional Management System Global Learning Consortium.
 
 For the GitHub Classroom and LMS integration to work, we require that your LMS supports:
 
