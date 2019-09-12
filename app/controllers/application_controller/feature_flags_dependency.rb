@@ -5,10 +5,6 @@ class ApplicationController
     not_found unless team_management_enabled?
   end
 
-  def ensure_lti_launch_flipper_is_enabled
-    not_found unless lti_launch_enabled?
-  end
-
   def ensure_google_classroom_roster_import_is_enabled
     not_found unless google_classroom_roster_import_enabled?
   end
@@ -27,11 +23,6 @@ class ApplicationController
     logged_in? && current_user.feature_enabled?(:archive_classrooms)
   end
   helper_method :archive_classrooms_enabled?
-
-  def lti_launch_enabled?
-    GitHubClassroom.flipper[:lti_launch].enabled? || (logged_in? && current_user.feature_enabled?(:lti_launch))
-  end
-  helper_method :lti_launch_enabled?
 
   def classroom_visibility_enabled?
     logged_in? && current_user.feature_enabled?(:classroom_visibility)
