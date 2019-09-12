@@ -38,12 +38,12 @@ There are three common cases when organizing students into teams:
 - There are one or more groups already formed. The student clicks on the existing group they want to join
 - A student needs to create a new group. The student enters the name of a new group to create it
 
-### Classroom groups and GitHub teams
-When students join their group in Classroom, _[a team]_(https://help.github.com/articles/about-teams/) is created on GitHub.com in your GitHub organization. Teams have pretty nifty functionality, including threaded comments and emoji support.
+### GitHub Classroom groups and GitHub teams
+When students join their group in GitHub Classroom, _[a team]_(https://help.github.com/articles/about-teams/) is created on GitHub.com in your GitHub organization. Teams have pretty nifty functionality, including threaded comments and emoji support.
 
-If you create a team for your students on GitHub.com, that team will not appear in Classroom. If you’d like to use Classroom to distribute shared repositories, then use group assignments in Classroom, not teams on GitHub.com.
+If you create a team for your students on GitHub.com, that team will not appear in GitHub Classroom. If you’d like to use GitHub Classroom to distribute shared repositories, then use group assignments in GitHub Classroom, not teams on GitHub.com.
 
-When you use group assignments in Classroom, each team of students will get access to one shared repository for the exercise. Every student will be able to push and pull to their team’s repository. We recommend assigning one student per team to act as project manager to resolve conflicts or merge pull requests. If your students are new to resolving conflicting changes, they can [check out our documentation](https://services.github.com/on-demand/merge-conflicts/) to learn to manage merge conflicts.
+When you use group assignments in GitHub Classroom, each team of students will get access to one shared repository for the exercise. Every student will be able to push and pull to their team’s repository. We recommend assigning one student per team to act as project manager to resolve conflicts or merge pull requests. If your students are new to resolving conflicting changes, they can [check out our documentation](https://services.github.com/on-demand/merge-conflicts/) to learn to manage merge conflicts.
 
 ### Get deeper insight into group participation
 Once your students are sorted into teams, they can start collaborating on the assignment like they would in any other repository: by pushing commits and branches, opening and reviewing pull requests, or using issues. Similarly, all of their commit history is available for you to review.
@@ -58,4 +58,4 @@ Once students complete their projects, there are a few ways to deliver feedback,
 If you chose to use private repositories for your assignment, your feedback will be confidential, so only you and the students in the group will see it.
 
 ### Create a group exercise
-Ready to give a group assignment? [Get started right away in GitHub Classroom](https://classroom.github.com/). Or check out [this discussion in the GitHub Education Community](https://education.github.community/t/using-existing-teams-in-group-assignments/6999) on how student groups can work with GitHub teams in Classroom.
+Ready to give a group assignment? [Get started right away in GitHub Classroom](https://classroom.github.com/). Or check out [this discussion in the GitHub Education Community](https://education.github.community/t/using-existing-teams-in-group-assignments/6999) on how student groups can work with GitHub teams in GitHub Classroom.
