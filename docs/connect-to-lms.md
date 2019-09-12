@@ -14,7 +14,7 @@ For the GitHub Classroom and LMS integration to work, we require that your LMS s
 - LTI Names and Roles Provisioning 1.X
 
 **Note**: Blackboard and Brightspace course rosters aren't compatible with GitHub Classroom yet. We are working to support Blackboard and Brightspace in the near future!
-{: class="warning"}
+{: class="flash"}
 
 ### Setup guide
 
