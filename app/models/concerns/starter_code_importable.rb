@@ -40,8 +40,7 @@ module StarterCodeImportable
 
   def track_private_repo_belonging_to_user
     return unless starter_code_repository
-    if starter_code_repository.private && starter_code_repository.owner[:type] == "User"
-      GitHubClassroom.statsd.increment("assignment.private_repo_owned_by_user.create")
-    end
+    return unless starter_code_repository.private && starter_code_repository.owner[:type] == "User"
+    GitHubClassroom.statsd.increment("assignment.private_repo_owned_by_user.create")
   end
 end
