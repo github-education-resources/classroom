@@ -10,7 +10,10 @@ A classroom is the basic foundational unit of GitHub Classroom where teachers ca
 #### Group assignment  
 Within a classroom in GitHub Classroom, teachers can create either [individual assignments](/help/glossary#individual-assignment) or group assignments. Group assignments are ideal for team submissions or collaborative projects. Just like individual assignments, creating a group assignment will set up an assignment repository within your classroom's GitHub organization account which may optionally include starter code. However, unlike individual assignments, group assignments allow teachers to set up teams that students can join when they accept the group assignment invitation.  
 
-Watch: [How to set up group assignments](/help/videos#-52quDR2QSc)
+Related resources:  
+
+  - Watch: [How to set up group assignments](/help/videos#-52quDR2QSc)  
+  - Guide: [Creating group assignments](/help/create-group-assignments)  
 
 
 #### Identifier
