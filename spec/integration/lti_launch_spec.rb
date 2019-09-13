@@ -21,11 +21,9 @@ RSpec.describe "LTI launch", type: :request do
 
   before(:each) do
     redis_store.flushdb
-    GitHubClassroom.flipper[:lti_launch].enable
   end
 
   after(:each) do
-    GitHubClassroom.flipper[:lti_launch].disable
     redis_store.quit
   end
 
