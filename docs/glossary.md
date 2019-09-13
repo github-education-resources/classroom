@@ -14,7 +14,7 @@ Watch: [How to set up group assignments](/help/videos#-52quDR2QSc)
 
 
 #### Identifier
-GitHub Classroom supports any type of identifier—student names, email addresses, or school IDs. Many schools have adopted the use of Unique Student Identifiers to identify students without exposing their real names, email addresses, or similar personally identifiable information. Just make sure you use the identifier type that complies with your school's policy.
+GitHub Classroom supports any type of identifier—student names, email addresses, or school IDs. Many schools have adopted the use of unique student identifiers to identify students without exposing their real names, email addresses, or similar personally identifiable information. Just make sure you use the identifier type that complies with your school's policy.
 
 
 #### Individual assignment
