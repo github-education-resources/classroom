@@ -242,4 +242,34 @@ RSpec.describe Assignment, type: :model do
       end
     end
   end
+
+  it "tracks when assignments are created with a private starter code repo owned by a user" do
+    stub_request(:get, github_url("/repositories/123")).to_return(
+      status: 200,
+      body: { private: true, owner: { type: "User" } }.to_json,
+      headers: { content_type: 'application/json; charset=utf-8' }
+    )
+    stub_request(:get, github_url("/repositories/123/contents/")).to_return(
+      status: 200,
+      body: { private: true, owner: { type: "User" } }.to_json,
+      headers: { content_type: 'application/json; charset=utf-8' }
+    )
+    expect(GitHubClassroom.statsd).to receive(:increment).with("assignment.private_repo_owned_by_user.create")
+    create(:assignment, starter_code_repo_id: 123)
+  end
+
+  it "does not track when assignments are created with a private starter code repo owned by an organization" do
+    stub_request(:get, github_url("/repositories/123")).to_return(
+      status: 200,
+      body: { private: true, owner: { type: "Organization" } }.to_json,
+      headers: { content_type: 'application/json; charset=utf-8' }
+    )
+    stub_request(:get, github_url("/repositories/123/contents/")).to_return(
+      status: 200,
+      body: { private: true, owner: { type: "Organization" } }.to_json,
+      headers: { content_type: 'application/json; charset=utf-8' }
+    )
+    expect(GitHubClassroom.statsd).to_not receive(:increment).with("assignment.private_repo_owned_by_user.create")
+    create(:assignment, starter_code_repo_id: 123)
+  end
 end
