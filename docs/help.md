@@ -15,7 +15,7 @@
 
 ### Workflows, case studies, best practices, and more from the GitHub blog
 
-#### Getting the most from Classroom
+#### Getting the most from GitHub Classroom
 
 * [GitHub Classroom now supports multiple classrooms per organization](https://github.blog/2019-01-23-github-classroom-now-supports-multiple-classrooms-per-organization/)
 * [Merge conflicts in the classroom](https://github.blog/2018-08-22-merge-conflicts-in-the-classroom/)
@@ -39,5 +39,5 @@
 
 ### Need more help?
 
-Not finding what you need? Want to talk to a human? [Open an issue on the Classroom repo.](https://github.com/education/classroom/issues)
+Not finding what you need? Want to talk to a human? [Open an issue on the GitHub Classroom repo.](https://github.com/education/classroom/issues)
 {: class="warning"}

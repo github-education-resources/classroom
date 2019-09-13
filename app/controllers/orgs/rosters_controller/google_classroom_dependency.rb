@@ -2,10 +2,6 @@
 
 module Orgs
   class RostersController
-    before_action :ensure_google_classroom_roster_import_is_enabled, only: %i[
-      import_from_google_classroom
-      sync_google_classroom
-    ]
     before_action :authorize_google_classroom, only: %i[import_from_google_classroom sync_google_classroom]
     before_action :ensure_google_classroom_is_linked, only: %i[import_from_google_classroom sync_google_classroom]
     before_action :set_google_classroom, only: %i[import_from_google_classroom sync_google_classroom]
