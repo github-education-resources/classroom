@@ -6,14 +6,13 @@ Verified faculty can now upgrade any GitHub organization being used for academic
 
    Organizations you own are listed under _Upgrade your organization_.
 
-   <div class="text-center">
-     <img src="/images/help/upgrade-organization.png" class="border" style="width: 75%;">
-   </div>
+   ![upgrade your organization image](/images/help/upgrade-organization.png)
 
-2. Next to the orginzation name, click **Upgrade** to upgrade to GitHub Team for free.
+
+2. Next to the organization name, click **Upgrade** to upgrade to GitHub Team for free.
 
    **Note:** You may be required to re-verify your faculty status one time to upgrade your organization. To do re-verify, click _submit your information again_. Reverification takes a few days, so thank you in advance for your patience.
-   {: class="warning"}
+   {: class="flash"}
 
 ### Further reading
 

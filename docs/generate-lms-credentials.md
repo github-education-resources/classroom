@@ -15,13 +15,8 @@ Before integrating GitHub Classroom within your learning management system (LMS)
 1. Click your LMS. If your LMS is not listed,
 click **Other learning management system**.
 
-1. Follow the prompts. At the end you'll see a screen which looks like this:
-
-   <div class="text-center">
-     <img src="/images/help/lms/github-classroom-credentials.png" class="border" style="width: 75%;">
-   </div>
-   <br>
-
+1. Follow the prompts. At the end you'll see a screen which looks like this:  
+  ![GitHub Classroom credentials](/images/help/lms/github-classroom-credentials.png)  
    **Note**: You may access this screen at any time by clicking **Connection Settings** in your classroom profile.
 
 1. Copy the credentials (or keep this page open in a separate window or tab) and [configure your learning management system](/help/connect-to-lms#part-2).
@@ -35,12 +30,7 @@ click **Other learning management system**.
 1. Follow the prompts until you reach _Connect to a learning management system_, then click your LMS. If your LMS is not listed, click **Other learning management system**.
 
 4. Follow the prompts. At the end you'll see a screen which looks like this:
-
-   <div class="text-center">
-     <img src="/images/help/lms/github-classroom-credentials.png" class="border" style="width: 75%;">
-   </div>
-   <br>
-
+![GitHub Classroom credentials](/images/help/lms/github-classroom-credentials.png)  
    **Note**: You may access this screen at any time by clicking **Connection Settings** in your classroom profile.
 
 1. Copy the credentials (or keep this page open in a separate window or tab) and [configure your learning management system](/help/connect-to-lms#part-2).

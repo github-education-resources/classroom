@@ -9,18 +9,15 @@ These steps will walk you through the process of configuring GitHub Classroom to
 
 ### Step by step installation guide
 
-1. Log into your GitHub Enterprise Instance.
-1. Next you'll want to create a local version of GitHub Classroom. Go to the organization's page, click `Settings` and then click `Oauth Apps` in the sidebar.
+1. Log into your GitHub Enterprise instance.
+1. Next you’ll want to create a local version of GitHub Classroom. Go to the organization’s page, click `Settings` and then click `Oauth Apps` in the sidebar.
 
-   <div class="text-center">
-     <img src="/images/help/enterprise/oauth.png" class="border" style="width: 75%;">
-   </div>
+![enterprise Oauth](/images/help/enterprise/oauth.png)
 
 
 #### Create the Classroom Enterprise application
 
 1. Click **New OAuth App** in the top right
-
 1. Set `Application name` to `Classroom Enterprise`
 1. Set `Homepage URL` to the URL of your local GitHub Classroom installation
 1. Set `Application description` to `GitHub Classroom for GitHub Enterprise`
@@ -31,10 +28,7 @@ These steps will walk you through the process of configuring GitHub Classroom to
 #### Configure the GitHub Classroom `.env`
 
 Now that you have an OAuth Application registered in your GitHub Enterprise instance you want your local GitHub Classroom instance to use it. Go to the page for your newly created application and find the `Client ID` and `Client Secret`:
-
-   <div class="text-center">
-     <img src="/images/help/enterprise/secrets.png" class="border" style="width: 75%;">
-   </div>
+![enterprise secrets](/images/help/enterprise/secrets.png)
 
 In your `.env` set the following:
 
@@ -44,4 +38,4 @@ GITHUB_CLIENT_ID=<client_id_from_above>
 GITHUB_CLIENT_SECRET=<client_secret_from_above>
 ```
 
-You should be able to restrt your local GitHub Classroom instance and register.
+You should be able to restart your local GitHub Classroom instance and register.
