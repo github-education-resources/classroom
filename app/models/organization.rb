@@ -26,10 +26,12 @@ class Organization < ApplicationRecord
   validates :github_id, presence: true
 
   validates :title, presence: true
-  validates :title, length: { maximum: 60 }
+  validates :title, length: { maximum: 255 }
   validates :title, uniqueness: { scope: :github_id }
 
   validates :slug, uniqueness: true
+
+  delegate :plan, to: :github_organization
 
   before_destroy :silently_remove_organization_webhook
 
@@ -45,8 +47,8 @@ class Organization < ApplicationRecord
 
   def self.sort_modes
     {
-      "Oldest first" => :order_by_oldest,
       "Newest first" => :order_by_newest,
+      "Oldest first" => :order_by_oldest,
       "Classroom name" => :order_by_title
     }
   end
@@ -68,7 +70,8 @@ class Organization < ApplicationRecord
     else
       token = users.limit(1).order("RANDOM()").pluck(:token)[0]
     end
-    Octokit::Client.new(access_token: token)
+
+    GitHubClassroom.github_client(access_token: token)
   end
 
   def github_organization
@@ -84,7 +87,7 @@ class Organization < ApplicationRecord
   end
 
   def geo_pattern_data_uri
-    patterns = %i[chevrons hexagons octagons plus_signs triangles squares diamonds]
+    patterns = %i[plaid hexagons plus_signs overlapping_circles overlapping_rings mosaic_squares]
     options = { base_color: "#28a745", patterns: patterns }
     if archived?
       options.delete(:base_color)

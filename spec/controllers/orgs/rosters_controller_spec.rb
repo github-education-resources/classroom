@@ -26,7 +26,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
     it "succeeds" do
       sign_in_as(user)
       get :new, params: { id: organization.slug }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
 
     it "renders correct template" do
@@ -90,6 +90,28 @@ RSpec.describe Orgs::RostersController, type: :controller do
         expect(organization.roster.roster_entries.count).to eq(2)
         expect(organization.roster.roster_entries[0].lms_user_id).to eq("1")
         expect(organization.roster.roster_entries[1].lms_user_id).to eq("2")
+      end
+
+      context "failbot reports when there is an error" do
+        before do
+          allow_any_instance_of(Orgs::RostersController)
+            .to receive(:lms_membership)
+            .and_raise(Faraday::ClientError)
+          Failbot.reports.clear
+        end
+
+        it "successfully" do
+          post :create, params: {
+            id: organization.slug,
+            identifiers: "email1\r\nemail2",
+            identifier_name: "emails"
+          }
+          expect(Failbot.reports.count).to eq(1)
+        end
+
+        after do
+          Failbot.reports.clear
+        end
       end
 
       after(:each) do
@@ -197,7 +219,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
       end
 
       it "succeeds" do
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(200)
       end
 
       it "renders roster/show" do
@@ -250,115 +272,92 @@ RSpec.describe Orgs::RostersController, type: :controller do
       sign_in_as(user)
     end
 
-    context "with lti launch enabled" do
-      before(:each) do
-        GitHubClassroom.flipper[:lti_launch].enable
-      end
+    context "with existing LMS" do
+      let(:lti_configuration) { create(:lti_configuration, organization: organization) }
 
-      after(:each) do
-        GitHubClassroom.flipper[:lti_launch].disable
-      end
+      context "with context_membership_url" do
+        before(:each) do
+          LtiConfiguration
+            .any_instance
+            .stub(:supports_membership_service?)
+            .and_return(true)
+        end
 
-      context "with existing LMS" do
-        let(:lti_configuration) { create(:lti_configuration, organization: organization) }
-
-        context "with context_membership_url" do
-          before(:each) do
-            LtiConfiguration
-              .any_instance
-              .stub(:supports_membership_service?)
-              .and_return(true)
+        context "fetching roster succeeds" do
+          let(:student) do
+            GitHubClassroom::LTI::Models::CourseMember.new(
+              email: "sample@example.com",
+              name: "Example Name",
+              user_id: "12345"
+            )
           end
 
-          context "fetching roster succeeds" do
+          let(:students) do
+            [student]
+          end
+
+          before(:each) do
+            GitHubClassroom::LTI::MembershipService
+              .any_instance
+              .stub(:students)
+              .and_return(students)
+          end
+
+          context "all attributes present" do
+            it "format.html: succeeds" do
+              get :import_from_lms, params: { id: lti_configuration.organization.slug }
+              expect(response).to have_http_status(:ok)
+              expect(flash[:alert]).to be_nil
+              expect(assigns(:identifiers).keys.length).to eql(3)
+            end
+
+            it "format.js: succeeds" do
+              get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
+              expect(response).to have_http_status(:ok)
+              expect(flash[:alert]).to be_nil
+              expect(assigns(:identifiers).keys.length).to eql(3)
+            end
+
+            context "no new students" do
+              before(:each) do
+                subject
+                  .stub(:filter_new_students)
+                  .and_return([])
+              end
+
+              it "creates no duplicate entries" do
+                expect(subject).to receive(:handle_lms_import_error)
+
+                get :import_from_lms, params: { id: lti_configuration.organization.slug }
+              end
+            end
+          end
+
+          context "successful fetch, but missing some attributes" do
             let(:student) do
               GitHubClassroom::LTI::Models::CourseMember.new(
-                email: "sample@example.com",
-                name: "Example Name",
+                email: nil,
+                name: nil,
                 user_id: "12345"
               )
             end
 
-            let(:students) do
-              [student]
-            end
-
-            before(:each) do
-              GitHubClassroom::LTI::MembershipService
-                .any_instance
-                .stub(:students)
-                .and_return(students)
-            end
-
-            context "all attributes present" do
-              it "format.html: succeeds" do
-                get :import_from_lms, params: { id: lti_configuration.organization.slug }
-                expect(response).to have_http_status(:ok)
-                expect(flash[:alert]).to be_nil
-                expect(assigns(:identifiers).keys.length).to eql(3)
-              end
-
-              it "format.js: succeeds" do
-                get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
-                expect(response).to have_http_status(:ok)
-                expect(flash[:alert]).to be_nil
-                expect(assigns(:identifiers).keys.length).to eql(3)
-              end
-
-              context "no new students" do
-                before(:each) do
-                  subject
-                    .stub(:filter_new_students)
-                    .and_return([])
-                end
-
-                it "creates no duplicate entries" do
-                  expect(subject).to receive(:handle_lms_import_error)
-
-                  get :import_from_lms, params: { id: lti_configuration.organization.slug }
-                end
-              end
-            end
-
-            context "successful fetch, but missing some attributes" do
-              let(:student) do
-                GitHubClassroom::LTI::Models::CourseMember.new(
-                  email: nil,
-                  name: nil,
-                  user_id: "12345"
-                )
-              end
-
-              it "hides options when they're nil lists" do
-                get :import_from_lms, params: { id: lti_configuration.organization.slug }
-                expect(response).to have_http_status(:ok)
-                expect(assigns(:identifiers).keys.length).to eql(1)
-              end
-            end
-          end
-
-          context "fetching roster fails" do
-            before(:each) do
-              GitHubClassroom::LTI::MembershipService
-                .any_instance
-                .stub(:students)
-                .and_raise(JSON::ParserError)
-            end
-
-            it "format.html: presents an error message to the user" do
+            it "hides options when they're nil lists" do
               get :import_from_lms, params: { id: lti_configuration.organization.slug }
-              expect(flash[:alert]).to be_present
-            end
-
-            it "format.js: presents an error message to the user" do
-              get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
-              expect(response.status).to be(422)
-              expect(flash[:alert]).to be_present
+              expect(response).to have_http_status(:ok)
+              expect(assigns(:identifiers).keys.length).to eql(1)
             end
           end
         end
 
-        context "without context_membership_service_url" do
+        context "fetching roster fails" do
+          before(:each) do
+            GitHubClassroom::LTI::MembershipService
+              .any_instance
+              .stub(:students)
+              .and_raise(JSON::ParserError)
+          end
+
           it "format.html: presents an error message to the user" do
             get :import_from_lms, params: { id: lti_configuration.organization.slug }
             expect(flash[:alert]).to be_present
@@ -372,22 +371,24 @@ RSpec.describe Orgs::RostersController, type: :controller do
         end
       end
 
-      context "with no existing LMS" do
-        it "Redirects to link LTI configuration page" do
-          get :import_from_lms, params: { id: organization.slug }
-          expect(response).to redirect_to(link_lms_organization_path)
+      context "without context_membership_service_url" do
+        it "format.html: presents an error message to the user" do
+          get :import_from_lms, params: { id: lti_configuration.organization.slug }
+          expect(flash[:alert]).to be_present
+        end
+
+        it "format.js: presents an error message to the user" do
+          get :import_from_lms, format: :js, xhr: true, params: { id: lti_configuration.organization.slug }
+          expect(response.status).to be(422)
+          expect(flash[:alert]).to be_present
         end
       end
     end
 
-    context "with lti launch disabled" do
-      before do
-        GitHubClassroom.flipper[:lti_launch].disable
-      end
-
-      it "404s" do
+    context "with no existing LMS" do
+      it "Redirects to link LTI configuration page" do
         get :import_from_lms, params: { id: organization.slug }
-        expect(response).to have_http_status(:not_found)
+        expect(response).to redirect_to(link_lms_organization_path)
       end
     end
   end
@@ -774,143 +775,120 @@ RSpec.describe Orgs::RostersController, type: :controller do
       GoogleAPI = Google::Apis::ClassroomV1
     end
 
-    context "with google classroom flipper enabled" do
+    context "when google classroom course is linked" do
       before do
-        GitHubClassroom.flipper[:google_classroom_roster_import].enable
+        organization.update_attributes(google_course_id: "1234")
       end
 
-      context "when google classroom course is linked" do
+      context "when user is authorized with google" do
         before do
-          organization.update_attributes(google_course_id: "1234")
+          # Stub google authentication
+          client = Signet::OAuth2::Client.new
+          allow_any_instance_of(ApplicationController)
+            .to receive(:user_google_classroom_credentials)
+            .and_return(client)
         end
 
-        context "when user is authorized with google" do
+        context "when course has multiple students" do
           before do
-            # Stub google authentication
-            client = Signet::OAuth2::Client.new
-            allow_any_instance_of(ApplicationController)
-              .to receive(:user_google_classroom_credentials)
-              .and_return(client)
+            valid_response = GoogleAPI::ListStudentsResponse.new
+
+            student_names = ["Student 1", "Student 2"]
+            student_profiles = student_names.map do |name|
+              GoogleAPI::UserProfile.new(name: GoogleAPI::Name.new(full_name: name))
+            end
+            students = student_profiles.map { |prof| GoogleAPI::Student.new(profile: prof) }
+
+            valid_response.students = students
+            allow_any_instance_of(GoogleAPI::ClassroomService)
+              .to receive(:list_course_students)
+              .and_return(valid_response)
           end
 
-          context "when course has multiple students" do
+          context "when organization has no roster" do
             before do
-              valid_response = GoogleAPI::ListStudentsResponse.new
-
-              student_names = ["Student 1", "Student 2"]
-              student_profiles = student_names.map do |name|
-                GoogleAPI::UserProfile.new(name: GoogleAPI::Name.new(full_name: name))
-              end
-              students = student_profiles.map { |prof| GoogleAPI::Student.new(profile: prof) }
-
-              valid_response.students = students
-              allow_any_instance_of(GoogleAPI::ClassroomService)
-                .to receive(:list_course_students)
-                .and_return(valid_response)
+              organization.update_attributes(roster_id: nil)
             end
 
-            context "when organization has no roster" do
-              before do
-                organization.update_attributes(roster_id: nil)
-              end
+            it "sends statsd" do
+              allow(GitHubClassroom.statsd).to receive(:increment)
+              patch :import_from_google_classroom, params: {
+                id: organization.slug
+              }
+              expect(GitHubClassroom.statsd).to have_received(:increment).with("google_classroom.import")
+              expect(GitHubClassroom.statsd).to have_received(:increment).with("roster_entries.lms_imported", by: 2)
+            end
 
-              it "sends statsd" do
-                allow(GitHubClassroom.statsd).to receive(:increment)
+            context "when students are fetched succesfully" do
+              before do
                 patch :import_from_google_classroom, params: {
                   id: organization.slug
                 }
-                expect(GitHubClassroom.statsd).to have_received(:increment).with("google_classroom.import")
-                expect(GitHubClassroom.statsd).to have_received(:increment).with("roster_entries.lms_imported", by: 2)
               end
 
-              context "when students are fetched succesfully" do
-                before do
-                  patch :import_from_google_classroom, params: {
-                    id: organization.slug
-                  }
-                end
-
-                it "sets success message" do
-                  expect(flash[:success]).to start_with("Your classroom roster has been saved! Manage it")
-                end
-
-                it "has correct number of students" do
-                  expect(organization.reload.roster.roster_entries.count).to eq(2)
-                end
-
-                it "has students with correct names" do
-                  expect(organization.reload.roster.roster_entries[0]).to have_attributes(identifier: "Student 1")
-                  expect(organization.reload.roster.roster_entries[1]).to have_attributes(identifier: "Student 2")
-                end
-
-                it "links the google classroom to the organization" do
-                  expect(organization.reload.google_course_id).to eq("1234")
-                end
+              it "sets success message" do
+                expect(flash[:success]).to start_with("Your classroom roster has been saved! Manage it")
               end
 
-              context "when there is an error fetching students" do
-                before do
-                  allow_any_instance_of(GoogleAPI::ClassroomService)
-                    .to receive(:list_course_students)
-                    .and_raise(Google::Apis::ServerError.new("boom"))
+              it "has correct number of students" do
+                expect(organization.reload.roster.roster_entries.count).to eq(2)
+              end
 
-                  patch :import_from_google_classroom, params: {
-                    id: organization.slug
-                  }
-                end
+              it "has students with correct names" do
+                expect(organization.reload.roster.roster_entries[0]).to have_attributes(identifier: "Student 1")
+                expect(organization.reload.roster.roster_entries[1]).to have_attributes(identifier: "Student 2")
+              end
 
-                it "sets error message" do
-                  expect(flash[:error]).to eq("Failed to fetch students from Google Classroom. Please try again later.")
-                end
+              it "links the google classroom to the organization" do
+                expect(organization.reload.google_course_id).to eq("1234")
+              end
+            end
+
+            context "when there is an error fetching students" do
+              before do
+                allow_any_instance_of(GoogleAPI::ClassroomService)
+                  .to receive(:list_course_students)
+                  .and_raise(Google::Apis::ServerError.new("boom"))
+
+                patch :import_from_google_classroom, params: {
+                  id: organization.slug
+                }
+              end
+
+              it "sets error message" do
+                expect(flash[:error]).to eq("Failed to fetch students from Google Classroom. Please try again later.")
               end
             end
           end
         end
       end
-
-      context "when there is no google classroom course linked" do
-        context "when user is authorized with google" do
-          before do
-            # Stub google authentication
-            client = Signet::OAuth2::Client.new
-            allow_any_instance_of(ApplicationController)
-              .to receive(:user_google_classroom_credentials)
-              .and_return(client)
-          end
-
-          it "redirects to google classroom selection route" do
-            patch :import_from_google_classroom, params: {
-              id: organization.slug
-            }
-            expect(response).to redirect_to(google_classrooms_index_organization_path(organization))
-          end
-
-          it "sets flash message" do
-            patch :import_from_google_classroom, params: {
-              id: organization.slug
-            }
-            expect(flash[:alert]).to eq(
-              "Please link a Google Classroom before syncing a roster."
-            )
-          end
-        end
-      end
-
-      # TODO: with google classroom not linked
-      after do
-        GitHubClassroom.flipper[:google_classroom_roster_import].disable
-      end
     end
 
-    context "with google classroom identifier disabled" do
-      before do
-        patch :import_from_google_classroom, params: {
-          id: organization.slug
-        }
-      end
+    context "when there is no google classroom course linked" do
+      context "when user is authorized with google" do
+        before do
+          # Stub google authentication
+          client = Signet::OAuth2::Client.new
+          allow_any_instance_of(ApplicationController)
+            .to receive(:user_google_classroom_credentials)
+            .and_return(client)
+        end
 
-      it "404s" do
-        expect(response).to have_http_status(:not_found)
+        it "redirects to google classroom selection route" do
+          patch :import_from_google_classroom, params: {
+            id: organization.slug
+          }
+          expect(response).to redirect_to(google_classrooms_index_organization_path(organization))
+        end
+
+        it "sets flash message" do
+          patch :import_from_google_classroom, params: {
+            id: organization.slug
+          }
+          expect(flash[:alert]).to eq(
+            "Please link a Google Classroom before syncing a roster."
+          )
+        end
       end
     end
   end
@@ -921,123 +899,83 @@ RSpec.describe Orgs::RostersController, type: :controller do
       GoogleAPI = Google::Apis::ClassroomV1
     end
 
-    context "with student identifier flipper enabled" do
+    context "when user is authorized with google" do
       before do
-        GitHubClassroom.flipper[:student_identifier].enable
+        # Stub google authentication again
+        client = Signet::OAuth2::Client.new
+        allow_any_instance_of(ApplicationController)
+          .to receive(:user_google_classroom_credentials)
+          .and_return(client)
       end
 
-      context "with google classroom flipper enabled" do
+      context "classroom has a linked google course" do
         before do
-          GitHubClassroom.flipper[:google_classroom_roster_import].enable
-        end
+          organization.update_attributes(google_course_id: "1234")
 
-        context "when user is authorized with google" do
-          before do
-            # Stub google authentication again
-            client = Signet::OAuth2::Client.new
-            allow_any_instance_of(ApplicationController)
-              .to receive(:user_google_classroom_credentials)
-              .and_return(client)
+          student_names = ["Student 1", "Student 2"]
+          student_profiles = student_names.map do |name|
+            GoogleAPI::UserProfile.new(name: GoogleAPI::Name.new(full_name: name))
+          end
+          @students = student_profiles.map do |prof|
+            GoogleAPI::Student.new(profile: prof, user_id: SecureRandom.uuid)
           end
 
-          context "classroom has a linked google course" do
-            before do
-              organization.update_attributes(google_course_id: "1234")
+          allow_any_instance_of(GoogleClassroomCourse)
+            .to receive(:students)
+            .and_return(@students)
 
-              student_names = ["Student 1", "Student 2"]
-              student_profiles = student_names.map do |name|
-                GoogleAPI::UserProfile.new(name: GoogleAPI::Name.new(full_name: name))
-              end
-              @students = student_profiles.map do |prof|
-                GoogleAPI::Student.new(profile: prof, user_id: SecureRandom.uuid)
-              end
-
-              allow_any_instance_of(GoogleClassroomCourse)
-                .to receive(:students)
-                .and_return(@students)
-
-              patch :sync_google_classroom, params: { id: organization.slug }
-            end
-
-            it "adds the new student to the roster" do
-              expect(organization.roster.roster_entries.count).to eq(3)
-            end
-
-            it "does not add duplicate students that were already added to roster" do
-              patch :sync_google_classroom, params: { id: organization.slug }
-              expect(organization.roster.roster_entries.count).to eq(3)
-            end
-
-            it "does not remove students deleted from google classroom" do
-              allow_any_instance_of(GoogleClassroomCourse)
-                .to receive(:students)
-                .and_return([])
-
-              patch :sync_google_classroom, params: { id: organization.slug }
-              expect(organization.roster.roster_entries.count).to eq(3)
-            end
-          end
-
-          context "when there is no google classroom course linked" do
-            before do
-              patch :import_from_google_classroom, params: {
-                id: organization.slug
-              }
-            end
-
-            it "redirects to google classroom selection route" do
-              expect(response).to redirect_to(google_classrooms_index_organization_path(organization))
-            end
-
-            it "sets flash message" do
-              expect(flash[:alert]).to eq(
-                "Please link a Google Classroom before syncing a roster."
-              )
-            end
-          end
-
-          context "when user is not authorized with google" do
-            before do
-              allow_any_instance_of(ApplicationController)
-                .to receive(:user_google_classroom_credentials)
-                .and_return(nil)
-
-              patch :sync_google_classroom, params: { id: organization.slug }
-            end
-
-            it "redirects to authorization url" do
-              expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
-            end
-          end
-
-          after do
-            GitHubClassroom.flipper[:google_classroom_roster_import].disable
-          end
-        end
-      end
-
-      context "with google classroom identifier disabled" do
-        before do
           patch :sync_google_classroom, params: { id: organization.slug }
         end
 
-        it "404s" do
-          expect(response).to have_http_status(:not_found)
+        it "adds the new student to the roster" do
+          expect(organization.roster.roster_entries.count).to eq(3)
+        end
+
+        it "does not add duplicate students that were already added to roster" do
+          patch :sync_google_classroom, params: { id: organization.slug }
+          expect(organization.roster.roster_entries.count).to eq(3)
+        end
+
+        it "does not remove students deleted from google classroom" do
+          allow_any_instance_of(GoogleClassroomCourse)
+            .to receive(:students)
+            .and_return([])
+
+          patch :sync_google_classroom, params: { id: organization.slug }
+          expect(organization.roster.roster_entries.count).to eq(3)
         end
       end
 
-      after do
-        GitHubClassroom.flipper[:student_identifier].disable
-      end
-    end
+      context "when there is no google classroom course linked" do
+        before do
+          patch :import_from_google_classroom, params: {
+            id: organization.slug
+          }
+        end
 
-    context "with flipper disabled" do
-      before do
-        patch :sync_google_classroom, params: { id: organization.slug }
+        it "redirects to google classroom selection route" do
+          expect(response).to redirect_to(google_classrooms_index_organization_path(organization))
+        end
+
+        it "sets flash message" do
+          expect(flash[:alert]).to eq(
+            "Please link a Google Classroom before syncing a roster."
+          )
+        end
       end
 
-      it "404s" do
-        expect(response).to have_http_status(:not_found)
+      context "when user is not authorized with google" do
+        before do
+          allow_any_instance_of(ApplicationController)
+            .to receive(:user_google_classroom_credentials)
+            .and_return(nil)
+
+          patch :sync_google_classroom, params: { id: organization.slug }
+        end
+
+        it "redirects to authorization url" do
+          expect(response).to redirect_to %r{\Ahttps://accounts.google.com/o/oauth2}
+        end
       end
     end
   end

@@ -33,6 +33,7 @@ class GitHubModel
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/BlockLength
   # rubocop:disable MethodLength
+  # rubocop:disable CyclomaticComplexity
   def initialize(client, id_attributes, **options)
     resource = options.delete(:classroom_resource)
 
@@ -58,23 +59,19 @@ class GitHubModel
 
           no_cache_options = options.dup
           no_cache_options[:headers] = GitHub::APIHeaders.no_cache_no_store
+          cached_value = resource.send(field_name)
 
-          if use_cache
-            cached_value = resource.send(field_name)
-            return cached_value if cached_value
+          return cached_value if use_cache && cached_value
 
-            api_response = github_response(client, id_attributes.values.compact, no_cache_options)
+          api_response = github_response(client, id_attributes.values.compact, no_cache_options)
 
-            local_cached_attributes.each do |attribute|
-              resource.assign_attributes("github_#{attribute}" => api_response.send(attribute))
-            end
-
-            resource.save
-
-            resource.send(field_name)
-          else
-            github_response(client, id_attributes.values.compact, no_cache_options).send(gh_attr)
+          local_cached_attributes.each do |attribute|
+            resource.assign_attributes("github_#{attribute}" => api_response.send(attribute))
           end
+
+          resource.save if resource.changed?
+
+          resource.send(field_name)
         end
       end
 
@@ -91,6 +88,7 @@ class GitHubModel
   # rubocop:enable MethodLength
   # rubocop:enable Metrics/BlockLength
   # rubocop:enable Metrics/AbcSize
+  # rubocop:enable CyclomaticComplexity
 
   # Internal: Update this instance's attribute instance variables with
   # new values.
@@ -178,7 +176,7 @@ class GitHubModel
   # Returns a Sawyer::Resource or nil if an error occurred.
   def github_classroom_request(id_args, **options)
     GitHub::Errors.with_error_handling do
-      GitHubClassroom.github_client.send(github_type, *id_args, options)
+      GitHubClassroom.github_client(auto_paginate: true).send(github_type, *id_args, options)
     end
   rescue GitHub::Error
     nil

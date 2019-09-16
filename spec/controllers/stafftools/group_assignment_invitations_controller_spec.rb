@@ -27,7 +27,7 @@ RSpec.describe Stafftools::GroupAssignmentInvitationsController, type: :controll
       end
 
       it "succeeds" do
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(200)
       end
 
       it "sets the GroupAssignmentInvitation" do

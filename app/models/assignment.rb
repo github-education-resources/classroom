@@ -39,11 +39,18 @@ class Assignment < ApplicationRecord
 
   validate :uniqueness_of_slug_across_organization
   validate :starter_code_repository_not_empty, if: :will_save_change_to_starter_code_repo_id?
-  validate :starter_code_repository_is_template, if: :will_save_change_to_starter_code_repo_id?
+  validate :starter_code_repository_is_template,
+    if: -> { :will_save_change_to_starter_code_repo_id? || :will_save_change_to_template_repos_enabled }
 
   alias_attribute :invitation, :assignment_invitation
   alias_attribute :repos, :assignment_repos
   alias_attribute :template_repos_enabled?, :template_repos_enabled
+
+  after_create :track_private_repo_belonging_to_user
+
+  def visibility=(visibility)
+    self.public_repo = visibility != "private"
+  end
 
   def private?
     !public_repo

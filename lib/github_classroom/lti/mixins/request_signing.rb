@@ -27,6 +27,7 @@ module GitHubClassroom
           connection = Faraday.new(url: req.uri, headers: request_headers) do |conn|
             conn.response :raise_error
             conn.adapter Faraday.default_adapter
+            conn.use :gzip
           end
 
           method = req.method.downcase
@@ -54,6 +55,7 @@ module GitHubClassroom
         def build_uri(endpoint, query)
           uri = URI.parse(endpoint)
           if query
+            query.stringify_keys!
             existing_query = Hash[URI.decode_www_form(uri.query || "")]
             uri.query = URI.encode_www_form(query.merge(existing_query))
           end

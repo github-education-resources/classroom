@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 class AssignmentsController < ApplicationController
   include OrganizationAuthorization
   include StarterCode
@@ -111,7 +110,7 @@ class AssignmentsController < ApplicationController
   def new_assignment_params
     params
       .require(:assignment)
-      .permit(:title, :slug, :public_repo, :students_are_repo_admins, :invitations_enabled, :template_repos_enabled)
+      .permit(:title, :slug, :visibility, :students_are_repo_admins, :invitations_enabled, :template_repos_enabled)
       .merge(creator: current_user,
              organization: @organization,
              starter_code_repo_id: starter_code_repo_id_param,
@@ -175,7 +174,7 @@ class AssignmentsController < ApplicationController
       .permit(
         :title,
         :slug,
-        :public_repo,
+        :visibility,
         :students_are_repo_admins,
         :deadline, :invitations_enabled,
         :template_repos_enabled
@@ -188,4 +187,3 @@ class AssignmentsController < ApplicationController
     GitHubClassroom.statsd.increment("deadline.create") if @assignment.deadline
   end
 end
-# rubocop:enable Metrics/ClassLength

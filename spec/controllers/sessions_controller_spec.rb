@@ -9,12 +9,19 @@ RSpec.describe SessionsController, type: :controller do
   end
   let(:consumer_key) { lti_configuration.consumer_key }
 
-  before do
-    GitHubClassroom.flipper[:lti_launch].enable
-  end
+  describe "sessions#failure", :vcr do
+    it "redirects to lti_failure and curries request parameters when strategy is lti" do
+      get :failure, params: { strategy: "lti" }
 
-  after do
-    GitHubClassroom.flipper[:lti_launch].disable
+      expect(response).to redirect_to(auth_lti_failure_path(request.params))
+    end
+
+    it "renders auth failure otherwise" do
+      get :failure
+
+      expect(response).to redirect_to(root_path)
+      expect(flash[:alert]).to eql("There was a problem authenticating with GitHub, please try again.")
+    end
   end
 
   describe "sessions#lti_setup", :vcr do
@@ -48,6 +55,42 @@ RSpec.describe SessionsController, type: :controller do
     end
   end
 
+  describe "sessions#lti_failure" do
+    it "raises LtiLaunchError" do
+      bypass_rescue
+
+      expect { get :lti_failure }.to raise_error(SessionsController::LtiLaunchError)
+    end
+  end
+
   describe "rescue_from :LtiLaunchError" do
+    let(:launch_params) { {} }
+    before(:each) do
+      get :lti_failure, params: launch_params
+    end
+
+    context "message contains launch_presentation_return_url" do
+      let(:return_url) { "https://return.example.com" }
+      let(:launch_params) { { launch_presentation_return_url: return_url } }
+
+      it "sets lti_errormsg query parameter" do
+        redirect_location = URI.parse(response.location)
+        params = Hash[URI.decode_www_form(redirect_location.query)]
+        expect(params["lti_errormsg"]).to_not be_nil
+      end
+
+      it "redirects back to the given launch_presentation_return_url" do
+        redirect_location = URI.parse(response.location)
+        redirect_location.query = nil
+
+        expect(redirect_location.to_s).to eq(return_url)
+      end
+    end
+
+    context "message does not contain launch_presentation_return_url" do
+      it "renders an error on the splash screen" do
+        expect(response).to render_template(:lti_launch)
+      end
+    end
   end
 end

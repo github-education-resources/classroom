@@ -9,7 +9,7 @@
 <%= link_to organization_url(current_organization), organization_url(current_organization), class: 'mobile-invitation-content' %>
 
 <div class="col-md-6 input-group">
-  <%= content_tag :input, '', type: 'text', class: "form-control input-sm", id: "organization-#{current_organization.github_id}", value: organization_url(current_organization), readonly: 'readonly' %>
+  <%= content_tag :input, '', type: 'text', class: "form-control input-sm text-mono", id: "organization-#{current_organization.github_id}", value: organization_url(current_organization), readonly: 'readonly' %>
   <span class="input-group-button">
     <button aria-label="<%= t('views.organizations.copy_to_clipboard') %>" data-clipboard-target=<%= "#organization-#{current_organization.github_id}" %> class="js-clipboard btn btn-sm tooltipped tooltipped-s" data-copied-hint="<%= t('views.organizations.copied') %>" type="button">
       <%= octicon 'clippy' %>
@@ -19,12 +19,7 @@
 </div>
 
 <% if action_name == 'invite' %>
-      <div class="form-actions">
-        <% next_step = new_roster_path(current_organization) %>
-        <% if lti_launch_enabled? || google_classroom_roster_import_enabled? %>
-          <% next_step = link_lms_organization_path(current_organization) %>
-        <% end %>
-
-        <%= button_to t('views.organizations.continue'), next_step, class: 'btn btn-primary right', method: :get %>
-      </div>
-    <% end %>
+  <div class="form-actions">
+    <%= button_to t('views.organizations.continue'), link_lms_organization_path(current_organization), class: 'btn btn-primary right', method: :get %>
+  </div>
+<% end %>

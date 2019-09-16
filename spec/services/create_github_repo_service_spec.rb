@@ -94,7 +94,7 @@ RSpec.describe CreateGitHubRepoService do
         expect { service.create_github_repository_from_template! }
           .to raise_error(
             subject::Result::Error,
-            "GitHub repository could not be created from template, please try again. (Could not created GitHub repository)" # rubocop:disable LineLength
+            "GitHub repository could not be created from template, please try again. (Could not created GitHub repository)"
           )
       end
     end
@@ -159,6 +159,7 @@ RSpec.describe CreateGitHubRepoService do
     describe "#verify_organization_has_private_repos_available!" do
       before(:each) do
         allow(assignment).to receive(:public?).and_return(false)
+        allow(assignment).to receive(:private?).and_return(true)
       end
       context "organization has private repos" do
         it "returns true" do
@@ -596,7 +597,7 @@ RSpec.describe CreateGitHubRepoService do
         expect { service.create_github_repository_from_template! }
           .to raise_error(
             subject::Result::Error,
-            "GitHub repository could not be created from template, please try again. (Could not created GitHub repository)" # rubocop:disable LineLength
+            "GitHub repository could not be created from template, please try again. (Could not created GitHub repository)"
           )
       end
     end
@@ -654,13 +655,14 @@ RSpec.describe CreateGitHubRepoService do
         expect { service.push_starter_code!(assignment_repository) }
           .to raise_error(
             subject::Result::Error,
-            "We were not able to import you the starter code to your Group assignment, please try again. (GitHub::Error)" # rubocop:disable LineLength
+            "We were not able to import you the starter code to your Group assignment, please try again. (GitHub::Error)"
           )
       end
     end
     describe "#verify_organization_has_private_repos_available!" do
       before(:each) do
         allow(group_assignment).to receive(:public?).and_return(false)
+        allow(group_assignment).to receive(:private?).and_return(true)
       end
       context "organization has private repos" do
         it "returns true" do
@@ -846,7 +848,7 @@ RSpec.describe CreateGitHubRepoService do
             result = service.perform
             expect(result.failed?).to be_truthy
             expect(result.error)
-              .to start_with("We were not able to import you the starter code to your Group assignment, please try again.") # rubocop:disable LineLength
+              .to start_with("We were not able to import you the starter code to your Group assignment, please try again.")
             expect(WebMock).to have_requested(:put, import_regex)
           end
 

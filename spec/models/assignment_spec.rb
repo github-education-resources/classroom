@@ -204,23 +204,72 @@ RSpec.describe Assignment, type: :model do
     end
   end
 
-  describe "validation methods that call API" do
+  describe "validation methods that call API", :vcr do
     let(:organization) { classroom_org }
+    let(:assignment) { create(:assignment, organization: organization, title: "Assignment 3") }
 
-    context "validation methods for starter code repo" do
-      let(:assignment) { create(:assignment, organization: organization, title: "Assignment 3") }
-
+    context "#starter_code_repository_not_empty" do
       it "calls methods if starter_code_repo_id is changed" do
         expect(assignment).to receive(:starter_code_repository_not_empty)
-        expect(assignment).to receive(:starter_code_repository_is_template)
         assignment.update(starter_code_repo_id: 1_062_897)
       end
 
       it "does not call methods if starter_code_repo_id is unchanged" do
         expect(assignment).not_to receive(:starter_code_repository_not_empty)
-        expect(assignment).not_to receive(:starter_code_repository_is_template)
         assignment.update(title: "Assignment 4")
       end
     end
+
+    context "#starter_code_repository_is_template" do
+      it "is called if starter_code_repo_id is changed" do
+        expect(assignment).to receive(:starter_code_repository_is_template)
+        assignment.update(starter_code_repo_id: 1_062_897)
+      end
+
+      it "is called if template_repos_enabled is changed" do
+        expect(assignment).to receive(:starter_code_repository_is_template)
+        expect(assignment.update(template_repos_enabled: false)).to be true
+      end
+
+      it "is called if both starter_code_repo_id and template_repos_enabled are changed" do
+        expect(assignment).to receive(:starter_code_repository_is_template)
+        assignment.update(starter_code_repo_id: 1_062_897, template_repos_enabled: true)
+      end
+
+      it "isn't called if starter_code_repo_id and template_repos_enabled are not changed" do
+        expect(assignment).to receive(:starter_code_repository_is_template)
+        assignment.update(title: "Assignment 5")
+      end
+    end
+  end
+
+  it "tracks when assignments are created with a private starter code repo owned by a user" do
+    stub_request(:get, github_url("/repositories/123")).to_return(
+      status: 200,
+      body: { private: true, owner: { type: "User" } }.to_json,
+      headers: { content_type: "application/json; charset=utf-8" }
+    )
+    stub_request(:get, github_url("/repositories/123/contents/")).to_return(
+      status: 200,
+      body: { private: true, owner: { type: "User" } }.to_json,
+      headers: { content_type: "application/json; charset=utf-8" }
+    )
+    expect(GitHubClassroom.statsd).to receive(:increment).with("assignment.private_repo_owned_by_user.create")
+    create(:assignment, starter_code_repo_id: 123)
+  end
+
+  it "does not track when assignments are created with a private starter code repo owned by an organization" do
+    stub_request(:get, github_url("/repositories/123")).to_return(
+      status: 200,
+      body: { private: true, owner: { type: "Organization" } }.to_json,
+      headers: { content_type: "application/json; charset=utf-8" }
+    )
+    stub_request(:get, github_url("/repositories/123/contents/")).to_return(
+      status: 200,
+      body: { private: true, owner: { type: "Organization" } }.to_json,
+      headers: { content_type: "application/json; charset=utf-8" }
+    )
+    expect(GitHubClassroom.statsd).to_not receive(:increment).with("assignment.private_repo_owned_by_user.create")
+    create(:assignment, starter_code_repo_id: 123)
   end
 end

@@ -26,7 +26,7 @@ RSpec.describe OrganizationsController, type: :controller do
     context "authenticated user with a valid token" do
       it "succeeds" do
         get :index
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(200)
       end
 
       it "sets the users organization" do
@@ -77,7 +77,7 @@ RSpec.describe OrganizationsController, type: :controller do
   describe "GET #new", :vcr do
     it "returns success status" do
       get :new
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
 
     it "has a new organization" do
@@ -216,7 +216,7 @@ RSpec.describe OrganizationsController, type: :controller do
     it "returns success and sets the organization" do
       get :edit, params: { id: organization.slug }
 
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
       expect(assigns(:current_organization)).to_not be_nil
     end
   end
@@ -225,7 +225,7 @@ RSpec.describe OrganizationsController, type: :controller do
     it "returns success and sets the organization" do
       get :invitation, params: { id: organization.slug }
 
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
       expect(assigns(:current_organization)).to_not be_nil
     end
   end
@@ -281,7 +281,7 @@ RSpec.describe OrganizationsController, type: :controller do
       it "returns success and sets the organization" do
         get :show_groupings, params: { id: organization.slug }
 
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(200)
         expect(assigns(:current_organization)).to_not be_nil
       end
 
@@ -342,37 +342,17 @@ RSpec.describe OrganizationsController, type: :controller do
   end
 
   describe "GET #link_lms", :vcr do
-    context "with lti launch enabled" do
-      before(:each) { GitHubClassroom.flipper[:lti_launch].enable }
-      after(:each)  { GitHubClassroom.flipper[:lti_launch].disable }
-
-      it "renders the LMS selection page" do
-        get :link_lms, params: { id: organization.slug }
-        expect(response).to have_http_status(:ok)
-        expect(response).to render_template(:link_lms)
-      end
+    it "renders the LMS selection page" do
+      get :link_lms, params: { id: organization.slug }
+      expect(response).to have_http_status(:ok)
+      expect(response).to render_template(:link_lms)
     end
 
     context "with google classroom disabled" do
-      before(:each) { GitHubClassroom.flipper[:google_classroom_roster_import].enable }
-      after(:each)  { GitHubClassroom.flipper[:google_classroom_roster_import].disable }
-
       it "renders the LMS selection page" do
         get :link_lms, params: { id: organization.slug }
         expect(response).to have_http_status(:ok)
         expect(response).to render_template(:link_lms)
-      end
-    end
-
-    context "with lti launch or google classroom disabled" do
-      before(:each) do
-        GitHubClassroom.flipper[:lti_launch].disable
-        GitHubClassroom.flipper[:google_classroom_roster_import].disable
-      end
-
-      it "returns not found" do
-        get :link_lms, params: { id: organization.slug }
-        expect(response).to have_http_status(:not_found)
       end
     end
   end
