@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 class OrganizationsController < Orgs::Controller
   before_action :ensure_team_management_flipper_is_enabled, only: [:show_groupings]
 
@@ -15,7 +14,7 @@ class OrganizationsController < Orgs::Controller
   skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create search]
 
   def index
-    @organizations = current_user.organizations.order(:id).page(params[:page]).per(12)
+    @organizations = current_user.organizations.order(created_at: :desc).page(params[:page]).per(12)
   end
 
   def new
@@ -92,9 +91,7 @@ class OrganizationsController < Orgs::Controller
 
   def new_assignment; end
 
-  def link_lms
-    not_found unless lti_launch_enabled? || google_classroom_roster_import_enabled?
-  end
+  def link_lms; end
 
   def invite; end
 

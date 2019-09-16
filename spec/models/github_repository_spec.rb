@@ -25,7 +25,11 @@ describe GitHubRepository do
     @github_repository.attributes.each do |attribute, value|
       next if %i[id_attributes client access_token].include?(attribute)
       expect(@github_repository).to respond_to(attribute)
-      expect(value).to eql(gh_repo.send(attribute))
+      if attribute == :owner
+        expect(value[:type]).to eql(gh_repo.send(attribute)[:type])
+      else
+        expect(value).to eql(gh_repo.send(attribute))
+      end
     end
 
     expect(WebMock).to have_requested(:get, github_url("/repositories/#{@github_repository.id}")).twice
