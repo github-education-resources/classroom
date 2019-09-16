@@ -38,8 +38,17 @@
         </div>
         <div>
           Private
-          <span class="d-block f6 text-gray text-normal mt-1">Submit assignments using private repositories. Submissions will only be visible to the submitter and organization owners. Editing this after assignments are created will not retroactively change their visibility.
-          <% unless view.private_repos_available? %><strong>This organization does not have any private repositories available.</strong><% end %></span></span>
+          <span class="d-block f6 text-gray text-normal mt-1">
+            <p<%= " style=color: #6A737D" unless view.private_repos_available? %>">
+              Submit assignments using private repositories. Submissions will only be visible to the submitter and organization owners. Editing this after assignments are created will not retroactively change their visibility.
+            </p>
+            <% unless view.private_repos_available? %>
+              <strong>
+                <p>Private repositories aren't available for this organization. However, current faculty may be eligible for free, unlimited private repositories.</p>
+                <p><%= link_to "Apply for free private repositories", "https://education.github.com/discount_requests/new" %></p>
+              </strong>
+            <% end %>
+          </span>
         </div>
       </div>
     </label>

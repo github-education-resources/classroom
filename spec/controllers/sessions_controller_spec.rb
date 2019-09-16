@@ -9,14 +9,6 @@ RSpec.describe SessionsController, type: :controller do
   end
   let(:consumer_key) { lti_configuration.consumer_key }
 
-  before do
-    GitHubClassroom.flipper[:lti_launch].enable
-  end
-
-  after do
-    GitHubClassroom.flipper[:lti_launch].disable
-  end
-
   describe "sessions#failure", :vcr do
     it "redirects to lti_failure and curries request parameters when strategy is lti" do
       get :failure, params: { strategy: "lti" }

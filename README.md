@@ -4,7 +4,7 @@
 ## Table of Contents
 
 - [The workflow you use as a developer, scaled for the needs of students.](#the-workflow-you-use-as-a-developer-scaled-for-the-needs-of-students)
-- [Why try Classroom?](#why-try-classroom)
+- [Why try GitHub Classroom?](#why-try-classroom)
 - [Design principles](#design-principles)
 - [GitHub Classroom and the edtech ecosystem](#github-classroom-and-the-edtech-ecosystem)
 - [The technical details](#the-technical-details)
@@ -20,19 +20,19 @@ Wouldn’t students be better served by showing versions of their work, iteratin
 
 With GitHub Classroom you can set up the industry-standard workflow and free up your time to focus on teaching.
 
-*Classroom is a teacher-facing tool that uses the GitHub API to enable the GitHub workflow for education.*
+*GitHub Classroom is a teacher-facing tool that uses the GitHub API to enable the GitHub workflow for education.*
 
 You create an Assignment with starter code and directions, send along one link, and students get their own “sandbox” copy of the repo to get started.
 
 Set due dates, track assignments in your teacher dashboard, or integrate other tools like testing frameworks.
 
-With Classroom, you can spin up your course on GitHub and move on to the good stuff.
+With GitHub Classroom, you can spin up your course on GitHub and move on to the good stuff.
 
 [@johndbritton](https://github.com/johndbritton), [@mozzadrella](https://github.com/mozzadrella), [@d12](https://github.com/d12), [@benemdon](https://github.com/benemdon), [@srinjoym](https://github.com/srinjoym), and [@tarebyte](https://github.com/tarebyte), are all maintainers.
 
 ![GitHub Classroom screenshot](https://cloud.githubusercontent.com/assets/1311594/14748352/32f677b0-0887-11e6-9ac2-8aa06e4341fa.png)
 
-## Why try Classroom?
+## Why try GitHub Classroom?
 
 *Spend more time with students, less on setup.* Students accept an assignment with one link, so you can get straight to the material.
 
@@ -42,23 +42,23 @@ With Classroom, you can spin up your course on GitHub and move on to the good st
 
 *You are in control.* Students can work individually or in groups, in public or in private. Invite teaching assistants or graders to view the assignments.
 
-*Scales for large courses with ease.* If you have a small course, Classroom will make your life easier and save you time. If you have hundreds of students, we have you covered: as many repositories as you need, and webhooks to integrate automated testing tools.
+*Scales for large courses with ease.* If you have a small course, GitHub Classroom will make your life easier and save you time. If you have hundreds of students, we have you covered: as many repositories as you need, and webhooks to integrate automated testing tools.
 
 *Works with your Learning Management System (LMS).* Students submit a link to their assignment repository to your learning management system. Give feedback through comments in GitHub, but keep grades in your LMS.
 
-*You’re not alone.* The experts on the GitHub Education team are here to answer any of your questions, and we’ve got [docs](https://github.com/education/classroom/tree/master/docs), best practices, and a strong community of educators to help you migrate to Classroom.
+*You’re not alone.* The experts on the GitHub Education team are here to answer any of your questions, and we’ve got [docs](https://github.com/education/classroom/tree/master/docs), best practices, and a strong community of educators to help you migrate to GitHub Classroom.
 
 *Are you super-advanced?* Do you want to build your own tools? We 💖 contributions. Please check out [contributing guidelines](CONTRIBUTING.md).
 
 ## Design principles
 
-*Classroom is a teacher-facing tool to simplify the educational use of GitHub.* Every student needs feedback and support as they learn to code, and using GitHub you can give them the right advice, in the right place, at the right time. Classroom makes it easier to use the workflow you love, with some automation and ease for student use.
+*GitHub Classroom is a teacher-facing tool to simplify the educational use of GitHub.* Every student needs feedback and support as they learn to code, and using GitHub you can give them the right advice, in the right place, at the right time. GitHub Classroom makes it easier to use the workflow you love, with some automation and ease for student use.
 
-*Students use GitHub. They don’t use Classroom.* Experience with real-world tools gives students a leg-up once they move on from school. Invest time in the tools students can grow with, not another third-party tool with its own learning curve.
+*Students use GitHub. They don’t use GitHub Classroom.* Experience with real-world tools gives students a leg-up once they move on from school. Invest time in the tools students can grow with, not another third-party tool with its own learning curve.
 
-*Classroom is not an LMS (Learning Management System).* If you need to use an LMS like Canvas, Moodle or Blackboard, we hear you. Students can post their repositories to your LMS. We’re going to stick with what we’re good at, which is helping people collaborate on code.
+*GitHub Classroom is not an LMS (Learning Management System).* If you need to use an LMS like Canvas, Moodle or Blackboard, we hear you. Students can post their repositories to your LMS. We’re going to stick with what we’re good at, which is helping people collaborate on code.
 
-*Classroom is open source.* Git and GitHub are versatile with many ways to meet your learning goals, and we want to model the open source process that makes our communities great.
+*GitHub Classroom is open source.* Git and GitHub are versatile with many ways to meet your learning goals, and we want to model the open source process that makes our communities great.
 
 We welcome contributions aligned with the roadmap below and through answering these questions:
 
@@ -66,27 +66,27 @@ We welcome contributions aligned with the roadmap below and through answering th
 * Does it replicate functionality that's best left to the expertise of content platforms, hardware or LMS?
 * How many support tickets and questions will the feature address?
 
-### Who is Classroom for?
+### Who is GitHub Classroom for?
 Anyone teaching computer science in a high school, university or informal environment.
-Folks who might also find Classroom useful:
+Folks who might also find GitHub Classroom useful:
 * Higher ed statistics and data science teachers
 * Higher ed biology and the hard sciences
 
 ## GitHub Classroom and the edtech ecosystem
 
-In case you’re wondering “How does Classroom interact with my favorite app/my notebook/my LMS” here’s the tl;dr on how those pieces fit together:
+In case you’re wondering “How does GitHub Classroom interact with my favorite app/my notebook/my LMS” here’s the tl;dr on how those pieces fit together:
 
 *Apps and content platforms*
 
 Examples: Codecademy, Skillshare, Udemy, Udacity
 
-Apps offer premium content and interactive exercises. GitHub Classroom offers *real-world experience* with code. Classroom, as a teacher-facing application will eventually surface best-in-class content for top courses (notes / lectures / problem sets) but not produce original content.
+Apps offer premium content and interactive exercises. GitHub Classroom offers *real-world experience* with code. GitHub Classroom, as a teacher-facing application will eventually surface best-in-class content for top courses (notes / lectures / problem sets) but not produce original content.
 
 *Learning Management system/LMS*
 
 Examples: Blackboard, Moodle, Canvas. Google Classroom
 
-Teachers often use a learning management system in keeping with student privacy regulations. Classroom has a lightweight integration with LMS ecosystem--students can submit a link to their repositories. LTI compliance and Google Classroom integration will make the app more extensible.
+Teachers often use a learning management system in keeping with student privacy regulations. GitHub Classroom has a lightweight integration with LMS ecosystem--students can submit a link to their repositories. LTI compliance and Google Classroom integration will make the app more extensible.
 
 *Notebooks*
 
@@ -113,7 +113,7 @@ New to Ruby? No worries! You can follow these instructions to install a local se
 
 #### macOS
 
-If you're using macOS and running the Homebrew package manager you're all set to go! Head down to [Setup Classroom](#setup-github-classroom)
+If you're using macOS and running the Homebrew package manager you're all set to go! Head down to [Setup GitHub Classroom](#setup-github-classroom)
 
 #### Linux
 
@@ -204,11 +204,11 @@ It is best if you create your own organization for testing purposes, if you have
 
 To obtain the `OWNER_GITHUB_ID` value, you can go to `https://api.github.com/users/organization_owner_username`.
 
-To obtain the `OWNER_GITHUB_TOKEN` value, you will need to log in to Classroom with the owner test account, pull up the Rails console, and copy the `token` field
+To obtain the `OWNER_GITHUB_TOKEN` value, you will need to log in to GitHub Classroom with the owner test account, pull up the Rails console, and copy the `token` field
 
 To get the `STUDENT_GITHUB_ID` value you will need to create another user account on GitHub and get the ID by going to `https://api.github.com/users/student_username`
 
-To get the `STUDENT_GITHUB_TOKEN` value, you will need to log in to Classroom with the student test account, pull up the Rails console, and copy the `token` field
+To get the `STUDENT_GITHUB_TOKEN` value, you will need to log in to GitHub Classroom with the student test account, pull up the Rails console, and copy the `token` field
 
 To obtain the `OWNER_ORGANIZATION_GITHUB_ID/LOGIN` you can go to `https://api.github.com/orgs/organization_name`.
 
@@ -257,7 +257,7 @@ We strongly encourage you to use [https://classroom.github.com](https://classroo
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-There are a few environment variables you will need to know in order to get Classroom working on production.
+There are a few environment variables you will need to know in order to get GitHub Classroom working on production.
 
 ### Production environment variables
 
@@ -269,9 +269,9 @@ ENV Variable | Description |
 `MOTD` | Show the message of the day banner at the top of the site
 
 ## Help wanted
-If you're interested in helping out with Classroom development and looking for a place to get started, check out the issues labeled [`help-wanted`](https://github.com/education/classroom/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted+%3Araised_hand_with_fingers_splayed%3A%22) and feel free to ask any questions you have before diving into the code.
+If you're interested in helping out with GitHub Classroom development and looking for a place to get started, check out the issues labeled [`help-wanted`](https://github.com/education/classroom/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted+%3Araised_hand_with_fingers_splayed%3A%22) and feel free to ask any questions you have before diving into the code.
 
 ## Contributors
-Classroom is developed by these [contributors](https://github.com/education/classroom/graphs/contributors).
+GitHub Classroom is developed by these [contributors](https://github.com/education/classroom/graphs/contributors).
 
 Shout out to [GitHub Summer of Code](https://github.com/blog/1970-students-work-on-open-source-with-github-this-summer) student, [Mark Tareshawty](http://marktareshawty.com), from [The Ohio State University](https://www.osu.edu/) for his work on GitHub Classroom.

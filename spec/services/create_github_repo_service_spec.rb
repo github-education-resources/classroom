@@ -94,7 +94,7 @@ RSpec.describe CreateGitHubRepoService do
         expect { service.create_github_repository_from_template! }
           .to raise_error(
             subject::Result::Error,
-            "GitHub repository could not be created from template, please try again. (Could not created GitHub repository)" # rubocop:disable LineLength
+            "GitHub repository could not be created from template, please try again. (Could not created GitHub repository)"
           )
       end
     end
@@ -597,7 +597,7 @@ RSpec.describe CreateGitHubRepoService do
         expect { service.create_github_repository_from_template! }
           .to raise_error(
             subject::Result::Error,
-            "GitHub repository could not be created from template, please try again. (Could not created GitHub repository)" # rubocop:disable LineLength
+            "GitHub repository could not be created from template, please try again. (Could not created GitHub repository)"
           )
       end
     end
@@ -655,7 +655,7 @@ RSpec.describe CreateGitHubRepoService do
         expect { service.push_starter_code!(assignment_repository) }
           .to raise_error(
             subject::Result::Error,
-            "We were not able to import you the starter code to your Group assignment, please try again. (GitHub::Error)" # rubocop:disable LineLength
+            "We were not able to import you the starter code to your Group assignment, please try again. (GitHub::Error)"
           )
       end
     end
@@ -848,7 +848,7 @@ RSpec.describe CreateGitHubRepoService do
             result = service.perform
             expect(result.failed?).to be_truthy
             expect(result.error)
-              .to start_with("We were not able to import you the starter code to your Group assignment, please try again.") # rubocop:disable LineLength
+              .to start_with("We were not able to import you the starter code to your Group assignment, please try again.")
             expect(WebMock).to have_requested(:put, import_regex)
           end
 

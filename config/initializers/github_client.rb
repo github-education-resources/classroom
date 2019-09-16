@@ -24,7 +24,7 @@ module GitHubClassroom
 
   def self.github_url
     if enterprise?
-      Rails.application.secrets.github_enterprise_url.present?
+      Rails.application.secrets.github_enterprise_url
     else
       "https://github.com"
     end

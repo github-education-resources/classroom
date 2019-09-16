@@ -21,6 +21,7 @@ gem "dalli", "~> 2.7", ">= 2.7.6"
 
 gem "failbot_rails",      "~> 0.5.0"
 gem "faraday-http-cache", "~> 2.0"
+gem "faraday_middleware", "~> 0.13.1"
 gem "flipper",            "~> 0.10.2"
 gem "flipper-redis",      "~> 0.10.2"
 gem "flipper-ui",         "~> 0.10.2"

@@ -5,7 +5,6 @@ module Orgs
     class LtiImportError < StandardError; end
 
     skip_before_action :ensure_current_roster, only: [:import_from_lms]
-    before_action :ensure_lti_launch_flipper_is_enabled, only: [:import_from_lms]
     before_action :ensure_lti_configuration, only: [:import_from_lms]
 
     rescue_from LtiImportError, with: :handle_lms_import_error
