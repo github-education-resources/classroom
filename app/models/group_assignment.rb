@@ -49,6 +49,8 @@ class GroupAssignment < ApplicationRecord
   alias_attribute :repos, :group_assignment_repos
   alias_attribute :template_repos_enabled?, :template_repos_enabled
 
+  after_create :track_private_repo_belonging_to_user
+
   def private?
     !public_repo
   end

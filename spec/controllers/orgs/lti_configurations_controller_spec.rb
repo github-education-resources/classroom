@@ -135,33 +135,6 @@ RSpec.describe Orgs::LtiConfigurationsController, type: :controller do
     end
   end
 
-  describe "PATCH #update", :vcr do
-    context "with existing lti_configuration" do
-      before(:each) do
-        create(:lti_configuration, organization: organization)
-      end
-
-      it "updates with new LMS url" do
-        options = { lms_link: "https://github.com" }
-        patch :update, params: { id: organization.slug, lti_configuration: options }
-
-        organization.lti_configuration.reload
-        expect(organization.lti_configuration.lms_link).to eq("https://github.com")
-        expect(flash[:success]).to eq("The configuration was successfully updated.")
-        expect(response).to redirect_to(lti_configuration_path(organization))
-      end
-    end
-
-    context "with no existing lti_configuration" do
-      it "does not update or create" do
-        options = { lms_link: "https://github.com" }
-        patch :update, params: { id: organization.slug, lti_configuration: options }
-        expect(response).to redirect_to(info_lti_configuration_path(organization))
-        expect(organization.lti_configuration).to be_nil
-      end
-    end
-  end
-
   describe "GET #autoconfigure", :vcr do
     context "with existing lti_configuration" do
       before(:each) do

@@ -47,8 +47,8 @@ class Organization < ApplicationRecord
 
   def self.sort_modes
     {
-      "Oldest first" => :order_by_oldest,
       "Newest first" => :order_by_newest,
+      "Oldest first" => :order_by_oldest,
       "Classroom name" => :order_by_title
     }
   end
