@@ -1,13 +1,16 @@
 <div class="d-sm-flex flex-items-center flex-justify-between my-4">
   <% if @organizations.present? %>
 
-    <div class="form-block col-md-5">
+    <div class="form-block col-md-9">
       <%= render partial: "shared/search_and_sort", locals: {
           submit_url: search_organizations_path,
           query: @query,
-          options: @sort_modes.keys,
-          option_links: @sort_modes_links,
-          selected_option: @current_sort_mode
+          sort_options: @sort_modes.keys,
+          sort_option_links: @sort_modes_links,
+          active_sort_option: @current_sort_mode,
+          view_options: @view_options,
+          view_option_links: @sort_modes_links,
+          active_view_option: @current_view_option
         } %>
     </div>
 

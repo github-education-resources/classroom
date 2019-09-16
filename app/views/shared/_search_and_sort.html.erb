@@ -1,10 +1,14 @@
 <% submit_url = local_assigns.fetch(:submit_url) %>
 <% query = local_assigns.fetch(:query, nil) %>
 <% search_placeholder = local_assigns.fetch(:search_placeholder, "Search...") %>
-<% select_menu_title = local_assigns.fetch(:select_menu_title, "Sort by:") %>
-<% options = local_assigns.fetch(:options, []) %>
-<% option_links = local_assigns.fetch(:option_links, []) %>
-<% selected_option = local_assigns.fetch(:selected_option, options.first) %>
+<% sort_menu_title = local_assigns.fetch(:sort_menu_title, "Sort by:") %>
+<% view_menu_title = local_assigns.fetch(:view_menu_title, "View:") %>
+<% sort_options = local_assigns.fetch(:sort_options, []) %>
+<% view_options = local_assigns.fetch(:view_options, []) %>
+<% sort_option_links = local_assigns.fetch(:sort_option_links, []) %>
+<% view_option_links = local_assigns.fetch(:view_option_links, []) %>
+<% active_sort_option = local_assigns.fetch(:active_sort_option, sort_options.first) %>
+<% active_view_option = local_assigns.fetch(:active_view_option, view_options.first) %>
 
 <div class="TableObject" id="js-search-and-sort-component" >
   <div class="TableObject-item TableObject-item--primary">
@@ -14,13 +18,26 @@
     <% end %>
   </div>
   <div class="TableObject-item">
-    <div id="select-menu-container">
-      <%= render partial: "shared/select_menu",
+    <div id="view-menu-container">
+      <%= render partial: "shared/view_menu",
           locals: {
-            title: select_menu_title,
-            options: options,
-            option_links: option_links,
-            selected_option: selected_option,
+            title: view_menu_title,
+            options: view_options,
+            option_links: view_option_links,
+            selected_option: active_view_option,
+            remote: true
+          }
+      %>
+    </div>
+  </div>
+  <div class="TableObject-item">
+    <div id="sort-menu-container">
+      <%= render partial: "shared/sort_menu",
+          locals: {
+            title: sort_menu_title,
+            options: sort_options,
+            option_links: sort_option_links,
+            selected_option: active_sort_option,
             remote: true
           }
       %>

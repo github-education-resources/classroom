@@ -53,6 +53,14 @@ class Organization < ApplicationRecord
     }
   end
 
+  def self.view_options
+    {
+      "all" => "All",
+      "active" => "Active",
+      "archvied" => "Archived"
+    }
+  end
+
   def all_assignments(with_invitations: false)
     return assignments + group_assignments unless with_invitations
 

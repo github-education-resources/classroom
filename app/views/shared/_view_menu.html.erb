@@ -1,0 +1,27 @@
+<% remote = local_assigns.fetch(:remote, false) %>
+
+<div class="select-menu ml-2">
+  <details class="dropdown details-reset details-overlay d-inline-block" id="view-options">
+    <summary class="btn select-menu-button">
+      <i>View:</i>
+      <span data-menu-button>
+        <%= selected_option %>
+      </span>
+    </summary>
+
+    <details-menu class="select-menu-modal hx_rsm-modal position-absolute right-0" style="z-index: 99;">
+      <div class="select-menu-header text-left">
+        <span class="select-menu-title">View</span>
+      </div>
+      <div class="select-menu-list">
+        <% options.each do |value, name| %>
+          <label class="select-menu-item" role="menuitemradio" aria-checked="<%= selected_option.to_s == value %>" tabindex="0">
+            <%= radio_button_tag "type", value, selected_option.to_s == value, "data-autosubmit": "true" %>
+            <%= octicon("check", class: "select-menu-item-icon") %>
+            <span class="text-normal select-menu-item-text" data-menu-button-text><%= name %></span>
+          </label>
+        <% end %>
+      </div>
+    </details-menu>
+  </details>
+</div>

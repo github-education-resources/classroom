@@ -148,8 +148,10 @@ class OrganizationsController < Orgs::Controller
 
   def set_filter_options
     @sort_modes = Organization.sort_modes
+    @view_options = Organization.view_options
 
     @current_sort_mode = params[:sort_by] || @sort_modes.keys.first
+    @current_view_option = params[:type] || @view_options.keys.first
     @query = params[:query]
 
     @sort_modes_links = @sort_modes.keys.map do |mode|
