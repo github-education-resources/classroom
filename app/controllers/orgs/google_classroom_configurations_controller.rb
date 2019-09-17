@@ -7,6 +7,7 @@ module Orgs
     before_action :authorize_google_classroom, only: %i[create search index]
     before_action :ensure_no_lti_configuration, only: %i[create index]
     before_action :ensure_no_roster, only: %i[create index]
+    before_action :verify_google_classroom_course, only: %i[create]
 
     def create
       current_organization.update(google_course_id: params[:course_id])
@@ -79,6 +80,27 @@ module Orgs
       end
 
       courses
+    end
+
+    def verify_google_classroom_course
+      @google_classroom_service.get_course("#{params[:course_id]}")
+    rescue Google::Apis::AuthorizationError
+      google_classroom_client = GitHubClassroom.google_classroom_client
+      login_hint = current_user.github_user.login
+      redirect_to google_classroom_client.get_authorization_url(login_hint: login_hint, request: request)
+      nil
+    rescue Google::Apis::ServerError
+      flash[:error] = "Failed to connect GitHub Classroom to Google Classroom. Please try again."
+      redirect_to organization_path(current_organization)
+    rescue Google::Apis::ClientError => e
+      error_message = JSON.parse(e.body)
+      status = error_message["error"]["status"]
+      if status == "PERMISSION_DENIED"
+        flash[:error] = "You do not have access to this Google Classroom course. Please pick a different course and try again."
+      else
+        flash[:error] = "Google Classroom could not be found. Please pick a different course and try again."
+      end
+      redirect_to google_classrooms_index_organization_path(current_organization)
     end
   end
 end
