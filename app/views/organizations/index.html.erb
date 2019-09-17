@@ -1,8 +1,7 @@
-<div class="d-sm-flex flex-items-center flex-justify-between my-4">
-  <% if @organizations.present? %>
-
+<% if @organizations.present? %>
+  <div class="d-sm-flex flex-items-center flex-justify-between my-4">
     <div class="form-block col-md-5">
-      <%= render partial: "shared/search_and_sort", locals: {
+      <%= render partial: "search_sort_and_filter", locals: {
           submit_url: search_organizations_path,
           query: @query,
           options: @sort_modes.keys,
@@ -14,20 +13,18 @@
     <%= link_to new_organization_path, class: 'd-none d-sm-inline-block btn btn-primary', role: 'button' do %>
       <%= t('views.organizations.new_classroom') %>
     <% end %>
-  <% end %>
-</div>
+  </div>
 
-<% if @organizations.present? %>
-    <div class="my-4" id="js-search-results">
-      <%= render partial: 'organization_card_layout', locals: {organizations: @organizations} %>
-    </div>
+  <div class="my-4" id="js-search-results">
+    <%= render partial: 'organization_card_layout', locals: {organizations: @organizations} %>
+  </div>
 <% else %>
-    <div class="blankslate large-format spacious clean-background">
-      <h3><%= t('views.organizations.no_classrooms') %></h3>
-      <p><%= t('views.organizations.no_classrooms_desc') %></p>
+  <div class="blankslate large-format spacious clean-background">
+    <h3><%= t('views.organizations.no_classrooms') %></h3>
+    <p><%= t('views.organizations.no_classrooms_desc') %></p>
 
-      <%= link_to new_organization_path, class: 'btn btn-primary btn-big', role: 'button' do %>
-        <%= t('views.organizations.create_first_classroom') %>
-      <% end %>
-    </div>
+    <%= link_to new_organization_path, class: 'btn btn-primary btn-big', role: 'button' do %>
+      <%= t('views.organizations.create_first_classroom') %>
+    <% end %>
+  </div>
 <% end %>

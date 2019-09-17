@@ -1,0 +1,15 @@
+<% phrase = local_assigns.fetch(:q, nil) %>
+
+<div class="py-3">
+  <%= form_tag organizations_path, method: :get, class: "d-block d-sm-flex", role: "search" do %>
+    <div class="mb-3 mb-sm-0 mr-sm-3 flex-auto">
+      <input type="hidden" name="tab" value="classrooms">
+      <input type="search" id="your-classroom-filter" name="q"
+             class="form-control width-full js-autosearch-field"
+             placeholder="Find a classroom&hellip;"
+             autocomplete="off"
+             aria-label="Find a classroom&hellip;"
+             value="<%= phrase %>">
+    </div>
+  <% end %>
+</div>
