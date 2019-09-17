@@ -1,3 +1,5 @@
+## Using template repositories for your assignment starter code
+
 Importing starter code for assignments is a very useful feature and with GitHub recently shipping the template repositories, we can leverage them in GitHub Classroom to make importing starter code much easier and faster!
 
 ### How to use template repositories for an assignment?
@@ -5,8 +7,8 @@ Importing starter code for assignments is a very useful feature and with GitHub 
 #### Before you begin
 To use template repositories for assignments, you'll need the following:
 
-* Set-up a GitHub classroom
-* An exercise repository that you have access to, which contains documentation, starter code, tests, or anything else your students need to begin work on an assignment.
+* A classroom in GitHub Classroom
+* An exercise repository that you have access to containing documentation, starter code, tests, or anything else your students need to begin work on an assignment.
 
 #### Get started
 
