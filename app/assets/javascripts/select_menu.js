@@ -47,7 +47,7 @@ function initializeSelectMenu() {
 
   function openSelectMenu(button) {
     const $button = button;
-    const $modal = $button.siblings(".select-menu-modal-holder")''
+    const $modal = $button.siblings(".select-menu-modal-holder");
 
     $modal.addClass("active");
     $button.addClass("active");
