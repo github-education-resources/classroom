@@ -53,11 +53,11 @@ class Organization < ApplicationRecord
     }
   end
 
-  def self.view_options
+  def self.view_modes
     {
-      "all" => "All",
-      "active" => "Active",
-      "archvied" => "Archived"
+      "All" => :all,
+      "Active" => :active,
+      "Archived" => :archived
     }
   end
 

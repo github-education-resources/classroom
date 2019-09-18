@@ -17,19 +17,21 @@
       <%= hidden_field_tag :sort_by, @current_sort_mode, id: "sort-mode-field" %>
     <% end %>
   </div>
-  <div class="TableObject-item">
-    <div id="view-menu-container">
-      <%= render partial: "shared/view_menu",
-          locals: {
-            title: view_menu_title,
-            options: view_options,
-            option_links: view_option_links,
-            selected_option: active_view_option,
-            remote: true
-          }
-      %>
+  <% if archive_classrooms_enabled? %>
+    <div class="TableObject-item">
+      <div id="view-menu-container">
+        <%= render partial: "shared/view_menu",
+            locals: {
+              title: view_menu_title,
+              options: view_options,
+              option_links: view_option_links,
+              selected_option: active_view_option,
+              remote: true
+            }
+        %>
+      </div>
     </div>
-  </div>
+  <% end %>
   <div class="TableObject-item">
     <div id="sort-menu-container">
       <%= render partial: "shared/sort_menu",
