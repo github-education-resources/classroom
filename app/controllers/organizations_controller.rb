@@ -165,17 +165,18 @@ class OrganizationsController < Orgs::Controller
   def add_current_user_to_organizations
     @users_github_organizations.each do |github_org|
       user_classrooms = Organization.where(github_id: github_org[:github_id])
+      user_login = current_user.github_user.login(use_cache: false)
 
       # Iterate over each classroom associate with this github organization
       user_classrooms.map do |classroom|
-        create_user_organization_access(classroom) unless classroom.users.include?(current_user)
+        create_user_organization_access(classroom, login) unless classroom.users.include?(current_user)
       end
     end
   end
 
-  def create_user_organization_access(organization)
+  def create_user_organization_access(organization, current_user_login)
     github_org = GitHubOrganization.new(current_user.github_client, organization.github_id)
-    return unless github_org.admin?(current_user.github_user.login(use_cache: false))
+    return unless github_org.admin?(current_user_login)
     organization.users << current_user
   end
 
