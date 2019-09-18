@@ -36,7 +36,7 @@ $(document).ready(function() {
         debounce(function() { $searchForm.submit(); }, 300);
     });
 
-    $("#js-search-and-sort-component .select-menu").on("select", function(e) {
+    $("#js-search-and-sort-component .select-menu, #js-search-and-sort-component .details-menu").on("select", function(e) {
         var selectedItem = $(e.target);
         var componentContext = selectedItem.closest("#js-search-and-sort-component");
 

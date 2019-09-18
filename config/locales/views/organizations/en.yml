@@ -64,6 +64,8 @@ en:
       classrooms: 'Classrooms'
       no_classrooms: "You're not managing any classrooms yet."
       no_classrooms_desc: 'You can begin creating assignments once you have at least one classroom.'
+      no_classroom_results: "No Matching Classrooms"
+      no_classrooms_results_desc: 'You do not have any classrooms that match your search parameters. Please try something else.'
       create_first_classroom: 'Create your first classroom'
       new_assignment: 'New assignment'
       individual_assignment: 'Individual assignment'

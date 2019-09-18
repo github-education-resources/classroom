@@ -14,7 +14,20 @@ class OrganizationsController < Orgs::Controller
   skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create search]
 
   def index
-    @organizations = current_user.organizations.order(created_at: :desc).page(params[:page]).per(12)
+    if archive_classrooms_enabled?
+      query = params[:q]
+      sort_by = params[:sort_by] || @sort_modes.keys.first
+
+      scope = current_user
+        .organizations.order(created_at: :desc)
+        .order_by_sort_mode(sort_by)
+
+      scope = scope.filter_by_search(query) if query
+
+      @organizations = scope.page(params[:page]).per(12)
+    else
+      @organizations = current_user.organizations.order(created_at: :desc).page(params[:page]).per(12)
+    end
   end
 
   def new

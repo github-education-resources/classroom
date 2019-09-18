@@ -1,23 +1,41 @@
-<% if @organizations.present? %>
+<% if current_user.organizations.any? %>
   <div class="d-sm-flex flex-items-center flex-justify-between my-4">
-    <div class="form-block col-md-5">
-      <%= render partial: "search_sort_and_filter", locals: {
-          submit_url: search_organizations_path,
-          query: @query,
-          options: @sort_modes.keys,
-          option_links: @sort_modes_links,
-          selected_option: @current_sort_mode
+    <div class="form-block col-md-8">
+      <% if archive_classrooms_enabled? %>
+        <%= render partial: "search_sort_and_filter", locals: {
+            submit_url: search_organizations_path,
+            query: @query,
+            options: @sort_modes,
+            option_links: @sort_modes_links,
+            selected_option: @current_sort_mode
+          } %>
+      <% else %>
+        <%= render partial: "shared/search_and_sort", locals: {
+            submit_url: search_organizations_path,
+            query: @query,
+            options: @sort_modes.keys,
+            option_links: @sort_modes_links,
+            selected_option: @current_sort_mode
         } %>
+      <% end %>
     </div>
 
-    <%= link_to new_organization_path, class: 'd-none d-sm-inline-block btn btn-primary', role: 'button' do %>
+    <% btn_class = "mb-2" if archive_classrooms_enabled? %>
+    <%= link_to new_organization_path, class: "d-none d-sm-inline-block btn btn-primary #{btn_class}", role: 'button' do %>
       <%= t('views.organizations.new_classroom') %>
     <% end %>
   </div>
 
-  <div class="my-4" id="js-search-results">
-    <%= render partial: 'organization_card_layout', locals: {organizations: @organizations} %>
-  </div>
+  <% if @organizations.any? %>
+    <div class="my-4" id="js-search-results">
+      <%= render partial: 'organization_card_layout', locals: {organizations: @organizations} %>
+    </div>
+  <% else %>
+    <div class="blankslate large-format spacious clean-background">
+      <h3><%= t('views.organizations.no_classroom_results') %></h3>
+      <p><%= t('views.organizations.no_classrooms_results_desc') %></p>
+    </div>
+  <% end %>
 <% else %>
   <div class="blankslate large-format spacious clean-background">
     <h3><%= t('views.organizations.no_classrooms') %></h3>
