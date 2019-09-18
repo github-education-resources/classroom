@@ -14,7 +14,7 @@ class OrganizationsController < Orgs::Controller
   skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create search]
 
   def index
-    @organizations = current_user.organizations.order(created_at: :desc).page(params[:page]).per(12)
+    @organizations = current_user.organizations.includes(:assignments, :group_assignments).order(created_at: :desc).page(params[:page]).per(12)
   end
 
   def new
@@ -108,6 +108,7 @@ class OrganizationsController < Orgs::Controller
   def search
     @organizations = current_user
       .organizations
+      .includes(:assignments, :group_assignments)
       .filter_by_search(@query)
       .order_by_sort_mode(@current_sort_mode)
       .order(:id)
@@ -160,13 +161,20 @@ class OrganizationsController < Orgs::Controller
         query: @query
       )
     end
+
+    @view_modes_links = @view_modes.keys.map do |mode|
+      search_organizations_path(
+        view: mode,
+        query: @query
+      )
+    end
   end
 
   # Check if the current user has any organizations with admin privilege,
   # if so add the user to the corresponding classroom automatically.
   def add_current_user_to_organizations
     @users_github_organizations.each do |github_org|
-      user_classrooms = Organization.where(github_id: github_org[:github_id])
+      user_classrooms = Organization.includes(:users).where(github_id: github_org[:github_id])
 
       # Iterate over each classroom associate with this github organization
       user_classrooms.map do |classroom|
