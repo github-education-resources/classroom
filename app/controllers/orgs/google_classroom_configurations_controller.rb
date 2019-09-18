@@ -83,6 +83,7 @@ module Orgs
     end
 
     def verify_google_classroom_course
+      binding.pry
       @google_classroom_service.get_course("#{params[:course_id]}")
     rescue Google::Apis::AuthorizationError
       google_classroom_client = GitHubClassroom.google_classroom_client

@@ -128,6 +128,34 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
   end
 
   describe "#create", :vcr do
+    context "when user is not authorized for course" do
+      before do 
+        # Stub google authentication again
+        client = Signet::OAuth2::Client.new
+        allow_any_instance_of(ApplicationController)
+          .to receive(:user_google_classroom_credentials)
+          .and_return(client)
+
+        allow_any_instance_of(GoogleAPI::ClassroomService)
+        .to receive(:get_course)
+        .and_raise(Google::Apis::ClientError.new(body: '{ "error": { "status": "PERMISSION_DENIED" }}'))
+
+        post :create, params: {
+          id: organization.slug,
+          course_id: 6464
+        }
+      end
+
+      it "flashes error message" do
+        message = "You do not have access to this Google Classroom course. Please pick a different course and try again."
+        expect(flash[:alert]).to eq(message)
+      end
+
+      it "redirects user to select a google classroom page" do
+        expect(response).to redirect_to(google_classrooms_index_organization_path(organization))
+      end
+    end
+
     context "when the user is authorized" do
       before(:each) do
         # Stub google authentication again
@@ -135,6 +163,10 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
         allow_any_instance_of(ApplicationController)
           .to receive(:user_google_classroom_credentials)
           .and_return(client)
+
+        allow_any_instance_of(GoogleAPI::ClassroomService)
+          .to receive(:get_course)
+          .and_return(GoogleAPI::Course.new(id: "223433", name: "testing another course"))
       end
 
       it "creates a statsd event" do
