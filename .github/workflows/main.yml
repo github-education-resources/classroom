@@ -8,17 +8,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-      - name: Set up Ruby 2.6.x
-        uses: actions/setup-ruby@v1
-        with:
-          ruby-version: 2.6.x
+      # - name: Set up Ruby 2.6.4
+      #   uses: actions/setup-ruby@v1
+      #   with:
+      #     ruby-version: 2.6.4
       - name: Start services
         run: |
           docker-compose up -d
       - name: Install PostgreSQL Client
         run: |
           sudo apt-get update
-          sudo apt-get install -y postgresql-client libpq-dev
+          sudo apt-get install -y postgresql-client libpq-dev ruby-full
       - name: Install dependencies
         run: |
           gem install bundler
