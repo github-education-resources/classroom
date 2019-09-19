@@ -19,10 +19,15 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client libpq-dev
+      - name: Install yarn
+        run: |
+          curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.24.6
+          export PATH=$HOME/.yarn/bin:$PATH
       - name: Install dependencies
         run: |
           gem install bundler
           bundle install --jobs 4 --retry 3 --without production
+          yarn install
       - name: Setup the Database
         run: |
           bundle exec rake db:create db:schema:load db:test:prepare
