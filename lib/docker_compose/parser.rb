@@ -6,7 +6,6 @@ module DockerCompose
     #
     # output - The String output results from `docker-compose ps`
     #
-    # rubocop:disable Metrics/LineLength
     # Examples:
     #
     #   output = `docker-compose ps`
@@ -27,7 +26,6 @@ module DockerCompose
     #            @ports="127.0.0.1:2345->5432/tcp",
     #            @state="Up">]>
     #
-    # rubocop:enable Metrics/LineLength
     #
     # Returns an instance of DockerCompose::Services.
     def self.parse(output)

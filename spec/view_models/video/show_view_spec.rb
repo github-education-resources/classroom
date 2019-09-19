@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Video::ShowView do
+RSpec.describe "Video::ShowView" do
   subject do
     Video::ShowView.new(
       id: "12345",

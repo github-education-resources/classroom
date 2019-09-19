@@ -20,4 +20,8 @@ class NullGitHubRepository < NullGitHubResource
   def private
     nil
   end
+
+  def owner
+    ""
+  end
 end

@@ -126,7 +126,6 @@ FactoryBot.define do
     consumer_key { SecureRandom.uuid }
     shared_secret { SecureRandom.uuid }
     cached_launch_message_nonce { SecureRandom.uuid }
-    lms_link { "www.example.com" }
     lms_type { :other }
   end
 end

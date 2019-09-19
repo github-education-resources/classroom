@@ -11,7 +11,6 @@ class SessionsController < ApplicationController
   end
 
   skip_before_action :verify_authenticity_token,  only: %i[lti_launch]
-  before_action      :verify_lti_launch_enabled,  only: %i[lti_setup lti_launch]
   before_action      :allow_in_iframe,            only: %i[lti_launch]
 
   rescue_from LtiLaunchError, with: :handle_lti_launch_error
