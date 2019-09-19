@@ -1,19 +1,25 @@
 .help {
   h1 {
-    font-size: 48px;
+    @include breakpoint(md) {
+      font-size: 48px;
+    }
   }
   .markdown-body {
     h2 {
-      font-size: 32px;
-      font-weight: 500;
-      border-bottom: none;
-      padding-right: 3em;
+      @include breakpoint(md) {
+        font-size: 32px;
+        font-weight: 500;
+        border-bottom: none;
+        padding-right: 3em;
+      }
     }
     h3 {
       font-size: 24px;
       font-weight: 500;
       margin-top: 3em;
-      padding-right: 3em;
+      @include breakpoint(md) {
+        padding-right: 3em;
+      }
     }
     h4 {
       margin-top: 1em;
@@ -21,10 +27,11 @@
     }
     img{
       margin: 2em auto;
-      max-width: calc(100% - 4em);
       border: 1px solid $border-gray-dark;
+      @include breakpoint(md) {
+        max-width: calc(100% - 4em);
+      }
     }
-
     .warning {
       font-weight: normal;
       padding: 1em 2em;
