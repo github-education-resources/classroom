@@ -1,0 +1,21 @@
+<%= render partial: "shared/search_and_sort", locals: {
+  submit_url: organization_group_assignment_path,
+  select_menu_title: "Sort group assignments by: ",
+  search_placeholder: "Search group assignments by team name...",
+  query: @query,
+  options: @assignment_sort_modes.keys,
+  option_links: @assignment_sort_modes_links,
+  selected_option: @current_sort_mode
+} %>
+
+<div class="assignment-repo-list" id="assignment-repo-list">
+  <%= render partial: 'group_assignments/group_assignment_list', locals: {
+    group_assignment_repos: @group_assignment_repos,
+    organization: @organization,
+    group_assignment: @group_assignment
+  } %>
+</div>
+
+<div id='assignment-repo-pagination'>
+  <%= render partial: 'shared/pagination', locals: { collection: @group_assignment_repos, param_name: local_assigns[:param_name] } %>
+</div>

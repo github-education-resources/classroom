@@ -1,0 +1,20 @@
+<%= render partial: 'shared/header' %>
+
+<div class="container-md p-responsive">
+  <nav aria-label="Breadcrumb" class="pt-6 pb-3">
+    <ol>
+      <% @breadcrumbs.each do |breadcrumb| %>
+        <% @last = breadcrumb == @breadcrumbs.last ? ' breadcrumb-item-selected text-gray' : '' %>
+        <li class="breadcrumb-item<%= @last %>">
+          <a href="<%= breadcrumb[0] %>" class="<%= @last %>" style="text-transform: capitalize;"><%= breadcrumb[1] %></a>
+        </li>
+      <% end %>
+    </ol>
+  </nav>
+
+  <h1 class="h00-mktg mb-8">Get help with GitHub Classroom</h1>
+
+  <div class="markdown-body">
+    <%= (markdown @file).html_safe %>
+  </div>
+</div>

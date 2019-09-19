@@ -15,13 +15,22 @@ VCR.configure do |c|
 
   c.before_record { |i| i.request.headers.delete "Authorization" }
 
-  # Application id
+  # GitHub Application id
   c.filter_sensitive_data("<TEST_APPLICATION_GITHUB_CLIENT_ID>") do
     application_github_client_id
   end
 
   c.filter_sensitive_data("<TEST_APPLICATION_GITHUB_CLIENT_SECRET>") do
     application_github_client_secret
+  end
+
+  # Google Application id
+  c.filter_sensitive_data("<TEST_APPLICATION_GOOGLE_CLIENT_ID>") do
+    application_google_client_id
+  end
+
+  c.filter_sensitive_data("<TEST_APPLICATION_GOOGLE_CLIENT_SECRET>") do
+    application_google_client_secret
   end
 
   # Owner
@@ -64,6 +73,14 @@ def application_github_client_secret
   ENV.fetch("GITHUB_CLIENT_SECRET") { "r" * 20 }
 end
 
+def application_google_client_id
+  ENV.fetch("GOOGLE_CLIENT_ID") { "i" * 20 }
+end
+
+def application_google_client_secret
+  ENV.fetch("GOOGLE_CLIENT_SECRET") { "r" * 20 }
+end
+
 def classroom_owner_github_id
   ENV.fetch("TEST_CLASSROOM_OWNER_GITHUB_ID") { 8_675_309 }
 end
@@ -89,7 +106,7 @@ def classroom_student_github_token
 end
 
 def oauth_client
-  Octokit::Client.new(access_token: classroom_owner_github_token)
+  GitHubClassroom.github_client(access_token: classroom_owner_github_token)
 end
 
 def use_vcr_placeholder_for(text, replacement)

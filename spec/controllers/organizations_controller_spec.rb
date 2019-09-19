@@ -26,7 +26,7 @@ RSpec.describe OrganizationsController, type: :controller do
     context "authenticated user with a valid token" do
       it "succeeds" do
         get :index
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(200)
       end
 
       it "sets the users organization" do
@@ -77,7 +77,7 @@ RSpec.describe OrganizationsController, type: :controller do
   describe "GET #new", :vcr do
     it "returns success status" do
       get :new
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
 
     it "has a new organization" do
@@ -105,34 +105,11 @@ RSpec.describe OrganizationsController, type: :controller do
       organization.destroy!
     end
 
-    context "multiple_classrooms_per_org flag not enabled" do
-      before do
-        GitHubClassroom.flipper[:multiple_classrooms_per_org].disable
-      end
-
-      it "will not add an organization that already exists" do
-        existing_organization_options = { github_id: organization.github_id }
-        expect do
-          post :create, params: { organization: existing_organization_options }
-        end.to_not change(Organization, :count)
-      end
-    end
-
-    context "multiple_classrooms_per_org flag is enabled" do
-      before do
-        GitHubClassroom.flipper[:multiple_classrooms_per_org].enable
-      end
-
-      after do
-        GitHubClassroom.flipper[:multiple_classrooms_per_org].disable
-      end
-
-      it "will add a classroom on same organization" do
-        existing_organization_options = { github_id: organization.github_id }
-        expect do
-          post :create, params: { organization: existing_organization_options }
-        end.to change(Organization, :count)
-      end
+    it "will add a classroom on same organization" do
+      existing_organization_options = { github_id: organization.github_id }
+      expect do
+        post :create, params: { organization: existing_organization_options }
+      end.to change(Organization, :count)
     end
 
     it "will fail to add an organization the user is not an admin of" do
@@ -173,11 +150,73 @@ RSpec.describe OrganizationsController, type: :controller do
     end
   end
 
+  describe "search organizations", :vcr do
+    before do
+      user.organizations = [create(:organization, title: "github_class_300"), organization]
+      user.save!
+    end
+
+    it "finds an organization" do
+      get :search, params: { id: organization.slug, query: "github" }, xhr: true
+      expect(response.status).to eq(200)
+      expect(assigns(:organizations)).to_not eq([])
+    end
+
+    it "finds no organization" do
+      get :search, params: { id: organization.slug, query: "testing stuff" }, xhr: true
+      expect(response.status).to eq(200)
+      expect(assigns(:organizations)).to eq([])
+    end
+
+    it "is not case sensitive" do
+      get :search, params: { id: organization.slug, query: "GITHUB" }, xhr: true
+      expect(response.status).to eq(200)
+      expect(assigns(:organizations)).to_not eq([])
+    end
+  end
+
+  describe "sort organizations", :vcr do
+    before do
+      organization.created_at = 1.day.ago
+      organization.save!
+
+      user.organizations = [create(:organization, title: "github_class_300"), organization]
+      user.save!
+    end
+
+    it "sorts organizations by name" do
+      get :search, params: { id: organization.slug, sort_by: "Classroom name" }, xhr: true
+      expect(response.status).to eq(200)
+
+      actual = assigns(:organizations).pluck(:title)
+      expected = user.organizations.sort_by(&:title).pluck(:title)
+      expect(actual).to eql(expected)
+    end
+
+    it "sorts organizations by oldest first" do
+      get :search, params: { id: organization.slug, sort_by: "Oldest first" }, xhr: true
+      expect(response.status).to eq(200)
+
+      actual = assigns(:organizations).pluck(:id)
+      expected = user.organizations.sort_by(&:created_at).pluck(:id)
+      expect(actual).to eql(expected)
+    end
+
+    it "sorts organizations by newest first" do
+      get :search, params: { id: organization.slug, sort_by: "Newest first" }, xhr: true
+      expect(response.status).to eq(200)
+
+      actual = assigns(:organizations).pluck(:id)
+      expected = user.organizations.sort_by(&:created_at).reverse.pluck(:id)
+      expect(actual).to eql(expected)
+    end
+  end
+
   describe "GET #edit", :vcr do
     it "returns success and sets the organization" do
       get :edit, params: { id: organization.slug }
 
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
       expect(assigns(:current_organization)).to_not be_nil
     end
   end
@@ -186,7 +225,7 @@ RSpec.describe OrganizationsController, type: :controller do
     it "returns success and sets the organization" do
       get :invitation, params: { id: organization.slug }
 
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
       expect(assigns(:current_organization)).to_not be_nil
     end
   end
@@ -242,7 +281,7 @@ RSpec.describe OrganizationsController, type: :controller do
       it "returns success and sets the organization" do
         get :show_groupings, params: { id: organization.slug }
 
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(200)
         expect(assigns(:current_organization)).to_not be_nil
       end
 
@@ -260,11 +299,23 @@ RSpec.describe OrganizationsController, type: :controller do
   end
 
   describe "PATCH #update", :vcr do
-    it "correctly updates the organization" do
-      options = { title: "New Title" }
-      patch :update, params: { id: organization.slug, organization: options }
+    context "when success" do
+      it "correctly updates the organization" do
+        options = { title: "New Title" }
+        patch :update, params: { id: organization.slug, organization: options }
 
-      expect(response).to redirect_to(organization_path(Organization.find(organization.id)))
+        expect(response).to redirect_to(organization_path(Organization.find(organization.id)))
+      end
+    end
+
+    context "when fail" do
+      it "not change current organization title" do
+        options = { title: " " }
+        patch :update, params: { id: organization.slug, organization: options }
+
+        expect(assigns(:current_organization).title).not_to eql(options[:title])
+        expect(response).to render_template(:edit)
+      end
     end
   end
 
@@ -287,6 +338,22 @@ RSpec.describe OrganizationsController, type: :controller do
     it "redirects back to the index page" do
       delete :destroy, params: { id: organization.slug }
       expect(response).to redirect_to(organizations_path)
+    end
+  end
+
+  describe "GET #link_lms", :vcr do
+    it "renders the LMS selection page" do
+      get :link_lms, params: { id: organization.slug }
+      expect(response).to have_http_status(:ok)
+      expect(response).to render_template(:link_lms)
+    end
+
+    context "with google classroom disabled" do
+      it "renders the LMS selection page" do
+        get :link_lms, params: { id: organization.slug }
+        expect(response).to have_http_status(:ok)
+        expect(response).to render_template(:link_lms)
+      end
     end
   end
 

@@ -34,13 +34,13 @@ describe GitHubOrganization do
   describe "#admin?", :vcr do
     it "verifies if the user is an admin of the organization" do
       user         = organization.users.first
-      github_admin = GitHubUser.new(user.github_client, user.uid)
+      github_admin = GitHubUser.new(user.github_client, user.uid, classroom_resource: user)
       expect(@github_organization.admin?(github_admin.login)).to eql(true)
     end
 
     it "returns false otherwise" do
       user = create(:user, uid: 67)
-      github_admin = GitHubUser.new(user.github_client, user.uid)
+      github_admin = GitHubUser.new(user.github_client, user.uid, classroom_resource: user)
       expect(@github_organization.admin?(github_admin.login)).to be_falsey
     end
   end
@@ -53,6 +53,29 @@ describe GitHubOrganization do
     it "successfully creates a GitHub Repository for the Organization" do
       @github_organization.create_repository(@repo_name, private: true)
       expect(WebMock).to have_requested(:post, github_url("/organizations/#{organization.github_id}/repos"))
+    end
+  end
+
+  describe "#create_repository_from_template", :vcr do
+    let(:organization) { classroom_org }
+    let(:client) { oauth_client }
+    let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
+    let(:template_repository) do
+      github_organization.create_repository(
+        "#{Faker::Team.name} Template",
+        private: true,
+        auto_init: true,
+        is_template: true
+      )
+    end
+
+    after(:each) do
+      @client.delete_repository(template_repository.id)
+    end
+
+    it "successfully creates a github repository for the organization using a template" do
+      @github_organization.create_repository_from_template(template_repository.id, "Cloned repo")
+      expect(WebMock).to have_requested(:post, github_url("/repositories/#{template_repository.id}/generate"))
     end
   end
 

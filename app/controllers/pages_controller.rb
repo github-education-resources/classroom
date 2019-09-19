@@ -7,25 +7,45 @@ class PagesController < ApplicationController
 
   skip_before_action :authenticate_user!
 
+  HELP_DOCUMENTS = [
+    "create-group-assignments",
+    "help",
+    "probot-settings",
+    "upgrade-your-organization",
+    "using-template-repos-for-assignments",
+    "connect-to-lms",
+    "generate-lms-credentials",
+    "glossary",
+    "import-roster-from-lms",
+    "setup-generic-lms",
+    "setup-canvas",
+    "setup-moodle"
+  ].freeze
+
   def home
     return redirect_to organizations_path if logged_in?
 
-    render :homev2, layout: "layouts/pagesv2" if public_home_v2_enabled?
-  end
+    @teacher_count = User.last&.id.to_i
+    @repo_count = AssignmentRepo.last&.id.to_i + GroupAssignmentRepo.last&.id.to_i
 
-  def homev2
-    @teacher_count = User.last.id if User.last
-
-    if AssignmentRepo.last && GroupAssignmentRepo.last.id
-      @repo_count = AssignmentRepo.last.id + GroupAssignmentRepo.last.id
-    end
-
-    return not_found unless home_v2_enabled?
-    render layout: "layouts/pagesv2"
+    render layout: "layouts/pages"
   end
 
   def assistant
-    return not_found unless assistant_landing_page_enabled? || public_assistant_landing_page_enabled?
-    render layout: "layouts/pagesv2"
+    render layout: "layouts/pages"
+  end
+
+  def help
+    file_name = params[:article_name] ? params[:article_name] : "help"
+    return not_found unless HELP_DOCUMENTS.include? file_name
+
+    @file = File.read(Rails.root.join("docs", "#{file_name}.md"))
+
+    @breadcrumbs = [["/", "GitHub Classroom"], ["/help", "Help"]]
+    @breadcrumbs.push(["", file_name]) if file_name != "help"
+
+    render layout: "layouts/pages"
+  rescue Errno::ENOENT
+    return not_found
   end
 end

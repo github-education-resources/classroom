@@ -3,6 +3,8 @@
 class SessionsController < ApplicationController
   skip_before_action :authenticate_user!
 
+  depends_on :lti
+
   def new
     scopes = session[:required_scopes] || default_required_scopes
     scope_param = { scope: scopes }.to_param
@@ -33,6 +35,15 @@ class SessionsController < ApplicationController
   end
 
   def failure
+    if params[:strategy] == "lti"
+      return redirect_to auth_lti_failure_path(request.parameters) if params[:strategy] == "lti"
+    end
     redirect_to root_path, alert: "There was a problem authenticating with GitHub, please try again."
+  end
+
+  private
+
+  def allow_in_iframe
+    response.headers.delete "X-Frame-Options"
   end
 end

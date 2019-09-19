@@ -39,6 +39,9 @@
       <% else %>
         <a class="btn btn-outline", data-remodal-target="link-to-github_account-<%= roster_entry.id %>">Link to GitHub account</a>
       <% end %>
+      <a class="btn btn-outline ml-2", data-remodal-target="edit-roster-student-<%= roster_entry.id %>">
+        <%= octicon "pencil" %> Edit
+      </a>
       <span class='clickable' data-remodal-target="delete-entry-<%= roster_entry.id %>">
         <%= octicon 'x', height: 22, class: "remove-roster-entry-button" %>
       </span>
@@ -48,3 +51,4 @@
 
 <%= render partial: 'link_to_github_account_modal', locals: { roster_entry: roster_entry } %>
 <%= render partial: 'delete_roster_entry_modal', locals: { roster_entry: roster_entry } %>
+<%= render partial: 'edit_roster_entry_modal', locals: { roster_entry: roster_entry, roster_entries_page: roster_entries_page } %>

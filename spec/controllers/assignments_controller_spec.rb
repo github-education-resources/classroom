@@ -14,7 +14,7 @@ RSpec.describe AssignmentsController, type: :controller do
   describe "GET #new", :vcr do
     it "returns success status" do
       get :new, params: { organization_id: organization.slug }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
     end
 
     it "has a new Assignment" do
@@ -197,10 +197,52 @@ RSpec.describe AssignmentsController, type: :controller do
     end
   end
 
+  describe "POST #toggle_invitations", :vcr do
+    before(:each) do
+      assignment.update(invitations_enabled: false)
+    end
+
+    it "updates the Assignment's invitations_enabled column" do
+      post :toggle_invitations, params: {
+        invitations_enabled: true,
+        organization_id: organization.slug,
+        id: assignment.slug
+      }
+      expect(assignment.reload.invitations_enabled).to be true
+    end
+  end
+
   describe "GET #show", :vcr do
     it "returns success status" do
       get :show, params: { organization_id: organization.slug, id: assignment.slug }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
+    end
+  end
+
+  describe "search for user in the roster", :vcr do
+    before do
+      organization.roster = create(:roster)
+      organization.save!
+      RosterEntry.create(identifier: "tester", roster: organization.roster)
+      organization.roster.reload
+    end
+
+    it "finds one user if in roster" do
+      get :show, xhr: true, params: { organization_id: organization.slug, id: assignment.slug, query: "tester" }
+      expect(response.status).to eq(200)
+      expect(assigns(:roster_entries)).to_not eq([])
+    end
+
+    it "finds no user if not in roster" do
+      get :show, xhr: true, params: { organization_id: organization.slug, id: assignment.slug, query: "aabz" }
+      expect(response.status).to eq(200)
+      expect(assigns(:roster_entries)).to eq([])
+    end
+
+    it "search is not case-sensitive" do
+      get :show, xhr: true, params: { organization_id: organization.slug, id: assignment.slug, query: "TESTER" }
+      expect(response.status).to eq(200)
+      expect(assigns(:roster_entries)).to_not eq([])
     end
   end
 
@@ -208,7 +250,7 @@ RSpec.describe AssignmentsController, type: :controller do
     it "returns success and sets the assignment" do
       get :edit, params: { id: assignment.slug, organization_id: organization.slug }
 
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
       expect(assigns(:assignment)).to_not be_nil
     end
   end
@@ -224,11 +266,11 @@ RSpec.describe AssignmentsController, type: :controller do
     context "public_repo is changed" do
       it "calls the AssignmentVisibility background job" do
         private_repos_plan = { owned_private_repos: 0, private_repos: 2 }
-        options = { title: "Ruby on Rails", public_repo: !assignment.public? }
+        options = { title: "Ruby on Rails", visibility: "private" }
 
         allow_any_instance_of(GitHubOrganization).to receive(:plan).and_return(private_repos_plan)
 
-        assert_enqueued_jobs 1, only: Assignment::RepositoryVisibilityJob do
+        assert_enqueued_jobs 1, only: AssignmentRepositoryVisibilityJob do
           patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
         end
       end
@@ -238,7 +280,7 @@ RSpec.describe AssignmentsController, type: :controller do
       it "will not kick off an AssignmentVisibility job" do
         options = { title: "Ruby on Rails" }
 
-        assert_no_enqueued_jobs only: Assignment::RepositoryVisibilityJob do
+        assert_no_enqueued_jobs only: AssignmentRepositoryVisibilityJob do
           patch :update, params: { id: assignment.slug, organization_id: organization.slug, assignment: options }
         end
       end

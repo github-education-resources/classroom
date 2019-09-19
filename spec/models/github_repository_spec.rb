@@ -25,7 +25,11 @@ describe GitHubRepository do
     @github_repository.attributes.each do |attribute, value|
       next if %i[id_attributes client access_token].include?(attribute)
       expect(@github_repository).to respond_to(attribute)
-      expect(value).to eql(gh_repo.send(attribute))
+      if attribute == :owner
+        expect(value[:type]).to eql(gh_repo.send(attribute)[:type])
+      else
+        expect(value).to eql(gh_repo.send(attribute))
+      end
     end
 
     expect(WebMock).to have_requested(:get, github_url("/repositories/#{@github_repository.id}")).twice
@@ -263,14 +267,60 @@ describe GitHubRepository do
     end
 
     describe "#empty?", :vcr do
-      it "returns false when there are commits" do
+      it "returns false when the repo has content" do
         github_repository = GitHubRepository.new(@client, 35_079_964)
         expect(github_repository.empty?).to be_falsey
       end
 
-      it "returns true when there are no commits" do
+      it "returns true when the repo has no content" do
         github_repository = GitHubRepository.new(@client, 141_328_892)
         expect(github_repository.empty?).to be_truthy
+      end
+    end
+
+    describe "#template?", :vcr do
+      let(:organization) { classroom_org }
+      let(:client) { oauth_client }
+      let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
+      let(:github_repository) do
+        github_organization.create_repository("Assignment 5", private: true, auto_init: true)
+      end
+
+      after(:each) do
+        github_organization.delete_repository(github_repository.id)
+      end
+
+      context "repository is a template" do
+        before(:each) do
+          client.edit_repository(github_repository.full_name, is_template: true)
+        end
+
+        it "returns true" do
+          expect(github_repository.template?).to be true
+        end
+      end
+
+      context "repository is not a template" do
+        before(:each) do
+          client.edit_repository(github_repository.full_name, is_template: false)
+        end
+
+        it "returns false" do
+          expect(github_repository.template?).to be false
+        end
+      end
+    end
+
+    describe "public?", :vcr do
+      let(:organization) { classroom_org }
+      let(:client) { oauth_client }
+      let(:github_organization) { GitHubOrganization.new(client, organization.github_id) }
+      let(:github_repository) do
+        github_organization.create_repository("Assignment 5", private: true)
+      end
+
+      it "returns a boolean indicating the visibility" do
+        expect(github_repository.public?).to be false
       end
     end
   end

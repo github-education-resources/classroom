@@ -10,8 +10,8 @@ module ActiveJob
   end
 end
 
-RSpec.describe Assignment::RepositoryVisibilityJob, type: :job do
-  subject { Assignment::RepositoryVisibilityJob }
+RSpec.describe AssignmentRepositoryVisibilityJob, type: :job do
+  subject { AssignmentRepositoryVisibilityJob }
 
   context "when a serialization error is thrown" do
     it "does not crash the test" do

@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class GroupAssignmentRepo < ApplicationRecord
-  include GitHubPlan
-  include GitHubRepoable
-  include Nameable
+  include AssignmentRepoable
+  include StafftoolsSearchable
+  include Sortable
+  include Searchable
 
-  update_index("group_assignment_repo#group_assignment_repo") { self }
+  define_pg_search(columns: %i[id github_repo_id])
 
   enum configuration_state: %i[not_configured configuring configured]
 
@@ -17,62 +18,35 @@ class GroupAssignmentRepo < ApplicationRecord
 
   has_many :repo_accesses, through: :group
 
-  validates :github_repo_id, presence:   true
-  validates :github_repo_id, uniqueness: true
-
   validates :group_assignment, presence: true
 
   validates :group, presence: true
   validates :group, uniqueness: { scope: :group_assignment }
 
-  before_validation(on: :create) do
-    if organization
-      create_github_repository
-      delete_github_repository_on_failure do
-        push_starter_code
-        add_team_to_github_repository
-      end
-    end
-  end
-
-  before_destroy :silently_destroy_github_repository
-
   delegate :creator, :starter_code_repo_id, to: :group_assignment
   delegate :github_team_id,                 to: :group
   delegate :default_branch, :commits,       to: :github_repository
+  delegate :slug, to: :group_assignment
 
-  # TODO: Move to a view model
-  def disabled?
-    @disabled ||= !github_repository.on_github? || !github_team.on_github?
+  scope :order_by_repo_created_at, ->(_context = nil) { order(:created_at) }
+  scope :order_by_team_name, ->(_context = nil) { joins(:group).order("title asc") }
+
+  scope :search_by_team_name, ->(query) { joins(:group).where("title ILIKE ?", "%#{query}%") }
+
+  def self.sort_modes
+    {
+      "Team name" => :order_by_team_name,
+      "Created at" => :order_by_repo_created_at
+    }
   end
 
-  def github_repository
-    @github_repository ||= GitHubRepository.new(organization.github_client, github_repo_id)
+  def self.search_mode
+    :search_by_team_name
   end
 
   def github_team
+    return NullGitHubTeam.new if group.nil?
+
     @github_team ||= group.github_team
-  end
-
-  def private?
-    !group_assignment.public_repo?
-  end
-
-  def repo_name
-    @repo_name ||= generate_github_repo_name
-  end
-
-  def import_status
-    return "No starter code provided" unless group_assignment.starter_code?
-
-    github_repository.import_progress.status.humanize
-  end
-
-  private
-
-  delegate :slug, to: :group_assignment
-
-  def name
-    @name ||= group.github_team.slug_no_cache
   end
 end

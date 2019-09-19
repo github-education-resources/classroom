@@ -1,0 +1,34 @@
+<% lms_name = current_lti_configuration.lms_name(default_name: "your learning management system") %>
+
+<%= render 'organizations/organization_banner', settings: true %>
+
+<div class="site-content">
+
+  <div class="site-content-cap container-lg clearfix">
+    <h2 class="col-6 float-left text-left pr-2 site-content-heading">Connect to <%= lms_name %></h2>
+  </div>
+
+
+  <div class="site-content-body">
+    <div class="blankslate blankslate-spacious blankslate-clean-background">
+      <h3>Congratulations! You've successfully connected GitHub Classroom to <%= lms_name %></h3>
+      <%= link_to organization_path(current_organization), class: 'btn btn-large btn-primary f3 mt-3 mb-5', role: 'button' do %>
+        Continue to Assignments
+      <% end %>
+      <div class="container-sm">
+        <div class="col-8 p-2 mx-auto">
+          <% if current_lti_configuration.supports_membership_service? %>
+            <p>You are able to import your roster from <%= lms_name %>. <%= link_to "Import students", roster_path(current_organization), method: :get, class: "btn btn-sm btn-outline ml-2" %></p>
+          <% else %>
+            <p>You are currently unable to import your roster from <%= lms_name %>. Make sure you've enabled GitHub Clasroom to access
+            membership services on <%= lms_name %>. <%= link_to "Learn more", help_path(article_name: "connect-to-lms") %>.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="protip">
+      <%= octicon 'gear' %> Or head back to <%= link_to "classroom settings", edit_organization_path(current_organization) %>
+    </div>
+  </div>
+</div>

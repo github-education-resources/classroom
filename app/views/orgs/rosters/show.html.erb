@@ -1,5 +1,5 @@
 <div class="remodal-bg">
-  <%= render 'organizations/organization_banner' %>
+  <%= render 'organizations/organization_banner', settings: true %>
 
   <div class="columns">
     <div class="one-fourth column">
@@ -12,8 +12,17 @@
             Classroom roster
           </span>
           <div class='flex-justify-between'>
-            <span class="btn btn-primary btn-sm", role="button" data-remodal-target="new-student-modal">New students</span>
-             <span class="btn btn-primary btn-sm", role="button" data-remodal-target="download-csv-modal">Download</span>
+            <% if current_organization.google_course_id %>
+              <span class="btn btn-primary btn-sm", role="button" data-remodal-target="sync-google-roster-modal"><%= octicon "sync" %>  Sync from Google Classroom</span>
+            <% elsif current_organization.lti_configuration %>
+              <% lms_name = current_organization.lti_configuration.lms_name(default_name: "learning management system") %>
+              <%= link_to import_from_lms_roster_path, remote: true, method: :get, class: "btn btn-primary btn-sm" do %>
+                <%= octicon "sync" %>  Sync from <%= lms_name %>
+              <% end %>
+            <% else %>
+              <span class="btn btn-primary btn-sm", role="button" data-remodal-target="new-student-modal">Update students</span>
+            <% end %>
+            <span class="btn btn-primary btn-sm", role="button" data-remodal-target="download-csv-modal">Download</span>
           </div>
         </h3>
 
@@ -27,7 +36,7 @@
           <span id='students-span'>
             <div class="assignment-list-items">
               <% @roster_entries.each do |roster_entry| %>
-                <%= render 'roster_entry', roster_entry: roster_entry %>
+                <%= render 'roster_entry', roster_entry: roster_entry, roster_entries_page: @roster_entries.current_page %>
               <% end %>
 
               <div class="d-flex col-12">
@@ -53,7 +62,7 @@
         </div>
       </div>
 
-      <div class="boxed-group dangerzone">
+      <div class="boxed-group dangerzone pb-3">
         <h3>Delete this roster</h3>
         <div class="boxed-group-inner pt-2 clearfix">
           <p>
@@ -74,5 +83,7 @@
 </div>
 
 <%= render partial: 'new_student_modal', locals: { roster: current_roster } %>
+<%= render partial: 'sync_google_roster_modal', locals: { roster: current_roster, course_name: @google_course_name } %>
 <%= render partial: 'download_csv_modal', locals: { roster: current_roster, organization: current_organization } %>
 <%= render partial: 'remove_roster_modal', locals: { roster: current_roster, organization: current_organization } %>
+<%= render partial: 'select_identifier_modal', locals: { roster: current_roster, organization: current_organization } %>

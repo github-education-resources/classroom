@@ -50,6 +50,14 @@ RSpec.configure do |config|
   config.include ActiveJob::TestHelper, type: :controller
   config.include AuthenticationHelper,  type: :request
   config.include AuthenticationHelper,  type: :controller
+
+  config.before(:each) do
+    # We use an in-memory flipper adapter for testing that is shared across test examples
+    # We disable all known features before each test in case a previous test left a feature as enabled
+    GitHubClassroom.flipper.features.each do |feature|
+      GitHubClassroom.flipper[feature.name].disable
+    end
+  end
 end
 
 Shoulda::Matchers.configure do |config|
