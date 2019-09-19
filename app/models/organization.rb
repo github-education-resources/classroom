@@ -41,6 +41,9 @@ class Organization < ApplicationRecord
 
   scope :search_by_title, ->(query) { where("title ILIKE ?", "%#{query}%") }
 
+  scope :archived, -> { where.not(archived_at: nil) }
+  scope :not_archived, -> { where(archived_at: nil) }
+
   def self.search_mode
     :search_by_title
   end

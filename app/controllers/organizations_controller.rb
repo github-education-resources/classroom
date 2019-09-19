@@ -106,10 +106,17 @@ class OrganizationsController < Orgs::Controller
   end
 
   def search
-    @organizations = current_user
-      .organizations
-      .includes(:assignments, :group_assignments)
-      .filter_by_search(@query)
+    scope = current_user.organizations.includes(:assignments, :group_assignments).filter_by_search(@query)
+
+    view_filter = params[:view]
+
+    scope = case view_filter
+    when "Archived" then scope.archived
+    when "Active" then scope.not_archived
+    else scope
+    end
+
+    @organizations = scope
       .order_by_sort_mode(@current_sort_mode)
       .order(:id)
       .page(params[:page])
