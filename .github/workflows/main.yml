@@ -15,35 +15,29 @@ jobs:
       - name: Start services
         run: |
           docker-compose up -d
-      - name: Check redis
+      - name: Install PostgreSQL Client
         run: |
-          sudo lsof -i :6379
-      - name: Check redis again
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client libpq-dev
+      - name: Install dependencies
         run: |
-          sudo lsof -i :9736
-      # - name: Install PostgreSQL Client
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y postgresql-client libpq-dev
-      # - name: Install dependencies
-      #   run: |
-      #     gem install bundler
-      #     bundle install --jobs 4 --retry 3 --without production
-      # - name: Setup the Database
-      #   run: |
-      #     bundle exec rake db:create db:schema:load db:test:prepare
-      #     bundle exec rake factory_bot:lint
-      # - name: Lint code with Rubocop
-      #   env:
-      #     KNAPSACK_GENERATE_REPORT: true
-      #     CLASSROOM_WEBHOOK_URL_PREFIX: https://example.com/github/hooks
-      #     GITHUB_CLIENT_ID: client_id
-      #     GITHUB_CLIENT_SECRET: client_secret
-      #     GOOGLE_CLIENT_ID: google_client_id
-      #     GOOGLE_CLIENT_SECRET: google_client_secret
-      #     RAILS_ENV: test
-      #     RACK_ENV: test
-      #     REDIS_URL: "redis://localhost:6379/0"
-      #     WEBHOOK_SECRET: abcdefg
-      #     API_SECRET: abcdefg
-      #   run: ./bin/rake knapsack:rspec && ./bin/rubocop -D
+          gem install bundler
+          bundle install --jobs 4 --retry 3 --without production
+      - name: Setup the Database
+        run: |
+          bundle exec rake db:create db:schema:load db:test:prepare
+          bundle exec rake factory_bot:lint
+      - name: Lint code with Rubocop
+        env:
+          KNAPSACK_GENERATE_REPORT: true
+          CLASSROOM_WEBHOOK_URL_PREFIX: https://example.com/github/hooks
+          GITHUB_CLIENT_ID: client_id
+          GITHUB_CLIENT_SECRET: client_secret
+          GOOGLE_CLIENT_ID: google_client_id
+          GOOGLE_CLIENT_SECRET: google_client_secret
+          RAILS_ENV: test
+          RACK_ENV: test
+          REDIS_URL: "redis://localhost:9736/0"
+          WEBHOOK_SECRET: abcdefg
+          API_SECRET: abcdefg
+        run: ./bin/rake knapsack:rspec && ./bin/rubocop -D
