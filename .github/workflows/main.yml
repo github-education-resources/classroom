@@ -15,6 +15,10 @@ jobs:
       - name: Start services
         run: |
           docker-compose up -d
+      - name: Install lsof
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lsof
       - name: Check redis
         run: |
           lsof -i :6379
