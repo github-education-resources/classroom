@@ -240,6 +240,6 @@ class GitHubRepository < GitHubResource
   private
 
   def github_attributes
-    %w[name full_name html_url node_id private]
+    %w[name full_name html_url node_id private owner]
   end
 end

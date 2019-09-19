@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_11_145910) do
+ActiveRecord::Schema.define(version: 2019_09_16_192858) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -168,7 +168,10 @@ ActiveRecord::Schema.define(version: 2019_09_11_145910) do
   create_table "lti_configurations", force: :cascade do |t|
     t.text "consumer_key", null: false
     t.text "shared_secret", null: false
+<<<<<<< HEAD
     t.text "lms_link"
+=======
+>>>>>>> master
     t.bigint "organization_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

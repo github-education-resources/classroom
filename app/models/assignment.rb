@@ -46,6 +46,8 @@ class Assignment < ApplicationRecord
   alias_attribute :repos, :assignment_repos
   alias_attribute :template_repos_enabled?, :template_repos_enabled
 
+  after_create :track_private_repo_belonging_to_user
+
   def visibility=(visibility)
     self.public_repo = visibility != "private"
   end
