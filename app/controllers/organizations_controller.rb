@@ -9,13 +9,12 @@ class OrganizationsController < Orgs::Controller
   before_action :paginate_users_github_organizations, only: %i[new create]
   before_action :verify_user_belongs_to_organization, only: [:remove_user]
   before_action :set_filter_options,                  only: %i[search index]
+  before_action :set_filtered_organizations,                  only: %i[search index]
 
   skip_before_action :ensure_current_organization,                         only: %i[index new create search]
   skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create search]
 
-  def index
-    @organizations = current_user.organizations.includes(:assignments, :group_assignments).order(created_at: :desc).page(params[:page]).per(12)
-  end
+  def index; end
 
   def new
     @organization = Organization.new
@@ -105,23 +104,7 @@ class OrganizationsController < Orgs::Controller
     end
   end
 
-  def search
-    scope = current_user.organizations.includes(:assignments, :group_assignments).filter_by_search(@query)
-
-    view_filter = params[:view]
-
-    scope = case view_filter
-    when "Archived" then scope.archived
-    when "Active" then scope.not_archived
-    else scope
-    end
-
-    @organizations = scope
-      .order_by_sort_mode(@current_sort_mode)
-      .order(:id)
-      .page(params[:page])
-      .per(12)
-  end
+  def search; end
 
   private
 
@@ -175,6 +158,24 @@ class OrganizationsController < Orgs::Controller
         query: @query
       )
     end
+  end
+
+  def set_filtered_organizations
+    scope = current_user.organizations.includes(:assignments, :group_assignments).filter_by_search(@query)
+
+    view_filter = params[:view] #might be replaceable with @current_view_mode
+
+    scope = case view_filter
+    when "Archived" then scope.archived
+    when "Active" then scope.not_archived
+    else scope
+    end
+
+    @organizations = scope
+      .order_by_sort_mode(@current_sort_mode)
+      .order(:id)
+      .page(params[:page])
+      .per(12)
   end
 
   # Check if the current user has any organizations with admin privilege,
