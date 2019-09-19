@@ -29,10 +29,7 @@ jobs:
           bundle exec rake factory_bot:lint
       - name: Lint code with Rubocop
         env:
-          KNAPSACK_GENERATE_REPORT: true
-        run: ./bin/rake knapsack:rspec && ./bin/rubocop -D
-      - name: Build and test with RSpec
-        env:
+          knapsack_generate_report: true
           classroom_webhook_url_prefix: https://example.com/github/hooks
           github_client_id: client_id
           github_client_secret: client_secret
@@ -43,4 +40,4 @@ jobs:
           redis_url: "redis://localhost:6379/0"
           webhook_secret: abcdefg
           api_secret: abcdefg
-        run: bundle exec rspec
+        run: ./bin/rake knapsack:rspec && ./bin/rubocop -D
