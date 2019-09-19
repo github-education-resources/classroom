@@ -1,20 +1,20 @@
 .help {
   h1 {
     @include breakpoint(md) {
-      font-size: 48px;
+      font-size: $h00-size;
     }
   }
   .markdown-body {
     h2 {
       @include breakpoint(md) {
-        font-size: 32px;
+        font-size: $h1-size;
         font-weight: 500;
         border-bottom: none;
         padding-right: 3em;
       }
     }
     h3 {
-      font-size: 24px;
+      font-size: $h2-size;
       font-weight: 500;
       margin-top: 3em;
       @include breakpoint(md) {
