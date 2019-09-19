@@ -147,15 +147,17 @@ class OrganizationsController < Orgs::Controller
 
     @sort_modes_links = @sort_modes.keys.map do |mode|
       search_organizations_path(
+        query: @query,
         sort_by: mode,
-        query: @query
+        view: @current_view_mode
       )
     end
 
     @view_modes_links = @view_modes.keys.map do |mode|
       search_organizations_path(
+        query: @query,
+        sort_by: @current_sort_mode,
         view: mode,
-        query: @query
       )
     end
   end

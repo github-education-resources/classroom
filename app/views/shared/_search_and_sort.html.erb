@@ -15,12 +15,13 @@
     <%= form_tag submit_url, id: "search-form", method: :get, remote: true do %>
       <%= text_field_tag :query, query, class: "input-block form-control", placeholder: search_placeholder, autofocus: true, autocomplete: :off, id: "search-query-field" %>
       <%= hidden_field_tag :sort_by, @current_sort_mode, id: "sort-mode-field" %>
+      <%= hidden_field_tag :view, @current_view_mode, id: "view-mode-field" %>
     <% end %>
   </div>
   <% if archive_classrooms_enabled? %>
     <div class="TableObject-item">
       <div id="view-menu-container">
-        <%= render partial: "shared/view_menu",
+        <%= render partial: "shared/sort_menu",
             locals: {
               title: view_menu_title,
               options: view_options,
