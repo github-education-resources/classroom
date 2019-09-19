@@ -4,41 +4,43 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up Ruby 2.4
-      uses: actions/setup-ruby@v1
-      with:
-        ruby-version: 2.4.x
-    - name: Start services
-      run: |
-        docker-compose up -d
-    - name: Install PostgreSQL Client
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y postgresql-client libpq-dev
-    - name: Install dependencies
-      run: |
-        gem install bundler
-        bundle install --jobs 4 --retry 3 --without production
-    - name: Setup the Database
-      run: |
-        bundle exec rake db:create db:migrate db:test:prepare
-        bundle exec rake factory_bot:lint
-    - name: Lint code with Rubocop
-      run: bundle exec rubocop -P
-    - name: Build and test with RSpec
-      env:
-        classroom_webhook_url_prefix: https://example.com/github/hooks
-        github_client_id: client_id
-        github_client_secret: client_secret
-        google_client_id: google_client_id
-        google_client_secret: google_client_secret
-        rails_env: test
-        rack_env: test
-        webhook_secret: abcdefg
-        api_secret: abcdefg
-      run: bundle exec rspec
+      - uses: actions/checkout@v1
+      - name: Set up Ruby 2.6.4
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6.4
+      - name: Start services
+        run: |
+          docker-compose up -d
+      - name: Install PostgreSQL Client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client libpq-dev
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundle install --jobs 4 --retry 3 --without production
+      - name: Setup the Database
+        run: |
+          bundle exec rake db:create db:schema:load db:test:prepare
+          bundle exec rake factory_bot:lint
+      - name: Lint code with Rubocop
+        env:
+          KNAPSACK_GENERATE_REPORT: true
+        run: ./bin/rake knapsack:rspec && ./bin/rubocop -D
+      - name: Build and test with RSpec
+        env:
+          classroom_webhook_url_prefix: https://example.com/github/hooks
+          github_client_id: client_id
+          github_client_secret: client_secret
+          google_client_id: google_client_id
+          google_client_secret: google_client_secret
+          rails_env: test
+          rack_env: test
+          redis_url: "redis://localhost:6379/0"
+          webhook_secret: abcdefg
+          api_secret: abcdefg
+        run: bundle exec rspec
