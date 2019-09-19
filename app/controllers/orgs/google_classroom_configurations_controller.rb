@@ -82,9 +82,9 @@ module Orgs
       courses
     end
 
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def verify_google_classroom_course
-      binding.pry
-      @google_classroom_service.get_course("#{params[:course_id]}")
+      @google_classroom_service.get_course(params[:course_id].to_s)
     rescue Google::Apis::AuthorizationError
       google_classroom_client = GitHubClassroom.google_classroom_client
       login_hint = current_user.github_user.login
@@ -96,12 +96,13 @@ module Orgs
     rescue Google::Apis::ClientError => e
       error_message = JSON.parse(e.body)
       status = error_message["error"]["status"]
-      if status == "PERMISSION_DENIED"
-        flash[:error] = "You do not have access to this Google Classroom course. Please pick a different course and try again."
-      else
-        flash[:error] = "Google Classroom could not be found. Please pick a different course and try again."
-      end
+      flash[:error] = if status == "PERMISSION_DENIED"
+                        "You do not have access to this Google Classroom course. Please pick a different course and try again."
+                      else
+                        "Google Classroom could not be found. Please pick a different course and try again."
+                      end
       redirect_to google_classrooms_index_organization_path(current_organization)
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
   end
 end

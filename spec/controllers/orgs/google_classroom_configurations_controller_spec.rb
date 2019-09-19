@@ -129,7 +129,7 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
 
   describe "#create", :vcr do
     context "when user is not authorized for course" do
-      before do 
+      before do
         # Stub google authentication again
         client = Signet::OAuth2::Client.new
         allow_any_instance_of(ApplicationController)
@@ -137,8 +137,8 @@ RSpec.describe Orgs::GoogleClassroomConfigurationsController, type: :controller 
           .and_return(client)
 
         allow_any_instance_of(GoogleAPI::ClassroomService)
-        .to receive(:get_course)
-        .and_raise(Google::Apis::ClientError.new(body: '{ "error": { "status": "PERMISSION_DENIED" }}'))
+          .to receive(:get_course)
+          .and_raise(Google::Apis::ClientError.new(body: '{ "error": { "status": "PERMISSION_DENIED" }}'))
 
         post :create, params: {
           id: organization.slug,
