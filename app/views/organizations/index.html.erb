@@ -1,13 +1,13 @@
-<div class="border-bottom border-gray-dark py-3">
+<div class="border-bottom border-gray-dark py-3" id="js-filtering-component">
   <% if @organizations.present? %>
 
     <%= render partial: "organization_filters", locals: {
         submit_url: search_organizations_path,
         query: @query,
-        sort_options: @sort_modes,
+        sort_options: @sort_modes.keys,
         sort_option_links: @sort_modes_links,
         active_sort_option: @current_sort_mode,
-        view_options: @view_modes,
+        view_options: @view_modes.keys,
         view_option_links: @view_modes_links,
         active_view_option: @current_view_mode
       } %>

@@ -144,30 +144,12 @@ class OrganizationsController < Orgs::Controller
     @current_sort_mode = params[:sort_by] || @sort_modes.keys.first
     @current_view_mode = params[:view] || @view_modes.keys.first
     @query = params[:query]
-
-    @sort_modes_links = @sort_modes.keys.map do |mode|
-      search_organizations_path(
-        query: @query,
-        sort_by: mode,
-        view: @current_view_mode
-      )
-    end
-
-    @view_modes_links = @view_modes.keys.map do |mode|
-      search_organizations_path(
-        query: @query,
-        sort_by: @current_sort_mode,
-        view: mode,
-      )
-    end
   end
 
   def set_filtered_organizations
     scope = current_user.organizations.includes(:assignments, :group_assignments).filter_by_search(@query)
 
-    view_filter = params[:view] #might be replaceable with @current_view_mode
-
-    scope = case view_filter
+    scope = case @current_view_mode
     when "Archived" then scope.archived
     when "Active" then scope.not_archived
     else scope

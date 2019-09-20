@@ -10,8 +10,8 @@
 <% active_sort_option = local_assigns.fetch(:active_sort_option, sort_options.first) %>
 <% active_view_option = local_assigns.fetch(:active_view_option, view_options.first) %>
 
-<%= form_tag submit_url, method: :get, remote: :true, role: "search", class: "d-block d-sm-flex" do %>
-  <div class="mb-3 mb-md-0 mr-md-3 flex-auto">
+<%= form_tag submit_url, method: :get, remote: :true, role: "search", id: "js-filtering-form", class: "d-block d-sm-flex" do %>
+  <div class="mb-3 mb-sm-0 mr-sm-3 flex-auto">
     <input type="search" id="your-classrooms-filter" name="query"
            class="form-control width-full js-autosearch-field"
            placeholder="Find a classroom&hellip;"
@@ -22,55 +22,61 @@
   <div class="d-flex">
     <% if archive_classrooms_enabled? %>
       <details class="details-reset details-overlay position-relative mr-2" id="view-options">
-        <summary class="btn select-menu-button mt-0">
+        <summary class="btn">
           <i>View:</i>
           <span data-menu-button>
             <%= active_view_option %>
           </span>
+          <span class="dropdown-caret"></span>
         </summary>
 
-        <details-menu class="select-menu-modal hx_rsm-modal position-absolute right-0" style="z-index: 99;">
-          <div class="select-menu-header text-left">
-            <span class="select-menu-title">View</span>
-            <button class="btn-link close-button" type="button" data-toggle-for="type-options"><%= octicon("x", :"aria-label" => "Close menu") %></button>
-          </div>
-          <div class="select-menu-list">
-            <% view_options.each do |name, value| %>
-              <label class="select-menu-item" role="menuitemradio" aria-checked="<%= active_view_option == name %>" tabindex="0">
-                <%= radio_button_tag "view", value, active_view_option == value %>
-                <%= octicon("check", class: "select-menu-item-icon") %>
-                <span class="text-normal select-menu-item-text" data-menu-button-text><%= name %></span>
-              </label>
-            <% end %>
+        <details-menu class="SelectMenu right-md-0">
+          <div class="SelectMenu-modal">
+            <header class="SelectMenu-header">
+              <span class="SelectMenu-title">View:</span>
+              <button class="SelectMenu-closeButton" type="button" data-toggle-for="view-options"><%= octicon("x", :"aria-label" => "Close menu") %></button>
+            </header>
+            <div class="SelectMenu-list">
+              <% view_options.each do |name| %>
+                <label class="SelectMenu-item" role="menuitemradio" aria-checked="<%= active_view_option == name %>" tabindex="0">
+                  <%= radio_button_tag "view", name, active_view_option == name, "hidden": "true", "data-autosubmit": "true" %>
+                  <%= octicon("check", class: "SelectMenu-icon") %>
+                  <span class="text-normal" data-menu-button-text><%= name %></span>
+                </label>
+              <% end %>
+            </div>
           </div>
         </details-menu>
       </details>
     <% end %>
 
-    <details class="details-reset details-overlay position-relative flex-auto" id="view-options">
-      <summary class="btn select-menu-button mt-0">
-        <i>Sort by:</i>
-        <span data-menu-button>
-          <%= active_sort_option %>
-        </span>
-      </summary>
+      <details class="details-reset details-overlay position-relative mr-2" id="sort-options">
+        <summary class="btn">
+          <i>Sort by:</i>
+          <span data-menu-button>
+            <%= active_sort_option %>
+          </span>
+          <span class="dropdown-caret"></span>
+        </summary>
 
-      <details-menu class="select-menu-modal hx_rsm-modal position-absolute right-0" style="z-index: 99;">
-        <div class="select-menu-header text-left">
-          <span class="select-menu-title">Sort by:</span>
-          <button class="btn-link close-button" type="button" data-toggle-for="type-options"><%= octicon("x", :"aria-label" => "Close menu") %></button>
-        </div>
-        <div class="select-menu-list">
-          <% sort_options.each do |name, value| %>
-            <label class="select-menu-item" role="menuitemradio" aria-checked="<%= active_sort_option == name %>" tabindex="0">
-              <%= radio_button_tag "sort_by", value, active_sort_option == value %>
-              <%= octicon("check", class: "select-menu-item-icon") %>
-              <span class="text-normal select-menu-item-text" data-menu-button-text><%= name %></span>
-            </label>
-          <% end %>
-        </div>
-      </details-menu>
-    </details>
+        <details-menu class="SelectMenu right-md-0">
+          <div class="SelectMenu-modal">
+            <header class="SelectMenu-header">
+              <span class="SelectMenu-title">Sort by:</span>
+              <button class="SelectMenu-closeButton" type="button" data-toggle-for="sort-options"><%= octicon("x", :"aria-label" => "Close menu") %></button>
+            </header>
+            <div class="SelectMenu-list">
+              <% sort_options.each do |name, value| %>
+                <label class="SelectMenu-item" role="menuitemradio" aria-checked="<%= active_sort_option == name %>" tabindex="0">
+                  <%= radio_button_tag "sort_by", name, active_sort_option == name, "hidden": "true", "data-autosubmit": "true" %>
+                  <%= octicon("check", class: "SelectMenu-icon") %>
+                  <span class="text-normal" data-menu-button-text><%= name %></span>
+                </label>
+              <% end %>
+            </div>
+          </div>
+        </details-menu>
+      </details>
 
     <%= link_to new_organization_path, class: 'text-center btn btn-primary ml-3', role: 'button' do %>
       <%= t('views.organizations.new_classroom') %>
