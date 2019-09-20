@@ -9,7 +9,7 @@ class OrganizationsController < Orgs::Controller
   before_action :paginate_users_github_organizations, only: %i[new create]
   before_action :verify_user_belongs_to_organization, only: [:remove_user]
   before_action :set_filter_options,                  only: %i[search index]
-  before_action :set_filtered_organizations,                  only: %i[search index]
+  before_action :set_filtered_organizations,          only: %i[search index]
 
   skip_before_action :ensure_current_organization,                         only: %i[index new create search]
   skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create search]
@@ -137,22 +137,38 @@ class OrganizationsController < Orgs::Controller
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def set_filter_options
     @sort_modes = Organization.sort_modes
     @view_modes = Organization.view_modes
-    @current_sort_mode = @sort_modes.dig(params[:sort_by]) ? params[:sort_by] : @sort_modes.keys.first
-    @current_view_mode = @view_modes.dig(params[:view]) ? params[:view] : @view_modes.keys.first
+
+    @current_sort_mode = if @sort_modes.dig(params[:sort_by])
+                           params[:sort_by]
+                         else
+                           @sort_modes.keys.first
+                         end
+
+    @current_view_mode = if @view_modes.dig(params[:view])
+                           params[:view]
+                         else
+                           @view_modes.keys.first
+                         end
+
     @query = params[:query]
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
+  # rubocop:disable Metrics/MethodLength
   def set_filtered_organizations
     scope = current_user.organizations.includes(:assignments, :group_assignments).filter_by_search(@query)
 
     scope = case @current_view_mode
-    when "Archived" then scope.archived
-    when "Active" then scope.not_archived
-    else scope
-    end
+            when "Archived" then scope.archived
+            when "Active" then scope.not_archived
+            else scope
+            end
 
     @organizations = scope
       .order_by_sort_mode(@current_sort_mode)
@@ -160,6 +176,7 @@ class OrganizationsController < Orgs::Controller
       .page(params[:page])
       .per(12)
   end
+  # rubocop:enable Metrics/MethodLength
 
   # Check if the current user has any organizations with admin privilege,
   # if so add the user to the corresponding classroom automatically.
