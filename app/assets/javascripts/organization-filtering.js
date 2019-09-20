@@ -22,4 +22,15 @@ $(document).ready(function() {
     history.replaceState(null, '', '?' + formData);
     debounce(function() { $searchForm.submit(); }, 300);
   });
+
+  $("#js-filtering-component .SelectMenu-item").on("change", function(e) {
+    const $clickedItem = $(e.target).closest(".SelectMenu-item");
+    const $currentActiveItem = $clickedItem.siblings("[aria-checked='true']");
+    const $currentMenu = $clickedItem.closest('details');
+
+    $currentActiveItem.attr("aria-checked", false);
+    $clickedItem.attr("aria-checked", true);
+    $currentMenu.find("[data-menu-button]").text($clickedItem.text())
+    $currentMenu.removeAttr('open')
+  });
 });

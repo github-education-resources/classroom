@@ -13,7 +13,7 @@
 <%= form_tag submit_url, method: :get, remote: :true, role: "search", id: "js-filtering-form", class: "d-block d-sm-flex" do %>
   <div class="mb-3 mb-sm-0 mr-sm-3 flex-auto">
     <input type="search" id="your-classrooms-filter" name="query"
-           class="form-control width-full js-autosearch-field"
+           class="form-control width-full"
            placeholder="Find a classroom&hellip;"
            aria-label="Find a classroom&hellip;"
            value="<%= query %>">
