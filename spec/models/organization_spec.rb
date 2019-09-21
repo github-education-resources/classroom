@@ -199,7 +199,7 @@ RSpec.describe Organization, type: :model do
       end
 
       it "excludes classrooms whose titles do not have the substring that was searched" do
-        expect(Organization.archived).to_not include(@archived)
+        expect(Organization.not_archived).to_not include(@archived)
       end
     end
   end
