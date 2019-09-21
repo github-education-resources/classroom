@@ -1,81 +1,70 @@
 function initializeSelectMenu() {
-  const $selectMenu            = $(".select-menu");
-  const $selectMenuListItems   = $(".select-menu-item");
-  const $selectMenuButton      = $(".select-menu-button");
-  const $selectMenuCloseButton = $(".select-menu-close-button");
+  var select_menu              = $(".select-menu");
+  var select_menu_modal        = $(".select-menu-modal-holder");
+  var select_menu_list         = $(".select-menu-list");
+  var select_menu_list_items   = $(".select-menu-item");
+  var select_menu_button       = $(".select-menu-button");
+  var select_menu_close_button = $(".select-menu-close-button");
+  var selected_option          = $(".select-menu .selected-option");
 
-  $selectMenuButton.click(function() {
-    $activeMenu = $(this);
-
-    if ($activeMenu.attr("aria-expanded") === "true") {
-      closeSelectMenu($activeMenu);
+  select_menu_button.click(function() {
+    if (select_menu_button.attr("aria-expanded") === "true") {
+      closeSelectMenu();
     } else {
-      openSelectMenu($activeMenu);
+      openSelectMenu();
     }
   });
 
-  $selectMenuListItems.click(function(e) {
-    const $clickedItem = $(e.target).closest($selectMenuListItems);
-    const $activeMenuButton = $clickedItem.closest(".select-menu").find(".select-menu-button");
+  select_menu_list_items.click(function(e) {
+    var clicked_item = $(e.target).closest(select_menu_list_items);
 
-    selectItem($clickedItem);
-    closeSelectMenu($activeMenuButton);
+    selectItem(clicked_item);
+    closeSelectMenu();
 
-    $clickedItem.trigger("select");
+    clicked_item.trigger("select");
   });
 
-  $selectMenuCloseButton.click(function(e) {
-    const $activeMenuButton = $(this).closest(".select-menu").find(".select-menu-button");
-
-    closeSelectMenu($activeMenuButton);
+  select_menu_close_button.click(function(e) {
+    closeSelectMenu();
   });
 
   function selectItem(item) {
-    const $item = item;
-    const $selectedItem = $item.closest(".select-menu-list").find(".selected");
-    const $selectedOption = $item.closest(".select-menu").find(".selected-option");
+    selected_item = select_menu_list.find(".selected");
+    if(item === selected_item) return;
 
-    if($item === $selectedItem) return;
+    selected_option.text(item.text());
+    selected_item.find(".octicon").addClass("v-hidden");
+    selected_item.removeClass("selected");
 
-    $selectedOption.text(item.text());
-    $selectedItem.find(".octicon").addClass("v-hidden");
-    $selectedItem.removeClass("selected");
-
-    $item.find(".octicon").removeClass("v-hidden");
-    $item.addClass("selected");
+    item.find(".octicon").removeClass("v-hidden");
+    item.addClass("selected");
   }
 
-  function openSelectMenu(button) {
-    const $button = button;
-    const $modal = $button.siblings(".select-menu-modal-holder");
-
-    $modal.addClass("active");
-    $button.addClass("active");
-    $button.attr("aria-expanded", "true");
+  function openSelectMenu() {
+    select_menu_modal.addClass("active");
+    select_menu_button.addClass("active");
+    select_menu_button.attr("aria-expanded", "true");
   }
 
-  function closeSelectMenu(button) {
-    const $button = button;
-    const $modal = $button.siblings(".select-menu-modal-holder");
-
-    $modal.removeClass("active");
-    $button.removeClass("active");
-    $button.attr("aria-expanded", "false");
+  function closeSelectMenu() {
+    select_menu_modal.removeClass("active");
+    select_menu_button.removeClass("active");
+    select_menu_button.attr("aria-expanded", "false");
   }
 
     // Create public instance methods on the DOM Element
-    if($selectMenu.get(0)) {
-      $selectMenu.get(0).getOptionLinks = function() {
+    if(select_menu.get(0)) {
+      select_menu.get(0).getOptionLinks = function() {
         var optionLinks = [];
-        $selectMenuListItems.each(function() {
+        select_menu_list_items.each(function() {
           optionLinks.push($(this).prop("href"));
         });
 
         return optionLinks;
       }
 
-      $selectMenu.get(0).setOptionLinks = function(optionLinks) {
-        $selectMenuListItems.each(function (index) {
+      select_menu.get(0).setOptionLinks = function(optionLinks) {
+        select_menu_list_items.each(function (index) {
           optionLink = optionLinks[index];
           $(this).prop("href", optionLink);
         });
@@ -83,10 +72,8 @@ function initializeSelectMenu() {
     }
 
   $(document).click(function(event) {
-    const selectedButton = $selectMenu.find(event.target);
-
-    if(selectedButton.length < 1) {
-      closeSelectMenu(selectedButton);
+    if(select_menu.find(event.target).length < 1) {
+      closeSelectMenu();
     }
   });
 };
