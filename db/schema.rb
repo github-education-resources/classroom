@@ -257,6 +257,8 @@ ActiveRecord::Schema.define(version: 2019_09_16_192858) do
     t.string "github_name"
     t.string "github_avatar_url"
     t.string "github_html_url"
+    t.boolean "teacher"
+    t.boolean "student"
     t.index ["token"], name: "index_users_on_token", unique: true
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
