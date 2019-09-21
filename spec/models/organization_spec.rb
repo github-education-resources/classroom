@@ -155,4 +155,52 @@ RSpec.describe Organization, type: :model do
       end
     end
   end
+
+  describe "scopes" do
+    describe "search_by_title" do
+      before do
+        @hyena = create(:organization, title: "hyena classroom")
+        @lion = create(:organization, title: "lion classroom")
+      end
+
+      it "includes classrooms whose titles have the substring that was searched" do
+        expect(Organization.search_by_title("class")).to include(@hyena, @lion)
+      end
+
+      it "excludes classrooms whose titles do not have the substring that was searched" do
+        expect(Organization.search_by_title("hyena")).to include(@hyena)
+        expect(Organization.search_by_title("hyena")).not_to include(@lion)
+      end
+    end
+
+    describe "archived" do
+      before do
+        @archived = create(:organization, archived_at: 1.month.ago)
+        @not_archived = create(:organization)
+      end
+
+      it "includes classrooms that have been archived" do
+        expect(Organization.archived).to include(@archived)
+      end
+
+      it "excludes classrooms whose titles do not have the substring that was searched" do
+        expect(Organization.archived).to_not include(@not_archived)
+      end
+    end
+
+    describe "not_archived" do
+      before do
+        @archived = create(:organization, archived_at: 1.month.ago)
+        @not_archived = create(:organization)
+      end
+
+      it "includes classrooms that have been archived" do
+        expect(Organization.not_archived).to include(@not_archived)
+      end
+
+      it "excludes classrooms whose titles do not have the substring that was searched" do
+        expect(Organization.archived).to_not include(@archived)
+      end
+    end
+  end
 end
