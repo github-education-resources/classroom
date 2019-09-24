@@ -143,13 +143,13 @@ class OrganizationsController < Orgs::Controller
     @sort_modes = Organization.sort_modes
     @view_modes = Organization.view_modes
 
-    @current_sort_mode = if @sort_modes.dig(params[:sort_by])
+    @current_sort_mode = if @sort_modes.keys.include?(params[:sort_by])
                            params[:sort_by]
                          else
                            @sort_modes.keys.first
                          end
 
-    @current_view_mode = if @view_modes.dig(params[:view])
+    @current_view_mode = if @view_modes.keys.include?(params[:view])
                            params[:view]
                          else
                            @view_modes.keys.first
