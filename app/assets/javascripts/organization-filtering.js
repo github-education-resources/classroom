@@ -14,25 +14,25 @@ $(document).ready(function() {
     };
   })();
 
-  $("#js-filtering-component").on("change keyup input", function(e) {
-    const componentContext = document.getElementyId("js-filtering-component");
+  $("#js-filtering-form").on("change keyup input", function(e) {
     const searchForm = document.getElementById("js-filtering-form");
-    const formData = $searchForm.find('input[name!=utf8]').serialize();
+    const formData = $(searchForm).find('input[name!=utf8]').serialize();
 
     history.replaceState(null, '', '?' + formData);
-    debounce(function() { $searchForm.submit(); }, 300);
+    // Can't use .submit() here as it does not make request via XHR
+    debounce(function() { searchForm.dispatchEvent(new Event('submit', {bubbles: true})); }, 300);
   });
 
-  $("#js-filtering-component .SelectMenu-item").on("change", function(e) {
-    const $clickedItem = $(e.target).closest(".SelectMenu-item");
-    const $currentMenu = $clickedItem.closest('details');
-    const $currentActiveItem = $currentMenu.find(".selected");
+  $("#js-filtering-form .SelectMenu-item").on("change", function(e) {
+    const clickedItem = e.target.closest(".SelectMenu-item");
+    const currentMenu = clickedItem.closest('details');
+    const currentActiveItem = currentMenu.querySelector(".selected");
 
-    $currentActiveItem.attr("aria-checked", false);
-    $currentActiveItem.removeClass("selected");
-    $clickedItem.attr("aria-checked", true);
-    $clickedItem.addClass("selected");
-    $currentMenu.find("[data-menu-button]").text($clickedItem.text())
-    $currentMenu.removeAttr('open')
+    currentActiveItem.setAttribute("aria-checked", false);
+    currentActiveItem.classList.remove("selected");
+    clickedItem.setAttribute("aria-checked", true);
+    clickedItem.classList.add("selected");
+    currentMenu.querySelector("[data-menu-button]").innerText = clickedItem.innerText;
+    currentMenu.removeAttribute('open');
   });
 });
