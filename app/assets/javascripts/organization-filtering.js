@@ -15,8 +15,8 @@ $(document).ready(function() {
   })();
 
   $("#js-filtering-component").on("change keyup input", function(e) {
-    const componentContext = $(e.target).closest("#js-filtering-component");
-    const $searchForm = componentContext.find("#js-filtering-form");
+    const componentContext = document.getElementyId("js-filtering-component");
+    const searchForm = document.getElementById("js-filtering-form");
     const formData = $searchForm.find('input[name!=utf8]').serialize();
 
     history.replaceState(null, '', '?' + formData);
