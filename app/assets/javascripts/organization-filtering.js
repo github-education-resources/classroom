@@ -25,13 +25,11 @@ $(document).ready(function() {
 
   $("#js-filtering-form .SelectMenu-item").on("change", function(e) {
     const clickedItem = e.target.closest(".SelectMenu-item");
-    const currentMenu = clickedItem.closest('details');
-    const currentActiveItem = currentMenu.querySelector(".selected");
+    const currentMenu = clickedItem.closest("details");
+    const currentActiveItem = currentMenu.querySelector("[aria-checked=true]");
 
     currentActiveItem.setAttribute("aria-checked", false);
-    currentActiveItem.classList.remove("selected");
     clickedItem.setAttribute("aria-checked", true);
-    clickedItem.classList.add("selected");
     currentMenu.querySelector("[data-menu-button]").innerText = clickedItem.innerText;
     currentMenu.removeAttribute('open');
   });

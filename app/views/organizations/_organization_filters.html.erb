@@ -12,7 +12,7 @@
 
 <%= form_tag submit_url, method: :get, remote: :true, role: "search", id: "js-filtering-form", class: "d-block d-sm-flex" do %>
   <div class="mb-3 mb-sm-0 mr-sm-3 flex-auto">
-    <input type="search" name="query"
+    <input type="search" id="your-classrooms-filter" name="query"
            class="form-control width-full"
            placeholder="Find a classroom&hellip;"
            aria-label="Find a classroom&hellip;"
@@ -38,8 +38,7 @@
             </header>
             <div class="SelectMenu-list">
               <% view_options.each do |name| %>
-                <% selected_item = active_view_option == name %>
-                <label class="SelectMenu-item  <%= 'selected' if selected_item %>" role="menuitemradio" aria-checked="<%= selected_item %>" tabindex="0">
+                <label class="SelectMenu-item" role="menuitemradio" aria-checked="<%= active_view_option == name %>" tabindex="0">
                   <%= radio_button_tag "view", name, active_view_option == name, "hidden": "true", "data-autosubmit": "true" %>
                   <%= octicon("check", class: "SelectMenu-icon") %>
                   <span class="text-normal" data-menu-button-text><%= name %></span>
@@ -68,8 +67,7 @@
             </header>
             <div class="SelectMenu-list">
               <% sort_options.each do |name, value| %>
-                <% selected_item = active_sort_option == name %>
-                <label class="SelectMenu-item <%= 'selected' if selected_item %>" role="menuitemradio" aria-checked="<%= selected_item %>" tabindex="0">
+                <label class="SelectMenu-item" role="menuitemradio" aria-checked="<%= active_sort_option == name %>" tabindex="0">
                   <%= radio_button_tag "sort_by", name, active_sort_option == name, "hidden": "true", "data-autosubmit": "true" %>
                   <%= octicon("check", class: "SelectMenu-icon") %>
                   <span class="text-normal" data-menu-button-text><%= name %></span>
