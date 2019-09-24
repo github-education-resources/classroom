@@ -38,7 +38,8 @@
             </header>
             <div class="SelectMenu-list">
               <% view_options.each do |name| %>
-                <label class="SelectMenu-item" role="menuitemradio" aria-checked="<%= active_view_option == name %>" tabindex="0">
+                <% selected_item = active_view_option == name %>
+                <label class="SelectMenu-item  <%= 'selected' if selected_item %>" role="menuitemradio" aria-checked="<%= selected_item %>" tabindex="0">
                   <%= radio_button_tag "view", name, active_view_option == name, "hidden": "true", "data-autosubmit": "true" %>
                   <%= octicon("check", class: "SelectMenu-icon") %>
                   <span class="text-normal" data-menu-button-text><%= name %></span>
@@ -67,7 +68,8 @@
             </header>
             <div class="SelectMenu-list">
               <% sort_options.each do |name, value| %>
-                <label class="SelectMenu-item" role="menuitemradio" aria-checked="<%= active_sort_option == name %>" tabindex="0">
+                <% selected_item = active_sort_option == name %>
+                <label class="SelectMenu-item <%= 'selected' if selected_item %>" role="menuitemradio" aria-checked="<%= selected_item %>" tabindex="0">
                   <%= radio_button_tag "sort_by", name, active_sort_option == name, "hidden": "true", "data-autosubmit": "true" %>
                   <%= octicon("check", class: "SelectMenu-icon") %>
                   <span class="text-normal" data-menu-button-text><%= name %></span>

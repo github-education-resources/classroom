@@ -168,9 +168,9 @@ ActiveRecord::Schema.define(version: 2019_09_16_192858) do
   create_table "lti_configurations", force: :cascade do |t|
     t.text "consumer_key", null: false
     t.text "shared_secret", null: false
-    t.bigint "organization_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "organization_id"
     t.string "context_membership_url"
     t.text "lms_type", default: "other", null: false
     t.string "cached_launch_message_nonce"
@@ -257,6 +257,8 @@ ActiveRecord::Schema.define(version: 2019_09_16_192858) do
     t.string "github_name"
     t.string "github_avatar_url"
     t.string "github_html_url"
+    t.boolean "teacher"
+    t.boolean "student"
     t.index ["token"], name: "index_users_on_token", unique: true
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end

@@ -25,11 +25,13 @@ $(document).ready(function() {
 
   $("#js-filtering-component .SelectMenu-item").on("change", function(e) {
     const $clickedItem = $(e.target).closest(".SelectMenu-item");
-    const $currentActiveItem = $clickedItem.siblings("[aria-checked='true']");
     const $currentMenu = $clickedItem.closest('details');
+    const $currentActiveItem = $currentMenu.find(".selected");
 
     $currentActiveItem.attr("aria-checked", false);
+    $currentActiveItem.removeClass("selected");
     $clickedItem.attr("aria-checked", true);
+    $clickedItem.addClass("selected");
     $currentMenu.find("[data-menu-button]").text($clickedItem.text())
     $currentMenu.removeAttr('open')
   });
