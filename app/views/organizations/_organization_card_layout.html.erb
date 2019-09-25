@@ -16,7 +16,7 @@
                 Create assignment
               <% end %>
               <% btn_text = organization.archived? ? "Unarchive classroom" : "Archive classroom" %>
-              <%= form_for organization, remote: true do |f| %>
+              <%= form_for organization, url: organization_path(organization, params: request.query_parameters), remote: true do |f| %>
                 <%= f.hidden_field :archived, value: !organization.archived? %>
                 <%= f.submit btn_text, class: "dropdown-item btn-link btn-block text-left" %>
               <% end %>
