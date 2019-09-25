@@ -53,6 +53,8 @@ class OrganizationsController < Orgs::Controller
     @groupings = current_organization.groupings
   end
 
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def update
     result = Organization::Editor.perform(organization: current_organization, options: update_organization_params.to_h)
 
@@ -73,6 +75,8 @@ class OrganizationsController < Orgs::Controller
       end
     end
   end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   def destroy
     if current_organization.update_attributes(deleted_at: Time.zone.now)
