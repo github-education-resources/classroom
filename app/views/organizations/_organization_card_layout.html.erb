@@ -12,12 +12,14 @@
             </summary>
 
             <details-menu class="dropdown-menu dropdown-menu-sw">
-              <button data-classroom-id="<%= organization.id %>" class="dropdown-item btn-link btn-block text-left js-classroom-new-assignment-btn" role="menuitem" aria-expanded="false">
+              <%= link_to new_assignment_organization_path(organization), class: 'dropdown-item btn-link btn-block text-left', role: 'button' do %>
                 Create assignment
-              </button>
-              <button data-classroom-id="<%= organization.id %>" class="dropdown-item btn-link btn-block text-left js-classroom-archive-btn" role="menuitem" aria-expanded="false">
-                Archive classroom
-              </button>
+              <% end %>
+              <% btn_text = organization.archived? ? "Unarchive classroom" : "Archive classroom" %>
+              <%= form_for organization, remote: true do |f| %>
+                <%= f.hidden_field :archived, value: !organization.archived? %>
+                <%= f.submit btn_text, class: "dropdown-item btn-link btn-block text-left" %>
+              <% end %>
             </details-menu>
           </details>
 
