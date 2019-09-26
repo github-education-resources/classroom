@@ -53,17 +53,30 @@ class OrganizationsController < Orgs::Controller
     @groupings = current_organization.groupings
   end
 
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def update
     result = Organization::Editor.perform(organization: current_organization, options: update_organization_params.to_h)
 
-    if result.success?
-      flash[:success] = "Successfully updated \"#{current_organization.title}\"!"
-      redirect_to current_organization
-    else
-      current_organization.reload
-      render :edit
+    respond_to do |format|
+      format.html do
+        if result.success?
+          flash[:success] = "Successfully updated \"#{current_organization.title}\"!"
+          redirect_to current_organization
+        else
+          current_organization.reload
+          render :edit
+        end
+      end
+      format.js do
+        set_filter_options
+        set_filtered_organizations
+        render "organizations/archive.js.erb", format: :js
+      end
     end
   end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   def destroy
     if current_organization.update_attributes(deleted_at: Time.zone.now)
