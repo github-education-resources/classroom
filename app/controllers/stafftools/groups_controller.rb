@@ -10,10 +10,10 @@ module Stafftools
       grouping = @group.grouping
 
       if @group.destroy
-        flash[:success] = 'Group was destroyed'
+        flash[:success] = "Group was destroyed"
         redirect_to stafftools_grouping_path(grouping.id)
       else
-        flash[:error] = 'Group was not destroyed'
+        flash[:error] = "Group was not destroyed"
         render :show
       end
     end
