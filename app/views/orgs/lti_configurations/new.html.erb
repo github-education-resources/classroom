@@ -1,0 +1,19 @@
+<div class="remodal-bg">
+  <%= render 'organizations/organization_banner', settings: true %>
+
+  <div class="site-content">
+    <div class="site-content-cap">
+      <h2 class="site-content-heading">Set up your learning management system</h2>
+    </div>
+
+    <div class="site-content-body markdown-body">
+      <p>Before you can configure your learning management system to connect to GitHub Classroom,
+      we need a few more details.</p>
+      <%= render partial: "orgs/lti_configurations/form", locals: {
+        allow_cancel: true,
+        model: @lti_configuration,
+        method: :post
+      } %>
+    </div>
+  </div>
+</div>

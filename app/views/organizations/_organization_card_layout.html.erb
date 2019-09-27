@@ -1,0 +1,69 @@
+<div class="d-sm-flex flex-wrap gutter-condensed">
+  <% organizations.each do |organization| %>
+    <article class="col-sm-12 col-md-6 mb-3 mb-sm-5">
+      <div class="bg-white rounded-1 height-full no-underline border box-shadow position-relative overflow-hidden">
+          <div class="position-relative py-2">
+            <div class="position-absolute top-0 right-0 bottom-0 left-0" style="background-image: <%= organization.geo_pattern_data_uri %>"></div>
+          </div>
+
+          <% if archive_classrooms_enabled? %>
+            <details class="dropdown details-reset details-overlay d-inline-block float-right mr-1">
+              <summary class="text-gray p-2 d-inline" aria-haspopup="true">
+                <%= octicon('kebab-horizontal') %>
+              </summary>
+
+              <details-menu class="dropdown-menu dropdown-menu-sw">
+                <%= link_to new_assignment_organization_path(organization), class: 'dropdown-item btn-link btn-block text-left', role: 'button' do %>
+                  Create assignment
+                <% end %>
+                <% btn_text = organization.archived? ? "Unarchive classroom" : "Archive classroom" %>
+                <%= form_for organization, url: organization_path(organization, params: request.query_parameters), remote: true do |f| %>
+                  <%= f.hidden_field :archived, value: !organization.archived? %>
+                  <%= f.submit btn_text, class: "dropdown-item btn-link btn-block text-left" %>
+                <% end %>
+              </details-menu>
+            </details>
+          <% end %>
+
+          <a href="<%= organization_path(organization) %>" class="d-block px-4 pt-2">
+            <h1 class="h4 overflow-hidden no-wrap pt-1"style="text-overflow: ellipsis;"><%= organization.title %></h1>
+            <p class="f5 text-gray"><%= organization.github_organization.login %></p>
+          </a>
+
+        <div class="px-4 pb-3 pt-2">
+          <% if organization.assignments.present? || organization.group_assignments.present? %>
+            <!-- <h2 class="h6 text-uppercase border-bottom pb-1">Latest Assignments</h2> -->
+            <ul class="border-top py-2">
+              <% organization.all_assignments.sort_by(&:created_at).reverse.take(5).each do |assignment| %>
+                <li class="d-flex flex-items-center py-1">
+                  <span class="d-inline-block text-center text-gray mr-2 bg-blue-light circle" style="width:22px; height:22px;">
+                    <%= octicon 'person', height: 9, class: 'v-align-baseline' if assignment.is_a? Assignment %>
+                    <%= octicon 'organization', height: 9, class: 'v-align-baseline' if assignment.is_a? GroupAssignment %>
+                  </span>
+                  <%= link_to(assignment.title, organization_assignment_path(organization, assignment), class: "text-gray-dark") if assignment.is_a? Assignment %>
+                  <%= link_to(assignment.title, organization_group_assignment_path(organization, assignment), class: "text-gray-dark") if assignment.is_a? GroupAssignment %>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <div class="py-4">
+              <%= link_to new_assignment_organization_path(organization), class: 'btn', role: 'button' do %>
+                <%= t('views.organizations.create_first_assignment') %>
+              <% end %>
+              </div>
+
+          <% end %>
+        </div>
+      </div>
+    </article>
+  <% end %>
+  <% if organizations.next_page.nil? %>
+    <article class="col-sm-12 col-md-6 mb-3 mb-sm-5">
+      <%= link_to new_organization_path, class: 'd-flex flex-column flex-justify-center flex-items-center rounded-1 height-full no-underline border p-5', role: 'button' do %>
+        <span class="d-none f4"><%= t('views.organizations.new_classroom') %></span>
+        <%= octicon 'plus', :class => "col-4 col-md-6 text-gray-light hover-grow", :width => "40", :height => "40" %>
+      <% end %>
+    </article>
+  <% end %>
+</div>
+<%= render partial: 'shared/pagination', locals: { collection: organizations } %>

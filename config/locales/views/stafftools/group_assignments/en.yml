@@ -1,0 +1,18 @@
+en:
+  views:
+    stafftools:
+      group_assignments:
+        created: 'Created'
+        group_assignment: 'Group assignment'
+        group_assignment_info: 'Group assignment information'
+        id: 'ID'
+        public_repo: 'Public'
+        owned_by: 'Owned by'
+        created_by: 'Created by'
+        starter_code: 'Starter code'
+        groupig: 'Grouping'
+        invitation: 'Invitation'
+        created_on: 'Created on'
+        last_updated: 'Last updated'
+        group_assignment_repo: 'Group assignment repositories'
+        deadline: 'Deadline'

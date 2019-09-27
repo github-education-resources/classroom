@@ -1,6 +1,6 @@
 <nav class="menu">
   <span class="menu-heading"><%= octicon 'rocket' %> Site Admin</span>
-  <%= link_to 'Search', stafftools_root_path, class: 'menu-item selected' %>
+  <%= link_to 'Search', stafftools_root_path, class: "menu-item #{'selected' if current_page?(stafftools_root_path)}" %>
 </nav>
 
 <nav class="menu">

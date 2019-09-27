@@ -26,17 +26,17 @@
     <div class="team-grid">
       <div class="columns">
         <div class="one-half team-left">
-          <% @group_assignment.group_assignment_repos.each do |group_assignment_repo| %>
+          <% @groups.each do |group| %>
               <% if cycle('odd', 'even') == 'odd' %>
-                <%= render partial: 'group_assignment_team', locals: { group_assignment_repo: group_assignment_repo } %>
+                <%= render partial: 'group_assignment_team', locals: { group: group } %>
               <% end %>
           <% end %>
         </div>
         <% reset_cycle %>
         <div class="one-half team-right">
-          <% @group_assignment.group_assignment_repos.each do |group_assignment_repo| %>
+          <% @groups.each do |group| %>
               <% if cycle('odd', 'even') == 'even' %>
-                <%= render partial: 'group_assignment_team', locals: { group_assignment_repo: group_assignment_repo } %>
+                <%= render partial: 'group_assignment_team', locals: { group: group } %>
               <% end %>
           <% end %>
         </div>
@@ -44,6 +44,7 @@
 
       <div style="clear:both"></div>
     </div>
+  <%= render partial: 'shared/pagination', locals: { collection: @groups } %>
   <% end %>
 
   <hr>
@@ -51,10 +52,17 @@
   <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, method: :patch) do %>
     <dl class="form">
       <dt><label><%= 'OR' if @groups.present? %> Create a new team</label></dt>
-      <dd>
-        <%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'textfield' %>
-        <%= button_tag(type: 'submit', class: 'btn btn-green js-navigation js-form-submit') do %>
-          <%= octicon 'plus' %> Create team
+      <dd class="d-flex">
+        <% if group_assignment.max_teams && group_assignment.grouping.groups.count >= group_assignment.max_teams %>
+          <%= text_field_tag 'group[title]', nil, placeholder: 'Team limit reached', disabled: true, class: 'form-control input-block' %>
+          <%= button_tag(type: 'submit', disabled: true, class: 'btn btn-primary js-navigation js-form-submit disabled') do %>
+            <%= octicon 'plus' %> Create team
+          <% end %>
+        <% else %>
+          <%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'form-control input-block' %>
+          <%= button_tag(type: 'submit', class: 'btn btn-primary js-navigation js-form-submit') do %>
+            <%= octicon 'plus' %> Create team
+          <% end %>
         <% end %>
       </dd>
     </dl>

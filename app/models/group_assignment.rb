@@ -3,20 +3,22 @@
 class GroupAssignment < ApplicationRecord
   include Flippable
   include GitHubPlan
+  include StarterCodeImportable
   include ValidatesNotReservedWord
+  include StafftoolsSearchable
 
-  update_index('stafftools#group_assignment') { self }
+  define_pg_search(columns: %i[id title slug])
 
   default_scope { where(deleted_at: nil) }
 
   has_one :group_assignment_invitation, dependent: :destroy, autosave: true
+  has_one :deadline, dependent: :destroy, as: :assignment
 
   has_many :group_assignment_repos, dependent: :destroy
 
-  belongs_to :creator, class_name: 'User'
+  belongs_to :creator, class_name: "User"
   belongs_to :grouping
   belongs_to :organization
-  belongs_to :student_identifier_type
 
   validates :creator, presence: true
 
@@ -33,12 +35,21 @@ class GroupAssignment < ApplicationRecord
   validates :slug, presence: true
   validates :slug, length: { maximum: 60 }
   validates :slug, format: { with: /\A[-a-zA-Z0-9_]*\z/,
-                             message: 'should only contain letters, numbers, dashes and underscores' }
+                             message: "should only contain letters, numbers, dashes and underscores" }
 
   validate :uniqueness_of_slug_across_organization
+  validate :max_teams_less_than_group_count
+  validate :starter_code_repository_not_empty, if: :will_save_change_to_starter_code_repo_id?
+  validate :starter_code_repository_is_template,
+    if: -> { :will_save_change_to_starter_code_repo_id? || :will_save_change_to_template_repos_enabled }
+
+  validates_associated :grouping
 
   alias_attribute :invitation, :group_assignment_invitation
   alias_attribute :repos, :group_assignment_repos
+  alias_attribute :template_repos_enabled?, :template_repos_enabled
+
+  after_create :track_private_repo_belonging_to_user
 
   def private?
     !public_repo
@@ -48,13 +59,8 @@ class GroupAssignment < ApplicationRecord
     public_repo
   end
 
-  def starter_code?
-    starter_code_repo_id.present?
-  end
-
-  def starter_code_repository
-    return unless starter_code?
-    @starter_code_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id)
+  def visibility=(visibility)
+    self.public_repo = visibility != "private"
   end
 
   def to_param
@@ -66,5 +72,14 @@ class GroupAssignment < ApplicationRecord
   def uniqueness_of_slug_across_organization
     return if Assignment.where(slug: slug, organization: organization).blank?
     errors.add(:slug, :taken)
+  end
+
+  def max_teams_less_than_group_count
+    return unless max_teams.present? && grouping.present? && max_teams < group_count = grouping.groups.count
+    if new_record?
+      errors.add(:max_teams, "is less than the number of teams in the existing set you've selected (#{group_count})")
+    else
+      errors.add(:max_teams, "is less than the number of existing teams (#{group_count})")
+    end
   end
 end

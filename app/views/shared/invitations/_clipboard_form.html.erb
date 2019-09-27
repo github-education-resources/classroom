@@ -1,7 +1,8 @@
-<%= content_tag :input, '', type: 'text', id: "#{type}-#{key}", value: url, readonly: 'readonly' %>
-<span class="input-group-button">
-  <button aria-label="<%= t('views.shared.copy_to_clipboard') %>" data-clipboard-target=<%= "##{type}-#{key}" %> class="js-clipboard btn tooltipped tooltipped-s" type="button">
-    <%= octicon 'clippy' %>
-    <%= t('views.shared.copy_invitation_link') %>
-  </button>
-</span>
+<div class="input-group">
+  <%= content_tag :input, '', type: 'text', class: "form-control input-sm text-mono",id: "#{type}-#{key}", value: url, readonly: 'readonly' %>
+  <span class="input-group-button">
+    <button aria-label="<%= t('views.shared.copy_to_clipboard') %>" data-clipboard-target=<%= "##{type}-#{key}" %> class="js-clipboard btn btn-sm tooltipped tooltipped-s" type="button">
+      <%= octicon 'clippy' %>
+    </button>
+  </span>
+</div>

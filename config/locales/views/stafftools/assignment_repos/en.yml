@@ -1,0 +1,27 @@
+en:
+  views:
+    stafftools:
+      assignment_repos:
+        assignment_title: "%{user_login}'s assignment repository for %{title}"
+        created: 'Created'
+        assignment_repo: 'Assignment repository'
+        assignment_repo_small: 'assignment repository'
+        general_info: 'General information'
+        id: 'ID'
+        owned_by: 'Owned by'
+        created_by: 'Created by'
+        assignment: 'Assignment'
+        user: 'User'
+        created_on: 'Created on'
+        github_repo: 'GitHub repository'
+        repo_id: 'Repository ID'
+        source_code: 'Source code'
+        import_status: 'Import status'
+        dangerzone: 'Dangerzone'
+        delete_repo_title: 'Delete this assignment repository'
+        delete_repo_confirmation: 'Are you ABSOLUTELY sure?'
+        delete_repo_warning: "Unexpected things will happen if you don't read this!"
+        delete_repo_desc: 'This action <strong>CANNOT</strong> be undone.<br>
+          Please note this will delete the record on GitHub Classroom <strong>AND</strong> the repository on GitHub.'
+        repo_id_confirmation: 'Please type the ID (%{assignment_repo_id}) of the assignment repository to confirm'
+        delete_repo_link_text: 'Delete this assignment repository'

@@ -3,15 +3,22 @@
 class Group < ApplicationRecord
   include GitHubTeamable
   include Sluggable
+  include StafftoolsSearchable
 
-  update_index('stafftools#group') { self }
+  define_pg_search(columns: %i[id github_team_id title slug])
 
   belongs_to :grouping
 
   has_one :organization, -> { unscope(where: :deleted_at) }, through: :grouping
 
-  has_and_belongs_to_many :repo_accesses, before_add:    :add_member_to_github_team, unless: :new_record?,
-                                          before_remove: :remove_from_github_team
+  has_and_belongs_to_many :repo_accesses,
+    before_add: :add_member_to_github_team, unless: :new_record?,
+    before_remove: :remove_from_github_team
+
+  has_many :users, through: :repo_accesses
+  has_many :group_invite_statuses, dependent: :destroy
+  has_many :group_assignment_repos
+  has_many :assignment_repos
 
   validates :github_team_id, presence: true
   validates :github_team_id, uniqueness: true
@@ -20,12 +27,9 @@ class Group < ApplicationRecord
 
   validates :title, presence: true
   validates :title, length: { maximum: 39 }
+  validates :title, no_emoji: true, on: :create
 
   validates :slug, uniqueness: { scope: :grouping }
-
-  before_validation(on: :create) do
-    create_github_team if organization
-  end
 
   before_destroy :silently_destroy_github_team
 

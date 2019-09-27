@@ -4,10 +4,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-site-verification" content="hon4VarnogZgLqpwbwCK12g0zkNS4-V8jXyTxdPOR5o" />
 
     <title>GitHub Classroom</title>
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= action_cable_meta_tag %>
     <%= csrf_meta_tags %>
 
     <%= render 'shared/open_graph' %>
@@ -16,20 +18,18 @@
     <div class="loading-indicator" style="display: none;"></div>
 
     <%= render 'peek/bar' %>
-    <%= render 'shared/message_of_the_day' %>
-    <%= render 'shared/header' %>
+    <main class="bg-gray-light">
+      <%= render 'shared/message_of_the_day' %>
+      <%= render 'shared/header' %>
 
-    <main>
       <%= yield :organization_banner %>
 
-      <div id="flash-messages">
+      <div id="flash-messages" class="container-lg p-responsive">
         <%= render 'shared/flash_messages' %>
       </div>
 
-      <div class="site-content">
-        <div class="container">
-          <%= yield %>
-        </div>
+      <div class="container-lg p-responsive">
+        <%= yield %>
       </div>
     </main>
 

@@ -13,7 +13,8 @@ class AuthHash
     {
       uid:        uid,
       token:      token,
-      site_admin: site_admin
+      site_admin: site_admin,
+      github_global_relay_id: node_id
     }
   end
 
@@ -22,11 +23,11 @@ class AuthHash
   attr_reader :user_hash
 
   def uid
-    user_hash.fetch('uid')
+    user_hash.fetch("uid")
   end
 
   def token
-    user_hash.fetch('credentials') { {} }.fetch('token')
+    user_hash.fetch("credentials") { {} }.fetch("token")
   end
 
   def site_admin
@@ -34,12 +35,16 @@ class AuthHash
     raw_info[:site_admin]
   end
 
+  def node_id
+    raw_info[:node_id]
+  end
+
   def non_staff_github_admins_ids
-    return [] if ENV['NON_STAFF_GITHUB_ADMIN_IDS'].blank?
-    ENV['NON_STAFF_GITHUB_ADMIN_IDS'].split(',').compact.delete_if(&:empty?)
+    return [] if ENV["NON_STAFF_GITHUB_ADMIN_IDS"].blank?
+    ENV["NON_STAFF_GITHUB_ADMIN_IDS"].split(",").compact.delete_if(&:empty?)
   end
 
   def raw_info
-    user_hash.fetch('extra') { {} }.fetch('raw_info') { {} }
+    user_hash.fetch("extra") { {} }.fetch("raw_info") { {} }
   end
 end

@@ -1,37 +1,128 @@
-<dl class="form">
+<% view = FormView.new(subject: @assignment, organization: @organization) %>
+
+<dl class="<%= view.form_class_for(:title) %> mt-0">
   <dt><%= f.label :title %></dt>
-  <dd><%= f.text_field :title, class: 'textfield' %></dd>
+  <dd><%= f.text_field :title, class: 'textfield form-control input-block', autocomplete: :off, oninput: 'removeErrorBox(el);' %></dd>
+  <%= render('shared/form_error', errors: view.error_message_for(:title)) if view.errors_for?(:title) %>
 </dl>
 
-<dl class="form">
+<dl class="<%= view.form_class_for(:slug) %>">
   <dt><%= f.label :slug %></dt>
-  <dd><%= f.text_field :slug, class: 'textfield' %></dd>
-  <span class="note"><%= t('assignment_form.slug_note') %></span>
+  <dd><%= f.text_field :slug, class: 'textfield form-control input-block', autocomplete: :off, oninput: 'removeErrorBox(this);' %></dd>
+  <%= render('shared/form_error', errors: view.error_message_for(:slug)) if view.errors_for?(:slug) %>
+  <p class="f6 text-gray my-2"><%= t('assignment_form.slug_note') %></p>
 </dl>
 
-<dl class="form">
+<dl class="<%= view.form_class_for(:public_repo) %> my-4">
   <div class="form-checkbox">
-    <label><%= f.radio_button :public_repo, true %> Public</label>
-    <%= octicon 'repo', height: 32 %>
-    <span class="note">Submit assignments using public repositories. All submissions will be visible to the world.</span>
+    <label>
+      <%= f.radio_button :visibility, "public", checked: view.public_is_checked? %>
+      <div class="d-flex">
+        <div>
+          <%= octicon 'repo', height: 32, class: "text-gray mr-2" %>
+        </div>
+        <div>
+          Public
+          <span class="d-block f6 text-gray text-normal mt-1">Submit assignments using public repositories. All submissions will be visible to the world.</span>
+        </div>
+      </div>
+    </label>
   </div>
 
   <div class="form-checkbox">
-    <label><%= f.radio_button :public_repo, false %> Private</label>
-    <%= octicon 'lock', height: 32 %>
-    <span class="note">Submit assignments using private repositories. Submissions will only be visible to the submitter and organization owners.</span>
+    <label>
+      <%= f.radio_button :visibility, "private", checked: !view.public_is_checked?, disabled: !view.private_repos_available? %>
+      <div class="d-flex">
+        <div>
+          <%= octicon 'lock', height: 32, class: "text-orange mr-2" %>
+        </div>
+        <div>
+          Private
+          <span class="d-block f6 text-gray text-normal mt-1">
+            <p<%= " style=color: #6A737D" unless view.private_repos_available? %>">
+              Submit assignments using private repositories. Submissions will only be visible to the submitter and organization owners. Editing this after assignments are created will not retroactively change their visibility.
+            </p>
+            <% unless view.private_repos_available? %>
+              <strong>
+                <p>Private repositories aren't available for this organization. However, current faculty may be eligible for free, unlimited private repositories.</p>
+                <p><%= link_to "Apply for free private repositories", "https://education.github.com/discount_requests/new" %></p>
+              </strong>
+            <% end %>
+          </span>
+        </div>
+      </div>
+    </label>
   </div>
 
-  <div class="form-checkbox">
-    <label><%= f.check_box :students_are_repo_admins %> Give students Admin permissions on their repository</label>
+  <%= render('shared/form_error', errors: view.error_message_for(:public_repo)) if view.errors_for?(:public_repo) %>
+</dl>
+
+<div class="Box my-4">
+  <div class="Box-header">
+    <h3 class="Box-title">Optional</h3>
   </div>
-</dl>
+  <div class="Box-body">
+    <% unless GitHubClassroom.enterprise? %>
+      <dl class="form-group mt-0 <%= view.form_class_for(:starter_code_repository) %>">
+        <dt><label>Add your starter code from GitHub</label></dt>
+        <dd>
+          <%= f.text_field :starter_code_repository,
+            class: "textfield js-autocomplete-textfield form-control input-contrast input-block",
+            name: "repo_name",
+            type: "text",
+            value: @assignment.starter_code_repository.try(:full_name),
+            placeholder: @assignment.starter_code_repository.try(:full_name) ||
+                'Search repositories',
+            autocomplete: "off",
+            oninput: "importOptions(this.value);removeErrorBox(this);",
+            data: { "autocomplete-search-endpoint": "github_repos" }
+          %>
+        </dd>
+        <dd class="dd-autocomplete-suggestions"><%= render_autocomplete_suggestions_container %></dd>
+        <input class="js-autocomplete-resource-id" type="hidden" name="repo_id" />
 
-<dl class="form">
-  <dt><label>Add your starter code from GitHub <small>(optional)</small> </label></dt>
-  <dd><input class="textfield js-autocomplete-textfield" type="text" name="repo_name" value="<%= @assignment.starter_code_repository.try(:full_name) %>" placeholder="<%= @assignment.starter_code_repository.try(:full_name) || 'Search repositories'%>" autocomplete="off" data-autocomplete-search-endpoint="github_repos"></dd>
-  <dd class="dd-autocomplete-suggestions"><%= render_autocomplete_suggestions_container %></dd>
-  <input class="js-autocomplete-resource-id" type="hidden" name="repo_id" />
-</dl>
+        <%= render('shared/form_error', errors: view.error_message_for(:starter_code_repository)) if view.errors_for?(:starter_code_repository) %>
 
-<%= render 'shared/assignment_student_identifier_type_options', assignment: @assignment, student_identifier_types: student_identifier_types %>
+        <div id="import-options" style=<%= "display:none;" if not @assignment.starter_code? %>>
+          <div class="form-checkbox">
+            <label><%= f.radio_button :template_repos_enabled, true, checked: (true if @assignment.new_record? || @assignment.template_repos_enabled?) %> Import starter code using a template repository</label>
+            <span class="Label border border-green text-gray-dark">Beta</span>
+            <span class="note">Starter code repository should be a <%= link_to "template repository", "https://help.github.com/en/articles/creating-a-template-repository", target: "_blank" %>. Increases student repository creation and code import speed dramatically.</span>
+          </div>
+
+          <div class="form-checkbox">
+            <label><%= f.radio_button :template_repos_enabled, false %> Import starter code using source importer</label>
+            <span class="note">Slower than template repository method, but the repository doesn't need to be a template.</span>
+          </div>
+        </div>
+      </dl>
+    <% end %>
+
+    <dl class="<%= view.form_class_for(:deadline) %>">
+      <dt><label>Deadline</label></dt>
+      <dd><%= f.text_field :deadline, class: 'jquery-datetimepicker form-control input-block', value: DeadlineFormatHelper.convert(f.object.deadline), autocomplete: :off %></dd>
+      <%= render('shared/form_error', errors: view.error_message_for(:deadline)) if view.errors_for?(:deadline) %>
+      <p class="f6 text-gray my-2">After the deadline, GitHub Classroom will save the latest commit from each repo as a submission. Submission commits are viewable on the assignment page.</p>
+    </dl>
+
+    <dl class="form-group">
+      <div class="form-checkbox">
+        <label>
+          <%= f.check_box :students_are_repo_admins %>
+          Give students admin permissions on their repository.
+          <div class="f6 text-gray text-normal mt-1">Editing this after assignments are created will not retroactively change their permissions.</div>
+        </label>
+      </div>
+    </dl>
+
+    <dl class="form-group">
+      <div class="form-checkbox">
+        <label>
+          <%= f.check_box :invitations_enabled %>
+          Enable assignment invitation URL
+        <div class="f6 text-gray text-normal mt-1">If enabled, students will be able to accept and access the assignment using the invitation URL.</div>
+        </label>
+      </div>
+    </dl>
+  </div>
+</div>

@@ -3,21 +3,22 @@
 class Assignment < ApplicationRecord
   include Flippable
   include GitHubPlan
+  include StarterCodeImportable
   include ValidatesNotReservedWord
+  include StafftoolsSearchable
 
-  update_index('stafftools#assignment') { self }
+  define_pg_search(columns: %i[id title slug])
 
   default_scope { where(deleted_at: nil) }
 
   has_one :assignment_invitation, dependent: :destroy, autosave: true
+  has_one :deadline, dependent: :destroy, as: :assignment
 
   has_many :assignment_repos, dependent: :destroy
   has_many :users,            through:   :assignment_repos
 
-  belongs_to :creator, class_name: 'User'
+  belongs_to :creator, class_name: "User"
   belongs_to :organization
-
-  belongs_to :student_identifier_type
 
   validates :creator, presence: true
 
@@ -32,12 +33,24 @@ class Assignment < ApplicationRecord
   validates :slug, presence: true
   validates :slug, length: { maximum: 60 }
   validates :slug, format: { with: /\A[-a-zA-Z0-9_]*\z/,
-                             message: 'should only contain letters, numbers, dashes and underscores' }
+                             message: "should only contain letters, numbers, dashes and underscores" }
+
+  validates :assignment_invitation, presence: true
 
   validate :uniqueness_of_slug_across_organization
+  validate :starter_code_repository_not_empty, if: :will_save_change_to_starter_code_repo_id?
+  validate :starter_code_repository_is_template,
+    if: -> { :will_save_change_to_starter_code_repo_id? || :will_save_change_to_template_repos_enabled }
 
   alias_attribute :invitation, :assignment_invitation
   alias_attribute :repos, :assignment_repos
+  alias_attribute :template_repos_enabled?, :template_repos_enabled
+
+  after_create :track_private_repo_belonging_to_user
+
+  def visibility=(visibility)
+    self.public_repo = visibility != "private"
+  end
 
   def private?
     !public_repo
@@ -45,15 +58,6 @@ class Assignment < ApplicationRecord
 
   def public?
     public_repo
-  end
-
-  def starter_code?
-    starter_code_repo_id.present?
-  end
-
-  def starter_code_repository
-    return unless starter_code?
-    @starter_code_repository ||= GitHubRepository.new(creator.github_client, starter_code_repo_id)
   end
 
   def to_param

@@ -1,0 +1,18 @@
+<div class="remodal text-left" data-remodal-id="remove-roster">
+  <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
+  <h2 class="remodal-header text-left">Are you sure you want to delete this roster?</h2>
+
+  <div class="remodal-warning">
+    Unexpected things will happen if you don't read this!
+  </div>
+
+  <div class="remodal-description">
+    Deleting the roster will delete all students.
+    This will not delete assignments, assignment repos, or submissions.
+    After deleting your roster, repos and submissions will be identified by GitHub handle instead of your roster identifier.
+  </div>
+
+  <%= form_tag({ controller: :rosters, action: :remove_organization }, method: :patch) do %>
+    <%= submit_tag 'Delete roster', class: 'btn btn-danger btn-block js-submit' %>
+  <% end %>
+</div>

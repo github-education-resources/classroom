@@ -13,7 +13,7 @@ class GitHubUser < GitHubResource
 
   def authorized_access_token?
     GitHub::Errors.with_error_handling do
-      GitHubClassroom.github_client.check_application_authorization(
+      GitHubClassroom.github_client(auto_paginate: true).check_application_authorization(
         @client.access_token,
         headers: GitHub::APIHeaders.no_cache_no_store
       ).present?
@@ -28,13 +28,13 @@ class GitHubUser < GitHubResource
 
   def organization_memberships
     GitHub::Errors.with_error_handling do
-      @client.organization_memberships(state: 'active', headers: GitHub::APIHeaders.no_cache_no_store)
+      @client.organization_memberships(state: "active", headers: GitHub::APIHeaders.no_cache_no_store)
     end
   end
 
   private
 
-  def github_attributes
+  def local_cached_attributes
     %w[login avatar_url html_url name]
   end
 end

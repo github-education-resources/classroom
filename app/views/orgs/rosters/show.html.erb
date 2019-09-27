@@ -1,0 +1,89 @@
+<div class="remodal-bg">
+  <%= render 'organizations/organization_banner', settings: true %>
+
+  <div class="columns">
+    <div class="one-fourth column">
+      <%= render partial: 'organizations/side_menu' %>
+    </div>
+    <div class="three-fourths column">
+      <div class="boxed-group">
+        <h3 class='d-flex flex-justify-between flex-items-center'>
+          <span>
+            Classroom roster
+          </span>
+          <div class='flex-justify-between'>
+            <% if current_organization.google_course_id %>
+              <span class="btn btn-primary btn-sm", role="button" data-remodal-target="sync-google-roster-modal"><%= octicon "sync" %>  Sync from Google Classroom</span>
+            <% elsif current_organization.lti_configuration %>
+              <% lms_name = current_organization.lti_configuration.lms_name(default_name: "learning management system") %>
+              <%= link_to import_from_lms_roster_path, remote: true, method: :get, class: "btn btn-primary btn-sm" do %>
+                <%= octicon "sync" %>  Sync from <%= lms_name %>
+              <% end %>
+            <% else %>
+              <span class="btn btn-primary btn-sm", role="button" data-remodal-target="new-student-modal">Update students</span>
+            <% end %>
+            <span class="btn btn-primary btn-sm", role="button" data-remodal-target="download-csv-modal">Download</span>
+          </div>
+        </h3>
+
+        <div class="site-content-body tabnav-body clearfix">
+          <div class="tabnav">
+            <nav class="tabnav-tabs">
+              <span id='students-tab' onclick="selectTab(this)" class="tabnav-tab selected tabnav-link" aria-current="page">All students</span>
+              <span id='unlinked-tab' onclick="selectTab(this)" class="tabnav-tab tabnav-link">Unlinked GitHub accounts</span>
+            </nav>
+          </div>
+          <span id='students-span'>
+            <div class="assignment-list-items">
+              <% @roster_entries.each do |roster_entry| %>
+                <%= render 'roster_entry', roster_entry: roster_entry, roster_entries_page: @roster_entries.current_page %>
+              <% end %>
+
+              <div class="d-flex col-12">
+                <%= render partial: 'shared/pagination', locals: { collection: @roster_entries, param_name: :roster_entries_page } %>
+              </div>
+            </div>
+          </span>
+          <span id='unlinked-span' class='hidden-tab'>
+            <div class="assignment-list-items">
+              <% if unlinked_users.empty? %>
+                <%= render 'shared/unlinked_blank_slate' %>
+              <% else %>
+                <% @current_unlinked_users.each do |user| %>
+                  <%= render 'unlinked_user', unlinked_user: user %>
+                <% end %>
+
+                <div class="d-flex col-12">
+                  <%= render partial: 'shared/pagination', locals: { collection: @current_unlinked_users, param_name: :unlinked_users_page } %>
+                </div>
+              <% end %>
+            </div>
+          </span>
+        </div>
+      </div>
+
+      <div class="boxed-group dangerzone pb-3">
+        <h3>Delete this roster</h3>
+        <div class="boxed-group-inner pt-2 clearfix">
+          <p>
+            Deleting the roster will delete all students.
+          </p>
+          <p>
+            This will not delete assignments, assignment repos, or submissions.
+          </p>
+            After deleting your roster, repos and submissions will be identified by GitHub handle instead of your roster identifier.
+          </p>
+          <p>
+            <a data-remodal-target="remove-roster" class="btn btn-danger">Delete roster</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= render partial: 'new_student_modal', locals: { roster: current_roster } %>
+<%= render partial: 'sync_google_roster_modal', locals: { roster: current_roster, course_name: @google_course_name } %>
+<%= render partial: 'download_csv_modal', locals: { roster: current_roster, organization: current_organization } %>
+<%= render partial: 'remove_roster_modal', locals: { roster: current_roster, organization: current_organization } %>
+<%= render partial: 'select_identifier_modal', locals: { roster: current_roster, organization: current_organization } %>

@@ -1,26 +1,30 @@
-<div class="site-content">
-  <div class="site-content-cap">
-    <% if @organizations.present? %>
-      <%= link_to new_organization_path, class: 'btn btn-green right', role: 'button' do %>
-        New classroom
-      <% end %>
-    <% end %>
-    <h2 class="site-content-heading">Classrooms</h2>
-  </div>
+<div class="border-bottom border-gray-dark py-3" >
+  <% if @organizations.present? %>
 
-  <div class="site-content-body organization-list-items">
-    <% if @organizations.present? %>
-      <%= render @organizations %>
-      <%= render partial: 'shared/pagination', locals: { collection: @organizations } %>
-    <% else %>
-      <div class="blankslate large-format spacious clean-background">
-        <h3>You’re not managing any classrooms yet.</h3>
-        <p>You can begin creating assignments once you have at least one classroom.</p>
-
-        <%= link_to new_organization_path, class: 'btn btn-green btn-big', role: 'button' do %>
-          Create your first classroom
-        <% end %>
-      </div>
-    <% end %>
-  </div>
+    <%= render partial: "organization_filters", locals: {
+        submit_url: search_organizations_path,
+        query: @query,
+        sort_options: @sort_modes.keys,
+        sort_option_links: @sort_modes_links,
+        active_sort_option: @current_sort_mode,
+        view_options: @view_modes.keys,
+        view_option_links: @view_modes_links,
+        active_view_option: @current_view_mode
+      } %>
+  <% end %>
 </div>
+
+<% if @organizations.present? %>
+    <div class="my-4" id="js-search-results">
+      <%= render partial: 'organization_card_layout', locals: {organizations: @organizations} %>
+    </div>
+<% else %>
+    <div class="blankslate large-format spacious clean-background">
+      <h3><%= t('views.organizations.no_classrooms') %></h3>
+      <p><%= t('views.organizations.no_classrooms_desc') %></p>
+
+      <%= link_to new_organization_path, class: 'btn btn-primary btn-big', role: 'button' do %>
+        <%= t('views.organizations.create_first_classroom') %>
+      <% end %>
+    </div>
+<% end %>

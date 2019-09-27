@@ -2,12 +2,31 @@
 
 module GitHubClassroom
   def self.github_client(options = {})
-    client_options = {
-      client_id:     Rails.application.secrets.github_client_id,
-      client_secret: Rails.application.secrets.github_client_secret,
-      auto_paginate: true
-    }.merge!(options)
+    options[:user_agent] = "GitHub Classroom"
 
-    Octokit::Client.new(client_options)
+    unless options.key?(:access_token)
+      options[:client_id] = Rails.application.secrets.github_client_id
+      options[:client_secret] = Rails.application.secrets.github_client_secret
+    end
+
+    if enterprise?
+      options[:api_endpoint] = "#{Rails.application.secrets.github_enterprise_url}/api/v3"
+    end
+
+    Octokit::Client.new(options)
+  end
+
+  def self.enterprise?
+    return false if Rails.env.test?
+
+    Rails.application.secrets.github_enterprise_url.present?
+  end
+
+  def self.github_url
+    if enterprise?
+      Rails.application.secrets.github_enterprise_url
+    else
+      "https://github.com"
+    end
   end
 end

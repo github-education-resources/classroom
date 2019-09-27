@@ -1,0 +1,18 @@
+en:
+  views:
+    stafftools:
+      assignments:
+        assignment_title: "Assignment %{title} for %{organization_login}"
+        created: 'Created'
+        assignment_type: 'Individual assignment'
+        assignment_info: 'Assignment information'
+        id: 'ID'
+        public_repo: 'Public'
+        owned_by: 'Owned by'
+        created_by: 'Created by'
+        starter_code: 'Starter code'
+        invitation: 'Invitation'
+        created_on: 'Created on'
+        last_updated: 'Last updated'
+        assignment_repo: 'Assignment repositories'
+        deadline: 'Deadline'

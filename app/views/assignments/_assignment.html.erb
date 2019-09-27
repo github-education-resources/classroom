@@ -1,18 +1,17 @@
-<div class="assignment-list-item flex-table">
-  <div class="flex-table-item">
-    <span class="assignment-icon assignment-icon-individual left">
-      <%= octicon 'person', height: 22 %>
-    </span>
-
-    <h3 class="assignment-name-link">
-      <%= link_to assignment.title, organization_assignment_path(@organization, assignment) %>
-    </h3>
-
-    <p class="assignment-type text-muted">Individual assignment</p>
-  </div>
-
-  <div class="flex-table-item clipboard-form">
-    <div class="input-group assignment-invite-link">
+<div class="box-shadow border rounded-2 bg-white p-3 py-md-4 my-3">
+  <div class="d-md-flex flex-items-center flex-justify-between gutter-md">
+    <div class="col-md-8 d-flex flex-items-center">
+      <span class="assignment-icon assignment-icon-individual left">
+        <%= octicon 'person', height: 22 %>
+      </span>
+      <div>
+        <h3 class="f3 text-normal lh-condensed">
+          <%= link_to assignment.title, organization_assignment_path(current_organization, assignment) %>
+        </h3>
+        <p class="text-gray mb-md-0">Individual assignment</p>
+      </div>
+    </div>
+    <div class="col-md-4">
       <%= render partial: "shared/invitations/clipboard_form", locals: InvitationHelper.attributes(assignment.invitation, request.base_url) %>
     </div>
   </div>

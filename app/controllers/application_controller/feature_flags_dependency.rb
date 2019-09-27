@@ -5,17 +5,23 @@ class ApplicationController
     not_found unless team_management_enabled?
   end
 
-  def ensure_student_identifier_flipper_is_enabled
-    not_found unless student_identifier_enabled?
-  end
-
-  def student_identifier_enabled?
-    logged_in? && current_user.feature_enabled?(:student_identifier)
-  end
-  helper_method :student_identifier_enabled?
-
   def team_management_enabled?
     logged_in? && current_user.feature_enabled?(:team_management)
   end
   helper_method :team_management_enabled?
+
+  def archive_classrooms_enabled?
+    logged_in? && current_user.feature_enabled?(:archive_classrooms)
+  end
+  helper_method :archive_classrooms_enabled?
+
+  def classroom_visibility_enabled?
+    logged_in? && current_user.feature_enabled?(:classroom_visibility)
+  end
+  helper_method :classroom_visibility_enabled?
+
+  def onboarding_redesign_enabled?
+    GitHubClassroom.flipper[:onboarding_redesign].enabled? || (logged_in? && current_user.feature_enabled?(:onboarding_redesign))
+  end
+  helper_method :onboarding_redesign_enabled?
 end

@@ -1,7 +1,11 @@
 <% if ENV['MOTD'].present? %>
   <div class="message-of-the-day">
-    <div class="container">
-      <p><%= ENV['MOTD'].html_safe %></p>
+    <div class="js-flash-container">
+      <div class="flash flash-full flash-notice">
+        <div class="container-lg">
+          <p class="text-gray"><%= ENV['MOTD'].html_safe %></p>
+          </div>
+        </div>
     </div>
   </div>
 <% end %>

@@ -15,29 +15,33 @@ Rails.application.configure do
   config.consider_all_requests_local = true
 
   # Enable/disable caching. By default caching is disabled.
-  if Rails.root.join('tmp', 'caching-dev.txt').exist?
+  if Rails.root.join("tmp", "caching-dev.txt").exist?
     config.action_controller.perform_caching = true
 
     config.public_file_server.headers = {
-      'Cache-Control' => 'public, max-age=172800'
+      "Cache-Control" => "public, max-age=172800"
     }
 
     dalli_store_config = {
-      namespace:  'CLASSROOM_DEVELOPMENT',
-      expires_in: (ENV.fetch('REQUEST_CACHE_TIMEOUT') { 30 }).to_i.minutes,
-      pool_size:  (ENV.fetch('RAILS_MAX_THREADS') { 5 })
+      namespace:  "CLASSROOM_DEVELOPMENT",
+      expires_in: (ENV.fetch("REQUEST_CACHE_TIMEOUT") { 30 }).to_i.minutes,
+      pool_size:  (ENV.fetch("RAILS_MAX_THREADS") { 5 })
     }
 
-    config.cache_store = :dalli_store, 'localhost:11211', dalli_store_config
+    memcached_url      = "localhost:22322"
+    config.cache_store = :dalli_store, memcached_url, dalli_store_config
 
     config.peek.adapter = :memcache, {
-      client: Dalli::Client.new('localhost:11211')
+      client: Dalli::Client.new(memcached_url)
     }
   else
     config.action_controller.perform_caching = false
 
     config.cache_store = :null_store
   end
+
+  # Store uploaded files on the local file system (see config/storage.yml for options)
+  config.active_storage.service = :local
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
@@ -49,6 +53,9 @@ Rails.application.configure do
 
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
+
+  # Highlight code that triggered database queries in logs.
+  config.active_record.verbose_query_logs = true
 
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large

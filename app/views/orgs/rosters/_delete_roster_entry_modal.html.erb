@@ -1,0 +1,17 @@
+<div class="remodal text-left" data-remodal-id="delete-entry-<%= roster_entry.id %>">
+  <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
+  <h2 class="remodal-header text-left">Are you sure you want to delete this?</h2>
+
+  <div class="remodal-warning">
+    Unexpected things will happen if you don't read this!
+  </div>
+
+  <div class="remodal-description">
+    This action will delete the student from your roster. This will unlink any GitHub accounts connected to this student.
+  </div>
+
+  <%= form_tag({ controller: :rosters, action: :delete_entry }, method: :patch) do %>
+    <%= hidden_field_tag 'roster_entry_id', roster_entry.id %>
+    <%= submit_tag 'Delete this student', class: 'btn btn-danger btn-block js-submit' %>
+  <% end %>
+</div>

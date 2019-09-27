@@ -1,74 +1,139 @@
 # frozen_string_literal: true
 
-require 'sidekiq/web'
-require 'staff_constraint'
+require "sidekiq/web"
+require "staff_constraint"
+require "googleauth"
 
 Rails.application.routes.draw do
-  mount Peek::Railtie => '/peek'
+  mount Peek::Railtie => "/peek"
+  mount ActionCable.server => "/cable"
 
-  root to: 'pages#home'
+  root to: "pages#home"
 
-  get  '/login',  to: 'sessions#new',     as: 'login'
-  post '/logout', to: 'sessions#destroy', as: 'logout'
+  get "/assistant", to: "pages#assistant"
+  get "/help/(:article_name)", to: "pages#help", as: "help"
+  get "/home", to: "pages#home"
 
-  match '/auth/:provider/callback', to: 'sessions#create',  via: %i[get post]
-  match '/auth/failure',            to: 'sessions#failure', via: %i[get post]
+  get  "/login",  to: "sessions#new",     as: "login"
+  post "/logout", to: "sessions#destroy", as: "logout"
 
-  get '/autocomplete/github_repos', to: 'autocomplete#github_repos'
+  get  "/login/oauth/authorize", to: "oauth#authorize"
+  post "/login/oauth/access_token", to: "oauth#access_token"
 
-  scope 'github', as: 'github' do
-    constraints user_agent: %r{\AGitHub-Hookshot/\w+\z}, format: 'json' do
-      post :hooks, to: 'hooks#receive'
+  post "/auth/lti/launch",          to: "sessions#lti_launch"
+  get "/auth/lti/setup",            to: "sessions#lti_setup"
+  get "/auth/lti/failure",          to: "sessions#lti_failure"
+  match "/auth/:provider/callback", to: "sessions#create",        via: %i[get post]
+  match "/auth/failure",            to: "sessions#failure",       via: %i[get post]
+
+  match "/google_classroom/oauth2_callback", to: Google::Auth::WebUserAuthorizer::CallbackApp, via: :all
+
+  get "/a/:short_key", to: "short_url#assignment_invitation",       as: "assignment_invitation_short"
+  get "/g/:short_key", to: "short_url#group_assignment_invitation", as: "group_assignment_invitation_short"
+
+  get "/autocomplete/github_repos", to: "autocomplete#github_repos"
+
+  get "/boom", to: "site#boom_town"
+  get "/boom/sidekiq", to: "site#boom_sidekiq"
+
+  scope "github", as: "github" do
+    constraints user_agent: %r{\AGitHub-Hookshot/\w+\z}, format: "json" do
+      post :hooks, to: "hooks#receive"
     end
   end
 
-  resources :assignment_invitations, path: 'assignment-invitations', only: [:show] do
+  resources :assignment_invitations, path: "assignment-invitations", only: [:show] do
     member do
       patch :accept
+      get   :setup
+      post  :create_repo
+      get   :progress
       get   :success
+      patch :join_roster
     end
   end
 
-  resources :group_assignment_invitations, path: 'group-assignment-invitations', only: [:show] do
+  resources :group_assignment_invitations, path: "group-assignment-invitations", only: [:show] do
     member do
-      get   :identifier
-      post  :submit_identifier
       get   :accept
       patch :accept_assignment
       patch :accept_invitation
+      get   :setup
+      post  :create_repo
+      get   :progress
       get   :successful_invitation, path: :success
+      patch :join_roster
     end
   end
 
-  scope path_names: { edit: 'settings' } do
-    resources :organizations, path: 'classrooms' do
+  scope path_names: { edit: "settings" } do
+    resources :organizations, path: "classrooms" do
+      collection do
+        get :search
+      end
+
       member do
+        get   :link_lms
         get   :invite
-        get   :new_assignment, path: 'new-assignment'
+        get   :new_assignment, path: "new-assignment"
         get   :setup
         patch :setup_organization
-        get   'settings/invitations', to: 'organizations#invitation'
-        get   'settings/teams',       to: 'organizations#show_groupings'
+        get   "settings/invitations", to: "organizations#invitation"
+        get   "settings/teams",       to: "organizations#show_groupings"
+        delete "users/:user_id",      to: "organizations#remove_user", as: "remove_user"
+
+        resource :roster, only: %i[show new create], controller: "orgs/rosters" do
+          patch :link
+          patch :unlink
+          patch :delete_entry
+          patch :edit_entry
+          patch :add_students
+          patch :remove_organization
+          patch :import_from_google_classroom
+          patch :sync_google_classroom
+          get   :import_from_lms
+        end
+
+        resource :lti_configuration, controller: "orgs/lti_configurations" do
+          get :info
+          get :autoconfigure
+          get :complete
+        end
+
+        scope :google_classrooms do
+          root "orgs/google_classroom_configurations#index", as: :google_classrooms_index
+          get  "search", to: "orgs/google_classroom_configurations#search", as: "google_classrooms_search"
+          post "create", to: "orgs/google_classroom_configurations#create", as: "google_classrooms_create"
+          delete "delete", to: "orgs/google_classroom_configurations#destroy", as: "google_classrooms_delete"
+        end
       end
 
       resources :groupings, only: %i[show edit update] do
         resources :groups, only: [:show] do
           member do
-            patch '/memberships/:user_id', to: 'groups#add_membership', as: 'add_membership'
-            delete '/memberships/:user_id', to: 'groups#remove_membership', as: 'remove_membership'
+            patch "/memberships/:user_id", to: "groups#add_membership", as: "add_membership"
+            delete "/memberships/:user_id", to: "groups#remove_membership", as: "remove_membership"
           end
         end
       end
 
       resources :assignments do
-        resources :assignment_repos, only: [:show]
+        resources :assignment_repos, only: [:show], controller: "orgs/assignment_repos"
+        get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
+        get :assistant, on: :member
+        member do
+          post :toggle_invitations
+        end
       end
 
-      resources :group_assignments, path: 'group-assignments' do
-        resources :group_assignment_repos, only: [:show]
+      resources :group_assignments, path: "group-assignments" do
+        resources :group_assignment_repos, only: [:show], controller: "orgs/group_assignment_repos"
+        get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
+        get :assistant, on: :member
+        member do
+          post :toggle_invitations
+        end
       end
-
-      resources :student_identifier_types, path: 'identifiers', except: [:show]
     end
   end
 
@@ -76,12 +141,12 @@ Rails.application.routes.draw do
 
   namespace :stafftools do
     constraints StaffConstraint.new do
-      mount Sidekiq::Web => '/sidekiq'
-      mount Flipper::UI.app(GitHubClassroom.flipper) => '/flipper', as: 'flipper'
+      mount Sidekiq::Web => "/sidekiq"
+      mount Flipper::UI.app(GitHubClassroom.flipper) => "/flipper", as: "flipper"
     end
 
-    root 'resources#index', as: :root
-    get '/resource_search', to: 'resources#search'
+    root "resources#index", as: :root
+    get "/resource_search", to: "resources#search"
 
     resources :users, only: [:show] do
       member do
@@ -90,9 +155,10 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :organizations, path: 'classrooms', only: [:show] do
+    resources :organizations, path: "classrooms", only: [:show] do
       member do
-        delete '/users/:user_id', to: 'organizations#remove_user', as: 'remove_user'
+        delete "/users/:user_id", to: "organizations#remove_user", as: "remove_user"
+        post :ensure_webhook_is_active
       end
     end
 
@@ -102,11 +168,31 @@ Rails.application.routes.draw do
     resources :assignment_repos,       only: %i[show destroy]
     resources :assignments,            only: [:show]
 
-    resources :group_assignment_invitations, path: 'group-assignment-invitations', only: [:show]
-    resources :group_assignment_repos,       path: 'group-assignment-repos',       only: %i[show destroy]
-    resources :group_assignments,            path: 'group-assignments',            only: [:show]
+    resources :deadlines, only: [:show]
+
+    resources :group_assignment_invitations, path: "group-assignment-invitations", only: [:show]
+    resources :group_assignment_repos,       path: "group-assignment-repos",       only: %i[show destroy]
+    resources :group_assignments,            path: "group-assignments",            only: [:show]
 
     resources :groupings, only: %i[show destroy]
     resources :groups,    only: %i[show destroy]
+  end
+
+  namespace :api, defaults: { format: :json } do
+    scope :internal do
+      scope "classrooms/:organization_id" do
+        resources :assignments, only: %i[index show] do
+          resources :assignment_repos, only: [:index] do
+            get "/clone_url", to: "assignment_repos#clone_url"
+          end
+        end
+        resources :group_assignments, path: "group-assignments", only: %i[index show] do
+          resources :group_assignment_repos, path: "group-assignment-repos", only: [:index] do
+            get "/clone_url", to: "group_assignment_repos#clone_url"
+          end
+        end
+      end
+      get "/user", to: "users#authenticated_user"
+    end
   end
 end

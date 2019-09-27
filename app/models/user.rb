@@ -2,12 +2,16 @@
 
 class User < ApplicationRecord
   include Flippable
+  include GraphQLNode
+  include StafftoolsSearchable
 
-  update_index('stafftools#user') { self }
+  define_pg_search(columns: %i[id uid github_login github_name])
 
   has_many :assignment_repos
   has_many :repo_accesses, dependent: :destroy
-  has_many :identifiers, class_name: 'StudentIdentifier', dependent: :destroy
+  has_many :roster_entries
+  has_many :invite_statuses, dependent: :destroy
+  has_many :assignment_invitations, through: :invite_statuses
 
   has_and_belongs_to_many :organizations
 
@@ -24,6 +28,8 @@ class User < ApplicationRecord
 
   delegate :authorized_access_token?, to: :github_user
 
+  alias_attribute :github_node_id, :github_global_relay_id
+
   def assign_from_auth_hash(hash)
     user_attributes = AuthHash.new(hash).user_info
     update_attributes(user_attributes)
@@ -39,31 +45,23 @@ class User < ApplicationRecord
   end
 
   def github_client
-    @github_client ||= Octokit::Client.new(access_token: token, auto_paginate: true)
+    @github_client ||= GitHubClassroom.github_client(access_token: token, auto_paginate: true)
   end
 
   def github_user
-    @github_user ||= GitHubUser.new(github_client, uid)
+    @github_user ||= GitHubUser.new(github_client, uid, classroom_resource: self)
   end
 
   def github_client_scopes
     GitHub::Token.scopes(token, github_client)
   end
 
-  # Public: Get an identifier for an organization based on the type.
-  #
-  # Example:
-  #
-  #   current_user.identifier_for(organization: current_organization, type: @type)
-  #   # => #<StudentIdentifier:0x007fb2c9eea380>
-  #
-  # Returns a StudentIdentifier or nil.
-  def identifier_for(organization:, type:)
-    identifiers.find_by(organization: organization, type: type)
-  end
-
   def staff?
     site_admin
+  end
+
+  def api_token(exp = 5.minutes.from_now)
+    MessageVerifier.encode({ user_id: id }, exp)
   end
 
   private

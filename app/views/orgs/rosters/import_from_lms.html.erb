@@ -1,0 +1,43 @@
+<% lms_name = local_assigns.fetch(:lms_name, "your learning management system") %>
+
+<div class="site-content">
+  <div class="site-content-cap">
+    <h1 class="site-content-heading">Sync Roster from <%= lms_name %></h1>
+  </div>
+
+  <div class="site-content-body">
+    <div class="my-3">
+      <% if @identifiers.present? %>
+        <%= form_with url: roster_path(current_organization), method: :post do |f| %>
+          <div class="Box">
+            <dl class="Box-header">
+              <h3 class="Box-title">Choose how to identify each imported student</h3>
+              <dt class="Box-subtitle">Select from the choices below</dt>
+            </dl>
+            <ul>
+            <%= hidden_field_tag "lms_user_ids", @student_ids %>
+              <% @identifiers.each_pair do |identifier_type, ids| %>
+                <li class="Box-row">
+                  <%= f.radio_button :identifiers, ids.join("\r\n") %>&nbsp;
+                  <%= f.label :identifiers, identifier_type  %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+          <div class="d-flex flex-items-center border-top pt-5">
+            <%= submit_tag 'Import roster entries', class: 'btn btn-primary mr-3' %>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="markdown-body">
+          GitHub Classroom received an empty roster from <%= lms_name %>. Please ensure you
+          have enabled GitHub Classroom to receive student information per your privacy settings
+          from within <%= lms_name %> and try again.
+        </div>
+        <div class="d-flex flex-items-center pt-5">
+          <%= link_to 'Go back', :back %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -3,13 +3,13 @@
 module StarterCode
   extend ActiveSupport::Concern
 
-  INVALID_SELECTION = 'Invalid repository selection, please check it again.'
-  WRONG_FORMAT      = 'Invalid repository name, use the format owner/name.'
+  INVALID_SELECTION = "Invalid repository selection, please check it again."
+  WRONG_FORMAT      = "Invalid repository name, use the format owner/name."
 
   def starter_code_repository_id(repo_name)
     return if repo_name.blank?
 
-    raise GitHub::Error, WRONG_FORMAT unless repo_name.match?(%r{^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$})
+    raise GitHub::Error, WRONG_FORMAT unless repo_name.match?(%r{^#{GitHub::USERNAME_REGEX}\/#{GitHub::REPOSITORY_REGEX}$})
 
     begin
       # rubocop:disable Rails/DynamicFindBy

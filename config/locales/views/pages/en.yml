@@ -1,13 +1,81 @@
 en:
-  views:
-    pages:
-      banner_heading: 'Your course assignments on GitHub'
-      banner_subheading: 'GitHub Classroom automates repository creation and access control, making it easy to distribute starter code and collect assignments on GitHub.'
-      see_how_it_works: 'See how it works'
-      sign_in_to_start: 'Sign in with your GitHub account to get started'
+  pages:
+    banner_heading: 'Your course assignments on GitHub'
+    banner_subheading: 'GitHub Classroom automates repository creation and access control, making it easy to distribute starter code and collect assignments on GitHub.'
+    see_how_it_works: 'See how it works'
+    sign_in_to_start: 'Sign in with your GitHub account to get started'
+    create_assignments: 'Create assignments'
+    create_assignments_desc: 'Distribute assignments with starter code. Students work on assignments individually or in groups using public or private GitHub repositories.'
+    invite_students: 'Invite students'
+    invite_students_desc: 'Students gain access to assignments using unique invitation URLs, eliminating the need to collect GitHub usernames in advance and manage access manually.'
+    review_progress: 'Review progress'
+    review_progress_desc: 'Teachers and teaching assistants can browse submissions by assignment, making it easy to follow along with student progress.'
+    home:
+      signin_section:
+        banner_heading: 'The workflow developers use,'
+        banner_subheading: 'whether you have five students or 500.'
+        why_classroom_html: |
+          Developers rarely work all by themselves, on a deadline, or ship something they’ll only use once (with no idea whether it actually works). Wouldn’t students be better served by showing versions of their work, iterating, checking in on milestones, and showing off the final product? <br><br>
+          With GitHub Classroom you can set up the industry-standard workflow and free up your time to focus on teaching. GitHub Classroom will automatically create student repositories, track assignments in your dashboard and integrate with third-party tools like automated testing. <br><br>
+          With GitHub Classroom, you can spin up your course on GitHub and move on to the good stuff.
+        see_how_it_works: 'See how it works'
+        sign_in_to_start: 'Sign in and get started'
+      why_classroom_section:
+        heading: 'Why try GitHub Classroom?'
+        items:
+        - heading: 'Spend more time with students, less on setup.'
+          content: 'Students accept an assignment with one link, so you can get straight to the material.'
+        - heading: 'Bootstrap group assignments in a snap.'
+          content: 'Invite students to a shared repository, and cap the number of students per group. Use the same groups over and over again, or create new ones.'
+        - heading: 'Download all repositories with the click of a button.'
+          content: 'When you''re ready to grade, download assignments to your machine from GitHub Classroom, or use our new desktop client, Classroom Assistant.'
+        - heading: 'More insight into student work than ever before.'
+          content: 'See when students accept the assignment, and access their work from the moment they start. With version control, catch when they get stuck and help them rewind.'
+        - heading: 'You are in control.'
+          content: 'Students can work individually or in groups, in public or in private. Set permissions for teaching assistants or graders.'
+        - heading: 'Scales for large courses with ease.'
+          content: 'If you have a small course, GitHub Classroom will make your life easier and save you time. If you have hundreds of students, we have your covered: as many repositories as you need, and webhooks to integrate automated testing tools.'
+        - heading: 'Works with your Learning Management System (LMS).'
+          content: 'Students submit a link to their assignment repository to your learning management system. Give feedback through comments in GitHub, but keep grades in your LMS.'
+        - heading: 'Are you super-advanced?'
+          content: Do you want to build your own tools? GitHub Classroom is [open source](https://github.com/education/classroom), and we 💖 contributions.
+      what_teachers_say_section:
+        heading: 'What teachers are saying'
+        items:
+        - quote: 'GitHub Classroom takes the intimidation out of using GitHub for noobs.'
+          name: 'Paul Intrevado'
+          school: 'University of San Francisco'
+        - quote: 'Excellent solution and with the power of Git and GitHub, mind blowing!'
+          name: 'Dr. Arindam Basu'
+          school: 'University of Canterbury'
+        - quote: 'This system organizes the resources required to teach coding in a way that significantly simplifies the task of assigning and collecting work from students.'
+          name: 'Stephen Cerruti'
+          school: 'e3 Civic High School'
+        - quote: 'After today I realize how simple this process really is. I never realized it would be so quick to set all of these things up and start using them for students. On top of this the [support community](https://education.github.community/) is absolutely amazing!!'
+          name: 'Adam Sullivan'
+          school: 'Brown University'
+      classroom_in_action_section:
+        heading: 'See what GitHub Classroom looks like in action'
+        subheading: 'Accept an assignment, and see how GitHub Classroom makes a copy of the assignment repository. Minimal setup, so you can get straight to work.'
+        accept_button: 'Accept an assignment'
+      get_started_section:
+        heading: 'Get started with your first GitHub Classroom'
+        items:
+        - heading: 'Create an organization for your course.'
+          content: When you [create  an organization](https://github.com/account/organizations/new), be sure to select the “Free Plan.” Make a new repository for each assignment.
+        - heading: 'Apply for an Educator discount.'
+          content: 'For professors, teachers, and bootcamp instructors, we’re happy to provide a discount for free private repositories. Go ahead and apply for [an Education discount](https://education.github.com/discount_requests/new) for your organization.'
+        - heading: 'Use the GitHub Classroom application.'
+          content: 'With your discount and organization sorted, create a [new classroom](https://classroom.github.com/classrooms/new), make your first assignment and invite students.'
+
+
       create_assignments: 'Create assignments'
       create_assignments_desc: 'Distribute assignments with starter code. Students work on assignments individually or in groups using public or private GitHub repositories.'
       invite_students: 'Invite students'
       invite_students_desc: 'Students gain access to assignments using unique invitation URLs, eliminating the need to collect GitHub usernames in advance and manage access manually.'
       review_progress: 'Review progress'
       review_progress_desc: 'Teachers and teaching assistants can browse submissions by assignment, making it easy to follow along with student progress.'
+
+    assistant:
+      banner_heading: 'Download all of your GitHub Classroom assignments in one click.'
+      banner_subheading: 'Classroom Assistant is a desktop application to help you get student repositories for grading.'

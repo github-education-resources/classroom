@@ -1,0 +1,36 @@
+<% view = Shared::SharedJoinRosterView.new(roster: roster, invitation: invitation) %>
+
+<%= render 'organizations/organization_invitation_banner' %>
+
+<div class="mt-1">
+  <div class="py-4 px-5 bg-gray-light border">
+    <div class="clearfix mt-1">
+      <div class="float-left circle assignment-icon-individual p-2 mr-3">
+        <%= octicon view.octicon_name, height: 22, class: "m-1" %>
+      </div>
+      <div class="overflow-hidden">
+        <h2 class="f3 text-gray text-normal mt-2">Join the classroom roster</h2>
+      </div>
+    </div>
+  </div>
+  <div class="px-5 py-3 bg-white border border-top-0">
+    <p class="f4">Your teacher has configured this classroom to pair GitHub accounts with identifiers. Please select yourself from the list below. You can also <%= link_to "skip", view.skip_path %> this step for now.</p>
+    <div class="border my-3">
+      <h3 class="bg-gray-light p-2 f4 text-normal"><%= roster.identifier_name %></h3>
+        <div class="overflow-auto" style="max-height:45vh;">
+          <% roster.unlinked_entries.sort_by(&:identifier).each do |entry| %>
+            <div class="menu-item p-0">
+              <%= form_tag({ controller: view.controller_name, action: :join_roster }, method: :patch) do %>
+                <%= hidden_field_tag 'roster_entry_id', entry.id %>
+                <%= submit_tag entry.identifier, class: 'width-full height-full p-2 text-left mb-0 border-0', style: 'background:transparent;cursor:pointer' %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+    </div>
+
+    <div>
+      <%= link_to "Skip", view.skip_path, class: "btn" %>
+    </div>
+  </div>
+</div>

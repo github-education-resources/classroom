@@ -15,13 +15,14 @@
   <%= form_tag({ controller: :assignment_invitations, action: :accept }, method: :patch) do %>
     <div class="markdown-body">
       <p>
-        Accepting this assignment will give you access to the <strong><%= "#{current_assignment.slug}-#{current_user.github_user.login}" %></strong>
+        Accepting this assignment will give you access to the <strong><%= "#{current_assignment.slug}-#{current_user.github_user.login(use_cache: false)}" %></strong>
         repository in the <%= link_to "@#{organization.github_organization.login}", organization.github_organization.html_url %> organization on GitHub.
       </p>
     </div>
 
     <div class="form-actions">
-      <%= submit_tag 'Accept this assignment', class: 'btn btn-green js-navigation' %>
+      <% loader = ' js-navigation' %>
+      <%= submit_tag 'Accept this assignment', class: 'btn btn-primary' + loader %>
     </div>
   <% end %>
 </div>

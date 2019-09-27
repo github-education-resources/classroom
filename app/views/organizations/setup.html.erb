@@ -1,23 +1,19 @@
-<div class="site-content">
-  <div class="site-content-cap">
-    <h2 class="site-content-heading">Name your classroom</h2>
+<div class="container-lg p-responsive">
+  <div class="Subhead Subhead--spacious">
+    <div class="Subhead-heading"><%= t('views.organizations.name_your_classroom') %></div>
   </div>
 
-  <div class="site-content-body">
-    <%= form_for @organization, url: { action: :setup_organization } do |f| %>
+  <div class="col-md-6">
+    <%= form_for current_organization, url: { action: :setup_organization } do |f| %>
       <%= render 'shared/error_messages', object: f.object %>
 
-      <div class="columns">
-        <div class="two-thirds column">
-          <dl class="form">
-            <dt><label>Please give your classroom a more descriptive name</label></dt>
-            <dd><%= f.text_field :title, class: 'textfield', placeholder: 'Please give your classroom a more descriptive name' %></dd>
-          </dl>
-        </div>
-      </div>
+      <dl class="form-group">
+        <dt><label><%= t('views.organizations.give_descriptive_name') %></label></dt>
+        <dd><%= f.text_field :title, class: 'textfield form-control input-contrast input-block', placeholder: t('views.organizations.give_descriptive_name') %></dd>
+      </dl>
 
-      <div class="form-actions">
-        <%= f.submit 'Continue', class: 'btn btn-green' %>
+      <div class="my-4">
+        <%= f.submit t('views.organizations.continue'), class: 'btn btn-primary' %>
       </div>
     <% end %>
   </div>

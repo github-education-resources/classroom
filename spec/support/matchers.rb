@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rspec/expectations'
+require "rspec/expectations"
 
 RSpec::Matchers.define :match_the_interface_of do
   match do

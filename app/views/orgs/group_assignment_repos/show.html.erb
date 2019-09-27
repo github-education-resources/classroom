@@ -1,0 +1,44 @@
+<% view = GroupAssignmentRepoView::ShowView.new(assignment_repo: @group_assignment_repo) %>
+
+<div class='d-flex flex-row flex-justify-between flex-items-center assignment-repo-list-item <%= view.disabled_class %>'>
+  <div class='d-flex flex-column flex-content-around'>
+    <div>
+      <%= link_to view.github_team_url, class: "assignment-repo-github-url #{view.disabled_class}", target: '_blank' do %>
+        <h3 class="css-truncate css-truncate-target"><%= view.github_team.name %></h3>
+      <% end %>
+    </div>
+    <div class="d-flex assignment-properties">
+      <%= render 'shared/commit_repo_detail', text: view.commit_text, url: view.github_commits_url %>
+      <%= render 'shared/members_repo_detail', text: view.members_text, url: view.github_team_url %>
+      <% if view.submission_passed? %>
+        <% if view.submission_succeeded? %>
+          <%= render 'shared/submission_succeeded_repo_detail', url: view.submission_url %>
+        <% else %>
+          <%= render 'shared/submission_failed_repo_detail' %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <div class='d-flex'>
+    <ul class='user-list'>
+      <% view.github_team_members.first(3).map(&:github_user).each do |student| %>
+        <li>
+          <%= link_to view.github_user_url_for(student), class: "tooltipped tooltipped-s #{view.disabled_class}", 'aria-label' => view.github_login_for(student) do %>
+            <%= image_tag view.github_avatar_url_for(student), class: 'avatar avatar-small ', height: 30, width: 30, alt: "@#{view.github_login_for(student)}" %>
+          <% end %>
+        </li>
+      <% end %>
+
+      <% if view.github_team_members.length > 3 %>
+        <li>
+          <%= link_to view.github_team_url, class: "#{view.disabled_class}" do %>
+            <%= image_tag 'student-ellipse@2x.png', class: 'avatar avatar-small', height: 30, width: 30, alt: 'student ellipse' %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+    <div class='assignment-repo-button'>
+      <%= link_to view.repository_text, view.github_repo_url, class: "btn btn-outline #{view.disabled_class}", role: 'button', target: '_blank' %>
+    </div>
+  </div>
+</div>

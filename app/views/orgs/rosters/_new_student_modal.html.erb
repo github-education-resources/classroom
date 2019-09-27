@@ -1,0 +1,41 @@
+<% view = FormView.new(subject: roster) %>
+
+<div class="remodal text-left" data-remodal-id="new-student-modal">
+  <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
+  <h2 class="remodal-header text-left">Add students to your Roster</h2>
+
+    <div class="my-3">
+      <h2 class="h4 mb-2">Import students from your institution</h2>
+      <p>GitHub Classroom is able to automatically import your roster from your institution. If you
+      would rather manage your roster manually, you can still do that, too.</p>
+
+      <%= link_to "Sync from a learning management system",
+        link_lms_organization_path,
+        class: "btn btn-block btn-sm"
+      %>
+    </div>
+
+    <div class="my-3">
+      <h2 class="h4 mb-2">Manually add students</h2>
+      <div>
+        <%= form_tag add_students_roster_path(current_organization), method: :patch do |f| %>
+        <div class="Box">
+          <dl class="Box-body <%= view.form_class_for(:roster_entries) %> mb-0">
+            <dt class="text-gray mb-1">Enter your list of students' identifiers, <strong>one per line</strong>.</dt>
+            <dd><%= text_area_tag(:identifiers, '', class: 'form-control input-block', id: 'entries-field', required: true) %></dd>
+            <%= render('shared/form_error', errors: view.error_message_for(:roster_entries)) if view.errors_for?(:roster_entries) %>
+          </dl>
+
+          <div class="Box-footer bg-gray">
+            <label class='btn btn-secondary btn-sm' for="file-upload">Upload a CSV or text file</label>
+            <%= file_field_tag :identifiers_file, style: 'display: none', id: 'file-upload', onchange: 'onIdentifiersUploaded()' %>
+          </div>
+        </div>
+
+          <div class="d-flex flex-items-center border-top pt-5">
+            <%= submit_tag 'Add roster entries', class: 'btn btn-primary mr-3' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+</div>

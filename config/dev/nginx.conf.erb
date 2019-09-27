@@ -1,5 +1,5 @@
 upstream <%= name %> {
- server 127.0.0.1:5300;
+ server 127.0.0.1:5000;
 }
 
 server {
@@ -8,7 +8,7 @@ server {
   listen [::]:8080;
 
   root <%= root %>/public;
-  server_name <%= name %>.dev ~^<%= name %>\.dev\.\d+\.\d+\.\d+\.\d+\.xip\.io$;
+  server_name <%= name %>.localhost <%= name %>.github.localhost ~^<%= name %>\.localhost\.\d+\.\d+\.\d+\.\d+\.xip\.io$;
 
   location / {
     proxy_read_timeout 300;

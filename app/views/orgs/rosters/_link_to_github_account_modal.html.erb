@@ -1,0 +1,24 @@
+<div class="remodal text-left" data-remodal-id="link-to-github_account-<%= roster_entry.id %>">
+  <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
+  <h2 class="remodal-header text-left">Select a GitHub account to link with</h2>
+
+  <% if unlinked_users.present? %>
+    <p>
+      <strong>Select an unlinked GitHub account to link this student to:</strong>
+    </p>
+    <div class="remodal-user-list">
+      <% unlinked_users.each do |user| %>
+        <div class="remodal-user">
+          <%= form_tag({ controller: :rosters, action: :link }, method: :patch) do %>
+            <%= hidden_field_tag 'user_id', user.id %>
+            <%= hidden_field_tag 'roster_entry_id', roster_entry.id %>
+            <%= submit_tag ('@' + user.github_user.login), class: 'remodal-user' %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    GitHub accounts will appear here if students have accepted an assignment in this classroom but haven't linked
+    their GitHub identity to a roster identifier.
+  <% end %>
+</div>

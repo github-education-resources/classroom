@@ -1,0 +1,12 @@
+<div style="background-color:<%= background_color if defined?(background_color) %>">
+  <header class="container-lg p-responsive">
+    <nav class="">
+      <ul class="d-flex f4 list-style-none pt-3">
+        <% if logged_in? %>
+          <li><%= link_to t('views.shared.back_to_classroom'), organizations_path, class: 'btn btn-outline' %></li>
+        <% else %>
+          <li style="margin-left: auto"><%= link_to t('views.shared.sign_in'), login_path, class: 'btn btn-outline' %></li>
+        <% end %>
+      </ul>
+  </header>
+</div>

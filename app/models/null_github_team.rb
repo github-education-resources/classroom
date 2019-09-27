@@ -2,7 +2,7 @@
 
 class NullGitHubTeam < NullGitHubResource
   def name
-    'Deleted team'
+    "Deleted team"
   end
 
   def organization
@@ -10,6 +10,14 @@ class NullGitHubTeam < NullGitHubResource
   end
 
   def slug
-    'ghost'
+    "ghost"
+  end
+
+  def html_url
+    "https://github.com/orgs/ghost/teams/ghost"
+  end
+
+  def on_github?
+    false
   end
 end

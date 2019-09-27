@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'typhoeus/adapters/faraday'
+require "typhoeus/adapters/faraday"
 
 Octokit.middleware = Faraday::RackBuilder.new do |builder|
   options = {}.tap do |opts|
@@ -17,5 +17,5 @@ Octokit.middleware = Faraday::RackBuilder.new do |builder|
   builder.use Octokit::Response::RaiseError
 
   builder.request :retry
-  builder.adapter :typhoeus
+  builder.adapter Faraday.default_adapter
 end

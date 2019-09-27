@@ -6,16 +6,16 @@
 # the maximum value specified for Puma. Default is set to 5 threads for minimum
 # and maximum; this matches the default thread size of Active Record.
 #
-threads_count = ENV.fetch('RAILS_MAX_THREADS') { 5 }
+threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
 threads threads_count, threads_count
 
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
 #
-port        ENV.fetch('PORT') { 3000 }
+port        ENV.fetch("PORT") { 3000 }
 
 # Specifies the `environment` that Puma will run in.
 #
-environment ENV.fetch('RAILS_ENV') { 'development' }
+environment ENV.fetch("RAILS_ENV") { "development" }
 
 # Specifies the number of `workers` to boot in clustered mode.
 # Workers are forked webserver processes. If using threads and workers together
@@ -23,7 +23,7 @@ environment ENV.fetch('RAILS_ENV') { 'development' }
 # Workers do not work on JRuby or Windows (both of which do not support
 # processes).
 #
-workers ENV.fetch('WEB_CONCURRENCY') { 1 }
+workers ENV.fetch("WEB_CONCURRENCY") { 1 }
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code
@@ -40,6 +40,7 @@ preload_app!
 #
 before_fork do
   ActiveRecord::Base.connection_pool.disconnect! if defined?(ActiveRecord)
+  Barnes.start
 end
 
 # The code in the `on_worker_boot` will be called if you are using
@@ -56,3 +57,12 @@ end
 
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
+
+# SIGTERM is raised when there is a rolling deployment usually involving
+# docker/kubernetes. Since classroom is dockerized, our exception tracker
+# gets noisy SignalException errors on every deployment. This configuration
+# will not raise a SignalException on SIGTERM whenever we deploy.
+# more infomation on this can be found here:
+# https://github.com/puma/puma/pull/1690
+#
+raise_exception_on_sigterm false

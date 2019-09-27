@@ -20,7 +20,7 @@
 //= require whatwg-fetch/fetch
 //= require include-fragment-element/include-fragment-element
 //
-//= require local_time
+//= require local-time
 //
 //= require jquery-readyselector/jquery.readyselector
 //
@@ -35,5 +35,7 @@
 //= require clipboard/dist/clipboard
 //
 //= require transliteration/lib/browser/transliteration
+//
+//= require jquery.datetimepicker
 //
 //= require_tree .

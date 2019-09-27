@@ -1,0 +1,27 @@
+<%= render partial: 'pages/back_to_classroom_header', locals: {background_color: "#5fb27b"} %>
+
+<div class="remodal-bg">
+  <div class="hero text-center assistant-bg">
+    <div class="container-new px-3">
+      <div class="pb-6">
+        <h1 class="f00-light text-white pt-5">
+          <b>GitHub</b> Classroom Assistant
+        </h1>
+        <h2 class="f2-light mt-4 text-white">
+          <%= t('.banner_heading') %>
+        </h2>
+        <p class="mt-1 text-white f3-light">
+          <%= t('.banner_subheading') %>
+        </p>
+
+        <%= render partial: 'pages/download_assistant_button' %>
+      </div>
+
+      <div class="assistant-screenshot d-block mx-auto mt-4">
+        <%= image_tag('classroom-assistant-downloading.png', class:'width-fit', alt: 'Classroom-Desktop Downloading Screenshot') %>
+      </div>
+    </div>
+  </div>
+
+  <%= render partial: 'pages/sign_in_section' %>
+</div>

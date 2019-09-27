@@ -1,15 +1,25 @@
 # frozen_string_literal: true
 
-# A parent class so that we always have
-# the `id`, `client`, and `access_token`
-# attr_readers.
-
+# Parent class to hold id attribute.
+# Used for defining GitHub resources that are only dependant on an id.
 class GitHubResource < GitHubModel
-  attr_reader :id, :client, :access_token
+  attr_reader :id
+
+  # client  - The Octokit::Client making the request.
+  # id      - The Interger id for the resource.
+  # options - A Hash of options to pass (optional).
+  #
+  def initialize(client, id, **options)
+    super(client, { id: id }, options)
+  end
 
   private
 
   def github_attributes
+    []
+  end
+
+  def local_cached_attributes
     []
   end
 end

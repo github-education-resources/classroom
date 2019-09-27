@@ -16,7 +16,7 @@ class GitHubTeam < GitHubResource
   def add_team_repository(full_name, options = {})
     GitHub::Errors.with_error_handling do
       unless @client.add_team_repository(@id, full_name, options)
-        raise GitHub::Error, 'Could not add team to the GitHub repository'
+        raise GitHub::Error, "Could not add team to the GitHub repository"
       end
     end
   end
@@ -28,7 +28,7 @@ class GitHubTeam < GitHubResource
   end
 
   def html_url
-    "https://github.com/orgs/#{github_organization.login}/teams/#{slug}"
+    "#{GitHubClassroom.github_url}/orgs/#{github_organization.login}/teams/#{slug}"
   end
 
   def github_organization

@@ -2,14 +2,26 @@
 
 class NullGitHubRepository < NullGitHubResource
   def name
-    'Deleted repository'
+    "Deleted repository"
   end
 
   def full_name
-    'Deleted repository'
+    "Deleted repository"
   end
 
   def html_url
-    '#'
+    "#"
+  end
+
+  def node_id
+    ""
+  end
+
+  def private
+    nil
+  end
+
+  def owner
+    ""
   end
 end

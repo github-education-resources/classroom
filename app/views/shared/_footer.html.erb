@@ -1,10 +1,79 @@
-<footer class="site-footer text-center">
-  <div class="container">
-    <div class="made-with-heart">
-      <%= raw I18n.t("views.shared.with_love_by_github", octicon_mortar_board: octicon('mortar-board'),
-      octicon_heart: octicon('heart'), href: link_to(octicon('logo-github'), 'https://education.github.com')) %>
-    </div>
+<footer class="pt-3 pb-6">
+  <div class="container-lg p-responsive text-gray text-center pt-6">
+      <p class="lh-condensed-ultra">
+        <%= raw t("views.shared.classroom_is_open_source",
+        href: link_to(t("views.shared.open_source_href"), 'https://github.com/education/classroom')) %>
+      </p>
+      <p class="lh-condensed-ultra">
+        <%= raw I18n.t("views.shared.with_love_by_github",
+        octicon_heart: octicon('heart'),
+        education_href: link_to('GitHub Education', 'https://education.github.com'),
+        href: link_to('GitHub', 'https://github.com')) %>
+      </p>
   </div>
-  <%= raw t("views.shared.classroom_is_open_source",
-  href: link_to(t("views.shared.open_source_href"), 'https://github.com/education/classroom')) %>
+
+  <div class="container-lg p-responsive py-4 clearfix">
+    <section class="col-sm-6 col-md-3 float-left">
+      <h4 class="f6 text-mono pt-4 pb-2">Video tutorials</h4>
+      <ul class="list-style-none">
+        <li>
+          <a href="https://classroom.github.com/videos#ChA_zph7aao">Set up GitHub Classroom</a>
+        </li>
+        <li>
+          <a href="https://classroom.github.com/videos#rTsfBAV7sOo">Create an individual assignment</a>
+        </li>
+        <li>
+          <a href="https://classroom.github.com/videos#-52quDR2QSc">Create a group assignment</a>
+        </li>
+      </ul>
+    </section>
+    <section class="col-sm-6 col-md-3 float-left">
+      <h4 class="f6 text-mono pt-4 pb-2">Resources</h4>
+      <ul class="list-style-none">
+        <li>
+          <a href="https://classroom.github.com/help">Help</a>
+        </li>
+        <li>
+          <a href="https://education.github.com/discount_requests/new">Apply for free private repositories</a>
+        </li>
+        <li>
+          <a href="https://education.github.community/">Join the community</a>
+        </li>
+        <li>
+          <a href="https://github.com/education/classroom/issues">Open an issue</a>
+          </li>
+      </ul>
+    </section>
+    <section class="col-sm-6 col-md-3 float-left">
+      <h4 class="f6 text-mono pt-4 pb-2">GitHub Education for Teachers</h4>
+      <ul class="list-style-none">
+        <li>
+          <a href="https://github.com/education/classroom">GitHub Classroom</a>
+        </li>
+        <li>
+          <a href="https://education.github.com/teachers/advisors">GitHub Campus Advisors</a>
+        </li>
+        <li>
+          <a href="https://education.github.community/">GitHub Education Community</a>
+        </li>
+      </ul>
+    </section>
+    <section class="col-sm-6 col-md-3 float-left">
+      <h4 class="f6 text-mono pt-4 pb-2">GitHub Education for Students</h4>
+      <ul class="list-style-none">
+        <li>
+          <a href="https://education.github.com/pack">GitHub Student Developer Pack</a>
+        </li>
+        <li>
+          <a href="https://education.github.com/students/experts">GitHub Campus Experts</a>
+        </li>
+      </ul>
+      <h4 class="f6 text-mono pt-4 pb-2">GitHub Education for Schools</h4>
+      <ul class="list-style-none">
+        <li>
+          <a href="https://education.github.com/schools">GitHub Campus Program</a>
+        </li>
+      </ul>
+    </section>
+  </div>
 </footer>
