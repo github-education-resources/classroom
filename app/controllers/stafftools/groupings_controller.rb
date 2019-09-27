@@ -12,10 +12,10 @@ module Stafftools
       GroupAssignment.where(grouping: @grouping).destroy_all
 
       if @grouping.destroy
-        flash[:success] = 'Grouping was destroyed'
+        flash[:success] = "Grouping was destroyed"
         redirect_to stafftools_organization_path(org.id)
       else
-        flash[:error] = 'Grouping was not destroyed'
+        flash[:error] = "Grouping was not destroyed"
         render :show
       end
     end
