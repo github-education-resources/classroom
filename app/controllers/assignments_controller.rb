@@ -10,6 +10,11 @@ class AssignmentsController < ApplicationController
   before_action :set_unlinked_users, only: %i[show]
 
   def new
+    if @organization.archived?
+      flash[:notice] = "You cannot create new assignments for archived classrooms"
+      redirect_back(fallback_location: organization_path(@organization))
+    end
+
     @assignment = Assignment.new
   end
 

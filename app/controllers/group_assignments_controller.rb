@@ -11,6 +11,11 @@ class GroupAssignmentsController < ApplicationController
   before_action :authorize_grouping_access, only: %i[create update]
 
   def new
+    if @organization.archived?
+      flash[:notice] = "You cannot create new assignments for archived classrooms"
+      redirect_back(fallback_location: organization_path(@organization))
+    end
+
     @group_assignment = GroupAssignment.new
   end
 
