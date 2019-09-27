@@ -45,8 +45,8 @@ en:
       delete_submit: 'Remove classroom'
       danger_zone: 'The Danger Zone'
       archived_classrooms: 'Archived classrooms'
-      archive_consequences_html: "<p>Assignment invitations will be disabled while the classroom is archived and the classroom will be moved to the archived section.</p><p>You can unarchive your classroom at any point.</p>"
-      archive_description: 'Mark this classroom as archived. The classroom will be moved to the archived section away from your active classrooms. Nothing will be deleted and this can be undone.'
+      archive_consequences_html: "<p>New assignments cannot be created and existing assignment invitations will be disabled while the classroom is archived.</p><p>You can unarchive your classroom at any point.</p>"
+      archive_description: 'Mark this classroom as archived. Nothing will be deleted and this can be undone.'
       archive_title: 'Archive this classroom'
       archive_submit: 'Archive classroom'
       unarchive_description: 'Mark this classroom as unarchived. It will return to your classroom dashboard.'
