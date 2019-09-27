@@ -3,7 +3,9 @@
 <div class="container-lg p-responsive">
   <div class="d-md-flex flex-items-center flex-justify-between mt-5 mb-3">
     <h2 class="f2 text-normal">Assignments</h2>
-    <% if @assignments.present? %>
+    <% if @assignments.present? && current_organization.archived? %>
+      <%= link_to t('views.organizations.new_assignment'), new_assignment_organization_path(current_organization), class: 'btn btn-primary right disabled', role: 'button'%>
+    <% else %>
       <%= link_to t('views.organizations.new_assignment'), new_assignment_organization_path(current_organization), class: 'btn btn-primary right', role: 'button'%>
     <% end %>
   </div>
