@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  const $searchAndSort = $("#js-search-and-sort-component");
+  const $searchAndSort = $("#js-filtering-form");
 
   if (!$searchAndSort) return;
 

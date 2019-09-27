@@ -159,15 +159,6 @@ class GroupAssignmentsController < ApplicationController
 
     @current_sort_mode = params[:sort_by] || @assignment_sort_modes.keys.first
     @query = params[:query]
-
-    @assignment_sort_modes_links = @assignment_sort_modes.keys.map do |mode|
-      organization_group_assignment_path(
-        sort_by: mode,
-        query: @query
-      )
-    end
-
-    @current_sort_mode = params[:sort_by] || @assignment_sort_modes.keys.first
   end
 
   def set_pagination_key
