@@ -38,7 +38,7 @@ RSpec.describe Stafftools::GroupingsController, type: :controller do
       end
     end
   end
-  
+
   describe "DELETE #destroy", :vcr do
     context "as an unauthorized user" do
       before do
