@@ -13,7 +13,7 @@ class GroupAssignmentsController < ApplicationController
   def new
     if @organization.archived?
       flash[:notice] = "You cannot create new assignments for archived classrooms"
-      redirect_back(fallback_location: organization_path(@organization))
+      redirect_back(fallback_location: organization_path(@organization)) and return
     end
 
     @group_assignment = GroupAssignment.new

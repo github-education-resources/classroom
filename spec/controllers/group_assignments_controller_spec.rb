@@ -12,9 +12,18 @@ RSpec.describe GroupAssignmentsController, type: :controller do
   end
 
   describe "GET #new", :vcr do
-    it "returns success status" do
+    it "returns success status for an active organization" do
       get :new, params: { organization_id: organization.slug }
       expect(response).to have_http_status(200)
+    end
+
+    it "redirects to the org#show for an archived organization" do
+      organization.update(archived_at: 1.week.ago)
+      organization.reload
+      assert(organization.archived?)
+
+      get :new, params: { organization_id: organization.slug }
+      expect(response).to redirect_to(organization_path(organization))
     end
 
     it "has a new GroupAssignment" do

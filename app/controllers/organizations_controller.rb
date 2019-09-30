@@ -101,12 +101,14 @@ class OrganizationsController < Orgs::Controller
     redirect_to settings_invitations_organization_path
   end
 
+  # rubocop:disable Style/GuardClause
   def new_assignment
     if current_organization.archived?
       flash[:notice] = "You cannot create new assignments for archived classrooms"
       redirect_back(fallback_location: root_path)
     end
   end
+  # rubocop:enable Style/GuardClause
 
   def link_lms; end
 
