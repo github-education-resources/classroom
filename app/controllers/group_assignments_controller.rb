@@ -10,6 +10,7 @@ class GroupAssignmentsController < ApplicationController
   before_action :set_filter_options,        only: %i[show]
   before_action :authorize_grouping_access, only: %i[create update]
 
+  # rubocop:disable Style/AndOr
   def new
     if @organization.archived?
       flash[:notice] = "You cannot create new assignments for archived classrooms"
@@ -18,6 +19,7 @@ class GroupAssignmentsController < ApplicationController
 
     @group_assignment = GroupAssignment.new
   end
+  # rubocop:enable Style/AndOr
 
   def create
     @group_assignment = build_group_assignment

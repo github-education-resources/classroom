@@ -9,14 +9,16 @@ class AssignmentsController < ApplicationController
   before_action :set_filter_options, only: %i[show]
   before_action :set_unlinked_users, only: %i[show]
 
+  # rubocop:disable Style/AndOr
   def new
     if @organization.archived?
       flash[:notice] = "You cannot create new assignments for archived classrooms"
-      redirect_back(fallback_location: organization_path(@organization))
+      redirect_back(fallback_location: organization_path(@organization)) and return
     end
 
     @assignment = Assignment.new
   end
+  # rubocop:enable Style/AndOr
 
   def create
     @assignment = Assignment.new(new_assignment_params)
