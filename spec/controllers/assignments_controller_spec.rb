@@ -12,7 +12,7 @@ RSpec.describe AssignmentsController, type: :controller do
   end
 
   describe "GET #new", :vcr do
-    it "returns success status for an active organization" do
+    it "returns success status" do
       get :new, params: { organization_id: organization.slug }
       expect(response).to have_http_status(200)
     end
