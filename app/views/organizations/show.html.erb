@@ -5,7 +5,7 @@
     <h2 class="f2 text-normal">Assignments</h2>
     <% if @assignments.present? && current_organization.archived? %>
       <%= link_to t('views.organizations.new_assignment'), new_assignment_organization_path(current_organization), class: 'btn btn-primary right disabled', role: 'button'%>
-    <% else %>
+    <% elsif @assignments.present? %>
       <%= link_to t('views.organizations.new_assignment'), new_assignment_organization_path(current_organization), class: 'btn btn-primary right', role: 'button'%>
     <% end %>
   </div>
