@@ -10,7 +10,9 @@ RSpec.describe Assignment, type: :model do
   end
 
   it "is invalid if the organization has been archived" do
-    archived = classroom_org.update(archived_at: 1.week.ago)
+    archived = classroom_org
+    archived.update(archived_at: 1.week.ago)
+
     expect { create(:assignment, organization: archived, assignment_invitation: nil) }.to raise_error(ActiveRecord::RecordInvalid)
   end
 

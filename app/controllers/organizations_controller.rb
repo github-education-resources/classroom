@@ -101,14 +101,11 @@ class OrganizationsController < Orgs::Controller
     redirect_to settings_invitations_organization_path
   end
 
-  # rubocop:disable Style/GuardClause
+  # rubocop:disable Style/AndOr
   def new_assignment
-    if current_organization.archived?
-      flash[:notice] = "You cannot create new assignments for archived classrooms"
-      redirect_back(fallback_location: root_path)
-    end
+    verify_organization_not_archived and return
   end
-  # rubocop:enable Style/GuardClause
+  # rubocop:enable Style/AndOr
 
   def link_lms; end
 
@@ -231,5 +228,13 @@ class OrganizationsController < Orgs::Controller
     @removed_user = User.find(params[:user_id])
     not_found unless current_organization.users.map(&:id).include?(@removed_user.id)
   end
+
+  # rubocop:disable Style/AndOr
+  def verify_organization_not_archived
+    return false if organization.archived?
+
+    flash[:notice] = "You cannot create new assignments for archived classrooms"
+    redirect_back(fallback_location: root_path) and return true
+  end
+  # rubocop:enable Style/AndOr
 end
-# rubocop:enable Metrics/ClassLength
