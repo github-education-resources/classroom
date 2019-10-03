@@ -101,7 +101,8 @@ def stub_octokit_client
 end
 
 def stub_org_request(org_id)
-  allow(stub_octokit_client).to receive(:organizations).with(org_id).and_return({})
+  org_response = OpenStruct.new(login: "fake org")
+  allow(stub_octokit_client).to receive(:organization).with(org_id, {}).and_return(org_response)
 end
 
 def stub_repo_request(repo_id, other_args = {}, repo_response = {})
