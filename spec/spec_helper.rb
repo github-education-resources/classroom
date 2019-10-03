@@ -105,7 +105,7 @@ def stub_org_request(org_id)
 end
 
 def stub_repo_request(repo_id, other_args = {}, repo_response = {})
-  repo_response = repo_response.merge({ name: "fake repo" })
+  repo_response = repo_response.merge(name: "fake repo")
   repo_response = OpenStruct.new(repo_response)
   allow(stub_octokit_client).to receive(:repository).with(repo_id, other_args).and_return(repo_response)
 end

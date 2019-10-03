@@ -5,7 +5,9 @@ class GitHubRepository < GitHubResource
 
   DEFAULT_LABEL_COLOR = "ffffff"
   TEMPLATE_REPOS_API_PREVIEW = "application/vnd.github.baptiste-preview"
-  TEMPLATE_PREVIEW_HEADER = { accept: TEMPLATE_REPOS_API_PREVIEW, headers: GitHub::APIHeaders.no_cache_no_store }
+  TEMPLATE_PREVIEW_HEADER = {
+    accept: TEMPLATE_REPOS_API_PREVIEW, headers: GitHub::APIHeaders.no_cache_no_store
+  }.freeze
 
   # NOTE: LEGACY, DO NOT REMOVE.
   # This is needed for the lib/collab_migration.rb
