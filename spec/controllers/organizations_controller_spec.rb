@@ -35,6 +35,13 @@ RSpec.describe OrganizationsController, type: :controller do
         get :index
         expect(assigns(:organizations).first.id).to eq(organization.id)
       end
+
+      it "sets the user as a teacher" do
+        expect(user.teacher).to be_falsey
+        get :index
+
+        expect(user.reload.teacher).to be_truthy
+      end
     end
 
     context "user with admin privilege on the organization but not part of the classroom" do

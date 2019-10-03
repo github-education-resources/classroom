@@ -6,6 +6,7 @@ class OrganizationsController < Orgs::Controller
   before_action :authorize_organization_addition,     only: [:create]
   before_action :set_users_github_organizations,      only: %i[index new create]
   before_action :add_current_user_to_organizations,   only: [:index]
+  before_action :mark_user_as_teacher,                only: [:index]
   before_action :paginate_users_github_organizations, only: %i[new create]
   before_action :verify_user_belongs_to_organization, only: [:remove_user]
   before_action :set_filter_options,                  only: %i[search index]
@@ -120,6 +121,13 @@ class OrganizationsController < Orgs::Controller
   def search; end
 
   private
+
+  def mark_user_as_teacher
+    return if current_user.teacher
+
+    current_user.teacher = true
+    current_user.save
+  end
 
   def authorize_organization_addition
     new_github_organization = github_organization_from_params
