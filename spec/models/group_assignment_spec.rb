@@ -5,6 +5,13 @@ require "rails_helper"
 RSpec.describe GroupAssignment, type: :model do
   it_behaves_like "a default scope where deleted_at is not present"
 
+  it "is invalid if the organization has been archived" do
+    archived = classroom_org
+    archived.update(archived_at: 1.week.ago)
+
+    expect { create(:group_assignment, organization: archived) }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
   describe ".search" do
     let(:searchable_assignment) { create(:group_assignment) }
 

@@ -225,4 +225,3 @@ class OrganizationsController < Orgs::Controller
     not_found unless current_organization.users.map(&:id).include?(@removed_user.id)
   end
 end
-# rubocop:enable Metrics/ClassLength
