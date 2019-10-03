@@ -101,16 +101,16 @@ def stub_octokit_client
 end
 
 def stub_org_request(org_id)
-  stub_request(:get, "https://api.github.com/organizations/#{org_id}").
-    to_return(body: {}.to_json, headers: {'Content-Type' => 'application/json'})
+  stub_request(:get, "https://api.github.com/organizations/#{org_id}")
+    .to_return(body: {}.to_json, headers: { "Content-Type" => "application/json" })
 end
 
 def stub_repo_request(repo_id, repo_response = {})
-  stub_request(:get, "https://api.github.com/repositories/#{repo_id}").
-    to_return(body: repo_response.to_json, headers: {'Content-Type' => 'application/json'})
+  stub_request(:get, "https://api.github.com/repositories/#{repo_id}")
+    .to_return(body: repo_response.to_json, headers: { "Content-Type" => "application/json" })
 end
 
 def stub_repo_contents_request(repo_id, repo_response = {})
-  stub_request(:get, "https://api.github.com/repositories/#{repo_id}/contents/").
-    to_return(body: repo_response.to_json, headers: {'Content-Type' => 'application/json'})
+  stub_request(:get, "https://api.github.com/repositories/#{repo_id}/contents/")
+    .to_return(body: repo_response.to_json, headers: { "Content-Type" => "application/json" })
 end

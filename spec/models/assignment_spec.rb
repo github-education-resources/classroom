@@ -131,15 +131,14 @@ RSpec.describe Assignment, type: :model do
 
     before(:each) do
       stub_org_request(organization.github_id)
-      github_organization = GitHubOrganization.new(@client, organization.github_id)
       stub_repo_request(STUB_REPO_ID)
-      @github_repository  = GitHubRepository.new(@client, STUB_REPO_ID)
+      @github_repository = GitHubRepository.new(@client, STUB_REPO_ID)
     end
 
     it "raises an error when starter code repository is empty" do
       assignment = build(:assignment, organization: organization, title: "assignment")
       assignment.assign_attributes(starter_code_repo_id: @github_repository.id)
-      stub_repo_contents_request(STUB_REPO_ID, { empty: true })
+      stub_repo_contents_request(STUB_REPO_ID, empty: true)
       expect { assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Starter code "\
         "repository cannot be empty. Select a repository that is not empty or create the assignment without starter "\
         "code.")
@@ -148,7 +147,7 @@ RSpec.describe Assignment, type: :model do
     it "does not raise an error when starter code repository is not empty" do
       assignment = build(:assignment, organization: organization, title: "assignment")
       assignment.assign_attributes(starter_code_repo_id: @github_repository.id)
-      stub_repo_contents_request(STUB_REPO_ID, { empty: false })
+      stub_repo_contents_request(STUB_REPO_ID, empty: false)
 
       expect { assignment.save! }.not_to raise_error
     end
@@ -175,14 +174,14 @@ RSpec.describe Assignment, type: :model do
       it "does not raise an error when starter code repo is a template repo" do
         stub_repo_contents_request(github_repository.id)
         assignment.assign_attributes(starter_code_repo_id: github_repository.id)
-        stub_repo_request(github_repository.id, { is_template: true })
+        stub_repo_request(github_repository.id, is_template: true)
         expect { assignment.save! }.not_to raise_error
       end
 
       it "raises an error when starter code repository is not a template repo" do
         stub_repo_contents_request(github_repository.id)
         assignment.assign_attributes(starter_code_repo_id: github_repository.id)
-        stub_repo_request(github_repository.id, { is_template: false })
+        stub_repo_request(github_repository.id, is_template: false)
         expect { assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Starter code "\
           "repository is not a template repository. Make it a template repository to use template cloning.")
       end
@@ -250,15 +249,15 @@ RSpec.describe Assignment, type: :model do
   end
 
   it "tracks when assignments are created with a private starter code repo owned by a user" do
-    stub_repo_request(STUB_REPO_ID, { private: true, owner: { type: "User" } })
-    stub_repo_contents_request(STUB_REPO_ID, { private: true, owner: { type: "User" } })
+    stub_repo_request(STUB_REPO_ID, private: true, owner: { type: "User" })
+    stub_repo_contents_request(STUB_REPO_ID, private: true, owner: { type: "User" })
     expect(GitHubClassroom.statsd).to receive(:increment).with("assignment.private_repo_owned_by_user.create")
     create(:assignment, starter_code_repo_id: STUB_REPO_ID)
   end
 
   it "does not track when assignments are created with a private starter code repo owned by an organization" do
-    stub_repo_request(STUB_REPO_ID, { private: true, owner: { type: "Organization" } })
-    stub_repo_contents_request(STUB_REPO_ID, { private: true, owner: { type: "Organization" } })
+    stub_repo_request(STUB_REPO_ID, private: true, owner: { type: "Organization" })
+    stub_repo_contents_request(STUB_REPO_ID, private: true, owner: { type: "Organization" })
     expect(GitHubClassroom.statsd).to_not receive(:increment).with("assignment.private_repo_owned_by_user.create")
     create(:assignment, starter_code_repo_id: STUB_REPO_ID)
   end
