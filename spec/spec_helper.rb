@@ -92,25 +92,24 @@ RSpec.configure do |config|
 end
 
 def stub_octokit_client
-  octokit_client = instance_double("Octokit::Client")
-  allow(Octokit::Client)
-    .to receive(:new)
-    .and_return(octokit_client)
-
-  octokit_client
+  @octokit_client ||= begin
+    @octokit_client = instance_double("Octokit::Client")
+    allow(Octokit::Client).to receive(:new).and_return(@octokit_client)
+    allow(@octokit_client).to receive(:access_token).and_return(1234)
+    @octokit_client
+  end
 end
 
 def stub_org_request(org_id)
-  stub_request(:get, "https://api.github.com/organizations/#{org_id}")
-    .to_return(body: {}.to_json, headers: { "Content-Type" => "application/json" })
+  allow(stub_octokit_client).to receive(:organizations).with(org_id).and_return({})
 end
 
-def stub_repo_request(repo_id, repo_response = {})
-  stub_request(:get, "https://api.github.com/repositories/#{repo_id}")
-    .to_return(body: repo_response.to_json, headers: { "Content-Type" => "application/json" })
+def stub_repo_request(repo_id, other_args = {}, repo_response = {})
+  repo_response = repo_response.merge({ name: "fake repo" })
+  repo_response = OpenStruct.new(repo_response)
+  allow(stub_octokit_client).to receive(:repository).with(repo_id, other_args).and_return(repo_response)
 end
 
 def stub_repo_contents_request(repo_id, repo_response = {})
-  stub_request(:get, "https://api.github.com/repositories/#{repo_id}/contents/")
-    .to_return(body: repo_response.to_json, headers: { "Content-Type" => "application/json" })
+  allow(stub_octokit_client).to receive(:contents).with(repo_id).and_return(repo_response)
 end
