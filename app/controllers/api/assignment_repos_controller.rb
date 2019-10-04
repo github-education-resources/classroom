@@ -9,7 +9,7 @@ module API
 
     def index
       repos = AssignmentRepo.where(assignment: @assignment).order(:id)
-      paginate json: repos
+      paginate json: repos, roster: @assignment.organization.roster
     end
 
     def clone_url
