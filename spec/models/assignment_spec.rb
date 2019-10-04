@@ -15,6 +15,13 @@ RSpec.describe Assignment, type: :model do
     expect { create(:assignment, assignment_invitation: nil) }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
+  it "is invalid if the organization has been archived" do
+    archived = classroom_org
+    archived.update(archived_at: 1.week.ago)
+
+    expect { create(:assignment, organization: archived, assignment_invitation: nil) }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
   describe ".search" do
     let(:searchable_assignment) { create(:assignment) }
 
