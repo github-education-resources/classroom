@@ -5,7 +5,7 @@ class GitHubRepository < GitHubResource
 
   DEFAULT_LABEL_COLOR = "ffffff"
   TEMPLATE_REPOS_API_PREVIEW = "application/vnd.github.baptiste-preview"
-  TEMPLATE_PREVIEW_HEADER = {
+  TEMPLATE_PREVIEW_OPTIONS = {
     accept: TEMPLATE_REPOS_API_PREVIEW, headers: GitHub::APIHeaders.no_cache_no_store
   }.freeze
 
@@ -236,7 +236,7 @@ class GitHubRepository < GitHubResource
   end
 
   def template?
-    @client.repository(@id, TEMPLATE_PREVIEW_HEADER).is_template
+    @client.repository(@id, TEMPLATE_PREVIEW_OPTIONS).is_template
   end
 
   private

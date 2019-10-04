@@ -226,14 +226,14 @@ RSpec.describe GroupAssignment, type: :model do
       end
 
       it "does not raise an error when starter code repo is a template repo" do
-        stub_repo_request(github_repository.id, GitHubRepository::TEMPLATE_PREVIEW_HEADER, is_template: true)
+        stub_repo_request(github_repository.id, GitHubRepository::TEMPLATE_PREVIEW_OPTIONS, is_template: true)
         stub_repo_contents_request(github_repository.id, empty: false)
         group_assignment.assign_attributes(starter_code_repo_id: github_repository.id)
         expect { group_assignment.save! }.not_to raise_error
       end
 
       it "raises an error when starter code repository is not a template repo" do
-        stub_repo_request(github_repository.id, GitHubRepository::TEMPLATE_PREVIEW_HEADER, is_template: false)
+        stub_repo_request(github_repository.id, GitHubRepository::TEMPLATE_PREVIEW_OPTIONS, is_template: false)
         stub_repo_contents_request(github_repository.id, empty: false)
         group_assignment.assign_attributes(starter_code_repo_id: github_repository.id)
         expect { group_assignment.save! }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: Starter code"\
