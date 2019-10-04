@@ -183,7 +183,6 @@ RSpec.describe GroupAssignment, type: :model do
     let(:organization) { classroom_org }
 
     before(:each) do
-      github_organization = stub_org_request(organization.github_id)
       stub_org_request(organization.github_id)
       stub_repo_request(STUB_REPO_ID)
       @github_repository = GitHubRepository.new(STUB_CLIENT, STUB_REPO_ID)
