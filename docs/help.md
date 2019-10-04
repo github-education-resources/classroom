@@ -12,6 +12,7 @@
 * [Upgrading your organization](/help/upgrade-your-organization)
 * [Using template repositories for assignments](/help/using-template-repos-for-assignments)
 * [Connecting GitHub Classroom to your learning management system](/help/connect-to-lms)
+* [Archiving a classroom](/help/archive-a-classroom)
 
 ### Workflows, case studies, best practices, and more
 
