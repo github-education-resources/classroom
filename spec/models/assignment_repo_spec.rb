@@ -182,9 +182,10 @@ RSpec.describe AssignmentRepo, type: :model do
 
     it "subtracts the number of starter repo commits" do
       starter_repo_id = 123
-      subject.assignment.update_attribute(:starter_code_repo_id, starter_repo_id)
-      stub_repo_request(subject.github_repo_id)
       stub_repo_request(starter_repo_id)
+      stub_repo_contents_request(starter_repo_id, empty: false)
+      subject.assignment.update_attributes(starter_code_repo_id: starter_repo_id)
+      stub_repo_request(subject.github_repo_id)
 
       total_commits = 3
       starter_repo_commits = 1

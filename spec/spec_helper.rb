@@ -130,7 +130,7 @@ def stub_repo_contents_request(repo_id, repo_response = {})
 end
 
 def stub_repo_contributors_stats_request(repo_name, total_commits)
-  allow(stub_octokit_client).to receive(:contributors_stats).with(repo_name, { retry_timeout: 2 }).and_return(["total" => total_commits])
+  allow(stub_octokit_client).to receive(:contributors_stats).with(repo_name, retry_timeout: 2).and_return(["total" => total_commits])
 end
 
 def stub_delete_repo_request(repo_id)
