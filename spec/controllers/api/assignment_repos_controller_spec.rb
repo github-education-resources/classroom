@@ -8,31 +8,69 @@ RSpec.describe API::AssignmentReposController, type: :controller do
   let(:assignment)        { create(:assignment, organization: organization, title: "Learn Clojure") }
 
   describe "GET #index", :vcr do
-    before do
-      @assignment_repo = create(:assignment_repo, assignment: assignment, github_repo_id: 42, user: user)
+    context "without a roster" do
+      before do
+        @assignment_repo = create(:assignment_repo, assignment: assignment, github_repo_id: 42, user: user)
 
-      get :index, params: {
-        organization_id: organization.slug,
-        assignment_id: assignment.slug,
-        access_token: user.api_token
-      }
+        get :index, params: {
+          organization_id: organization.slug,
+          assignment_id: assignment.slug,
+          access_token: user.api_token
+        }
+      end
+
+      after do
+        AssignmentRepo.destroy_all
+      end
+
+      it "returns success" do
+        expect(response).to have_http_status(200)
+      end
+
+      it "returns all of the assignment repos" do
+        expect(json.length).to eql(1)
+      end
+
+      it "returns correct attributes in assignment repo serializer" do
+        expect(json.first["username"]).to eq(user.github_user.login)
+        expect(json.first["displayName"]).to eq(user.github_user.name)
+        expect(json.first["rosterIdentifier"]).to be_nil
+      end
     end
 
-    after do
-      AssignmentRepo.destroy_all
-    end
+    context "with a roster" do
+      before do
+        @assignment_repo = create(:assignment_repo, assignment: assignment, github_repo_id: 42, user: user)
+        roster = create(:roster)
+        @entry = create(:roster_entry, roster: roster, identifier: "entryA", user: user)
 
-    it "returns success" do
-      expect(response).to have_http_status(200)
-    end
+        organization.roster = roster
+        organization.save
 
-    it "returns all of the assignment repos" do
-      expect(json.length).to eql(1)
-    end
+        get :index, params: {
+          organization_id: organization.slug,
+          assignment_id: assignment.slug,
+          access_token: user.api_token
+        }
+      end
 
-    it "returns correct attributes in assignment repo serializer" do
-      expect(json.first["username"]).to eq(user.github_user.login)
-      expect(json.first["displayName"]).to eq(user.github_user.name)
+      after do
+        AssignmentRepo.destroy_all
+      end
+
+      it "returns success" do
+        expect(response).to have_http_status(200)
+      end
+
+      it "returns all of the assignment repos" do
+        expect(json.length).to eql(1)
+      end
+
+      it "returns correct attributes in assignment repo serializer" do
+        expect(json.first["username"]).to eq(user.github_user.login)
+        expect(json.first["displayName"]).to eq(user.github_user.name)
+        expect(json.first["rosterIdentifier"]).to eq(@entry.identifier)
+      end
     end
   end
 
