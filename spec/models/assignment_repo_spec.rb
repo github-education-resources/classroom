@@ -26,12 +26,15 @@ RSpec.describe AssignmentRepo, type: :model do
     end
   end
 
-  describe "callbacks", :vcr do
+  describe "callbacks" do
     describe "before_destroy" do
       describe "#silently_destroy_github_repository" do
         it "deletes the repository from GitHub" do
+          stub_org_request(organization.github_id)
+          stub_delete_repo_request(subject.github_repo_id)
+
+          expect(stub_octokit_client).to receive(:delete_repository).with(subject.github_repo_id)
           subject.destroy
-          expect(WebMock).to have_requested(:delete, github_url("/repositories/#{subject.github_repo_id}"))
         end
       end
     end
@@ -48,14 +51,21 @@ RSpec.describe AssignmentRepo, type: :model do
       expect(subject.user).to be_a(User)
     end
 
-    context "assignment_repo has a user through a repo_access", :vcr do
-      let(:repo_access) { RepoAccess.create(user: student, organization: organization) }
+    context "assignment_repo has a user through a repo_access" do
+      let(:repo_access) do
+        stub_org_request(organization.github_id)
+        stub_user_request(student.uid)
+        stub_check_org_membership_request(organization.github_id, student.github_user.login)
+        stub_update_org_membership_request(
+          organization.github_organization.login, user: student.github_user.login
+        )
+        stub_update_org_membership_request(
+          organization.github_organization.login, state: "active"
+        )
+        RepoAccess.create(user: student, organization: organization)
+      end
 
       subject { create(:assignment_repo, repo_access: repo_access, user: nil) }
-
-      after(:each) do
-        RepoAccess.destroy_all
-      end
 
       it "returns the user" do
         expect(subject.user).to eql(student)
@@ -108,7 +118,7 @@ RSpec.describe AssignmentRepo, type: :model do
     end
   end
 
-  describe "is sortable", :vcr do
+  describe "is sortable" do
     let(:assignment_repo_one) { create(:assignment_repo, assignment: assignment) }
     let(:assignment_repo_two) { create(:assignment_repo, assignment: assignment) }
 
@@ -140,7 +150,7 @@ RSpec.describe AssignmentRepo, type: :model do
     end
   end
 
-  describe "is searchable", :vcr do
+  describe "is searchable" do
     let(:assignment_repo_one) { create(:assignment_repo, assignment: assignment) }
     let(:assignment_repo_two) { create(:assignment_repo, assignment: assignment) }
 
@@ -159,6 +169,28 @@ RSpec.describe AssignmentRepo, type: :model do
       actual = AssignmentRepo.where(assignment: assignment).filter_by_search(query)
 
       expect(actual).to eq(expected)
+    end
+  end
+
+  describe "number of commits" do
+    it "returns the total number of commits when there is no starter repo" do
+      stub_repo_request(subject.github_repo_id)
+      stub_repo_contributors_stats_request(subject.github_repository.full_name, 1)
+      expect(subject.assignment.starter_code_repo_id).to eq(nil)
+      expect(subject.number_of_commits).to eq(1)
+    end
+
+    it "subtracts the number of starter repo commits" do
+      starter_repo_id = 123
+      subject.assignment.update_attribute(:starter_code_repo_id, starter_repo_id)
+      stub_repo_request(subject.github_repo_id)
+      stub_repo_request(starter_repo_id)
+
+      total_commits = 3
+      starter_repo_commits = 1
+      stub_repo_contributors_stats_request(subject.github_repository.full_name, total_commits)
+      stub_repo_contributors_stats_request(subject.assignment.starter_code_repository.full_name, starter_repo_commits)
+      expect(subject.number_of_commits).to eq(total_commits - starter_repo_commits)
     end
   end
 end

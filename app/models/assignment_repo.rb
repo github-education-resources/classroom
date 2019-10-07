@@ -57,6 +57,15 @@ class AssignmentRepo < ApplicationRecord
     original_user || repo_access.user
   end
 
+  def number_of_commits
+    starter_repo = assignment.starter_code_repository
+    if starter_repo
+      github_repository.number_of_commits - starter_repo.number_of_commits
+    else
+      github_repository.number_of_commits
+    end
+  end
+
   private
 
   # Internal: Validate uniqueness of <user, assignment> key.
