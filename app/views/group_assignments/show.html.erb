@@ -19,7 +19,7 @@
                 <% if @group_assignment.deadline.passed? %>
                   - Deadline Passed
                 <% else %>
-                  <%= "- Deadline in #{distance_of_time_in_words(Time.zone.now, @group_assignment.deadline.deadline_at)}" %>
+                  <%= render partial: "shared/deadline_with_local_time", locals: { deadline: @group_assignment.deadline.deadline_at } %>
                 <% end %>
               <% end %>
             </p>
