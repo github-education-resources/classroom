@@ -19,7 +19,7 @@ RSpec.describe GroupAssignmentRepo, type: :model do
       RepoAccess.create(user: student, organization: organization)
     end
 
-    let(:grouping)     { create(:grouping, organization: organization) }
+    let(:grouping) { create(:grouping, organization: organization) }
 
     let(:group_assignment) do
       stub_repo_request(1_062_897)
