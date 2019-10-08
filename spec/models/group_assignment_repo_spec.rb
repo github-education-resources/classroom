@@ -3,13 +3,27 @@
 require "rails_helper"
 
 RSpec.describe GroupAssignmentRepo, type: :model do
-  context "with created objects", :vcr do
+  context "with created objects" do
     let(:organization) { classroom_org }
     let(:student)      { classroom_student }
-    let(:repo_access)  { RepoAccess.create(user: student, organization: organization) }
+    let(:repo_access)  do
+      stub_org_request(organization.github_id)
+      stub_user_request(student.uid)
+      stub_check_org_membership_request(organization.github_id, student.github_user.login)
+      stub_update_org_membership_request(
+        organization.github_organization.login, user: student.github_user.login
+      )
+      stub_update_org_membership_request(
+        organization.github_organization.login, state: "active"
+      )
+      RepoAccess.create(user: student, organization: organization)
+    end
+
     let(:grouping)     { create(:grouping, organization: organization) }
 
     let(:group_assignment) do
+      stub_repo_request(1_062_897)
+      stub_repo_contents_request(1_062_897, empty: false)
       create(
         :group_assignment,
         grouping: grouping,
@@ -20,11 +34,20 @@ RSpec.describe GroupAssignmentRepo, type: :model do
       )
     end
 
-    let(:github_team_id) { organization.github_organization.create_team(Faker::Team.name[0..39]).id }
-    let(:group) { create(:group, grouping: grouping, github_team_id: github_team_id, repo_accesses: [repo_access]) }
+    let(:github_team_id) do
+      stub_create_team(organization, 123)
+      123
+    end
+
+    let(:group) do
+      user_login = repo_access.user.github_user.login
+      stub_create_team_membership_request(github_team_id, user_login)
+      create(:group, grouping: grouping, github_team_id: github_team_id, repo_accesses: [repo_access])
+    end
+
     subject { create(:group_assignment_repo, group_assignment: group_assignment, group: group, github_repo_id: 42) }
 
-    describe ".search", :vcr do
+    describe ".search" do
       let(:searchable_repo) { create(:group_assignment_repo, group_assignment: group_assignment) }
 
       before do
@@ -47,12 +70,15 @@ RSpec.describe GroupAssignmentRepo, type: :model do
       end
     end
 
-    describe "callbacks", :vcr do
+    describe "callbacks" do
       describe "before_destroy" do
         describe "#silently_destroy_github_repository" do
           it "deletes the repository from GitHub" do
+            stub_org_request(organization.github_id)
+            stub_delete_repo_request(subject.github_repo_id)
+
+            expect(stub_octokit_client).to receive(:delete_repository).with(subject.github_repo_id)
             subject.destroy
-            expect(WebMock).to have_requested(:delete, github_url("/repositories/#{subject.github_repo_id}"))
           end
         end
       end
@@ -79,6 +105,8 @@ RSpec.describe GroupAssignmentRepo, type: :model do
 
       describe "#default_branch" do
         it "returns the github repository's default_branch" do
+          stub_repo_request(subject.github_repo_id)
+          stub_repo_default_branch_request(subject.github_repository.full_name)
           expect(subject.default_branch).to eql(subject.github_repository.default_branch)
         end
       end
@@ -90,9 +118,17 @@ RSpec.describe GroupAssignmentRepo, type: :model do
       end
     end
 
-    describe "is sortable", :vcr do
-      let(:github_team_id_two) { organization.github_organization.create_team(Faker::Team.name[0..39]).id }
-      let(:group_two) { create(:group, grouping: grouping, github_team_id: github_team_id_two, repo_accesses: [repo_access]) }
+    describe "is sortable" do
+      let(:github_team_id_two) do
+        stub_create_team(organization, 456)
+        456
+      end
+
+      let(:group_two) do
+        user_login = repo_access.user.github_user.login
+        stub_create_team_membership_request(github_team_id_two, user_login)
+        create(:group, grouping: grouping, github_team_id: github_team_id_two, repo_accesses: [repo_access])
+      end
 
       let(:group_assignment_repo_one) { create(:group_assignment_repo, group_assignment: group_assignment, group: group, github_repo_id: 1) }
       let(:group_assignment_repo_two) { create(:group_assignment_repo, group_assignment: group_assignment, group: group_two, github_repo_id: 2) }
@@ -112,9 +148,17 @@ RSpec.describe GroupAssignmentRepo, type: :model do
       end
     end
 
-    describe "is searchable", :vcr do
-      let(:github_team_id_two) { organization.github_organization.create_team(Faker::Team.name[0..39]).id }
-      let(:group_two) { create(:group, grouping: grouping, github_team_id: github_team_id_two, repo_accesses: [repo_access]) }
+    describe "is searchable" do
+      let(:github_team_id_two) do
+        stub_create_team(organization, 456)
+        456
+      end
+
+      let(:group_two) do
+        user_login = repo_access.user.github_user.login
+        stub_create_team_membership_request(github_team_id_two, user_login)
+        create(:group, grouping: grouping, github_team_id: github_team_id_two, repo_accesses: [repo_access])
+      end
 
       let(:group_assignment_repo_one) { create(:group_assignment_repo, group_assignment: group_assignment, group: group, github_repo_id: 1) }
       let(:group_assignment_repo_two) { create(:group_assignment_repo, group_assignment: group_assignment, group: group_two, github_repo_id: 2) }
@@ -145,6 +189,29 @@ RSpec.describe GroupAssignmentRepo, type: :model do
 
       it "returns a valid GitHubTeam when group exists" do
         expect(group_assignment_repo.github_team).to be_a(GitHubTeam)
+      end
+    end
+
+    describe "number of commits" do
+      it "returns the total number of commits when there is no starter repo" do
+        stub_repo_request(subject.github_repo_id)
+        stub_repo_contributors_stats_request(subject.github_repository.full_name, 1)
+        subject.assignment.update_attributes(starter_code_repo_id: nil)
+        expect(subject.number_of_commits).to eq(1)
+      end
+
+      it "subtracts the number of starter repo commits" do
+        starter_repo_id = subject.assignment.starter_code_repo_id
+        expect(starter_repo_id).to_not be_nil
+        stub_repo_request(starter_repo_id)
+        stub_repo_contents_request(starter_repo_id, empty: false)
+        stub_repo_request(subject.github_repo_id)
+
+        total_commits = 3
+        starter_repo_commits = 1
+        stub_repo_contributors_stats_request(subject.github_repository.full_name, total_commits)
+        stub_repo_contributors_stats_request(subject.assignment.starter_code_repository.full_name, starter_repo_commits)
+        expect(subject.number_of_commits).to eq(total_commits - starter_repo_commits)
       end
     end
   end
