@@ -17,7 +17,7 @@ class SharedAssignmentRepoView < ViewModel
 
   def number_of_github_commits
     return 0 if disabled?
-    assignment_repo.number_of_commits
+    github_repository.number_of_commits
   end
 
   def commit_text
