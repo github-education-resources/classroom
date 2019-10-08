@@ -1,5 +1,7 @@
 <% view = FormView.new(subject: @assignment, organization: @organization) %>
-
+<% if view.errors_for?(:base) %>
+  <dd class="error mb-1 text-red text-bold f4"><%= view.error_message_for(:base) %></dd>
+<% end %>
 <dl class="<%= view.form_class_for(:title) %> mt-0">
   <dt><%= f.label :title %></dt>
   <dd><%= f.text_field :title, class: 'textfield form-control input-block', autocomplete: :off, oninput: 'removeErrorBox(el);' %></dd>

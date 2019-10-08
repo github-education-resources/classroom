@@ -174,8 +174,8 @@ Rails.application.routes.draw do
     resources :group_assignment_repos,       path: "group-assignment-repos",       only: %i[show destroy]
     resources :group_assignments,            path: "group-assignments",            only: [:show]
 
-    resources :groupings, only: [:show]
-    resources :groups,    only: [:show]
+    resources :groupings, only: %i[show destroy]
+    resources :groups,    only: %i[show destroy]
   end
 
   namespace :api, defaults: { format: :json } do
