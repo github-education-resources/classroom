@@ -100,17 +100,66 @@ def stub_octokit_client
   end
 end
 
+def stub_user_request(user_id)
+  headers = { headers: { "Cache-Control" => "no-cache, no-store" } }
+  allow(stub_octokit_client).to receive(:user).with(user_id, headers)
+end
+
 def stub_org_request(org_id)
   org_response = OpenStruct.new(login: "fake org")
   allow(stub_octokit_client).to receive(:organization).with(org_id, {}).and_return(org_response)
 end
 
+def stub_check_org_membership_request(org_id, user_login)
+  allow(stub_octokit_client).to receive(:organization_member?).with(org_id, user_login)
+end
+
+def stub_update_org_membership_request(org_login, other_args = {})
+  allow(stub_octokit_client).to receive(:update_organization_membership).with(org_login, other_args)
+end
+
 def stub_repo_request(repo_id, other_args = {}, repo_response = {})
-  repo_response = repo_response.merge(name: "fake repo")
+  fake_name = Faker::Company.name
+  repo_response = repo_response.merge(name: fake_name, full_name: fake_name)
   repo_response = OpenStruct.new(repo_response)
   allow(stub_octokit_client).to receive(:repository).with(repo_id, other_args).and_return(repo_response)
 end
 
 def stub_repo_contents_request(repo_id, repo_response = {})
   allow(stub_octokit_client).to receive(:contents).with(repo_id).and_return(repo_response)
+end
+
+def stub_repo_contributors_stats_request(repo_name, total_commits)
+  allow(stub_octokit_client).to receive(:contributors_stats).with(repo_name, retry_timeout: 2).and_return(["total" => total_commits])
+end
+
+def stub_repo_default_branch_request(repo_name)
+  repo_response = OpenStruct.new(default_branch: "master")
+  allow(stub_octokit_client).to receive(:repository).with(repo_name).and_return(repo_response)
+end
+
+def stub_delete_repo_request(repo_id)
+  allow(stub_octokit_client).to receive(:delete_repository).with(repo_id)
+end
+
+def stub_create_team_request(org_id, team_name, team_id)
+  team_description = "#{team_name} created by GitHub Classroom"
+  team_response = OpenStruct.new(id: team_id)
+  allow(stub_octokit_client).to receive(:create_team).with(org_id, name: team_name, description: team_description).and_return(team_response)
+end
+
+def stub_team_request(team_id)
+  allow(stub_octokit_client).to receive(:team).with(team_id, {})
+end
+
+def stub_create_team(organization, team_id)
+  stub_org_request(organization.github_id)
+  team_name = Faker::Team.name[0..39]
+  stub_create_team_request(organization.github_id, team_name, team_id)
+  stub_team_request(team_id)
+  organization.github_organization.create_team(team_name)
+end
+
+def stub_create_team_membership_request(team_id, user_login)
+  allow(stub_octokit_client).to receive(:add_team_membership).with(team_id, user_login)
 end
