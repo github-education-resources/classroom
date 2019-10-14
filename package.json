@@ -2,6 +2,7 @@
   "name": "classroom",
   "private": true,
   "dependencies": {
+    "@github/details-menu-element": "^1.0.6",
     "clipboard": "^1.7.1",
     "dragula": "3.7.1",
     "github-markdown-css": "^3.0.1",
