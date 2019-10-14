@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@github/details-menu-element@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@github/details-menu-element/-/details-menu-element-1.0.6.tgz#078b83f75d654dcc8359c8850fb73277e7740fcc"
+  integrity sha512-fDZvy6UWIzkIyn4ls8UmzEpr1H8WhixaQQsLc4ZsyRKe+JFD45T96rWhWJjpJiAVwmTUbx7nX2gA5WpJS+mSxA==
+
 ansi-regex@^2.0.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-2.1.1.tgz#c3b33ab5ee360d86e0e628f0468ae7ef27d654df"
