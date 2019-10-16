@@ -27,6 +27,7 @@
 //= require remodal/dist/remodal
 //
 //= require dragula/dist/dragula
+//= require @github/details-menu-element/dist/index.umd
 //
 //= require peek
 //= require peek/views/dalli

@@ -46,7 +46,7 @@ gem "ims-lti", "~> 2.2.3"
 gem "local_time", "~> 2.0"
 
 gem "oauth",           "~> 0.5.4"
-gem "octicons_helper", "~> 2.1"
+gem "octicons_helper", "~> 9.1.1"
 gem "octokit", github: "octokit/octokit.rb"
 gem "octopoller",      "~> 0.1"
 gem "omniauth-github", "~> 1.3"
@@ -121,5 +121,5 @@ group :test do
   gem "shoulda-matchers",     "4.0.0.rc1"
   gem "simplecov",            "~> 0.15.0", require: false
   gem "vcr",                  "~> 3.0", ">= 3.0.3"
-  gem "webmock",              "~> 3.0", ">= 3.0.1"
+  gem "webmock",              "~> 3.5"
 end

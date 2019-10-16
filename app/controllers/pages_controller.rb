@@ -15,10 +15,12 @@ class PagesController < ApplicationController
     "using-template-repos-for-assignments",
     "connect-to-lms",
     "generate-lms-credentials",
+    "glossary",
     "import-roster-from-lms",
     "setup-generic-lms",
     "setup-canvas",
-    "setup-moodle"
+    "setup-moodle",
+    "archive-a-classroom"
   ].freeze
 
   def home
@@ -40,7 +42,7 @@ class PagesController < ApplicationController
 
     @file = File.read(Rails.root.join("docs", "#{file_name}.md"))
 
-    @breadcrumbs = [["/", "Classroom"], ["/help", "Help"]]
+    @breadcrumbs = [["/", "GitHub Classroom"], ["/help", "Help"]]
     @breadcrumbs.push(["", file_name]) if file_name != "help"
 
     render layout: "layouts/pages"

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe UnlinkedUser::ShowView do
+RSpec.describe "UnlinkedUser::ShowView" do
   let(:unlinked_user) { classroom_student }
 
   subject { UnlinkedUser::ShowView.new(unlinked_user: unlinked_user) }

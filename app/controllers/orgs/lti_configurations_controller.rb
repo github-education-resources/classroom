@@ -40,18 +40,6 @@ module Orgs
       @lti_configuration = LtiConfiguration.new(lms_type: lms_type)
     end
 
-    def edit; end
-
-    def update
-      if current_lti_configuration.update_attributes(lti_configuration_params)
-        flash[:success] = "The configuration was successfully updated."
-        redirect_to lti_configuration_path(current_organization)
-      else
-        flash[:error] = "The configuration could not be updated at this time. Please try again."
-        redirect_to edit_lti_configuration_path(current_organization)
-      end
-    end
-
     def destroy
       lms_name = current_lti_configuration.lms_name(default_name: "your learning management system")
       GitHubClassroom.statsd.increment("lti_configuration.destroy")
@@ -80,7 +68,7 @@ module Orgs
     end
 
     def lti_configuration_params
-      params.require(:lti_configuration).permit(:lms_link, :lms_type)
+      params.require(:lti_configuration).permit(:lms_type)
     end
 
     def ensure_no_google_classroom
