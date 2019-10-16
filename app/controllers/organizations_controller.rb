@@ -124,7 +124,7 @@ class OrganizationsController < Orgs::Controller
   def authorize_organization_addition
     new_github_organization = github_organization_from_params
 
-    return if new_github_organization.admin?(current_user.github_user.login(use_cache: false))
+    return if new_github_organization.admin?(current_user_login)
     raise NotAuthorized, "You are not permitted to add this organization as a classroom"
   end
 
@@ -196,16 +196,15 @@ class OrganizationsController < Orgs::Controller
   def add_current_user_to_organizations
     @users_github_organizations.each do |github_org|
       user_classrooms = Organization.includes(:users).where(github_id: github_org[:github_id])
-      user_login = current_user.github_user.login(use_cache: false)
 
       # Iterate over each classroom associate with this github organization
       user_classrooms.map do |classroom|
-        create_user_organization_access(classroom, login) unless classroom.users.include?(current_user)
+        create_user_organization_access(classroom) unless classroom.users.include?(current_user)
       end
     end
   end
 
-  def create_user_organization_access(organization, current_user_login)
+  def create_user_organization_access(organization)
     github_org = GitHubOrganization.new(current_user.github_client, organization.github_id)
     return unless github_org.admin?(current_user_login)
     organization.users << current_user
@@ -224,5 +223,9 @@ class OrganizationsController < Orgs::Controller
   def verify_user_belongs_to_organization
     @removed_user = User.find(params[:user_id])
     not_found unless current_organization.users.map(&:id).include?(@removed_user.id)
+  end
+
+  def current_user_login
+    @current_user_login ||= current_user.github_user.login(use_cache: false)
   end
 end
