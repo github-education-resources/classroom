@@ -1,0 +1,5 @@
+$("#js-search-results").html(
+    "<%= j render partial: "organizations/organization_card_layout", locals: {
+      organizations: @organizations
+    } %>"
+);

@@ -9,13 +9,12 @@ class OrganizationsController < Orgs::Controller
   before_action :paginate_users_github_organizations, only: %i[new create]
   before_action :verify_user_belongs_to_organization, only: [:remove_user]
   before_action :set_filter_options,                  only: %i[search index]
+  before_action :set_filtered_organizations,          only: %i[search index]
 
   skip_before_action :ensure_current_organization,                         only: %i[index new create search]
   skip_before_action :ensure_current_organization_visible_to_current_user, only: %i[index new create search]
 
-  def index
-    @organizations = current_user.organizations.order(created_at: :desc).page(params[:page]).per(12)
-  end
+  def index; end
 
   def new
     @organization = Organization.new
@@ -54,17 +53,30 @@ class OrganizationsController < Orgs::Controller
     @groupings = current_organization.groupings
   end
 
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def update
     result = Organization::Editor.perform(organization: current_organization, options: update_organization_params.to_h)
 
-    if result.success?
-      flash[:success] = "Successfully updated \"#{current_organization.title}\"!"
-      redirect_to current_organization
-    else
-      current_organization.reload
-      render :edit
+    respond_to do |format|
+      format.html do
+        if result.success?
+          flash[:success] = "Successfully updated \"#{current_organization.title}\"!"
+          redirect_to current_organization
+        else
+          current_organization.reload
+          render :edit
+        end
+      end
+      format.js do
+        set_filter_options
+        set_filtered_organizations
+        render "organizations/archive.js.erb", format: :js
+      end
     end
   end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   def destroy
     if current_organization.update_attributes(deleted_at: Time.zone.now)
@@ -105,22 +117,14 @@ class OrganizationsController < Orgs::Controller
     end
   end
 
-  def search
-    @organizations = current_user
-      .organizations
-      .filter_by_search(@query)
-      .order_by_sort_mode(@current_sort_mode)
-      .order(:id)
-      .page(params[:page])
-      .per(12)
-  end
+  def search; end
 
   private
 
   def authorize_organization_addition
     new_github_organization = github_organization_from_params
 
-    return if new_github_organization.admin?(current_user.github_user.login)
+    return if new_github_organization.admin?(current_user_login)
     raise NotAuthorized, "You are not permitted to add this organization as a classroom"
   end
 
@@ -146,25 +150,52 @@ class OrganizationsController < Orgs::Controller
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def set_filter_options
     @sort_modes = Organization.sort_modes
+    @view_modes = Organization.view_modes
 
-    @current_sort_mode = params[:sort_by] || @sort_modes.keys.first
+    @current_sort_mode = if @sort_modes.keys.include?(params[:sort_by])
+                           params[:sort_by]
+                         else
+                           @sort_modes.keys.first
+                         end
+
+    @current_view_mode = if @view_modes.keys.include?(params[:view])
+                           params[:view]
+                         else
+                           @view_modes.keys.first
+                         end
+
     @query = params[:query]
-
-    @sort_modes_links = @sort_modes.keys.map do |mode|
-      search_organizations_path(
-        sort_by: mode,
-        query: @query
-      )
-    end
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
+
+  # rubocop:disable Metrics/MethodLength
+  def set_filtered_organizations
+    scope = current_user.organizations.includes(:assignments, :group_assignments).filter_by_search(@query)
+
+    scope = case @current_view_mode
+            when "Archived" then scope.archived
+            when "Active" then scope.not_archived
+            else scope
+            end
+
+    @organizations = scope
+      .order_by_sort_mode(@current_sort_mode)
+      .order(:id)
+      .page(params[:page])
+      .per(12)
+  end
+  # rubocop:enable Metrics/MethodLength
 
   # Check if the current user has any organizations with admin privilege,
   # if so add the user to the corresponding classroom automatically.
   def add_current_user_to_organizations
     @users_github_organizations.each do |github_org|
-      user_classrooms = Organization.where(github_id: github_org[:github_id])
+      user_classrooms = Organization.includes(:users).where(github_id: github_org[:github_id])
 
       # Iterate over each classroom associate with this github organization
       user_classrooms.map do |classroom|
@@ -175,7 +206,7 @@ class OrganizationsController < Orgs::Controller
 
   def create_user_organization_access(organization)
     github_org = GitHubOrganization.new(current_user.github_client, organization.github_id)
-    return unless github_org.admin?(current_user.github_user.login)
+    return unless github_org.admin?(current_user_login)
     organization.users << current_user
   end
 
@@ -193,5 +224,8 @@ class OrganizationsController < Orgs::Controller
     @removed_user = User.find(params[:user_id])
     not_found unless current_organization.users.map(&:id).include?(@removed_user.id)
   end
+
+  def current_user_login
+    @current_user_login ||= current_user.github_user.login(use_cache: false)
+  end
 end
-# rubocop:enable Metrics/ClassLength
