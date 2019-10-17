@@ -1,0 +1,41 @@
+.help {
+  h1 {
+    @include breakpoint(md) {
+      font-size: $h00-size;
+    }
+  }
+  .markdown-body {
+    h2 {
+      @include breakpoint(md) {
+        font-size: $h1-size;
+        font-weight: 500;
+        border-bottom: none;
+        padding-right: 3em;
+      }
+    }
+    h3 {
+      font-size: $h2-size;
+      font-weight: 500;
+      margin-top: 3em;
+      @include breakpoint(md) {
+        padding-right: 3em;
+      }
+    }
+    h4 {
+      margin-top: 1em;
+      display: inline-block;
+    }
+    img{
+      margin: 2em auto;
+      border: 1px solid $border-gray-dark;
+      @include breakpoint(md) {
+        max-width: calc(100% - 4em);
+      }
+    }
+    .warning {
+      font-weight: normal;
+      padding: 1em 2em;
+      border: 1px solid $border-yellow;
+    }
+  }
+}

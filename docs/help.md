@@ -1,10 +1,10 @@
-[Learn more about GitHub Classroom](#guides), join [the education community](#community), or [get in touch](#need-more-help) for more help.
 
 ### Getting started with GitHub Classroom
-* [Quick-start video tutorials](/videos):
+* Get up and running quickly with our [video tutorials](/videos):
   * Just getting started? [Learn the basics of setting up GitHub Classroom](/videos#ChA_zph7aao)
   * [Create individual assignments](/videos#rTsfBAV7sOo)
   * [Create group assignments](/videos#-52quDR2QSc) for collaborative projects
+* [Check our glossary](/help/glossary) to learn more about terms and concepts used in GitHub Classroom    
 
 ### Guides  
 * [Controlling assignment repo settings with the Probot Settings app](/help/probot-settings)
@@ -12,10 +12,11 @@
 * [Upgrading your organization](/help/upgrade-your-organization)
 * [Using template repositories for assignments](/help/using-template-repos-for-assignments)
 * [Connecting GitHub Classroom to your learning management system](/help/connect-to-lms)
+* [Archiving a classroom](/help/archive-a-classroom)
 
-### Workflows, case studies, best practices, and more from the GitHub blog
+### Workflows, case studies, best practices, and more
 
-#### Getting the most from Classroom
+#### Getting the most from GitHub Classroom (from the GitHub Blog)
 
 * [GitHub Classroom now supports multiple classrooms per organization](https://github.blog/2019-01-23-github-classroom-now-supports-multiple-classrooms-per-organization/)
 * [Merge conflicts in the classroom](https://github.blog/2018-08-22-merge-conflicts-in-the-classroom/)
@@ -26,7 +27,7 @@
 * [Real-time feedback for students using continuous integration tools ](https://github.blog/2017-03-01-real-time-feedback-for-students-using-continuous-integration-tools/)
 * [Importing a course roster from your learning management system](/help/import-roster-from-lms)
 
-#### Educators share their experiences
+#### Educators share their experiences (from the GitHub Blog)
 
 * [How GitHub Classroom and Travis CI improved students’ grades](https://github.blog/2019-02-12-how-github-classroom-and-travis-ci-improved-students-grades/)
 * [GitHub Classroom report predicts positive student learning outcomes](https://github.blog/2018-08-15-classroom-report-predicts-positive-student-learning-outcomes/)
@@ -39,5 +40,5 @@
 
 ### Need more help?
 
-Not finding what you need? Want to talk to a human? [Open an issue on the Classroom repo.](https://github.com/education/classroom/issues)
-{: class="warning"}
+Not finding what you need? Want to talk to a human? [Open an issue on the GitHub Classroom repository.](https://github.com/education/classroom/issues)
+{: class="flash"}

@@ -26,7 +26,7 @@ class Organization < ApplicationRecord
   validates :github_id, presence: true
 
   validates :title, presence: true
-  validates :title, length: { maximum: 60 }
+  validates :title, length: { maximum: 255 }
   validates :title, uniqueness: { scope: :github_id }
 
   validates :slug, uniqueness: true
@@ -39,7 +39,10 @@ class Organization < ApplicationRecord
   scope :order_by_oldest, ->(_context = nil) { order(created_at: :asc) }
   scope :order_by_title,  ->(_context = nil) { order(:title) }
 
-  scope :search_by_title, ->(query) { where("title ILIKE ?", "%#{query}%") }
+  scope :search_by_title, ->(query) { where("organizations.title ILIKE ?", "%#{query}%") }
+
+  scope :archived, -> { where.not(archived_at: nil) }
+  scope :not_archived, -> { where(archived_at: nil) }
 
   def self.search_mode
     :search_by_title
@@ -47,9 +50,17 @@ class Organization < ApplicationRecord
 
   def self.sort_modes
     {
-      "Oldest first" => :order_by_oldest,
       "Newest first" => :order_by_newest,
+      "Oldest first" => :order_by_oldest,
       "Classroom name" => :order_by_title
+    }
+  end
+
+  def self.view_modes
+    {
+      "All" => :all,
+      "Active" => :active,
+      "Archived" => :archived
     }
   end
 

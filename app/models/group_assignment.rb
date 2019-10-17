@@ -38,6 +38,7 @@ class GroupAssignment < ApplicationRecord
                              message: "should only contain letters, numbers, dashes and underscores" }
 
   validate :uniqueness_of_slug_across_organization
+  validate :organization_is_not_archived
   validate :max_teams_less_than_group_count
   validate :starter_code_repository_not_empty, if: :will_save_change_to_starter_code_repo_id?
   validate :starter_code_repository_is_template,
@@ -48,6 +49,8 @@ class GroupAssignment < ApplicationRecord
   alias_attribute :invitation, :group_assignment_invitation
   alias_attribute :repos, :group_assignment_repos
   alias_attribute :template_repos_enabled?, :template_repos_enabled
+
+  after_create :track_private_repo_belonging_to_user
 
   def private?
     !public_repo
@@ -79,5 +82,9 @@ class GroupAssignment < ApplicationRecord
     else
       errors.add(:max_teams, "is less than the number of existing teams (#{group_count})")
     end
+  end
+
+  def organization_is_not_archived
+    errors.add(:base, "You cannot create or modify group assignments in archived classrooms") if organization.archived?
   end
 end

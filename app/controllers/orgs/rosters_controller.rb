@@ -2,7 +2,6 @@
 
 require "google/apis/classroom_v1"
 
-# rubocop:disable Metrics/ClassLength
 module Orgs
   class RostersController < Orgs::Controller
     before_action :ensure_current_roster, except: %i[

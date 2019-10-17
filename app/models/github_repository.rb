@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/ClassLength
 class GitHubRepository < GitHubResource
   depends_on :import
 
   DEFAULT_LABEL_COLOR = "ffffff"
   TEMPLATE_REPOS_API_PREVIEW = "application/vnd.github.baptiste-preview"
+  TEMPLATE_PREVIEW_OPTIONS = {
+    accept: TEMPLATE_REPOS_API_PREVIEW, headers: GitHub::APIHeaders.no_cache_no_store
+  }.freeze
 
   # NOTE: LEGACY, DO NOT REMOVE.
   # This is needed for the lib/collab_migration.rb
@@ -234,14 +236,12 @@ class GitHubRepository < GitHubResource
   end
 
   def template?
-    options = { accept: TEMPLATE_REPOS_API_PREVIEW, headers: GitHub::APIHeaders.no_cache_no_store }
-    @client.repository(@id, options).is_template
+    @client.repository(@id, TEMPLATE_PREVIEW_OPTIONS).is_template
   end
 
   private
 
   def github_attributes
-    %w[name full_name html_url node_id private]
+    %w[name full_name html_url node_id private owner]
   end
 end
-# rubocop:enable Metrics/ClassLength

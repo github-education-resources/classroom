@@ -19,11 +19,11 @@ TrailingBlankLines:
 Documentation:
   Enabled: false
 
-Metrics/ClassLength:
-  Max: 120
-
 Metrics/LineLength:
-  Max: 120
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
 
 Metrics/BlockLength:
   Exclude:

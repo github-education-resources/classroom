@@ -27,15 +27,13 @@
 
     <div class="my-3">
       <h2 class="h4 mb-2">Import students from your institution</h2>
-      <% if google_classroom_roster_import_enabled? || lti_launch_enabled? %>
-        <p>GitHub Classroom is able to automatically import your roster from your institution. If you
-        would rather manage your roster manually, you can still do that, too.</p>
+      <p>GitHub Classroom is able to automatically import your roster from your institution. If you
+      would rather manage your roster manually, you can still do that, too.</p>
 
-        <%= link_to "Sync from a learning management system",
-          link_lms_organization_path,
-          class: "btn btn-block btn-sm"
-        %>
-      <% end %>
+      <%= link_to "Sync from a learning management system",
+        link_lms_organization_path,
+        class: "btn btn-block btn-sm"
+      %>
     </div>
 
     <div class="my-3">

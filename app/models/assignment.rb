@@ -38,6 +38,7 @@ class Assignment < ApplicationRecord
   validates :assignment_invitation, presence: true
 
   validate :uniqueness_of_slug_across_organization
+  validate :organization_is_not_archived
   validate :starter_code_repository_not_empty, if: :will_save_change_to_starter_code_repo_id?
   validate :starter_code_repository_is_template,
     if: -> { :will_save_change_to_starter_code_repo_id? || :will_save_change_to_template_repos_enabled }
@@ -45,6 +46,8 @@ class Assignment < ApplicationRecord
   alias_attribute :invitation, :assignment_invitation
   alias_attribute :repos, :assignment_repos
   alias_attribute :template_repos_enabled?, :template_repos_enabled
+
+  after_create :track_private_repo_belonging_to_user
 
   def visibility=(visibility)
     self.public_repo = visibility != "private"
@@ -67,5 +70,9 @@ class Assignment < ApplicationRecord
   def uniqueness_of_slug_across_organization
     return if GroupAssignment.where(slug: slug, organization: organization).blank?
     errors.add(:slug, :taken)
+  end
+
+  def organization_is_not_archived
+    errors.add(:base, "You cannot create or modify assignments in archived classrooms") if organization.archived?
   end
 end

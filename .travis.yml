@@ -13,6 +13,7 @@ before_install:
   - sudo service postgresql stop && sudo service postgresql start $DB_VERSION
   - echo "Using postgres version $(psql -U postgres -tc 'SHOW server_version')"
   - gem update --system
+  - gem install bundler
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.24.6
   - export PATH=$HOME/.yarn/bin:$PATH
 
