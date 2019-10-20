@@ -41,7 +41,7 @@ There are three common cases when organizing students into teams:
 - A student needs to create a new group. The student enters the name of a new group to create it
 
 ### GitHub Classroom groups and GitHub teams
-When students join their group in GitHub Classroom, _[a team]_(https://help.github.com/articles/about-teams/) is created on GitHub.com in your GitHub organization. Teams have pretty nifty functionality, including threaded comments and emoji support.
+When students join their group in GitHub Classroom, [a team](https://help.github.com/articles/about-teams/) is created on GitHub.com in your GitHub organization. Teams have pretty nifty functionality, including threaded comments and emoji support.
 
 If you create a team for your students on GitHub.com, that team will not appear in Classroom. If you’d like to use GitHub Classroom to distribute shared repositories, then use group assignments in GitHub Classroom, not teams on GitHub.com.
 
