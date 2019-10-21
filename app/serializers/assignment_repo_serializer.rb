@@ -17,7 +17,7 @@ class AssignmentRepoSerializer < ActiveModel::Serializer
 
   def rosterIdentifier
     return nil unless instance_options[:roster]
-    instance_options[:roster].roster_entries.find_by(user_id: object.user.id).identifier
+    instance_options[:roster].roster_entries.find_by(user_id: object.user.id)&.identifier
   end
   # rubocop:enable MethodName
 end
