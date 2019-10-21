@@ -5,6 +5,7 @@ require "rails_helper"
 RSpec.describe API::AssignmentReposController, type: :controller do
   let(:organization)      { classroom_org }
   let(:user)              { classroom_teacher }
+  let(:second_user)       { classroom_student }
   let(:assignment)        { create(:assignment, organization: organization, title: "Learn Clojure") }
 
   describe "GET #index", :vcr do
@@ -40,7 +41,9 @@ RSpec.describe API::AssignmentReposController, type: :controller do
 
     context "with a roster" do
       before do
-        @assignment_repo = create(:assignment_repo, assignment: assignment, github_repo_id: 42, user: user)
+        create(:assignment_repo, assignment: assignment, github_repo_id: 42, user: user)
+        create(:assignment_repo, assignment: assignment, github_repo_id: 43, user: second_user)
+
         roster = create(:roster)
         @entry = create(:roster_entry, roster: roster, identifier: "entryA", user: user)
 
