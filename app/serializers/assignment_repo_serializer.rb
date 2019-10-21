@@ -16,7 +16,6 @@ class AssignmentRepoSerializer < ActiveModel::Serializer
   end
 
   def rosterIdentifier
-    byebug
     return nil unless instance_options[:roster]
     instance_options[:roster].roster_entries.find_by(user_id: object.user.id).identifier
   end
