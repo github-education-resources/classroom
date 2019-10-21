@@ -36,13 +36,13 @@ RSpec.describe API::AssignmentReposController, type: :controller do
       end
 
       it "returns all of the assignment repos" do
-        expect(json.length).to eql(1)
+        expect(json.length).to eql(2)
       end
 
       it "returns correct attributes in assignment repo serializer" do
         expect(json.first["username"]).to eq(user.github_user.login)
         expect(json.first["displayName"]).to eq(user.github_user.name)
-        expect(json.first["rosterIdentifier"]).to eq(@entry.identifier))
+        expect(json.first["rosterIdentifier"]).to eq(@entry.identifier)
       end
     end
 
@@ -67,7 +67,7 @@ RSpec.describe API::AssignmentReposController, type: :controller do
       end
 
       it "returns all of the assignment repos" do
-        expect(json.length).to eql(1)
+        expect(json.length).to eql(2)
       end
 
       it "returns correct attributes in assignment repo serializer" do
