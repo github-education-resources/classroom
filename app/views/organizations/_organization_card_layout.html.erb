@@ -6,24 +6,24 @@
             <div class="position-absolute top-0 right-0 bottom-0 left-0" style="background-image: <%= organization.geo_pattern_data_uri %>"></div>
           </div>
 
-          <% if archive_classrooms_enabled? %>
-            <details class="dropdown details-reset details-overlay d-inline-block float-right mr-1">
-              <summary class="text-gray p-2 d-inline" aria-haspopup="true">
-                <%= octicon('kebab-horizontal') %>
-              </summary>
+          <details class="dropdown details-reset details-overlay d-inline-block float-right mr-1">
+            <summary class="text-gray p-2 d-inline" aria-haspopup="true">
+              <%= octicon('kebab-horizontal') %>
+            </summary>
 
-              <details-menu class="dropdown-menu dropdown-menu-sw">
+            <details-menu class="dropdown-menu dropdown-menu-sw">
+              <% unless organization.archived? %>
                 <%= link_to new_assignment_organization_path(organization), class: 'dropdown-item btn-link btn-block text-left', role: 'button' do %>
                   Create assignment
                 <% end %>
-                <% btn_text = organization.archived? ? "Unarchive classroom" : "Archive classroom" %>
-                <%= form_for organization, url: organization_path(organization, params: request.query_parameters), remote: true do |f| %>
-                  <%= f.hidden_field :archived, value: !organization.archived? %>
-                  <%= f.submit btn_text, class: "dropdown-item btn-link btn-block text-left" %>
-                <% end %>
-              </details-menu>
-            </details>
-          <% end %>
+              <% end %>
+              <% btn_text = organization.archived? ? "Unarchive classroom" : "Archive classroom" %>
+              <%= form_for organization, url: organization_path(organization, params: request.query_parameters), remote: true do |f| %>
+                <%= f.hidden_field :archived, value: !organization.archived? %>
+                <%= f.submit btn_text, class: "dropdown-item btn-link btn-block text-left" %>
+              <% end %>
+            </details-menu>
+          </details>
 
           <a href="<%= organization_path(organization) %>" class="d-block px-4 pt-2">
             <h1 class="h4 overflow-hidden no-wrap pt-1"style="text-overflow: ellipsis;"><%= organization.title %></h1>
