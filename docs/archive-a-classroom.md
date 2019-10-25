@@ -16,5 +16,5 @@ You can archive classrooms that you no longer plan on using. If a classroom is a
 1. [Sign in to GitHub Classroom](https://classroom.github.com/login).
 2. From the [classrooms home page](https://classroom.github.com/classrooms), invoke the options menu for the classroom you'd like to archive by clicking on the three dots.
 ![archive classroom ellipsis](/images/help/archiving/archive-ellipsis.png)
-3. Select _Archive this classroom_.
+3. Select _Archive classroom_.
 ![classroom dropdown menu](/images/help/archiving/archive-dropdown.png)
