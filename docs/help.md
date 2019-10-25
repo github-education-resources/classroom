@@ -7,7 +7,7 @@
 * [Check our glossary](/help/glossary) to learn more about terms and concepts used in GitHub Classroom    
 
 ### Guides  
-* [Controlling assignment repo settings with the Probot Settings app](/help/probot-settings)
+* [Controlling assignment repository settings with the Probot Settings app](/help/probot-settings)
 * [Creating group assignments](/help/create-group-assignments)
 * [Upgrading your organization](/help/upgrade-your-organization)
 * [Using template repositories for assignments](/help/using-template-repos-for-assignments)
