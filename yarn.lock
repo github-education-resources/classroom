@@ -84,6 +84,11 @@ delegate@^3.1.2:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/delegate/-/delegate-3.1.3.tgz#9a8251a777d7025faa55737bc3b071742127a9fd"
 
+details-element-polyfill@2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/details-element-polyfill/-/details-element-polyfill-2.3.1.tgz#6af31acd454d9e3906961c35b4f1e229281c4b62"
+  integrity sha512-7Gr2pBgSpeSvBGBWjMESJ7WClexq3A5/HlZ2ZVgG4OjNvTgRfCEe0+ZEfT44JymqCtHd04+pSrgYg4W6yok/6w==
+
 dragula@3.7.1:
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/dragula/-/dragula-3.7.1.tgz#c44e811dbc42dc5c654dab71c77032995144e687"
@@ -228,6 +233,11 @@ lru-cache@^4.0.1:
   dependencies:
     pseudomap "^1.0.2"
     yallist "^2.1.2"
+
+mdn-polyfills@5.11.0:
+  version "5.11.0"
+  resolved "https://registry.yarnpkg.com/mdn-polyfills/-/mdn-polyfills-5.11.0.tgz#84850485966a1896a20ba531dcfa21f93971472b"
+  integrity sha512-0TpXrw/kpNFAiwoz/Lk5JwQoULoPPvE5BQheuR1/CnJgznpmZPNiInMFC6MTgZJaC/B5y2Ci66xP4nd0zpHvfQ==
 
 mem@^1.1.0:
   version "1.1.0"
