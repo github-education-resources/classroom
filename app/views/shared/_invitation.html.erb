@@ -6,13 +6,10 @@
       url: url_for(action: :toggle_invitations, id: (@assignment.nil? ? @group_assignment.slug : @assignment.slug)),
       method: "POST"
     } %>
-  <label>Enable assignment invitation URL</label>
+  <label class="pl-1">Enable assignment invitation URL <span class="tooltipped tooltipped-no-delay tooltipped-n tooltipped-multiline d-inline-block pl-1" style="bottom: 3px" aria-label="While enabled, students will be able to accept and access this assignment. When you no longer want anyone to access this assignment, uncheck to deactivate the invitation link."><%= octicon 'info' %></span></label>
   <span style="color: green"><%= octicon 'check', height: 16, id: "checkmark", style: "display: none; padding-bottom: 3px;" %></span>
   <%= image_tag 'octocat-spinner-128.gif', width: 13, height: 13, class: 'spinner', id: "loading-indicator", style: "display:none" %>
-  <div class="input-group input-block pt-2 pb-1">
+  <div class="input-group input-block pt-2 pb-4">
     <%= render partial: "shared/invitations/clipboard_form", locals: local_assigns %>
   </div>
-  <p class="note mb-3">
-    <%= t('views.shared.share_invite_url') %>
-  </p>
 </dt>
