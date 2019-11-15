@@ -53,17 +53,30 @@ class OrganizationsController < Orgs::Controller
     @groupings = current_organization.groupings
   end
 
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def update
     result = Organization::Editor.perform(organization: current_organization, options: update_organization_params.to_h)
 
-    if result.success?
-      flash[:success] = "Successfully updated \"#{current_organization.title}\"!"
-      redirect_to current_organization
-    else
-      current_organization.reload
-      render :edit
+    respond_to do |format|
+      format.html do
+        if result.success?
+          flash[:success] = "Successfully updated \"#{current_organization.title}\"!"
+          redirect_to current_organization
+        else
+          current_organization.reload
+          render :edit
+        end
+      end
+      format.js do
+        set_filter_options
+        set_filtered_organizations
+        render "organizations/archive.js.erb", format: :js
+      end
     end
   end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   def destroy
     if current_organization.update_attributes(deleted_at: Time.zone.now)
@@ -111,7 +124,7 @@ class OrganizationsController < Orgs::Controller
   def authorize_organization_addition
     new_github_organization = github_organization_from_params
 
-    return if new_github_organization.admin?(current_user.github_user.login)
+    return if new_github_organization.admin?(current_user_login)
     raise NotAuthorized, "You are not permitted to add this organization as a classroom"
   end
 
@@ -193,7 +206,7 @@ class OrganizationsController < Orgs::Controller
 
   def create_user_organization_access(organization)
     github_org = GitHubOrganization.new(current_user.github_client, organization.github_id)
-    return unless github_org.admin?(current_user.github_user.login)
+    return unless github_org.admin?(current_user_login)
     organization.users << current_user
   end
 
@@ -211,5 +224,8 @@ class OrganizationsController < Orgs::Controller
     @removed_user = User.find(params[:user_id])
     not_found unless current_organization.users.map(&:id).include?(@removed_user.id)
   end
+
+  def current_user_login
+    @current_user_login ||= current_user.github_user.login(use_cache: false)
+  end
 end
-# rubocop:enable Metrics/ClassLength

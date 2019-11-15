@@ -12,7 +12,7 @@ Before you create a group exercise, you’ll need the following:
 - A list of students, or unique identifiers like their email addresses
 
 ### Get started
-To get started, log in to [GitHub Classroom](https://classroom.github.com/), choose one of your classrooms, then click the **New assignment** button followed by **Create group assignment**. This brings you to the “New group assignment” page where you can provide the details of an assignment. If you don’t see your classroom listed, [double check that you’ve granted that organization access to GitHub Classroom](https://help.github.com/articles/approving-oauth-apps-for-your-organization/).
+To get started, log in to [GitHub Classroom](https://classroom.github.com/), choose one of your active classrooms, then click the **New assignment** button followed by **Create group assignment**. This brings you to the “New group assignment” page where you can provide the details of an assignment. If you don’t see your classroom listed, [double check that you’ve granted that organization access to GitHub Classroom](https://help.github.com/articles/approving-oauth-apps-for-your-organization/). You cannot create or modify group assignments for classrooms that have been archived.
 
 ![a mouse cursor clicks on a GitHub Classroom classroom, then clicks the "New assignment button", then clicks the “Create group assignment” button, text begins to appear in the first text field. The animation loops from the beginning](https://user-images.githubusercontent.com/1874003/37045015-f8ea30f4-2132-11e8-90a9-e60fb8cd06c6.gif)
 
@@ -41,7 +41,7 @@ There are three common cases when organizing students into teams:
 - A student needs to create a new group. The student enters the name of a new group to create it
 
 ### GitHub Classroom groups and GitHub teams
-When students join their group in GitHub Classroom, _[a team]_(https://help.github.com/articles/about-teams/) is created on GitHub.com in your GitHub organization. Teams have pretty nifty functionality, including threaded comments and emoji support.
+When students join their group in GitHub Classroom, [a team](https://help.github.com/articles/about-teams/) is created on GitHub.com in your GitHub organization. Teams have pretty nifty functionality, including threaded comments and emoji support.
 
 If you create a team for your students on GitHub.com, that team will not appear in Classroom. If you’d like to use GitHub Classroom to distribute shared repositories, then use group assignments in GitHub Classroom, not teams on GitHub.com.
 

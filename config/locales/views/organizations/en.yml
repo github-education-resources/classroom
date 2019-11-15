@@ -45,8 +45,8 @@ en:
       delete_submit: 'Remove classroom'
       danger_zone: 'The Danger Zone'
       archived_classrooms: 'Archived classrooms'
-      archive_consequences_html: "<p>Assignment invitations will be disabled while the classroom is archived and the classroom will be moved to the archived section.</p><p>You can unarchive your classroom at any point.</p>"
-      archive_description: 'Mark this classroom as archived. The classroom will be moved to the archived section away from your active classrooms. Nothing will be deleted and this can be undone.'
+      archive_consequences_html: "<p>New assignments cannot be created and existing assignment invitations will be disabled while the classroom is archived.</p><p>You can unarchive your classroom at any point.</p>"
+      archive_description: 'Mark this classroom as archived. Nothing will be deleted, but you will be unable to create new assignments. Classrooms can be unarchived.'
       archive_title: 'Archive this classroom'
       archive_submit: 'Archive classroom'
       unarchive_description: 'Mark this classroom as unarchived. It will return to your classroom dashboard.'
@@ -72,8 +72,9 @@ en:
       group_assignment: 'Group assignment'
       group_assignment_desc: 'Participants form teams that work together on a shared repository.'
       create_group_assignment: 'Create a group assignment'
-      name_your_classroom: 'Name your classroom'
-      give_descriptive_name: 'Please give your classroom a more descriptive name'
+      name_your_classroom: 'Set up your classroom'
+      give_descriptive_name: 'Classroom name'
+      classroom_name_note: 'Using your course name and section can help students identify your classroom.'
       set_of_teams: 'Set of teams'
       no_teams: "This classroom doesn't have any sets of teams yet."
       assignments: 'Assignments'

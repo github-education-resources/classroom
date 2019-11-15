@@ -15,35 +15,33 @@
   </div>
 
   <div class="d-flex">
-    <% if archive_classrooms_enabled? %>
-      <details class="details-reset details-overlay position-relative mr-2" id="view-options">
-        <summary class="btn">
-          <i>View:</i>
-          <span data-menu-button>
-            <%= active_view_option %>
-          </span>
-          <span class="dropdown-caret"></span>
-        </summary>
+    <details class="details-reset details-overlay position-relative mr-2" id="view-options">
+      <summary class="btn">
+        <i>View:</i>
+        <span data-menu-button>
+          <%= active_view_option %>
+        </span>
+        <span class="dropdown-caret"></span>
+      </summary>
 
-        <details-menu class="SelectMenu right-md-0">
-          <div class="SelectMenu-modal">
-            <header class="SelectMenu-header">
-              <span class="SelectMenu-title">View:</span>
-              <button class="SelectMenu-closeButton" type="button" data-toggle-for="view-options"><%= octicon("x", :"aria-label" => "Close menu") %></button>
-            </header>
-            <div class="SelectMenu-list">
-              <% view_options.each do |name| %>
-                <label class="SelectMenu-item" role="menuitemradio" aria-checked="<%= active_view_option == name %>" tabindex="0">
-                  <%= radio_button_tag "view", name, active_view_option == name, "hidden": "true", "data-autosubmit": "true" %>
-                  <%= octicon("check", class: "SelectMenu-icon") %>
-                  <span class="text-normal" data-menu-button-text><%= name %></span>
-                </label>
-              <% end %>
-            </div>
+      <details-menu class="SelectMenu right-md-0">
+        <div class="SelectMenu-modal">
+          <header class="SelectMenu-header">
+            <span class="SelectMenu-title">View:</span>
+            <button class="SelectMenu-closeButton" type="button" data-toggle-for="view-options"><%= octicon("x", :"aria-label" => "Close menu") %></button>
+          </header>
+          <div class="SelectMenu-list">
+            <% view_options.each do |name| %>
+              <label class="SelectMenu-item" role="menuitemradio" aria-checked="<%= active_view_option == name %>" tabindex="0">
+                <%= radio_button_tag "view", name, active_view_option == name, "hidden": "true", "data-autosubmit": "true" %>
+                <%= octicon("check", class: "SelectMenu-icon") %>
+                <span class="text-normal" data-menu-button-text><%= name %></span>
+              </label>
+            <% end %>
           </div>
-        </details-menu>
-      </details>
-    <% end %>
+        </div>
+      </details-menu>
+    </details>
 
       <details class="details-reset details-overlay position-relative mr-2" id="sort-options">
         <summary class="btn">

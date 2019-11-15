@@ -6,6 +6,18 @@ module Stafftools
 
     def show; end
 
+    def destroy
+      grouping = @group.grouping
+
+      if @group.destroy
+        flash[:success] = "Group was destroyed"
+        redirect_to stafftools_grouping_path(grouping.id)
+      else
+        flash[:error] = "Group was not destroyed"
+        render :show
+      end
+    end
+
     private
 
     def set_group

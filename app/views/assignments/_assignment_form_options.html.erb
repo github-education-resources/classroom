@@ -1,5 +1,7 @@
 <% view = FormView.new(subject: @assignment, organization: @organization) %>
-
+<% if view.errors_for?(:base) %>
+  <dd class="error mb-1 text-red text-bold f4"><%= view.error_message_for(:base) %></dd>
+<% end %>
 <dl class="<%= view.form_class_for(:title) %> mt-0">
   <dt><%= f.label :title %></dt>
   <dd><%= f.text_field :title, class: 'textfield form-control input-block', autocomplete: :off, oninput: 'removeErrorBox(el);' %></dd>
@@ -109,7 +111,7 @@
       <div class="form-checkbox">
         <label>
           <%= f.check_box :students_are_repo_admins %>
-          Give students admin permissions on their repository.
+          Grant students admin access to their repository
           <div class="f6 text-gray text-normal mt-1">Editing this after assignments are created will not retroactively change their permissions.</div>
         </label>
       </div>
@@ -119,8 +121,7 @@
       <div class="form-checkbox">
         <label>
           <%= f.check_box :invitations_enabled %>
-          Enable assignment invitation URL
-        <div class="f6 text-gray text-normal mt-1">If enabled, students will be able to accept and access the assignment using the invitation URL.</div>
+          Enable assignment invitation URL <span class="tooltipped tooltipped-no-delay tooltipped-n tooltipped-multiline d-inline-block pl-1" aria-label="While enabled, students will be able to accept and access this assignment. When you no longer want anyone to access this assignment, uncheck to deactivate the invitation link."><%= octicon "info" %></span>
         </label>
       </div>
     </dl>
