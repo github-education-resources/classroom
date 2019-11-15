@@ -2,7 +2,6 @@
 
 class User < ApplicationRecord
   include Flippable
-  include GraphQLNode
   include StafftoolsSearchable
 
   define_pg_search(columns: %i[id uid github_login github_name])
