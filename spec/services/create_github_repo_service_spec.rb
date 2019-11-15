@@ -108,7 +108,6 @@ RSpec.describe CreateGitHubRepoService do
           .with(
             hash_including(
               github_repo_id: github_repository.id,
-              github_global_relay_id: github_repository.node_id,
               "user" => student
             )
           )
@@ -404,7 +403,6 @@ RSpec.describe CreateGitHubRepoService do
           expect(result.success?).to be_truthy
           expect(result.repo.assignment).to eql(assignment)
           expect(result.repo.user).to eql(student)
-          expect(result.repo.github_global_relay_id).to be_truthy
         end
 
         it "creates an AssignmentRepo as a member" do
@@ -413,7 +411,6 @@ RSpec.describe CreateGitHubRepoService do
           expect(result.success?).to be_truthy
           expect(result.repo.assignment).to eql(assignment)
           expect(result.repo.user).to eql(teacher)
-          expect(result.repo.github_global_relay_id).to be_truthy
         end
 
         context "github repository with the same name already exists" do
@@ -610,8 +607,7 @@ RSpec.describe CreateGitHubRepoService do
           .to receive_message_chain(:repos, :build)
           .with(
             hash_including(
-              github_repo_id: github_repository.id,
-              github_global_relay_id: github_repository.node_id,
+              github_repo_id: github_repository.id
               "group" => group
             )
           )
@@ -768,7 +764,6 @@ RSpec.describe CreateGitHubRepoService do
           expect(result.success?).to be_truthy
           expect(result.repo.group_assignment).to eql(group_assignment)
           expect(result.repo.group).to eql(group)
-          expect(result.repo.github_global_relay_id).to be_truthy
         end
 
         it "tracks the how long it too to be created" do

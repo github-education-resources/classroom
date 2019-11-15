@@ -7,16 +7,14 @@ module GitHubFactory
     return @classroom_student if defined?(@classroom_student)
     @classroom_student = create(:user,
       uid: classroom_student_github_id,
-      token: classroom_student_github_token,
-      github_global_relay_id: global_relay_id_from_id(classroom_student_github_id))
+      token: classroom_student_github_token)
   end
 
   def classroom_teacher
     return @teacher if defined?(@teacher)
     @teacher = create(:user,
       uid: classroom_owner_github_id,
-      token: classroom_owner_github_token,
-      github_global_relay_id: global_relay_id_from_id(classroom_owner_github_id))
+      token: classroom_owner_github_token)
   end
 
   def classroom_org

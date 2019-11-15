@@ -74,7 +74,6 @@ class Organization
           github_id: github_id,
           title: title,
           users: users,
-          github_global_relay_id: github_organization.node_id,
           organization_webhook: organization_webhook
         )
       rescue ActiveRecord::RecordInvalid => err
