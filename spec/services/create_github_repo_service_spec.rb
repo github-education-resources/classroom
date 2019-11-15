@@ -607,7 +607,7 @@ RSpec.describe CreateGitHubRepoService do
           .to receive_message_chain(:repos, :build)
           .with(
             hash_including(
-              github_repo_id: github_repository.id
+              github_repo_id: github_repository.id,
               "group" => group
             )
           )
