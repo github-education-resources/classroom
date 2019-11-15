@@ -67,7 +67,6 @@ class Organization
       ensure_users_are_authorized!
 
       begin
-        github_organization = GitHubOrganization.new(users.first.github_client, github_id)
         organization_webhook = ensure_organization_webhook_exists!
 
         organization.update_attributes!(
