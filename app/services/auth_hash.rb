@@ -13,8 +13,7 @@ class AuthHash
     {
       uid:        uid,
       token:      token,
-      site_admin: site_admin,
-      github_global_relay_id: node_id
+      site_admin: site_admin
     }
   end
 
