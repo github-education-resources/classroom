@@ -28,8 +28,4 @@ module GitHubFactory
 
     @classroom_org = create(:organization, options)
   end
-
-  def global_relay_id_from_id(id)
-    Base64.strict_encode64(["04:User", id.to_s].join)
-  end
 end
