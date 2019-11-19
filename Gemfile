@@ -8,7 +8,7 @@ git_source(:github) do |repo_name|
 end
 
 ruby File.read(File.expand_path("../.ruby-version", __FILE__)).chomp
-gem "rails", "~> 5.2.3"
+gem "rails", "~> 6.0.1"
 
 gem "autoprefixer-rails", "~> 7.1", ">= 7.1.3"
 
@@ -62,15 +62,15 @@ gem "puma",                 "~> 4.0", ">= 4.0.1"
 gem "rack-canonical-host", "~> 0.2.3"
 gem "rack-rewrite",        "~> 1.5.0"
 gem "rack-timeout",        "~> 0.5.1", require: false
-gem "rails-i18n",          "~> 5.1", ">= 5.1.3"
+gem "rails-i18n",          "~> 6.0"
 gem "redis-namespace",     "~> 1.5", ">= 1.5.3"
 gem "ruby-progressbar",    "~> 1.8", ">= 1.8.1", require: false
 
 gem "kramdown",            "~> 1.17.0"
 
-gem "sass-rails", "~> 5.0", ">= 5.0.6"
+gem "sass-rails", "~> 6.0"
 gem "sidekiq",    "~> 5.2", ">= 5.2.7"
-gem "sprockets",  "~> 3.7", ">= 3.7.2"
+gem 'sprockets', '~> 3.7.2'
 
 gem "turbolinks", "~> 2.5", ">= 2.5.4"
 gem "typhoeus",   "~> 1.3"
@@ -109,7 +109,7 @@ group :production do
 end
 
 group :test do
-  gem "action-cable-testing", "~> 0.3"
+  gem "action-cable-testing", "~> 0.6.0"
   gem "database_cleaner",     "~> 1.6", ">= 1.6.1"
   gem "factory_bot_rails",    "~> 4.8"
   gem "faker",                "~> 1.8", ">= 1.8.4"
