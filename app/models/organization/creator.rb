@@ -67,14 +67,12 @@ class Organization
       ensure_users_are_authorized!
 
       begin
-        github_organization = GitHubOrganization.new(users.first.github_client, github_id)
         organization_webhook = ensure_organization_webhook_exists!
 
         organization.update_attributes!(
           github_id: github_id,
           title: title,
           users: users,
-          github_global_relay_id: github_organization.node_id,
           organization_webhook: organization_webhook
         )
       rescue ActiveRecord::RecordInvalid => err
