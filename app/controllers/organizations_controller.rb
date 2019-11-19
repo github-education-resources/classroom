@@ -16,6 +16,13 @@ class OrganizationsController < Orgs::Controller
 
   def index; end
 
+  def github_access_management_url
+    github_url = GitHubClassroom.github_url
+    github_client_id = Rails.application.secrets.github_client_id
+    "#{github_url}/settings/connections/applications/#{github_client_id}/?return_to=classroom"
+  end
+  helper_method :github_access_management_url
+
   def new
     @organization = Organization.new
   end

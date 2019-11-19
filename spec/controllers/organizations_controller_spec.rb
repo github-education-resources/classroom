@@ -128,7 +128,6 @@ RSpec.describe OrganizationsController, type: :controller do
       expect { post :create, params: { organization: organization_params } }.to change(Organization, :count)
 
       expect(Organization.last.github_id).to_not be_nil
-      expect(Organization.last.github_global_relay_id).to_not be_nil
     end
 
     it "will redirect the user to the setup page" do
