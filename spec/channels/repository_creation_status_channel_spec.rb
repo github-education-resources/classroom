@@ -8,6 +8,6 @@ RSpec.describe RepositoryCreationStatusChannel, type: :channel do
   it "subscribes to stream" do
     stub_connection current_user: student
     subscribe(assignment_id: 1)
-    expect(streams).to include(RepositoryCreationStatusChannel.channel(user_id: student.id, assignment_id: 1))
+    assert_has_stream "repository_creation_status_1_1"
   end
 end
