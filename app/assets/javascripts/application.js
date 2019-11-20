@@ -10,6 +10,8 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require polyfills
+//
 //= require jquery/dist/jquery
 //= require jquery.turbolinks
 //= require jquery-ujs/src/rails
@@ -27,6 +29,7 @@
 //= require remodal/dist/remodal
 //
 //= require dragula/dist/dragula
+//= require @github/details-menu-element/dist/index.umd
 //
 //= require peek
 //= require peek/views/dalli
