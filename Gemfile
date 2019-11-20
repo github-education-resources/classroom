@@ -70,7 +70,7 @@ gem "kramdown",            "~> 1.17.0"
 
 gem "sass-rails", "~> 6.0"
 gem "sidekiq",    "~> 5.2", ">= 5.2.7"
-gem 'sprockets', '~> 3.7.2'
+gem "sprockets",  "~> 3.7.2"
 
 gem "turbolinks", "~> 2.5", ">= 2.5.4"
 gem "typhoeus",   "~> 1.3"
@@ -90,7 +90,7 @@ group :development, :test do
   gem "guard-rspec",              "~> 4.7", ">= 4.7.3", require: false
   gem "knapsack",                 "~> 1.14", ">= 1.14.1"
   gem "rails-controller-testing", "~> 1.0", ">= 1.0.4"
-  gem "rspec-rails",              "~> 3.6", ">= 3.6.1"
+  gem "rspec-rails",              ">= 4.0.0.beta3"
   gem "rubocop",                  "~> 0.49.1", require: false
   gem "scss_lint",                "~> 0.54.0", require: false
   gem "spring",                   "~> 2.1", ">= 2.1.0"
