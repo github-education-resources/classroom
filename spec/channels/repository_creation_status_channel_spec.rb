@@ -7,7 +7,8 @@ RSpec.describe RepositoryCreationStatusChannel, type: :channel do
 
   it "subscribes to stream" do
     stub_connection current_user: student
-    subscribe(assignment_id: 1)
+    data = subscribe(assignment_id: 1)
+    puts "############## #{data.streams.first} ##################"
     assert_has_stream "repository_creation_status_1_1"
   end
 end
