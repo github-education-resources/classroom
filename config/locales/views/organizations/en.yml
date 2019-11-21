@@ -5,7 +5,7 @@ en:
       new_organization_button_label: 'Create a new organization'
       select_organization_desc: 'GitHub Classroom uses organization accounts to manage permissions, administration, and security for classrooms.'
       no_organizations: 'Oh, you don’t have any organizations on your GitHub account'
-      please_create_or_authorize_new_organization: "Please <a href='https://github.com/account/organizations/new?coupon=&plan=team_free'>create an organization on GitHub.com</a> or %{authorize_href} and then come back."
+      please_create_or_authorize_new_organization: "Please <a href='https://github.com/account/organizations/new?coupon=&plan=team_free'>create an organization</a> or %{authorize_href}."
       authorize_organization_access_link: "authorize an existing one"
       grant_organization_access: "Grant access to an organization that is not listed"
       grant_organization_access_protip: "<strong>ProTip!</strong> Don't see your organization? You need to %{href} first."
@@ -64,8 +64,8 @@ en:
       theres_no_going_back: 'Once you reset this classroom, there is no going back. Please be certain.'
       new_classroom: 'New classroom'
       classrooms: 'Classrooms'
-      no_classrooms: "You're not managing any classrooms yet."
-      no_classrooms_desc: 'You can begin creating assignments once you have at least one classroom.'
+      no_classrooms: "You’re not managing any classrooms yet"
+      no_classrooms_desc: 'A classroom is a space where you can organize and manage assignments, students, and teaching assistants for a single course.'
       create_first_classroom: 'Create your first classroom'
       new_assignment: 'New assignment'
       individual_assignment: 'Individual assignment'
