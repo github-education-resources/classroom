@@ -2,8 +2,10 @@ en:
   views:
     organizations:
       select_organization: 'Select an organization for your new classroom'
-      no_organizations: 'Oh, you don’t have any organizations on your GitHub account.'
-      please_create_or_authorize_new_organization: "Please <a href='https://github.com/organizations/new'>create an organization on GitHub.com</a> or %{authorize_href} and then come back."
+      new_organization_button_label: 'Create a new organization'
+      select_organization_desc: 'GitHub Classroom uses organization accounts to manage permissions, administration, and security for classrooms.'
+      no_organizations: 'Oh, you don’t have any organizations on your GitHub account'
+      please_create_or_authorize_new_organization: "Please <a href='https://github.com/account/organizations/new?coupon=&plan=team_free'>create an organization on GitHub.com</a> or %{authorize_href} and then come back."
       authorize_organization_access_link: "authorize an existing one"
       grant_organization_access: "Grant access to an organization that is not listed"
       grant_organization_access_protip: "<strong>ProTip!</strong> Don't see your organization? You need to %{href} first."
