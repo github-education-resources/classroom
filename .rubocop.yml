@@ -1,5 +1,12 @@
+inherit_gem:
+  rubocop-github:
+    - config/default_edge.yml
+    - config/rails_edge.yml
+
+inherit_from: .rubocop_todo.yml
+
 AllCops:
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.6
   Include:
     - '**/Rakefile'
     - '**/config.ru'
