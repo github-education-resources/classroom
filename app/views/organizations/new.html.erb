@@ -1,14 +1,14 @@
 <div class="container-lg p-responsive">
 
   <% if @users_github_organizations.empty? %>
-    <div class="blankslate mt-6">
+    <div class="blankslate mt-6 py-8">
       <img src="https://ghicons.github.com/assets/images/light/Nested%20Teams.png" alt="" class="mb-3" width="56" height="56" />
       <h3 class="mb-1"><%= t('views.organizations.no_organizations') %></h3>
-      <p style="max-width: 680px; margin: 0 auto;">
+      <p class="col-lg-9 mx-auto pb-3">
         <%= t('views.organizations.select_organization_desc') %>
         <%= t('views.organizations.please_create_or_authorize_new_organization', authorize_href: link_to(t('views.organizations.authorize_organization_access_link'), github_access_management_url, target: '_blank')).html_safe %>
       </p>
-      <p class="pt-4"><a class="btn btn-primary" href="https://github.com/account/organizations/new?coupon=&plan=team_free" role="button" target="_blank">Create a new organization</a></p>
+      <p><a class="btn btn-sm btn-primary" href="https://github.com/account/organizations/new?coupon=&plan=team_free" role="button" target="_blank">Create a new organization</a></p>
       <p><a href="<%= github_access_management_url %>" target="_blank">Grant access to an existing organization</a></p>
     </div>
   <% else %>
