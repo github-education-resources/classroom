@@ -1,4 +1,12 @@
 GIT
+  remote: https://github.com/github/rubocop-github.git
+  revision: 6bc6dfb5db40c929a69f1721a862781116853469
+  ref: 6bc6dfb
+  specs:
+    rubocop-github (0.13.0)
+      rubocop (~> 0.59)
+
+GIT
   remote: https://github.com/octokit/octokit.rb.git
   revision: 790a64e58c5072cc5a240f7e4e3ca4718ea7152e
   specs:
@@ -292,7 +300,7 @@ GEM
       oauth2 (~> 1.0)
       omniauth (~> 1.2)
     os (1.0.1)
-    parallel (1.19.0)
+    parallel (1.19.1)
     parser (2.6.5.0)
       ast (~> 2.4.0)
     peek (1.0.1)
@@ -430,13 +438,13 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
-    rubocop-github (0.12.0)
-      rubocop (~> 0.59)
     rubocop-performance (1.5.1)
       rubocop (>= 0.71.0)
     rubocop-rails (2.3.2)
       rack (>= 1.1)
       rubocop (>= 0.72.0)
+    rubocop-rspec (1.36.0)
+      rubocop (>= 0.68.1)
     ruby-progressbar (1.10.1)
     ruby_dep (1.5.0)
     safe_yaml (1.0.5)
@@ -588,10 +596,11 @@ DEPENDENCIES
   rails-i18n (~> 6.0)
   redis-namespace (~> 1.5, >= 1.5.3)
   rspec-rails (>= 4.0.0.beta3)
-  rubocop (~> 0.52)
-  rubocop-github (~> 0.10)
+  rubocop (~> 0.74)
+  rubocop-github!
   rubocop-performance (~> 1.4)
   rubocop-rails (~> 2.3)
+  rubocop-rspec (~> 1.30, >= 1.30.1)
   ruby-progressbar (~> 1.8, >= 1.8.1)
   sass-rails (~> 6.0)
   scss_lint (~> 0.54.0)

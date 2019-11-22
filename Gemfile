@@ -91,10 +91,11 @@ group :development, :test do
   gem "knapsack",                 "~> 1.14", ">= 1.14.1"
   gem "rails-controller-testing", "~> 1.0", ">= 1.0.4"
   gem "rspec-rails",              ">= 4.0.0.beta3"
-  gem "rubocop",                  "~> 0.52", require: false
-  gem 'rubocop-github',           "~> 0.10", require: false
+  gem "rubocop",                  "~> 0.74", :require => false
+  gem "rubocop-github",           git: "https://github.com/github/rubocop-github.git", ref: "6bc6dfb", :require => false
   gem "rubocop-performance",      "~> 1.4", :require => false
   gem "rubocop-rails",            "~> 2.3", :require => false
+  gem "rubocop-rspec",            "~> 1.30", ">= 1.30.1", require: false
   gem "scss_lint",                "~> 0.54.0", require: false
   gem "spring",                   "~> 2.1", ">= 2.1.0"
   gem "spring-watcher-listen",    "~> 2.0", ">= 2.0.1"
