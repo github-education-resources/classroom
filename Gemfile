@@ -92,7 +92,6 @@ group :development, :test do
   gem "rails-controller-testing", "~> 1.0", ">= 1.0.4"
   gem "rspec-rails",              ">= 4.0.0.beta3"
   gem "rubocop",                  "~> 0.74", :require => false
-  gem "rubocop-github",           git: "https://github.com/github/rubocop-github.git", ref: "6bc6dfb", :require => false
   gem "rubocop-performance",      "~> 1.4", :require => false
   gem "rubocop-rails",            "~> 2.3", :require => false
   gem "rubocop-rspec",            "~> 1.30", ">= 1.30.1", require: false

@@ -1,12 +1,21 @@
-inherit_gem:
-  rubocop-github:
-    - config/default_edge.yml
-    - config/rails_edge.yml
-
 inherit_from: .rubocop_todo.yml
+
+require:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rspec
 
 AllCops:
   TargetRubyVersion: 2.6
+  CacheRootDirectory: ./tmp
+  # https://github.com/thoughtbot/factory_bot/issues/1160#issuecomment-421410237
+  RSpec:
+    Patterns:
+      - _test.rb
+      - "(?:^|/)test/"
+  RSpec/FactoryBot:
+    Patterns:
+      - test/factories/**/*.rb
   Include:
     - '**/Rakefile'
     - '**/config.ru'
@@ -15,6 +24,7 @@ AllCops:
     - 'db/**/*'
     - 'script/**/*'
     - 'vendor/**/*'
+    - 'vendor/**/.*'
     - 'node_modules/**/*'
 
 Rails:
