@@ -20,10 +20,10 @@ AllCops:
 Rails:
   Enabled: true
 
-TrailingBlankLines:
+Layout/TrailingBlankLines:
   Enabled: true
 
-Documentation:
+Style/Documentation:
   Enabled: false
 
 Metrics/LineLength:
@@ -52,7 +52,7 @@ Rails/UnknownEnv:
     - staging
     - production
 
-Style/FileName:
+Naming/FileName:
   Exclude:
     - 'Gemfile'
     - 'Guardfile'
