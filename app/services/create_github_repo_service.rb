@@ -100,8 +100,7 @@ class CreateGitHubRepoService
   # or raises a Result::Error on failure
   def create_assignment_repo!(github_repository)
     assignment_repo_attrs = {
-      github_repo_id: github_repository.id,
-      github_global_relay_id: github_repository.node_id
+      github_repo_id: github_repository.id
     }
     assignment_repo_attrs[exercise.humanize] = exercise.collaborator
     assignment_repo = exercise.repos.build(assignment_repo_attrs)

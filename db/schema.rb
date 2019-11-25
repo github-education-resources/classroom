@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_16_192858) do
+ActiveRecord::Schema.define(version: 2019_11_15_233121) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,7 +36,6 @@ ActiveRecord::Schema.define(version: 2019_09_16_192858) do
     t.integer "assignment_id"
     t.integer "user_id"
     t.string "submission_sha"
-    t.string "github_global_relay_id"
     t.integer "configuration_state", default: 0
     t.index ["assignment_id"], name: "index_assignment_repos_on_assignment_id"
     t.index ["github_repo_id"], name: "index_assignment_repos_on_github_repo_id", unique: true
@@ -92,7 +91,6 @@ ActiveRecord::Schema.define(version: 2019_09_16_192858) do
     t.integer "group_id", null: false
     t.string "submission_sha"
     t.integer "configuration_state", default: 0
-    t.string "github_global_relay_id"
     t.index ["github_repo_id"], name: "index_group_assignment_repos_on_github_repo_id", unique: true
     t.index ["group_assignment_id"], name: "index_group_assignment_repos_on_group_assignment_id"
   end
@@ -195,7 +193,6 @@ ActiveRecord::Schema.define(version: 2019_09_16_192858) do
     t.datetime "deleted_at"
     t.string "slug", null: false
     t.integer "roster_id"
-    t.string "github_global_relay_id"
     t.bigint "organization_webhook_id"
     t.string "google_course_id"
     t.datetime "archived_at"
@@ -252,7 +249,6 @@ ActiveRecord::Schema.define(version: 2019_09_16_192858) do
     t.datetime "updated_at", null: false
     t.boolean "site_admin", default: false
     t.datetime "last_active_at", null: false
-    t.string "github_global_relay_id"
     t.string "github_login"
     t.string "github_name"
     t.string "github_avatar_url"

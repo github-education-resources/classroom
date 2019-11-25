@@ -2,7 +2,10 @@
   "name": "classroom",
   "private": true,
   "dependencies": {
+    "@github/details-menu-element": "^1.0.6",
+    "@webcomponents/custom-elements": "1.2.4",
     "clipboard": "^1.7.1",
+    "details-element-polyfill": "2.3.1",
     "dragula": "3.7.1",
     "github-markdown-css": "^3.0.1",
     "include-fragment-element": "^3.0.0",
@@ -10,6 +13,7 @@
     "jquery-readyselector": "git+https://git@github.com/Verba/jquery-readyselector.git",
     "jquery-ujs": " ~1.2.2",
     "jquery.turbolinks": "git+https://git@github.com/kossnocorp/jquery.turbolinks#2.1.0",
+    "mdn-polyfills": "5.11.0",
     "primer": "^10.10.4",
     "rails-ujs": "^5.1.1",
     "remodal": "^1.1.1",
