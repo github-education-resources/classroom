@@ -83,7 +83,7 @@
   <div class="Box-body">
     <% unless GitHubClassroom.enterprise? %>
       <dl class="<%= view.form_class_for(:starter_code_repository) %>">
-        <dt><label>Add your starter code from GitHub</label></dt>
+        <dt><label>Add starter code</label></dt>
         <dd>
           <%= f.text_field :starter_code_repository,
             class: "textfield js-autocomplete-textfield form-control input-contrast input-block",
@@ -91,7 +91,7 @@
             type: "text",
             value: @group_assignment.starter_code_repository.try(:full_name),
             placeholder: @group_assignment.starter_code_repository.try(:full_name) ||
-                'Search repositories',
+              'Find a GitHub repository…',
             autocomplete: "off",
             oninput: "importOptions(this.value);removeErrorBox(this);",
             data: { "autocomplete-search-endpoint": "github_repos" }
@@ -106,7 +106,7 @@
           <div class="form-checkbox">
             <label><%= f.radio_button :template_repos_enabled, true, checked: (true if @group_assignment.new_record? || @group_assignment.template_repos_enabled?) %> Import starter code using a template repository</label>
             <span class="Label border border-green text-gray-dark">Beta</span>
-            <span class="note">Starter code repository should be a <%= link_to "template repository", "https://help.github.com/en/articles/creating-a-template-repository", target: "_blank" %>. Increases student repository creation and code import speed dramatically.</span>
+            <span class="note col-md-9">Starter code repository must be a <%= link_to "template repository", "https://help.github.com/en/articles/creating-a-template-repository", target: "_blank" %>. Importing from a template repository speeds up code import and student repository creation.</span>
           </div>
 
           <div class="form-checkbox">
@@ -117,6 +117,9 @@
       </dl>
     <% end %>
 
+    <hr class="pt-3"/>
+
+    <h4 class="pt-2">Team options</h4>
     <dl class="<%= view.form_class_for(:max_members) %>">
        <dt><%= f.label "Maximum number of members in each team" %></dt>
        <dd><%= f.number_field :max_members, class: 'textfield form-control input-contrast input-block', autocomplete: :off %></dd>
@@ -127,14 +130,35 @@
       <dd><%= f.number_field :max_teams, class: 'textfield form-control input-contrast input-block', autocomplete: :off %></dd>
       <%= render 'shared/form_error', errors: view.error_message_for(:max_teams) if view.errors_for?(:max_teams) %>
     </dl>
+
+    <hr class="pt-3"/>
+
     <dl class="<%= view.form_class_for(:deadline) %> mb-0">
-      <dt><label>Deadline</label></dt>
+      <dt class="pt-2"><label>Deadline</label></dt>
       <dd><%= f.text_field :deadline, class: 'jquery-datetimepicker form-control input-contrast input-block', value: DeadlineFormatHelper.convert(f.object.deadline), autocomplete: :off %></dd>
       <%= render('shared/form_error', errors: view.error_message_for(:deadline)) if view.errors_for?(:deadline) %>
-      <p class="f6 text-gray my-2">After the deadline, GitHub Classroom will save the latest commit from each repo as a submission. Submission commits are viewable on the assignment page.</p>
+      <dd class="col-md-10 text-small text-gray my-2">After the deadline, GitHub Classroom will save the latest commit from each repository as a submission. Submission commits are viewable on the assignment page.</dd>
     </dl>
 
+    <hr class="pt-2"/>
+
     <dl class="form-group">
+      <h4 class="h5 pt-2">Enable assignment invitation link</h4>
+      <div class="form-checkbox">
+        <label>
+          <%= f.check_box :invitations_enabled %>
+          Enable assignment invitation URL <span class="tooltipped tooltipped-no-delay tooltipped-n tooltipped-multiline d-inline-block pl-1" aria-label="While enabled, students will be able to accept and access this assignment. When you no longer want anyone to access this assignment, uncheck to deactivate the invitation link."><%= octicon "info" %></span>
+        </label>
+        <p class="text-small text-normal text-gray mt-1">
+          While enabled, anyone with access to the link will be able to accept and access this assignment
+        </p>
+      </div>
+    </dl>
+
+    <hr class="pt-2"/>
+
+    <dl class="form-group">
+      <h4 class="h5 pt-2">Student admin access</h4>
       <div class="form-checkbox">
         <label>
           <%= f.check_box :students_are_repo_admins %>
@@ -144,13 +168,5 @@
       </div>
     </dl>
 
-    <dl class="form-group">
-      <div class="form-checkbox">
-        <label>
-          <%= f.check_box :invitations_enabled %>
-          Enable assignment invitation URL <span class="tooltipped tooltipped-no-delay tooltipped-n tooltipped-multiline d-inline-block pl-1" aria-label="While enabled, students will be able to accept and access this assignment. When you no longer want anyone to access this assignment, uncheck to deactivate the invitation link."><%= octicon "info" %></span>
-        </label>
-      </div>
-    </dl>
   </div>
 </div>
