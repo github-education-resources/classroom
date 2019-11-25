@@ -49,6 +49,9 @@ You can view your student’s status with the assignment (If they’ve accepted 
 You can access your newly created assignment under the **Assignments** tab and change its settings at any time.
 
 # Further learning
-[Create a group assignment](https://classroom.github.com/help/create-group-assignments)
-[Upgrade your organization](https://classroom.github.com/help/upgrade-your-organization)
-[Connect your classroom to a Learning Management System](https://classroom.github.com/help/connect-to-lms)
+
+- [Create a group assignment](https://classroom.github.com/help/create-group-assignments)
+
+- [Upgrade your organization](https://classroom.github.com/help/upgrade-your-organization)
+
+- [Connect your classroom to a Learning Management System](https://classroom.github.com/help/connect-to-lms)
