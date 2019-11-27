@@ -16,7 +16,6 @@ class OrganizationEventJob < ApplicationJob
     return false if organizations.empty?
 
     failed_removals = organizations.reject do |org|
-      # return false if org.users.count == 1
       user = org.users.find_by(uid: github_user_id)
 
       if user
