@@ -5,6 +5,7 @@ class OrganizationEventJob < ApplicationJob
   queue_as :github_event
 
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def perform(payload_body)
     return true unless payload_body.dig("action") == "member_removed"
 
@@ -31,4 +32,5 @@ class OrganizationEventJob < ApplicationJob
     failed_removals.empty?
   end
   # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 end
