@@ -11,14 +11,15 @@ task :remove_classroom_users_without_github_org_access do
 
       github_org_ids.each do |gh_id|
         github_org = GitHubOrganization.new(user.github_client, gh_id)
+        next unless github_org.admin?(user.github_user.login)
 
-        if !github_org.admin?(user.github_user.login)
-          payload = {
-            "action": "member_removed",
-            "membership": { "user": { "id": user.github_user.id } },
-            "organization": { "id": gh_id } }
+        payload = {
+          "action": "member_removed",
+          "membership": { "user": { "id": user.github_user.id } },
+          "organization": { "id": gh_id }
+        }
 
-          OrganizationEventJob.perform_later(payload)
+        OrganizationEventJob.perform_later(payload)
         end
       end
     end
