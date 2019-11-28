@@ -1,15 +1,13 @@
-<%= render 'organizations/organization_invitation_banner' %>
-
 <%= hidden_field_tag "group_assignment_setup" %>
 <%= hidden_field_tag 'group_id', group.id %>
 <%= hidden_field_tag 'group_assignment_id', group_assignment.id %>
 
 <div id="flash-messages" class="flash-messages"></div>
 
-<div class="site-content">
+<div class="site-content pt-3">
   <div class="site-content-cap">
     <h2 class="site-content-heading">
-      Your assignment repository is being set up. This might take a while.
+      The repository for your assignment <%= group_assignment.title %> is being set up. This might take a while.
     </h2>
   </div>
 </div>
