@@ -1,24 +1,24 @@
-<%= render 'organizations/organization_invitation_banner' %>
-
-<div class="site-content">
-  <div class="site-content-cap">
-    <h2 class="site-content-heading">
-      <span class="assignment-icon assignment-icon-group">
+<div class="container-md pt-3">
+  <div class="site-content">
+    <div class="site-content-cap d-flex flex-items-center">
+      <div class="assignment-icon assignment-icon-group">
         <%= octicon 'organization', height: 22 %>
-      </span>
-      Accept the <strong><%= group_assignment.title %></strong> assignment
-    </h2>
+      </div>
+      <h2 class="text-normal lh-ultra">
+        Accept the assignment <span class='text-bold no-wrap'><%= group_assignment.title %></span>
+      </h2>
+    </div>
   </div>
-</div>
 
-<div class="site-content-body">
-  <%= form_tag({ controller: :group_assignment_invitations, action: :accept_assignment}, method: :patch) do %>
-    <div class="markdown-body">
-      <p>Accepting this assignment will give your team (<%= group.github_team.name %>) access to the <strong><%= "#{group_assignment.slug}-#{group.github_team.slug}" %></strong> repository in the <%= link_to "@#{organization.github_organization.login}", organization.github_organization.html_url %> organization on GitHub.</p>
-    </div>
+  <div class="site-content-body">
+    <%= form_tag({ controller: :group_assignment_invitations, action: :accept_assignment}, method: :patch) do %>
+      <div class="markdown-body">
+        <p>Accepting this assignment will give your team (<%= group.github_team.name %>) access to the <strong><%= "#{group_assignment.slug}-#{group.github_team.slug}" %></strong> repository in the <%= link_to "#{organization.github_organization.login}", organization.github_organization.html_url %> organization on GitHub.</p>
+      </div>
 
-    <div class="form-actions">
-      <%= submit_tag 'Accept this assignment', class: 'btn btn-primary' %>
-    </div>
-  <% end %>
+      <div class="form-actions">
+        <%= submit_tag 'Accept this assignment', class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+  </div>
 </div>
