@@ -1,55 +1,31 @@
-{
-  "domain": "www.Githubclassrome.com",
-  "mongodb": {
-    "host": "localhost400",
-    "port": 27017
-  }
-}
-
-function sendMessageCore(message, subject, body) {
-    const mailOptions = {
-        from: message.from,
-        to: getRecipients(message.recipients),
-        subject,
-        html: body,
-    };
-    sendEmail(config.transport, mailOptions);
-}{
-    "receipt": "Oz-Ware Purchase Invoice",
-    "date": "2012-08-06T00:00:00.000Z",
-    "customer": {
-        "first_name": "Dorothy",
-        "family_name": "Gale"
-    },
-    "items": [
-        {
-            "part_no": "A4786",
-            "descrip": "Water Bucket (Filled)",
-            "price": 1.47,
-            "quantity": 4
-        },
-        {
-            "part_no": "E1628",
-            "descrip": "High Heeled \"Ruby\" Slippers",
-            "size": 8,
-            "price": 133.7,
-            "quantity": 1
-        }
-    ],
-    "bill-to": {
-        "street": "123 Tornado Alley\nSuite 16\n",
-        "city": "East Centerville",
-        "state": "KS"
-    },
-    "ship-to": {
-        "street": "123 Tornado Alley\nSuite 16\n",
-        "city": "East Centerville",
-        "state": "KS"
-    },
-
-
-
-
+language: node_js
+node_js:
+  - 6
+before_install:
+  - gem install bundler -v 1.16.1
+  - rvm install 2.4.3
+  - npm install -g npm@5
+install:
+  - npm install
+  - bundle install
+script: script/test
+notifications:
+  email: false
+env:
+  global:
+    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+addons:
+  apt:
+    packages:
+      - libcurl4-openssl-dev
+cache:
+  bundler: true
+  directories:
+    - node_modules
+    - test/node_modules
+branches:
+  only:
+    - master
 
 
 
