@@ -63,3 +63,74 @@ notifications:
   email: false
   slack:
     secure: hYvPi67Ka3T873Roo2WASv6anZUqnkkcvFjUrtxnYwDB14XueP9VXAbFFW8zYl9Uj6eAsPzxbGsGUzW0dUvhHXElffglNnrSh33FtbvrImnzhJvhORYh9+sFK1QWZEKj10oon715kjkRaltu2gqB0fon2bvGgFfdbLQJj8Kh6m8=
+{
+  "env": {
+    "global": [
+      "CI_NODE_TOTAL=2",
+      "CLASSROOM_WEBHOOK_URL_PREFIX=\"https://example.com/github/hooks\"",
+      "GITHUB_CLIENT_ID=client_id",
+      "GITHUB_CLIENT_SECRET=client_secret",
+      "GOOGLE_CLIENT_ID=google_client_id",
+      "GOOGLE_CLIENT_SECRET=google_client_secret",
+      "RAILS_ENV=test",
+      "RACK_ENV=test",
+      "REDIS_URL=\"redis://localhost:6379/0\"",
+      "WEBHOOK_SECRET=abcdefg",
+      "API_SECRET=abcdefg"
+    ],
+    "matrix": [
+      "CI_NODE_INDEX=0 DB_VERSION=10",
+      "CI_NODE_INDEX=1 DB_VERSION=10"
+    ]
+  },
+  "sudo": false,
+  "cache": {
+    "yarn": true,
+    "bundler": true
+  },
+  "addons": {
+    "apt": {
+      "packages": [
+        "postgresql-10",
+        "postgresql-client-10"
+      ]
+    }
+  },
+  "script": [
+    "KNAPSACK_GENERATE_REPORT=true ./bin/rake knapsack:rspec && ./bin/rubocop -D"
+  ],
+  "install": [
+    "bundle install --local --without development production --deployment --jobs=3 --retry=3",
+    "yarn install"
+  ],
+  "node_js": [
+    7
+  ],
+  "language": "ruby",
+  "services": [
+    "redis-server"
+  ],
+  "before_script": [
+    "psql -c 'create database classroom_test;' -U postgres",
+    "bundle exec rake db:schema:load",
+    "bundle exec rake factory_bot:lint"
+  ],
+  "notifications": {
+    "email": false,
+    "slack": {
+      "secure": "at0arWdFgfxCpnlJwf83TX+oIMwjqf4RllaBm7aspTpzwxqvzlvQkrZj0tdpL+wV1N56HkdeH4iiaF5rNrPjB9yQwFKLqeLxIIB8c4IQl8f30v9ZYVyAnoCusQpfI/wk19Y1VJqJV0VkRRLKlY17zZ5VFsHYJ28d6USD5s3RyWA="
+    }
+  },
+  "before_install": [
+    "sudo sed -i -e '/local.*peer/s/postgres/all/' -e 's/peer\\|md5/trust/g' /etc/postgresql/*/main/pg_hba.conf",
+    "sed -e 's/^port.*/port = 5432/' /etc/postgresql/10/main/postgresql.conf > postgresql.conf",
+    "sudo chown postgres postgresql.conf",
+    "sudo mv postgresql.conf /etc/postgresql/10/main",
+    "sudo service postgresql stop && sudo service postgresql start $DB_VERSION",
+    "echo \"Using postgres version $(psql -U postgres -tc 'SHOW server_version')\"",
+    "gem update --system",
+    "gem install bundler",
+    "curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.24.6",
+    "export PATH=$HOME/.yarn/bin:$PATH"
+  ]
+}
