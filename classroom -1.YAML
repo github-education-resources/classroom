@@ -1,0 +1,87 @@
+{
+  "domain": "www.Githubclassrome.com",
+  "mongodb": {
+    "host": "localhost400",
+    "port": 27017
+  }
+}
+
+function sendMessageCore(message, subject, body) {
+    const mailOptions = {
+        from: message.from,
+        to: getRecipients(message.recipients),
+        subject,
+        html: body,
+    };
+    sendEmail(config.transport, mailOptions);
+}{
+    "receipt": "Oz-Ware Purchase Invoice",
+    "date": "2012-08-06T00:00:00.000Z",
+    "customer": {
+        "first_name": "Dorothy",
+        "family_name": "Gale"
+    },
+    "items": [
+        {
+            "part_no": "A4786",
+            "descrip": "Water Bucket (Filled)",
+            "price": 1.47,
+            "quantity": 4
+        },
+        {
+            "part_no": "E1628",
+            "descrip": "High Heeled \"Ruby\" Slippers",
+            "size": 8,
+            "price": 133.7,
+            "quantity": 1
+        }
+    ],
+    "bill-to": {
+        "street": "123 Tornado Alley\nSuite 16\n",
+        "city": "East Centerville",
+        "state": "KS"
+    },
+    "ship-to": {
+        "street": "123 Tornado Alley\nSuite 16\n",
+        "city": "East Centerville",
+        "state": "KS"
+    },
+
+
+
+
+
+
+
+function sendMessageToManagement(subject, body) {
+    const message = config.management_message;
+    sendMessageCore(message, subject, body);
+}
+function sendMessageToOperations(subject, body) {
+    const message = config.operations_message;
+    sendMessageCore(message, subject, body);
+}
+function sendMessageToAllEmployees(subject, body) {
+    const message = config.all_employees_message;
+    sendMessageCore(message, subject, body);
+    
+    function sendEmail(transport, mailOptions) {
+    console.log(mailOptions);
+}
+const yaml = require('js-yaml');
+const fs = require('fs');
+let config = {};
+try {
+    config = yaml.safeLoad(fs.readFileSync('email.yml', 'utf8'));
+} catch (e) {
+    console.log(e);
+}
+const yaml = require('js-yaml');
+const fs = require('fs');
+try {
+    const config = yaml.safeLoad(fs.readFileSync('test2.yml', 'utf8'));
+    const indentedJson = JSON.stringify(config, null, 4);
+    console.log(indentedJson);
+} catch (e) {
+    console.log(e);
+
