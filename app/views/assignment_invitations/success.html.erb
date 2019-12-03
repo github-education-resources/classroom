@@ -1,18 +1,36 @@
-<div class="site-content container-md pt-3">
-  <div class="site-content-cap d-flex flex-items-center">
-    <div class="assignment-icon assignment-icon-individual">
-      <%= octicon 'person', height: 22 %>
-    </div>
-    <h2 class="site-content-heading text-normal text-gray-dark lh-ultra">
-      <strong><%= current_assignment.title %></strong> assignment accepted
-    </h2>
+<div class="site-content container-lg pt-7 py-3 px-3 clearfix gutter">
+  <div class="col-lg-7 col-sm-8 mx-sm-auto float-lg-left border-red">
+    <h2 class="h1 mb-4">You’re ready to go!</h2>
+    <p class="f3 py-2 lh-default text-gray">
+      You accepted the assignment, <span class="text-bold text-gray-dark"><%= current_assignment.title %></span>. Your assignment repository has been created here:
+    </p>
+    <p class="f5 mt-2">
+      <span class="bg-blue-light rounded-1 text-mono p-1">
+        <%= octicon "repo" %>
+        <%= link_to current_submission.github_repository.html_url, current_submission.github_repository.html_url %>
+      </span>
+    </p>
+    <% if @current_assignment.deadline %>
+      <% if @current_assignment.deadline.passed? %>
+        Deadline passed
+      <% else %>
+      <p class="f5 bg-transparent rounded-1 lh-default text-gray">
+        <span class="d-block-inline mx-1 pb-1"><%= octicon "calendar" %></span>
+        Your assignment is due by <span class="text-bold text-gray-dark"><%= render partial: "shared/due_date_with_local_time", locals: { deadline: @current_assignment.deadline.deadline_at } %></span>
+      </p>
+      <% end %>
+    <% end %>
+    <p class="col-lg-11 mt-lg-7 mt-sm-4 mb-6 text-gray-light">Note: You may receive an email invitation to join <%= link_to "#{organization.github_organization.login}", organization.github_organization.html_url %> on your behalf. No further action is necessary.</p>
   </div>
-</div>
 
-<div class="site-content-body container-md">
-  <div class="markdown-body text-gray">
-    <h2>You’re ready to go!</h2>
-    <p class='f4 py-2 lh-default'>Your assignment repository has been created here: <span class='f5 bg-blue-light rounded-1 text-mono no-wrap p-1'><%= link_to current_submission.github_repository.html_url, current_submission.github_repository.html_url %></span></p>
-    <p class='f6 pt-2'><strong>Note:</strong> You may receive an email invitation to join <%= link_to "#{organization.github_organization.login}", organization.github_organization.html_url %> on your behalf. No further action is necessary.</p>
+  <div class="Box border-gray rounded-2 js-notice col-lg-4 float-lg-right col-sm-8 mx-sm-auto m-3">
+    <div class="d-flex py-3">
+      <img src='https://ghicons.github.com/assets/images/light/Education.png' alt='GitHub Education icon' height='56' width='56' class='mr-3'/>
+      <div>
+        <h2 class="h5">Apply for the GitHub Student Developer Pack</h2>
+        <p class="text-gray text-normal mt-2">Some content goes here and continues on and on and on.</p>
+      </div>
+    </div>
   </div>
+
 </div>
