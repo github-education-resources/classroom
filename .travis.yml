@@ -55,6 +55,7 @@ env:
     - REDIS_URL="redis://localhost:6379/0"
     - WEBHOOK_SECRET=abcdefg
     - API_SECRET=abcdefg
+    - TOKEN_SECRET=IaVpYV/QqEPwVG+UKqcnigWEnfPXjyemk+ChmK7I2YE=
   matrix:
     - CI_NODE_INDEX=0 DB_VERSION=10
     - CI_NODE_INDEX=1 DB_VERSION=10
