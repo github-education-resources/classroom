@@ -4,20 +4,22 @@
     <p class="f3 py-2 lh-default text-gray">
       You accepted the assignment, <span class="text-bold text-gray-dark"><%= current_assignment.title %></span>. Your assignment repository has been created here:
     </p>
-    <p class="f5 mt-2">
-      <span class="bg-blue-light rounded-1 text-mono p-1">
-        <%= octicon "repo" %>
+    <div class="f5 bg-blue-light rounded-1 text-mono p-1 mt-2 mb-2 d-flex">
+      <span class="pl-1 pr-3"><%= octicon "repo" %></span>
+      <span class="d-block-inline">
         <%= link_to current_submission.github_repository.html_url, current_submission.github_repository.html_url %>
       </span>
-    </p>
+    </div>
     <% if @current_assignment.deadline %>
       <% if @current_assignment.deadline.passed? %>
         Deadline passed
       <% else %>
-      <p class="f5 bg-transparent rounded-1 lh-default text-gray">
-        <span class="d-block-inline mx-1 pb-1"><%= octicon "calendar" %></span>
-        Your assignment is due by <span class="text-bold text-gray-dark"><%= render partial: "shared/due_date_with_local_time", locals: { deadline: @current_assignment.deadline.deadline_at } %></span>
-      </p>
+      <div class="f5 rounded-1 lh-default text-gray d-flex">
+        <span class="ml-1 pb-1 pr-3"><%= octicon "calendar" %></span>
+        <div class="d-block-inline">
+          Your assignment is due by <span class="text-bold text-gray-dark"><%= render partial: "shared/due_date_with_local_time", locals: { deadline: @current_assignment.deadline.deadline_at } %></span>
+        </div>
+      </div>
       <% end %>
     <% end %>
     <p class="col-lg-11 mt-lg-7 mt-sm-4 mb-6 text-gray-light">Note: You may receive an email invitation to join <%= link_to "#{organization.github_organization.login}", organization.github_organization.html_url %> on your behalf. No further action is necessary.</p>
