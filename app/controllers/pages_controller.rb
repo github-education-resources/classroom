@@ -13,6 +13,7 @@ class PagesController < ApplicationController
     "probot-settings",
     "upgrade-your-organization",
     "using-template-repos-for-assignments",
+    "creating-an-individual-assignment",
     "connect-to-lms",
     "generate-lms-credentials",
     "glossary",
