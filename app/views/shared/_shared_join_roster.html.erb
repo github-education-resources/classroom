@@ -1,19 +1,21 @@
 <% view = Shared::SharedJoinRosterView.new(roster: roster, invitation: invitation) %>
 
-<div class="container-md pt-3">
-  <div class="py-4 px-5 bg-gray-light border">
-    <div class="d-inline-flex flex-items-center">
-      <img src='https://ghicons.github.com/assets/images/light/Education.png' alt='GitHub Education icon' height='56' width='56' class='mr-2'/>
-      <div class="overflow-hidden">
-        <h2 class="text-gray text-normal mt-2">Join the classroom, <%= organization.title %></h2>
-      </div>
-    </div>
+<div class="site-content container-md pt-7 px-3">
+
+  <div class="col-lg-10 mx-auto overflow-hidden">
+    <h2 class="f1 text-normal lh-ultra mb-3">
+      Join the classroom:
+      <span class='d-block text-green'><%= organization.title %></span
+    </h2>
   </div>
-  <div class="px-5 py-3 bg-white border border-top-0">
-    <p class="f4 text-gray lh-default">To join the GitHub Classroom for this course, please select yourself from the list below to associate your GitHub account with your school’s identifier (i.e., your name, ID, or email).</p>
-    <p class='text-right text-gray pt-2'>Can’t find your name? <%= link_to "Skip to the next step →" , view.skip_path %> </p>
+
+  <div class="col-lg-10 mx-auto">
+  <!-- <div class="px-5 py-3 bg-white border border-top-0"> -->
+    <p class="f3 text-gray lh-default">To join the GitHub Classroom for this course, please select yourself from the list below to associate your GitHub account with your school’s identifier (i.e., your name, ID, or email).</p>
+    <p class='text-right text-gray pt-1 pb-3'>Can’t find your name? <%= link_to "Skip to the next step →" , view.skip_path %> </p>
+
     <div class="border my-3">
-      <h3 class="f4 text-normal bg-gray-light p-2 pl-3 border-bottom "><%= roster.identifier_name %></h3>
+      <h3 class="f4 bg-gray-light p-2 pl-3 border-bottom "><%= roster.identifier_name %></h3>
         <div class="overflow-auto" style="height:calc(50vh - 60px);">
           <% roster.unlinked_entries.sort_by(&:identifier).each do |entry| %>
             <div class="menu-item px-2 py-1">

@@ -1,14 +1,17 @@
-<div class="site-content container-lg pt-4 py-3 px-3 clearfix gutter">
+<div class="site-content container-md pt-7 px-3">
 
-  <div class="col-lg-7 col-sm-8 mx-auto">
+  <div class="col-lg-10 mx-auto mb-4">
   <!-- <div class="col-lg-7 col-sm-8 mx-sm-auto float-lg-left"> -->
     <div class="mb-3 col-md-2 col-sm-3" style="max-height:96px;max-width:96px">
       <img src="https://ghicons.github.com/assets/images/light/Admin%20mentoring.png" alt="hands high five" class="p-3 width-fit border" style="border-radius: 54px;"/>
     </div>
-    <h2 class="h1 mb-4">You’re ready to go!</h2>
+    <h2 class="f1 text-normal lh-ultra mb-4">
+      You’re ready to go &mdash;
+      <span class='d-block text-green'><%= group.github_team.name %></span>
+    </h2>
 
-    <p class="f3 py-2 lh-default text-gray">
-      You accepted the group assignment, <span class="text-bold text-gray-dark"><%= group_assignment.title %></span>, with the team <span class="text-bold text-gray-dark"><%= group.github_team.name %></span>. Your assignment repository has been created:
+    <p class="f3 pb-2 lh-default text-gray">
+      You accepted the assignment, <span class="text-bold text-gray-dark"><%= group_assignment.title %></span>. Your team’s assignment repository has been created:
     </p>
 
     <div class="f5 bg-blue-light rounded-1 text-mono p-1 mt-2 mb-2 d-flex">

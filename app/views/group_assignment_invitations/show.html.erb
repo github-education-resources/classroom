@@ -1,20 +1,22 @@
-<div class="container-md pt-3">
+<div class="site-content container-md pt-7 px-3">
 
-  <div class="site-content">
-    <div class="site-content-cap d-flex flex-items-center">
-      <div class="assignment-icon assignment-icon-group">
-        <%= octicon 'organization', height: 22 %>
-      </div>
-      <h2 class="text-normal lh-ultra">
-        Accept the assignment <span class='text-bold no-wrap'><%= group_assignment.title %></span>
-      </h2>
-    </div>
+  <div class="col-lg-10 mx-auto mb-4">
+    <div class="f4 text-mono d-block text-gray-light"><%= organization.title %></div>
+    <h2 class="f1 text-normal lh-ultra mb-4">
+      Accept the group assignment &mdash;
+      <span class='d-block text-green'><%= group_assignment.title %></span>
+    </h2>
   </div>
 
-  <div class="site-content-body">
+  <div class="col-lg-10 mx-auto mb-4">
+
     <div class="pb-2 text-gray">
-      <p class="f4 lh-default">Once you accept this <%= organization.title %> assignment, your team will be granted access to the assignment repository in the <%= link_to "#{organization.github_organization.login}", organization.github_organization.html_url %> organization on GitHub.</p>
-      <p class="f4 lh-default">Make sure you select the correct team as you won’t be able to change this later.</p>
+      <p class="f3 lh-default">
+        Once you accept this assignment, your team will be granted access to the assignment repository in the <%= link_to "#{organization.github_organization.login}", organization.github_organization.html_url %> organization on GitHub.
+      </p>
+      <p class="f3 lh-default">
+        Be sure to select the correct team as you won’t be able to change this later.
+      </p>
     </div>
 
     <% if @groups.present? %>
@@ -67,5 +69,7 @@
         </dd>
       </dl>
     <% end %>
+
   </div>
+
 </div>
