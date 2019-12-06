@@ -32,7 +32,7 @@ jobs:
         run: |
           bundle exec rake db:create db:schema:load db:test:prepare
           bundle exec rake factory_bot:lint
-      - name: Lint code with Rubocop
+      - name: Tests and Linting
         env:
           KNAPSACK_GENERATE_REPORT: true
           CLASSROOM_WEBHOOK_URL_PREFIX: https://example.com/github/hooks
