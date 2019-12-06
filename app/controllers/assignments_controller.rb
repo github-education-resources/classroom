@@ -14,19 +14,7 @@ class AssignmentsController < ApplicationController
   end
 
   def create
-    @assignment = Assignment.new(new_assignment_params)
-
-    @assignment.build_assignment_invitation
-
-    if @assignment.save
-      @assignment.deadline&.create_job
-
-      send_create_assignment_statsd_events
-      flash[:success] = "\"#{@assignment.title}\" has been created!"
-      redirect_to organization_assignment_path(@organization, @assignment)
-    else
-      render :new
-    end
+  
   end
 
   # rubocop:disable MethodLength
