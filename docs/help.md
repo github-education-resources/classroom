@@ -41,5 +41,5 @@
 
 ### Need more help?
 
-Not finding what you need? Want to talk to a human? [Reach out to GitHub Support.](https://support.github.com)
+Not finding what you need? Want to talk to a human? [Reach out to the GitHub Education team](mailto:education@github.com)
 {: class="flash"}

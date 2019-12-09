@@ -50,5 +50,5 @@ If you don’t see a checkbox in Canvas labeled _Allow this tool to access the I
 
 You may continue linking GitHub Classroom to Canvas without this capability, but you will be unable to sync your roster from Canvas to GitHub Classroom.
 
-Not finding what you need? Want to talk to a human? [Reach out to GitHub Support.](https://support.github.com)
+Not finding what you need? Want to talk to a human? [Reach out to the GitHub Education team.](mailto:education@github.com)
 {: class="flash"}

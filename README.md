@@ -1,5 +1,4 @@
 # GitHub Classroom
-[![Code Climate](https://codeclimate.com/github/education/classroom/badges/gpa.svg)](https://codeclimate.com/github/education/classroom)
 
 ## Table of Contents
 
