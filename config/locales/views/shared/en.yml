@@ -17,4 +17,4 @@ en:
       with_love_by_github: "Made with %{octicon_heart} by the %{education_href} team at %{href}."
       back_to_classroom: 'Back to GitHub Classroom'
       your_classrooms: "Your classrooms"
-      signed_in_as: "Signed in as:"
+      signed_in_as: "Signed in as"

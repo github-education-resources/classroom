@@ -16,7 +16,7 @@
 
               <div role="menu" class="dropdown-menu dropdown-menu-sw mt-2" style="width: 180px">
                 <%= link_to current_user.github_user.html_url, class: "dropdown-item", role: "menuitem" do %>
-                  <%= t("views.shared.signed_in_as") %> <strong class="d-block"><%= current_user.github_user.login %></strong>
+                  <%= t("views.shared.signed_in_as") %> <strong><%= current_user.github_user.login %></strong>
                 <% end %>
 
                 <div role="none" class="dropdown-divider"></div>
