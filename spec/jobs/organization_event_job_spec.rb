@@ -15,12 +15,6 @@ RSpec.describe OrganizationEventJob, type: :job do
       @organization = create(:organization, github_id: payload.dig("organization", "id"))
     end
 
-    describe "returns false" do
-      it "if user is the only member" do
-        expect(OrganizationEventJob.perform_now(payload)).to be_falsey
-      end
-    end
-
     describe "successfully" do
       before(:each) do
         github_user_id = payload.dig("membership", "user", "id")
@@ -35,6 +29,10 @@ RSpec.describe OrganizationEventJob, type: :job do
         OrganizationEventJob.perform_now(payload)
 
         expect { @organization.users.find(uid: @user.uid) }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it "deletes user from organization even if user is the only member" do
+        expect(OrganizationEventJob.perform_now(payload)).to be_truthy
       end
 
       it "deletes user from organization and transfers assignment ownership" do
