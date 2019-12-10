@@ -1,0 +1,48 @@
+name: Ruby
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Ruby 2.6.3
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6.3
+      - name: Start services
+        run: |
+          docker-compose up -d
+      - name: Install PostgreSQL Client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client libpq-dev
+      - name: Install yarn
+        run: |
+          curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.24.6
+          export PATH=$HOME/.yarn/bin:$PATH
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundle install --jobs 4 --retry 3 --without production
+          yarn install
+      - name: Setup the Database
+        run: |
+          bundle exec rake db:create db:schema:load db:test:prepare
+          bundle exec rake factory_bot:lint
+      - name: Tests and Linting
+        env:
+          KNAPSACK_GENERATE_REPORT: true
+          CLASSROOM_WEBHOOK_URL_PREFIX: https://example.com/github/hooks
+          GITHUB_CLIENT_ID: client_id
+          GITHUB_CLIENT_SECRET: client_secret
+          GOOGLE_CLIENT_ID: google_client_id
+          GOOGLE_CLIENT_SECRET: google_client_secret
+          RAILS_ENV: test
+          RACK_ENV: test
+          REDIS_URL: "redis://localhost:9736/0"
+          WEBHOOK_SECRET: abcdefg
+          API_SECRET: abcdefg
+        run: ./bin/rake knapsack:rspec && ./bin/rubocop -D
