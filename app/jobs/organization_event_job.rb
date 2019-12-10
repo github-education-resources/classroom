@@ -11,7 +11,7 @@ class OrganizationEventJob < ApplicationJob
 
     github_user_id = payload_body.dig("membership", "user", "id")
     github_organization_id = payload_body.dig("organization", "id")
-    organizations = Organization.where(github_id: github_organization_id)
+    organizations = Organization.where(github_id: github_organization_id).includes(:users)
 
     return false if organizations.empty?
 
