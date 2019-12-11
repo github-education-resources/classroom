@@ -9,6 +9,7 @@
 ### Guides  
 * [Controlling assignment repository settings with the Probot Settings app](/help/probot-settings)
 * [Creating group assignments](/help/create-group-assignments)
+* [Creating individual assignments](/help/creating-an-individual-assignment)
 * [Upgrading your organization](/help/upgrade-your-organization)
 * [Using template repositories for assignments](/help/using-template-repos-for-assignments)
 * [Connecting GitHub Classroom to your learning management system](/help/connect-to-lms)
