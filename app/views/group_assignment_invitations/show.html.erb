@@ -1,70 +1,75 @@
-<%= render 'organizations/organization_invitation_banner' %>
+<div class="site-content container-md pt-7 px-3">
 
-<div class="site-content">
-  <div class="site-content-cap">
-    <h2 class="site-content-heading">
-      <span class="assignment-icon assignment-icon-group">
-        <%= octicon 'organization', height: 22 %>
-      </span>
-      Accept the <strong><%= group_assignment.title %></strong> assignment
+  <div class="col-lg-10 mx-auto mb-4">
+    <div class="f4 text-mono d-block text-gray-light"><%= organization.title %></div>
+    <h2 class="f1 text-normal lh-ultra mb-4">
+      Accept the group assignment &mdash;
+      <span class='d-block text-green'><%= group_assignment.title %></span>
     </h2>
   </div>
-</div>
 
-<div class="site-content-body">
-  <div class="markdown-body">
-    <p>Accepting this assignment will give your team access to the assignment repository in the <%= link_to "@#{organization.github_organization.login}", organization.github_organization.html_url %> organization on GitHub.</p>
-    <p>Please be certain that the team you are selecting is the correct team as you cannot change this later</p>
+  <div class="col-lg-10 mx-auto mb-4">
+
+    <div class="pb-2 text-gray">
+      <p class="f3 lh-default">
+        Once you accept this assignment, your team will be granted access to the assignment repository in the <%= link_to "#{organization.github_organization.login}", organization.github_organization.html_url %> organization on GitHub.
+      </p>
+      <p class="f3 lh-default">
+        Be sure to select the correct team as you won’t be able to change this later.
+      </p>
+    </div>
+
+    <% if @groups.present? %>
+      <hr>
+
+      <div class="markdown-body">
+        <p><label>Join an existing team</label></p>
+      </div>
+      <div class="team-grid ml-2">
+        <div class="columns">
+          <div class="one-half team-left">
+            <% @groups.each do |group| %>
+                <% if cycle('odd', 'even') == 'odd' %>
+                  <%= render partial: 'group_assignment_team', locals: { group: group } %>
+                <% end %>
+            <% end %>
+          </div>
+          <% reset_cycle %>
+          <div class="one-half team-right">
+            <% @groups.each do |group| %>
+                <% if cycle('odd', 'even') == 'even' %>
+                  <%= render partial: 'group_assignment_team', locals: { group: group } %>
+                <% end %>
+            <% end %>
+          </div>
+        </div>
+
+        <div style="clear:both"></div>
+      </div>
+    <%= render partial: 'shared/pagination', locals: { collection: @groups } %>
+    <% end %>
+
+    <hr />
+
+    <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, method: :patch) do %>
+      <dl class="form">
+        <dt class='pb-1'><label><%= 'OR' if @groups.present? %> Create a new team</label></dt>
+        <dd class="d-flex">
+          <% if group_assignment.max_teams && group_assignment.grouping.groups.count >= group_assignment.max_teams %>
+            <%= text_field_tag 'group[title]', nil, placeholder: 'Team limit reached', disabled: true, class: 'form-control input-block' %>
+            <%= button_tag(type: 'submit', disabled: true, class: 'btn btn-primary js-navigation js-form-submit disabled') do %>
+              <%= octicon 'plus' %> Create team
+            <% end %>
+          <% else %>
+            <%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'form-control input-block' %>
+            <%= button_tag(type: 'submit', class: 'btn btn-primary js-navigation js-form-submit') do %>
+              <%= octicon 'plus' %> Create team
+            <% end %>
+          <% end %>
+        </dd>
+      </dl>
+    <% end %>
+
   </div>
 
-  <% if @groups.present? %>
-    <hr>
-
-    <div class="markdown-body">
-      <p><label>Join an existing team</label></p>
-    </div>
-    <div class="team-grid">
-      <div class="columns">
-        <div class="one-half team-left">
-          <% @groups.each do |group| %>
-              <% if cycle('odd', 'even') == 'odd' %>
-                <%= render partial: 'group_assignment_team', locals: { group: group } %>
-              <% end %>
-          <% end %>
-        </div>
-        <% reset_cycle %>
-        <div class="one-half team-right">
-          <% @groups.each do |group| %>
-              <% if cycle('odd', 'even') == 'even' %>
-                <%= render partial: 'group_assignment_team', locals: { group: group } %>
-              <% end %>
-          <% end %>
-        </div>
-      </div>
-
-      <div style="clear:both"></div>
-    </div>
-  <%= render partial: 'shared/pagination', locals: { collection: @groups } %>
-  <% end %>
-
-  <hr>
-
-  <%= form_tag({ controller: :group_assignment_invitations, action: :accept_invitation}, method: :patch) do %>
-    <dl class="form">
-      <dt><label><%= 'OR' if @groups.present? %> Create a new team</label></dt>
-      <dd class="d-flex">
-        <% if group_assignment.max_teams && group_assignment.grouping.groups.count >= group_assignment.max_teams %>
-          <%= text_field_tag 'group[title]', nil, placeholder: 'Team limit reached', disabled: true, class: 'form-control input-block' %>
-          <%= button_tag(type: 'submit', disabled: true, class: 'btn btn-primary js-navigation js-form-submit disabled') do %>
-            <%= octicon 'plus' %> Create team
-          <% end %>
-        <% else %>
-          <%= text_field_tag 'group[title]', nil, placeholder: 'Create a new team', class: 'form-control input-block' %>
-          <%= button_tag(type: 'submit', class: 'btn btn-primary js-navigation js-form-submit') do %>
-            <%= octicon 'plus' %> Create team
-          <% end %>
-        <% end %>
-      </dd>
-    </dl>
-  <% end %>
 </div>
