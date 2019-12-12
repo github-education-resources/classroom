@@ -18,7 +18,7 @@ jobs:
       - name: Install PostgreSQL Client
         run: |
           sudo apt-get update
-          sudo apt-get install -y postgresql-client libpq-dev
+          sudo apt-get install -y postgresql-client libpq-dev libsodium18
       - name: Install yarn
         run: |
           curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.24.6
