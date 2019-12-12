@@ -15,7 +15,7 @@ jobs:
       - name: Start services
         run: |
           docker-compose up -d
-      - name: Install PostgreSQL Client
+      - name: Install PostgreSQL Client and libsodium
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client libpq-dev libsodium18
