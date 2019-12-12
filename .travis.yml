@@ -41,7 +41,7 @@ addons:
     packages:
       - postgresql-10
       - postgresql-client-10
-      - libsodium18
+      - libsodium23
 
 env:
   global:
