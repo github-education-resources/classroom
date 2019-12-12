@@ -78,6 +78,8 @@ gem "typhoeus",   "~> 1.3"
 gem "uglifier",      "~> 4.1"
 gem "unicode-emoji", "~> 1.1"
 
+gem "rbnacl", "~> 7.1"
+
 group :development do
   gem "web-console", "~> 3.5", ">= 3.5.1"
 end
