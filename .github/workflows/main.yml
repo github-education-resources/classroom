@@ -45,4 +45,5 @@ jobs:
           REDIS_URL: "redis://localhost:9736/0"
           WEBHOOK_SECRET: abcdefg
           API_SECRET: abcdefg
+          TOKEN_SECRET: "IaVpYV/QqEPwVG+UKqcnigWEnfPXjyemk+ChmK7I2YE="
         run: ./bin/rake knapsack:rspec && ./bin/rubocop -D
