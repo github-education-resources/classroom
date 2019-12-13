@@ -6,7 +6,6 @@ body {
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
   font-size: 13px;
   line-height: 1.4;
-  background-color: $gray-000;
 
   &.site {
     display: flex;
@@ -119,6 +118,10 @@ main {
   }
 }
 
+.organization-banner {
+  border-bottom: 1px solid #e1e4e8;
+}
+
 .organization-nav {
   border-bottom: none;
 
@@ -128,7 +131,7 @@ main {
   .tabnav-tab.selected {
     color: #2f363d;
     border-top: 3px solid #444d56;
-    background-color: #fafbfc;
+    background-color: $bg-white;
   }
 }
 
