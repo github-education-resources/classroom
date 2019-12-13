@@ -1,20 +1,45 @@
-<%= render 'organizations/organization_invitation_banner' %>
+<div class="site-content pt-7 px-3 gutter-condensed">
 
-<div class="site-content">
-  <div class="site-content-cap">
-    <h2 class="site-content-heading">
-      <span class="assignment-icon assignment-icon-individual">
-        <%= octicon 'person', height: 22 %>
-      </span>
-      Accepted the <strong><%= current_assignment.title %></strong> assignment
+  <div class="col-lg-8 col-sm-8 mx-sm-auto float-lg-left">
+    <div class="mb-3 col-md-2 col-sm-3" style="max-height:96px;max-width:96px">
+      <img src="https://ghicons.github.com/assets/images/light/Admin%20mentoring.png" alt="hands high five" class="p-3 width-fit border" style="border-radius: 54px;"/>
+    </div>
+    <h2 class="f1 text-normal lh-ultra mb-4">
+      You’re ready to go!
     </h2>
+    <p class="f3 py-2 lh-default text-gray">
+      You accepted the assignment, <span class="text-bold text-gray-dark"><%= current_assignment.title %></span>. Your assignment repository has been created:
+    </p>
+    <div class="f5 bg-blue-light rounded-1 text-mono p-1 mt-2 mb-2 d-flex">
+      <span class="pl-1 pr-3"><%= octicon "repo" %></span>
+      <span class="d-block-inline">
+        <%= link_to current_submission.github_repository.html_url, current_submission.github_repository.html_url %>
+      </span>
+    </div>
+    <% if @current_assignment.deadline %>
+      <% if @current_assignment.deadline.passed? %>
+        Your assignment was due on <span class="text-bold text-gray-dark"><%= render partial: "shared/due_date_with_local_time", locals: { deadline: @current_assignment.deadline.deadline_at } %></span>
+      <% else %>
+      <div class="f5 rounded-1 lh-default text-gray d-flex">
+        <span class="ml-1 pb-1 pr-3"><%= octicon "calendar" %></span>
+        <div class="d-block-inline">
+          Your assignment is due by <span class="text-bold text-gray-dark"><%= render partial: "shared/due_date_with_local_time", locals: { deadline: @current_assignment.deadline.deadline_at } %></span>
+        </div>
+      </div>
+      <% end %>
+    <% end %>
+    <p class="col-lg-11 mt-lg-7 mt-sm-4 mb-6 text-gray-light">Note: You may receive an email invitation to join <%= link_to "#{organization.github_organization.login}", organization.github_organization.html_url %> on your behalf. No further action is necessary.</p>
   </div>
-</div>
 
-<div class="site-content-body">
-  <div class="markdown-body">
-    <h2>You are ready to go!</h2>
-    <p>You may receive an invitation to join <%= link_to "@#{organization.github_organization.login}", organization.github_organization.html_url %> via email invitation on your behalf. No further action is necessary.</p>
-    <p>Your assignment has been created here: <%= link_to current_submission.github_repository.html_url, current_submission.github_repository.html_url %></p>
+  <div class="Box border-gray rounded-2 js-notice col-lg-3 float-lg-right col-sm-8 mx-sm-auto m-3">
+    <div class="py-3 px-4">
+      <img src='https://ghicons.github.com/assets/images/light/Education.png' alt='GitHub Education icon' height='56' width='56' class='mb-3'/>
+      <div>
+        <h2 class="h5">Join the GitHub Student Developer Pack</h2>
+        <p class="text-gray text-normal mt-2 lh-default">Verified students receive free GitHub Pro plus thousands of dollars worth of the best real-world tools and training from GitHub Education partners &mdash; for free. <a href="https://education.github.com/pack">Learn more</a></p>
+        <a href="https://education.github.com/discount_requests/new" class="btn btn-sm btn-outline my-3 px-3">Apply</a>
+      </div>
+    </div>
   </div>
+
 </div>

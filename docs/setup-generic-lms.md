@@ -28,5 +28,5 @@ When you have successfully linked GitHub Classroom to your LMS, you should be di
 
 [Importing your course roster from your learning management system to GitHub Classroom](/help/import-roster-from-lms)
 
-Not finding what you need? Want to talk to a human? [Open an issue on the GitHub Classroom repository.](https://github.com/education/classroom/issues)
+Not finding what you need? Want to talk to a human? [Reach out to the GitHub Education team.](mailto:education@github.com)
 {: class="flash"}
