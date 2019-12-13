@@ -16,15 +16,14 @@
 
               <div role="menu" class="dropdown-menu dropdown-menu-sw mt-2" style="width: 180px">
                 <%= link_to current_user.github_user.html_url, class: "dropdown-item", role: "menuitem" do %>
-                  <%= t("views.shared.signed_in_as") %> <strong class="d-block"><%= current_user.github_user.login %></strong>
+                  <%= t("views.shared.signed_in_as") %> <strong><%= current_user.github_user.login %></strong>
                 <% end %>
 
                 <div role="none" class="dropdown-divider"></div>
 
                 <%= link_to t("views.shared.your_classrooms"), organizations_path, class: "dropdown-item", role: "menuitem" %>
                 <%= link_to t("views.shared.community_discussion"), "https://education.github.com/forum", class: "dropdown-item", role: "menuitem" %>
-                <%= link_to t("views.shared.report_bug"), 'https://github.com/education/classroom/issues', class: "dropdown-item", role: "menuitem" %>
-                <%= link_to t("views.shared.changelog"), 'https://github.com/education/classroom/pulls?q=is%3Apr+is%3Amerged+sort%3Aupdated-desc', class: "dropdown-item", role: "menuitem", target: '_blank' %>
+                <%= link_to t("views.shared.report_bug"), 'mailto:education@github.com', class: "dropdown-item", role: "menuitem" %>
 
                 <div role="none" class="dropdown-divider"></div>
 
