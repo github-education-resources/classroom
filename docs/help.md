@@ -41,5 +41,5 @@
 
 ### Need more help?
 
-Not finding what you need? Want to talk to a human? [Open an issue on the GitHub Classroom repository.](https://github.com/education/classroom/issues)
+Not finding what you need? Want to talk to a human? [Reach out to the GitHub Education team](mailto:education@github.com)
 {: class="flash"}
