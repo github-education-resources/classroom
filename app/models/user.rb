@@ -89,7 +89,7 @@ class User < ApplicationRecord
   # See https://github.com/education/classroom/issues/445
   def ensure_no_token_scope_loss
     return true if token_was.blank?
-    return true unless token_changed?
+    return true unless token != token_was
 
     old_scopes = GitHub::Token.scopes(token_was)
     new_scopes = GitHub::Token.scopes(token)
