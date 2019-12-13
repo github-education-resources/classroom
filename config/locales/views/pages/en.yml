@@ -37,8 +37,6 @@ en:
           content: 'If you have a small course, GitHub Classroom will make your life easier and save you time. If you have hundreds of students, we have your covered: as many repositories as you need, and webhooks to integrate automated testing tools.'
         - heading: 'Works with your Learning Management System (LMS).'
           content: 'Students submit a link to their assignment repository to your learning management system. Give feedback through comments in GitHub, but keep grades in your LMS.'
-        - heading: 'Are you super-advanced?'
-          content: Do you want to build your own tools? GitHub Classroom is [open source](https://github.com/education/classroom), and we 💖 contributions.
       what_teachers_say_section:
         heading: 'What teachers are saying'
         items:
