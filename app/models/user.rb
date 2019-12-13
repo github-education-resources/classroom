@@ -125,6 +125,6 @@ class User < ApplicationRecord
     return value unless value && value =~ /\AGH_/
 
     hex = value.sub(/\AGH_/, '')
-    encryptor.decrypt([hex].pack("H*"))
+    encryptor.decrypt([hex].pack("H*")).force_encoding(Encoding::UTF_8)
   end
 end
