@@ -1,4 +1,5 @@
 # GitHub Classroom
+[![Build Status](https://travis-ci.org/education/classroom.svg?branch=master)](https://travis-ci.org/education/classroom) [![Code Climate](https://codeclimate.com/github/education/classroom/badges/gpa.svg)](https://codeclimate.com/github/education/classroom)
 
 ## Table of Contents
 
@@ -45,7 +46,9 @@ With GitHub Classroom, you can spin up your course on GitHub and move on to the 
 
 *Works with your Learning Management System (LMS).* Students submit a link to their assignment repository to your learning management system. Give feedback through comments in GitHub, but keep grades in your LMS.
 
-*You’re not alone.* The experts on the GitHub Education team are here to answer any of your questions, and we’ve got [docs](https://classroom.github.com/help), best practices, and a strong community of educators to help you migrate to GitHub Classroom.
+*You’re not alone.* The experts on the GitHub Education team are here to answer any of your questions, and we’ve got [docs](https://github.com/education/classroom/tree/master/docs), best practices, and a strong community of educators to help you migrate to GitHub Classroom.
+
+*Are you super-advanced?* Do you want to build your own tools? We 💖 contributions. Please check out [contributing guidelines](CONTRIBUTING.md).
 
 ## Design principles
 
@@ -163,7 +166,7 @@ After you register your OAuth application, you should fill in the homepage url w
 
 To obtain your GitHub User ID for the `NON_STAFF_GITHUB_ADMIN_IDS` field, go to `https://api.github.com/users/your_username`
 
-To obtain your `Google Client ID/Secret` you will need to [create a new web application](http://console.developers.google.com). When creating credentials choose `OAuth Client ID`, then fill in the `Authorized JavaScript origins` with `http://localhost:5000` and the `Authorized redirect URIs` with `http://localhost:5000/auth/github/callback`.
+To obtain your `Google Client ID/Secret` you will need to [create a new web application](http://console.developers.google.com). When creating credentials choose `OAuth Client ID`, then fill in the `Authorized JavaScript origins` with `http://localhost:5000` and the `Authorized redirect URIs` with `http://localhost:5000/auth/github/callback`. 
 
 After creating your Google credientials, add the Google Classroom scopes of:
 * `https://www.googleapis.com/auth/classroom.courses.readonly`
@@ -264,6 +267,9 @@ ENV Variable | Description |
 `GOOGLE_ANALYTICS_TRACKING_ID` | identifier for Google Analytics in the format `UA-.*`
 `PINGLISH_ENABLED` | Enable the `/_ping` endpoint with relevant health checks
 `MOTD` | Show the message of the day banner at the top of the site
+
+## Help wanted
+If you're interested in helping out with GitHub Classroom development and looking for a place to get started, check out the issues labeled [`help-wanted`](https://github.com/education/classroom/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted+%3Araised_hand_with_fingers_splayed%3A%22) and feel free to ask any questions you have before diving into the code.
 
 ## Contributors
 GitHub Classroom is developed by these [contributors](https://github.com/education/classroom/graphs/contributors).
