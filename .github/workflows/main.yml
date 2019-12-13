@@ -17,6 +17,7 @@ jobs:
           docker-compose up -d
       - name: Install PostgreSQL Client and libsodium
         run: |
+          sudo rm -f /etc/apt/sources.list.d/dotnetdev.list /etc/apt/sources.list.d/microsoft-prod.list
           sudo apt-get update
           sudo apt-get install -y postgresql-client libpq-dev libsodium23
       - name: Install yarn
