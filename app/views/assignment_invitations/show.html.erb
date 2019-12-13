@@ -1,28 +1,27 @@
-<%= render 'organizations/organization_invitation_banner' %>
+<div class="site-content container-md pt-7 px-3">
 
-<div class="site-content">
-  <div class="site-content-cap">
-    <h2 class="site-content-heading">
-      <span class="assignment-icon assignment-icon-individual">
-        <%= octicon 'person', height: 22 %>
-      </span>
-      Accept the <strong><%= current_assignment.title %></strong> assignment
+  <div class="col-lg-10 mx-auto mb-4">
+
+    <div class="f4 text-mono d-block text-gray-light"><%= organization.title %></div>
+    <h2 class="f1 text-normal lh-ultra mb-4">
+      Accept the assignment &mdash;
+      <span class='d-block text-green'><%= current_assignment.title %></span>
     </h2>
+
+    <%= form_tag({ controller: :assignment_invitations, action: :accept }, method: :patch) do %>
+    <div class="pb-2 text-gray">
+        <p class="f3 lh-default">
+          Once you accept this  assignment, you will be granted access to the <span class="text-mono bg-blue-light f4 rounded-1 p-1 mr-1"><%= "#{current_assignment.slug}-#{current_user.github_user.login(use_cache: false)}" %></span>
+          repository in the <%= link_to "#{organization.github_organization.login}", organization.github_organization.html_url %> organization on GitHub.
+        </p>
+      </div>
+
+      <div class="form-actions">
+        <% loader = ' js-navigation' %>
+        <%= submit_tag 'Accept this assignment', class: 'btn btn-primary' + loader %>
+      </div>
+    <% end %>
+
   </div>
-</div>
 
-<div class="site-content-body">
-  <%= form_tag({ controller: :assignment_invitations, action: :accept }, method: :patch) do %>
-    <div class="markdown-body">
-      <p>
-        Accepting this assignment will give you access to the <strong><%= "#{current_assignment.slug}-#{current_user.github_user.login(use_cache: false)}" %></strong>
-        repository in the <%= link_to "@#{organization.github_organization.login}", organization.github_organization.html_url %> organization on GitHub.
-      </p>
-    </div>
-
-    <div class="form-actions">
-      <% loader = ' js-navigation' %>
-      <%= submit_tag 'Accept this assignment', class: 'btn btn-primary' + loader %>
-    </div>
-  <% end %>
 </div>
