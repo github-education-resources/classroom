@@ -39,7 +39,7 @@ if [ "$(uname -s)" = "Darwin" ]; then
 
   brew bundle check >/dev/null 2>&1 || {
     echo "==> Installing Homebrew dependencies..."
-    brew bundle
+    brew bundle --no-lock
 
     # According to homebrew, postgresql@9.4 is pinned and as
     # such is keg-only, which means it is not symlinked into
