@@ -62,8 +62,7 @@ class User < ApplicationRecord
   end
 
   def token=(value)
-    encrypted_value = encrypt_value(value)
-    super(encrypted_value)
+    super(encrypt_value(value))
   end
 
   def token
@@ -115,7 +114,6 @@ class User < ApplicationRecord
 
   def encrypt_value(value)
     return if value.blank?
-
     ciphertext = encryptor.encrypt(value)
     hex = ciphertext.bytes.pack("c*").unpack("H*").first
     "GH_" + hex
@@ -123,7 +121,6 @@ class User < ApplicationRecord
 
   def decrypt_value(value)
     return value unless value && value =~ /\AGH_/
-
     hex = value.sub(/\AGH_/, '')
     encryptor.decrypt([hex].pack("H*")).force_encoding(Encoding::UTF_8)
   end
