@@ -6,8 +6,11 @@
       <div class="pt-3 pt-md-4">
         <div class="d-md-flex flex-justify-between">
           <div class="flex-auto">
+            <p class="f4 mb-md-0 text-gray-light">
+              <%= link_to "Classrooms", organizations_path %> / Classroom
+            </p>
             <h1><%= link_to organization.title, organization, class: "text-gray-dark no-underline" %></h1>
-            <p class="f5 mb-md-0"><%= link_to "#{organization.github_organization.login}", organization.github_organization.html_url, class: "text-gray-dark no-underline" %></p>
+            <p class="f5 mb-md-0"><%= link_to "#{organization.github_organization.login}", organization.github_organization.html_url, class: "text-gray-light no-underline" %></p>
           </div>
         </div>
         <% if organization.archived? %><br><span class="Label v-align-middle" style="background-color: red;">Archived</span><% end %>
