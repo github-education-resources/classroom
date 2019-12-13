@@ -120,8 +120,8 @@ class User < ApplicationRecord
   end
 
   def decrypt_value(value)
-    return value unless value && value =~ /\AGH_/
-    hex = value.sub(/\AGH_/, '')
+    return value unless value && value.start_with?("GH_")
+    hex = value.sub(/\AGH_/, "")
     encryptor.decrypt([hex].pack("H*")).force_encoding(Encoding::UTF_8)
   end
 end
