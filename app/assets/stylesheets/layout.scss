@@ -125,6 +125,11 @@ main {
 .organization-nav {
   border-bottom: none;
 
+  .tabnav {
+    margin-bottom: 0px;
+    border-bottom: 0px;
+  }
+
   .tabnav-tab {
     color: $gray-light;
   }

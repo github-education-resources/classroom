@@ -1,20 +1,22 @@
-<div class="tabnav organization-nav">
-  <nav class="tabnav-tabs" aria-label="Classroom menu">
-    <%= link_to organization, class: "tabnav-tab #{'selected' if current_page?(organization_path(organization)) || request.path_info.include?('assignment')}" do %>
-      <%= octicon 'repo', class: 'mr-1' %>
-      Assignments <span class="Counter"><%= organization.all_assignments(with_invitations: false).count %></span>
-    <% end %>
-    <%= link_to roster_path(organization), class: "tabnav-tab #{'selected' if current_page?(new_roster_path(organization))}" do %>
-      <%= octicon 'organization', class: 'mr-1' %>
-      Students <span class="Counter"><%= organization.roster ? organization.roster.roster_entries.count : 0 %></span>
-    <% end %>
-    <%= link_to settings_invitations_organization_path(organization), class: "tabnav-tab #{'selected' if current_page?(settings_invitations_organization_path(organization))}" do %>
-      <%= octicon 'tools', class: 'mr-1' %>
-      TAs and Admins <span class="Counter"><%= organization.users.count %></span>
-    <% end %>
-    <%= link_to edit_organization_path(organization), class: "tabnav-tab #{'selected' if current_page?(edit_organization_path(organization))}" do %>
-      <%= octicon 'gear', class: 'mr-1' %>
-      Settings
-    <% end %>
-  </nav>
+<div class="organization-nav">
+  <div class="tabnav">
+    <nav class="tabnav-tabs" aria-label="Classroom menu">
+      <%= link_to organization, class: "tabnav-tab #{'selected' if current_page?(organization_path(organization)) || request.path_info.include?('assignment')}" do %>
+        <%= octicon 'repo', class: 'mr-1' %>
+        Assignments <span class="Counter"><%= organization.all_assignments(with_invitations: false).count %></span>
+      <% end %>
+      <%= link_to roster_path(organization), class: "tabnav-tab #{'selected' if current_page?(new_roster_path(organization))}" do %>
+        <%= octicon 'organization', class: 'mr-1' %>
+        Students <span class="Counter"><%= organization.roster ? organization.roster.roster_entries.count : 0 %></span>
+      <% end %>
+      <%= link_to settings_invitations_organization_path(organization), class: "tabnav-tab #{'selected' if current_page?(settings_invitations_organization_path(organization))}" do %>
+        <%= octicon 'tools', class: 'mr-1' %>
+        TAs and Admins <span class="Counter"><%= organization.users.count %></span>
+      <% end %>
+      <%= link_to edit_organization_path(organization), class: "tabnav-tab #{'selected' if current_page?(edit_organization_path(organization))}" do %>
+        <%= octicon 'gear', class: 'mr-1' %>
+        Settings
+      <% end %>
+    </nav>
+  </div>
 </div>
