@@ -52,7 +52,9 @@ class OrganizationsController < Orgs::Controller
       .page(params[:page])
   end
 
-  def edit; end
+  def edit
+    @org_login = current_organization.github_organization.login
+  end
 
   def invitation; end
 

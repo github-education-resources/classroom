@@ -1,111 +1,137 @@
 <div class="remodal-bg">
   <%= render 'organizations/organization_banner', settings: true %>
 
-  <div class="d-md-flex gutter-md">
-    <div class="col-md-3">
-      <div class="my-3">
-        <%= render partial: 'organizations/side_menu' %>
+  <div class="container-lg p-responsive">
+    <div class="d-md-flex flex-items-center flex-justify-between mt-5 mb-3">
+      <div class="d-md-flex gutter-md">
+        <div class="col-md-3 text-mono text-normal p-5 h3">
+          Classroom Details
+        </div>
+        <div class="col-md-9 bg-gray-light p-5">
+          <p><strong>Classroom name</strong></p>
+          <%= form_for current_organization do |f| %>
+            <%= render 'shared/error_messages', object: f.object %>
+            <dl class="form">
+              <dd>
+                <%= f.text_field :title, class: 'textfield form-control col-12 col-md-9' %>
+                <%= f.submit t('views.organizations.save_changes'), class: 'btn' %>
+              </dd>
+            </dl>
+          <% end %>
+
+          <p><strong>Organization account</strong></p>
+          <p><%= link_to @org_login, "#{GitHubClassroom.github_url}/orgs/#{@org_login}" %></p>
+
+          <div class="d-flex">
+            <div>
+              GitHub Classroom uses <%= @org_login %> to manage permissions, administration, and security for your classroom. Organization accounts are managed on github.com, not classroom.github.com.
+            </div>
+            <div class="p-3">
+              <%= link_to "Organization settings", "#{GitHubClassroom.github_url}/organizations/#{@org_login}/settings/profile", class: "btn" %>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="col-md-9">
-      <div class="Subhead mt-3">
-        <h1 class="Subhead-heading"><%= t('views.organizations.profile_information') %></h1>
-      </div>
-      <%= form_for current_organization do |f| %>
-        <%= render 'shared/error_messages', object: f.object %>
-        <dl class="form">
-          <dt class="mb-2"><%= f.label :title %></dt>
-          <dd><%= f.text_field :title, class: 'textfield form-control col-12 col-md-6' %></dd>
-        </dl>
-        <%= f.submit t('views.organizations.save_changes'), class: 'btn btn-primary' %>
-      <% end %>
 
-      <div class="Box Box--condensed mt-5">
-        <div class="Box-header">
-          <h2 class="Box-title"><%= "Learning management system" %></h2>
+    <div class="d-md-flex flex-items-center flex-justify-between mt-5 mb-3">
+      <div class="d-md-flex gutter-md">
+        <div class="col-md-3 text-mono text-normal p-5 h3">
+          Classroom settings
         </div>
 
-        <div class="Box-body">
-          <% if current_organization.lti_configuration %>
-            <% lms_name = current_organization.lti_configuration.lms_name(default_name: "a learning management system") %>
-            You are currently connected to <%= lms_name %>.
-            <%= link_to "Connection Settings", lti_configuration_path(current_organization) %>
-          <% elsif current_organization.google_course_id %>
-            You are currently connected to Google Classroom.
+        <div class="col-md-9 bg-gray-light p-5">
+          <p><strong>Connect to a learning management system (LMS)</strong></p>
+
+          <div class="d-flex">
+            <% if current_organization.lti_configuration %>
+              <% lms_name = current_organization.lti_configuration.lms_name(default_name: "a learning management system") %>
+              You are currently connected to <%= lms_name %>.
+              <%= link_to "Connection Settings", lti_configuration_path(current_organization) %>
+            <% elsif current_organization.google_course_id %>
+              You are currently connected to Google Classroom.
+            <% else %>
+              <div>
+                <p>Integrate GitHub Classroom with your institution's learning management system to sync your student roster and unlock new capabilities. <%= link_to "Learn more", help_path(article_name: "connect-to-lms") %></p>
+              </div>
+              <div class="p-3">
+                <%= link_to "Connect to LMS",
+                  link_lms_organization_path(current_organization),
+                  class: "btn btn-secondary"
+                %>
+              </div>
+            <% end %>
+          </div>
+
+          <% if classroom_visibility_enabled? %>
+            <div class="details-reset details-overlay">
+              <a data-remodal-target="organization-visibility-private" class="btn btn-danger boxed-action"><%= t('views.organizations.private') %>
+              </a>
+              <a data-remodal-target="organization-visibility-public" class="btn btn-danger boxed-action"><%= t('views.organizations.public') %>
+              </a>
+            </div>
+            <strong><%= t('views.organizations.visibility_title') %></strong>
+            <p><%= t('views.organizations.visibility_description') %></p>
+          <% end %>
+
+          <% if current_organization.google_course_id %>
+            <div class="details-reset details-overlay">
+              <%= button_to "Unlink Google Classroom", google_classrooms_delete_organization_path, method: :delete, class: "btn btn-danger boxed-action"%>
+            </div>
+            <strong>Unlink Google Classroom</strong>
+            <p>Unlinking Google Classroom will not remove any students and assignments from GitHub Classoom.</p>
+          <% end %>
+
+          <% if current_organization.archived_at %>
+            <div class="details-reset details-overlay">
+              <%= form_for current_organization do |f| %>
+                <%= f.hidden_field :archived, value: false %>
+                <%= f.submit t('views.organizations.unarchive_submit'), class: "btn btn-danger boxed-action" %>
+              <% end %>
+            </div>
+            <p><strong><%= t('views.organizations.unarchive_title') %></strong></p>
+            <p><%= t('views.organizations.unarchive_description') %></p>
           <% else %>
-            <p>You are currently not connected to a learning management system. Integrating GitHub Classroom
-            with your institution will unlock new capabilities and enhance your experience.</p>
-            <%= link_to "Connect to a learning management system",
-              link_lms_organization_path(current_organization),
-              class: "btn btn-sm btn-secondary d-inline-flex flex-items-center mb-2 mr-1"
-            %>
-            <%= link_to "Learn more", help_path(article_name: "connect-to-lms") %>
+            <p><strong><%= t('views.organizations.archive_title') %></strong></p>
+            <div class="d-flex">
+              <div>
+                <p><%= t("views.organizations.archive_description_html") %></p>
+              </div>
+              <div class="p-3 details-reset details-overlay">
+                <a data-remodal-target="archive" class="btn boxed-action"><%= t('views.organizations.archive_submit') %></a>
+              </div>
+            </div>
           <% end %>
         </div>
       </div>
+    </div>
 
-      <div class="Box Box--condensed mt-5">
-        <div class="Box-header bg-red">
-          <h2 class="Box-title text-white"><%= t('views.organizations.danger_zone') %></h2>
+    <div class="d-md-flex flex-items-center flex-justify-between mt-5 mb-3">
+      <div class="d-md-flex gutter-md">
+        <div class="col-md-3 text-mono text-normal p-5 h3">
+          Delete classroom
         </div>
 
-        <div class="Box-body">
-          <ul>
-            <% if classroom_visibility_enabled? %>
-              <li class="Box-row">
-                <div class="details-reset details-overlay">
-                  <a data-remodal-target="organization-visibility-private" class="btn btn-danger boxed-action"><%= t('views.organizations.private') %>
-                  </a>
-                  <a data-remodal-target="organization-visibility-public" class="btn btn-danger boxed-action"><%= t('views.organizations.public') %>
-                  </a>
-                </div>
-                <strong class="text-gray"><%= t('views.organizations.visibility_title') %></strong>
-                <p class="text-gray"><%= t('views.organizations.visibility_description') %></p>
-              </li>
-            <% end %>
-            <% if current_organization.google_course_id %>
-              <li class="Box-row">
-                <div class="details-reset details-overlay">
-                  <%= button_to "Unlink Google Classroom", google_classrooms_delete_organization_path, method: :delete, class: "btn btn-danger boxed-action"%>
-                </div>
-                <strong>Unlink Google Classroom</strong>
-                <p>Unlinking Google Classroom will not remove any students and assignments from GitHub Classoom.</p>
-              </li>
-            <% end %>
-            <li class="Box-row">
-              <% if current_organization.archived_at %>
-                <div class="details-reset details-overlay">
-                  <%= form_for current_organization do |f| %>
-                    <%= f.hidden_field :archived, value: false %>
-                    <%= f.submit t('views.organizations.unarchive_submit'), class: "btn btn-danger boxed-action" %>
-                  <% end %>
-                </div>
-                <strong class="text-gray"><%= t('views.organizations.unarchive_title') %></strong>
-                <p class="text-gray"><%= t('views.organizations.unarchive_description') %></p>
-              <% else %>
-                <div class="details-reset details-overlay">
-                  <a data-remodal-target="archive" class="btn btn-danger boxed-action"><%= t('views.organizations.archive_submit') %></a>
-                </div>
-                <strong class="text-gray"><%= t('views.organizations.archive_title') %></strong>
-                <p class="text-gray"><%= t('views.organizations.archive_description') %></p>
-              <% end %>
-            </li>
-            <li class="Box-row">
+        <div class="Box Box--danger col-md-9 bg-gray-light p-5">
+          <p><strong class="text-red"><%= t('views.organizations.delete_title') %></strong></p>
+          <div class="d-flex">
+            <div>
+              <p><%= t('views.organizations.theres_no_going_back_html') %></p>
+            </div>
+            <div class="p-3">
               <div class="details-reset details-overlay">
                 <a data-remodal-target="reset-and-remove-organization" class="btn btn-danger boxed-action"><%= t('views.organizations.delete_submit') %>
-                </a>
+               </a>
               </div>
-              <strong class="text-gray"><%= t('views.organizations.delete_title') %></strong>
-              <p class="text-gray"><%= t('views.organizations.theres_no_going_back') %></p>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-
-  <%= render partial: 'organizations/reset_and_remove_organization_modal' %>
-  <%= render partial: 'organizations/organization_visibility_private_modal' %>
-  <%= render partial: 'organizations/organization_visibility_public_modal' %>
-  <%= render partial: 'organizations/archive_modal' %>
 </div>
+
+<%= render partial: 'organizations/reset_and_remove_organization_modal' %>
+<%= render partial: 'organizations/organization_visibility_private_modal' %>
+<%= render partial: 'organizations/organization_visibility_public_modal' %>
+<%= render partial: 'organizations/archive_modal' %>
