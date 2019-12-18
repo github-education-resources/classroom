@@ -75,22 +75,30 @@
           <% end %>
 
           <% if current_organization.google_course_id %>
-            <div class="details-reset details-overlay">
-              <%= button_to "Unlink Google Classroom", google_classrooms_delete_organization_path, method: :delete, class: "btn btn-danger boxed-action"%>
+            <p><strong>Unlink Google Classroom</strong></p>
+            <div class="d-flex">
+              <div>
+                Unlinking Google Classroom will not remove any students and assignments from GitHub Classoom.
+              </div>
+              <div class="p-3 details-reset details-overlay">
+                <%= button_to "Unlink Google Classroom", google_classrooms_delete_organization_path, method: :delete, class: "btn btn-danger boxed-action"%>
+              </div>
             </div>
-            <strong>Unlink Google Classroom</strong>
-            <p>Unlinking Google Classroom will not remove any students and assignments from GitHub Classoom.</p>
           <% end %>
 
           <% if current_organization.archived_at %>
-            <div class="details-reset details-overlay">
-              <%= form_for current_organization do |f| %>
-                <%= f.hidden_field :archived, value: false %>
-                <%= f.submit t('views.organizations.unarchive_submit'), class: "btn btn-danger boxed-action" %>
-              <% end %>
-            </div>
             <p><strong><%= t('views.organizations.unarchive_title') %></strong></p>
-            <p><%= t('views.organizations.unarchive_description') %></p>
+            <div class="d-flex">
+              <div>
+                <%= t('views.organizations.unarchive_description') %>
+              </div>
+              <div class="p-3 details-reset details-overlay">
+                <%= form_for current_organization do |f| %>
+                  <%= f.hidden_field :archived, value: false %>
+                  <%= f.submit t('views.organizations.unarchive_submit'), class: "btn btn-danger boxed-action" %>
+                <% end %>
+              </div>
+            </div>
           <% else %>
             <p><strong><%= t('views.organizations.archive_title') %></strong></p>
             <div class="d-flex">
