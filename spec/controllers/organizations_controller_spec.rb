@@ -213,6 +213,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
   describe "GET #edit", :vcr do
     it "returns success and sets the organization" do
+      stub_org_request(organization.github_id)
       get :edit, params: { id: organization.slug }
 
       expect(response).to have_http_status(200)
