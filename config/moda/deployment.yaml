@@ -1,0 +1,5 @@
+environments:
+- name: production
+  cluster_selector:
+    profile: general
+    region: iad
