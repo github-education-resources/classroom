@@ -108,15 +108,6 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :groupings, only: %i[show edit update] do
-        resources :groups, only: [:show] do
-          member do
-            patch "/memberships/:user_id", to: "groups#add_membership", as: "add_membership"
-            delete "/memberships/:user_id", to: "groups#remove_membership", as: "remove_membership"
-          end
-        end
-      end
-
       resources :assignments do
         resources :assignment_repos, only: [:show], controller: "orgs/assignment_repos"
         get "/roster_entries/:roster_entry_id", to: "orgs/roster_entries#show", as: "roster_entry"
