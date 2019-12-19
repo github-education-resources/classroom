@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class OrganizationsController < Orgs::Controller
-  before_action :ensure_team_management_flipper_is_enabled, only: [:show_groupings]
-
   before_action :authorize_organization_addition,     only: [:create]
   before_action :set_users_github_organizations,      only: %i[index new create]
   before_action :add_current_user_to_organizations,   only: [:index]
@@ -57,10 +55,6 @@ class OrganizationsController < Orgs::Controller
   end
 
   def invitation; end
-
-  def show_groupings
-    @groupings = current_organization.groupings
-  end
 
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize

@@ -6,11 +6,6 @@
   <%= link_to t('views.organizations.classroom_profile'), edit_organization_path(organization),
               class: "menu-item #{'selected' if current_page?(edit_organization_path(organization))}" %>
 
-  <% if team_management_enabled? %>
-    <%= link_to t('views.organizations.team_management'), settings_teams_organization_path(organization),
-                class: "menu-item #{'selected' if current_page?(settings_teams_organization_path(organization))}" %>
-  <% end %>
-
   <%= link_to t('views.organizations.classroom_admins'),
               settings_invitations_organization_path(organization),
               class: "menu-item #{'selected' if current_page?(settings_invitations_organization_path(organization))}" %>

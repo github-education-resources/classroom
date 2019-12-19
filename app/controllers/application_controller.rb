@@ -10,7 +10,6 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user! # authentication_dependency
 
   helper_method :current_user, :logged_in?, :true_user, :log_out # authentication_dependency
-  helper_method :team_management_enabled? # feature_flags_dependency
 
   # errors_dependency
   rescue_from StandardError, with: :send_to_statsd_and_reraise
