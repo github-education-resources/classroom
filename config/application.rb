@@ -15,7 +15,7 @@ ENV["FAILBOT_BACKEND"] ||= "memory"
 require "failbot_rails"
 FailbotRails.setup("classroom#{'-staging' if Rails.env.staging?}")
 
-Failbot.before_report do |exception, context|
+Failbot.before_report do |_, context|
   # Filter out any failbot params not in the allowlist
   # This keeps the keys in the params, but sets their value to [FILTERED] unless the key is in the allowlist
   filter = ActionDispatch::Http::ParameterFilter.new([ParameterFiltering.filtered_params_proc])

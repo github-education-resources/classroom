@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe "failbot context filtering" do
@@ -16,12 +18,13 @@ RSpec.describe "failbot context filtering" do
 
   it "filters out sensitive data attributes before reporting to the backend" do
     # Simulate when params are automatically pushed into failbot context
-    Failbot.push(params: {
+    params = {
       my_model_name: {
         super_secret_param: "sally@mit.edu",
-        repository_id: 123,
+        repository_id: 123
       }
-    })
+    }
+    Failbot.push(params: params)
 
     Failbot.report(Exception.new)
     report = Failbot.reports.last
