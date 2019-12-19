@@ -19,8 +19,7 @@ Failbot.before_report do |_, context|
   # Filter out any failbot params not in the allowlist
   # This keeps the keys in the params, but sets their value to [FILTERED] unless the key is in the allowlist
   if context["params"]
-    filter = ActionDispatch::Http::ParameterFilter.new([ParameterFiltering.filtered_params_proc])
-    context["params"] = filter.filter(context["params"])
+    context["params"] = ParameterFiltering.filter(context["params"])
   end
 
   # FailbotRails::Middleware adds remote_ip and url to context.
@@ -28,11 +27,7 @@ Failbot.before_report do |_, context|
   context.delete("remote_ip")
   context.delete("url")
 
-  context["message"] = context["message"].gsub(/https?:\/\/[\S]+/) do |url|
-    uri = URI.parse(url)
-    # Filter out path, query params, etc in case they are sensitive
-    "#{uri.scheme}://#{uri.host}/[PATH_FILTERED]"
-  end
+  context["message"] = ParameterFiltering.sanitize_urls(context["message"])
 
   context
 end

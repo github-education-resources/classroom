@@ -18,4 +18,17 @@ module ParameterFiltering
       end
     end
   end
+
+  def self.filter(params)
+    filter = ActionDispatch::Http::ParameterFilter.new([filtered_params_proc])
+    filter.filter(params)
+  end
+
+  def self.sanitize_urls(message)
+    message.gsub(/https?:\/\/[\S]+/) do |url|
+      uri = URI.parse(url)
+      # Filter out path, query params, etc in case they are sensitive
+      "#{uri.scheme}://#{uri.host}/[PATH_FILTERED]"
+    end
+  end
 end
