@@ -26,7 +26,14 @@ Failbot.before_report do |_, context|
   context.delete("remote_ip")
   context.delete("url")
 
-  context
+
+   context["message"] = context["message"].gsub(/https?:\/\/[\S]+/) do |url|
+     uri = URI.parse(url)
+     # Filter out path, query params, etc in case they are sensitive
+     "#{uri.scheme}://#{uri.host}/[PATH_FILTERED]"
+   end
+
+   context
 end
 
 module GitHubClassroom
