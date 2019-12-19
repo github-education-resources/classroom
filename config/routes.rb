@@ -79,7 +79,6 @@ Rails.application.routes.draw do
         get   :setup
         patch :setup_organization
         get   "settings/invitations", to: "organizations#invitation"
-        get   "settings/teams",       to: "organizations#show_groupings"
         delete "users/:user_id",      to: "organizations#remove_user", as: "remove_user"
 
         resource :roster, only: %i[show new create], controller: "orgs/rosters" do
@@ -105,15 +104,6 @@ Rails.application.routes.draw do
           get  "search", to: "orgs/google_classroom_configurations#search", as: "google_classrooms_search"
           post "create", to: "orgs/google_classroom_configurations#create", as: "google_classrooms_create"
           delete "delete", to: "orgs/google_classroom_configurations#destroy", as: "google_classrooms_delete"
-        end
-      end
-
-      resources :groupings, only: %i[show edit update] do
-        resources :groups, only: [:show] do
-          member do
-            patch "/memberships/:user_id", to: "groups#add_membership", as: "add_membership"
-            delete "/memberships/:user_id", to: "groups#remove_membership", as: "remove_membership"
-          end
         end
       end
 
