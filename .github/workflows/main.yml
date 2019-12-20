@@ -11,7 +11,7 @@ jobs:
       - name: Set up Ruby 2.6.3
         uses: actions/setup-ruby@v1
         with:
-          ruby-version: 2.6.3
+          ruby-version: 2.6.4
       - name: Start services
         run: |
           docker-compose up -d
