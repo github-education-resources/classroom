@@ -12,9 +12,9 @@ en:
       already_added: '@%{owner} has already added this organization to GitHub Classroom'
       manage_classroom: 'Manage classroom'
       edit: 'Edit'
-      add_to_organization: '1. Invite TAs and admins to your GitHub organization'
+      add_to_organization: 'Invite TAs and admins to your GitHub organization'
       must_add_as_owner_html: "Organizations are managed on github.com, not classroom.github.com. In order to grant admin access, you must first add them as <strong>owners</strong> to your GitHub organization, <strong>%{organization}</strong>."
-      give_this_link: '2. Ask them to join this classroom URL'
+      give_this_link: 'Ask them to join this classroom URL'
       give_this_link_desc: 'In addition to inviting them to the organization, you also need to send them the classroom invitation URL above to join your classroom. Once they sign in to GitHub Classroom using the invitation link, they will automatically be added to this classroom as admins.'
       remove_user_btn_text: 'Remove administrator'
       remove_owner_desc: 'Please note this will not remove the user from the organization.'

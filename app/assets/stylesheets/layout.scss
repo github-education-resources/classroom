@@ -140,6 +140,16 @@ main {
   }
 }
 
+.circled-number {
+  display: inline-block;
+  padding: 5px 8px;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1;
+  color: $gray-dark;
+  background-color: rgba($black, 0.08);
+  border-radius: 40px;
+}
 
 .site-content,
 .menu {
