@@ -15,6 +15,7 @@ spec:
       containers:
       - name: classroom
         image: classroom
+        command: ["bin/rails", "server"]
         ports:
         - name: http
           containerPort: 8080
