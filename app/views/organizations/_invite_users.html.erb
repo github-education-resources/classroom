@@ -1,10 +1,10 @@
-<div class="col-md-9 bg-gray-light p-5">
+<div class="col-md-9 bg-gray-light rounded-1 p-5">
   <div class="d-md-flex p-3 col-md-11">
     <div class="col-md-2">
       <span class="circled-number">1</span>
     </div>
     <div class="col-md-12">
-      <h4><%= t('views.organizations.add_to_organization') %></h4>
+      <h4 class="h6 pb-1"><%= t('views.organizations.add_to_organization') %></h4>
       <p><%= t('views.organizations.must_add_as_owner_html', organization: sanitize(current_organization.github_organization.login)) %></p>
       <p><%= link_to("Invite TAs and admins to your GitHub organization →", current_organization.github_organization.team_invitations_url) %></p>
     </div>
@@ -15,7 +15,7 @@
       <span class="circled-number">2</span>
     </div>
     <div class="col-md-12">
-      <h4><%= t('views.organizations.give_this_link') %></h4>
+      <h4 class="h6 pb-1"><%= t('views.organizations.give_this_link') %></h4>
 
       <p>
         <div class="col-md-9 input-group">
