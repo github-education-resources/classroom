@@ -11,7 +11,7 @@
         <div class="col-md-9 bg-gray-light rounded-1 p-5">
           <div class="mx-md-3">
 
-            <h4 class="h6 pb-1">Classroom name</h4>
+            <h4 class="h5 pb-1">Classroom name</h4>
             <%= form_for current_organization do |f| %>
               <%= render 'shared/error_messages', object: f.object %>
               <dl class="form">
@@ -22,10 +22,10 @@
               </dl>
             <% end %>
 
-            <h4 class="h6 pb-1">Organization account</h4>
+            <h4 class="h5 pb-1">Organization account</h4>
 
             <div class="d-lg-flex">
-              <p class="pr-lg-4 pb-2 note">
+              <p class="pr-lg-4 pb-2 text-gray-light">
                 GitHub Classroom uses the organization, <%= link_to @org_login, "#{GitHubClassroom.github_url}/orgs/#{@org_login}" %>, to manage permissions, administration, and security for your classroom. Organization accounts are managed on github.com, not classroom.github.com.
               </p>
               <div>
@@ -49,21 +49,21 @@
           <div class="mx-md-3">
 
             <div class="mb-3">
-              <h4 class="h6 pb-1">Connect to a learning management system (LMS)</h4>
+              <h4 class="h5 pb-1">Connect to a learning management system (LMS)</h4>
               <div class="d-lg-flex">
                 <% if current_organization.lti_configuration %>
                   <% lms_name = current_organization.lti_configuration.lms_name(default_name: "a learning management system") %>
-                  <p class="note">
+                  <p class="text-gray-light">
                     You are currently connected to <%= lms_name %>.
                   </p>
                   <%= link_to "Connection Settings", lti_configuration_path(current_organization) %>
                 <% elsif current_organization.google_course_id %>
-                  <p class="note">
+                  <p class="text-gray-light">
                     You are currently connected to Google Classroom.
                   </p>
                 <% else %>
                   <div class="pr-lg-4 pb-2">
-                    <p class="note">Integrate GitHub Classroom with your institution's learning management system to sync your student roster. <%= link_to "Learn more", help_path(article_name: "connect-to-lms") %></p>
+                    <p class="text-gray">Integrate GitHub Classroom with your institution's learning management system to sync your student roster. <%= link_to "Learn more", help_path(article_name: "connect-to-lms") %></p>
                   </div>
                   <div>
                     <%= link_to "Connect to LMS",
@@ -75,10 +75,10 @@
               </div>
 
               <% if current_organization.google_course_id %>
-                <h4 class="h6 pb-1">Unlink Google Classroom</h4>
+                <h4 class="h5 pb-1">Unlink Google Classroom</h4>
                 <div class="d-lg-flex">
                   <div class="pr-lg-4">
-                    <p class="note">
+                    <p class="text-gray-light">
                       Unlinking Google Classroom will not remove any students and assignments from GitHub Classroom.
                     </p>
                   </div>
@@ -91,12 +91,12 @@
 
             <div class="pt-sm-4 pt-lg-0">
               <% if current_organization.archived_at %>
-                <h4 class="h6 pb-1">
+                <h4 class="h5 pb-1">
                   <%= t('views.organizations.unarchive_title') %>
                 </h4>
                 <div class="d-lg-flex">
                   <div>
-                    <p class"note"><%= t('views.organizations.unarchive_description') %></p>
+                    <p class"text-gray-light"><%= t('views.organizations.unarchive_description') %></p>
                   </div>
                   <div class="details-reset details-overlay">
                     <%= form_for current_organization do |f| %>
@@ -106,12 +106,12 @@
                   </div>
                 </div>
               <% else %>
-                <h4 class="h6 pb-1">
+                <h4 class="h5 pb-1">
                   <%= t('views.organizations.archive_title') %>
                 </h4>
                 <div class="d-lg-flex">
                   <div class="pr-lg-4 pb-2">
-                    <p class="note"><%= t("views.organizations.archive_description_html") %></p>
+                    <p class="text-gray-light"><%= t("views.organizations.archive_description_html") %></p>
                   </div>
                   <div class="details-reset details-overlay">
                     <a data-remodal-target="archive" class="btn btn-sm"><%= t('views.organizations.archive_submit') %></a>
@@ -135,12 +135,12 @@
         <div class="Box Box--danger col-md-9 bg-gray-light rounded-1 px-5 pt-4 pb-3">
           <div class="mx-md-3">
 
-            <h4 class="h6 pb-1 text-red"><%= t('views.organizations.delete_title') %></h4>
+            <h4 class="h5 pb-1 text-red"><%= t('views.organizations.delete_title') %></h4>
 
             <div class="d-lg-flex">
 
               <div class="pr-lg-4 pb-sm-2">
-                <p class="note pb-2"><%= t('views.organizations.theres_no_going_back_html') %></p>
+                <p class="text-gray-light pb-2"><%= t('views.organizations.theres_no_going_back_html') %></p>
               </div>
 
               <div class="details-reset details-overlay">
