@@ -698,6 +698,13 @@ footer {
   }
 }
 
+.admin-list-item {
+  &:not(:first-of-type) {
+    border-top: 1px solid $gray-300;
+    padding-top: $spacer-1;
+  }
+}
+
 .member-list {
   min-height: 35px;
 
