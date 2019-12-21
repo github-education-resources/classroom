@@ -35,7 +35,7 @@ en:
       delete_classroom_consequences_html: "This action <strong>CANNOT</strong> be undone. This will permanently delete the <strong>%{classroom_title}</strong> classroom and all repositories and teams created by this classroom in the <strong>%{organization}</strong> organization account."
       delete_confirm: 'Please type the name of the classroom to confirm'
       delete_title: 'Delete this classroom'
-      delete_submit: 'Remove classroom'
+      delete_submit: 'Delete classroom'
       danger_zone: 'The Danger Zone'
       archived_classrooms: 'Archived classrooms'
       archive_consequences_html: "<p>New assignments cannot be created and existing assignment invitations will be disabled while the classroom is archived.</p><p>You can unarchive your classroom at any point.</p>"
@@ -50,7 +50,7 @@ en:
       student_identifiers: 'Student identifiers'
       classroom_admins: 'Administrators'
       save_changes: 'Rename classroom'
-      theres_no_going_back_html: "<strong>Caution</strong>: Once you delete a classroom, all its data and contents -- including student assignment repositories associated with this classroom -- will be removed. This action is irreversible. Please be certain."
+      theres_no_going_back_html: "<strong>Caution</strong>: Once you delete a classroom, all contents and data—including student assignment repositories associated with this classroom—will be permanently removed. This action is irreversible. Please be certain."
       new_classroom: 'New classroom'
       classrooms: 'Classrooms'
       no_classrooms: "You're not managing any classrooms yet."
