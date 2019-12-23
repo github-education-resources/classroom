@@ -12,7 +12,7 @@
             <%= link_to organization.title, organization, class: "text-gray-dark no-underline" %>
             <% if organization.archived? %><span class="Label bg-red v-align-middle ml-1">Archived</span><% end %>
           </h1>
-          <p class="f5 pb-1"><%= link_to "#{organization.github_organization.name}", organization.github_organization.html_url, class: "text-gray no-underline" %></p>
+          <p class="f5 pb-1"><%= link_to organization.github_organization.name, organization.github_organization.html_url, class: "text-gray no-underline" %></p>
         </div>
 
         <div class="mt-3">
