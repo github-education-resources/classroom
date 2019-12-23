@@ -117,7 +117,7 @@ main {
 }
 
 .organization-banner {
-  border-bottom: 1px solid #e1e4e8;
+  border-bottom: 1px solid $gray-200;
 }
 
 .organization-nav {
@@ -132,8 +132,8 @@ main {
     color: $gray-light;
   }
   .tabnav-tab.selected {
-    color: #2f363d;
-    border-top: 3px solid #444d56;
+    color: $gray-800;
+    border-top: 3px solid $orange-600;
     background-color: $bg-white;
   }
 }
