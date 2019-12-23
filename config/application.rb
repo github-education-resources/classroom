@@ -22,8 +22,9 @@ Failbot.before_report do |_, context|
     context["params"] = ParameterFiltering.filter(context["params"])
   end
 
-  # FailbotRails::Middleware adds remote_ip and url to context.
+  # FailbotRails::Middleware adds referrer, remote_ip and url to context.
   # Let's remove them since they are considered sensitive info.
+  context.delete("referrer")
   context.delete("remote_ip")
   context.delete("url")
 
