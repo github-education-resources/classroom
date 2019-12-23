@@ -97,16 +97,6 @@ class Organization < ApplicationRecord
     users.count == 1
   end
 
-  def geo_pattern_data_uri
-    patterns = %i[plaid hexagons plus_signs overlapping_circles overlapping_rings mosaic_squares]
-    options = { base_color: "#28a745", patterns: patterns }
-    if archived?
-      options.delete(:base_color)
-      options[:color] = "#696868"
-    end
-    @geo_pattern_data_uri ||= GeoPattern.generate(id, options).to_data_uri
-  end
-
   # Check if we are the last Classroom on this GitHub Organization
   def last_classroom_on_org?
     Organization.where(github_id: github_id).length <= 1
