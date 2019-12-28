@@ -1,23 +1,22 @@
 <% organization = @organization || current_organization %>
 
 <% content_for :organization_banner do %>
-  <div class="organization-banner" style="background-image: <%= organization.geo_pattern_data_uri %>">
+  <div class="organization-banner bg-gray-light">
     <div class="container-lg p-responsive">
       <div class="pt-3 pt-md-4">
-        <div class="d-md-flex flex-justify-between">
-          <div class="flex-auto">
-            <h1><%= link_to organization.title, organization, class: "text-white no-underline" %></h1>
-            <p class="f5 mb-md-0"><%= link_to "#{organization.github_organization.login}", organization.github_organization.html_url, class: "text-white no-underline" %></p>
-          </div>
-
-          <ul class="list-style-none d-flex flex-items-center">
-            <li class="text-white tooltipped tooltipped-s mr-3" aria-label="<%= t('views.organizations.individual_assignments') %>"><%= octicon 'person', :class => "mr-1" %><%= organization.assignments.count %></li>
-            <li class="text-white tooltipped tooltipped-s" aria-label="<%= t('views.organizations.group_assignments') %>"><%= octicon 'organization', :class => "mr-1" %><%= organization.group_assignments.count %></li>
-          </ul>
+        <div class="flex-auto">
+          <p class="f5 mb-3 lh-ultra">
+            <%= link_to "← Back to classrooms", organizations_path %>
+          </p>
+          <h1>
+            <%= link_to organization.title, organization, class: "text-gray-dark no-underline" %>
+            <% if organization.archived? %><span class="Label bg-red v-align-middle ml-1">Archived</span><% end %>
+          </h1>
+          <p class="f5 pb-1"><%= link_to organization.github_organization.name, organization.github_organization.html_url, class: "text-gray no-underline" %></p>
         </div>
-        <% if organization.archived? %><br><span class="Label v-align-middle" style="background-color: red;">Archived</span><% end %>
+
         <div class="mt-3">
-          <%= render 'organizations/navigation', organization: organization, settings_view: local_assigns[:settings] %>
+          <%= render 'organizations/navigation', organization: organization %>
         </div>
       </div>
     </div>
