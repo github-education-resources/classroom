@@ -61,6 +61,18 @@ class User < ApplicationRecord
     MessageVerifier.encode({ user_id: id }, exp)
   end
 
+  def token=(value)
+    super(encrypt_value(value))
+  end
+
+  def token
+    decrypt_value(super)
+  end
+
+  def token_was
+    decrypt_value(super)
+  end
+
   private
 
   # Internal: We need to make sure that the user
@@ -77,7 +89,7 @@ class User < ApplicationRecord
   # See https://github.com/education/classroom/issues/445
   def ensure_no_token_scope_loss
     return true if token_was.blank?
-    return true unless token_changed?
+    return true unless token != token_was
 
     old_scopes = GitHub::Token.scopes(token_was)
     new_scopes = GitHub::Token.scopes(token)
@@ -91,5 +103,25 @@ class User < ApplicationRecord
 
   def ensure_last_active_at_presence
     self.last_active_at ||= Time.zone.now
+  end
+
+  # Internal: Returns a SimpleBox encryptor for token encryption/decryption.
+  def encryptor
+    token_secret = Rails.application.secrets.token_secret
+    raise "TOKEN_SECRET is not set, please check you .env file" if token_secret.blank?
+    @encryptor ||= RbNaCl::SimpleBox.from_secret_key(token_secret.unpack("m0").first)
+  end
+
+  def encrypt_value(value)
+    return if value.blank?
+    ciphertext = encryptor.encrypt(value)
+    hex = ciphertext.bytes.pack("c*").unpack("H*").first
+    "GH_" + hex
+  end
+
+  def decrypt_value(value)
+    return value unless value && value.start_with?("GH_")
+    hex = value.sub(/\AGH_/, "")
+    encryptor.decrypt([hex].pack("H*")).force_encoding(Encoding::UTF_8)
   end
 end
