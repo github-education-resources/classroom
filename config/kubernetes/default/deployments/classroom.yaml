@@ -2,6 +2,10 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: classroom
+  annotations:
+    heaven.githubapp.com/inject-app-config-into-containers: "classroom"
+    heaven.githubapp.com/inject-heaven-env-vars-into-containers: "classroom"
+    heaven.githubapp.com/image-placeholder: "classroom"
 spec:
   replicas: 2
   selector:
@@ -12,14 +16,74 @@ spec:
       labels:
         app: classroom
     spec:
+      volumes:
+      - name: assets
+        emptyDir: {}
+      - name: nginx-confd
+        configMap:
+          name: nginx-confd
+      initContainers:
+      - name: nginx-assets
+        image: classroom
+        command: ["sh", "-c", "cp -rv /app/public/* /public"]
+        volumeMounts:
+        - mountPath: "/public"
+          name: assets
       containers:
       - name: classroom
         image: classroom
-        command: ["bin/rails", "server"]
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sleep", "5"]
+        command:
+          - bundle
+          - exec
+          - rails
+          - server
+          - '-p8080'
+          - '--binding=0.0.0.0'
+        env:
+          - name: RAILS_ENV
+            value: production
         ports:
         - name: http
           containerPort: 8080
           protocol: TCP
-        envFrom:
-          - configMapRef:
-              name: kube-cluster-metadata
+        readinessProbe:
+          initialDelaySeconds: 10
+          httpGet:
+            path: /robots.txt
+            port: http
+          periodSeconds: 5
+          failureThreshold: 10
+          successThreshold: 1
+      - name: nginx
+        image: nginx:1.15
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sleep", "5", ";", "nginx", "-s", "quit"]
+        ports:
+        - name: proxy-http
+          containerPort: 8082
+          protocol: TCP
+        volumeMounts:
+        - mountPath: "/etc/nginx/conf.d"
+          name: nginx-confd
+        - mountPath: "/public"
+          name: assets
+        livenessProbe:
+          initialDelaySeconds: 5
+          httpGet:
+            path: /robots.txt
+            port: proxy-http
+          periodSeconds: 5
+          failureThreshold: 1
+        readinessProbe:
+          initialDelaySeconds: 5
+          httpGet:
+            path: /robots.txt
+            port: proxy-http
+          periodSeconds: 5
+          failureThreshold: 1
