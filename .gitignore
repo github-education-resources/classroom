@@ -46,3 +46,4 @@ spec/examples.txt
 
 # mac
 .DS_Store
+Brewfile.lock.json
