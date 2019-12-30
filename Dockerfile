@@ -10,7 +10,7 @@ ENV PATH=/usr/local/lib/nodejs/node-$VERSION-$DISTRO/bin:$PATH
 
 # copy in some dependencies from apt
 RUN apt-get update -qq && \
-    apt-get install -y npm
+    apt-get install -y libsodium23
 
 # Yarn
 RUN curl -o- -L https://yarnpkg.com/install.sh | bash
