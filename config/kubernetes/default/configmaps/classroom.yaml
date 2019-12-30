@@ -5,7 +5,7 @@ metadata:
 data:
   default.conf: |-
     upstream classroom {
-      server 127.0.0.1:8080 fail_timeout=1s;
+      server 127.0.0.1:8080;
     }
     server {
       listen 8082;
@@ -17,9 +17,9 @@ data:
       proxy_set_header X-Queue-Start "t=${msec}000";
       proxy_set_header X-Request-Start "t=${msec}000";
       proxy_redirect off;
-      proxy_read_timeout 120s;
-      proxy_connect_timeout 120s;
-      proxy_send_timeout 120s;
+      proxy_read_timeout 3000;
+      proxy_connect_timeout 3000;
+      proxy_send_timeout 3000;
       gzip_static on;
       location / {
         try_files $uri @classroom;
