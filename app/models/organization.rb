@@ -79,7 +79,7 @@ class Organization < ApplicationRecord
     if Rails.env.test?
       token = users.first.token unless users.first.nil?
     else
-      token = users.limit(1).order("RANDOM()").pluck(:token)[0]
+      token = users.limit(1).order("RANDOM()").first.token
     end
 
     GitHubClassroom.github_client(access_token: token)
