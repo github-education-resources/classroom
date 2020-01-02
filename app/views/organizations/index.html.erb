@@ -1,4 +1,4 @@
-<div class="border-bottom border-gray-dark py-3" >
+<div class="pt-3" >
   <% if @organizations.present? %>
 
     <%= render partial: "organization_filters", locals: {
@@ -19,11 +19,12 @@
       <%= render partial: 'organization_card_layout', locals: {organizations: @organizations} %>
     </div>
 <% else %>
-    <div class="blankslate large-format spacious clean-background">
+    <div class="blankslate mt-6 py-8">
+      <img src="https://ghicons.github.com/assets/images/light/Education.png" alt="Education icon" class="mb-3" />
       <h3><%= t('views.organizations.no_classrooms') %></h3>
-      <p><%= t('views.organizations.no_classrooms_desc') %></p>
+      <p class="col-lg-6 mx-auto py-1"><%= t('views.organizations.no_classrooms_desc') %></p>
 
-      <%= link_to new_organization_path, class: 'btn btn-primary btn-big', role: 'button' do %>
+      <%= link_to new_organization_path, class: 'btn btn-sm btn-primary mt-2', role: 'button' do %>
         <%= t('views.organizations.create_first_classroom') %>
       <% end %>
     </div>
