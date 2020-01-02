@@ -32,36 +32,27 @@ en:
       group_assignments: 'Group Assignments'
       are_you_sure: 'Are you sure?'
       are_you_absolutely_sure: 'Are you ABSOLUTELY sure?'
-      public: "Public"
-      private: "Private"
-      visibility_public: "Make all repositories public"
-      visibility_private: "Make all repositories private"
-      visibility_title: "Change visibility of all repositories"
-      visibility_description: "Makes all student assignment/repositories public or private. This will change your assignment settings to reflect your choice."
-      visibility_consequences_html: "This will change the visibility of <strong>all</strong> assignments and repositories related to this classroom."
       delete_warning: "Unexpected things will happen if you don't read this!"
       delete_org_consequences_html: "This action <strong>CANNOT</strong> be undone. This will permanently delete the <strong>%{classroom_title}</strong> classroom and all repositories and teams under the <strong>%{organization}</strong> organization account that were created by GitHub Classroom."
       delete_classroom_consequences_html: "This action <strong>CANNOT</strong> be undone. This will permanently delete the <strong>%{classroom_title}</strong> classroom and all repositories and teams created by this classroom in the <strong>%{organization}</strong> organization account."
       delete_confirm: 'Please type the name of the classroom to confirm'
-      delete_title: 'Reset and remove this classroom'
-      delete_submit: 'Remove classroom'
+      delete_title: 'Delete this classroom'
+      delete_submit: 'Delete classroom'
       danger_zone: 'The Danger Zone'
       archived_classrooms: 'Archived classrooms'
       archive_consequences_html: "<p>New assignments cannot be created and existing assignment invitations will be disabled while the classroom is archived.</p><p>You can unarchive your classroom at any point.</p>"
-      archive_description: 'Mark this classroom as archived. Nothing will be deleted, but you will be unable to create new assignments. Classrooms can be unarchived.'
+      archive_description_html: "Once a classroom is archived, it will be deactivated but <strong>nothing will be deleted</strong>. You won't be able to create new assignments. Students will not be able to submit assignments. Classrooms can be unarchived."
       archive_title: 'Archive this classroom'
-      archive_submit: 'Archive classroom'
-      unarchive_description: 'Mark this classroom as unarchived. It will return to your classroom dashboard.'
+      archive_submit: 'Archive this classroom'
+      unarchive_description: 'Unarchive this classroom to restore activity. You will be able to create new assignments and students will be able to submit assignments.'
       unarchive_title: 'Unarchive this classroom'
-      unarchive_submit: 'Unarchive classroom'
+      unarchive_submit: 'Unarchive this classroom'
       classroom_settings: 'Classroom settings'
       classroom_profile: 'Classroom profile'
       student_identifiers: 'Student identifiers'
-      team_management: 'Team management'
       classroom_admins: 'Administrators'
-      profile_information: 'Profile information'
-      save_changes: 'Save changes'
-      theres_no_going_back: 'Once you reset this classroom, there is no going back. Please be certain.'
+      save_changes: 'Rename classroom'
+      theres_no_going_back_html: "<strong>Caution</strong>: Once you delete a classroom, all contents and data—including student assignment repositories associated with this classroom—will be permanently removed. This action is irreversible. Please be certain."
       new_classroom: 'New classroom'
       classrooms: 'Classrooms'
       no_classrooms: "You’re not managing any classrooms yet"
