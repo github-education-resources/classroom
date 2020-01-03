@@ -4,7 +4,7 @@
   <div class="organization-banner bg-gray-light">
     <div class="container-lg p-responsive">
       <div class="pt-3 pt-md-4">
-        <div class="flex-auto pb-2">
+        <div class="flex-auto">
           <p class="f5 mb-3 lh-ultra">
             <%= link_to "← Back to classrooms", organizations_path %>
           </p>
@@ -12,7 +12,7 @@
             <%= link_to organization.title, organization, class: "text-gray-dark no-underline" %>
             <% if organization.archived? %><span class="Label bg-red v-align-middle ml-1">Archived</span><% end %>
           </h1>
-          <p class="f5 pb-1"><%= link_to organization.github_organization.name, organization.github_organization.html_url, class: "text-gray no-underline" %></p>
+          <p class="f5 pb-1"><%= link_to organization.github_organization.login, organization.github_organization.html_url, class: "text-gray no-underline" %></p>
         </div>
 
         <div class="mt-3">

@@ -61,6 +61,7 @@ span {
 
 main {
   flex: 1;
+  padding-bottom: $spacer-8;
 }
 
 .octicon {
@@ -459,11 +460,18 @@ footer {
   }
 }
 
-.blankslate.spacious {
-  @media screen and (max-width: 40em) {
-    padding: 1rem 0;
+.blankslate {
+  img {
+    width: 56px;
+    height: 56px;
+  }
+  &.spacious {
+    @media screen and (max-width: 40em) {
+      padding: 1rem 0;
+    }
   }
 }
+
 
 .signin-section {
   padding: 6.154em 20px 4.103em;

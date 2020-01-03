@@ -130,6 +130,23 @@ RSpec.describe User, type: :model do
 
       expect(student.token).to eql(good_token)
     end
+
+    it "encrypts and decrypts the token" do
+      expect(student).to receive(:ensure_no_token_scope_loss).and_return(true)
+      student.update_attributes(token: "secret")
+      student.reload
+      expect(student.token).to eql("secret")
+    end
+
+    it "encrypts the token" do
+      student.token = "secret"
+      expect(student.attributes[:token]).to_not eql("secret")
+    end
+
+    it "can read unencrypted tokens" do
+      student.write_attribute(:token, "secret")
+      expect(student.token).to eql("secret")
+    end
   end
 
   describe "invite_statuses" do
