@@ -1,15 +1,25 @@
-<%= render 'organizations/organization_banner', settings: true %>
+<div class="remodal-bg pb-6">
+  <%= render 'organizations/organization_banner', settings: true %>
 
-  <div class="container-lg p-responsive">
+  <div class="container-lg p-responsive pt-6">
     <div class="d-md-flex gutter-md">
-      <div class="col-md-9">
-        <div class="Subhead mt-3">
-          <h1 class="Subhead-heading"><%= t('views.organizations.administrators') %></h1>
-        </div>
+        <h3 class="col-md-3 f5 text-mono text-normal text-gray px-5 py-3">
+          Classroom admins
+        </h3>
 
         <%= render partial: 'organizations/organization_users' %>
+    </div>
+
+    <div class="d-md-flex flex-items-center flex-justify-between mt-5 mb-3">
+      <div class="d-md-flex gutter-md">
+        <h3 class="col-md-3 f5 text-mono text-normal text-gray p-5">
+          Invite admins
+        </h3>
+
         <%= render partial: 'organizations/invite_users' %>
+
       </div>
     </div>
+
   </div>
 </div>

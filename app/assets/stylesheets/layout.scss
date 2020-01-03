@@ -139,6 +139,31 @@ main {
   }
 }
 
+.numbered-list {
+  list-style: none;
+  counter-reset: circled-counter;
+  li {
+    counter-increment: circled-counter;
+    position: relative;
+    margin: 0;
+    padding-left: $spacer-7;
+    padding-bottom: $spacer-4;
+    &::before {
+      content: counter(circled-counter);
+      position: absolute;
+      margin-right: -($spacer-5);
+      top: 1px;
+      background-color: $gray-200;
+      right: 100%;
+      border-radius: 50%;
+      padding: 2px;
+      height: $spacer-3;
+      width: $spacer-3;
+      text-align: center;
+      font-size: 80%;
+    }
+  }
+}
 
 .site-content,
 .menu {
@@ -701,6 +726,13 @@ footer {
 
   .team-member:not(:first-child) {
     margin-top: 10px;
+  }
+}
+
+.admin-list-item {
+  &:not(:first-of-type) {
+    border-top: 1px solid $gray-300;
+    padding-top: $spacer-1;
   }
 }
 
