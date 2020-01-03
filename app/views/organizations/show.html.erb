@@ -16,9 +16,9 @@
     <div class="blankslate mt-3 py-8">
       <img src="https://ghicons.github.com/assets/images/light/Code%20Hosting.png" alt="repository icon" class="mb-3" />
       <h3 class="lh-condensed mb-2"><%= t('views.organizations.no_assignments') %></h3>
-      <p class="col-md-8 mx-auto">
+      <p class="col-md-9 mx-auto">
         <a href='<%= new_organization_assignment_path(current_organization) %>'>Create an individual assignment</a> to generate an assignment repository for each student to work from.
-        Or, <a href='<%= new_organization_group_assignment_path(current_organization) %>'>create a group assignment</a> and have students work collaboratively in team repositories.
+        Or, <a href='<%= new_organization_group_assignment_path(current_organization) %>'>create a group assignment</a> and have students work collaboratively in groups from team repositories.
       </p>
       <details class="dropdown details-reset details-overlay d-inline-block mt-2">
         <summary class="btn btn-primary btn-sm" aria-haspopup="true">
@@ -31,6 +31,10 @@
           <li><a class="dropdown-item " href='<%= new_organization_group_assignment_path(current_organization) %>'>Group assignment</a></li>
         </ul>
       </details>
+
+      <p class="note mt-6">
+        Learn how to create an <a href="https://classroom.github.com/help/creating-an-individual-assignment">individual assignment</a> or a <a href="https://classroom.github.com/help/create-group-assignments">group assignment</a>.
+      </p>
 
     </div>
   <% end %>
