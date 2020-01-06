@@ -13,7 +13,7 @@
     <%= render @assignments %>
     <%= render partial: 'shared/pagination', locals: { collection: @assignments } %>
   <% else %>
-    <div class="blankslate mt-3 py-8">
+    <div class="blankslate blankslate-clean-background border mt-3 py-8">
       <img src="https://ghicons.github.com/assets/images/light/Code%20Hosting.png" alt="repository icon" class="mb-3" />
       <h3 class="lh-condensed mb-2"><%= t('views.organizations.no_assignments') %></h3>
       <p class="col-md-9 mx-auto">
