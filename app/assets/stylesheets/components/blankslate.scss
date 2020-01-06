@@ -7,7 +7,15 @@
   border: 1px solid $gray-200;
   border-radius: 3px;
   box-shadow: inset 0 0 10px rgba($black, 0.05);
-
+  img {
+    width: 56px;
+    height: 56px;
+  }
+  &.spacious {
+    @media screen and (max-width: 40em) {
+      padding: 1rem 0;
+    }
+  }
   code {
     padding: 2px 5px 3px;
     font-size: $h5-size;
