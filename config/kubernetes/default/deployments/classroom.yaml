@@ -36,6 +36,12 @@ spec:
           preStop:
             exec:
               command: ["sleep", "5"]
+        resources:
+          requests:
+            cpu: 500m
+            memory: 500Mi
+          limits:
+            memory: 2Gi
         command:
           - bundle
           - exec
