@@ -45,12 +45,11 @@ Rails.application.configure do
 
   # Mount Action Cable outside main process or domain
   # config.action_cable.mount_path = nil
-  # config.action_cable.url = 'wss://example.com/cable'
-  # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
-  # rubocop:disable Style/RegexpLiteral
-  config.action_cable.url = [/ws:\/\/*/, /wss:\/\/*/]
-  config.action_cable.allowed_request_origins = [/http:\/\/*/, /https:\/\/*/]
-  # rubocop:enable Style/RegexpLiteral
+
+  # This is currently set to wild card so it will work accross the range of Moda namespaces.
+  # Once we switch over to using classroom.github.com we should make it more specific
+  config.action_cable.url = %r{wss://*}
+  config.action_cable.allowed_request_origins = %r{https://*}
 
   config.force_ssl = false
 
