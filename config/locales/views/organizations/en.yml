@@ -2,8 +2,10 @@ en:
   views:
     organizations:
       select_organization: 'Select an organization for your new classroom'
-      no_organizations: 'Oh, you don’t have any organizations on your GitHub account.'
-      please_create_or_authorize_new_organization: "Please <a href='https://github.com/organizations/new'>create an organization on GitHub.com</a> or %{authorize_href} and then come back."
+      new_organization_button_label: 'Create a new organization'
+      select_organization_desc: 'GitHub Classroom uses organization accounts to manage permissions, administration, and security for classrooms.'
+      no_organizations: 'Oh, you don’t have any organizations on your GitHub account'
+      please_create_or_authorize_new_organization: "Please <a href='https://github.com/account/organizations/new?coupon=&plan=team_free'>create an organization</a> or %{authorize_href}."
       authorize_organization_access_link: "authorize an existing one"
       grant_organization_access: "Grant access to an organization that is not listed"
       grant_organization_access_protip: "<strong>ProTip!</strong> Don't see your organization? You need to %{href} first."
@@ -12,13 +14,10 @@ en:
       already_added: '@%{owner} has already added this organization to GitHub Classroom'
       manage_classroom: 'Manage classroom'
       edit: 'Edit'
-      invite_administrator: 'Invite other administrators'
-      administrators: 'Administrators'
-      add_to_organization: '1. Add them to your GitHub Organization'
-      must_add_as_owner: 'You must add them to the Organization as an Owner in order for them to have access.'
-      link_to_add_owner: 'You can do so at %{href}'
-      give_this_link: '2. Give them this URL'
-      give_this_link_desc: 'After signing in, they will automatically be added to this classroom.'
+      add_to_organization: 'Invite TAs and admins to your GitHub organization'
+      must_add_as_owner_html: "Organizations are managed on github.com, not classroom.github.com. In order to grant admin access, you must first add them as <strong>owners</strong> to your GitHub organization, <strong>%{organization}</strong>."
+      give_this_link: 'Ask them to join this classroom URL'
+      give_this_link_desc: 'In addition to inviting them to the organization, you also need to send them the classroom invitation URL above to join your classroom. Once they sign in to GitHub Classroom using the invitation link, they will automatically be added to this classroom as admins.'
       remove_user_btn_text: 'Remove administrator'
       remove_owner_desc: 'Please note this will not remove the user from the organization.'
       remove_owner_header: 'Are you sure you want to remove this owner ?'
@@ -53,8 +52,8 @@ en:
       theres_no_going_back_html: "<strong>Caution</strong>: Once you delete a classroom, all contents and data—including student assignment repositories associated with this classroom—will be permanently removed. This action is irreversible. Please be certain."
       new_classroom: 'New classroom'
       classrooms: 'Classrooms'
-      no_classrooms: "You're not managing any classrooms yet."
-      no_classrooms_desc: 'You can begin creating assignments once you have at least one classroom.'
+      no_classrooms: "You’re not managing any classrooms yet"
+      no_classrooms_desc: 'A classroom is a space where you can organize and manage assignments, students, and teaching assistants for a single course.'
       create_first_classroom: 'Create your first classroom'
       new_assignment: 'New assignment'
       individual_assignment: 'Individual assignment'
@@ -69,5 +68,5 @@ en:
       set_of_teams: 'Set of teams'
       no_teams: "This classroom doesn't have any sets of teams yet."
       assignments: 'Assignments'
-      no_assignments: "There are no assignments in this classroom yet."
+      no_assignments: "There are no assignments in this classroom yet"
       create_first_assignment: 'Create your first assignment'

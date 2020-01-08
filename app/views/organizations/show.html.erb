@@ -2,7 +2,6 @@
 
 <div class="container-lg p-responsive">
   <div class="d-md-flex flex-items-center flex-justify-between mt-5 mb-3">
-    <h2 class="f2 text-normal">Assignments</h2>
     <% if @assignments.present? && current_organization.archived? %>
       <%= link_to t('views.organizations.new_assignment'), new_assignment_organization_path(current_organization), class: 'btn btn-primary right disabled', role: 'button'%>
     <% elsif @assignments.present? %>
@@ -14,10 +13,28 @@
     <%= render @assignments %>
     <%= render partial: 'shared/pagination', locals: { collection: @assignments } %>
   <% else %>
-    <div class="blankslate blankslate-spacious blankslate">
-      <h3><%= t('views.organizations.no_assignments') %></h3>
-      <%= link_to new_assignment_organization_path(current_organization), class: 'btn btn-large btn-primary f3 mt-3', role: 'button' do %>
-        <%= t('views.organizations.create_first_assignment') %>
-      <% end %>
+    <div class="blankslate blankslate-clean-background border mt-3 py-8">
+      <img src="https://ghicons.github.com/assets/images/light/Code%20Hosting.png" alt="repository icon" class="mb-3" />
+      <h3 class="lh-condensed mb-2"><%= t('views.organizations.no_assignments') %></h3>
+      <p class="col-md-9 mx-auto">
+        <a href='<%= new_organization_assignment_path(current_organization) %>'>Create an individual assignment</a> to generate an assignment repository for each student to work from.
+        Or, <a href='<%= new_organization_group_assignment_path(current_organization) %>'>create a group assignment</a> and have students work collaboratively in groups from team repositories.
+      </p>
+      <details class="dropdown details-reset details-overlay d-inline-block mt-2">
+        <summary class="btn btn-primary btn-sm" aria-haspopup="true">
+          Create your first assignment
+          <div class="dropdown-caret ml-2 mb-n1"></div>
+        </summary>
+
+        <ul class="dropdown-menu dropdown-menu-se dropdown-wide text-left">
+          <li><a class="dropdown-item" href='<%= new_organization_assignment_path(current_organization) %>'>Individual assignment</a></li>
+          <li><a class="dropdown-item " href='<%= new_organization_group_assignment_path(current_organization) %>'>Group assignment</a></li>
+        </ul>
+      </details>
+
+      <p class="note mt-6">
+        Learn how to create an <a href='<%= help_path(article_name: "creating-an-individual-assignment") %>'>individual assignment</a> or a <a href='<%= help_path(article_name: "create-group-assignments") %>'>group assignment</a>.
+      </p>
+
     </div>
   <% end %>

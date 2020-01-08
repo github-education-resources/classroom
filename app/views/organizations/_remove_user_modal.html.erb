@@ -6,5 +6,5 @@
     <p><%= t('views.organizations.remove_owner_desc') %></p>
   </div>
 
-  <%= button_to t('views.organizations.remove_user_btn_text'), remove_user_organization_path(@current_organization, user.id), method: :delete, class: 'btn btn-danger btn-block js-submit' %>
+  <%= button_to t('views.organizations.remove_user_btn_text'), remove_user_organization_path(@current_organization, user.id), method: :delete, class: 'btn btn-block js-submit' %>
 </div>
