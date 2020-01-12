@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-tap "caskroom/cask"
 tap "github/bootstrap"
 
 cask "docker" unless system "which docker"
