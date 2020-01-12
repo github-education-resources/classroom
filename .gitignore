@@ -46,3 +46,6 @@ spec/examples.txt
 
 # mac
 .DS_Store
+
+# Homebrew lock file
+Brewfile.lock.json
