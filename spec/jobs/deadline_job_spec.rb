@@ -18,11 +18,11 @@ RSpec.describe DeadlineJob, type: :job do
     clear_performed_jobs
   end
 
-  it "uses the :deadline queue" do
+  it "uses the :critical queue" do
     ActiveJob::Base.queue_adapter = :test
     expect do
       DeadlineJob.perform_later(deadline.id)
-    end.to have_enqueued_job.on_queue("deadline")
+    end.to have_enqueued_job.on_queue("critical")
   end
 
   it "does not throw if the deadline no longer exists" do

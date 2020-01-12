@@ -13,6 +13,15 @@ end
 RSpec.describe AssignmentRepositoryVisibilityJob, type: :job do
   subject { AssignmentRepositoryVisibilityJob }
 
+  let(:assignment) { create(:assignment) }
+
+  it "uses the :low queue" do
+    ActiveJob::Base.queue_adapter = :test
+    expect do
+      subject.perform_later(assignment, change: {})
+    end.to have_enqueued_job.on_queue("low")
+  end
+
   context "when a serialization error is thrown" do
     it "does not crash the test" do
       allow_any_instance_of(subject).to receive(:perform) { raise ActiveJob::DeserializationError }

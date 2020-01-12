@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CreateGitHubRepositoryNewJob < ApplicationJob
-  queue_as :create_repository
+  queue_as :critical
 
   # Creates an AssignmentRepo or a GroupAssignmentRepo
   #

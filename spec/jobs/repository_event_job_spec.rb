@@ -6,6 +6,13 @@ RSpec.describe RepositoryEventJob, type: :job do
   let(:organization) { classroom_org                                          }
   let(:payload)      { json_payload("webhook_events/repository_deleted.json") }
 
+  it "uses the :critical queue" do
+    ActiveJob::Base.queue_adapter = :test
+    expect do
+      RepositoryEventJob.perform_later(payload)
+    end.to have_enqueued_job.on_queue("critical")
+  end
+
   context "ACTION deleted", :vcr do
     it "deletes the matching AssignmentRepo" do
       assignment_repo = create(

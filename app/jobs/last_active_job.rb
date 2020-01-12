@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class LastActiveJob < ApplicationJob
-  queue_as :last_active
+  queue_as :low
 
   # Public: Update the last time the User was active.
   #

@@ -34,6 +34,13 @@ RSpec.describe RepositoryImportEventJob, type: :job do
   let(:invite_status)       { invitation.status(user) }
   let(:group_invite_status) { group_invitation.status(group) }
 
+  it "uses the :critical queue" do
+    ActiveJob::Base.queue_adapter = :test
+    expect do
+      subject.perform_later(success_payload)
+    end.to have_enqueued_job.on_queue("critical")
+  end
+
   context "with created assignment_repo", :vcr do
     let(:assignment_repo) do
       create(
