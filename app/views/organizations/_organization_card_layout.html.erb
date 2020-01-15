@@ -3,7 +3,7 @@
     <article class="col-sm-12 col-md-6 mb-3 mb-sm-5">
       <div class="bg-white rounded-1 height-full no-underline border box-shadow position-relative overflow-hidden">
           <div class="position-relative py-2">
-            <div class="position-absolute top-0 right-0 bottom-0 left-0" style="background-image: <%= organization.geo_pattern_data_uri %>"></div>
+            <div class="position-absolute top-0 right-0 bottom-0 left-0 <%= organization.archived? ? 'bg-gray' : 'bg-green' %>"></div>
           </div>
 
           <details class="dropdown details-reset details-overlay d-inline-block float-right mr-1">

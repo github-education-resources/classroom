@@ -4,9 +4,6 @@
 
 body {
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
-  font-size: 13px;
-  line-height: 1.4;
-  background-color: $gray-000;
 
   &.site {
     display: flex;
@@ -64,6 +61,7 @@ span {
 
 main {
   flex: 1;
+  padding-bottom: $spacer-8;
 }
 
 .octicon {
@@ -119,19 +117,53 @@ main {
   }
 }
 
+.organization-banner {
+  border-bottom: 1px solid $gray-200;
+}
+
 .organization-nav {
   border-bottom: none;
 
+  .tabnav {
+    margin-bottom: 0px;
+    border-bottom: 0px;
+  }
+
   .tabnav-tab {
-    color: #f6f8fa;
+    color: $gray-light;
   }
   .tabnav-tab.selected {
-    color: #2f363d;
-    border-top: 3px solid #444d56;
-    background-color: #fafbfc;
+    color: $gray-800;
+    border-top: 3px solid $orange-600;
+    background-color: $bg-white;
   }
 }
 
+.numbered-list {
+  list-style: none;
+  counter-reset: circled-counter;
+  li {
+    counter-increment: circled-counter;
+    position: relative;
+    margin: 0;
+    padding-left: $spacer-7;
+    padding-bottom: $spacer-4;
+    &::before {
+      content: counter(circled-counter);
+      position: absolute;
+      margin-right: -($spacer-5);
+      top: 1px;
+      background-color: $gray-200;
+      right: 100%;
+      border-radius: 50%;
+      padding: 2px;
+      height: $spacer-3;
+      width: $spacer-3;
+      text-align: center;
+      font-size: 80%;
+    }
+  }
+}
 
 .site-content,
 .menu {
@@ -350,6 +382,10 @@ hr {
   }
 }
 
+.dropdown-wide {
+  width: 200px;
+}
+
 main.bg-gray-light, .help main {
   padding-bottom: $spacer-10;
   &+footer {
@@ -428,11 +464,18 @@ footer {
   }
 }
 
-.blankslate.spacious {
-  @media screen and (max-width: 40em) {
-    padding: 1rem 0;
+.blankslate {
+  img {
+    width: 56px;
+    height: 56px;
+  }
+  &.spacious {
+    @media screen and (max-width: 40em) {
+      padding: 1rem 0;
+    }
   }
 }
+
 
 .signin-section {
   padding: 6.154em 20px 4.103em;
@@ -687,6 +730,13 @@ footer {
 
   .team-member:not(:first-child) {
     margin-top: 10px;
+  }
+}
+
+.admin-list-item {
+  &:not(:first-of-type) {
+    border-top: 1px solid $gray-300;
+    padding-top: $spacer-1;
   }
 }
 

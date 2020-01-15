@@ -3,7 +3,7 @@
 class OrganizationWebhook < ApplicationRecord
   class NoValidTokenError < StandardError; end
   WEBHOOK_URL_PRODUCTION_ERROR = "WebHook failed to be created,"\
-    " please reach out to education@github.com"
+    " please open an issue at https://github.com/education/classroom/issues/new"
   WEBHOOK_URL_DEVELOPMENT_ERROR = "CLASSROOM_WEBHOOK_URL_PREFIX is not set,"\
     " please check your .env file."
 

@@ -15,10 +15,11 @@ jobs:
       - name: Start services
         run: |
           docker-compose up -d
-      - name: Install PostgreSQL Client
+      - name: Install PostgreSQL Client and libsodium
         run: |
+          sudo rm -f /etc/apt/sources.list.d/dotnetdev.list /etc/apt/sources.list.d/microsoft-prod.list
           sudo apt-get update
-          sudo apt-get install -y postgresql-client libpq-dev
+          sudo apt-get install -y postgresql-client libpq-dev libsodium23
       - name: Install yarn
         run: |
           curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.24.6
@@ -45,4 +46,5 @@ jobs:
           REDIS_URL: "redis://localhost:9736/0"
           WEBHOOK_SECRET: abcdefg
           API_SECRET: abcdefg
+          TOKEN_SECRET: "IaVpYV/QqEPwVG+UKqcnigWEnfPXjyemk+ChmK7I2YE="
         run: ./bin/rake knapsack:rspec && ./bin/rubocop -D

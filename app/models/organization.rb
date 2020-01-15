@@ -79,7 +79,7 @@ class Organization < ApplicationRecord
     if Rails.env.test?
       token = users.first.token unless users.first.nil?
     else
-      token = users.limit(1).order("RANDOM()").pluck(:token)[0]
+      token = users.limit(1).order("RANDOM()").first.token
     end
 
     GitHubClassroom.github_client(access_token: token)
@@ -95,16 +95,6 @@ class Organization < ApplicationRecord
 
   def one_owner_remains?
     users.count == 1
-  end
-
-  def geo_pattern_data_uri
-    patterns = %i[plaid hexagons plus_signs overlapping_circles overlapping_rings mosaic_squares]
-    options = { base_color: "#28a745", patterns: patterns }
-    if archived?
-      options.delete(:base_color)
-      options[:color] = "#696868"
-    end
-    @geo_pattern_data_uri ||= GeoPattern.generate(id, options).to_data_uri
   end
 
   # Check if we are the last Classroom on this GitHub Organization
