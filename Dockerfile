@@ -1,1 +1,1 @@
-FROM ruby:2.6.3
+FROM ruby:2.6.5
