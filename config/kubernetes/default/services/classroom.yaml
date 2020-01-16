@@ -5,7 +5,7 @@ metadata:
   labels:
     service: classroom
   annotations:
-    moda.github.net/domain-name: moda.github.net/domain-name: "classroom-%environment%.service.cp1-iad.github.net"
+    moda.github.net/domain-name: "classroom-%environment%.service.cp1-iad.github.net"
 spec:
   ports:
   - name: http
