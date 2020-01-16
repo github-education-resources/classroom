@@ -51,7 +51,7 @@ spec:
           - '--binding=0.0.0.0'
         env:
           - name: RAILS_ENV
-            value: production
+            value: staging
         ports:
         - name: http
           containerPort: 8080
