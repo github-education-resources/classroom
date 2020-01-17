@@ -38,10 +38,11 @@ spec:
               command: ["sleep", "5"]
         resources:
           requests:
-            cpu: 500m
-            memory: 500Mi
+            cpu: "1024m"
+            memory: "2Gi"
           limits:
-            memory: 2Gi
+            cpu: "2Gi"
+            memory: "2Gi"
         command:
           - bundle
           - exec
