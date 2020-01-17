@@ -1,4 +1,4 @@
-FROM ruby:2.6.3
+FROM ruby:2.6.5
 
 # set up nodejs
 ENV VERSION=v8.9.4
