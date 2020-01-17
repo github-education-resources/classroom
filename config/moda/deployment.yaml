@@ -3,3 +3,7 @@ environments:
   cluster_selector:
     profile: general
     region: iad
+- name: staging
+  cluster_selector:
+    profile: general
+    region: iad
