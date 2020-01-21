@@ -7,3 +7,10 @@ environments:
   cluster_selector:
     profile: general
     region: iad
+- name: prodmoda
+  cluster_selector:
+    profile: general
+    region: iad
+notifications:
+    slack_channels:
+    - "#classroom-ops"
