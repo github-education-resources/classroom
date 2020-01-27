@@ -114,7 +114,8 @@ class AssignmentsController < ApplicationController
       .merge(creator: current_user,
              organization: @organization,
              starter_code_repo_id: starter_code_repo_id_param,
-             deadline: deadline_param)
+             deadline: deadline_param,
+             cloud_ide_integration: CloudIDEIntegration.new(cloud_ide_id: params[:assignment][:cloud_ide]))
   end
 
   # An unlinked user in the context of an assignment is a user who:

@@ -19,6 +19,7 @@ class GroupAssignment < ApplicationRecord
   belongs_to :creator, class_name: "User"
   belongs_to :grouping
   belongs_to :organization
+  belongs_to :cloud_ide_integration
 
   validates :creator, presence: true
 

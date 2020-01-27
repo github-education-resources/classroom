@@ -123,5 +123,12 @@
       </div>
     </dl>
 
+    <hr class="pt-2"/>
+
+    <dl class="<%= view.form_class_for(:deadline) %>">
+      <dt><label>Online IDE</label> <span class="Label border border-green text-gray-dark">Beta</span></dt>
+      <dd><%= f.select :cloud_ide, options_from_collection_for_select(CloudIDE.all, "id", "title"), {include_blank: "None"}, {class: 'form-control input-block testing'}%></dd>
+      <dd class="col-md-10 text-small text-gray my-2">Automatically setup student repositories with an online IDE where students can write code, run programs, and collaborate. <a href="#">Learn more</a>.</dd>
+    </dl>
   </div>
 </div>

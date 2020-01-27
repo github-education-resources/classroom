@@ -19,6 +19,9 @@ class Assignment < ApplicationRecord
 
   belongs_to :creator, class_name: "User"
   belongs_to :organization
+  belongs_to :cloud_ide_integration
+
+  has_one :cloud_ide, through: :cloud_ide_integration
 
   validates :creator, presence: true
 

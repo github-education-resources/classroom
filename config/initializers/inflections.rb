@@ -18,4 +18,5 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.acronym "API"
   inflect.acronym "StatsD"
   inflect.acronym "ES"
+  inflect.acronym "IDE"
 end
