@@ -10,7 +10,7 @@
   },
 
   "env": {
-    "CLASSROOM_WEBHOOK_PREFIX_URL": {
+    "CLASSROOM_WEBHOOK_URL_PREFIX": {
       "description": "The URL for your application to receive webhooks ex https://classroom.github.com",
       "required": true
     },
