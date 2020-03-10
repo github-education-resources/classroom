@@ -15,11 +15,10 @@ en:
         banner_heading: 'The workflow developers use,'
         banner_subheading: 'whether you have five students or 500.'
         why_classroom_html: |
-          Developers rarely work all by themselves, on a deadline, or ship something they’ll only use once (with no idea whether it actually works). Wouldn’t students be better served by showing versions of their work, iterating, checking in on milestones, and showing off the final product? <br><br>
-          With GitHub Classroom you can set up the industry-standard workflow and free up your time to focus on teaching. GitHub Classroom will automatically create student repositories, track assignments in your dashboard and integrate with third-party tools like automated testing. <br><br>
-          With GitHub Classroom, you can spin up your course on GitHub and move on to the good stuff.
+          Managing and organizing your class is easy with GitHub Classroom. Track and manage assignments in your dashboard, grade work automatically, and catch students when they get stuck— all while using GitHub, the industry-standard tool developers use.
         see_how_it_works: 'See how it works'
         sign_in_to_start: 'Sign in and get started'
+        try_it_out: 'Try it out'
       why_classroom_section:
         heading: 'Why try GitHub Classroom?'
         items:
