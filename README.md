@@ -1,6 +1,26 @@
 # GitHub Classroom
 [![Build Status](https://travis-ci.org/education/classroom.svg?branch=master)](https://travis-ci.org/education/classroom) [![Code Climate](https://codeclimate.com/github/education/classroom/badges/gpa.svg)](https://codeclimate.com/github/education/classroom)
 
+---
+
+Moving forwards, GitHub Classroom will be developed internally alongside GitHub.com. As a result, we’re archiving the open source repository. This represents a significant “growing up” moment for GitHub Classroom as we strive to offer you the best education tools possible.
+
+We’re making this decision for a few important reasons:
+
+1. Quality. To provide the best services to our varied and global community, we need GitHub Classroom to meet the operational excellence of GitHub.com. Continuing development internally allows us to make better use of GitHub’s internal resources, tooling, and infrastructure. 
+
+2. Better support. Using GitHub Support as our primary feedback mechanism, instead of issues, allows us to assist our users in a more productive way. We can leverage the support infrastructure already in place for GitHub.com, and all user feedback can be kept in a single place. The Education team will continue to respond to all GitHub Classroom requests.
+
+GitHub Classroom will continue to evolve and improve based on your feedback. We’re growing faster than ever, and can’t wait to launch some very exciting new features in the coming months.
+
+If you have questions, concerns, or feedback, don’t hesitate to contact us at https://support.github.com/contact.
+
+Thank you!
+
+The GitHub Classroom Team
+
+---
+
 ## Table of Contents
 
 - [The workflow you use as a developer, scaled for the needs of students.](#the-workflow-you-use-as-a-developer-scaled-for-the-needs-of-students)
