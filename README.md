@@ -3,7 +3,7 @@
 
 ---
 
-Starting today, GitHub Classroom will be developed internally alongside GitHub.com. As a result, we’re archiving the open source repository. This represents a significant “growing up” moment for GitHub Classroom as we strive to offer you the best education tools possible.
+Moving forwards, GitHub Classroom will be developed internally alongside GitHub.com. As a result, we’re archiving the open source repository. This represents a significant “growing up” moment for GitHub Classroom as we strive to offer you the best education tools possible.
 
 We’re making this decision for a few important reasons:
 
