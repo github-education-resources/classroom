@@ -42,8 +42,22 @@ RSpec.describe OrganizationEventJob, type: :job do
 
         OrganizationEventJob.perform_now(payload)
 
-        expect { @organization.users.find(uid: @user.uid) }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(@organization.users).not_to include(@user)
         expect(assignment.reload.creator_id).not_to eq(@user.id)
+      end
+
+      it "deletes user from multiple organizations (classrooms) mapped to the same GitHub organization" do
+        org2 = create(:organization, github_id: payload.dig("organization", "id"))
+        @user.organizations << org2
+        @user.save
+
+        expect(@organization.users).to include(@user)
+        expect(org2.users).to include(@user)
+
+        OrganizationEventJob.perform_now(payload)
+
+        expect(@organization.users).not_to include(@user)
+        expect(org2.users).not_to include(@user)
       end
     end
   end
