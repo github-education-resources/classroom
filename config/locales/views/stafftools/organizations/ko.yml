@@ -1,0 +1,19 @@
+ko:
+  views:
+    stafftools:
+      organizations:
+        added: '추가됨'
+        remove_owner_header: '이 소유자를 삭제 하시겠습니까?'
+        remove_owner_desc: '조직에서 이 사용자를 삭제하지 않습니다.'
+        remove_user_btn_text: '사용자 제거'
+        classroom: '강의실'
+        id: '아이디'
+        joined_on: '가입된'
+        last_updated: '마지막 업데이트됨'
+        github_organization: '깃허브 조직'
+        homepage: '홈페이지'
+        webhook_url: '웹훅 URL'
+        webhook_enabled_check: '웹훅 사용 가능한가요?'
+        owners: '소유자'
+        assignments: '과제'
+        groupings: '그룹화'
