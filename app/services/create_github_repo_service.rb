@@ -2,7 +2,7 @@
 
 class CreateGitHubRepoService
   attr_reader :exercise, :stats_sender
-  delegate :assignment, :collaborator, :organization, :invite_status, to: :exercise
+  delegate :assignment, :collaborator, :organization, :invite_status, :github_organization, to: :exercise
 
   def initialize(assignment, collaborator)
     @exercise = Exercise.build(assignment, collaborator)
@@ -59,7 +59,7 @@ class CreateGitHubRepoService
       description: "#{exercise.repo_name} created by GitHub Classroom"
     }
 
-    organization.github_organization.create_repository(exercise.repo_name, options)
+    github_organization.create_repository(exercise.repo_name, options)
   rescue GitHub::Error => error
     raise Result::Error.new errors(:repository_creation_failed), error.message
   end
@@ -74,7 +74,7 @@ class CreateGitHubRepoService
 
     options = repo_from_template_options
 
-    github_repository = organization.github_organization.create_repository_from_template(
+    github_repository = github_organization.create_repository_from_template(
       assignment.starter_code_repo_id,
       exercise.repo_name,
       options
@@ -112,7 +112,7 @@ class CreateGitHubRepoService
 
   def delete_github_repository(github_repo_id)
     return true if github_repo_id.nil?
-    organization.github_organization.delete_repository(github_repo_id)
+    github_organization.delete_repository(github_repo_id)
   rescue GitHub::Error
     true
   end
@@ -223,7 +223,7 @@ class CreateGitHubRepoService
     {
       private: assignment.private?,
       description: "#{exercise.repo_name} created by GitHub Classroom",
-      owner: organization.github_organization.login,
+      owner: github_organization.login,
       include_all_branches: true
     }
   end

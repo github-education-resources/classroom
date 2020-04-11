@@ -128,8 +128,7 @@ RSpec.describe CreateGitHubRepositoryNewJob, type: :job do
         end
 
         it "if #push_starter_code! fails" do
-          allow_any_instance_of(Assignment)
-            .to receive("starter_code?").and_return(true)
+          assignment.update(starter_code_repo_id: 1_062_897)
           allow_any_instance_of(CreateGitHubRepoService)
             .to receive(:push_starter_code!)
             .and_raise(
