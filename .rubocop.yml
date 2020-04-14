@@ -1,5 +1,21 @@
+inherit_from: .rubocop_todo.yml
+
+require:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rspec
+
 AllCops:
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.6
+  CacheRootDirectory: ./tmp
+  # https://github.com/thoughtbot/factory_bot/issues/1160#issuecomment-421410237
+  RSpec:
+    Patterns:
+      - _test.rb
+      - "(?:^|/)test/"
+  RSpec/FactoryBot:
+    Patterns:
+      - test/factories/**/*.rb
   Include:
     - '**/Rakefile'
     - '**/config.ru'
@@ -8,15 +24,16 @@ AllCops:
     - 'db/**/*'
     - 'script/**/*'
     - 'vendor/**/*'
+    - 'vendor/**/.*'
     - 'node_modules/**/*'
 
 Rails:
   Enabled: true
 
-TrailingBlankLines:
+Layout/TrailingBlankLines:
   Enabled: true
 
-Documentation:
+Style/Documentation:
   Enabled: false
 
 Metrics/LineLength:
@@ -45,7 +62,7 @@ Rails/UnknownEnv:
     - staging
     - production
 
-Style/FileName:
+Naming/FileName:
   Exclude:
     - 'Gemfile'
     - 'Guardfile'
