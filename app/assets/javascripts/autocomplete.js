@@ -13,6 +13,15 @@
   update_textfield = function(list_element) {
     $(list_element).removeClass('suggestion-focused');
     $('.js-autocomplete-textfield').val($(list_element).data('res-name'));
+    if (list_element.dataset.resPrivateOwnedByUser == "true") {
+      if ($('.private-user-owned-repo-message').hasClass('hidden-tab')) {
+        $('.private-user-owned-repo-message').removeClass('hidden-tab');
+      }
+    } else {
+      if (!$('.private-user-owned-repo-message').hasClass('hidden-tab')) {
+        $('.private-user-owned-repo-message').addClass('hidden-tab');
+      }
+    }
     return $('.js-autocomplete-resource-id').val($(list_element).data('res-id'));
   };
 

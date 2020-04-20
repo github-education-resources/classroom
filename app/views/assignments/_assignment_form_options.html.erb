@@ -79,6 +79,7 @@
             oninput: "importOptions(this.value);removeErrorBox(this);",
             data: { "autocomplete-search-endpoint": "github_repos" }
           %>
+          <span class="private-user-owned-repo-message hidden-tab">We will soon only be allowing starter code repositories that belong to your classroom organization to be used for assignments. If you have any feedback about this change, let us know at [an issue url]</span>
         </dd>
 
         <dd class="dd-autocomplete-suggestions"><%= render_autocomplete_suggestions_container %></dd>

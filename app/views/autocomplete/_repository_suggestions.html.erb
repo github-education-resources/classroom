@@ -8,7 +8,8 @@
       <% repos.each do |repo| %>
         <li class="js-autocomplete-suggestion-item"
           data-res-id="<%= repo[:id] %>"
-          data-res-name="<%= repo[:full_name] %>">
+          data-res-name="<%= repo[:full_name] %>"
+          data-res-private-owned-by-user="<%= repo[:private] && repo[:owner][:type] == "User" %>">
           <%= repo[:private] ? octicon('lock') : octicon('repo') %>
           <strong><%= repo[:full_name] %></strong>
           <span><%= repo[:description] %></span>
