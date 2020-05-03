@@ -6,7 +6,7 @@ class GroupAssignmentRepoSerializer < ActiveModel::Serializer
   attributes :displayName
 
   def username
-    object.group.title
+    object.group.github_team.name
   end
 
   # rubocop:disable MethodName
