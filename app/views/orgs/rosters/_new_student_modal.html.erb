@@ -4,6 +4,27 @@
   <button data-remodal-action="close" class="remodal-close"><%= octicon 'x' %></button>
   <h2 class="remodal-header text-left">Add students to your Roster</h2>
 
+  <%= hidden_field_tag 'user_id', current_user.id, id: "current_user_id" %>
+  <%= hidden_field_tag 'roster_id', roster.id, id: "current_roster_id" %>
+
+  <div class="flex-justify-between roster-update-progress" hidden>
+    <div class="Box Box--blue">
+      <div class="flash flash-full roster-update-message" hidden>
+        <button class="flash-close js-flash-close"><%= octicon "x" %></button>
+        <p id="roster-progress"></p>
+      </div>
+      <div class="Box-body">
+        <div class="Subhead border-bottom-0">
+          <h4 class="Subhead-heading Subhead-heading--blue">Adding students to Roster</h4>
+        </div>
+        <span class="Progress Progress">
+          <span class="bg-green roster-update-progress-bar" style="width: 0%;"></span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+
     <div class="my-3">
       <h2 class="h4 mb-2">Import students from your institution</h2>
       <p>GitHub Classroom is able to automatically import your roster from your institution. If you
@@ -18,7 +39,7 @@
     <div class="my-3">
       <h2 class="h4 mb-2">Manually add students</h2>
       <div>
-        <%= form_tag add_students_roster_path(current_organization), method: :patch do |f| %>
+        <%= form_tag add_students_roster_path(current_organization), method: :patch, remote: true, id: "add-students-roster-form"  do |f| %>
         <div class="Box">
           <dl class="Box-body <%= view.form_class_for(:roster_entries) %> mb-0">
             <dt class="text-gray mb-1">Enter your list of students' identifiers, <strong>one per line</strong>.</dt>
@@ -32,8 +53,8 @@
           </div>
         </div>
 
-          <div class="d-flex flex-items-center border-top pt-5">
-            <%= submit_tag 'Add roster entries', class: 'btn btn-primary mr-3' %>
+        <div class="d-flex flex-items-center border-top pt-5">
+          <%= submit_tag 'Add roster entries', class: 'btn btn-primary mr-3', data: { "disable-with": "Updating..." } %>
           </div>
         <% end %>
       </div>

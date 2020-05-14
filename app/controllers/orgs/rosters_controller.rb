@@ -21,6 +21,7 @@ module Orgs
     depends_on :google_classroom
 
     # rubocop:disable AbcSize
+    # rubocop:disable MethodLength
     def show
       @google_course_name = current_organization_google_course_name
 
@@ -34,9 +35,13 @@ module Orgs
         .order(:id)
         .page(params[:unlinked_users_page])
 
+      # Used for displaying all roster entries in tabs
+      @roster_entries_count = current_roster.roster_entries.count
+
       download_roster if params.dig("format")
     end
     # rubocop:enable AbcSize
+    # rubocop:enable MethodLength
 
     def new
       @roster = Roster.new
@@ -129,38 +134,19 @@ module Orgs
       redirect_to roster_path(current_organization, params: { roster_entries_page: params[:roster_entries_page] })
     end
 
-    # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/AbcSize
     def add_students
-      if params[:lms_user_ids].is_a? String
-        params[:lms_user_ids] = params[:lms_user_ids].split
-      end
+      params[:lms_user_ids].split! if params[:lms_user_ids].is_a? String
+      lms_user_ids = Array.wrap(params[:lms_user_ids])
+
       identifiers = params[:identifiers].split("\r\n").reject(&:blank?)
-      lms_ids = params[:lms_user_ids] || []
-
-      begin
-        entries = RosterEntry.create_entries(
-          identifiers: identifiers,
-          roster: current_roster,
-          lms_user_ids: lms_ids
-        )
-
-        if entries.empty?
-          flash[:warning] = "No students created."
-        elsif entries.length == identifiers.length
-          flash[:success] = "Students created."
-          imported_students_lms_statsd(lms_user_ids: params[:lms_user_ids])
-        else
-          flash[:success] = "Students created. Some duplicates have been omitted."
-          imported_students_lms_statsd(lms_user_ids: params[:lms_user_ids])
-        end
-      rescue RosterEntry::IdentifierCreationError
-        flash[:error] = "An error has occurred. Please try again."
-      end
-
-      redirect_to roster_path(current_organization)
+      job_info = AddStudentsToRosterJob.perform_later(identifiers, current_roster, current_user, lms_user_ids)
+      render json: { job_info: job_info }
     end
+    # rubocop:enable Metrics/AbcSize
 
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def download_roster
       grouping = current_organization.groupings.find(params[:grouping]) if params[:grouping]
 
@@ -177,7 +163,6 @@ module Orgs
         end
       end
     end
-
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
 
@@ -194,7 +179,7 @@ module Orgs
     end
 
     def imported_students_lms_statsd(lms_user_ids:)
-      return if lms_user_ids.nil?
+      return if lms_user_ids.blank?
       GitHubClassroom.statsd.increment("roster_entries.lms_imported", by: lms_user_ids.length)
     end
 

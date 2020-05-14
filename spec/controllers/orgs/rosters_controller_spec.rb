@@ -494,11 +494,13 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
         it "sends successfully" do
           expect(GitHubClassroom.statsd).to receive(:increment).with("roster_entries.lms_imported", by: 2)
-          patch :add_students, params: {
-            id:         organization.slug,
-            identifiers: "a\r\nb",
-            lms_user_ids: [1, 2]
-          }
+          perform_enqueued_jobs do
+            patch :add_students, params: {
+              id:         organization.slug,
+              identifiers: "a\r\nb",
+              lms_user_ids: [1, 2]
+            }
+          end
         end
       end
 
@@ -510,96 +512,25 @@ RSpec.describe Orgs::RostersController, type: :controller do
 
         it "sends successfully" do
           expect(GitHubClassroom.statsd).to_not receive(:increment).with("roster_entries.lms_imported", by: 2)
-          patch :add_students, params: {
-            id:         organization.slug,
-            identifiers: "a\r\nb",
-            lms_user_ids: [1, 2]
-          }
+          perform_enqueued_jobs do
+            patch :add_students, params: {
+              id:         organization.slug,
+              identifiers: "a\r\nb",
+              lms_user_ids: [1, 2]
+            }
+          end
         end
       end
     end
 
     context "when all identifiers are valid" do
-      before do
-        patch :add_students, params: {
-          id:         organization.slug,
-          identifiers: "a\r\nb"
-        }
-      end
-
-      it "redirects to rosters page" do
-        expect(response).to redirect_to(roster_url(organization))
-      end
-
-      it "sets success message" do
-        expect(flash[:success]).to eq("Students created.")
-      end
-
-      it "creates the student on the roster" do
-        expect(roster.reload.roster_entries).to include(RosterEntry.find_by(identifier: "a"))
-      end
-    end
-
-    context "when there are duplicate identifiers" do
-      before do
-        create(:roster_entry, roster: roster, identifier: "a")
-        create(:roster_entry, roster: roster, identifier: "b")
-        patch :add_students, params: {
-          id:         organization.slug,
-          identifiers: "a\r\nb"
-        }
-      end
-
-      it "redirects to rosters page" do
-        expect(response).to redirect_to(roster_url(organization))
-      end
-
-      it "sets flash message" do
-        expect(flash[:success]).to eq("Students created.")
-      end
-
-      it "creates roster entries" do
+      it "enqueues the AddStudentsToRosterJob" do
         expect do
           patch :add_students, params: {
             id:         organization.slug,
             identifiers: "a\r\nb"
           }
-        end.to change(roster.reload.roster_entries, :count).by(2)
-      end
-
-      it "finds identifiers with suffix" do
-        expect(roster.reload.roster_entries).to include(RosterEntry.find_by(identifier: "a-1"))
-        expect(roster.reload.roster_entries).to include(RosterEntry.find_by(identifier: "b-1"))
-      end
-    end
-
-    context "when there's an internal error" do
-      before do
-        errored_entry = RosterEntry.new(roster: roster)
-        errored_entry.errors[:base] << "Something went wrong ¯\\_(ツ)_/¯ "
-        allow(RosterEntry).to receive(:create).and_return(errored_entry)
-
-        patch :add_students, params: {
-          id:         organization.slug,
-          identifiers: "a\r\nb"
-        }
-      end
-
-      it "redirects to rosters page" do
-        expect(response).to redirect_to(roster_url(organization))
-      end
-
-      it "sets flash message" do
-        expect(flash[:error]).to eq("An error has occurred. Please try again.")
-      end
-
-      it "creates no roster entries" do
-        expect do
-          patch :add_students, params: {
-            id:         organization.slug,
-            identifiers: "a\r\nb"
-          }
-        end.to change(roster.reload.roster_entries, :count).by(0)
+        end.to have_enqueued_job(AddStudentsToRosterJob)
       end
     end
   end
@@ -916,6 +847,7 @@ RSpec.describe Orgs::RostersController, type: :controller do
           student_profiles = student_names.map do |name|
             GoogleAPI::UserProfile.new(name: GoogleAPI::Name.new(full_name: name))
           end
+
           @students = student_profiles.map do |prof|
             GoogleAPI::Student.new(profile: prof, user_id: SecureRandom.uuid)
           end
@@ -924,7 +856,9 @@ RSpec.describe Orgs::RostersController, type: :controller do
             .to receive(:students)
             .and_return(@students)
 
-          patch :sync_google_classroom, params: { id: organization.slug }
+          perform_enqueued_jobs do
+            patch :sync_google_classroom, params: { id: organization.slug }
+          end
         end
 
         it "adds the new student to the roster" do

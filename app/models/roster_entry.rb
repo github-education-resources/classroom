@@ -112,35 +112,4 @@ class RosterEntry < ApplicationRecord
       .uniq
     where(user_id: nil).or(where.not(user_id: students_on_team))
   end
-
-  # Takes an array of identifiers and creates a
-  # roster entry for each. Omits duplicates, and
-  # raises IdentifierCreationError if there is an
-  # error.
-  #
-  # Returns the created entries.
-
-  # rubocop:disable Metrics/MethodLength
-  def self.create_entries(identifiers:, roster:, lms_user_ids: [])
-    created_entries = []
-    RosterEntry.transaction do
-      identifiers = add_suffix_to_duplicates(
-        identifiers: identifiers,
-        existing_roster_entries: RosterEntry.where(roster: roster).pluck(:identifier)
-      )
-
-      identifiers.zip(lms_user_ids).each do |identifier, lms_user_id|
-        roster_entry = RosterEntry.create(identifier: identifier, roster: roster, lms_user_id: lms_user_id)
-
-        if !roster_entry.persisted?
-          raise IdentifierCreationError unless roster_entry.errors.include?(:identifier)
-        else
-          created_entries << roster_entry
-        end
-      end
-    end
-
-    created_entries
-  end
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 end
