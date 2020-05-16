@@ -1,29 +1,46 @@
 <% submit_url = local_assigns.fetch(:submit_url) %>
 <% query = local_assigns.fetch(:query, nil) %>
 <% search_placeholder = local_assigns.fetch(:search_placeholder, "Search...") %>
-<% select_menu_title = local_assigns.fetch(:select_menu_title, "Sort by:") %>
-<% options = local_assigns.fetch(:options, []) %>
-<% option_links = local_assigns.fetch(:option_links, []) %>
+<% title = local_assigns.fetch(:select_menu_title, "Sort by:") %>
 <% selected_option = local_assigns.fetch(:selected_option, options.first) %>
+<% options = local_assigns.fetch(:options, []) %>
 
-<div class="TableObject" id="js-search-and-sort-component" >
-  <div class="TableObject-item TableObject-item--primary">
-    <%= form_tag submit_url, id: "search-form", method: :get, remote: true do %>
-      <%= text_field_tag :query, query, class: "input-block form-control", placeholder: search_placeholder, autofocus: true, autocomplete: :off, id: "search-query-field" %>
-      <%= hidden_field_tag :sort_by, @current_sort_mode, id: "sort-mode-field" %>
-    <% end %>
+<%= form_tag submit_url, method: :get, remote: :true, role: "search", id: "js-filtering-form", class: "d-block d-sm-flex" do %>
+  <div class="mb-3 mb-sm-0 mr-sm-3 flex-auto">
+    <input type="search" id="your-classrooms-filter" name="query"
+           class="form-control width-full"
+           placeholder="<%= search_placeholder %>"
+           aria-label="<%= search_placeholder %>"
+           value="<%= query %>">
   </div>
-  <div class="TableObject-item">
-    <div id="select-menu-container">
-      <%= render partial: "shared/select_menu",
-          locals: {
-            title: select_menu_title,
-            options: options,
-            option_links: option_links,
-            selected_option: selected_option,
-            remote: true
-          }
-      %>
-    </div>
+
+  <div class="d-flex">
+    <details class="details-reset details-overlay position-relative mr-2" id="sort-options">
+      <summary class="btn">
+        <i><%= title %></i>
+        <span data-menu-button>
+          <%= selected_option %>
+        </span>
+        <span class="dropdown-caret"></span>
+      </summary>
+
+      <details-menu class="SelectMenu right-md-0">
+        <div class="SelectMenu-modal">
+          <header class="SelectMenu-header">
+            <span class="SelectMenu-title">Sort by:</span>
+            <button class="SelectMenu-closeButton" type="button" data-toggle-for="sort-options"><%= octicon("x", :"aria-label" => "Close menu") %></button>
+          </header>
+          <div class="SelectMenu-list">
+            <% options.each do |name, value| %>
+              <label class="SelectMenu-item" role="menuitemradio" aria-checked="<%= selected_option == name %>" tabindex="0">
+                <%= radio_button_tag "sort_by", name, selected_option == name, "hidden": "true", "data-autosubmit": "true" %>
+                <%= octicon("check", class: "SelectMenu-icon") %>
+                <span class="text-normal" data-menu-button-text><%= name %></span>
+              </label>
+            <% end %>
+          </div>
+        </div>
+      </details-menu>
+    </details>
   </div>
-</div>
+<% end %>

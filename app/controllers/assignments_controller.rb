@@ -144,13 +144,6 @@ class AssignmentsController < ApplicationController
 
     @current_sort_mode = params[:sort_by] || @assignment_sort_modes.keys.first
     @query = params[:query]
-
-    @assignment_sort_modes_links = @assignment_sort_modes.keys.map do |mode|
-      organization_assignment_path(
-        sort_by: mode,
-        query: @query
-      )
-    end
   end
 
   def deadline_param
