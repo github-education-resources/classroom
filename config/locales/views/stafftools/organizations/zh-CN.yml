@@ -1,0 +1,19 @@
+zh-CN:
+  views:
+    stafftools:
+      organizations:
+        added: '已添加'
+        remove_owner_header: '你确认要删除这个所有者？'
+        remove_owner_desc: '请注意这不会把用户从组织中删除。'
+        remove_user_btn_text: '删除用户'
+        classroom: '教室'
+        id: 'ID'
+        joined_on: '加入时间'
+        last_updated: '最后更新'
+        github_organization: 'GitHub 组织'
+        homepage: '首页'
+        webhook_url: 'WebHook 网址'
+        webhook_enabled_check: 'WebHook 已激活？'
+        owners: '所有者'
+        assignments: '作业'
+        groupings: '分组'

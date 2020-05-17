@@ -1,0 +1,58 @@
+zh-CN:
+  views:
+    organizations:
+      select_organization: '为你的新教室选择一个组织'
+      no_organizations: '你的Github帐户未关联到任何组织。'
+      please_create_or_authorize_new_organization: "请 <a href='https://github.com/organizations/new'>在GitHub.com创建一个组织</a> 或 %{authorize_href} 然后返回。"
+      authorize_organization_access_link: "授权已存在的组织"
+      grant_organization_access: "授权给未列出的组织"
+      grant_organization_access_protip: "<strong>提示！</strong> 没看到你的组织？你需要先 %{href} 。"
+      grant_organization_access_link: '授权给我们'
+      you_are_not_owner: '由于你不是所有者因此无法添加这个组织到教室。'
+      already_added: '@%{owner} 已将这个组织添加到GitHub Classroom'
+      manage_classroom: '管理教室'
+      edit: '编辑'
+      invite_administrator: '邀请其他管理员'
+      add_to_organization: '1. 添加他们到你的GitHub 组织'
+      must_add_as_owner: '如果想让他们进行访问，你必须添加他们为组织的所有者。'
+      link_to_add_owner: '你可以在这里做 %{href}'
+      give_this_link: '2. 给他们这个地址'
+      give_this_link_desc: '登录后，他们会被自动添加到这个教室。'
+      copy_to_clipboard: '复制到剪贴板'
+      copied: '已复制！'
+      copy_classroom_link: '复制教室链接'
+      continue: '继续'
+      individual_assignments: '个人作业'
+      group_assignments: '小组作业'
+      are_you_sure: '你绝对确认？'
+      delete_warning: "如果你不仔细阅读这个，可能会有未知错误发生！"
+      delete_consequences_html: "这个操作 <strong>无法</strong> 恢复。请注意重置和删除这个教室会删除所有<strong>%{organization}</strong>组织下的库和团队。"
+      delete_confirm: '请输入组织名称来确认'
+      delete_submit: '重置并删除这个教室'
+      classroom_settings: '教室设置'
+      classroom_profile: '教室信息'
+      student_identifiers: '学生标识'
+      team_management: '团队管理'
+      invite_other_admin: '邀请其他管理员'
+      profile_information: '用户信息'
+      save_changes: '保存更改'
+      theres_no_going_back: '一旦重置教室就无法撤销操作，请慎重。'
+      new_classroom: '新教室'
+      classrooms: '教室'
+      no_classrooms: "你没有管理任何教室。"
+      no_classrooms_desc: '你需要至少一个教室才能开始创建作业。'
+      create_first_classroom: '创建你的第一个教室'
+      new_assignment: '新作业'
+      individual_assignment: '个人作业'
+      individual_assignment_desc: '每个参与者在他们的库上独自完成作业。'
+      create_individual_assignment: '创建个人作业'
+      group_assignment: '小组作业'
+      group_assignment_desc: '参与者创建团队并在共享库中协同工作。'
+      create_group_assignment: '创建一个小组作业'
+      name_your_classroom: '命名你的教室'
+      give_descriptive_name: '请给你的教室一个更具描述性的名字'
+      set_of_teams: '团队'
+      no_teams: "这个教室目前还没有任何团队。"
+      assignments: '作业'
+      no_assignments: "这个组织目前还没有任何作业。"
+      create_first_assignment: '创建你的第一个作业'

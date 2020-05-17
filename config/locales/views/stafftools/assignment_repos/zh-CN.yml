@@ -1,0 +1,26 @@
+zh-CN:
+  views:
+    stafftools:
+      assignment_repos:
+        assignment_title: "%{user_login} 的针对 %{title} 的作业库"
+        created: '已创建'
+        assignment_repo: '作业库'
+        assignment_repo_small: '作业库'
+        general_info: '通用信息'
+        id: 'ID'
+        owned_by: '所有者'
+        created_by: '创建者'
+        assignment: '作业'
+        user: '用户'
+        created_on: '创建日期'
+        github_repo: 'GitHub库'
+        repo_id: '库 ID'
+        source_code: '源代码'
+        dangerzone: '危险区'
+        delete_repo_title: '删除这个作业库'
+        delete_repo_confirmation: '你绝对确认？'
+        delete_repo_warning: "如果你不仔细读这个可能会发生不可预知行为！"
+        delete_repo_desc: '这个操作 <strong>不可</strong> 恢复。<br>
+          请注意这个操作会删除GitHub Classroom <strong>和</strong> GitHub库。'
+        repo_id_confirmation: '请输入作业库ID (%{assignment_repo_id}) 确认'
+        delete_repo_link_text: '删除这个作业库'

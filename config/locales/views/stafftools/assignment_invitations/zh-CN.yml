@@ -1,0 +1,13 @@
+zh-CN:
+  views:
+    stafftools:
+      assignment_invitations:
+        invitation_for: '为如下人的作业邀请 '
+        created: '已创建'
+        assignment_type: '单独作业邀请'
+        assignment_invitation_title: '作业邀请信息'
+        id: 'ID'
+        assignment: '作业'
+        owner: '属于'
+        invitation_url: '邀请网址'
+        created_on: '创建于'

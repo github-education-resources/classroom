@@ -1,0 +1,17 @@
+zh-CN:
+  views:
+    stafftools:
+      assignments:
+        assignment_title: "%{organization_login}的作业"
+        created: '已创建'
+        assignment_type: '单独作业'
+        assignment_info: '作业信息'
+        id: 'ID'
+        owned_by: '所有者'
+        created_by: '创建者'
+        starter_code: '初始代码'
+        invitation: '邀请'
+        created_on: '创建日期'
+        last_updated: '最后更新'
+        assignment_repo: '作业库'
+        deadline: '截止日期'
