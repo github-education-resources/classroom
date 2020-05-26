@@ -2,7 +2,7 @@
 
 # Documentation: https://developer.github.com/v3/activity/events/types/#repositoryimportevent
 class RepositoryImportEventJob < ApplicationJob
-  queue_as :porter_status
+  queue_as :critical
 
   CREATE_COMPLETE = "Your GitHub repository was created."
   IMPORT_FAILED = "We were not able to import starter code to your assignment, please try again."

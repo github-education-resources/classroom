@@ -14,10 +14,11 @@ RSpec.describe LastActiveJob, type: :job do
     Timecop.return
   end
 
-  it "uses the :last_active_at queue" do
-    assert_performed_with(job: LastActiveJob, args: [user.id, @time], queue: "last_active") do
+  it "uses the :low queue" do
+    ActiveJob::Base.queue_adapter = :test
+    expect do
       LastActiveJob.perform_later(user.id, @time)
-    end
+    end.to have_enqueued_job.on_queue("low")
   end
 
   it "updates the last_active_at attribute" do

@@ -2,7 +2,7 @@
 
 # Documentation: https://developer.github.com/v3/activity/events/types/#repositoryevent
 class RepositoryEventJob < ApplicationJob
-  queue_as :github_event
+  queue_as :critical
 
   def perform(payload_body)
     return true unless payload_body.dig("action") == "deleted"

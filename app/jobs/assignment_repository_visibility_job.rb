@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AssignmentRepositoryVisibilityJob < ApplicationJob
-  queue_as :assignment
+  queue_as :low
 
   rescue_from ActiveJob::DeserializationError do |_exception|
     # Assignment no longer exists. No point in running this job anymore.

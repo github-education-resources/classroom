@@ -7,6 +7,13 @@ RSpec.describe MembershipEventJob, type: :job do
   let(:organization) { classroom_org }
   let(:student)      { classroom_student }
 
+  it "uses the :critical queue" do
+    ActiveJob::Base.queue_adapter = :test
+    expect do
+      MembershipEventJob.perform_later(payload)
+    end.to have_enqueued_job.on_queue("critical")
+  end
+
   context "ACTION member_removed", :vcr do
     it "removes user from team" do
       group_assignment = create(:group_assignment, title: "Intro to Rails #2", organization: organization)

@@ -23,6 +23,13 @@ RSpec.describe CreateGitHubRepositoryNewJob, type: :job do
   let(:service) { CreateGitHubRepoService.new(assignment, student) }
   let(:invite_status) { assignment.invitation.status(student) }
 
+  it "uses the :critical queue" do
+    ActiveJob::Base.queue_adapter = :test
+    expect do
+      CreateGitHubRepositoryNewJob.perform_later(assignment, student)
+    end.to have_enqueued_job.on_queue("critical")
+  end
+
   describe "#perform", :vcr do
     before(:each) do
       invite_status.waiting!

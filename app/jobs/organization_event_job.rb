@@ -2,7 +2,7 @@
 
 # Documentation: https://developer.github.com/v3/activity/events/types/#organizationevent
 class OrganizationEventJob < ApplicationJob
-  queue_as :github_event
+  queue_as :critical
 
   # rubocop:disable Metrics/AbcSize
   def perform(payload_body)

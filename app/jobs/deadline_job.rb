@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DeadlineJob < ApplicationJob
-  queue_as :deadline
+  queue_as :critical
 
   def perform(deadline_id)
     deadline = Deadline.find_by(id: deadline_id)

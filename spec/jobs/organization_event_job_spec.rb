@@ -4,6 +4,13 @@ require "rails_helper"
 RSpec.describe OrganizationEventJob, type: :job do
   let(:payload) { json_payload("webhook_events/member_removed.json") }
 
+  it "uses the :critical queue" do
+    ActiveJob::Base.queue_adapter = :test
+    expect do
+      OrganizationEventJob.perform_later(payload)
+    end.to have_enqueued_job.on_queue("critical")
+  end
+
   context "organization doesn't exist in classroom" do
     it "returns false" do
       expect(OrganizationEventJob.perform_now(payload)).to be_falsey
