@@ -141,21 +141,26 @@ If you're using macOS and running the Homebrew package manager you're all set to
 
 We use Docker and docker-compose so that we don't have to setup our external dependencies on our machines.
 
-Here is the installation guide for Ubuntu: https://docs.docker.com/install/linux/docker-ce/ubuntu/
+Here is the [installation guide for docker on Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/) and [docker compose is here](https://docs.docker.com/compose/install/) . Make sure to configure docker to run as your main (non-root) user as shown [here](https://docs.docker.com/install/linux/linux-postinstall/)
 
-##### Installing Rbenv
+##### Installing Ruby using rbenv
 
 First things first, you'll need to install Ruby. We recommend using the excellent [rbenv](https://github.com/sstephenson/rbenv), and [ruby-build](https://github.com/sstephenson/ruby-build).
+
+After installing you will need to use `rbenv install <version>` to install the version of ruby specified in the ".ruby-version' file in the classroom directory (2.4.2 as of this writing) then use `gem install bundler` and `gem install bundler -v "<2.0"` before continuing. You may also need to use `rbenv init` in the classroom directory and follow the instructions. If you still run into errors later you may need to run the two gem commands above using `sudo`.
+
+##### Installing Yarn
+You will also need to install yarn, see [Yarn Documentation](https://yarnpkg.com/en/docs/install)
 
 ##### Install PostgreSQL
 
 In order to install the `pg` gem you have to have PostgreSQL on your system, all you need to do is install it via your package manager of choice.
 
-If you're running an Debian/Ubuntu based GNU/Linux for example run: `apt-get install nodejs postgresql redis-server memcached`.
+If you're running an Debian/Ubuntu based GNU/Linux for example run: `apt-get install nodejs postgresql redis-server memcached libpq-dev`.
 
 #### Windows
 
-We really don't have a good story for running this on Windows, but Pull Requests are welcome :smile:
+At this point, the best option for developing this on Windows is probably to create a virtual linux machine in VirtualBox or VMWare then follow the linux instructions above. We really don't have a good story for running this on Windows natively, but Pull Requests are welcome :smile:
 
 ### Setup GitHub Classroom
 
@@ -180,11 +185,13 @@ ENV Variable | Description |
 `GOOGLE_CLIENT_ID` | the Google Client ID
 `GOOGLE_CLIENT_SECRET` | the Google Client Secret
 
+If nothing is in the CLASSROOM_WEBHOOK_URL_PREFIX you will get an error doing some actions in your test server. However, filling it in with a filler like `http://http://f379f5a1.ngrok.io` should work to test most things. if you need real webhooks, see the instructions further down this readme.
+
 To obtain your `GitHub Client ID/Secret` you need to [register a new OAuth application](https://github.com/settings/applications/new).
 
 After you register your OAuth application, you should fill in the homepage url with `http://localhost:5000` and the authorization url with `http://localhost:5000/auth/github/callback`.
 
-To obtain your GitHub User ID for the `NON_STAFF_GITHUB_ADMIN_IDS` field, go to `https://api.github.com/users/your_username`
+To obtain your GitHub User ID for the `NON_STAFF_GITHUB_ADMIN_IDS` field, go to [https://api.github.com/users/your_username] and look under `id`
 
 To obtain your `Google Client ID/Secret` you will need to [create a new web application](http://console.developers.google.com). When creating credentials choose `OAuth Client ID`, then fill in the `Authorized JavaScript origins` with `http://localhost:5000` and the `Authorized redirect URIs` with `http://localhost:5000/auth/github/callback`. 
 
